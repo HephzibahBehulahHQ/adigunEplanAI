@@ -190,7 +190,7 @@
   "symbolName": "Symbolname",
   "symbolWidth": "Körperbreite (mm)",
   "symbolHeight": "Körperhöhe (mm)",
-  "symbolPins": "Pins: ID, x, y pro Zeile (mm ab Mittelpunkt) [kind: power/control/signal/pe/neutral]",
+  "symbolPins": "Pins: ID, x, y pro Zeile (mm ab Mittelpunkt) [kind: power/control/signal/pe/neutral] [optionale Gruppe nach kind]",
   "editCustomSymbol": "Eigenes Symbol bearbeiten",
   "symbolArtwork": "Grafik in mm: line, x1, y1, x2, y2 oder circle, x, y, Radius pro Zeile",
   "engineeringSymbols": "Technische Symbole",
@@ -235,5 +235,7 @@
   "digital-input-four": "Vierkanal-Digitaleingangsschnittstelle",
   "digital-output-four": "Vierkanal-Digitalausgangsschnittstelle",
   "analog-input-two": "Zweikanal-Differenz-Analogeingangsschnittstelle",
-  "analog-output-two": "Zweikanal-Differenz-Analogausgangsschnittstelle"
+  "analog-output-two": "Zweikanal-Differenz-Analogausgangsschnittstelle",
+  "busbar-four-taps": "Sammelschiene mit vier potentialgleichen Abgriffen",
+  "category-connections": "Verbindungen"
 }

@@ -190,7 +190,7 @@
   "symbolName": "Orúkọ àmì",
   "symbolWidth": "Fífẹ̀ ara (mm)",
   "symbolHeight": "Gíga ara (mm)",
-  "symbolPins": "Ebute: id, x, y ní ìlà kọ̀ọ̀kan (mm láti àárín) [kind: power/control/signal/pe/neutral]",
+  "symbolPins": "Ebute: id, x, y ní ìlà kọ̀ọ̀kan (mm láti àárín) [kind: power/control/signal/pe/neutral] [ẹgbẹ́ àṣàyàn lẹ́yìn kind]",
   "editCustomSymbol": "Ṣàtúnṣe àmì àkànṣe",
   "symbolArtwork": "Àwòrán ní mm: line, x1, y1, x2, y2 tàbí circle, x, y, radius ní ìlà kọ̀ọ̀kan",
   "engineeringSymbols": "Àwọn àmì ẹ̀rọ",
@@ -235,5 +235,7 @@
   "digital-input-four": "Ẹnu ìwọlé díjítà oníìkànnì mẹ́rin",
   "digital-output-four": "Ẹnu ìjáde díjítà oníìkànnì mẹ́rin",
   "analog-input-two": "Ẹnu ìwọlé analog ìyàtọ̀ oníìkànnì méjì",
-  "analog-output-two": "Ẹnu ìjáde analog ìyàtọ̀ oníìkànnì méjì"
+  "analog-output-two": "Ẹnu ìjáde analog ìyàtọ̀ oníìkànnì méjì",
+  "busbar-four-taps": "Ọ̀pá iná pẹ̀lú ebute mẹ́rin ní agbára kan",
+  "category-connections": "Àwọn ìsopọ̀"
 }

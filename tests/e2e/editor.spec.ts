@@ -611,6 +611,36 @@ test("NO contact catalog mapping preserves native pins and offers only compatibl
   expect(assigned.manufacturerParts[0].partNumber).toBe("ZBE101");
 });
 
+test("busbar tap wiring shares one physical node and survives reload", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("busbar");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-busbar-four-taps");
+  await clickWorld(page, 100, 100);
+  await place(page, "terminal", 40, 60);
+  await place(page, "terminal", 160, 60);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "U1:bus/tap1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  await page.getByRole("button", { name: "U1:bus/tap3", exact: true }).click();
+  await page.getByRole("button", { name: "X2:1", exact: true }).click();
+  const data = await project(page);
+  expect(data.wires).toHaveLength(2);
+  expect(data.nets).toHaveLength(1);
+  expect(data.terminals).toHaveLength(3);
+  await page.reload();
+  expect((await project(page)).nets).toEqual(data.nets);
+});
+
 for (const [id, query, channel] of [
   ["digital-input-four", "digital input", "IN0"],
   ["digital-output-four", "digital output", "OUT0"],

@@ -19,7 +19,13 @@ const pin = (
   x: number,
   y: number,
   kind: Project["terminals"][number]["kind"] = "power",
-) => ({ id, position: { x, y }, kind });
+  terminalGroup?: string,
+) => ({
+  id,
+  position: { x, y },
+  kind,
+  ...(terminalGroup ? { terminalGroup } : {}),
+});
 export const engineeringSymbols = [
   {
     id: "transformer-two-winding",
@@ -713,6 +719,30 @@ export const engineeringSymbols = [
         line(15, y, 15, y + 4),
         line(15, y + 4, 24, y + 4),
       ]),
+    ],
+  },
+  {
+    id: "busbar-four-taps",
+    name: "Common-potential busbar with four taps",
+    category: "connections",
+    width: 40,
+    height: 28,
+    pins: [
+      pin("tap1", -20, -8, "power", "bus"),
+      pin("tap2", -20, 8, "power", "bus"),
+      pin("tap3", 20, -8, "power", "bus"),
+      pin("tap4", 20, 8, "power", "bus"),
+    ],
+    artwork: [
+      line(-8, -10, 8, -10),
+      line(8, -10, 8, 10),
+      line(8, 10, -8, 10),
+      line(-8, 10, -8, -10),
+      line(-20, -8, -8, -8),
+      line(-20, 8, -8, 8),
+      line(8, -8, 20, -8),
+      line(8, 8, 20, 8),
+      line(0, -10, 0, 10),
     ],
   },
 ] as const;

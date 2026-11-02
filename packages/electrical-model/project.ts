@@ -66,7 +66,12 @@ export const schemas = {
     pins: z
       .array(
         z
-          .object({ id, position: point, kind: terminalKind.optional() })
+          .object({
+            id,
+            position: point,
+            kind: terminalKind.optional(),
+            terminalGroup: id.optional(),
+          })
           .strict(),
       )
       .max(256),
@@ -212,7 +217,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(5),
+    schemaVersion: z.literal(6),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -226,7 +231,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 5;
+  schemaVersion: 6;
   id: string;
   name: string;
   createdAt: string;
@@ -242,7 +247,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 5,
+    schemaVersion: 6,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -398,6 +403,16 @@ function validateReferences(project: Project): void {
         ))
     )
       throw new Error("Artwork outside custom symbol bounds");
+    const groupKinds = new Map<string, string>();
+    for (const pin of definition.pins)
+      if (pin.terminalGroup && pin.kind) {
+        if (
+          groupKinds.has(pin.terminalGroup) &&
+          groupKinds.get(pin.terminalGroup) !== pin.kind
+        )
+          throw new Error("Conflicting terminal group kinds");
+        groupKinds.set(pin.terminalGroup, pin.kind);
+      }
   }
   for (const definition of project.symbolDefinitions)
     if (
@@ -433,6 +448,24 @@ function validateReferences(project: Project): void {
       .filter((pin) => pin.symbolInstanceId === instance.id)
       .map((pin) => pin.definitionPinId);
     const expected = definition.pins.map((pin) => pin.id);
+    const groups = new Map<string, string>();
+    const groupTerminals = new Map<string, string>();
+    for (const pin of project.pins.filter(
+      (p) => p.symbolInstanceId === instance.id,
+    )) {
+      const group = definition.pins.find(
+        (p) => p.id === pin.definitionPinId,
+      )?.terminalGroup;
+      if (!group) continue;
+      if (
+        (groups.has(group) && groups.get(group) !== pin.terminalId) ||
+        (groupTerminals.has(pin.terminalId) &&
+          groupTerminals.get(pin.terminalId) !== group)
+      )
+        throw new Error("Terminal group mapping mismatch");
+      groups.set(group, pin.terminalId);
+      groupTerminals.set(pin.terminalId, group);
+    }
     if (
       actual.length !== expected.length ||
       expected.some((id) => !actual.includes(id))
@@ -511,7 +544,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -519,10 +552,10 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 5) return { project: validateProject(raw), migratedFrom: 5 };
-  if (version === 2 || version === 3 || version === 4)
+  if (version === 6) return { project: validateProject(raw), migratedFrom: 6 };
+  if (version === 2 || version === 3 || version === 4 || version === 5)
     return {
-      project: validateProject({ ...raw, schemaVersion: 5 }),
+      project: validateProject({ ...raw, schemaVersion: 6 }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -530,7 +563,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 5,
+      schemaVersion: 6,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

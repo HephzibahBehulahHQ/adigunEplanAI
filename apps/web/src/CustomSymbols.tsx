@@ -50,13 +50,14 @@ export function CustomSymbols({
               .map((line) => {
                 const values = line.split(",").map((value) => value.trim());
                 if (
-                  ![3, 4].includes(values.length) ||
+                  ![3, 4, 5].includes(values.length) ||
                   values.some((value) => !value)
                 )
                   throw new Error("Invalid pin row");
                 return {
                   id: values[0],
                   position: { x: Number(values[1]), y: Number(values[2]) },
+                  ...(values[4] ? { terminalGroup: values[4] } : {}),
                   ...(values[3]
                     ? {
                         kind: values[3] as Project["terminals"][number]["kind"],
@@ -149,7 +150,7 @@ export function CustomSymbols({
               definition?.pins
                 .map(
                   (pin) =>
-                    `${pin.id}, ${pin.position.x}, ${pin.position.y}${pin.kind ? `, ${pin.kind}` : ""}`,
+                    `${pin.id}, ${pin.position.x}, ${pin.position.y}${pin.kind || pin.terminalGroup ? `, ${pin.kind ?? "control"}` : ""}${pin.terminalGroup ? `, ${pin.terminalGroup}` : ""}`,
                 )
                 .join("\n") ?? ""
             }

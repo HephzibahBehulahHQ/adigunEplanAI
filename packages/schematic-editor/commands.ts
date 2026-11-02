@@ -305,22 +305,32 @@ export function place(
     rotation: 0,
     position: { x: quantize(position.x, grid), y: quantize(position.y, grid) },
   });
+  const groupedTerminals = new Map<string, string>();
   for (const pin of primitive.pins) {
-    const terminalId = uid();
-    project.terminals.push({
-      id: terminalId,
-      name: pin.id,
-      deviceId,
-      designation:
-        kind === "motor" ? (pin.id === "positive" ? "+" : "-") : pin.id,
-      kind:
-        custom?.pins.find((p) => p.id === pin.id)?.kind ??
-        (kind === "ground"
-          ? "pe"
-          : kind === "motor" || kind === "fuse"
-            ? "power"
-            : "control"),
-    });
+    const declared = custom?.pins.find((p) => p.id === pin.id);
+    const group = declared?.terminalGroup;
+    const key = group ? `group:${group}` : `pin:${pin.id}`;
+    const terminalId = groupedTerminals.get(key) ?? uid();
+    if (!groupedTerminals.has(key))
+      project.terminals.push({
+        id: terminalId,
+        name: group ?? pin.id,
+        deviceId,
+        designation:
+          group ??
+          (kind === "motor" ? (pin.id === "positive" ? "+" : "-") : pin.id),
+        kind:
+          (group
+            ? custom?.pins.find((p) => p.terminalGroup === group && p.kind)
+                ?.kind
+            : declared?.kind) ??
+          (kind === "ground"
+            ? "pe"
+            : kind === "motor" || kind === "fuse"
+              ? "power"
+              : "control"),
+      });
+    groupedTerminals.set(key, terminalId);
     project.pins.push({
       id: uid(),
       name: pin.id,

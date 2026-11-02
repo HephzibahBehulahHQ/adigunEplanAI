@@ -190,7 +190,7 @@
   "symbolName": "Symbol name",
   "symbolWidth": "Body width (mm)",
   "symbolHeight": "Body height (mm)",
-  "symbolPins": "Pins: id, x, y per line (mm from center) [kind: power/control/signal/pe/neutral]",
+  "symbolPins": "Pins: id, x, y per line (mm from center) [kind: power/control/signal/pe/neutral] [optional group after kind]",
   "editCustomSymbol": "Edit custom symbol",
   "symbolArtwork": "Artwork in mm: line, x1, y1, x2, y2 or circle, x, y, radius per line",
   "engineeringSymbols": "Engineering symbols",
@@ -235,5 +235,7 @@
   "digital-input-four": "Four-channel digital input interface",
   "digital-output-four": "Four-channel digital output interface",
   "analog-input-two": "Two-channel differential analog input interface",
-  "analog-output-two": "Two-channel differential analog output interface"
+  "analog-output-two": "Two-channel differential analog output interface",
+  "busbar-four-taps": "Common-potential busbar with four taps",
+  "category-connections": "Connections"
 }

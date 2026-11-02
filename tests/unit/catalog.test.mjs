@@ -1,4 +1,5 @@
 import { test } from "node:test";
+import { analyze } from "../../packages/connectivity-engine/analyze.ts";
 import {
   engineeringSymbols,
   installSymbol,
@@ -48,7 +49,11 @@ test("every engineering symbol installs and places its declared electrical nodes
       );
     assert.equal(
       new Set(pins.map((pin) => pin.terminalId)).size,
-      symbol.pins.length,
+      new Set(
+        symbol.pins.map((pin) =>
+          pin.terminalGroup ? `group:${pin.terminalGroup}` : `pin:${pin.id}`,
+        ),
+      ).size,
     );
     assert.deepEqual(parseProject(serializeProject(p)).project.wires, p.wires);
   }
@@ -99,6 +104,81 @@ test("every engineering symbol installs and places its declared electrical nodes
   );
 });
 
+test("busbar taps share one physical terminal and group edits preserve that identity", () => {
+  const p = installSymbol(nativeProject(), "busbar-four-taps");
+  const id = place(
+    p,
+    "page",
+    "layer",
+    "custom",
+    { x: 200, y: 150 },
+    5,
+    "library-busbar-four-taps",
+  );
+  const pins = p.pins.filter((pin) => pin.symbolInstanceId === id);
+  assert.equal(new Set(pins.map((pin) => pin.terminalId)).size, 1);
+  const net = analyze(p).nets.find((net) => net.pinIds.includes(pins[0].id));
+  assert.equal(net.pinIds.length, 4);
+  assert.equal(net.terminalIds.length, 1);
+  const other = place(
+    p,
+    "page",
+    "layer",
+    "custom",
+    { x: 300, y: 150 },
+    5,
+    "library-busbar-four-taps",
+  );
+  assert.notEqual(
+    p.pins.find((pin) => pin.symbolInstanceId === other).terminalId,
+    pins[0].terminalId,
+  );
+  const definition = p.symbolDefinitions.find(
+    (d) => d.id === "library-busbar-four-taps",
+  );
+  const extended = updateCustomSymbol(p, {
+    ...definition,
+    pins: [
+      ...definition.pins,
+      {
+        id: "tap5",
+        position: { x: 0, y: 14 },
+        kind: "power",
+        terminalGroup: "bus",
+      },
+    ],
+  });
+  const added = extended.pins.find(
+    (pin) => pin.symbolInstanceId === id && pin.definitionPinId === "tap5",
+  );
+  assert.equal(added.terminalId, pins[0].terminalId);
+  assert.throws(
+    () =>
+      updateCustomSymbol(p, {
+        ...definition,
+        pins: definition.pins.map((pin) => ({
+          ...pin,
+          terminalGroup: "changed",
+        })),
+      }),
+    /regroup/,
+  );
+  const invalid = structuredClone(p);
+  invalid.terminals.push({
+    ...invalid.terminals.find((t) => t.id === pins[0].terminalId),
+    id: "split-terminal",
+  });
+  invalid.pins.find((pin) => pin.id === pins[0].id).terminalId =
+    "split-terminal";
+  assert.throws(() => serializeProject(invalid), /group mapping/);
+  const old = nativeProject();
+  old.schemaVersion = 5;
+  assert.deepEqual(
+    parseProject(JSON.stringify(old)).project.terminals,
+    old.terminals,
+  );
+});
+
 test("custom artwork is bounded native geometry and schema three migrates without changing identities", () => {
   const p = nativeProject();
   const definition = {
@@ -143,7 +223,7 @@ test("custom artwork is bounded native geometry and schema three migrates withou
   p.schemaVersion = 3;
   const migrated = parseProject(JSON.stringify(p));
   assert.equal(migrated.migratedFrom, 3);
-  assert.equal(migrated.project.schemaVersion, 5);
+  assert.equal(migrated.project.schemaVersion, 6);
   assert.deepEqual(migrated.project.wires, p.wires);
 });
 

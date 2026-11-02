@@ -30,6 +30,16 @@ function validateDefinition(definition: Project["symbolDefinitions"][number]) {
       .size !== parsed.pins.length
   )
     throw new Error("Overlapping custom pins");
+  const kinds = new Map<string, string>();
+  for (const pin of parsed.pins)
+    if (pin.terminalGroup && pin.kind) {
+      if (
+        kinds.has(pin.terminalGroup) &&
+        kinds.get(pin.terminalGroup) !== pin.kind
+      )
+        throw new Error("Conflicting terminal group kinds");
+      kinds.set(pin.terminalGroup, pin.kind);
+    }
   return parsed;
 }
 
@@ -57,20 +67,42 @@ export function updateCustomSymbol(
   );
   for (const instance of instances) {
     const pins = next.pins.filter((p) => p.symbolInstanceId === instance.id);
+    for (const existing of pins) {
+      const old = current.pins.find((p) => p.id === existing.definitionPinId);
+      const updated = parsed.pins.find(
+        (p) => p.id === existing.definitionPinId,
+      );
+      if (updated && old?.terminalGroup !== updated.terminalGroup)
+        throw new Error("Cannot regroup instantiated pin identities");
+    }
     if (
       pins.some((pin) => !parsed.pins.some((p) => p.id === pin.definitionPinId))
     )
       throw new Error("Cannot remove instantiated pin identities");
     for (const pin of parsed.pins)
       if (!pins.some((p) => p.definitionPinId === pin.id)) {
-        const terminalId = crypto.randomUUID();
-        next.terminals.push({
-          id: terminalId,
-          name: pin.id,
-          designation: pin.id,
-          deviceId: instance.deviceId,
-          kind: pin.kind ?? "control",
-        });
+        const shared = pin.terminalGroup
+          ? next.pins.find(
+              (p) =>
+                p.symbolInstanceId === instance.id &&
+                parsed.pins.find((d) => d.id === p.definitionPinId)
+                  ?.terminalGroup === pin.terminalGroup,
+            )
+          : undefined;
+        const terminalId = shared?.terminalId ?? crypto.randomUUID();
+        if (!shared)
+          next.terminals.push({
+            id: terminalId,
+            name: pin.terminalGroup ?? pin.id,
+            designation: pin.terminalGroup ?? pin.id,
+            deviceId: instance.deviceId,
+            kind:
+              (pin.terminalGroup
+                ? parsed.pins.find(
+                    (p) => p.terminalGroup === pin.terminalGroup && p.kind,
+                  )?.kind
+                : pin.kind) ?? "control",
+          });
         next.pins.push({
           id: crypto.randomUUID(),
           name: pin.id,
@@ -80,7 +112,10 @@ export function updateCustomSymbol(
         });
       }
     for (const pin of parsed.pins) {
-      const instancePin = pins.find((p) => p.definitionPinId === pin.id);
+      const instancePin = next.pins.find(
+        (p) =>
+          p.symbolInstanceId === instance.id && p.definitionPinId === pin.id,
+      );
       const terminal = next.terminals.find(
         (t) => t.id === instancePin?.terminalId,
       );

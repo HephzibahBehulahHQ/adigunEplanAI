@@ -1206,7 +1206,7 @@ export function SchematicEditor({
                 data-pin={pin.id}
                 role="button"
                 tabIndex={0}
-                aria-label={`${device.reference}:${terminal.designation}`}
+                aria-label={`${device.reference}:${terminal.designation}${project.pins.filter((p) => p.symbolInstanceId === instance.id && p.terminalId === terminal.id).length > 1 ? `/${pin.definitionPinId}` : ""}`}
                 onPointerDown={(e) => {
                   if (tool === "pan" || Object.hasOwn(primitives, tool)) return;
                   if (tool === "select") {
