@@ -975,3 +975,70 @@ test("cross-page net labels persist memberships and navigate to the real drawing
     ).terminalIds,
   ).toEqual(net.terminalIds);
 });
+
+test("component comparison preserves selections through search and shows missing ratings explicitly", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Schneider Electric ZBE101",
+      exact: true,
+    })
+    .check();
+  const table = page.getByRole("table", {
+    name: "Compare components",
+    exact: true,
+  });
+  await expect(table).toBeVisible();
+  const voltage = table.getByRole("row").filter({
+    has: page.getByRole("rowheader", {
+      name: "Nominal voltage",
+      exact: true,
+    }),
+  });
+  await expect(voltage.getByRole("cell")).toHaveText(["800 V", "Not declared"]);
+  const section = table.getByRole("row").filter({
+    has: page.getByRole("rowheader", {
+      name: "Rated cross-section",
+      exact: true,
+    }),
+  });
+  await expect(section.getByRole("cell")).toHaveText(["4 mm²", "Not declared"]);
+  await page.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await expect(
+    table.getByRole("columnheader", {
+      name: "Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeVisible();
+  const card = page.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  await expect(
+    card
+      .locator("dt")
+      .filter({ hasText: /^Rated cross-section$/ })
+      .locator("+ dd"),
+  ).toHaveText("Not declared");
+  await expect(
+    table.getByRole("link", { name: "3004362", exact: true }),
+  ).toHaveAttribute("href", /^https:\/\/www\.phoenixcontact\.com\//);
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Schneider Electric ZBE101",
+      exact: true,
+    })
+    .uncheck();
+  await expect(table).toHaveCount(0);
+  expect((await project(page)).manufacturerParts).toHaveLength(0);
+  expect((await project(page)).devices).toHaveLength(0);
+});

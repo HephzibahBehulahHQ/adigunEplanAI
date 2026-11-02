@@ -256,5 +256,9 @@
   "rcbo-two-pole": "Two-pole RCBO interface",
   "motor-protection-three-pole": "Three-pole motor-protection switch interface",
   "surge-protector-l-pe": "L/PE surge protective device interface",
-  "protection-relay-trip": "Protection relay with measurement and trip interface"
+  "protection-relay-trip": "Protection relay with measurement and trip interface",
+  "compareParts": "Compare components",
+  "selectForComparison": "Select for comparison",
+  "comparisonHint": "Select two to four components. Missing values are not inferred.",
+  "property": "Property"
 }

@@ -256,5 +256,9 @@
   "rcbo-two-pole": "Zweipolige FI/LS-Schnittstelle",
   "motor-protection-three-pole": "Dreipolige Motorschutzschalter-Schnittstelle",
   "surge-protector-l-pe": "L/PE-Überspannungsschutz-Schnittstelle",
-  "protection-relay-trip": "Schutzrelais mit Mess- und Auslöseschnittstelle"
+  "protection-relay-trip": "Schutzrelais mit Mess- und Auslöseschnittstelle",
+  "compareParts": "Bauteile vergleichen",
+  "selectForComparison": "Für Vergleich auswählen",
+  "comparisonHint": "Zwei bis vier Bauteile auswählen. Fehlende Werte werden nicht abgeleitet.",
+  "property": "Eigenschaft"
 }

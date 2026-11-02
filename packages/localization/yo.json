@@ -256,5 +256,9 @@
   "rcbo-two-pole": "Ìsopọ̀ RCBO onípó méjì",
   "motor-protection-three-pole": "Ìsopọ̀ ààbò mọ́tò onípó mẹ́ta",
   "surge-protector-l-pe": "Ìsopọ̀ ààbò ìgbésókè foliteji L/PE",
-  "protection-relay-trip": "Relay ààbò pẹ̀lú ìsopọ̀ ìwọ̀n àti gígé"
+  "protection-relay-trip": "Relay ààbò pẹ̀lú ìsopọ̀ ìwọ̀n àti gígé",
+  "compareParts": "Ṣe àfiwé àwọn èròjà",
+  "selectForComparison": "Yàn fún àfiwé",
+  "comparisonHint": "Yan èròjà méjì sí mẹ́rin. A kò ṣe àfojúsùn àwọn iye tí kò sí.",
+  "property": "Ànímọ́"
 }

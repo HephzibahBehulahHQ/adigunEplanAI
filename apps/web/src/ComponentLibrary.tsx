@@ -21,6 +21,8 @@ export function ComponentLibrary({
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [manufacturer, setManufacturer] = useState("");
+  const [comparison, setComparison] = useState<string[]>([]);
+  const compared = catalog.filter((part) => comparison.includes(part.id));
   const results = searchCatalog(query, category, manufacturer);
   const project = native.project;
   const devicesFor = (part: CatalogPart) =>
@@ -73,6 +75,71 @@ export function ComponentLibrary({
       <p role="status">
         {t("results")}: {results.length}
       </p>
+      <section aria-label={t("compareParts")}>
+        <h3>{t("compareParts")}</h3>
+        <p>{t("comparisonHint")}</p>
+        {compared.length >= 2 && (
+          <div style={{ maxWidth: "100%", overflowX: "auto" }}>
+            <table>
+              <caption>{t("compareParts")}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{t("property")}</th>
+                  {compared.map((part) => (
+                    <th scope="col" key={part.id}>
+                      {part.manufacturer} {part.partNumber}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {(
+                  [
+                    ["nominalVoltage", "nominalVoltageV", "V"],
+                    ["nominalCurrent", "nominalCurrentA", "A"],
+                    ["ratedCrossSection", "ratedCrossSectionMm2", "mm²"],
+                    ["connectionMethod", "connectionMethod", ""],
+                    ["contactArrangement", "contactArrangement", ""],
+                  ] as const
+                ).map(([label, field, unit]) => (
+                  <tr key={field}>
+                    <th scope="row">{t(label)}</th>
+                    {compared.map((part) => (
+                      <td key={part.id}>
+                        {part.ratings[field] === undefined
+                          ? t("notDeclared")
+                          : `${part.ratings[field]}${unit ? ` ${unit}` : ""}`}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+                <tr>
+                  <th scope="row">{t("connections")}</th>
+                  {compared.map((part) => (
+                    <td key={part.id}>{part.mapping.connections}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <th scope="row">{t("reviewedOn")}</th>
+                  {compared.map((part) => (
+                    <td key={part.id}>{part.reviewedOn}</td>
+                  ))}
+                </tr>
+                <tr>
+                  <th scope="row">{t("manufacturerSource")}</th>
+                  {compared.map((part) => (
+                    <td key={part.id}>
+                      <a href={part.sourceUrl} target="_blank" rel="noreferrer">
+                        {part.partNumber}
+                      </a>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
       {results.map((part) => (
         <article
           key={part.id}
@@ -82,6 +149,21 @@ export function ComponentLibrary({
             {part.name} · {part.partNumber}
           </h3>
           <p>{part.manufacturer}</p>
+          <label>
+            <input
+              type="checkbox"
+              checked={comparison.includes(part.id)}
+              disabled={comparison.length >= 4 && !comparison.includes(part.id)}
+              onChange={(e) =>
+                setComparison((current) =>
+                  e.target.checked
+                    ? [...current, part.id]
+                    : current.filter((id) => id !== part.id),
+                )
+              }
+            />
+            {t("selectForComparison")}: {part.manufacturer} {part.partNumber}
+          </label>
           <a href={part.sourceUrl} target="_blank" rel="noreferrer">
             {t("manufacturerSource")}
           </a>
@@ -110,7 +192,11 @@ export function ComponentLibrary({
                 : `${part.ratings.nominalCurrentA} A`}
             </dd>
             <dt>{t("ratedCrossSection")}</dt>
-            <dd>{part.ratings.ratedCrossSectionMm2} mm²</dd>
+            <dd>
+              {part.ratings.ratedCrossSectionMm2 === undefined
+                ? t("notDeclared")
+                : `${part.ratings.ratedCrossSectionMm2} mm²`}
+            </dd>
             <dt>{t("conductorRange")}</dt>
             <dd>
               {part.ratings.minimumCrossSectionMm2 === undefined ||
