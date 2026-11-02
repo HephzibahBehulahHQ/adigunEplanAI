@@ -12,6 +12,8 @@ test("catalog warnings distinguish reviewed facts from missing manufacturer info
   assert.ok(catalogMissingData(wago).includes("nominalVoltage"));
   assert.ok(catalogMissingData(wago).includes("nominalCurrent"));
   for (const part of catalog) {
+    assert.equal(part.verification, "source-reviewed-facts");
+    assert.equal(part.licensing, "factual-metadata-only");
     assert.ok(catalogMissingData(part).includes("catalogSourceRevision"));
     assert.ok(catalogMissingData(part).includes("catalogTerminalMarkings"));
     assert.equal(

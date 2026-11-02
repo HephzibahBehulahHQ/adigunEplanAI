@@ -336,5 +336,9 @@
   "catalogRangeBasis": "Ìpìlẹ̀ ààlà okun",
   "catalogMappingScope": "Ìsopọ̀ àmì gbogbogbò jẹ́ ìtumọ̀ ẹ̀rọ, kì í ṣe ìjẹ́rìí olupèsè. Ọjọ́ àyẹ̀wò kì í ṣe àtúnyẹ̀wò olupèsè.",
   "catalogDimensionOrder": "ìbú × gíga × ìjìnlẹ̀ ara",
-  "catalogMountedDepth": "Ìjìnlẹ̀ nígbà tí a bá fi sí orí rail"
+  "catalogMountedDepth": "Ìjìnlẹ̀ nígbà tí a bá fi sí orí rail",
+  "catalogVerification": "Ààlà àyẹ̀wò",
+  "catalogLicensing": "Ààlà lílo dátà",
+  "source-reviewed-facts": "A ṣàyẹ̀wò àwọn òtítọ́ tí a kọ sí orísun olupèsè; kò sí ìjẹ́rìí ohun èlò gidi.",
+  "factual-metadata-only": "Dátà òtítọ́ nìkan. Kò sí àwòrán, ìwé dátà tàbí fáìlì CAD olupèsè; a kò fúnni ní ẹ̀tọ́ pínpín wọn."
 }

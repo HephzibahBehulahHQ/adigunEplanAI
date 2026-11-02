@@ -336,5 +336,9 @@
   "catalogRangeBasis": "Conductor range basis",
   "catalogMappingScope": "Generic symbol mapping is an engineering interpretation, not manufacturer certification. Review date is not a manufacturer revision.",
   "catalogDimensionOrder": "width × height × body depth",
-  "catalogMountedDepth": "Depth when mounted on rail"
+  "catalogMountedDepth": "Depth when mounted on rail",
+  "catalogVerification": "Verification scope",
+  "catalogLicensing": "Data reuse scope",
+  "source-reviewed-facts": "Listed facts reviewed against the manufacturer source; no physical certification.",
+  "factual-metadata-only": "Factual metadata only. No manufacturer artwork, datasheets or CAD assets included; no redistribution rights granted."
 }

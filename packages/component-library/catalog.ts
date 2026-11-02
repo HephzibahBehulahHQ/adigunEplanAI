@@ -8,6 +8,8 @@ export type CatalogPart = {
   partNumber: string;
   sourceUrl: string;
   reviewedOn: string;
+  verification: "source-reviewed-facts";
+  licensing: "factual-metadata-only";
   dimensionsMm?: { width: number; height: number; depth: number };
   mountedDepthsMm?: readonly { rail: string; depth: number }[];
   terminalMarkings?: readonly string[];
@@ -32,6 +34,8 @@ export const catalog: readonly CatalogPart[] = [
     sourceUrl:
       "https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-uk-5-n-3004362",
     reviewedOn: "2026-11-02",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
     ratings: {
       nominalVoltageV: 800,
       nominalCurrentA: 32,
@@ -53,6 +57,8 @@ export const catalog: readonly CatalogPart[] = [
     sourceUrl:
       "https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-ut-25-3044076",
     reviewedOn: "2026-11-03",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
     dimensionsMm: { width: 5.2, height: 47.7, depth: 46.9 },
     mounting: "NS 35/7.5; NS 35/15",
     mountedDepthsMm: [
@@ -81,6 +87,8 @@ export const catalog: readonly CatalogPart[] = [
     sourceUrl:
       "https://www.wago.com/global/rail-mount-terminal-blocks/2-conductor-through-terminal-block/p/2002-1201",
     reviewedOn: "2026-11-02",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
     ratings: {
       ratedCrossSectionMm2: 2.5,
       connectionMethod: "Push-in CAGE CLAMP",
@@ -97,6 +105,8 @@ export const catalog: readonly CatalogPart[] = [
     sourceUrl:
       "https://www.se.com/us/en/product/ZBE101/harmony-22mm-push-button-add-on-contact-block-1-no-screw-clamp-terminal/",
     reviewedOn: "2026-11-02",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
     ratings: { contactArrangement: "1 NO", connectionMethod: "screw clamp" },
     mapping: { glyph: "contact", electricalNodes: 2, connections: 2 },
   },

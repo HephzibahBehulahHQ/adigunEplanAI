@@ -140,4 +140,8 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
     "Nominal voltage",
   );
   await expect(wago).toContainText("not manufacturer certification");
+  await expect(wago).toContainText(
+    "Listed facts reviewed against the manufacturer source",
+  );
+  await expect(wago).toContainText("no redistribution rights granted");
 });

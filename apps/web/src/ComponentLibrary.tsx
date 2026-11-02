@@ -330,6 +330,10 @@ export function ComponentLibrary({
             </ul>
           </aside>
           <dl>
+            <dt>{t("catalogVerification")}</dt>
+            <dd>{t(part.verification)}</dd>
+            <dt>{t("catalogLicensing")}</dt>
+            <dd>{t(part.licensing)}</dd>
             <dt>{t("catalogDimensions")}</dt>
             <dd>
               {part.dimensionsMm
