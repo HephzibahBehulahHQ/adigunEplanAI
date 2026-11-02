@@ -327,5 +327,12 @@
   "mccb-three-pole": "Olùgé ààbò àpò líle onípó mẹ́ta MCCB",
   "plug-two-pole": "Ìsopọ̀ plọ́ọ̀gù onípó méjì",
   "socket-two-pole": "Ìsopọ̀ ihò plọ́ọ̀gù onípó méjì",
-  "industrial-serial-bridge": "Afárá nẹ́tíwọ́ọ̀kì ilé iṣẹ́ tẹ̀lé-tẹ̀lé oníbùdó méjì"
+  "industrial-serial-bridge": "Afárá nẹ́tíwọ́ọ̀kì ilé iṣẹ́ tẹ̀lé-tẹ̀lé oníbùdó méjì",
+  "catalogMissingData": "Àwọn dátà tí a ti ṣàyẹ̀wò tí kò sí — má ṣe fojú díwọ̀n ìbámu",
+  "catalogDimensions": "Ìwọ̀n ẹ̀rọ",
+  "catalogTerminalMarkings": "Àmì tẹ́mínà olupèsè",
+  "catalogMounting": "Àwọn ohun tí fífi sípò nílò",
+  "catalogSourceRevision": "Àtúnyẹ̀wò orísun olupèsè",
+  "catalogRangeBasis": "Ìpìlẹ̀ ààlà okun",
+  "catalogMappingScope": "Ìsopọ̀ àmì gbogbogbò jẹ́ ìtumọ̀ ẹ̀rọ, kì í ṣe ìjẹ́rìí olupèsè. Ọjọ́ àyẹ̀wò kì í ṣe àtúnyẹ̀wò olupèsè."
 }

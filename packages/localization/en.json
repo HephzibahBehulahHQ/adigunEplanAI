@@ -327,5 +327,12 @@
   "mccb-three-pole": "Three-pole molded-case circuit breaker MCCB",
   "plug-two-pole": "Two-pole plug interface",
   "socket-two-pole": "Two-pole socket interface",
-  "industrial-serial-bridge": "Two-port industrial serial network bridge"
+  "industrial-serial-bridge": "Two-port industrial serial network bridge",
+  "catalogMissingData": "Missing verified data — do not infer suitability",
+  "catalogDimensions": "Mechanical dimensions",
+  "catalogTerminalMarkings": "Manufacturer terminal markings",
+  "catalogMounting": "Mounting requirements",
+  "catalogSourceRevision": "Manufacturer source revision",
+  "catalogRangeBasis": "Conductor range basis",
+  "catalogMappingScope": "Generic symbol mapping is an engineering interpretation, not manufacturer certification. Review date is not a manufacturer revision."
 }

@@ -110,3 +110,29 @@ test("secondary category browsing and search leave native project unchanged", as
   ).toBeVisible();
   expect(await project(page)).toEqual(before);
 });
+
+test("catalog exposes missing manufacturer data and conductor range limitations", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  const phoenix = page.getByRole("article", {
+    name: "Phoenix Contact 3044076",
+    exact: true,
+  });
+  await expect(phoenix.getByRole("complementary")).toContainText(
+    "Manufacturer terminal markings",
+  );
+  await expect(phoenix.getByRole("complementary")).not.toContainText(
+    "Nominal voltage",
+  );
+  await expect(phoenix).toContainText("ferrule ranges differ");
+  const wago = page.getByRole("article", {
+    name: "WAGO 2002-1201",
+    exact: true,
+  });
+  await expect(wago.getByRole("complementary")).toContainText(
+    "Nominal voltage",
+  );
+  await expect(wago).toContainText("not manufacturer certification");
+});

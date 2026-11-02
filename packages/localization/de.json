@@ -327,5 +327,12 @@
   "mccb-three-pole": "Dreipoliger Kompaktleistungsschalter MCCB",
   "plug-two-pole": "Zweipolige Steckerschnittstelle",
   "socket-two-pole": "Zweipolige Buchsenschnittstelle",
-  "industrial-serial-bridge": "Industrielle serielle Netzwerkbrücke mit zwei Ports"
+  "industrial-serial-bridge": "Industrielle serielle Netzwerkbrücke mit zwei Ports",
+  "catalogMissingData": "Fehlende geprüfte Daten — Eignung nicht ableiten",
+  "catalogDimensions": "Mechanische Abmessungen",
+  "catalogTerminalMarkings": "Hersteller-Klemmenkennzeichnung",
+  "catalogMounting": "Montageanforderungen",
+  "catalogSourceRevision": "Revision der Herstellerquelle",
+  "catalogRangeBasis": "Grundlage des Leiterbereichs",
+  "catalogMappingScope": "Die generische Symbolzuordnung ist eine technische Interpretation, keine Herstellerzertifizierung. Das Prüfdatum ist keine Herstellerrevision."
 }

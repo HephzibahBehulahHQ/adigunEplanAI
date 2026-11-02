@@ -3,6 +3,7 @@ import { CustomSymbols } from "./CustomSymbols";
 import { CustomComponents } from "./CustomComponents";
 import {
   catalog,
+  catalogMissingData,
   searchCatalog,
   assignCatalogPart,
   compatibleCatalogDevice,
@@ -319,6 +320,15 @@ export function ComponentLibrary({
           <p>
             {t("reviewedOn")}: {part.reviewedOn}
           </p>
+          <p>{t("catalogMappingScope")}</p>
+          <aside aria-label={t("catalogMissingData")}>
+            <strong>{t("catalogMissingData")}</strong>
+            <ul>
+              {catalogMissingData(part).map((field) => (
+                <li key={field}>{t(field)}</li>
+              ))}
+            </ul>
+          </aside>
           <dl>
             {part.ratings.contactArrangement !== undefined && (
               <>
@@ -353,6 +363,12 @@ export function ComponentLibrary({
                 ? t("notDeclared")
                 : `${part.ratings.minimumCrossSectionMm2}–${part.ratings.maximumCrossSectionMm2} mm²`}
             </dd>
+            {part.ratings.sectionRangeBasis && (
+              <>
+                <dt>{t("catalogRangeBasis")}</dt>
+                <dd>{part.ratings.sectionRangeBasis}</dd>
+              </>
+            )}
             <dt>{t("connections")}</dt>
             <dd>{part.mapping.connections}</dd>
           </dl>

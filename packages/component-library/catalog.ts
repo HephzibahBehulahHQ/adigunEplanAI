@@ -8,6 +8,10 @@ export type CatalogPart = {
   partNumber: string;
   sourceUrl: string;
   reviewedOn: string;
+  dimensionsMm?: { width: number; height: number; depth: number };
+  terminalMarkings?: readonly string[];
+  mounting?: string;
+  sourceRevision?: string;
   ratings: Record<string, string | number>;
   mapping: {
     glyph: "terminal" | "contact";
@@ -90,6 +94,26 @@ export const catalog: readonly CatalogPart[] = [
     mapping: { glyph: "contact", electricalNodes: 2, connections: 2 },
   },
 ];
+
+export function catalogMissingData(part: CatalogPart) {
+  const missing: (
+    | "nominalVoltage"
+    | "nominalCurrent"
+    | "catalogDimensions"
+    | "catalogTerminalMarkings"
+    | "catalogMounting"
+    | "catalogSourceRevision"
+  )[] = [];
+  if (typeof part.ratings.nominalVoltageV !== "number")
+    missing.push("nominalVoltage");
+  if (typeof part.ratings.nominalCurrentA !== "number")
+    missing.push("nominalCurrent");
+  if (!part.dimensionsMm) missing.push("catalogDimensions");
+  if (!part.terminalMarkings?.length) missing.push("catalogTerminalMarkings");
+  if (!part.mounting?.trim()) missing.push("catalogMounting");
+  if (!part.sourceRevision?.trim()) missing.push("catalogSourceRevision");
+  return missing;
+}
 
 export function compatibleCatalogDevice(
   project: Project,
