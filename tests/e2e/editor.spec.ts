@@ -1123,6 +1123,20 @@ test("catalog filters, favorites and recent assignments persist without changing
   expect(after.pins).toEqual(before.pins);
   expect(after.wires).toEqual(before.wires);
   expect(after.devices[0].partId).toBeDefined();
+  expect(after.schemaVersion).toBe(9);
+  const terminalPart = after.manufacturerParts.find(
+    (part: { partNumber: string }) => part.partNumber === "3044076",
+  );
+  expect(terminalPart.catalogSnapshot.dimensionsMm).toEqual({
+    width: 5.2,
+    height: 47.7,
+    depth: 46.9,
+  });
+  expect(terminalPart.catalogSnapshot.mountedDepthsMm[1]).toEqual({
+    rail: "NS 35/15",
+    depth: 55,
+  });
+  expect(terminalPart.catalogSnapshot.sourceRevision).toBeUndefined();
 });
 
 test("corrupt catalog preferences remain intact until explicit reset without touching the project", async ({

@@ -112,6 +112,40 @@ export const schemas = {
           z.union([z.string().max(2000), finite]),
         )
         .refine((value) => Object.keys(value).length <= 128),
+      catalogSnapshot: z
+        .object({
+          catalogId: id,
+          reviewedOn: z.iso.date(),
+          category: name,
+          description: z.string().trim().min(1).max(2000),
+          mapping: z
+            .object({
+              glyph: z.enum(["terminal", "contact"]),
+              electricalNodes: z.number().int().min(1).max(256),
+              connections: z.number().int().min(1).max(1000),
+            })
+            .strict(),
+          dimensionsMm: z
+            .object({
+              width: positive.max(100000),
+              height: positive.max(100000),
+              depth: positive.max(100000),
+            })
+            .strict()
+            .optional(),
+          mountedDepthsMm: z
+            .array(
+              z.object({ rail: name, depth: positive.max(100000) }).strict(),
+            )
+            .min(1)
+            .max(32)
+            .optional(),
+          terminalMarkings: z.array(name).min(1).max(256).optional(),
+          mounting: z.string().trim().min(1).max(2000).optional(),
+          sourceRevision: name.optional(),
+        })
+        .strict()
+        .optional(),
       custom: z
         .object({
           componentId: id,
@@ -138,6 +172,11 @@ export const schemas = {
         .optional(),
     })
     .superRefine((part, ctx) => {
+      if (part.custom && part.catalogSnapshot)
+        ctx.addIssue({
+          code: "custom",
+          message: "Custom data cannot carry a catalog snapshot",
+        });
       if (part.custom)
         for (const field of [
           "nominalVoltageV",
@@ -278,7 +317,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(8),
+    schemaVersion: z.literal(9),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -292,7 +331,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 8;
+  schemaVersion: 9;
   id: string;
   name: string;
   createdAt: string;
@@ -308,7 +347,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 8,
+    schemaVersion: 9,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -649,7 +688,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -657,17 +696,18 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 8) return { project: validateProject(raw), migratedFrom: 8 };
+  if (version === 9) return { project: validateProject(raw), migratedFrom: 9 };
   if (
     version === 2 ||
     version === 3 ||
     version === 4 ||
     version === 5 ||
     version === 6 ||
-    version === 7
+    version === 7 ||
+    version === 8
   )
     return {
-      project: validateProject({ ...raw, schemaVersion: 8 }),
+      project: validateProject({ ...raw, schemaVersion: 9 }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -675,7 +715,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 8,
+      schemaVersion: 9,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

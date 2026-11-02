@@ -152,7 +152,7 @@ test("schema six migrates to eight without inventing component verification or c
   const legacy = { ...p, schemaVersion: 6 };
   const result = parseProject(JSON.stringify(legacy));
   assert.equal(result.migratedFrom, 6);
-  assert.equal(result.project.schemaVersion, 8);
+  assert.equal(result.project.schemaVersion, 9);
   assert.deepEqual(result.project.pins, p.pins);
   assert.deepEqual(result.project.terminals, p.terminals);
   assert.deepEqual(result.project.manufacturerParts, []);

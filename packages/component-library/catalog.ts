@@ -199,13 +199,32 @@ export function assignCatalogPart(
   const terminals = next.terminals.filter((item) => item.deviceId === deviceId);
   if (!compatibleCatalogDevice(next, deviceId, part))
     throw new Error("Part requires a compatible editable symbol");
+  const catalogSnapshot = {
+    catalogId: part.id,
+    reviewedOn: part.reviewedOn,
+    category: part.category,
+    description: part.name,
+    mapping: structuredClone(part.mapping),
+    ...(part.dimensionsMm
+      ? { dimensionsMm: structuredClone(part.dimensionsMm) }
+      : {}),
+    ...(part.mountedDepthsMm
+      ? { mountedDepthsMm: structuredClone([...part.mountedDepthsMm]) }
+      : {}),
+    ...(part.terminalMarkings
+      ? { terminalMarkings: [...part.terminalMarkings] }
+      : {}),
+    ...(part.mounting ? { mounting: part.mounting } : {}),
+    ...(part.sourceRevision ? { sourceRevision: part.sourceRevision } : {}),
+  };
   let nativePart = next.manufacturerParts.find(
     (item) =>
       !item.custom &&
       item.manufacturer === part.manufacturer &&
       item.partNumber === part.partNumber &&
       item.sourceUrl === part.sourceUrl &&
-      JSON.stringify(item.ratings) === JSON.stringify(part.ratings),
+      JSON.stringify(item.ratings) === JSON.stringify(part.ratings) &&
+      JSON.stringify(item.catalogSnapshot) === JSON.stringify(catalogSnapshot),
   );
   if (!nativePart) {
     nativePart = {
@@ -215,6 +234,7 @@ export function assignCatalogPart(
       partNumber: part.partNumber,
       sourceUrl: part.sourceUrl,
       ratings: structuredClone(part.ratings),
+      catalogSnapshot,
     };
     next.manufacturerParts.push(nativePart);
   }
