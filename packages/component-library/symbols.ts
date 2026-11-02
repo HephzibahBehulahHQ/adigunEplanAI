@@ -1,31 +1,9 @@
 import { schemas, type Project } from "../electrical-model/project.ts";
 import { createCustomSymbol } from "./custom-symbols.ts";
 
-type Shape = NonNullable<
-  Project["symbolDefinitions"][number]["artwork"]
->[number];
-const line = (x1: number, y1: number, x2: number, y2: number): Shape => ({
-  kind: "line",
-  from: { x: x1, y: y1 },
-  to: { x: x2, y: y2 },
-});
-const circle = (x: number, y: number, r: number): Shape => ({
-  kind: "circle",
-  center: { x, y },
-  radiusMm: r,
-});
-const pin = (
-  id: string,
-  x: number,
-  y: number,
-  kind: Project["terminals"][number]["kind"] = "power",
-  terminalGroup?: string,
-) => ({
-  id,
-  position: { x, y },
-  kind,
-  ...(terminalGroup ? { terminalGroup } : {}),
-});
+import { line, circle, pin } from "./symbol-primitives.ts";
+import { extendedSymbols } from "./extended-symbols.ts";
+
 export const engineeringSymbols = [
   {
     id: "transformer-two-winding",
@@ -1373,6 +1351,7 @@ export const engineeringSymbols = [
       line(-15, 2, 15, 2),
     ],
   },
+  ...extendedSymbols,
 ] as const;
 
 export function searchSymbols(query: string, category = "") {
