@@ -14,7 +14,10 @@ test("catalog warnings distinguish reviewed facts from missing manufacturer info
   for (const part of catalog) {
     assert.ok(catalogMissingData(part).includes("catalogSourceRevision"));
     assert.ok(catalogMissingData(part).includes("catalogTerminalMarkings"));
-    assert.ok(catalogMissingData(part).includes("catalogDimensions"));
+    assert.equal(
+      catalogMissingData(part).includes("catalogDimensions"),
+      part.id !== "phoenix-3044076",
+    );
   }
   assert.match(phoenix.ratings.sectionRangeBasis, /ferrule ranges differ/);
   const completed = {
@@ -29,5 +32,24 @@ test("catalog warnings distinguish reviewed facts from missing manufacturer info
     catalogMissingData({ ...completed, sourceRevision: "  " }).includes(
       "catalogSourceRevision",
     ),
+  );
+});
+
+test("UT 2.5 dimensions preserve body and rail-mounted envelopes separately", () => {
+  const part = catalog.find((p) => p.id === "phoenix-3044076");
+  assert.deepEqual(part.dimensionsMm, {
+    width: 5.2,
+    height: 47.7,
+    depth: 46.9,
+  });
+  assert.deepEqual(part.mountedDepthsMm, [
+    { rail: "NS 35/7.5", depth: 47.5 },
+    { rail: "NS 35/15", depth: 55 },
+  ]);
+  assert.ok(!catalogMissingData(part).includes("catalogMounting"));
+  assert.ok(catalogMissingData(part).includes("catalogSourceRevision"));
+  assert.equal(
+    catalog.find((p) => p.id === "wago-2002-1201").dimensionsMm,
+    undefined,
   );
 });

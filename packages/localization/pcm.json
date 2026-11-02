@@ -334,5 +334,7 @@
   "catalogMounting": "Mounting requirements",
   "catalogSourceRevision": "Manufacturer source revision",
   "catalogRangeBasis": "Conductor range basis",
-  "catalogMappingScope": "Generic symbol mapping na engineering interpretation, no be manufacturer certification. Review date no be manufacturer revision."
+  "catalogMappingScope": "Generic symbol mapping na engineering interpretation, no be manufacturer certification. Review date no be manufacturer revision.",
+  "catalogDimensionOrder": "width × height × body depth",
+  "catalogMountedDepth": "Depth when dem mount am for rail"
 }

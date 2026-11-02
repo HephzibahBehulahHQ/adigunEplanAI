@@ -334,5 +334,7 @@
   "catalogMounting": "Montageanforderungen",
   "catalogSourceRevision": "Revision der Herstellerquelle",
   "catalogRangeBasis": "Grundlage des Leiterbereichs",
-  "catalogMappingScope": "Die generische Symbolzuordnung ist eine technische Interpretation, keine Herstellerzertifizierung. Das Prüfdatum ist keine Herstellerrevision."
+  "catalogMappingScope": "Die generische Symbolzuordnung ist eine technische Interpretation, keine Herstellerzertifizierung. Das Prüfdatum ist keine Herstellerrevision.",
+  "catalogDimensionOrder": "Breite × Höhe × Gehäusetiefe",
+  "catalogMountedDepth": "Tiefe bei Schienenmontage"
 }

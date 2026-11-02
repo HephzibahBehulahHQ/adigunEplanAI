@@ -334,5 +334,7 @@
   "catalogMounting": "Àwọn ohun tí fífi sípò nílò",
   "catalogSourceRevision": "Àtúnyẹ̀wò orísun olupèsè",
   "catalogRangeBasis": "Ìpìlẹ̀ ààlà okun",
-  "catalogMappingScope": "Ìsopọ̀ àmì gbogbogbò jẹ́ ìtumọ̀ ẹ̀rọ, kì í ṣe ìjẹ́rìí olupèsè. Ọjọ́ àyẹ̀wò kì í ṣe àtúnyẹ̀wò olupèsè."
+  "catalogMappingScope": "Ìsopọ̀ àmì gbogbogbò jẹ́ ìtumọ̀ ẹ̀rọ, kì í ṣe ìjẹ́rìí olupèsè. Ọjọ́ àyẹ̀wò kì í ṣe àtúnyẹ̀wò olupèsè.",
+  "catalogDimensionOrder": "ìbú × gíga × ìjìnlẹ̀ ara",
+  "catalogMountedDepth": "Ìjìnlẹ̀ nígbà tí a bá fi sí orí rail"
 }

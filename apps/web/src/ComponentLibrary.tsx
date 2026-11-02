@@ -330,6 +330,24 @@ export function ComponentLibrary({
             </ul>
           </aside>
           <dl>
+            <dt>{t("catalogDimensions")}</dt>
+            <dd>
+              {part.dimensionsMm
+                ? `${part.dimensionsMm.width} × ${part.dimensionsMm.height} × ${part.dimensionsMm.depth} mm (${t("catalogDimensionOrder")})`
+                : t("notDeclared")}
+            </dd>
+            <dt>{t("catalogMounting")}</dt>
+            <dd>{part.mounting ?? t("notDeclared")}</dd>
+            {part.mountedDepthsMm && (
+              <>
+                <dt>{t("catalogMountedDepth")}</dt>
+                <dd>
+                  {part.mountedDepthsMm
+                    .map(({ rail, depth }) => `${rail}: ${depth} mm`)
+                    .join("; ")}
+                </dd>
+              </>
+            )}
             {part.ratings.contactArrangement !== undefined && (
               <>
                 <dt>{t("contactArrangement")}</dt>

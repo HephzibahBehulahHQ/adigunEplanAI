@@ -127,6 +127,11 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
     "Nominal voltage",
   );
   await expect(phoenix).toContainText("ferrule ranges differ");
+  await expect(phoenix).toContainText("5.2 × 47.7 × 46.9 mm");
+  await expect(phoenix).toContainText("NS 35/7.5: 47.5 mm; NS 35/15: 55 mm");
+  await expect(phoenix.getByRole("complementary")).not.toContainText(
+    "Mechanical dimensions",
+  );
   const wago = page.getByRole("article", {
     name: "WAGO 2002-1201",
     exact: true,

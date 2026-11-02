@@ -334,5 +334,7 @@
   "catalogMounting": "Mounting requirements",
   "catalogSourceRevision": "Manufacturer source revision",
   "catalogRangeBasis": "Conductor range basis",
-  "catalogMappingScope": "Generic symbol mapping is an engineering interpretation, not manufacturer certification. Review date is not a manufacturer revision."
+  "catalogMappingScope": "Generic symbol mapping is an engineering interpretation, not manufacturer certification. Review date is not a manufacturer revision.",
+  "catalogDimensionOrder": "width × height × body depth",
+  "catalogMountedDepth": "Depth when mounted on rail"
 }

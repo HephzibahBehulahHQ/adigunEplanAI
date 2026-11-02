@@ -9,6 +9,7 @@ export type CatalogPart = {
   sourceUrl: string;
   reviewedOn: string;
   dimensionsMm?: { width: number; height: number; depth: number };
+  mountedDepthsMm?: readonly { rail: string; depth: number }[];
   terminalMarkings?: readonly string[];
   mounting?: string;
   sourceRevision?: string;
@@ -51,7 +52,13 @@ export const catalog: readonly CatalogPart[] = [
     partNumber: "3044076",
     sourceUrl:
       "https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-ut-25-3044076",
-    reviewedOn: "2026-11-02",
+    reviewedOn: "2026-11-03",
+    dimensionsMm: { width: 5.2, height: 47.7, depth: 46.9 },
+    mounting: "NS 35/7.5; NS 35/15",
+    mountedDepthsMm: [
+      { rail: "NS 35/7.5", depth: 47.5 },
+      { rail: "NS 35/15", depth: 55 },
+    ],
     ratings: {
       nominalVoltageV: 1000,
       nominalCurrentA: 24,
