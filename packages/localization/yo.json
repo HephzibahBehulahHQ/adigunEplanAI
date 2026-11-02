@@ -237,5 +237,11 @@
   "analog-input-two": "Ẹnu ìwọlé analog ìyàtọ̀ oníìkànnì méjì",
   "analog-output-two": "Ẹnu ìjáde analog ìyàtọ̀ oníìkànnì méjì",
   "busbar-four-taps": "Ọ̀pá iná pẹ̀lú ebute mẹ́rin ní agbára kan",
-  "category-connections": "Àwọn ìsopọ̀"
+  "category-connections": "Àwọn ìsopọ̀",
+  "connector-two-pole": "Asopọ̀ ìkọjá onípó méjì",
+  "connector-l-n-pe": "Asopọ̀ ìkọjá L/N/PE",
+  "ac-dc-supply": "Ìsopọ̀ ìpèsè AC/DC",
+  "isolated-dc-dc": "Ìsopọ̀ olùyípadà DC/DC aláìsopọ̀",
+  "dc-ac-inverter": "Ìsopọ̀ inverter DC/AC alápá kan",
+  "ups-external-battery": "Ìsopọ̀ UPS pẹ̀lú bátírì ìta"
 }

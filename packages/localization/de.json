@@ -237,5 +237,11 @@
   "analog-input-two": "Zweikanal-Differenz-Analogeingangsschnittstelle",
   "analog-output-two": "Zweikanal-Differenz-Analogausgangsschnittstelle",
   "busbar-four-taps": "Sammelschiene mit vier potentialgleichen Abgriffen",
-  "category-connections": "Verbindungen"
+  "category-connections": "Verbindungen",
+  "connector-two-pole": "Zweipoliger Durchgangsverbinder",
+  "connector-l-n-pe": "L/N/PE-Durchgangsverbinder",
+  "ac-dc-supply": "AC/DC-Netzgeräteschnittstelle",
+  "isolated-dc-dc": "Isolierte DC/DC-Wandlerschnittstelle",
+  "dc-ac-inverter": "Einphasige DC/AC-Wechselrichterschnittstelle",
+  "ups-external-battery": "USV-Schnittstelle mit externer Batterie"
 }

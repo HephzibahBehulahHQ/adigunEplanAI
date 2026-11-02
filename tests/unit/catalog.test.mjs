@@ -67,6 +67,22 @@ test("every engineering symbol installs and places its declared electrical nodes
   assert.equal(searchSymbols("pushbutton", "switching")[0].pins.length, 2);
   assert.equal(searchSymbols("roller", "switching")[0].pins.length, 2);
   assert.equal(searchSymbols("selector", "switching")[0].pins.length, 3);
+  assert.equal(
+    new Set(
+      searchSymbols("two-pole pass-through", "connections")[0].pins.map(
+        (pin) => pin.terminalGroup,
+      ),
+    ).size,
+    2,
+  );
+  assert.equal(
+    new Set(
+      searchSymbols("L/N/PE pass-through", "connections")[0].pins.map(
+        (pin) => pin.terminalGroup,
+      ),
+    ).size,
+    3,
+  );
   assert.equal(searchSymbols("stepper", "motors")[0].pins.length, 4);
   assert.equal(
     searchSymbols("servo", "motors")[0].pins.filter(
@@ -81,6 +97,10 @@ test("every engineering symbol installs and places its declared electrical nodes
     2,
   );
   assert.equal(searchSymbols("overload", "protection")[0].pins.length, 8);
+  assert.equal(searchSymbols("AC/DC supply", "power")[0].pins.length, 5);
+  assert.equal(searchSymbols("DC/DC converter", "power")[0].pins.length, 4);
+  assert.equal(searchSymbols("DC/AC inverter", "power")[0].pins.length, 5);
+  assert.equal(searchSymbols("UPS interface", "power")[0].pins.length, 7);
   for (const query of [
     "digital input",
     "digital output",

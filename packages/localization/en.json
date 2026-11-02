@@ -237,5 +237,11 @@
   "analog-input-two": "Two-channel differential analog input interface",
   "analog-output-two": "Two-channel differential analog output interface",
   "busbar-four-taps": "Common-potential busbar with four taps",
-  "category-connections": "Connections"
+  "category-connections": "Connections",
+  "connector-two-pole": "Two-pole pass-through connector",
+  "connector-l-n-pe": "L/N/PE pass-through connector",
+  "ac-dc-supply": "AC/DC supply interface",
+  "isolated-dc-dc": "Isolated DC/DC converter interface",
+  "dc-ac-inverter": "Single-phase DC/AC inverter interface",
+  "ups-external-battery": "UPS interface with external battery"
 }

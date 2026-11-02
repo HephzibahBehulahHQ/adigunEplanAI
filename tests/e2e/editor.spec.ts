@@ -641,6 +641,78 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   expect((await project(page)).nets).toEqual(data.nets);
 });
 
+test("connector poles retain separate electrical nodes while each pole passes through", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page
+    .getByLabel("Search symbols", { exact: true })
+    .fill("two-pole pass-through");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-connector-two-pole");
+  await clickWorld(page, 100, 100);
+  let data = await project(page);
+  expect(data.pins).toHaveLength(4);
+  expect(data.terminals).toHaveLength(2);
+  expect(data.nets).toHaveLength(2);
+  const groups = data.nets.map(
+    (net: { pinIds: string[] }) => net.pinIds.length,
+  );
+  expect(groups).toEqual([2, 2]);
+  await place(page, "terminal", 40, 60);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "U1:pole1/in1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  data = await project(page);
+  expect(data.nets).toHaveLength(2);
+  await page.reload();
+  expect((await project(page)).nets).toEqual(data.nets);
+});
+
+for (const [id, query, endpoint, count] of [
+  ["ac-dc-supply", "AC/DC supply", "positive", 5],
+  ["isolated-dc-dc", "isolated DC/DC", "OUT_positive", 4],
+  ["dc-ac-inverter", "DC/AC inverter", "L_out", 5],
+  ["ups-external-battery", "UPS interface", "L_out", 7],
+] as const)
+  test(`power interface ${id} retains independent ports and native wiring`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    let data = await project(page);
+    expect(data.terminals).toHaveLength(count);
+    expect(data.nets).toHaveLength(count);
+    await place(page, "terminal", 160, 80);
+    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("button", { name: `U1:${endpoint}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "X1:1", exact: true }).click();
+    data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(count);
+    await page.reload();
+    expect((await project(page)).wires).toEqual(data.wires);
+  });
+
 for (const [id, query, channel] of [
   ["digital-input-four", "digital input", "IN0"],
   ["digital-output-four", "digital output", "OUT0"],
