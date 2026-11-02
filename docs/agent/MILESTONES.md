@@ -1,10 +1,11 @@
 # Milestones
 
-- Milestone 0: repository and feasibility audit complete.
-- Milestone 1: application foundation published; hosted CI passed.
-- Milestone 2: corporate workspace interface published; corrected hosted CI passed.
-- Milestone 3: native model/persistence/validation/migration/undo-redo complete locally; final checks passed, publication pending.
-- Milestone 4: next, drawing canvas, symbols, selection, zoom/snapping, layers, wiring and property editing.
-- Milestones 5–20: pending; authoritative roadmap is MASTER_SPECIFICATION.md Part 22.
+- 0: repository and feasibility audit complete.
+- 1: application foundation published; hosted CI passed.
+- 2: corporate interface published; hosted CI passed.
+- 3: versioned native projects/persistence/validation/migration/undo-redo published; hosted CI passed.
+- 4: 2D schematic tools complete locally; final 46-unit/21-browser gate passed, publication pending.
+- 5: next, electrical connectivity and netlists.
+- 6–20: pending; MASTER_SPECIFICATION.md Part 22 is authoritative.
 
-Owner authorized continuous milestone execution. Project-driven engineering panels expand with their domain milestones; current empty states are not the final product target.
+The owner authorizes continuous approved milestone execution. The full targeted engineering platform remains the goal; milestone completion is not final product acceptance.

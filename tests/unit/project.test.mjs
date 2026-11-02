@@ -18,10 +18,10 @@ import { nativeProject } from "../fixtures/native-project.mjs";
 
 test("native document retains engineering meaning separately from wire geometry", () => {
   const p = nativeProject();
-  assert.equal(collections.length, 28);
+  assert.equal(collections.length, 31);
   assert.deepEqual(parseProject(serializeProject(p)).project, p);
   const moved = structuredClone(p);
-  moved.wirePaths[0].points[0].x = 100;
+  moved.wirePaths[0].points.splice(1, 0, { x: 100, y: 20 });
   assert.deepEqual(validateProject(moved).wires, p.wires);
 });
 for (const [name, change] of [
@@ -84,7 +84,7 @@ test("version zero migration fills only missing collections and rejects future v
   };
   const migrated = parseProject(JSON.stringify(legacy));
   assert.equal(migrated.migratedFrom, 0);
-  assert.equal(migrated.project.schemaVersion, 1);
+  assert.equal(migrated.project.schemaVersion, 2);
   assert.deepEqual(migrated.project.documents, []);
   assert.throws(
     () => parseProject(JSON.stringify({ ...legacy, schemaVersion: 99 })),

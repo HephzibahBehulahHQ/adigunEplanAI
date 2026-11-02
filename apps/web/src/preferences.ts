@@ -80,3 +80,15 @@ export function restorePreferences(raw: string | null): Preferences {
   }
   return result;
 }
+
+export function drawingInk(color: string): string {
+  const rgb = [1, 3, 5]
+    .map((index) => parseInt(color.slice(index, index + 2), 16) / 255)
+    .map((value) =>
+      value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4),
+    );
+  const luminance = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+  return (luminance + 0.05) / 0.05 >= 1.05 / (luminance + 0.05)
+    ? "#000000"
+    : "#ffffff";
+}

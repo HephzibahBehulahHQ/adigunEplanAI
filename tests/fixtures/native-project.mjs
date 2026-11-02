@@ -11,6 +11,13 @@ export function nativeProject() {
     kind: "schematic",
     outputLanguage: "de",
   });
+  p.layers.push({
+    id: "layer",
+    name: "Electrical",
+    pageId: "page",
+    visible: true,
+    locked: false,
+  });
   p.pages.push({
     id: "page",
     name: "Sheet 1",
@@ -18,11 +25,16 @@ export function nativeProject() {
     widthMm: 420,
     heightMm: 297,
     order: 0,
+    gridMm: 5,
+    snapping: true,
   });
   p.symbolDefinitions.push({
     id: "def",
     name: "Terminal",
     category: "terminal",
+    glyph: "terminal",
+    widthMm: 8,
+    heightMm: 8,
     pins: [{ id: "1", position: { x: 0, y: 0 } }],
   });
   for (const [suffix, x] of [
@@ -45,6 +57,8 @@ export function nativeProject() {
       id: `symbol-${suffix}`,
       name: "Terminal",
       definitionId: "def",
+      layerId: "layer",
+      mirrored: false,
       deviceId: `device-${suffix}`,
       pageId: "page",
       position: { x, y: 20 },
@@ -67,6 +81,7 @@ export function nativeProject() {
   p.wirePaths.push({
     id: "path",
     wireId: "wire",
+    layerId: "layer",
     pageId: "page",
     points: [
       { x: 10, y: 20 },

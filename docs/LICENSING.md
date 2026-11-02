@@ -9,3 +9,5 @@ Preserve upstream notices when packaging/distributing dependencies. The producti
 Milestone 2 adds @playwright/test 1.64.1 (Apache-2.0), used only for testing. The metadata gate now covers 147 lockfile entries. Human translation review and final distribution notice review remain production gates.
 
 Milestone 3 adds Zod 4.6.7 (MIT) for actual runtime schema validation. Its installed license is included in the generated runtime notices. The lockfile metadata gate covers 148 entries.
+
+Milestone 4 generic schematic glyphs and geometry/router code are original product source. They are IEC-style representations, not copied official standards artwork or manufacturer CAD assets. No new third-party runtime dependency is added.

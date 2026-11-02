@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import {
   dictionaries,
   type MessageKey,
@@ -6,6 +6,7 @@ import {
 } from "../../../packages/localization";
 import {
   defaults,
+  drawingInk,
   panelIds,
   restorePreferences,
   storageKey,
@@ -17,6 +18,7 @@ import {
 import { useNativeProjects } from "./useNativeProjects";
 import {
   ProjectTools,
+  NativeDataPanel,
   ProjectNavigator,
   ProjectProperties,
   NativeDrawing,
@@ -33,7 +35,7 @@ export function App() {
       return defaults();
     }
   });
-  const [tab, setTab] = useState<"view" | "settings">("view");
+  const [tab, setTab] = useState<"home" | "view" | "settings">("home");
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
@@ -89,7 +91,15 @@ export function App() {
             {id === "project" ? (
               <ProjectNavigator native={native} t={t} />
             ) : id === "properties" ? (
-              <ProjectProperties native={native} t={t} />
+              <>
+                <div id="native-object-properties" />
+                <ProjectProperties native={native} t={t} />
+              </>
+            ) : id === "bom" ||
+              id === "panel3d" ||
+              id === "calculations" ||
+              id === "reports" ? (
+              <NativeDataPanel native={native} t={t} kind={id} />
             ) : (
               <p className="empty-hint">
                 {t(
@@ -181,6 +191,9 @@ export function App() {
         </span>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
+        <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
+          {t("home")}
+        </button>
         <button aria-pressed={tab === "view"} onClick={() => setTab("view")}>
           {t("view")}
         </button>
@@ -192,14 +205,15 @@ export function App() {
         </button>
         <button onClick={() => help.current?.showModal()}>{t("help")}</button>
       </nav>
-      <ProjectTools native={native} t={t} />
       {native.error && (
         <p className="storage-error" role="alert">
           {t(native.error)}
         </p>
       )}
       <div className="ribbon" aria-label={t(tab)}>
-        {tab === "view" ? (
+        {tab === "home" ? (
+          <ProjectTools native={native} t={t} />
+        ) : tab === "view" ? (
           <>
             <div className="panel-toggles">
               {panelIds.map((id) => (
@@ -302,20 +316,28 @@ export function App() {
         >
           <header className="workspace-heading">
             <span>{t("workspace")}</span>
-            <span>{t("noProject")}</span>
+            <span>{native.project?.name ?? t("noProject")}</span>
           </header>
           <div className="drawing-viewport">
             <div
               className="drawing-sheet"
               data-background={prefs.background}
-              style={{
-                backgroundColor:
-                  prefs.background === "dark"
-                    ? "#101827"
-                    : prefs.background === "custom"
-                      ? prefs.color
-                      : "#ffffff",
-              }}
+              style={
+                {
+                  "--drawing-ink":
+                    prefs.background === "custom"
+                      ? drawingInk(prefs.color)
+                      : prefs.background === "dark"
+                        ? "#e2e8f0"
+                        : "#17305b",
+                  backgroundColor:
+                    prefs.background === "dark"
+                      ? "#101827"
+                      : prefs.background === "custom"
+                        ? prefs.color
+                        : "#ffffff",
+                } as CSSProperties
+              }
             >
               {native.project ? (
                 <NativeDrawing native={native} t={t} />

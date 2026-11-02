@@ -1,0 +1,196 @@
+.schematic-editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  background: var(--panel);
+  color: var(--text);
+  padding: 0.35rem;
+  font-size: 0.7rem;
+}
+.editor-toolbar label {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+.editor-toolbar input:not([type="checkbox"]):not([type="radio"]) {
+  width: 75px;
+  max-width: 100%;
+  padding: 0.3rem;
+}
+.editor-toolbar button,
+.editor-toolbar select {
+  font-size: 0.7rem;
+  padding: 0.35rem;
+}
+.editor-toolbar button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.editor-options {
+  background: var(--panel);
+  color: var(--text);
+  font-size: 0.75rem;
+  padding: 0.4rem;
+}
+.editor-options summary {
+  cursor: pointer;
+}
+.editor-options .editor-toolbar {
+  align-items: flex-start;
+}
+.layer-controls {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  border: 1px solid var(--line);
+  padding: 0.3rem;
+}
+.layer-controls label {
+  overflow-wrap: anywhere;
+  max-width: 100%;
+}
+.editor-hint {
+  margin: 0;
+  background: var(--panel);
+  color: var(--muted);
+  padding: 0.35rem;
+  font-size: 0.65rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.engineering-canvas {
+  touch-action: none;
+  min-height: 300px;
+  user-select: none;
+  outline-offset: -3px;
+}
+.engineering-canvas g[data-instance] {
+  cursor: move;
+}
+.engineering-canvas [data-pin] {
+  cursor: crosshair;
+}
+.engineering-canvas [data-pin]:focus {
+  outline: none;
+}
+.engineering-canvas [data-pin]:focus circle:last-child {
+  stroke: #e67e00;
+  stroke-width: 1;
+}
+.drawing-sheet:has(.native-drawing) {
+  place-items: stretch;
+}
+.drawing-sheet:has(.empty-workspace) {
+  place-items: center;
+}
+.drawing-sheet .native-sheet {
+  color: var(--drawing-ink, #17305b);
+}
+.navigator-pages {
+  display: grid;
+  gap: 3px;
+  padding: 0.3rem;
+}
+.navigator-pages button {
+  text-align: left;
+}
+.native-bom {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+}
+.native-bom th,
+.native-bom td {
+  padding: 0.4rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.native-bom th {
+  color: var(--muted);
+}
+.ribbon .native-tools {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+@media (max-width: 680px) {
+  .editor-hint {
+    white-space: normal;
+  }
+  .engineering-canvas {
+    min-height: 320px;
+  }
+}
+
+.panel-body .editor-toolbar {
+  display: grid;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+.panel-body .editor-toolbar label {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .engineering-layout {
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .engineering-layout:has(> .dock-bottom) {
+    grid-template-rows: minmax(0, 1fr) 180px;
+  }
+  .workspace,
+  .drawing-viewport,
+  .drawing-sheet,
+  .native-drawing,
+  .schematic-editor {
+    min-height: 0;
+  }
+  .drawing-viewport {
+    overflow: hidden;
+  }
+  .schematic-editor .engineering-canvas {
+    height: 0;
+    min-height: 120px;
+    flex: 1;
+  }
+  .drawing-tabs,
+  .editor-toolbar,
+  .editor-hint,
+  .editor-options {
+    flex-shrink: 0;
+  }
+  .dock-bottom .panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .dock-left .panel,
+  .dock-right .panel {
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-body {
+    min-height: 0;
+    overflow: auto;
+  }
+}

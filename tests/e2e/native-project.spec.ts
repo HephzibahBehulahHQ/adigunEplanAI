@@ -15,13 +15,15 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
   await page.goto("/");
   await create(page, "Native project");
   await expect(
-    page.getByRole("img", { name: "Sheet 1", exact: true }),
+    page.getByRole("application", { name: "Sheet 1", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "New drawing page", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "Sheet 2", exact: true }),
+    page
+      .locator(".drawing-tabs")
+      .getByRole("button", { name: "Sheet 2", exact: true }),
   ).toBeVisible();
   const properties = page.getByRole("region", {
     name: "Properties",
@@ -62,7 +64,7 @@ test("native export round trips, invalid import preserves work and replacement r
   const download = await downloadPromise;
   const text = await readFile((await download.path())!, "utf8");
   const exported = JSON.parse(text);
-  expect(exported.schemaVersion).toBe(1);
+  expect(exported.schemaVersion).toBe(2);
   await page.locator("input[type=file]").setInputFiles({
     name: "invalid.json",
     mimeType: "application/json",
