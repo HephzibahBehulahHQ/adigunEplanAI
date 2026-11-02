@@ -369,5 +369,9 @@
   "roomDrawingHelp": "Raumecken der Reihe nach anklicken. Fertigstellen speichert den Raum; Escape verwirft die Zeichnung ohne Projektänderung.",
   "removeLastVertex": "Letzten Punkt entfernen",
   "finishRoom": "Raum fertigstellen",
-  "cancelRoomDrawing": "Zeichnung abbrechen"
+  "cancelRoomDrawing": "Zeichnung abbrechen",
+  "showRoomDimensions": "Raumkanten bemaßen",
+  "roomArea": "Raumgrenzfläche",
+  "roomPerimeter": "Raumgrenzumfang",
+  "roomMeasurementUnavailable": "Messwerte nicht verfügbar: Raumgrenze korrigieren."
 }

@@ -56,6 +56,15 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     .locator(".building-editor summary")
     .filter({ hasText: /^Office$/ })
     .click();
+  await expect(page.locator(".building-editor dl")).toContainText("12 m²");
+  await expect(page.locator(".building-editor dl")).toContainText("14 m");
+  await page
+    .getByRole("checkbox", { name: "Show room edge dimensions", exact: true })
+    .check();
+  await expect(page.locator("[data-room-dimension]")).toHaveCount(4);
+  await expect(page.locator("[data-room-dimension]").first()).toHaveText(
+    "4000 mm",
+  );
   const edit = page.getByRole("form", {
     name: "Edit room: Office",
     exact: true,
@@ -68,6 +77,9 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     "points",
     "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
   );
+  await expect(page.locator(".building-editor dl")).toContainText("12 m²");
+  await expect(page.locator(".building-editor dl")).toContainText("16 m");
+  await expect(page.locator("[data-room-dimension]")).toHaveCount(6);
   await edit
     .getByLabel("Boundary vertices (x,y mm per line)", { exact: true })
     .fill("0,0\n4000,4000\n0,4000\n4000,0");

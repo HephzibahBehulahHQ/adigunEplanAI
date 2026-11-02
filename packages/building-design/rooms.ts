@@ -105,3 +105,23 @@ export function addPolygonRoom(
   next.rooms.push({ id: crypto.randomUUID(), floorId, name, boundary: points });
   return validateProject(next);
 }
+
+export function measureRoom(boundary: readonly Point[]) {
+  const points = validateRoomBoundary(boundary);
+  const origin = points[0];
+  const edges = points.map((from, i) => {
+    const to = points[(i + 1) % points.length];
+    return { from, to, lengthMm: Math.hypot(to.x - from.x, to.y - from.y) };
+  });
+  return {
+    areaMm2:
+      Math.abs(
+        edges.reduce(
+          (area, edge) => area + cross(origin, edge.from, edge.to),
+          0,
+        ),
+      ) / 2,
+    perimeterMm: edges.reduce((sum, edge) => sum + edge.lengthMm, 0),
+    edges,
+  };
+}

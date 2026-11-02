@@ -369,5 +369,9 @@
   "roomDrawingHelp": "Tẹ àwọn igun yàrá ní ìtẹ̀lé. Pari fi yàrá pamọ́; Escape fagilé láìyí iṣẹ́ padà.",
   "removeLastVertex": "Yọ igun ìkẹyìn",
   "finishRoom": "Pari yàrá",
-  "cancelRoomDrawing": "Fagilé àwòrán"
+  "cancelRoomDrawing": "Fagilé àwòrán",
+  "showRoomDimensions": "Fi ìwọ̀n etí yàrá hàn",
+  "roomArea": "Agbègbè ààlà yàrá",
+  "roomPerimeter": "Gígùn àyíká ààlà yàrá",
+  "roomMeasurementUnavailable": "Ìwọ̀n kò sí: tún ààlà yàrá ṣe."
 }

@@ -369,5 +369,9 @@
   "roomDrawingHelp": "Click room corners in order. Finish saves the room; Escape cancels without changing the project.",
   "removeLastVertex": "Remove last vertex",
   "finishRoom": "Finish room",
-  "cancelRoomDrawing": "Cancel drawing"
+  "cancelRoomDrawing": "Cancel drawing",
+  "showRoomDimensions": "Show room edge dimensions",
+  "roomArea": "Room boundary area",
+  "roomPerimeter": "Room boundary perimeter",
+  "roomMeasurementUnavailable": "Measurements unavailable: repair the room boundary."
 }

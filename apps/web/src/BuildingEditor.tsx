@@ -1,5 +1,6 @@
 import {
   parseRoomBoundary,
+  measureRoom,
   addPolygonRoom,
   updateRoom,
 } from "../../../packages/building-design/rooms.ts";
@@ -7,7 +8,7 @@ import {
   snap,
   type Point,
 } from "../../../packages/engineering-core/geometry.ts";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
 import {
@@ -31,9 +32,23 @@ export function BuildingEditor({
     points: Point[];
     viewBox: string;
   } | null>(null);
+  const [showDimensions, setShowDimensions] = useState(false);
   const [buildingId, setBuildingId] = useState("");
   const [floorId, setFloorId] = useState("");
   const p = native.project;
+  const measurements = useMemo(
+    () =>
+      new Map(
+        (p?.rooms ?? []).map((room) => {
+          try {
+            return [room.id, measureRoom(room.boundary)] as const;
+          } catch {
+            return [room.id, null] as const;
+          }
+        }),
+      ),
+    [p?.rooms],
+  );
   if (!p) return null;
   const building =
     p.buildings.find((b) => b.id === buildingId) ?? p.buildings[0];
@@ -304,6 +319,14 @@ export function BuildingEditor({
               </button>
             </div>
           )}
+          <label>
+            <input
+              type="checkbox"
+              checked={showDimensions}
+              onChange={(e) => setShowDimensions(e.target.checked)}
+            />
+            {t("showRoomDimensions")}
+          </label>
           <svg
             className="building-plan"
             role="img"
@@ -403,6 +426,39 @@ export function BuildingEditor({
                   strokeWidth={2}
                   vectorEffect="non-scaling-stroke"
                 />
+                {showDimensions &&
+                  measurements.get(room.id)?.edges.map((edge, index) => {
+                    const x = (edge.from.x + edge.to.x) / 2,
+                      y = (edge.from.y + edge.to.y) / 2;
+                    const rawAngle =
+                      (Math.atan2(
+                        edge.to.y - edge.from.y,
+                        edge.to.x - edge.from.x,
+                      ) *
+                        180) /
+                      Math.PI;
+                    const angle =
+                      rawAngle > 90
+                        ? rawAngle - 180
+                        : rawAngle < -90
+                          ? rawAngle + 180
+                          : rawAngle;
+                    return (
+                      <text
+                        key={index}
+                        data-room-dimension
+                        x={x}
+                        y={y}
+                        dy={-margin * 0.15}
+                        textAnchor="middle"
+                        transform={`rotate(${angle} ${x} ${y})`}
+                        fontSize={margin * 0.4}
+                        fill="currentColor"
+                      >
+                        {Number(edge.lengthMm.toPrecision(6))} mm
+                      </text>
+                    );
+                  })}
                 <text
                   x={room.boundary[0].x + margin / 3}
                   y={room.boundary[0].y + margin}
@@ -419,6 +475,30 @@ export function BuildingEditor({
               <li key={room.id}>
                 <details>
                   <summary>{room.name}</summary>
+                  {measurements.get(room.id) ? (
+                    <dl>
+                      <dt>{t("roomArea")}</dt>
+                      <dd>
+                        {Number(
+                          (
+                            measurements.get(room.id)!.areaMm2 / 1000000
+                          ).toPrecision(6),
+                        )}{" "}
+                        m²
+                      </dd>
+                      <dt>{t("roomPerimeter")}</dt>
+                      <dd>
+                        {Number(
+                          (
+                            measurements.get(room.id)!.perimeterMm / 1000
+                          ).toPrecision(6),
+                        )}{" "}
+                        m
+                      </dd>
+                    </dl>
+                  ) : (
+                    <p>{t("roomMeasurementUnavailable")}</p>
+                  )}
                   <form
                     key={JSON.stringify(room)}
                     aria-label={`${t("editRoom")}: ${room.name}`}
