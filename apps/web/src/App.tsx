@@ -81,18 +81,18 @@ export function App() {
             <p className="empty-hint">
               {t(id === "diagnostics" ? "noDiagnostics" : "emptyPanel")}
             </p>
-            <details
-              open={layoutOpen[id] ?? false}
-              onToggle={(event) => {
-                const open = event.currentTarget.open;
-                setLayoutOpen((previous) =>
-                  previous[id] === open
-                    ? previous
-                    : { ...previous, [id]: open },
-                );
-              }}
-            >
-              <summary>{t("layout")}</summary>
+            <details open={layoutOpen[id] ?? false}>
+              <summary
+                onClick={(event) => {
+                  event.preventDefault();
+                  setLayoutOpen((previous) => ({
+                    ...previous,
+                    [id]: !previous[id],
+                  }));
+                }}
+              >
+                {t("layout")}
+              </summary>
               <label>
                 {t("dock")}
                 <select
