@@ -427,3 +427,68 @@ dialog form {
   flex-grow: 0;
   flex-shrink: 0;
 }
+
+.native-tools {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  font-size: 0.8rem;
+}
+.native-tools input,
+.panel-body input:not([type="range"]) {
+  max-width: 100%;
+  padding: 0.5rem;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.dialog-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.native-tools dialog label {
+  display: grid;
+  gap: 0.5rem;
+}
+.native-drawing {
+  align-self: stretch;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  z-index: 1;
+}
+.drawing-tabs {
+  background: var(--panel);
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  padding: 0.4rem;
+  position: relative;
+  z-index: 2;
+}
+.drawing-tabs button {
+  font-size: 0.75rem;
+}
+.drawing-tabs button[aria-pressed="true"] {
+  border-color: var(--cyan);
+}
+.native-sheet {
+  width: 100%;
+  flex: 1;
+  min-height: 300px;
+  color: #17305b;
+}
+.drawing-sheet[data-background="dark"] .native-sheet {
+  color: #e2e8f0;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

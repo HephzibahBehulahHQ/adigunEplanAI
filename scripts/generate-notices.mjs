@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-const names = ["react", "react-dom", "scheduler"];
+const names = ["react", "react-dom", "scheduler", "zod"];
 const text =
   "AdigunEplanAI third-party runtime notices\n\n" +
   names
@@ -14,9 +14,7 @@ const path = "apps/web/public/THIRD_PARTY_NOTICES.txt";
 if (process.argv.includes("--check")) {
   if (readFileSync(path, "utf8").replace(/\r\n/g, "\n") !== text)
     throw new Error("Runtime notices are stale; run npm run notices");
-  console.log(
-    "Runtime notices match installed React, React DOM and scheduler licenses",
-  );
+  console.log("Runtime notices match installed runtime package licenses");
 } else {
   mkdirSync("apps/web/public", { recursive: true });
   writeFileSync(path, text);

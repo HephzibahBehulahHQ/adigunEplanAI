@@ -8,7 +8,7 @@ All requirements within each referenced part remain authoritative. Audit complet
 | P02 | Part 2: MANDATORY GITHUB REPOSITORIES | Audit documented | MASTER_SPECIFICATION.md |
 | P03 | Part 3: CORPORATE IDENTITY | Interface implemented/tested; human translation review pending | MASTER_SPECIFICATION.md |
 | P04 | Part 4: APPLICATION EXPERIENCE AND SCREENSHOT RECONSTRUCTION | Shell/panel controls tested; domain views pending | MASTER_SPECIFICATION.md |
-| P05 | Part 5: ELECTRICAL SCHEMATIC ENGINE | Pending implementation / validation | MASTER_SPECIFICATION.md |
+| P05 | Part 5: ELECTRICAL SCHEMATIC ENGINE | Native entity schemas/integrity tested; schematic tools and library pending | MASTER_SPECIFICATION.md |
 | P06 | Part 6: WIRING, NETLISTS AND DEVICE CONNECTIONS | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P07 | Part 7: BUILDING ELECTRICAL AND ARCHITECTURAL DESIGN | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P08 | Part 8: ENGINEERING CALCULATION ENGINE | Pending implementation / validation | MASTER_SPECIFICATION.md |
@@ -20,7 +20,7 @@ All requirements within each referenced part remain authoritative. Audit complet
 | P14 | Part 14: 500 READY-MADE ELECTRICAL AND ARCHITECTURAL PROJECTS | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P15 | Part 15: PROJECT TEMPLATES AND WIZARDS | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P16 | Part 16: DOCUMENTATION AND EXPORTS | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P17 | Part 17: ACCOUNTS, DATABASE AND PROJECT SAVING | Pending implementation / validation | MASTER_SPECIFICATION.md |
+| P17 | Part 17: ACCOUNTS, DATABASE AND PROJECT SAVING | Local native persistence/recovery tested; accounts/cloud pending | MASTER_SPECIFICATION.md |
 | P18 | Part 18: TECHNOLOGY ARCHITECTURE | Audit documented | MASTER_SPECIFICATION.md |
 | P19 | Part 19: REPOSITORY STRUCTURE | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P20 | Part 20: PERFORMANCE AND USER EXPERIENCE | Pending implementation / validation | MASTER_SPECIFICATION.md |
