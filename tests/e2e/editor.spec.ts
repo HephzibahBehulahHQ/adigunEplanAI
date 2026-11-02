@@ -476,6 +476,159 @@ test("desktop engineering workspace stays within the viewport", async ({
   ).toBe(true);
 });
 
+test("component catalog searches and maps a sourced part to a real terminal", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("missing-part");
+  await expect(library.getByRole("status")).toHaveText("Results: 0");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("phoenix 3004362");
+  await library
+    .getByLabel("Category", { exact: true })
+    .selectOption("connections");
+  await library
+    .getByLabel("Manufacturer", { exact: true })
+    .selectOption("Phoenix Contact");
+  await expect(library.getByRole("status")).toHaveText("Results: 1");
+  await expect(
+    library.getByRole("link", { name: "Manufacturer source", exact: true }),
+  ).toHaveAttribute("href", /phoenixcontact\.com/);
+  const data = await project(page);
+  await library
+    .getByLabel("Compatible device", { exact: true })
+    .selectOption(data.devices[0].id);
+  await library
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  let assigned = await project(page);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("3004362");
+  expect(assigned.terminals[0].capacity).toBe(2);
+  const bom = page.getByRole("region", {
+    name: "Bill of materials",
+    exact: true,
+  });
+  await expect(bom).toContainText("3004362");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).devices[0].partId).toBeUndefined();
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  assigned = await project(page);
+  expect(assigned.devices[0].partId).toBe(assigned.manufacturerParts[0].id);
+  await expect(bom).toContainText("3004362");
+});
+
+test("engineering symbol search imports distinct transformer pins for native placement", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
+  await page
+    .getByLabel("Symbol category", { exact: true })
+    .selectOption("power");
+  await page
+    .getByRole("button", {
+      name: "Import symbol: Two-winding transformer",
+      exact: true,
+    })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-transformer-two-winding");
+  await clickWorld(page, 100, 100);
+  for (const pin of ["P1", "P2", "S1", "S2"])
+    await expect(
+      page.getByRole("button", { name: `U1:${pin}`, exact: true }),
+    ).toBeVisible();
+  const data = await project(page);
+  expect(data.terminals).toHaveLength(4);
+  expect(data.nets).toHaveLength(4);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).symbolInstances).toHaveLength(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "U1:S1", exact: true }),
+  ).toBeVisible();
+});
+
+test("custom symbols create native pins that wire and survive undo and reload", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Custom symbols$/ })
+    .click();
+  const form = page.getByRole("form", { name: "Custom symbols", exact: true });
+  await form.getByLabel("Symbol name", { exact: true }).fill("Interface");
+  await form.getByLabel("Body width (mm)", { exact: true }).fill("20");
+  await form.getByLabel("Body height (mm)", { exact: true }).fill("20");
+  await form.getByLabel(/^Pins:/).fill("IN, -10, 0\nOUT, 10, 0");
+  await form
+    .getByLabel(/^Artwork in mm:/)
+    .fill("line, -10, 0, 10, 0\ncircle, 0, 0, 4");
+  await form.getByRole("button", { name: "Create", exact: true }).click();
+  const definition = (await project(page)).symbolDefinitions.find(
+    (d: { name: string }) => d.name === "Interface",
+  );
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption(definition.id);
+  await clickWorld(page, 80, 80);
+  await expect(page.locator("[data-custom-artwork] line")).toHaveCount(1);
+  await expect(page.locator("[data-custom-artwork] circle")).toHaveCount(1);
+  await place(page, "lamp", 150, 80);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "U1:OUT", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  expect((await project(page)).wires).toHaveLength(1);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).wires).toHaveLength(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "U1:IN", exact: true }),
+  ).toBeVisible();
+  expect((await project(page)).wires).toHaveLength(1);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Custom symbols$/ })
+    .click();
+  await page
+    .getByLabel("Edit custom symbol", { exact: true })
+    .selectOption(definition.id);
+  const editForm = page.getByRole("form", {
+    name: "Custom symbols",
+    exact: true,
+  });
+  await editForm.getByLabel("Body width (mm)", { exact: true }).fill("24");
+  await editForm.getByLabel(/^Pins:/).fill("IN, -12, 0\nOUT, 12, 0");
+  const old = (await project(page)).wires[0];
+  await editForm.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).wires[0]).toEqual(old);
+  expect((await project(page)).wirePaths[0].points[0].x).toBe(92);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect(
+    (await project(page)).symbolDefinitions.find(
+      (d: { id: string }) => d.id === definition.id,
+    ).widthMm,
+  ).toBe(20);
+});
+
 test("cross-page net labels persist memberships and navigate to the real drawing", async ({
   page,
 }) => {

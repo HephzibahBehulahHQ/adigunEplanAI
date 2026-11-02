@@ -217,19 +217,51 @@ export function ensureLayer(
   project.layers.push({ id, name, pageId, visible: true, locked: false });
   return id;
 }
+
+export function refreshDefinitionInstances(
+  project: Project,
+  definitionId: string,
+): Project {
+  const ids = project.symbolInstances
+    .filter((s) => s.definitionId === definitionId)
+    .map((s) => s.id);
+  editable(project, ids);
+  checkBounds(project, ids);
+  checkCollisions(project, ids);
+  reroute(project, ids);
+  return validateProject(project);
+}
 export function place(
   project: Project,
   pageId: string,
   layerId: string,
-  kind: Primitive,
+  kind: Primitive | "custom",
   position: Point,
   grid: number,
+  customDefinitionId?: string,
 ): string {
   const layer = project.layers.find((l) => l.id === layerId);
   if (!layer || layer.pageId !== pageId || layer.locked || !layer.visible)
     throw new Error("Invalid placement layer");
-  const primitive = primitives[kind];
+  const custom =
+    kind === "custom"
+      ? project.symbolDefinitions.find(
+          (d) => d.id === customDefinitionId && d.category === "custom",
+        )
+      : undefined;
+  if (kind === "custom" && !custom)
+    throw new Error("Unknown custom definition");
+  const primitive = custom
+    ? {
+        glyph: custom.glyph,
+        prefix: "U",
+        w: custom.widthMm,
+        h: custom.heightMm,
+        pins: custom.pins,
+      }
+    : primitives[kind as Primitive];
   const definitionId =
+    custom?.id ??
     project.symbolDefinitions.find(
       (d) =>
         d.category === "generic" &&
@@ -238,7 +270,8 @@ export function place(
         d.widthMm === primitive.w &&
         d.heightMm === primitive.h &&
         JSON.stringify(d.pins) === JSON.stringify(primitive.pins),
-    )?.id ?? uid();
+    )?.id ??
+    uid();
   if (!project.symbolDefinitions.some((d) => d.id === definitionId))
     project.symbolDefinitions.push({
       id: definitionId,
@@ -259,7 +292,7 @@ export function place(
   )
     index++;
   const reference = `${primitive.prefix}${index}`;
-  project.devices.push({ id: deviceId, name: kind, reference });
+  project.devices.push({ id: deviceId, name: custom?.name ?? kind, reference });
   const instanceId = uid();
   project.symbolInstances.push({
     id: instanceId,

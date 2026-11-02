@@ -10,6 +10,12 @@ const name = z.string().trim().min(1).max(160);
 const finite = z.number().finite();
 const positive = finite.positive();
 const point = z.object({ x: finite, y: finite }).strict();
+const artworkShape = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("line"), from: point, to: point }).strict(),
+  z
+    .object({ kind: z.literal("circle"), center: point, radiusMm: positive })
+    .strict(),
+]);
 const entity = z.object({ id, name }).strict();
 export const schemas = {
   layers: entity.extend({
@@ -57,6 +63,7 @@ export const schemas = {
     widthMm: positive,
     heightMm: positive,
     pins: z.array(z.object({ id, position: point }).strict()).max(256),
+    artwork: z.array(artworkShape).min(1).max(256).optional(),
   }),
   symbolInstances: entity.extend({
     definitionId: id,
@@ -198,7 +205,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(3),
+    schemaVersion: z.literal(4),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -212,7 +219,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 3;
+  schemaVersion: 4;
   id: string;
   name: string;
   createdAt: string;
@@ -228,7 +235,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 3,
+    schemaVersion: 4,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -363,6 +370,28 @@ function validateReferences(project: Project): void {
         target !== project.id
       )
         throw new Error(`Unknown finding entity: ${target}`);
+  for (const definition of project.symbolDefinitions) {
+    const inside = (p: Point) =>
+      Math.abs(p.x) <= definition.widthMm / 2 &&
+      Math.abs(p.y) <= definition.heightMm / 2;
+    if (
+      definition.artwork &&
+      (definition.category !== "custom" ||
+        definition.artwork.some((shape) =>
+          shape.kind === "line"
+            ? !inside(shape.from) || !inside(shape.to)
+            : !inside({
+                x: shape.center.x - shape.radiusMm,
+                y: shape.center.y - shape.radiusMm,
+              }) ||
+              !inside({
+                x: shape.center.x + shape.radiusMm,
+                y: shape.center.y + shape.radiusMm,
+              }),
+        ))
+    )
+      throw new Error("Artwork outside custom symbol bounds");
+  }
   for (const definition of project.symbolDefinitions)
     if (
       new Set(definition.pins.map((p) => p.id)).size !== definition.pins.length
@@ -456,7 +485,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3;
+  migratedFrom: 0 | 1 | 2 | 3 | 4;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -464,18 +493,18 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 3) return { project: validateProject(raw), migratedFrom: 3 };
-  if (version === 2)
+  if (version === 4) return { project: validateProject(raw), migratedFrom: 4 };
+  if (version === 2 || version === 3)
     return {
-      project: validateProject({ ...raw, schemaVersion: 3 }),
-      migratedFrom: 2,
+      project: validateProject({ ...raw, schemaVersion: 4 }),
+      migratedFrom: version,
     };
   if (version === 0 || version === 1) {
     const old = raw as Record<string, unknown>;
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 3,
+      schemaVersion: 4,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);
