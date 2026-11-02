@@ -484,7 +484,7 @@ test("component catalog searches and maps a sourced part to a real terminal", as
   const library = page.locator(".component-library");
   await library.locator(":scope > summary").click();
   await library
-    .getByLabel("Manufacturer", { exact: true })
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
     .selectOption("WAGO");
   const wago = library.getByRole("article", {
     name: "WAGO 2002-1201",
@@ -492,7 +492,9 @@ test("component catalog searches and maps a sourced part to a real terminal", as
   });
   await expect(wago).toContainText("Not declared");
   await expect(wago).not.toContainText("undefined");
-  await library.getByLabel("Manufacturer", { exact: true }).selectOption("");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("");
   await library
     .getByLabel("Search parts", { exact: true })
     .fill("missing-part");
@@ -501,10 +503,10 @@ test("component catalog searches and maps a sourced part to a real terminal", as
     .getByLabel("Search parts", { exact: true })
     .fill("phoenix 3004362");
   await library
-    .getByLabel("Category", { exact: true })
+    .getByRole("combobox", { name: "Category", exact: true })
     .selectOption("connections");
   await library
-    .getByLabel("Manufacturer", { exact: true })
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
     .selectOption("Phoenix Contact");
   await expect(library.getByRole("status")).toHaveText("Results: 1");
   await expect(
@@ -589,7 +591,7 @@ test("NO contact catalog mapping preserves native pins and offers only compatibl
   const library = page.locator(".component-library");
   await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
   await library
-    .getByLabel("Category", { exact: true })
+    .getByRole("combobox", { name: "Category", exact: true })
     .selectOption("switching");
   const article = library.getByRole("article", {
     name: "Schneider Electric ZBE101",
@@ -964,7 +966,7 @@ test("cross-page net labels persist memberships and navigate to the real drawing
     ).terminalIds,
   ).toEqual(net.terminalIds);
   page.once("dialog", (dialog) => dialog.accept());
-  await page.locator("input[type=file]").setInputFiles({
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "recompute.adeplan.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify({ ...data, nets: [], findings: [] })),

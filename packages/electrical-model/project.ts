@@ -18,6 +18,43 @@ const artworkShape = z.discriminatedUnion("kind", [
     .strict(),
 ]);
 const entity = z.object({ id, name }).strict();
+export const symbolDefinitionSchema = entity.extend({
+  category: name,
+  glyph: z.enum([
+    "box",
+    "terminal",
+    "resistor",
+    "fuse",
+    "contact",
+    "coil",
+    "lamp",
+    "motor",
+    "ground",
+    "junction",
+  ]),
+  widthMm: positive,
+  heightMm: positive,
+  pins: z
+    .array(
+      z
+        .object({
+          id,
+          position: point,
+          kind: terminalKind.optional(),
+          terminalGroup: id.optional(),
+        })
+        .strict(),
+    )
+    .max(256),
+  artwork: z.array(artworkShape).min(1).max(256).optional(),
+});
+const sourceUrl = z
+  .url()
+  .max(2048)
+  .refine(
+    (value) => /^https?:\/\//.test(value),
+    "Source URL must use HTTP or HTTPS",
+  );
 export const schemas = {
   layers: entity.extend({
     pageId: id,
@@ -47,36 +84,7 @@ export const schemas = {
     gridMm: positive.max(100).default(5),
     snapping: z.boolean().default(true),
   }),
-  symbolDefinitions: entity.extend({
-    category: name,
-    glyph: z.enum([
-      "box",
-      "terminal",
-      "resistor",
-      "fuse",
-      "contact",
-      "coil",
-      "lamp",
-      "motor",
-      "ground",
-      "junction",
-    ]),
-    widthMm: positive,
-    heightMm: positive,
-    pins: z
-      .array(
-        z
-          .object({
-            id,
-            position: point,
-            kind: terminalKind.optional(),
-            terminalGroup: id.optional(),
-          })
-          .strict(),
-      )
-      .max(256),
-    artwork: z.array(artworkShape).min(1).max(256).optional(),
-  }),
+  symbolDefinitions: symbolDefinitionSchema,
   symbolInstances: entity.extend({
     definitionId: id,
     layerId: id,
@@ -92,17 +100,69 @@ export const schemas = {
     ]),
   }),
   devices: entity.extend({ reference: name, partId: id.optional() }),
-  manufacturerParts: entity.extend({
-    manufacturer: name,
-    partNumber: name,
-    sourceUrl: z
-      .url()
-      .refine(
-        (value) => /^https?:\/\//.test(value),
-        "Source URL must use HTTP or HTTPS",
-      ),
-    ratings: z.record(z.string(), z.union([z.string(), finite])),
-  }),
+  manufacturerParts: entity
+    .extend({
+      manufacturer: name,
+      partNumber: name,
+      sourceUrl: sourceUrl.optional(),
+      ratings: z
+        .record(
+          z.string().min(1).max(80),
+          z.union([z.string().max(2000), finite]),
+        )
+        .refine((value) => Object.keys(value).length <= 128),
+      custom: z
+        .object({
+          componentId: id,
+          revision: z.number().int().positive().max(1000000),
+          provenance: z.literal("user-supplied"),
+          verification: z.literal("unverified"),
+          licensing: z.enum(["user-owned", "authorized", "unknown"]),
+          category: name,
+          description: z.string().trim().min(1).max(2000),
+          sourceRevision: z.string().trim().min(1).max(160).optional(),
+          mounting: z.string().trim().min(1).max(2000).optional(),
+          terminalInformation: z.string().trim().min(1).max(2000).optional(),
+          dimensionsMm: z
+            .object({
+              width: positive.max(100000),
+              height: positive.max(100000),
+              depth: positive.max(100000),
+            })
+            .strict()
+            .optional(),
+          symbolDefinition: symbolDefinitionSchema,
+        })
+        .strict()
+        .optional(),
+    })
+    .superRefine((part, ctx) => {
+      if (part.custom)
+        for (const field of [
+          "nominalVoltageV",
+          "nominalCurrentA",
+          "ratedCrossSectionMm2",
+        ]) {
+          const value = part.ratings[field];
+          if (
+            value !== undefined &&
+            (typeof value !== "number" ||
+              value < 0 ||
+              (field === "ratedCrossSectionMm2" && value === 0))
+          )
+            ctx.addIssue({
+              code: "custom",
+              message:
+                "Custom rating requires a valid numeric value in the declared unit",
+              path: ["ratings", field],
+            });
+        }
+      if (!part.custom && !part.sourceUrl)
+        ctx.addIssue({
+          code: "custom",
+          message: "Manufacturer source URL required",
+        });
+    }),
   terminals: entity.extend({
     deviceId: id,
     designation: name,
@@ -217,7 +277,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(6),
+    schemaVersion: z.literal(7),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -231,7 +291,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 6;
+  schemaVersion: 7;
   id: string;
   name: string;
   createdAt: string;
@@ -247,7 +307,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 6,
+    schemaVersion: 7,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -382,6 +442,40 @@ function validateReferences(project: Project): void {
         target !== project.id
       )
         throw new Error(`Unknown finding entity: ${target}`);
+  const componentRevisions = new Set<string>();
+  for (const part of project.manufacturerParts)
+    if (part.custom) {
+      const revisionKey = `${part.custom.componentId}:${part.custom.revision}`;
+      if (componentRevisions.has(revisionKey))
+        throw new Error("Duplicate custom component revision");
+      componentRevisions.add(revisionKey);
+      const definition = project.symbolDefinitions.find(
+        (d) => d.id === part.custom!.symbolDefinition.id,
+      );
+      if (
+        !definition ||
+        JSON.stringify(definition) !==
+          JSON.stringify(part.custom.symbolDefinition)
+      )
+        throw new Error("Custom component symbol revision mismatch");
+      if (!definition.pins.length)
+        throw new Error(
+          "Custom electrical component requires connection points",
+        );
+      if (
+        definition.widthMm > 500 ||
+        definition.heightMm > 500 ||
+        definition.pins.some(
+          (pin) =>
+            Math.abs(pin.position.x) > definition.widthMm / 2 ||
+            Math.abs(pin.position.y) > definition.heightMm / 2,
+        ) ||
+        new Set(
+          definition.pins.map((pin) => `${pin.position.x},${pin.position.y}`),
+        ).size !== definition.pins.length
+      )
+        throw new Error("Invalid custom component connection geometry");
+    }
   for (const definition of project.symbolDefinitions) {
     const inside = (p: Point) =>
       Math.abs(p.x) <= definition.widthMm / 2 &&
@@ -544,7 +638,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -552,10 +646,16 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 6) return { project: validateProject(raw), migratedFrom: 6 };
-  if (version === 2 || version === 3 || version === 4 || version === 5)
+  if (version === 7) return { project: validateProject(raw), migratedFrom: 7 };
+  if (
+    version === 2 ||
+    version === 3 ||
+    version === 4 ||
+    version === 5 ||
+    version === 6
+  )
     return {
-      project: validateProject({ ...raw, schemaVersion: 6 }),
+      project: validateProject({ ...raw, schemaVersion: 7 }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -563,7 +663,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 6,
+      schemaVersion: 7,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

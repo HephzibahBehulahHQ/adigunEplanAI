@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CustomSymbols } from "./CustomSymbols";
+import { CustomComponents } from "./CustomComponents";
 import { EngineeringSymbols } from "./EngineeringSymbols";
 import {
   catalog,
@@ -85,6 +86,7 @@ export function ComponentLibrary({
       <summary>{t("componentLibrary")}</summary>
       <p>{t("catalogScope")}</p>
       <CustomSymbols native={native} t={t} />
+      <CustomComponents native={native} t={t} />
       <EngineeringSymbols native={native} t={t} />
       <label>
         {t("searchParts")}

@@ -64,8 +64,8 @@ test("native export round trips, invalid import preserves work and replacement r
   const download = await downloadPromise;
   const text = await readFile((await download.path())!, "utf8");
   const exported = JSON.parse(text);
-  expect(exported.schemaVersion).toBe(6);
-  await page.locator("input[type=file]").setInputFiles({
+  expect(exported.schemaVersion).toBe(7);
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "invalid.json",
     mimeType: "application/json",
     buffer: Buffer.from('{"schemaVersion":99}'),
@@ -73,14 +73,14 @@ test("native export round trips, invalid import preserves work and replacement r
   await expect(page.getByRole("alert")).toContainText("invalid");
   await expect(page.locator(".project-title")).toHaveText("Round trip");
   page.once("dialog", (d) => d.dismiss());
-  await page.locator("input[type=file]").setInputFiles({
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "native.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify({ ...exported, name: "Replacement" })),
   });
   await expect(page.locator(".project-title")).toHaveText("Round trip");
   page.once("dialog", (d) => d.accept());
-  await page.locator("input[type=file]").setInputFiles({
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "native.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify({ ...exported, name: "Replacement" })),

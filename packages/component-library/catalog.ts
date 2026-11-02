@@ -170,6 +170,7 @@ export function assignCatalogPart(
     throw new Error("Part requires a compatible editable symbol");
   let nativePart = next.manufacturerParts.find(
     (item) =>
+      !item.custom &&
       item.manufacturer === part.manufacturer &&
       item.partNumber === part.partNumber &&
       item.sourceUrl === part.sourceUrl &&

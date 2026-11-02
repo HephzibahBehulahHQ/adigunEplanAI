@@ -116,7 +116,7 @@ test("version zero migration fills only missing collections and rejects future v
   };
   const migrated = parseProject(JSON.stringify(legacy));
   assert.equal(migrated.migratedFrom, 0);
-  assert.equal(migrated.project.schemaVersion, 6);
+  assert.equal(migrated.project.schemaVersion, 7);
   assert.deepEqual(migrated.project.documents, []);
   assert.throws(
     () => parseProject(JSON.stringify({ ...legacy, schemaVersion: 99 })),
