@@ -243,5 +243,18 @@
   "ac-dc-supply": "AC/DC-Netzgeräteschnittstelle",
   "isolated-dc-dc": "Isolierte DC/DC-Wandlerschnittstelle",
   "dc-ac-inverter": "Einphasige DC/AC-Wechselrichterschnittstelle",
-  "ups-external-battery": "USV-Schnittstelle mit externer Batterie"
+  "ups-external-battery": "USV-Schnittstelle mit externer Batterie",
+  "temperature-element": "Zweipoliges Temperaturmesselement",
+  "pressure-transducer": "Versorgte Druckaufnehmerschnittstelle",
+  "flow-transducer": "Versorgte Durchflussaufnehmerschnittstelle",
+  "energy-meter-pulse": "Einphasen-Energiezähler mit Impulsschnittstelle",
+  "emergency-luminaire-battery": "Notleuchte mit externer Batterie",
+  "detector-relay": "Melder mit Wechslerrelaisschnittstelle",
+  "distribution-three-way": "Dreikreis-Verteilerschnittstelle",
+  "contactor-three-pole": "Dreipoliges Schütz mit Spule",
+  "isolator-three-pole-pe": "Dreipoliger Trennschalter mit PE-Durchgang",
+  "rcbo-two-pole": "Zweipolige FI/LS-Schnittstelle",
+  "motor-protection-three-pole": "Dreipolige Motorschutzschalter-Schnittstelle",
+  "surge-protector-l-pe": "L/PE-Überspannungsschutz-Schnittstelle",
+  "protection-relay-trip": "Schutzrelais mit Mess- und Auslöseschnittstelle"
 }

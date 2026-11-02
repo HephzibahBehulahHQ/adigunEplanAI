@@ -243,5 +243,18 @@
   "ac-dc-supply": "AC/DC supply interface",
   "isolated-dc-dc": "Isolated DC/DC converter interface",
   "dc-ac-inverter": "Single-phase DC/AC inverter interface",
-  "ups-external-battery": "UPS interface with external battery"
+  "ups-external-battery": "UPS interface with external battery",
+  "temperature-element": "Two-terminal temperature sensing element",
+  "pressure-transducer": "Powered pressure transducer interface",
+  "flow-transducer": "Powered flow transducer interface",
+  "energy-meter-pulse": "Single-phase energy meter with pulse interface",
+  "emergency-luminaire-battery": "Emergency luminaire with external battery",
+  "detector-relay": "Detector with changeover relay interface",
+  "distribution-three-way": "Three-way distribution board interface",
+  "contactor-three-pole": "Three-pole contactor with coil",
+  "isolator-three-pole-pe": "Three-pole isolator with PE pass-through",
+  "rcbo-two-pole": "Two-pole RCBO interface",
+  "motor-protection-three-pole": "Three-pole motor protection switch interface",
+  "surge-protector-l-pe": "L/PE surge protection interface",
+  "protection-relay-trip": "Protection relay with measurement and trip interface"
 }

@@ -243,5 +243,18 @@
   "ac-dc-supply": "Ìsopọ̀ ìpèsè AC/DC",
   "isolated-dc-dc": "Ìsopọ̀ olùyípadà DC/DC aláìsopọ̀",
   "dc-ac-inverter": "Ìsopọ̀ inverter DC/AC alápá kan",
-  "ups-external-battery": "Ìsopọ̀ UPS pẹ̀lú bátírì ìta"
+  "ups-external-battery": "Ìsopọ̀ UPS pẹ̀lú bátírì ìta",
+  "temperature-element": "Ẹ̀rọ ìmọ̀ ooru oníbùdó méjì",
+  "pressure-transducer": "Ìsopọ̀ olùyípadà ìfúnpá alágbára",
+  "flow-transducer": "Ìsopọ̀ olùyípadà ìṣàn alágbára",
+  "energy-meter-pulse": "Mítà agbára alápá kan pẹ̀lú ìsopọ̀ pulse",
+  "emergency-luminaire-battery": "Fitilà pàjáwìrì pẹ̀lú bátírì ìta",
+  "detector-relay": "Olùṣàwárí pẹ̀lú ìsopọ̀ rílè ìyípadà",
+  "distribution-three-way": "Ìsopọ̀ pátákó pínpín oníọ̀nà mẹ́ta",
+  "contactor-three-pole": "Kọ́ńtákítọ̀ onípó mẹ́ta pẹ̀lú kóílì",
+  "isolator-three-pole-pe": "Olùyà iná onípó mẹ́ta pẹ̀lú ìkọjá PE",
+  "rcbo-two-pole": "Ìsopọ̀ RCBO onípó méjì",
+  "motor-protection-three-pole": "Ìsopọ̀ ààbò mọ́tò onípó mẹ́ta",
+  "surge-protector-l-pe": "Ìsopọ̀ ààbò ìgbésókè foliteji L/PE",
+  "protection-relay-trip": "Relay ààbò pẹ̀lú ìsopọ̀ ìwọ̀n àti gígé"
 }

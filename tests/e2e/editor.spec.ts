@@ -676,6 +676,63 @@ test("connector poles retain separate electrical nodes while each pole passes th
   expect((await project(page)).nets).toEqual(data.nets);
 });
 
+for (const [id, query, terminals, pins] of [
+  ["distribution-three-way", "distribution board", 6, 12],
+  ["contactor-three-pole", "contactor", 8, 8],
+  ["isolator-three-pole-pe", "isolator", 7, 8],
+] as const)
+  test(`distribution and switching interface ${id} preserves declared node groups`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 120, 120);
+    const data = await project(page);
+    expect(data.terminals).toHaveLength(terminals);
+    expect(data.pins).toHaveLength(pins);
+    expect(data.nets).toHaveLength(terminals);
+    if (id === "distribution-three-way") {
+      const neutral = data.terminals.find(
+        (t: { designation: string }) => t.designation === "N_bus",
+      );
+      const pe = data.terminals.find(
+        (t: { designation: string }) => t.designation === "PE_bus",
+      );
+      expect(neutral.id).not.toBe(pe.id);
+      expect(neutral.kind).toBe("neutral");
+      expect(pe.kind).toBe("pe");
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(neutral.id),
+        ).pinIds,
+      ).toHaveLength(4);
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(pe.id),
+        ).pinIds,
+      ).toHaveLength(4);
+    }
+    if (id === "isolator-three-pole-pe") {
+      const pe = data.terminals.find((t: { kind: string }) => t.kind === "pe");
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(pe.id),
+        ).pinIds,
+      ).toHaveLength(2);
+    }
+    await page.reload();
+    expect((await project(page)).nets).toEqual(data.nets);
+  });
+
 for (const [id, query, endpoint, count] of [
   ["ac-dc-supply", "AC/DC supply", "positive", 5],
   ["isolated-dc-dc", "isolated DC/DC", "OUT_positive", 4],
@@ -711,6 +768,53 @@ for (const [id, query, endpoint, count] of [
     expect(data.nets).toHaveLength(count);
     await page.reload();
     expect((await project(page)).wires).toEqual(data.wires);
+  });
+
+for (const [id, query, endpoint, count] of [
+  ["rcbo-two-pole", "RCBO", "L_out", 4],
+  ["motor-protection-three-pole", "motor-protection switch", "L1_out", 6],
+  ["surge-protector-l-pe", "surge protective", "L", 2],
+  ["protection-relay-trip", "protection relay", "trip_NO", 7],
+] as const)
+  test(`protection interface ${id} keeps isolated ports through wiring and reload`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    let data = await project(page);
+    expect(data.terminals).toHaveLength(count);
+    expect(data.nets).toHaveLength(count);
+    await place(page, "terminal", 160, 80);
+    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("button", { name: `U1:${endpoint}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "X1:1", exact: true }).click();
+    data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(count);
+    const joined = data.nets.find(
+      (net: { terminalIds: string[] }) => net.terminalIds.length === 2,
+    );
+    expect(joined).toBeDefined();
+    expect(
+      data.nets.filter(
+        (net: { terminalIds: string[] }) => net.terminalIds.length === 1,
+      ),
+    ).toHaveLength(count - 1);
+    await page.reload();
+    expect((await project(page)).wires).toEqual(data.wires);
+    expect((await project(page)).nets).toEqual(data.nets);
   });
 
 for (const [id, query, channel] of [

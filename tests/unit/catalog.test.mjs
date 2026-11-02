@@ -101,6 +101,44 @@ test("every engineering symbol installs and places its declared electrical nodes
   assert.equal(searchSymbols("DC/DC converter", "power")[0].pins.length, 4);
   assert.equal(searchSymbols("DC/AC inverter", "power")[0].pins.length, 5);
   assert.equal(searchSymbols("UPS interface", "power")[0].pins.length, 7);
+  assert.equal(
+    searchSymbols("temperature sensing", "instrumentation")[0].pins.length,
+    2,
+  );
+  assert.equal(
+    searchSymbols("pressure transducer", "instrumentation")[0].pins.length,
+    3,
+  );
+  assert.equal(
+    searchSymbols("flow transducer", "instrumentation")[0].pins.length,
+    3,
+  );
+  assert.equal(
+    searchSymbols("energy meter", "instrumentation")[0].pins.length,
+    6,
+  );
+  assert.equal(
+    searchSymbols("emergency luminaire", "building")[0].pins.length,
+    5,
+  );
+  assert.equal(searchSymbols("detector", "building")[0].pins.length, 5);
+  const board = searchSymbols("distribution board", "building")[0];
+  assert.equal(board.pins.length, 12);
+  assert.equal(
+    new Set(
+      board.pins
+        .filter((pin) => pin.terminalGroup)
+        .map((pin) => pin.terminalGroup),
+    ).size,
+    2,
+  );
+  assert.equal(searchSymbols("contactor", "switching")[0].pins.length, 8);
+  assert.equal(
+    searchSymbols("isolator", "power")[0].pins.filter(
+      (pin) => pin.terminalGroup === "PE",
+    ).length,
+    2,
+  );
   for (const query of [
     "digital input",
     "digital output",
@@ -508,3 +546,43 @@ test("non-terminal part mapping rejects a different glyph even with the same ter
   );
   assert.equal(serializeProject(p), before);
 });
+
+for (const [symbolId, kinds] of [
+  ["rcbo-two-pole", ["power", "power", "neutral", "neutral"]],
+  ["motor-protection-three-pole", Array(6).fill("power")],
+  ["surge-protector-l-pe", ["power", "pe"]],
+  [
+    "protection-relay-trip",
+    ["control", "control", "signal", "signal", "control", "control", "control"],
+  ],
+])
+  test(`protection interface ${symbolId} does not infer internal shorts or ratings`, () => {
+    const p = installSymbol(nativeProject(), symbolId);
+    const instance = place(
+      p,
+      "page",
+      "layer",
+      "custom",
+      { x: 100, y: 100 },
+      5,
+      `library-${symbolId}`,
+    );
+    const pins = p.pins.filter((pin) => pin.symbolInstanceId === instance);
+    assert.deepEqual(
+      pins.map((pin) => p.terminals.find((t) => t.id === pin.terminalId).kind),
+      kinds,
+    );
+    const nets = analyze(p).nets;
+    for (const pin of pins) {
+      const net = nets.find((net) => net.pinIds.includes(pin.id));
+      assert.equal(net.pinIds.length, 1);
+      assert.equal(net.terminalIds.length, 1);
+    }
+    assert.equal(p.manufacturerParts.length, 0);
+    for (const terminal of p.terminals)
+      assert.equal(terminal.capacity, undefined);
+    assert.deepEqual(
+      analyze(parseProject(serializeProject(p)).project).nets,
+      nets,
+    );
+  });
