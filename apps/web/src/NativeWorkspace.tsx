@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
 import type { MessageKey } from "../../../packages/localization";
@@ -8,6 +8,12 @@ import {
 } from "../../../packages/electrical-model/project.ts";
 import { projectStorageKey } from "../../../packages/project-storage/repository.ts";
 import type { NativeProjects } from "./useNativeProjects";
+const BuildingEditor = lazy(() =>
+  import("./BuildingEditor").then((module) => ({
+    default: module.BuildingEditor,
+  })),
+);
+
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
 export function ProjectTools({ native, t }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -294,39 +300,64 @@ export function ProjectProperties({ native, t }: Props) {
 export function NativeDrawing({ native, t }: Props) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
+  const [buildingView, setBuildingView] = useState(false);
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
   if (!p) return null;
   const page = p.pages.find((item) => item.id === selected) ?? p.pages[0];
   return (
     <div className="native-drawing">
-      <nav className="drawing-tabs" aria-label={t("pageName")}>
-        {p.pages.map((item) => (
-          <button
-            key={item.id}
-            aria-pressed={item.id === page?.id}
-            onClick={() => setSelected(item.id)}
-          >
-            {item.name}
-          </button>
-        ))}
+      <nav className="drawing-tabs" aria-label={t("workspaceView")}>
         <button
-          onClick={() => native.addPage(`${t("sheet")} ${p.pages.length + 1}`)}
+          aria-pressed={!buildingView}
+          onClick={() => setBuildingView(false)}
         >
-          {t("newPage")}
+          {t("schematicView")}
+        </button>
+        <button
+          aria-pressed={buildingView}
+          onClick={() => setBuildingView(true)}
+        >
+          {t("buildingDesign")}
         </button>
       </nav>
-      {page ? (
-        <SchematicEditor
-          key={`${p.id}:${page.id}`}
-          native={native}
-          page={page}
-          t={t}
-          clipboard={clipboard}
-          setClipboard={setClipboard}
-        />
+      {buildingView ? (
+        <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
+          <BuildingEditor key={p.id} native={native} t={t} />
+        </Suspense>
       ) : (
-        <p>{t("noPages")}</p>
+        <>
+          <nav className="drawing-tabs" aria-label={t("pageName")}>
+            {p.pages.map((item) => (
+              <button
+                key={item.id}
+                aria-pressed={item.id === page?.id}
+                onClick={() => setSelected(item.id)}
+              >
+                {item.name}
+              </button>
+            ))}
+            <button
+              onClick={() =>
+                native.addPage(`${t("sheet")} ${p.pages.length + 1}`)
+              }
+            >
+              {t("newPage")}
+            </button>
+          </nav>
+          {page ? (
+            <SchematicEditor
+              key={`${p.id}:${page.id}`}
+              native={native}
+              page={page}
+              t={t}
+              clipboard={clipboard}
+              setClipboard={setClipboard}
+            />
+          ) : (
+            <p>{t("noPages")}</p>
+          )}
+        </>
       )}
     </div>
   );

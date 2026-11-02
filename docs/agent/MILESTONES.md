@@ -6,8 +6,9 @@
 - 3: versioned native projects/persistence/validation/migration/undo-redo published; hosted CI passed.
 - 4: 2D schematic tools published in PR #4; local and hosted CI passed.
 - 5: published in PR #5; both hosted CI runs passed. See MILESTONE_5_ACCEPTANCE.md for scope and evidence.
-- 6: implementation locally verified; see MILESTONE_6_ACCEPTANCE.md. Final publication CI gate pending before transition to Milestone 7.
-- 7–20: pending; MASTER_SPECIFICATION.md Part 22 is authoritative.
+- 6: implementation verified and published in draft PR #6; final hosted runs 41544056477 and 41544045519 passed. See MILESTONE_6_ACCEPTANCE.md for retained integration requirements.
+- 7: in progress; native building/floor creation and rectangular room outlines are implemented and locally tested.
+- 8–20: pending; MASTER_SPECIFICATION.md Part 22 is authoritative.
 
 The owner authorizes continuous approved milestone execution. The full targeted engineering platform remains the goal; milestone completion is not final product acceptance.
 

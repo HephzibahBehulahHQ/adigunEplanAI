@@ -5,6 +5,7 @@
     "packages/project-storage/**/*.ts",
     "packages/schematic-editor/**/*.ts",
     "packages/connectivity-engine/**/*.ts",
-    "packages/component-library/**/*.ts"
+    "packages/component-library/**/*.ts",
+    "packages/building-design/**/*.ts"
   ]
 }

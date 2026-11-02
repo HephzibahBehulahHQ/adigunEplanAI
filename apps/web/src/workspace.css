@@ -492,3 +492,32 @@ button:disabled {
   opacity: 0.5;
   cursor: default;
 }
+
+.building-editor {
+  padding: 1rem;
+  overflow: auto;
+  min-width: 0;
+}
+.building-editor form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.6rem;
+  margin-block: 0.8rem;
+}
+.building-editor label {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+.building-editor input,
+.building-editor select {
+  max-width: 100%;
+  min-width: 0;
+}
+.building-plan {
+  display: block;
+  width: 100%;
+  height: 360px;
+  background: var(--panel);
+}
