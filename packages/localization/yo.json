@@ -260,5 +260,16 @@
   "compareParts": "Ṣe àfiwé àwọn èròjà",
   "selectForComparison": "Yàn fún àfiwé",
   "comparisonHint": "Yan èròjà méjì sí mẹ́rin. A kò ṣe àfojúsùn àwọn iye tí kò sí.",
-  "property": "Ànímọ́"
+  "property": "Ànímọ́",
+  "propertyFilters": "Àlẹ̀mọ́ iye ìwọ̀n",
+  "propertyFiltersHint": "A yọ èròjà tí kò ní iye ìwọ̀n tí a béèrè nígbà tí àlẹ̀mọ́ bá ṣiṣẹ́.",
+  "minimumVoltage": "Foliteji tí a sọ tó kéré jù (V)",
+  "minimumCurrent": "Ìṣàn iná tí a sọ tó kéré jù (A)",
+  "catalogView": "Ìwò katalọ́ọ̀gù",
+  "catalogFavorites": "Àwọn àyànfẹ́",
+  "catalogRecent": "Àwọn tí a ṣẹ̀ṣẹ̀ yàn",
+  "catalogFavorite": "Àyànfẹ́",
+  "catalogPreferencesCorrupt": "A kò lè ka ètò katalọ́ọ̀gù. A pa dátà tí a fi pamọ́ mọ́. Tún ètò katalọ́ọ̀gù nìkan ṣe láti yí i padà.",
+  "resetCatalogPreferences": "Tún ètò katalọ́ọ̀gù ṣe",
+  "catalogPreferencesUnsaved": "Ètò katalọ́ọ̀gù wà fún àkókò yìí ṣùgbọ́n a kò lè fi í pamọ́."
 }

@@ -69,7 +69,7 @@ export function useNativeProjects() {
     }
   }
   function update(change: (draft: Project) => Project) {
-    if (!project || !history) return;
+    if (!project || !history) return false;
     try {
       const updated = history.execute((draft) => {
         const next = electricalTransaction(draft, change);
@@ -81,8 +81,10 @@ export function useNativeProjects() {
           p.id === updated.id ? updated : p,
         ),
       });
+      return true;
     } catch {
       setState((previous) => ({ ...previous, error: "invalidProject" }));
+      return false;
     }
   }
   return {

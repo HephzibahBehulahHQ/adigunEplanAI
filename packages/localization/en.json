@@ -260,5 +260,16 @@
   "compareParts": "Compare components",
   "selectForComparison": "Select for comparison",
   "comparisonHint": "Select two to four components. Missing values are not inferred.",
-  "property": "Property"
+  "property": "Property",
+  "propertyFilters": "Rating filters",
+  "propertyFiltersHint": "Missing ratings are excluded when a rating filter is active.",
+  "minimumVoltage": "Minimum declared voltage (V)",
+  "minimumCurrent": "Minimum declared current (A)",
+  "catalogView": "Catalog view",
+  "catalogFavorites": "Favorites",
+  "catalogRecent": "Recently assigned",
+  "catalogFavorite": "Favorite",
+  "catalogPreferencesCorrupt": "Catalog preferences could not be read. Stored data has been preserved. Reset only catalog preferences to enable changes.",
+  "resetCatalogPreferences": "Reset catalog preferences",
+  "catalogPreferencesUnsaved": "Catalog preferences are available in this session but could not be saved."
 }

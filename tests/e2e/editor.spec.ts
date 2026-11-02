@@ -1042,3 +1042,162 @@ test("component comparison preserves selections through search and shows missing
   expect((await project(page)).manufacturerParts).toHaveLength(0);
   expect((await project(page)).devices).toHaveLength(0);
 });
+
+test("catalog filters, favorites and recent assignments persist without changing circuit topology", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  const before = await project(page);
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByLabel("Minimum declared voltage (V)", { exact: true })
+    .fill("1000");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await expect(library.getByRole("article")).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3044076",
+  );
+  await library
+    .getByLabel("Minimum declared current (A)", { exact: true })
+    .fill("25");
+  await expect(library.getByRole("article")).toHaveCount(0);
+  await library
+    .getByLabel("Minimum declared voltage (V)", { exact: true })
+    .fill("");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  expect(await project(page)).toEqual(before);
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeChecked();
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("favorites");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await library.getByLabel("Catalog view", { exact: true }).selectOption("all");
+  for (const part of ["3004362", "3044076", "3004362"]) {
+    const card = library.getByRole("article", {
+      name: `Phoenix Contact ${part}`,
+      exact: true,
+    });
+    await card
+      .getByLabel("Compatible device", { exact: true })
+      .selectOption(before.devices[0].id);
+    await card
+      .getByRole("button", { name: "Assign part", exact: true })
+      .click();
+  }
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("recent");
+  await expect(library.getByRole("article")).toHaveCount(2);
+  await expect(library.getByRole("article").nth(0)).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3004362",
+  );
+  await expect(library.getByRole("article").nth(1)).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3044076",
+  );
+  const after = await project(page);
+  expect(after.pins).toEqual(before.pins);
+  expect(after.wires).toEqual(before.wires);
+  expect(after.devices[0].partId).toBeDefined();
+});
+
+test("corrupt catalog preferences remain intact until explicit reset without touching the project", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.evaluate(() =>
+    localStorage.setItem("adiguneplanai.catalog-preferences.v1", "{broken"),
+  );
+  await page.reload();
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await expect(library.getByRole("alert")).toContainText(
+    "Stored data has been preserved",
+  );
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.catalog-preferences.v1"),
+    ),
+  ).toBe("{broken");
+  expect(await project(page)).toEqual(before);
+  await library
+    .getByRole("button", { name: "Reset catalog preferences", exact: true })
+    .click();
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeChecked();
+  expect(await project(page)).toEqual(before);
+});
+
+test("catalog preference quota failure retains session favorites and reports unsaved state", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === "adiguneplanai.catalog-preferences.v1")
+        throw new DOMException("Quota", "QuotaExceededError");
+      original.call(this, key, value);
+    };
+  });
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await expect(library.getByRole("alert")).toContainText("could not be saved");
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("favorites");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  expect(await project(page)).toEqual(before);
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).not.toBeChecked();
+});

@@ -10,6 +10,14 @@ import {
 } from "../../../packages/component-library/catalog.ts";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
+import {
+  catalogPreferencesKey,
+  emptyCatalogPreferences,
+  parseCatalogPreferences,
+  toggleCatalogFavorite,
+  recordRecentCatalogPart,
+  type CatalogPreferences,
+} from "../../../packages/component-library/preferences.ts";
 
 export function ComponentLibrary({
   native,
@@ -21,9 +29,52 @@ export function ComponentLibrary({
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [manufacturer, setManufacturer] = useState("");
+  const [minimumVoltage, setMinimumVoltage] = useState("");
+  const [minimumCurrent, setMinimumCurrent] = useState("");
+  const [view, setView] = useState("all");
+  const [preferences, setPreferences] = useState(() => {
+    try {
+      return {
+        value: parseCatalogPreferences(
+          localStorage.getItem(catalogPreferencesKey),
+        ),
+        corrupt: false,
+        writeFailed: false,
+      };
+    } catch {
+      return {
+        value: emptyCatalogPreferences(),
+        corrupt: true,
+        writeFailed: false,
+      };
+    }
+  });
+  function savePreferences(value: CatalogPreferences) {
+    try {
+      localStorage.setItem(catalogPreferencesKey, JSON.stringify(value));
+      setPreferences({ value, corrupt: false, writeFailed: false });
+    } catch {
+      setPreferences({ value, corrupt: false, writeFailed: true });
+    }
+  }
   const [comparison, setComparison] = useState<string[]>([]);
   const compared = catalog.filter((part) => comparison.includes(part.id));
-  const results = searchCatalog(query, category, manufacturer);
+  const results = searchCatalog(query, category, manufacturer, {
+    minimumVoltageV: minimumVoltage === "" ? undefined : Number(minimumVoltage),
+    minimumCurrentA: minimumCurrent === "" ? undefined : Number(minimumCurrent),
+  }).filter((part) =>
+    view === "favorites"
+      ? preferences.value.favoriteIds.includes(part.id)
+      : view === "recent"
+        ? preferences.value.recentIds.includes(part.id)
+        : true,
+  );
+  if (view === "recent")
+    results.sort(
+      (a, b) =>
+        preferences.value.recentIds.indexOf(a.id) -
+        preferences.value.recentIds.indexOf(b.id),
+    );
   const project = native.project;
   const devicesFor = (part: CatalogPart) =>
     project?.devices.filter((device) =>
@@ -75,6 +126,53 @@ export function ComponentLibrary({
       <p role="status">
         {t("results")}: {results.length}
       </p>
+      <fieldset>
+        <legend>{t("propertyFilters")}</legend>
+        <p>{t("propertyFiltersHint")}</p>
+        <label>
+          {t("minimumVoltage")}
+          <input
+            type="number"
+            min="0"
+            step="any"
+            value={minimumVoltage}
+            onChange={(e) => setMinimumVoltage(e.target.value)}
+          />
+        </label>
+        <label>
+          {t("minimumCurrent")}
+          <input
+            type="number"
+            min="0"
+            step="any"
+            value={minimumCurrent}
+            onChange={(e) => setMinimumCurrent(e.target.value)}
+          />
+        </label>
+      </fieldset>
+      <label>
+        {t("catalogView")}
+        <select
+          aria-label={t("catalogView")}
+          value={view}
+          onChange={(e) => setView(e.target.value)}
+        >
+          <option value="all">{t("all")}</option>
+          <option value="favorites">{t("catalogFavorites")}</option>
+          <option value="recent">{t("catalogRecent")}</option>
+        </select>
+      </label>
+      {preferences.corrupt && (
+        <div role="alert">
+          <p>{t("catalogPreferencesCorrupt")}</p>
+          <button onClick={() => savePreferences(emptyCatalogPreferences())}>
+            {t("resetCatalogPreferences")}
+          </button>
+        </div>
+      )}
+      {preferences.writeFailed && (
+        <p role="alert">{t("catalogPreferencesUnsaved")}</p>
+      )}
       <section aria-label={t("compareParts")}>
         <h3>{t("compareParts")}</h3>
         <p>{t("comparisonHint")}</p>
@@ -152,6 +250,19 @@ export function ComponentLibrary({
           <label>
             <input
               type="checkbox"
+              checked={preferences.value.favoriteIds.includes(part.id)}
+              disabled={preferences.corrupt}
+              onChange={() =>
+                savePreferences(
+                  toggleCatalogFavorite(preferences.value, part.id),
+                )
+              }
+            />
+            {t("catalogFavorite")}: {part.manufacturer} {part.partNumber}
+          </label>
+          <label>
+            <input
+              type="checkbox"
               checked={comparison.includes(part.id)}
               disabled={comparison.length >= 4 && !comparison.includes(part.id)}
               onChange={(e) =>
@@ -213,7 +324,13 @@ export function ComponentLibrary({
               onSubmit={(e) => {
                 e.preventDefault();
                 const id = String(new FormData(e.currentTarget).get("device"));
-                native.update((p) => assignCatalogPart(p, id, part.id));
+                const assigned = native.update((p) =>
+                  assignCatalogPart(p, id, part.id),
+                );
+                if (assigned && !preferences.corrupt)
+                  savePreferences(
+                    recordRecentCatalogPart(preferences.value, part.id),
+                  );
               }}
             >
               <label>

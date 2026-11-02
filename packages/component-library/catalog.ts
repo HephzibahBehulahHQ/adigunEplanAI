@@ -122,7 +122,14 @@ export function searchCatalog(
   query: string,
   category = "",
   manufacturer = "",
+  requirements: { minimumVoltageV?: number; minimumCurrentA?: number } = {},
 ): CatalogPart[] {
+  if (
+    Object.values(requirements).some(
+      (value) => value !== undefined && (!Number.isFinite(value) || value < 0),
+    )
+  )
+    return [];
   const words = query
     .trim()
     .normalize("NFKC")
@@ -133,6 +140,12 @@ export function searchCatalog(
     (part) =>
       (!category || part.category === category) &&
       (!manufacturer || part.manufacturer === manufacturer) &&
+      (requirements.minimumVoltageV === undefined ||
+        (typeof part.ratings.nominalVoltageV === "number" &&
+          part.ratings.nominalVoltageV >= requirements.minimumVoltageV)) &&
+      (requirements.minimumCurrentA === undefined ||
+        (typeof part.ratings.nominalCurrentA === "number" &&
+          part.ratings.nominalCurrentA >= requirements.minimumCurrentA)) &&
       words.every((word) =>
         `${part.name} ${part.manufacturer} ${part.partNumber} ${part.category}`
           .normalize("NFKC")

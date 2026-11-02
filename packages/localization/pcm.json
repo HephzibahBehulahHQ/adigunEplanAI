@@ -260,5 +260,16 @@
   "compareParts": "Compare components",
   "selectForComparison": "Choose for comparison",
   "comparisonHint": "Choose two to four components. We no dey guess missing values.",
-  "property": "Property"
+  "property": "Property",
+  "propertyFilters": "Rating filters",
+  "propertyFiltersHint": "If rating filter dey active, parts wey no declare that rating no go show.",
+  "minimumVoltage": "Minimum voltage wey dem declare (V)",
+  "minimumCurrent": "Minimum current wey dem declare (A)",
+  "catalogView": "Catalog view",
+  "catalogFavorites": "Favorites",
+  "catalogRecent": "Parts wey you just assign",
+  "catalogFavorite": "Favorite",
+  "catalogPreferencesCorrupt": "We no fit read catalog settings. Your stored data still dey. Reset only catalog settings to change am.",
+  "resetCatalogPreferences": "Reset catalog settings",
+  "catalogPreferencesUnsaved": "Catalog settings dey work for this session but we no fit save am."
 }

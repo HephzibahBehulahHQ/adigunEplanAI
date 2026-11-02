@@ -260,5 +260,16 @@
   "compareParts": "Bauteile vergleichen",
   "selectForComparison": "Für Vergleich auswählen",
   "comparisonHint": "Zwei bis vier Bauteile auswählen. Fehlende Werte werden nicht abgeleitet.",
-  "property": "Eigenschaft"
+  "property": "Eigenschaft",
+  "propertyFilters": "Bemessungswertfilter",
+  "propertyFiltersHint": "Bei aktivem Filter werden Bauteile ohne den geforderten Bemessungswert ausgeschlossen.",
+  "minimumVoltage": "Minimale angegebene Spannung (V)",
+  "minimumCurrent": "Minimaler angegebener Strom (A)",
+  "catalogView": "Katalogansicht",
+  "catalogFavorites": "Favoriten",
+  "catalogRecent": "Zuletzt zugewiesen",
+  "catalogFavorite": "Favorit",
+  "catalogPreferencesCorrupt": "Katalogeinstellungen konnten nicht gelesen werden. Gespeicherte Daten bleiben erhalten. Zum Ändern nur die Katalogeinstellungen zurücksetzen.",
+  "resetCatalogPreferences": "Katalogeinstellungen zurücksetzen",
+  "catalogPreferencesUnsaved": "Katalogeinstellungen sind in dieser Sitzung verfügbar, konnten aber nicht gespeichert werden."
 }
