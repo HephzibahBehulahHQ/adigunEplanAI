@@ -342,7 +342,7 @@
   "source-reviewed-facts": "We check listed facts against manufacturer source; no physical certification.",
   "factual-metadata-only": "Factual metadata only. No manufacturer artwork, datasheet or CAD asset dey inside; no permission to redistribute dem.",
   "buildingDesign": "Building design",
-  "buildingStructureScope": "Building/floor structure and rectangular room outlines for millimetres. Walls, equipment and circuit schedules go follow for later updates.",
+  "buildingStructureScope": "Building and floor structure with room boundaries wey you fit edit for millimetres. Room edits keep their identity and floor assignment.",
   "addBuilding": "Add building",
   "buildingName": "Building name",
   "buildingAddress": "Building address",
@@ -359,5 +359,9 @@
   "roomOutlines": "Room outlines",
   "removeRoom": "Remove room",
   "workspaceView": "Workspace view",
-  "schematicView": "Schematic"
+  "schematicView": "Schematic",
+  "editRoom": "Edit room",
+  "roomVertices": "Boundary vertices (x,y mm for each line)",
+  "roomVerticesHelp": "Use 3–256 different points in boundary order. Edges no fit cross, touch or overlap each other.",
+  "applyRoom": "Apply room"
 }

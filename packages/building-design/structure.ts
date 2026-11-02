@@ -1,5 +1,7 @@
 import { validateProject, type Project } from "../electrical-model/project.ts";
 
+import { validateRoomBoundary } from "./rooms.ts";
+
 export function addBuilding(
   project: Project,
   name: string,
@@ -47,12 +49,12 @@ export function addRectangularRoom(
     id: crypto.randomUUID(),
     floorId,
     name,
-    boundary: [
+    boundary: validateRoomBoundary([
       { x: xMm, y: yMm },
       { x: xMm + widthMm, y: yMm },
       { x: xMm + widthMm, y: yMm + depthMm },
       { x: xMm, y: yMm + depthMm },
-    ],
+    ]),
   });
   return validateProject(next);
 }

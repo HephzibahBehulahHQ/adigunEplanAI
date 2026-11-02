@@ -1,3 +1,7 @@
+import {
+  parseRoomBoundary,
+  updateRoom,
+} from "../../../packages/building-design/rooms.ts";
 import { useState } from "react";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
@@ -228,7 +232,50 @@ export function BuildingEditor({
           <ul>
             {rooms.map((room) => (
               <li key={room.id}>
-                {room.name}
+                <details>
+                  <summary>{room.name}</summary>
+                  <form
+                    key={JSON.stringify(room)}
+                    aria-label={`${t("editRoom")}: ${room.name}`}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      const data = new FormData(e.currentTarget);
+                      native.update((p) =>
+                        updateRoom(
+                          p,
+                          room.id,
+                          String(data.get("name")),
+                          parseRoomBoundary(String(data.get("boundary"))),
+                        ),
+                      );
+                    }}
+                  >
+                    <label>
+                      {t("roomName")}
+                      <input
+                        name="name"
+                        defaultValue={room.name}
+                        required
+                        maxLength={160}
+                      />
+                    </label>
+                    <label>
+                      {t("roomVertices")}
+                      <textarea
+                        aria-label={t("roomVertices")}
+                        name="boundary"
+                        defaultValue={room.boundary
+                          .map((p) => `${p.x},${p.y}`)
+                          .join("\n")}
+                        required
+                        maxLength={16000}
+                        rows={8}
+                      />
+                    </label>
+                    <p>{t("roomVerticesHelp")}</p>
+                    <button>{t("applyRoom")}</button>
+                  </form>
+                </details>
                 <button
                   disabled={p.distributionBoards.some(
                     (b) => b.roomId === room.id,

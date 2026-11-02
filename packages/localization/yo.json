@@ -342,7 +342,7 @@
   "source-reviewed-facts": "A ṣàyẹ̀wò àwọn òtítọ́ tí a kọ sí orísun olupèsè; kò sí ìjẹ́rìí ohun èlò gidi.",
   "factual-metadata-only": "Dátà òtítọ́ nìkan. Kò sí àwòrán, ìwé dátà tàbí fáìlì CAD olupèsè; a kò fúnni ní ẹ̀tọ́ pínpín wọn.",
   "buildingDesign": "Ètò ilé",
-  "buildingStructureScope": "Ilé, ilẹ̀ àti ààlà yàrá onígun mẹ́rin ní milimita. Ògiri, ohun èlò àti àtòjọ iyika yóò tẹ̀lé.",
+  "buildingStructureScope": "Ilé àti ilẹ̀ pẹ̀lú ààlà yàrá tí a lè ṣàtúnṣe ní milimita. Àtúnṣe pa ìdánimọ̀ yàrá àti ilẹ̀ rẹ̀ mọ́.",
   "addBuilding": "Fi ilé kún",
   "buildingName": "Orúkọ ilé",
   "buildingAddress": "Àdírẹ́sì ilé",
@@ -359,5 +359,9 @@
   "roomOutlines": "Ààlà yàrá",
   "removeRoom": "Yọ yàrá",
   "workspaceView": "Ìwòye iṣẹ́",
-  "schematicView": "Àwòrán iyika"
+  "schematicView": "Àwòrán iyika",
+  "editRoom": "Ṣàtúnṣe yàrá",
+  "roomVertices": "Àwọn igun ààlà (x,y mm ní ìlà kọ̀ọ̀kan)",
+  "roomVerticesHelp": "Lo igun 3–256 tí kò jọra ní ìtẹ̀lé ààlà. A kọ àwọn etí tí ń kọjá tàbí kan ara wọn.",
+  "applyRoom": "Fi yàrá sílò"
 }

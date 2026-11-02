@@ -342,7 +342,7 @@
   "source-reviewed-facts": "Aufgeführte Fakten mit der Herstellerquelle abgeglichen; keine physische Zertifizierung.",
   "factual-metadata-only": "Nur sachliche Metadaten. Keine Herstellerbilder, Datenblätter oder CAD-Dateien enthalten; keine Weiterverbreitungsrechte erteilt.",
   "buildingDesign": "Gebäudeplanung",
-  "buildingStructureScope": "Gebäude-/Etagenstruktur und rechteckige Raumumrisse in Millimetern. Wände, Geräte und Stromkreislisten folgen in weiteren Ausbauschritten.",
+  "buildingStructureScope": "Gebäude- und Etagenstruktur mit bearbeitbaren Raumgrenzen in Millimetern. Raumänderungen behalten Identität und Etagenzuordnung.",
   "addBuilding": "Gebäude hinzufügen",
   "buildingName": "Gebäudename",
   "buildingAddress": "Gebäudeadresse",
@@ -359,5 +359,9 @@
   "roomOutlines": "Raumumrisse",
   "removeRoom": "Raum entfernen",
   "workspaceView": "Arbeitsbereichsansicht",
-  "schematicView": "Schaltplan"
+  "schematicView": "Schaltplan",
+  "editRoom": "Raum bearbeiten",
+  "roomVertices": "Grenzpunkte (x,y mm je Zeile)",
+  "roomVerticesHelp": "3–256 verschiedene Punkte entlang des Umfangs eingeben. Kreuzende, berührende oder überlappende Kanten werden abgelehnt.",
+  "applyRoom": "Raum anwenden"
 }

@@ -53,6 +53,38 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     "-1000,0 3000,0 3000,3000 -1000,3000",
   );
   await page
+    .locator(".building-editor summary")
+    .filter({ hasText: /^Office$/ })
+    .click();
+  const edit = page.getByRole("form", {
+    name: "Edit room: Office",
+    exact: true,
+  });
+  await edit
+    .getByLabel("Boundary vertices (x,y mm per line)", { exact: true })
+    .fill("0,0\n4000,0\n4000,2000\n2000,2000\n2000,4000\n0,4000");
+  await edit.getByRole("button", { name: "Apply room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
+  );
+  await edit
+    .getByLabel("Boundary vertices (x,y mm per line)", { exact: true })
+    .fill("0,0\n4000,4000\n0,4000\n4000,0");
+  await edit.getByRole("button", { name: "Apply room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
+  );
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
+  );
+  await page
     .getByRole("button", { name: "Remove room: Office", exact: true })
     .click();
   await expect(page.locator("[data-room-id]")).toHaveCount(0);
