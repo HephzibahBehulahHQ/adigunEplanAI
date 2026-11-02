@@ -9,3 +9,5 @@ The target also includes all specification requirements beyond the screenshot: b
 Target image SHA256: c99e97fccec545612872ddc5466df9109bc9af63f0d64b9e27420c6321d961c9.
 
 Owner reconfirmation: the latest attachment, codex-clipboard-4bebfa81-84fb-4508-9f7b-4edcfcfec8e5.png, is byte-identical to the saved target (SHA256 verified). Keep this visual target throughout the remaining milestones.
+
+Production domain requirement (owner instruction): configure Cloudflare and Supabase around https://adiguneplanai.hephzibahbehulah.com/. The supplied https://hephzibahbehulahhq.github.io/adigunEplanAI/ address is the migration source. Use the custom domain for production links and authentication redirects. This instruction authorizes configuration work within the existing project scope; it is not evidence that DNS, hosting or Supabase authentication is already configured. Track implementation and verification in docs/deployment/production-domain.md.
