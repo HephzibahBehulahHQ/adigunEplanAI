@@ -376,5 +376,22 @@
   "roomMeasurementUnavailable": "Messwerte nicht verfügbar: Raumgrenze korrigieren.",
   "catalogLoading": "Bauteilbibliothek wird geladen…",
   "catalogLoadError": "Die Bauteilbibliothek konnte nicht geladen werden. Das Projekt bleibt bearbeitbar und exportierbar.",
-  "buildingLoadError": "Die Gebäudeplanung konnte nicht geladen werden. Das Projekt bleibt im Schaltplanbereich verfügbar."
+  "buildingLoadError": "Die Gebäudeplanung konnte nicht geladen werden. Das Projekt bleibt im Schaltplanbereich verfügbar.",
+  "wallsAndLayers": "Wände und Planebenen",
+  "addPlanLayer": "Planebene hinzufügen",
+  "planLayerName": "Name der Planebene",
+  "planLayerKind": "Art der Planebene",
+  "architecturalLayer": "Architekturebene",
+  "electricalLayer": "Elektroebene",
+  "planLayerVisible": "Sichtbar",
+  "planLayerLocked": "Gesperrt",
+  "addWall": "Wand hinzufügen",
+  "wallName": "Wandname",
+  "wallStartX": "Start X (mm)",
+  "wallStartY": "Start Y (mm)",
+  "wallEndX": "Ende X (mm)",
+  "wallEndY": "Ende Y (mm)",
+  "wallThickness": "Dicke (mm)",
+  "wallHeight": "Wandhöhe (mm)",
+  "removeWall": "Wand entfernen"
 }

@@ -281,6 +281,37 @@ export const schemas = {
     elevationMm: finite,
     heightMm: positive,
   }),
+  architecturalLayers: entity.extend({
+    floorId: id,
+    kind: z.enum(["architectural", "electrical"]),
+    visible: z.boolean(),
+    locked: z.boolean(),
+  }),
+  walls: entity
+    .extend({
+      floorId: id,
+      layerId: id,
+      start: point,
+      end: point,
+      thicknessMm: positive.max(10000),
+      heightMm: positive.max(100000),
+    })
+    .superRefine((wall, ctx) => {
+      if (wall.start.x === wall.end.x && wall.start.y === wall.end.y)
+        ctx.addIssue({
+          code: "custom",
+          message: "Wall must have nonzero length",
+        });
+      if (
+        [wall.start.x, wall.start.y, wall.end.x, wall.end.y].some(
+          (v) => Math.abs(v) > 1000000,
+        )
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Wall coordinate exceeds plan bounds",
+        });
+    }),
   rooms: entity.extend({
     floorId: id,
     boundary: z.array(point).min(3).max(10000),
@@ -317,7 +348,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(9),
+    schemaVersion: z.literal(10),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -331,7 +362,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 9;
+  schemaVersion: 10;
   id: string;
   name: string;
   createdAt: string;
@@ -347,7 +378,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 9,
+    schemaVersion: 10,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -395,12 +426,25 @@ const references: Partial<
   plcAddresses: { moduleId: "plcModules" },
   equipment3d: { deviceId: "devices", enclosureId: "enclosures" },
   floors: { buildingId: "buildings" },
+  architecturalLayers: { floorId: "floors" },
+  walls: { floorId: "floors", layerId: "architecturalLayers" },
   rooms: { floorId: "floors" },
   circuits: { boardId: "distributionBoards", deviceIds: "devices" },
   distributionBoards: { deviceId: "devices", roomId: "rooms" },
   reports: { documentId: "documents", revisionId: "revisions" },
 };
 function validateReferences(project: Project): void {
+  for (const wall of project.walls) {
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === wall.layerId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== wall.floorId ||
+      layer.kind !== "architectural"
+    )
+      throw new Error("Wall requires an architectural layer on its floor");
+  }
   const pageOrders = new Set<string>();
   for (const page of project.pages) {
     const key = `${page.documentId}:${page.order}`;
@@ -688,7 +732,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -696,7 +740,8 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 9) return { project: validateProject(raw), migratedFrom: 9 };
+  if (version === 10)
+    return { project: validateProject(raw), migratedFrom: 10 };
   if (
     version === 2 ||
     version === 3 ||
@@ -704,10 +749,16 @@ export function parseProject(text: string): {
     version === 5 ||
     version === 6 ||
     version === 7 ||
-    version === 8
+    version === 8 ||
+    version === 9
   )
     return {
-      project: validateProject({ ...raw, schemaVersion: 9 }),
+      project: validateProject({
+        architecturalLayers: [],
+        walls: [],
+        ...raw,
+        schemaVersion: 10,
+      }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -715,7 +766,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 9,
+      schemaVersion: 10,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

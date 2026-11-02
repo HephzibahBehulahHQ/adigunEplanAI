@@ -376,5 +376,22 @@
   "roomMeasurementUnavailable": "Measurements no dey: repair the room boundary.",
   "catalogLoading": "Component library dey load…",
   "catalogLoadError": "Component library no load. You still fit edit and export your project.",
-  "buildingLoadError": "Building design no load. Your project still dey for schematic workspace."
+  "buildingLoadError": "Building design no load. Your project still dey for schematic workspace.",
+  "wallsAndLayers": "Walls and plan layers",
+  "addPlanLayer": "Add plan layer",
+  "planLayerName": "Plan layer name",
+  "planLayerKind": "Plan layer kind",
+  "architecturalLayer": "Architectural layer",
+  "electricalLayer": "Electrical layer",
+  "planLayerVisible": "Visible",
+  "planLayerLocked": "Locked",
+  "addWall": "Add wall",
+  "wallName": "Wall name",
+  "wallStartX": "Start X (mm)",
+  "wallStartY": "Start Y (mm)",
+  "wallEndX": "End X (mm)",
+  "wallEndY": "End Y (mm)",
+  "wallThickness": "Thickness (mm)",
+  "wallHeight": "Wall height (mm)",
+  "removeWall": "Remove wall"
 }

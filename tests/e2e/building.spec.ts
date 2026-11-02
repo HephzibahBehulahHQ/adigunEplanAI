@@ -185,3 +185,78 @@ test("graphical room drawing snaps vertices and commits only on Finish", async (
   await page.reload();
   expect((await read()).rooms).toEqual(after.rooms);
 });
+
+test("native walls obey architectural layer visibility and locking and survive reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Walls reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  await page.locator(".wall-tools > summary").click();
+  const layer = page.getByRole("form", { name: "Add plan layer", exact: true });
+  await layer
+    .getByLabel("Plan layer name", { exact: true })
+    .fill("Architecture");
+  await layer
+    .getByRole("button", { name: "Add plan layer", exact: true })
+    .click();
+  const wall = page.getByRole("form", { name: "Add wall", exact: true });
+  await wall.getByLabel("Wall name", { exact: true }).fill("North wall");
+  await wall.getByRole("button", { name: "Add wall", exact: true }).click();
+  await expect(page.locator("[data-wall-id]")).toHaveAttribute(
+    "points",
+    "0,100 4000,100 4000,-100 0,-100",
+  );
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .check();
+  await expect(
+    wall.getByRole("button", { name: "Add wall", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Remove wall: North wall", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", { name: "Visible: Architecture", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(0);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".wall-tools > summary").click();
+  await expect(
+    page.getByRole("checkbox", { name: "Locked: Architecture", exact: true }),
+  ).toBeChecked();
+  await page
+    .getByRole("checkbox", { name: "Visible: Architecture", exact: true })
+    .check();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(1);
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .uncheck();
+  await page
+    .getByRole("button", { name: "Remove wall: North wall", exact: true })
+    .click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(1);
+});

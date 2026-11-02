@@ -376,5 +376,22 @@
   "roomMeasurementUnavailable": "Ìwọ̀n kò sí: tún ààlà yàrá ṣe.",
   "catalogLoading": "Ń kó ibi ìkàwé ohun èlò…",
   "catalogLoadError": "Ibi ìkàwé ohun èlò kò lè ṣí. O ṣì lè ṣàtúnṣe àti gbé iṣẹ́ rẹ jáde.",
-  "buildingLoadError": "Ètò ilé kò lè ṣí. Iṣẹ́ rẹ ṣì wà ní agbègbè àwòrán iyika."
+  "buildingLoadError": "Ètò ilé kò lè ṣí. Iṣẹ́ rẹ ṣì wà ní agbègbè àwòrán iyika.",
+  "wallsAndLayers": "Ògiri àti fẹ́lẹfẹ́lẹ́ ètò",
+  "addPlanLayer": "Fi fẹ́lẹfẹ́lẹ́ ètò kún",
+  "planLayerName": "Orúkọ fẹ́lẹfẹ́lẹ́ ètò",
+  "planLayerKind": "Irú fẹ́lẹfẹ́lẹ́ ètò",
+  "architecturalLayer": "Fẹ́lẹfẹ́lẹ́ ilé",
+  "electricalLayer": "Fẹ́lẹfẹ́lẹ́ iná",
+  "planLayerVisible": "Hàn",
+  "planLayerLocked": "Tì pa",
+  "addWall": "Fi ògiri kún",
+  "wallName": "Orúkọ ògiri",
+  "wallStartX": "Ìbẹ̀rẹ̀ X (mm)",
+  "wallStartY": "Ìbẹ̀rẹ̀ Y (mm)",
+  "wallEndX": "Òpin X (mm)",
+  "wallEndY": "Òpin Y (mm)",
+  "wallThickness": "Sísanra (mm)",
+  "wallHeight": "Gíga ògiri (mm)",
+  "removeWall": "Yọ ògiri"
 }

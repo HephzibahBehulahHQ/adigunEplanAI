@@ -1,3 +1,5 @@
+import { WallTools } from "./WallTools";
+import { wallFootprint } from "../../../packages/building-design/walls.ts";
 import {
   parseRoomBoundary,
   measureRoom,
@@ -55,9 +57,18 @@ export function BuildingEditor({
   const floors = p.floors.filter((f) => f.buildingId === building?.id);
   const floor = floors.find((f) => f.id === floorId) ?? floors[0];
   const rooms = p.rooms.filter((r) => r.floorId === floor?.id);
-  const bounds = rooms.reduce(
-    (bounds, room) =>
-      room.boundary.reduce(
+  const visibleWalls = p.walls.filter(
+    (w) =>
+      w.floorId === floor?.id &&
+      p.architecturalLayers.some((l) => l.id === w.layerId && l.visible),
+  );
+  const planShapes = [
+    ...rooms.map((r) => r.boundary),
+    ...visibleWalls.map((w) => wallFootprint(w)),
+  ];
+  const bounds = planShapes.reduce(
+    (bounds, boundary) =>
+      boundary.reduce(
         (b, point) => ({
           minX: Math.min(b.minX, point.x),
           minY: Math.min(b.minY, point.y),
@@ -68,10 +79,10 @@ export function BuildingEditor({
       ),
     { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
   );
-  const minX = rooms.length ? bounds.minX : 0;
-  const minY = rooms.length ? bounds.minY : 0;
-  const width = rooms.length ? bounds.maxX - minX : 10000;
-  const height = rooms.length ? bounds.maxY - minY : 8000;
+  const minX = planShapes.length ? bounds.minX : 0;
+  const minY = planShapes.length ? bounds.minY : 0;
+  const width = planShapes.length ? bounds.maxX - minX : 10000;
+  const height = planShapes.length ? bounds.maxY - minY : 8000;
   const margin = Math.max(width, height, 1000) * 0.05;
   const activeDrawing = drawing?.floorId === floor?.id ? drawing : null;
   const planViewBox = `${minX - margin} ${minY - margin} ${Math.max(width, 1) + 2 * margin} ${Math.max(height, 1) + 2 * margin}`;
@@ -241,6 +252,7 @@ export function BuildingEditor({
             ))}
             <button>{t("addRoom")}</button>
           </form>
+          <WallTools key={floor.id} native={native} floorId={floor.id} t={t} />
           <form
             aria-label={t("drawRoom")}
             onSubmit={(e) => {
@@ -417,6 +429,22 @@ export function BuildingEditor({
                 ))}
               </>
             )}
+            {visibleWalls.map((w) => (
+              <polygon
+                key={w.id}
+                data-wall-id={w.id}
+                points={wallFootprint(w)
+                  .map((p) => `${p.x},${p.y}`)
+                  .join(" ")}
+                fill="currentColor"
+                fillOpacity={0.2}
+                stroke="currentColor"
+                strokeWidth={1}
+                vectorEffect="non-scaling-stroke"
+              >
+                <title>{w.name}</title>
+              </polygon>
+            ))}
             {rooms.map((room) => (
               <g key={room.id} data-room-id={room.id}>
                 <polygon

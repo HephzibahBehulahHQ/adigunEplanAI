@@ -376,5 +376,22 @@
   "roomMeasurementUnavailable": "Measurements unavailable: repair the room boundary.",
   "catalogLoading": "Loading component library…",
   "catalogLoadError": "The component library could not load. Your project remains available for editing and export.",
-  "buildingLoadError": "Building design could not load. Your project remains available in the schematic workspace."
+  "buildingLoadError": "Building design could not load. Your project remains available in the schematic workspace.",
+  "wallsAndLayers": "Walls and plan layers",
+  "addPlanLayer": "Add plan layer",
+  "planLayerName": "Plan layer name",
+  "planLayerKind": "Plan layer kind",
+  "architecturalLayer": "Architectural layer",
+  "electricalLayer": "Electrical layer",
+  "planLayerVisible": "Visible",
+  "planLayerLocked": "Locked",
+  "addWall": "Add wall",
+  "wallName": "Wall name",
+  "wallStartX": "Start X (mm)",
+  "wallStartY": "Start Y (mm)",
+  "wallEndX": "End X (mm)",
+  "wallEndY": "End Y (mm)",
+  "wallThickness": "Thickness (mm)",
+  "wallHeight": "Wall height (mm)",
+  "removeWall": "Remove wall"
 }
