@@ -254,7 +254,7 @@ export function place(
   const primitive = custom
     ? {
         glyph: custom.glyph,
-        prefix: "U",
+        prefix: custom.connectionClass === "mechanical" ? "ME" : "U",
         w: custom.widthMm,
         h: custom.heightMm,
         pins: custom.pins,

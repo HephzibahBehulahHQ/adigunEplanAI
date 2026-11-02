@@ -19,6 +19,7 @@ const artworkShape = z.discriminatedUnion("kind", [
 ]);
 const entity = z.object({ id, name }).strict();
 export const symbolDefinitionSchema = entity.extend({
+  connectionClass: z.literal("mechanical").optional(),
   category: name,
   glyph: z.enum([
     "box",
@@ -277,7 +278,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(7),
+    schemaVersion: z.literal(8),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -291,7 +292,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 7;
+  schemaVersion: 8;
   id: string;
   name: string;
   createdAt: string;
@@ -307,7 +308,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 7,
+    schemaVersion: 8,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -458,7 +459,10 @@ function validateReferences(project: Project): void {
           JSON.stringify(part.custom.symbolDefinition)
       )
         throw new Error("Custom component symbol revision mismatch");
-      if (!definition.pins.length)
+      if (
+        !definition.pins.length &&
+        definition.connectionClass !== "mechanical"
+      )
         throw new Error(
           "Custom electrical component requires connection points",
         );
@@ -477,6 +481,13 @@ function validateReferences(project: Project): void {
         throw new Error("Invalid custom component connection geometry");
     }
   for (const definition of project.symbolDefinitions) {
+    if (
+      definition.connectionClass === "mechanical" &&
+      (definition.category !== "custom" ||
+        definition.glyph !== "box" ||
+        definition.pins.length)
+    )
+      throw new Error("Mechanical symbols cannot declare electrical pins");
     const inside = (p: Point) =>
       Math.abs(p.x) <= definition.widthMm / 2 &&
       Math.abs(p.y) <= definition.heightMm / 2;
@@ -638,7 +649,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -646,16 +657,17 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 7) return { project: validateProject(raw), migratedFrom: 7 };
+  if (version === 8) return { project: validateProject(raw), migratedFrom: 8 };
   if (
     version === 2 ||
     version === 3 ||
     version === 4 ||
     version === 5 ||
-    version === 6
+    version === 6 ||
+    version === 7
   )
     return {
-      project: validateProject({ ...raw, schemaVersion: 7 }),
+      project: validateProject({ ...raw, schemaVersion: 8 }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -663,7 +675,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 7,
+      schemaVersion: 8,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

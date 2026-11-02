@@ -14,7 +14,7 @@ function validateDefinition(definition: Project["symbolDefinitions"][number]) {
     parsed.widthMm > 500 ||
     parsed.heightMm < 4 ||
     parsed.heightMm > 500 ||
-    !parsed.pins.length
+    (!parsed.pins.length && parsed.connectionClass !== "mechanical")
   )
     throw new Error("Invalid custom dimensions or empty pin set");
   if (
@@ -65,6 +65,8 @@ export function updateCustomSymbol(
   const instances = next.symbolInstances.filter(
     (s) => s.definitionId === definition.id,
   );
+  if (instances.length && current.connectionClass !== parsed.connectionClass)
+    throw new Error("Cannot change connection class after placement");
   for (const instance of instances) {
     const pins = next.pins.filter((p) => p.symbolInstanceId === instance.id);
     for (const existing of pins) {

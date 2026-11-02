@@ -300,5 +300,8 @@
   "componentSaved": "Bauteilrevision erstellt. Bestehende Zuweisungen bleiben erhalten.",
   "componentError": "Bauteilaktion abgelehnt. Bestehende Arbeit bleibt erhalten.",
   "componentImported": "Bauteil importiert.",
-  "componentAssigned": "Bauteil zugewiesen."
+  "componentAssigned": "Bauteil zugewiesen.",
+  "mechanicalSymbol": "Mechanisches Symbol (ohne elektrische Anschlüsse)",
+  "mechanicalSymbolHint": "Für mechanische Bauteile mechanisch auswählen und Pins leer lassen. Elektrische Symbole benötigen Anschlusspunkte.",
+  "cable-gland-mechanical": "Mechanische Kabelverschraubung"
 }

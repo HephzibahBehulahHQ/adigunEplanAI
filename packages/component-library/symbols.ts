@@ -1,4 +1,4 @@
-import type { Project } from "../electrical-model/project.ts";
+import { schemas, type Project } from "../electrical-model/project.ts";
 import { createCustomSymbol } from "./custom-symbols.ts";
 
 type Shape = NonNullable<
@@ -1342,6 +1342,37 @@ export const engineeringSymbols = [
       line(13, 14, 28, 14),
     ],
   },
+  {
+    id: "cable-gland-mechanical",
+    name: "Mechanical cable gland",
+    category: "connections",
+    connectionClass: "mechanical",
+    width: 32,
+    height: 24,
+    pins: [],
+    artwork: [
+      line(-15, -5, -9, -5),
+      line(-9, -5, -9, 5),
+      line(-9, 5, -15, 5),
+      line(-15, 5, -15, -5),
+      line(-9, -8, -4, -11),
+      line(-4, -11, 1, -8),
+      line(1, -8, 1, 8),
+      line(1, 8, -4, 11),
+      line(-4, 11, -9, 8),
+      line(-9, 8, -9, -8),
+      line(1, -7, 11, -7),
+      line(11, -7, 15, -3),
+      line(15, -3, 15, 3),
+      line(15, 3, 11, 7),
+      line(11, 7, 1, 7),
+      line(4, -7, 4, 7),
+      line(7, -7, 7, 7),
+      line(10, -7, 10, 7),
+      line(-15, -2, 15, -2),
+      line(-15, 2, 15, 2),
+    ],
+  },
 ] as const;
 
 export function searchSymbols(query: string, category = "") {
@@ -1362,16 +1393,19 @@ export function searchSymbols(query: string, category = "") {
 export function installSymbol(project: Project, symbolId: string): Project {
   const symbol = engineeringSymbols.find((item) => item.id === symbolId);
   if (!symbol) throw new Error("Unknown engineering symbol");
-  const definition = {
+  const definition = schemas.symbolDefinitions.parse({
     id: `library-${symbol.id}`,
     name: symbol.name,
     category: "custom",
+    ...("connectionClass" in symbol
+      ? { connectionClass: symbol.connectionClass }
+      : {}),
     glyph: "box" as const,
     widthMm: symbol.width,
     heightMm: symbol.height,
     pins: structuredClone([...symbol.pins]),
     artwork: structuredClone([...symbol.artwork]),
-  };
+  });
   const existing = project.symbolDefinitions.find(
     (item) => item.id === definition.id,
   );

@@ -300,5 +300,8 @@
   "componentSaved": "Component revision created. Existing assignments are unchanged.",
   "componentError": "Component action rejected. Existing work has been preserved.",
   "componentImported": "Component imported.",
-  "componentAssigned": "Component assigned."
+  "componentAssigned": "Component assigned.",
+  "mechanicalSymbol": "Mechanical symbol (no electrical connections)",
+  "mechanicalSymbolHint": "For mechanical parts, select mechanical and leave pins empty. Electrical symbols require connection points.",
+  "cable-gland-mechanical": "Mechanical cable gland"
 }

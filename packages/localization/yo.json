@@ -300,5 +300,8 @@
   "componentSaved": "A ti ṣẹ̀dá àtúnyẹ̀wò èròjà. Ìyàn tẹ́lẹ̀ kò yí padà.",
   "componentError": "A kọ ìṣe èròjà. A pa iṣẹ́ tẹ́lẹ̀ mọ́.",
   "componentImported": "A ti gbé èròjà wọlé.",
-  "componentAssigned": "A ti yan èròjà."
+  "componentAssigned": "A ti yan èròjà.",
+  "mechanicalSymbol": "Ààmì ẹ̀rọ (láìsí ìsopọ̀ iná)",
+  "mechanicalSymbolHint": "Fún èròjà ẹ̀rọ, yan ẹ̀rọ kí o sì fi àwọn pin sílẹ̀ láìsí iye. Ààmì iná nílò àwọn ojú ìsopọ̀.",
+  "cable-gland-mechanical": "Ẹ̀rọ ìdì okun"
 }

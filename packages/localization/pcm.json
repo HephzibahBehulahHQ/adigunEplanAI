@@ -300,5 +300,8 @@
   "componentSaved": "Component revision don create. Old assignments no change.",
   "componentError": "Component action no pass. Your old work still dey.",
   "componentImported": "Component don import.",
-  "componentAssigned": "Component don assign."
+  "componentAssigned": "Component don assign.",
+  "mechanicalSymbol": "Mechanical symbol (no electrical connections)",
+  "mechanicalSymbolHint": "For mechanical parts, choose mechanical and leave pins empty. Electrical symbols need connection points.",
+  "cable-gland-mechanical": "Mechanical cable gland"
 }

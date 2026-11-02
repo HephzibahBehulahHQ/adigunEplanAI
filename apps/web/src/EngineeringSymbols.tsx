@@ -61,8 +61,11 @@ export function EngineeringSymbols({
       <ul>
         {matches.map((symbol) => (
           <li key={symbol.id}>
-            {t(symbol.id as MessageKey)} · {symbol.pins.length}{" "}
-            {t("electricalPins")}
+            {t(symbol.id as MessageKey)} ·{" "}
+            {"connectionClass" in symbol &&
+            symbol.connectionClass === "mechanical"
+              ? t("mechanicalSymbol")
+              : `${symbol.pins.length} ${t("electricalPins")}`}
             <svg
               data-library-preview={symbol.id}
               role="img"

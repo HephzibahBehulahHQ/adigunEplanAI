@@ -157,7 +157,9 @@ export function CustomComponents({
               —
             </option>
             {project.symbolDefinitions
-              .filter((d) => d.pins.length)
+              .filter(
+                (d) => d.pins.length || d.connectionClass === "mechanical",
+              )
               .map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.name}
