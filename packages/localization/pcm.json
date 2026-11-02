@@ -190,7 +190,7 @@
   "symbolName": "Symbol name",
   "symbolWidth": "Body width (mm)",
   "symbolHeight": "Body height (mm)",
-  "symbolPins": "Pins: id, x, y each line (mm from center)",
+  "symbolPins": "Pins: id, x, y each line (mm from center) [kind: power/control/signal/pe/neutral]",
   "editCustomSymbol": "Edit custom symbol",
   "symbolArtwork": "Artwork for mm: line, x1, y1, x2, y2 or circle, x, y, radius each line",
   "engineeringSymbols": "Engineering symbols",
@@ -215,5 +215,6 @@
   "variable-frequency-drive": "Variable-frequency drive",
   "category-protection": "Protection",
   "category-automation": "Automation",
-  "category-industrial": "Industrial controls"
+  "category-industrial": "Industrial controls",
+  "notDeclared": "No declaration"
 }

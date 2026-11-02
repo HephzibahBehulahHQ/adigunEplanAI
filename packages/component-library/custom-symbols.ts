@@ -69,7 +69,7 @@ export function updateCustomSymbol(
           name: pin.id,
           designation: pin.id,
           deviceId: instance.deviceId,
-          kind: "control",
+          kind: pin.kind ?? "control",
         });
         next.pins.push({
           id: crypto.randomUUID(),
@@ -79,6 +79,13 @@ export function updateCustomSymbol(
           definitionPinId: pin.id,
         });
       }
+    for (const pin of parsed.pins) {
+      const instancePin = pins.find((p) => p.definitionPinId === pin.id);
+      const terminal = next.terminals.find(
+        (t) => t.id === instancePin?.terminalId,
+      );
+      if (terminal && pin.kind) terminal.kind = pin.kind;
+    }
   }
   next.symbolDefinitions[
     next.symbolDefinitions.findIndex((d) => d.id === parsed.id)

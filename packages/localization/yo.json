@@ -190,7 +190,7 @@
   "symbolName": "Orúkọ àmì",
   "symbolWidth": "Fífẹ̀ ara (mm)",
   "symbolHeight": "Gíga ara (mm)",
-  "symbolPins": "Ebute: id, x, y ní ìlà kọ̀ọ̀kan (mm láti àárín)",
+  "symbolPins": "Ebute: id, x, y ní ìlà kọ̀ọ̀kan (mm láti àárín) [kind: power/control/signal/pe/neutral]",
   "editCustomSymbol": "Ṣàtúnṣe àmì àkànṣe",
   "symbolArtwork": "Àwòrán ní mm: line, x1, y1, x2, y2 tàbí circle, x, y, radius ní ìlà kọ̀ọ̀kan",
   "engineeringSymbols": "Àwọn àmì ẹ̀rọ",
@@ -215,5 +215,6 @@
   "variable-frequency-drive": "Ẹ̀rọ ìyípadà frẹ́kúẹ́ńsì",
   "category-protection": "Ààbò",
   "category-automation": "Ìṣàkóso aládàáṣe",
-  "category-industrial": "Ìṣàkóso ilé iṣẹ́"
+  "category-industrial": "Ìṣàkóso ilé iṣẹ́",
+  "notDeclared": "A kò sọ ọ́"
 }

@@ -10,6 +10,7 @@ const name = z.string().trim().min(1).max(160);
 const finite = z.number().finite();
 const positive = finite.positive();
 const point = z.object({ x: finite, y: finite }).strict();
+const terminalKind = z.enum(["power", "control", "signal", "pe", "neutral"]);
 const artworkShape = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("line"), from: point, to: point }).strict(),
   z
@@ -62,7 +63,13 @@ export const schemas = {
     ]),
     widthMm: positive,
     heightMm: positive,
-    pins: z.array(z.object({ id, position: point }).strict()).max(256),
+    pins: z
+      .array(
+        z
+          .object({ id, position: point, kind: terminalKind.optional() })
+          .strict(),
+      )
+      .max(256),
     artwork: z.array(artworkShape).min(1).max(256).optional(),
   }),
   symbolInstances: entity.extend({
@@ -96,7 +103,7 @@ export const schemas = {
     designation: name,
     capacity: z.number().int().min(1).max(1000).optional(),
     required: z.boolean().optional(),
-    kind: z.enum(["power", "control", "signal", "pe", "neutral"]),
+    kind: terminalKind,
   }),
   pins: entity.extend({
     terminalId: id,
@@ -205,7 +212,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(4),
+    schemaVersion: z.literal(5),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -219,7 +226,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 4;
+  schemaVersion: 5;
   id: string;
   name: string;
   createdAt: string;
@@ -235,7 +242,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 4,
+    schemaVersion: 5,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -485,7 +492,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -493,10 +500,10 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 4) return { project: validateProject(raw), migratedFrom: 4 };
-  if (version === 2 || version === 3)
+  if (version === 5) return { project: validateProject(raw), migratedFrom: 5 };
+  if (version === 2 || version === 3 || version === 4)
     return {
-      project: validateProject({ ...raw, schemaVersion: 4 }),
+      project: validateProject({ ...raw, schemaVersion: 5 }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -504,7 +511,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 4,
+      schemaVersion: 5,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

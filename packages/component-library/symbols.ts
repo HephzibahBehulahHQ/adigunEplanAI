@@ -14,7 +14,12 @@ const circle = (x: number, y: number, r: number): Shape => ({
   center: { x, y },
   radiusMm: r,
 });
-const pin = (id: string, x: number, y: number) => ({ id, position: { x, y } });
+const pin = (
+  id: string,
+  x: number,
+  y: number,
+  kind: Project["terminals"][number]["kind"] = "power",
+) => ({ id, position: { x, y }, kind });
 export const engineeringSymbols = [
   {
     id: "transformer-two-winding",
@@ -65,7 +70,7 @@ export const engineeringSymbols = [
     category: "switching",
     width: 24,
     height: 16,
-    pins: [pin("11", -12, 0), pin("12", 12, 0)],
+    pins: [pin("11", -12, 0, "control"), pin("12", 12, 0, "control")],
     artwork: [
       line(-12, 0, -4, 0),
       line(-4, 0, 4, 0),
@@ -85,7 +90,7 @@ export const engineeringSymbols = [
       pin("U", -16, -8),
       pin("V", -16, 0),
       pin("W", -16, 8),
-      pin("PE", 0, 16),
+      pin("PE", 0, 16, "pe"),
     ],
     artwork: [
       circle(0, 0, 11),
@@ -120,7 +125,11 @@ export const engineeringSymbols = [
     category: "building",
     width: 28,
     height: 24,
-    pins: [pin("L", -14, -6), pin("N", -14, 6), pin("PE", 14, 0)],
+    pins: [
+      pin("L", -14, -6),
+      pin("N", -14, 6, "neutral"),
+      pin("PE", 14, 0, "pe"),
+    ],
     artwork: [
       circle(0, 0, 10),
       line(-14, -6, -5, -6),
@@ -156,7 +165,11 @@ export const engineeringSymbols = [
     category: "automation",
     width: 32,
     height: 24,
-    pins: [pin("supply", -16, -6), pin("common", -16, 6), pin("output", 16, 0)],
+    pins: [
+      pin("supply", -16, -6, "control"),
+      pin("common", -16, 6, "control"),
+      pin("output", 16, 0, "signal"),
+    ],
     artwork: [
       line(-10, -10, 10, -10),
       line(10, -10, 10, 10),
@@ -185,7 +198,7 @@ export const engineeringSymbols = [
       pin("U", 20, -10),
       pin("V", 20, 0),
       pin("W", 20, 10),
-      pin("PE", 0, 18),
+      pin("PE", 0, 18, "pe"),
     ],
     artwork: [
       line(-14, -16, 14, -16),

@@ -41,6 +41,11 @@ test("every engineering symbol installs and places its declared electrical nodes
     );
     const pins = p.pins.filter((pin) => pin.symbolInstanceId === id);
     assert.equal(pins.length, symbol.pins.length, symbol.name);
+    for (const pin of pins)
+      assert.equal(
+        p.terminals.find((t) => t.id === pin.terminalId).kind,
+        symbol.pins.find((p) => p.id === pin.definitionPinId).kind,
+      );
     assert.equal(
       new Set(pins.map((pin) => pin.terminalId)).size,
       symbol.pins.length,
@@ -98,8 +103,56 @@ test("custom artwork is bounded native geometry and schema three migrates withou
   p.schemaVersion = 3;
   const migrated = parseProject(JSON.stringify(p));
   assert.equal(migrated.migratedFrom, 3);
-  assert.equal(migrated.project.schemaVersion, 4);
+  assert.equal(migrated.project.schemaVersion, 5);
   assert.deepEqual(migrated.project.wires, p.wires);
+});
+
+test("declared pin kinds propagate on edits and schema four preserves prior terminal kinds", () => {
+  const p = installSymbol(nativeProject(), "socket-l-n-pe");
+  const id = place(
+    p,
+    "page",
+    "layer",
+    "custom",
+    { x: 200, y: 150 },
+    5,
+    "library-socket-l-n-pe",
+  );
+  const definition = p.symbolDefinitions.find(
+    (d) => d.id === "library-socket-l-n-pe",
+  );
+  const pin = p.pins.find(
+    (pin) => pin.symbolInstanceId === id && pin.definitionPinId === "PE",
+  );
+  assert.equal(p.terminals.find((t) => t.id === pin.terminalId).kind, "pe");
+  const edited = updateCustomSymbol(p, {
+    ...definition,
+    pins: definition.pins.map((pin) => ({
+      ...pin,
+      kind: pin.id === "L" ? "control" : pin.kind,
+    })),
+  });
+  const l = edited.pins.find(
+    (pin) => pin.symbolInstanceId === id && pin.definitionPinId === "L",
+  );
+  assert.equal(
+    edited.terminals.find((t) => t.id === l.terminalId).kind,
+    "control",
+  );
+  p.schemaVersion = 4;
+  for (const d of p.symbolDefinitions)
+    for (const pin of d.pins) delete pin.kind;
+  assert.deepEqual(
+    parseProject(JSON.stringify(p)).project.terminals,
+    p.terminals,
+  );
+  assert.throws(() =>
+    createCustomSymbol(nativeProject(), {
+      ...definition,
+      id: "invalid",
+      pins: [{ id: "x", position: { x: 0, y: 0 }, kind: "invented" }],
+    }),
+  );
 });
 
 test("custom definition edits preserve wired identities and reject pin removal or protected rerouting", () => {
@@ -236,12 +289,37 @@ test("custom definitions produce real independent terminals and reject invalid g
 });
 
 test("catalog searches factual manufacturer records without fabricating matches", () => {
+  assert.equal(searchCatalog("", "", "Phoenix Contact").length, 2);
+  assert.equal(
+    searchCatalog("2002-1201", "", "WAGO")[0].ratings.nominalVoltageV,
+    undefined,
+  );
   assert.equal(searchCatalog("phoenix 3004362").length, 1);
   assert.equal(searchCatalog("ＵＫ ５ Ｎ").length, 1);
   assert.equal(searchCatalog("", "protection").length, 0);
   assert.equal(searchCatalog("", "connections", "Unknown").length, 0);
   assert.equal(catalog[0].ratings.nominalCurrentA, 32);
   assert.match(catalog[0].sourceUrl, /^https:\/\/www\.phoenixcontact\.com\//);
+});
+
+test("every manufacturer record maps a native terminal without fabricating missing ratings", () => {
+  for (const part of catalog) {
+    const p = nativeProject();
+    const id = place(p, "page", "layer", "terminal", { x: 200, y: 150 }, 5);
+    const device = p.symbolInstances.find((s) => s.id === id).deviceId;
+    const assigned = assignCatalogPart(p, device, part.id);
+    const record = assigned.manufacturerParts.find(
+      (item) =>
+        item.id === assigned.devices.find((d) => d.id === device).partId,
+    );
+    assert.deepEqual(record.ratings, part.ratings);
+    assert.equal(record.sourceUrl, part.sourceUrl);
+    assert.deepEqual(assigned.wires, p.wires);
+    assert.equal(
+      assigned.terminals.find((t) => t.deviceId === device).capacity,
+      2,
+    );
+  }
 });
 test("catalog assignment preserves topology and supplies only sourced terminal metadata", () => {
   const p = nativeProject();

@@ -484,6 +484,16 @@ test("component catalog searches and maps a sourced part to a real terminal", as
   const library = page.locator(".component-library");
   await library.locator(":scope > summary").click();
   await library
+    .getByLabel("Manufacturer", { exact: true })
+    .selectOption("WAGO");
+  const wago = library.getByRole("article", {
+    name: "WAGO 2002-1201",
+    exact: true,
+  });
+  await expect(wago).toContainText("Not declared");
+  await expect(wago).not.toContainText("undefined");
+  await library.getByLabel("Manufacturer", { exact: true }).selectOption("");
+  await library
     .getByLabel("Search parts", { exact: true })
     .fill("missing-part");
   await expect(library.getByRole("status")).toHaveText("Results: 0");

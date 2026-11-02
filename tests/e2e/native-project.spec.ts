@@ -64,7 +64,7 @@ test("native export round trips, invalid import preserves work and replacement r
   const download = await downloadPromise;
   const text = await readFile((await download.path())!, "utf8");
   const exported = JSON.parse(text);
-  expect(exported.schemaVersion).toBe(4);
+  expect(exported.schemaVersion).toBe(5);
   await page.locator("input[type=file]").setInputFiles({
     name: "invalid.json",
     mimeType: "application/json",

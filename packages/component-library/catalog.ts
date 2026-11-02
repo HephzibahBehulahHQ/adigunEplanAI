@@ -35,6 +35,44 @@ export const catalog: readonly CatalogPart[] = [
     // One electrical node represents the common potential of this feed-through block.
     mapping: { glyph: "terminal", electricalNodes: 1, connections: 2 },
   },
+  {
+    id: "phoenix-3044076",
+    name: "UT 2,5",
+    category: "connections",
+    manufacturer: "Phoenix Contact",
+    partNumber: "3044076",
+    sourceUrl:
+      "https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-ut-25-3044076",
+    reviewedOn: "2026-11-02",
+    ratings: {
+      nominalVoltageV: 1000,
+      nominalCurrentA: 24,
+      ratedCrossSectionMm2: 2.5,
+      minimumCrossSectionMm2: 0.14,
+      maximumCrossSectionMm2: 4,
+      connectionMethod: "screw",
+      connections: 2,
+      sectionRangeBasis:
+        "Unprepared rigid or flexible conductors; ferrule ranges differ",
+    },
+    mapping: { glyph: "terminal", electricalNodes: 1, connections: 2 },
+  },
+  {
+    id: "wago-2002-1201",
+    name: "TOPJOB S 2002-1201",
+    category: "connections",
+    manufacturer: "WAGO",
+    partNumber: "2002-1201",
+    sourceUrl:
+      "https://www.wago.com/global/rail-mount-terminal-blocks/2-conductor-through-terminal-block/p/2002-1201",
+    reviewedOn: "2026-11-02",
+    ratings: {
+      ratedCrossSectionMm2: 2.5,
+      connectionMethod: "Push-in CAGE CLAMP",
+      connections: 2,
+    },
+    mapping: { glyph: "terminal", electricalNodes: 1, connections: 2 },
+  },
 ];
 
 export function searchCatalog(

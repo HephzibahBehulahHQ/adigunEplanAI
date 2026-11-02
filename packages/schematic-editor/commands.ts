@@ -314,11 +314,12 @@ export function place(
       designation:
         kind === "motor" ? (pin.id === "positive" ? "+" : "-") : pin.id,
       kind:
-        kind === "ground"
+        custom?.pins.find((p) => p.id === pin.id)?.kind ??
+        (kind === "ground"
           ? "pe"
           : kind === "motor" || kind === "fuse"
             ? "power"
-            : "control",
+            : "control"),
     });
     project.pins.push({
       id: uid(),

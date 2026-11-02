@@ -94,15 +94,25 @@ export function ComponentLibrary({
           </p>
           <dl>
             <dt>{t("nominalVoltage")}</dt>
-            <dd>{part.ratings.nominalVoltageV} V</dd>
+            <dd>
+              {part.ratings.nominalVoltageV === undefined
+                ? t("notDeclared")
+                : `${part.ratings.nominalVoltageV} V`}
+            </dd>
             <dt>{t("nominalCurrent")}</dt>
-            <dd>{part.ratings.nominalCurrentA} A</dd>
+            <dd>
+              {part.ratings.nominalCurrentA === undefined
+                ? t("notDeclared")
+                : `${part.ratings.nominalCurrentA} A`}
+            </dd>
             <dt>{t("ratedCrossSection")}</dt>
             <dd>{part.ratings.ratedCrossSectionMm2} mm²</dd>
             <dt>{t("conductorRange")}</dt>
             <dd>
-              {part.ratings.minimumCrossSectionMm2}–
-              {part.ratings.maximumCrossSectionMm2} mm²
+              {part.ratings.minimumCrossSectionMm2 === undefined ||
+              part.ratings.maximumCrossSectionMm2 === undefined
+                ? t("notDeclared")
+                : `${part.ratings.minimumCrossSectionMm2}–${part.ratings.maximumCrossSectionMm2} mm²`}
             </dd>
             <dt>{t("connections")}</dt>
             <dd>{part.mapping.connections}</dd>
