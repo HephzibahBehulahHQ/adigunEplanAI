@@ -87,6 +87,8 @@ export const schemas = {
   terminals: entity.extend({
     deviceId: id,
     designation: name,
+    capacity: z.number().int().min(1).max(1000).optional(),
+    required: z.boolean().optional(),
     kind: z.enum(["power", "control", "signal", "pe", "neutral"]),
   }),
   pins: entity.extend({
@@ -95,12 +97,18 @@ export const schemas = {
     definitionPinId: id,
   }),
   wires: entity.extend({
+    color: z
+      .string()
+      .regex(/^#[0-9a-f]{6}$/i)
+      .optional(),
+    physicalLengthM: positive.optional(),
     fromPinId: id,
     toPinId: id,
     conductorId: id.optional(),
   }),
   wirePaths: z
     .object({
+      routingMode: z.enum(["auto", "manual"]).optional(),
       layerId: id,
       id,
       wireId: id,
@@ -108,9 +116,16 @@ export const schemas = {
       points: z.array(point).min(2).max(10000),
     })
     .strict(),
-  nets: entity.extend({ wireIds: z.array(id).max(10000) }),
+  nets: entity.extend({
+    wireIds: z.array(id).max(10000),
+    pinIds: z.array(id).max(20000).optional(),
+    terminalIds: z.array(id).max(20000).optional(),
+    labels: z.array(z.string().max(2000)).max(1000).optional(),
+  }),
   cables: entity.extend({
     conductorIds: z.array(id).min(1).max(256),
+    shielded: z.boolean().optional(),
+    shieldBondTerminalIds: z.array(id).max(256).optional(),
     lengthM: positive.optional(),
   }),
   conductors: entity.extend({
@@ -183,7 +198,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(2),
+    schemaVersion: z.literal(3),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -197,7 +212,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 2;
+  schemaVersion: 3;
   id: string;
   name: string;
   createdAt: string;
@@ -213,7 +228,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -253,8 +268,8 @@ const references: Partial<
   pins: { terminalId: "terminals", symbolInstanceId: "symbolInstances" },
   wires: { fromPinId: "pins", toPinId: "pins", conductorId: "conductors" },
   wirePaths: { wireId: "wires", pageId: "pages", layerId: "layers" },
-  nets: { wireIds: "wires" },
-  cables: { conductorIds: "conductors" },
+  nets: { wireIds: "wires", pinIds: "pins", terminalIds: "terminals" },
+  cables: { conductorIds: "conductors", shieldBondTerminalIds: "terminals" },
   connectionPoints: { terminalIds: "terminals" },
   terminalStrips: { terminalIds: "terminals" },
   plcModules: { deviceId: "devices" },
@@ -441,7 +456,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2;
+  migratedFrom: 0 | 1 | 2 | 3;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -449,13 +464,18 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 2) return { project: validateProject(raw), migratedFrom: 2 };
+  if (version === 3) return { project: validateProject(raw), migratedFrom: 3 };
+  if (version === 2)
+    return {
+      project: validateProject({ ...raw, schemaVersion: 3 }),
+      migratedFrom: 2,
+    };
   if (version === 0 || version === 1) {
     const old = raw as Record<string, unknown>;
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 2,
+      schemaVersion: 3,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

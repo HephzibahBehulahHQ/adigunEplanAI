@@ -16,6 +16,7 @@ import {
   connect,
   remove,
   removeWire,
+  setWireRoute,
   paste,
   ensureLayer,
   insertJunction,
@@ -40,6 +41,70 @@ function blank() {
   p.nets = [];
   return p;
 }
+
+test("manual routes preserve electrical identities, reject invalid paths and undo atomically", () => {
+  const p = blank();
+  place(p, "page", "layer", "resistor", { x: 50, y: 50 }, 5);
+  place(p, "page", "layer", "lamp", { x: 150, y: 50 }, 5);
+  connect(p, p.pins[1].id, p.pins[2].id);
+  const id = p.wires[0].id;
+  const points = [
+    { x: 60, y: 50 },
+    { x: 70, y: 50 },
+    { x: 70, y: 80 },
+    { x: 130, y: 80 },
+    { x: 130, y: 50 },
+    { x: 144, y: 50 },
+  ];
+  const history = new ProjectHistory(p);
+  const manual = history.execute((draft) => setWireRoute(draft, id, points));
+  assert.equal(manual.wirePaths[0].routingMode, "manual");
+  assert.deepEqual(manual.wires, p.wires);
+  assert.deepEqual(manual.wirePaths[0].points, points);
+  assert.throws(
+    () =>
+      history.execute((draft) =>
+        move(draft, [draft.symbolInstances[0].id], { x: 5, y: 0 }, 5),
+      ),
+    /Manual/,
+  );
+  assert.deepEqual(history.current.wirePaths[0].points, points);
+  assert.throws(
+    () =>
+      setWireRoute(manual, id, [
+        { x: 60, y: 50 },
+        { x: 144, y: 60 },
+      ]),
+    /orthogonal/,
+  );
+  assert.throws(
+    () =>
+      setWireRoute(manual, id, [
+        { x: 61, y: 50 },
+        { x: 144, y: 50 },
+      ]),
+    /detached/,
+  );
+  assert.throws(
+    () =>
+      setWireRoute(manual, id, [
+        { x: 60, y: 50 },
+        { x: 60, y: -1 },
+        { x: 144, y: -1 },
+        { x: 144, y: 50 },
+      ]),
+    /sheet/,
+  );
+  assert.equal(
+    history.execute((draft) => setWireRoute(draft, id, null)).wirePaths[0]
+      .routingMode,
+    "auto",
+  );
+  assert.deepEqual(history.undo().wirePaths[0].points, points);
+  assert.deepEqual(history.undo().wirePaths, p.wirePaths);
+  manual.layers[0].locked = true;
+  assert.throws(() => setWireRoute(manual, id, points), /editable/);
+});
 test("all native glyphs create real devices, terminals and valid pin mappings", () => {
   for (const kind of Object.keys(primitives)) {
     const p = blank();
@@ -164,7 +229,7 @@ test("schema one migration preserves entities and adds independent graphical lay
   for (const path of legacy.wirePaths) delete path.layerId;
   const migrated = parseProject(JSON.stringify(legacy));
   assert.equal(migrated.migratedFrom, 1);
-  assert.equal(migrated.project.schemaVersion, 2);
+  assert.equal(migrated.project.schemaVersion, 3);
   assert.deepEqual(migrated.project.wires, legacy.wires);
   assert.equal(migrated.project.layers.length, 1);
   assert.deepEqual(

@@ -193,6 +193,10 @@ function reroute(project: Project, ids: string[]) {
   for (const path of project.wirePaths) {
     const w = project.wires.find((w) => w.id === path.wireId)!;
     if (pages.has(path.pageId) && pathNeedsReroute(project, path)) {
+      if (path.routingMode === "manual")
+        throw new Error(
+          "Manual wire route must be edited or reset before this change",
+        );
       const layer = project.layers.find((item) => item.id === path.layerId)!;
       if (layer.locked || !layer.visible)
         throw new Error("A protected wire route would change");
@@ -373,6 +377,12 @@ export function mirror(project: Project, ids: string[]) {
   reroute(project, ids);
   return project;
 }
+function nextWireNumber(project: Project): string {
+  const used = new Set(project.wires.map((wire) => wire.name));
+  let index = 1;
+  while (used.has(`W${index}`)) index++;
+  return `W${index}`;
+}
 export function connect(
   project: Project,
   fromPinId: string,
@@ -397,7 +407,7 @@ export function connect(
   const id = uid();
   project.wires.push({
     id,
-    name: `W${project.wires.length + 1}`,
+    name: nextWireNumber(project),
     fromPinId,
     toPinId,
   });
@@ -468,6 +478,9 @@ export function remove(project: Project, ids: string[]) {
         ) &&
         !project.connectionPoints.some((t) =>
           t.terminalIds.some((id) => terminalIds.has(id)),
+        ) &&
+        !project.cables.some((cable) =>
+          cable.shieldBondTerminalIds?.some((id) => terminalIds.has(id)),
         )
       ) {
         project.devices = project.devices.filter((d) => d.id !== id);
@@ -509,6 +522,45 @@ export function removeWire(project: Project, wireId: string): Project {
     (f) => !f.entityIds.includes(wireId) && !f.entityIds.includes(path.id),
   );
   return project;
+}
+
+export function setWireRoute(
+  project: Project,
+  wireId: string,
+  points: Point[] | null,
+): Project {
+  const next = structuredClone(project);
+  const wire = next.wires.find((w) => w.id === wireId);
+  const path = next.wirePaths.find((p) => p.wireId === wireId);
+  const layer = next.layers.find((l) => l.id === path?.layerId);
+  if (!wire || !path || !layer || layer.locked || !layer.visible)
+    throw new Error("Wire is not editable");
+  const page = next.pages.find((p) => p.id === path.pageId)!;
+  const route = points ?? routeWire(next, wire.fromPinId, wire.toPinId);
+  if (
+    route.length < 2 ||
+    route.length > 10000 ||
+    route.some(
+      (p, index) =>
+        !Number.isFinite(p.x) ||
+        !Number.isFinite(p.y) ||
+        p.x < 0 ||
+        p.y < 0 ||
+        p.x > page.widthMm ||
+        p.y > page.heightMm ||
+        (index > 0 &&
+          ((p.x !== route[index - 1].x && p.y !== route[index - 1].y) ||
+            (p.x === route[index - 1].x && p.y === route[index - 1].y))),
+    )
+  )
+    throw new Error(
+      "Route must contain distinct orthogonal points within the sheet",
+    );
+  path.points = structuredClone(route);
+  if (pathNeedsReroute(next, path))
+    throw new Error("Route is detached or obstructed");
+  path.routingMode = points ? "manual" : "auto";
+  return validateProject(next);
 }
 
 export function paste(
