@@ -373,5 +373,8 @@
   "showRoomDimensions": "Raumkanten bemaßen",
   "roomArea": "Raumgrenzfläche",
   "roomPerimeter": "Raumgrenzumfang",
-  "roomMeasurementUnavailable": "Messwerte nicht verfügbar: Raumgrenze korrigieren."
+  "roomMeasurementUnavailable": "Messwerte nicht verfügbar: Raumgrenze korrigieren.",
+  "catalogLoading": "Bauteilbibliothek wird geladen…",
+  "catalogLoadError": "Die Bauteilbibliothek konnte nicht geladen werden. Das Projekt bleibt bearbeitbar und exportierbar.",
+  "buildingLoadError": "Die Gebäudeplanung konnte nicht geladen werden. Das Projekt bleibt im Schaltplanbereich verfügbar."
 }

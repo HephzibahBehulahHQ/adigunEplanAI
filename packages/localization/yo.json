@@ -373,5 +373,8 @@
   "showRoomDimensions": "Fi ìwọ̀n etí yàrá hàn",
   "roomArea": "Agbègbè ààlà yàrá",
   "roomPerimeter": "Gígùn àyíká ààlà yàrá",
-  "roomMeasurementUnavailable": "Ìwọ̀n kò sí: tún ààlà yàrá ṣe."
+  "roomMeasurementUnavailable": "Ìwọ̀n kò sí: tún ààlà yàrá ṣe.",
+  "catalogLoading": "Ń kó ibi ìkàwé ohun èlò…",
+  "catalogLoadError": "Ibi ìkàwé ohun èlò kò lè ṣí. O ṣì lè ṣàtúnṣe àti gbé iṣẹ́ rẹ jáde.",
+  "buildingLoadError": "Ètò ilé kò lè ṣí. Iṣẹ́ rẹ ṣì wà ní agbègbè àwòrán iyika."
 }

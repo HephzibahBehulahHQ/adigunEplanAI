@@ -373,5 +373,8 @@
   "showRoomDimensions": "Show room edge dimensions",
   "roomArea": "Room boundary area",
   "roomPerimeter": "Room boundary perimeter",
-  "roomMeasurementUnavailable": "Measurements unavailable: repair the room boundary."
+  "roomMeasurementUnavailable": "Measurements unavailable: repair the room boundary.",
+  "catalogLoading": "Loading component library…",
+  "catalogLoadError": "The component library could not load. Your project remains available for editing and export.",
+  "buildingLoadError": "Building design could not load. Your project remains available in the schematic workspace."
 }

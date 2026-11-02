@@ -373,5 +373,8 @@
   "showRoomDimensions": "Show room edge dimensions",
   "roomArea": "Room boundary area",
   "roomPerimeter": "Room boundary perimeter",
-  "roomMeasurementUnavailable": "Measurements no dey: repair the room boundary."
+  "roomMeasurementUnavailable": "Measurements no dey: repair the room boundary.",
+  "catalogLoading": "Component library dey load…",
+  "catalogLoadError": "Component library no load. You still fit edit and export your project.",
+  "buildingLoadError": "Building design no load. Your project still dey for schematic workspace."
 }

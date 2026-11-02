@@ -145,3 +145,73 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
   );
   await expect(wago).toContainText("no redistribution rights granted");
 });
+
+test("catalog loads only when opened and retains query after collapse", async ({
+  page,
+}) => {
+  let requests = 0;
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname.endsWith("/CatalogPanel.tsx"))
+      requests++;
+  });
+  await create(page);
+  expect(requests).toBe(0);
+  const before = await project(page);
+  const summary = page.locator(".component-library > summary");
+  await summary.click();
+  await page.getByLabel("Search parts", { exact: true }).fill("3044076");
+  expect(requests).toBe(1);
+  await summary.click();
+  await summary.click();
+  await expect(page.getByLabel("Search parts", { exact: true })).toHaveValue(
+    "3044076",
+  );
+  expect(requests).toBe(1);
+  expect(await project(page)).toEqual(before);
+});
+
+test("failed catalog download preserves project export and schematic tools", async ({
+  page,
+}) => {
+  await page.route(
+    (url) => url.pathname.endsWith("/CatalogPanel.tsx"),
+    (route) => route.abort("failed"),
+  );
+  await create(page);
+  const before = await project(page);
+  await page.locator(".component-library > summary").click();
+  await expect(
+    page.locator(".component-library").getByRole("alert"),
+  ).toHaveText(
+    "The component library could not load. Your project remains available for editing and export.",
+  );
+  await expect(page.locator(".engineering-canvas")).toBeVisible();
+  const downloaded = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export project", exact: true })
+    .click();
+  const download = await downloaded;
+  expect(JSON.parse(readFileSync((await download.path())!, "utf8"))).toEqual(
+    before,
+  );
+});
+
+test("failed building download allows return to the unchanged schematic project", async ({
+  page,
+}) => {
+  await page.route(
+    (url) => url.pathname.endsWith("/BuildingEditor.tsx"),
+    (route) => route.abort("failed"),
+  );
+  await create(page);
+  const before = await project(page);
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toHaveText(
+    "Building design could not load. Your project remains available in the schematic workspace.",
+  );
+  await page.getByRole("button", { name: "Schematic", exact: true }).click();
+  await expect(page.locator(".engineering-canvas")).toBeVisible();
+  expect(await project(page)).toEqual(before);
+});

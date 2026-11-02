@@ -1,3 +1,4 @@
+import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -322,9 +323,11 @@ export function NativeDrawing({ native, t }: Props) {
         </button>
       </nav>
       {buildingView ? (
-        <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
-          <BuildingEditor key={p.id} native={native} t={t} />
-        </Suspense>
+        <LazyPanelBoundary message={t("buildingLoadError")}>
+          <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
+            <BuildingEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
       ) : (
         <>
           <nav className="drawing-tabs" aria-label={t("pageName")}>
