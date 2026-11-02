@@ -547,6 +547,12 @@ test("engineering symbol search imports distinct transformer pins for native pla
   await page
     .getByLabel("Symbol category", { exact: true })
     .selectOption("power");
+  const preview = page.locator(
+    '[data-library-preview="transformer-two-winding"]',
+  );
+  await expect(preview).toHaveAttribute("role", "img");
+  await expect(preview.locator("text")).toHaveCount(4);
+  await expect(preview.locator("circle")).toHaveCount(8);
   await page
     .getByRole("button", {
       name: "Import symbol: Two-winding transformer",
@@ -572,6 +578,73 @@ test("engineering symbol search imports distinct transformer pins for native pla
     page.getByRole("button", { name: "U1:S1", exact: true }),
   ).toBeVisible();
 });
+
+test("NO contact catalog mapping preserves native pins and offers only compatible devices", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "contact", 80, 80);
+  await place(page, "terminal", 140, 80);
+  await page.locator(".component-library > summary").click();
+  const library = page.locator(".component-library");
+  await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await library
+    .getByLabel("Category", { exact: true })
+    .selectOption("switching");
+  const article = library.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  const select = article.getByLabel("Compatible device", { exact: true });
+  await expect(select.locator("option")).toHaveCount(2);
+  const data = await project(page);
+  const device = data.devices.find(
+    (d: { reference: string }) => d.reference === "S1",
+  );
+  await select.selectOption(device.id);
+  await article
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  const assigned = await project(page);
+  expect(assigned.pins).toEqual(data.pins);
+  expect(assigned.terminals).toEqual(data.terminals);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("ZBE101");
+});
+
+for (const [id, query, channel] of [
+  ["digital-input-four", "digital input", "IN0"],
+  ["digital-output-four", "digital output", "OUT0"],
+  ["analog-input-two", "analog input", "IN0_plus"],
+  ["analog-output-two", "analog output", "OUT0_plus"],
+])
+  test(`automation interface ${id} places and wires distinct native channels`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    expect((await project(page)).terminals).toHaveLength(6);
+    await place(page, "resistor", 150, 80);
+    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("button", { name: `U1:${channel}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "R1:1", exact: true }).click();
+    const data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(7);
+    await page.reload();
+    expect((await project(page)).wires).toEqual(data.wires);
+  });
 
 test("custom symbols create native pins that wire and survive undo and reload", async ({
   page,

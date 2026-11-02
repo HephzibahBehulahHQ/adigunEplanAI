@@ -5,6 +5,8 @@ import {
   catalog,
   searchCatalog,
   assignCatalogPart,
+  compatibleCatalogDevice,
+  type CatalogPart,
 } from "../../../packages/component-library/catalog.ts";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
@@ -21,15 +23,9 @@ export function ComponentLibrary({
   const [manufacturer, setManufacturer] = useState("");
   const results = searchCatalog(query, category, manufacturer);
   const project = native.project;
-  const devices =
+  const devicesFor = (part: CatalogPart) =>
     project?.devices.filter((device) =>
-      project.symbolInstances.some(
-        (instance) =>
-          instance.deviceId === device.id &&
-          project.symbolDefinitions.find(
-            (def) => def.id === instance.definitionId,
-          )?.glyph === "terminal",
-      ),
+      compatibleCatalogDevice(project, device.id, part),
     ) ?? [];
   return (
     <details className="component-library">
@@ -56,7 +52,7 @@ export function ComponentLibrary({
           <option value="">{t("all")}</option>
           {[...new Set(catalog.map((p) => p.category))].map((value) => (
             <option key={value} value={value}>
-              {t("connections")}
+              {t(value === "switching" ? "category-switching" : "connections")}
             </option>
           ))}
         </select>
@@ -93,6 +89,14 @@ export function ComponentLibrary({
             {t("reviewedOn")}: {part.reviewedOn}
           </p>
           <dl>
+            {part.ratings.contactArrangement !== undefined && (
+              <>
+                <dt>{t("contactArrangement")}</dt>
+                <dd>{part.ratings.contactArrangement}</dd>
+              </>
+            )}
+            <dt>{t("connectionMethod")}</dt>
+            <dd>{part.ratings.connectionMethod ?? t("notDeclared")}</dd>
             <dt>{t("nominalVoltage")}</dt>
             <dd>
               {part.ratings.nominalVoltageV === undefined
@@ -137,14 +141,16 @@ export function ComponentLibrary({
                   <option value="" disabled>
                     —
                   </option>
-                  {devices.map((device) => (
+                  {devicesFor(part).map((device) => (
                     <option key={device.id} value={device.id}>
                       {device.reference}
                     </option>
                   ))}
                 </select>
               </label>
-              <button disabled={!devices.length}>{t("assignPart")}</button>
+              <button disabled={!devicesFor(part).length}>
+                {t("assignPart")}
+              </button>
             </form>
           )}
         </article>

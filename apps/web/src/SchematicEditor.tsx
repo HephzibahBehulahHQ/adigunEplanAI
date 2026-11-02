@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { SymbolArtwork } from "./SymbolArtwork";
 import { WireProperties } from "./WireProperties";
 import "./schematic-editor.css";
 import {
@@ -1151,24 +1152,7 @@ export function SchematicEditor({
                 />
                 {definition.artwork ? (
                   <g data-custom-artwork={definition.id}>
-                    {definition.artwork.map((shape, index) =>
-                      shape.kind === "line" ? (
-                        <line
-                          key={index}
-                          x1={shape.from.x}
-                          y1={shape.from.y}
-                          x2={shape.to.x}
-                          y2={shape.to.y}
-                        />
-                      ) : (
-                        <circle
-                          key={index}
-                          cx={shape.center.x}
-                          cy={shape.center.y}
-                          r={shape.radiusMm}
-                        />
-                      ),
-                    )}
+                    <SymbolArtwork artwork={definition.artwork} />
                   </g>
                 ) : (
                   <Glyph

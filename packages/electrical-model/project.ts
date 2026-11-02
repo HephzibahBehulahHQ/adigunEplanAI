@@ -419,6 +419,25 @@ function validateReferences(project: Project): void {
       !definition.pins.some((item) => item.id === pin.definitionPinId)
     )
       throw new Error(`Pin mapping mismatch: ${pin.id}`);
+    const declaredKind = definition.pins.find(
+      (item) => item.id === pin.definitionPinId,
+    )?.kind;
+    if (declaredKind && declaredKind !== terminal.kind)
+      throw new Error(`Declared pin kind mismatch: ${pin.id}`);
+  }
+  for (const instance of project.symbolInstances) {
+    const definition = project.symbolDefinitions.find(
+      (item) => item.id === instance.definitionId,
+    )!;
+    const actual = project.pins
+      .filter((pin) => pin.symbolInstanceId === instance.id)
+      .map((pin) => pin.definitionPinId);
+    const expected = definition.pins.map((pin) => pin.id);
+    if (
+      actual.length !== expected.length ||
+      expected.some((id) => !actual.includes(id))
+    )
+      throw new Error(`Incomplete symbol pin mapping: ${instance.id}`);
   }
   const deviceReferences = project.devices.map((item) => item.reference);
   if (new Set(deviceReferences).size !== deviceReferences.length)

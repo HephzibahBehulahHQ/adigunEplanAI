@@ -57,6 +57,46 @@ test("every engineering symbol installs and places its declared electrical nodes
   assert.equal(searchSymbols("breaker", "protection")[0].pins.length, 2);
   assert.equal(searchSymbols("sensor", "automation")[0].pins.length, 3);
   assert.equal(searchSymbols("drive", "industrial")[0].pins.length, 7);
+  assert.equal(searchSymbols("relay", "switching")[0].pins.length, 5);
+  assert.equal(searchSymbols("rectifier", "power")[0].pins.length, 4);
+  assert.equal(searchSymbols("pushbutton", "switching")[0].pins.length, 2);
+  assert.equal(searchSymbols("roller", "switching")[0].pins.length, 2);
+  assert.equal(searchSymbols("selector", "switching")[0].pins.length, 3);
+  assert.equal(searchSymbols("stepper", "motors")[0].pins.length, 4);
+  assert.equal(
+    searchSymbols("servo", "motors")[0].pins.filter(
+      (pin) => pin.kind === "signal",
+    ).length,
+    2,
+  );
+  assert.equal(
+    searchSymbols("residual", "protection")[0].pins.filter(
+      (pin) => pin.kind === "neutral",
+    ).length,
+    2,
+  );
+  assert.equal(searchSymbols("overload", "protection")[0].pins.length, 8);
+  for (const query of [
+    "digital input",
+    "digital output",
+    "analog input",
+    "analog output",
+  ]) {
+    const symbol = searchSymbols(query, "automation")[0];
+    assert.equal(symbol.pins.length, 6);
+    assert.equal(symbol.pins.filter((pin) => pin.kind === "signal").length, 4);
+    assert.equal(symbol.pins.filter((pin) => pin.kind === "control").length, 2);
+  }
+  assert.deepEqual(
+    searchSymbols("luminaire", "building")[0].pins.map((pin) => pin.kind),
+    ["power", "neutral", "pe"],
+  );
+  assert.equal(
+    searchSymbols("generator", "power")[0].pins.filter(
+      (pin) => pin.kind === "neutral" || pin.kind === "pe",
+    ).length,
+    2,
+  );
 });
 
 test("custom artwork is bounded native geometry and schema three migrates without changing identities", () => {
@@ -305,7 +345,14 @@ test("catalog searches factual manufacturer records without fabricating matches"
 test("every manufacturer record maps a native terminal without fabricating missing ratings", () => {
   for (const part of catalog) {
     const p = nativeProject();
-    const id = place(p, "page", "layer", "terminal", { x: 200, y: 150 }, 5);
+    const id = place(
+      p,
+      "page",
+      "layer",
+      part.mapping.glyph,
+      { x: 200, y: 150 },
+      5,
+    );
     const device = p.symbolInstances.find((s) => s.id === id).deviceId;
     const assigned = assignCatalogPart(p, device, part.id);
     const record = assigned.manufacturerParts.find(
@@ -317,8 +364,9 @@ test("every manufacturer record maps a native terminal without fabricating missi
     assert.deepEqual(assigned.wires, p.wires);
     assert.equal(
       assigned.terminals.find((t) => t.deviceId === device).capacity,
-      2,
+      part.mapping.glyph === "terminal" ? 2 : undefined,
     );
+    assert.deepEqual(assigned.pins, p.pins);
   }
 });
 test("catalog assignment preserves topology and supplies only sourced terminal metadata", () => {
@@ -347,4 +395,16 @@ test("catalog assignment preserves topology and supplies only sourced terminal m
     /compatible/,
   );
   assert.throws(() => assignCatalogPart(p, device, "missing"), /Unknown/);
+});
+
+test("non-terminal part mapping rejects a different glyph even with the same terminal count", () => {
+  const p = nativeProject();
+  const id = place(p, "page", "layer", "resistor", { x: 200, y: 150 }, 5);
+  const device = p.symbolInstances.find((s) => s.id === id).deviceId;
+  const before = serializeProject(p);
+  assert.throws(
+    () => assignCatalogPart(p, device, "schneider-zbe101"),
+    /compatible/,
+  );
+  assert.equal(serializeProject(p), before);
 });

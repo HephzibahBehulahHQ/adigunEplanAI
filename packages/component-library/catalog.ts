@@ -9,7 +9,11 @@ export type CatalogPart = {
   sourceUrl: string;
   reviewedOn: string;
   ratings: Record<string, string | number>;
-  mapping: { glyph: "terminal"; electricalNodes: number; connections: number };
+  mapping: {
+    glyph: "terminal" | "contact";
+    electricalNodes: number;
+    connections: number;
+  };
 };
 
 // Factual specifications only; no manufacturer artwork or copied datasheet is bundled.
@@ -73,7 +77,46 @@ export const catalog: readonly CatalogPart[] = [
     },
     mapping: { glyph: "terminal", electricalNodes: 1, connections: 2 },
   },
+  {
+    id: "schneider-zbe101",
+    name: "Harmony ZBE101 NO contact block",
+    category: "switching",
+    manufacturer: "Schneider Electric",
+    partNumber: "ZBE101",
+    sourceUrl:
+      "https://www.se.com/us/en/product/ZBE101/harmony-22mm-push-button-add-on-contact-block-1-no-screw-clamp-terminal/",
+    reviewedOn: "2026-11-02",
+    ratings: { contactArrangement: "1 NO", connectionMethod: "screw clamp" },
+    mapping: { glyph: "contact", electricalNodes: 2, connections: 2 },
+  },
 ];
+
+export function compatibleCatalogDevice(
+  project: Project,
+  deviceId: string,
+  part: CatalogPart,
+): boolean {
+  const instances = project.symbolInstances.filter(
+    (s) => s.deviceId === deviceId,
+  );
+  return (
+    instances.length > 0 &&
+    project.terminals.filter((t) => t.deviceId === deviceId).length ===
+      part.mapping.electricalNodes &&
+    instances.every((instance) => {
+      const definition = project.symbolDefinitions.find(
+        (d) => d.id === instance.definitionId,
+      );
+      const layer = project.layers.find((l) => l.id === instance.layerId);
+      return (
+        definition?.glyph === part.mapping.glyph &&
+        !!layer &&
+        !layer.locked &&
+        layer.visible
+      );
+    })
+  );
+}
 
 export function searchCatalog(
   query: string,
@@ -109,27 +152,9 @@ export function assignCatalogPart(
   const next = structuredClone(project);
   const device = next.devices.find((item) => item.id === deviceId);
   if (!device) throw new Error("Unknown device");
-  const instances = next.symbolInstances.filter(
-    (item) => item.deviceId === deviceId,
-  );
   const terminals = next.terminals.filter((item) => item.deviceId === deviceId);
-  if (
-    !instances.length ||
-    terminals.length !== part.mapping.electricalNodes ||
-    instances.some((instance) => {
-      const definition = next.symbolDefinitions.find(
-        (item) => item.id === instance.definitionId,
-      );
-      const layer = next.layers.find((item) => item.id === instance.layerId);
-      return (
-        definition?.glyph !== part.mapping.glyph ||
-        !layer ||
-        layer.locked ||
-        !layer.visible
-      );
-    })
-  )
-    throw new Error("Part requires a compatible editable terminal symbol");
+  if (!compatibleCatalogDevice(next, deviceId, part))
+    throw new Error("Part requires a compatible editable symbol");
   let nativePart = next.manufacturerParts.find(
     (item) =>
       item.manufacturer === part.manufacturer &&
@@ -149,6 +174,7 @@ export function assignCatalogPart(
     next.manufacturerParts.push(nativePart);
   }
   device.partId = nativePart.id;
-  terminals[0].capacity = part.mapping.connections;
+  if (part.mapping.glyph === "terminal")
+    terminals[0].capacity = part.mapping.connections;
   return validateProject(next);
 }
