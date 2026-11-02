@@ -303,5 +303,7 @@
   "componentAssigned": "Bauteil zugewiesen.",
   "mechanicalSymbol": "Mechanisches Symbol (ohne elektrische Anschlüsse)",
   "mechanicalSymbolHint": "Für mechanische Bauteile mechanisch auswählen und Pins leer lassen. Elektrische Symbole benötigen Anschlusspunkte.",
-  "cable-gland-mechanical": "Mechanische Kabelverschraubung"
+  "cable-gland-mechanical": "Mechanische Kabelverschraubung",
+  "loadingSymbols": "Elektrotechnische Symbole werden geladen…",
+  "symbolLoadError": "Elektrotechnische Symbole konnten nicht geladen werden. Das Projekt bleibt bearbeitbar und exportierbar."
 }

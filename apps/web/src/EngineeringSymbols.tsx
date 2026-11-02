@@ -33,8 +33,7 @@ export function EngineeringSymbols({
       ),
   );
   return (
-    <details>
-      <summary>{t("engineeringSymbols")}</summary>
+    <>
       <p>{t("originalSymbolsScope")}</p>
       <label>
         {t("searchSymbols")}
@@ -119,6 +118,6 @@ export function EngineeringSymbols({
           </li>
         ))}
       </ul>
-    </details>
+    </>
   );
 }

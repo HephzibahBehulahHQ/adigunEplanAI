@@ -6,6 +6,7 @@
 - [Component revisions and replacement](#component-revisions-and-replacement)
 - [Component files](#component-files)
 - [Mechanical symbols](#mechanical-symbols)
+- [Loading engineering symbols](#loading-engineering-symbols)
 
 ## Custom components
 
@@ -32,3 +33,9 @@ Exact duplicate imports leave existing records intact. Conflicting record identi
 Use Engineering symbols to search for and import Mechanical cable gland, then select it under Custom symbols and place it on the sheet. It receives an ME reference and has no electrical connection points, so wire tools cannot connect to its body. It can be moved, copied, deleted and included in a BOM through a matching user-supplied custom component. Its drawing does not declare physical dimensions or manufacturer ratings.
 
 To create your own pinless mechanical drawing, open Custom symbols, select Mechanical symbol (no electrical connections), enter the body dimensions, leave Pins empty and optionally enter original artwork. Electrical custom symbols still require pins. Once a symbol is placed, its connection class cannot be changed; create a new definition instead. Mechanical custom-component records can use the pinless definition and follow the same revision/import/export workflow.
+
+## Loading engineering symbols
+
+Open Component library → Engineering symbols to load the symbol definitions. A loading message appears while that section downloads. Closing and reopening the section retains its search and category selection. Opening the library alone does not change the project.
+
+If that download fails, the library shows an error while native editing and project export remain available. Save or export your work before reloading the page to try again. This does not guarantee that uncached assets are available offline.

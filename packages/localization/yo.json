@@ -303,5 +303,7 @@
   "componentAssigned": "A ti yan èròjà.",
   "mechanicalSymbol": "Ààmì ẹ̀rọ (láìsí ìsopọ̀ iná)",
   "mechanicalSymbolHint": "Fún èròjà ẹ̀rọ, yan ẹ̀rọ kí o sì fi àwọn pin sílẹ̀ láìsí iye. Ààmì iná nílò àwọn ojú ìsopọ̀.",
-  "cable-gland-mechanical": "Ẹ̀rọ ìdì okun"
+  "cable-gland-mechanical": "Ẹ̀rọ ìdì okun",
+  "loadingSymbols": "A ń kó àwọn ààmì ẹ̀rọ iná wọlé…",
+  "symbolLoadError": "A kò lè kó àwọn ààmì ẹ̀rọ iná wọlé. Iṣẹ́ rẹ ṣì wà fún àtúnṣe àti gbígbé jáde."
 }

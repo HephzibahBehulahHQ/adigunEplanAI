@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { Component, lazy, Suspense, useState, type ReactNode } from "react";
 import { CustomSymbols } from "./CustomSymbols";
 import { CustomComponents } from "./CustomComponents";
-import { EngineeringSymbols } from "./EngineeringSymbols";
 import {
   catalog,
   searchCatalog,
@@ -20,6 +19,29 @@ import {
   type CatalogPreferences,
 } from "../../../packages/component-library/preferences.ts";
 
+const EngineeringSymbols = lazy(() =>
+  import("./EngineeringSymbols").then((module) => ({
+    default: module.EngineeringSymbols,
+  })),
+);
+
+class SymbolLibraryBoundary extends Component<
+  { children: ReactNode; message: string },
+  { failed: boolean }
+> {
+  override state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  override render() {
+    return this.state.failed ? (
+      <p role="alert">{this.props.message}</p>
+    ) : (
+      this.props.children
+    );
+  }
+}
+
 export function ComponentLibrary({
   native,
   t,
@@ -28,6 +50,7 @@ export function ComponentLibrary({
   t: (key: MessageKey) => string;
 }) {
   const [query, setQuery] = useState("");
+  const [symbolsOpened, setSymbolsOpened] = useState(false);
   const [category, setCategory] = useState("");
   const [manufacturer, setManufacturer] = useState("");
   const [minimumVoltage, setMinimumVoltage] = useState("");
@@ -87,7 +110,20 @@ export function ComponentLibrary({
       <p>{t("catalogScope")}</p>
       <CustomSymbols native={native} t={t} />
       <CustomComponents native={native} t={t} />
-      <EngineeringSymbols native={native} t={t} />
+      <details
+        onToggle={(event) => {
+          if (event.currentTarget.open) setSymbolsOpened(true);
+        }}
+      >
+        <summary>{t("engineeringSymbols")}</summary>
+        {symbolsOpened && (
+          <SymbolLibraryBoundary message={t("symbolLoadError")}>
+            <Suspense fallback={<p role="status">{t("loadingSymbols")}</p>}>
+              <EngineeringSymbols native={native} t={t} />
+            </Suspense>
+          </SymbolLibraryBoundary>
+        )}
+      </details>
       <label>
         {t("searchParts")}
         <input

@@ -303,5 +303,7 @@
   "componentAssigned": "Component don assign.",
   "mechanicalSymbol": "Mechanical symbol (no electrical connections)",
   "mechanicalSymbolHint": "For mechanical parts, choose mechanical and leave pins empty. Electrical symbols need connection points.",
-  "cable-gland-mechanical": "Mechanical cable gland"
+  "cable-gland-mechanical": "Mechanical cable gland",
+  "loadingSymbols": "Engineering symbols dey load…",
+  "symbolLoadError": "Engineering symbols no fit load. Your project still dey for editing and export."
 }
