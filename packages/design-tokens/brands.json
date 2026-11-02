@@ -1,0 +1,27 @@
+{
+  "elektroniker": {
+    "name": "HB Elektroniker",
+    "repository": "hb-elektroniker",
+    "accent": "#22D3EE"
+  },
+  "trading": {
+    "name": "HB Trading",
+    "repository": "hb-trading",
+    "accent": "#22C55E"
+  },
+  "artificialIntelligence": {
+    "name": "HB Artificial Intelligence",
+    "repository": "hb-artificial-intelligence",
+    "accent": "#A78BFA"
+  },
+  "evangelism": {
+    "name": "HB Evangelism",
+    "repository": "hb-evangelism",
+    "accent": "#D4AF37"
+  },
+  "politics": {
+    "name": "HB Politics",
+    "repository": "hb-politics",
+    "accent": "#F97316"
+  }
+}

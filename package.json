@@ -11,18 +11,22 @@
     "node": ">=24.0.0 <25"
   },
   "scripts": {
-    "dev": "npm run dev --workspace @adiguneplanai/web",
+    "dev": "npm run dev --workspace @adiguneplanai/web --",
     "build": "npm run build --workspace @adiguneplanai/web",
     "typecheck": "tsc -p apps/web/tsconfig.json",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "node --test tests/tooling/*.test.mjs",
+    "test": "node --test tests/tooling/*.test.mjs tests/unit/*.test.mjs",
     "licenses": "node scripts/check-licenses.mjs",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run licenses && npm run build"
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run licenses && npm run notices:check && npm run build",
+    "test:e2e": "playwright test",
+    "notices": "node scripts/generate-notices.mjs",
+    "notices:check": "node scripts/generate-notices.mjs --check"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "eslint": "10.14.0",

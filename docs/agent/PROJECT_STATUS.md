@@ -1,5 +1,7 @@
 # Project status
 
-Milestone 1 foundation verified locally. Branch codex/milestone-0-intake. Milestone 0 source retained in history. Implemented npm monorepo, strict shared TypeScript config, React/Vite boot entry, lint/format gates, CI and dependency-license gate. Type checking, lint, formatting, 2 tooling tests, 144-entry license metadata gate and production build pass. npm audit reports 0 vulnerabilities after the minimatch 11.0.4 override. Linux CI and browser QA remain unverified. Remote publication is being pursued through the GitHub connector because native credential-helper authentication fails.
+Milestone 1 published as 9db77462dc9c620badf1227a5f966624c66385b0 in draft PR #1; both hosted CI runs passed. Its source tree matches local commit 1be0c9a, retained on codex/milestone-0-intake.
 
-Next: Milestone 2 corporate interface under standing user authorization.
+Milestone 2 verified locally on codex/milestone-2-interface: official corporate asset and pinned design tokens; interactive docking, panel sizing/collapse/visibility; persistent local interface settings; light/dark themes and drawing backgrounds; complete en/de/yo/pcm UI dictionaries; keyboard-accessible help. Six local unit/tooling tests and seven Chromium interaction/mobile tests pass. Type checking, lint, formatting, 147-entry license gate and production build pass. Runtime notices are generated and verified. Browser screenshot inspected for layout. No native project model or ECAD feature is claimed yet.
+
+Next: publish Milestone 2 and inspect hosted CI, then Milestone 3 native project model. Continuous milestone execution is authorized by the owner.
