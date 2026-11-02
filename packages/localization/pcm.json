@@ -363,5 +363,11 @@
   "editRoom": "Edit room",
   "roomVertices": "Boundary vertices (x,y mm for each line)",
   "roomVerticesHelp": "Use 3–256 different points in boundary order. Edges no fit cross, touch or overlap each other.",
-  "applyRoom": "Apply room"
+  "applyRoom": "Apply room",
+  "drawRoom": "Draw room",
+  "roomGrid": "Snap grid (mm)",
+  "roomDrawingHelp": "Click room corners in order. Finish saves the room; Escape cancels without changing the project.",
+  "removeLastVertex": "Remove last vertex",
+  "finishRoom": "Finish room",
+  "cancelRoomDrawing": "Cancel drawing"
 }

@@ -1,7 +1,12 @@
 import {
   parseRoomBoundary,
+  addPolygonRoom,
   updateRoom,
 } from "../../../packages/building-design/rooms.ts";
+import {
+  snap,
+  type Point,
+} from "../../../packages/engineering-core/geometry.ts";
 import { useState } from "react";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
@@ -19,6 +24,13 @@ export function BuildingEditor({
   native: NativeProjects;
   t: (key: MessageKey) => string;
 }) {
+  const [drawing, setDrawing] = useState<{
+    floorId: string;
+    name: string;
+    grid: number;
+    points: Point[];
+    viewBox: string;
+  } | null>(null);
   const [buildingId, setBuildingId] = useState("");
   const [floorId, setFloorId] = useState("");
   const p = native.project;
@@ -46,8 +58,16 @@ export function BuildingEditor({
   const width = rooms.length ? bounds.maxX - minX : 10000;
   const height = rooms.length ? bounds.maxY - minY : 8000;
   const margin = Math.max(width, height, 1000) * 0.05;
+  const activeDrawing = drawing?.floorId === floor?.id ? drawing : null;
+  const planViewBox = `${minX - margin} ${minY - margin} ${Math.max(width, 1) + 2 * margin} ${Math.max(height, 1) + 2 * margin}`;
   return (
-    <section className="building-editor" aria-label={t("buildingDesign")}>
+    <section
+      className="building-editor"
+      aria-label={t("buildingDesign")}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") setDrawing(null);
+      }}
+    >
       <h2>{t("buildingDesign")}</h2>
       <p>{t("buildingStructureScope")}</p>
       <form
@@ -81,6 +101,7 @@ export function BuildingEditor({
             <select
               value={building.id}
               onChange={(e) => {
+                setDrawing(null);
                 setBuildingId(e.target.value);
                 setFloorId("");
               }}
@@ -144,7 +165,10 @@ export function BuildingEditor({
             {t("floorName")}
             <select
               value={floor.id}
-              onChange={(e) => setFloorId(e.target.value)}
+              onChange={(e) => {
+                setDrawing(null);
+                setFloorId(e.target.value);
+              }}
             >
               {floors.map((f) => (
                 <option key={f.id} value={f.id}>
@@ -202,13 +226,174 @@ export function BuildingEditor({
             ))}
             <button>{t("addRoom")}</button>
           </form>
+          <form
+            aria-label={t("drawRoom")}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const data = new FormData(e.currentTarget);
+              const grid = Number(data.get("grid"));
+              if (Number.isFinite(grid) && grid >= 1 && grid <= 1000)
+                setDrawing({
+                  floorId: floor.id,
+                  name: String(data.get("name")).trim(),
+                  grid,
+                  points: [],
+                  viewBox: planViewBox,
+                });
+            }}
+          >
+            <label>
+              {t("roomName")}
+              <input
+                name="name"
+                required
+                maxLength={160}
+                disabled={!!activeDrawing}
+              />
+            </label>
+            <label>
+              {t("roomGrid")}
+              <input
+                name="grid"
+                type="number"
+                min={1}
+                max={1000}
+                defaultValue={100}
+                required
+                disabled={!!activeDrawing}
+              />
+            </label>
+            <button disabled={!!activeDrawing}>{t("drawRoom")}</button>
+          </form>
+          {activeDrawing && (
+            <div className="room-drawing-tools">
+              <p role="status">
+                {t("roomDrawingHelp")} · {activeDrawing.points.length}/256
+              </p>
+              <button
+                disabled={!activeDrawing.points.length}
+                onClick={() =>
+                  setDrawing({
+                    ...activeDrawing,
+                    points: activeDrawing.points.slice(0, -1),
+                  })
+                }
+              >
+                {t("removeLastVertex")}
+              </button>
+              <button
+                disabled={activeDrawing.points.length < 3}
+                onClick={() => {
+                  if (
+                    native.update((p) =>
+                      addPolygonRoom(
+                        p,
+                        activeDrawing.floorId,
+                        activeDrawing.name,
+                        activeDrawing.points,
+                      ),
+                    )
+                  )
+                    setDrawing(null);
+                }}
+              >
+                {t("finishRoom")}
+              </button>
+              <button onClick={() => setDrawing(null)}>
+                {t("cancelRoomDrawing")}
+              </button>
+            </div>
+          )}
           <svg
             className="building-plan"
             role="img"
             aria-label={t("roomOutlines")}
-            viewBox={`${minX - margin} ${minY - margin} ${Math.max(width, 1) + 2 * margin} ${Math.max(height, 1) + 2 * margin}`}
+            viewBox={activeDrawing?.viewBox ?? planViewBox}
+            tabIndex={0}
+            onPointerDown={(e) => {
+              if (
+                !activeDrawing ||
+                e.button !== 0 ||
+                activeDrawing.points.length >= 256
+              )
+                return;
+              const matrix = e.currentTarget.getScreenCTM();
+              if (!matrix) return;
+              const point = new DOMPoint(e.clientX, e.clientY).matrixTransform(
+                matrix.inverse(),
+              );
+              const next = {
+                x: snap(point.x, activeDrawing.grid),
+                y: snap(point.y, activeDrawing.grid),
+              };
+              if (
+                !Number.isFinite(next.x) ||
+                !Number.isFinite(next.y) ||
+                Math.abs(next.x) > 1000000 ||
+                Math.abs(next.y) > 1000000
+              )
+                return;
+              if (
+                activeDrawing.points.some(
+                  (p) => p.x === next.x && p.y === next.y,
+                )
+              )
+                return;
+              e.currentTarget.focus();
+              setDrawing({
+                ...activeDrawing,
+                points: [...activeDrawing.points, next],
+              });
+            }}
           >
             <title>{floor.name}</title>
+            {activeDrawing && (
+              <>
+                <defs>
+                  <pattern
+                    id="room-drawing-grid"
+                    width={activeDrawing.grid}
+                    height={activeDrawing.grid}
+                    patternUnits="userSpaceOnUse"
+                  >
+                    <path
+                      d={`M ${activeDrawing.grid} 0 L 0 0 0 ${activeDrawing.grid}`}
+                      fill="none"
+                      stroke="currentColor"
+                      strokeOpacity={0.15}
+                      strokeWidth={1}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </pattern>
+                </defs>
+                <rect
+                  x={activeDrawing.viewBox.split(" ")[0]}
+                  y={activeDrawing.viewBox.split(" ")[1]}
+                  width={activeDrawing.viewBox.split(" ")[2]}
+                  height={activeDrawing.viewBox.split(" ")[3]}
+                  fill="url(#room-drawing-grid)"
+                />
+                <polyline
+                  data-room-draft
+                  points={activeDrawing.points
+                    .map((p) => `${p.x},${p.y}`)
+                    .join(" ")}
+                  fill="none"
+                  stroke="var(--cyan)"
+                  strokeWidth={3}
+                  vectorEffect="non-scaling-stroke"
+                />
+                {activeDrawing.points.map((p, i) => (
+                  <circle
+                    key={i}
+                    cx={p.x}
+                    cy={p.y}
+                    r={Math.max(activeDrawing.grid / 15, 5)}
+                    fill="var(--cyan)"
+                  />
+                ))}
+              </>
+            )}
             {rooms.map((room) => (
               <g key={room.id} data-room-id={room.id}>
                 <polygon

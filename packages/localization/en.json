@@ -363,5 +363,11 @@
   "editRoom": "Edit room",
   "roomVertices": "Boundary vertices (x,y mm per line)",
   "roomVerticesHelp": "Use 3–256 distinct vertices in perimeter order. Crossing, touching or overlapping edges are rejected.",
-  "applyRoom": "Apply room"
+  "applyRoom": "Apply room",
+  "drawRoom": "Draw room",
+  "roomGrid": "Snap grid (mm)",
+  "roomDrawingHelp": "Click room corners in order. Finish saves the room; Escape cancels without changing the project.",
+  "removeLastVertex": "Remove last vertex",
+  "finishRoom": "Finish room",
+  "cancelRoomDrawing": "Cancel drawing"
 }

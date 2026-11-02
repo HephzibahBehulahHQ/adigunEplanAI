@@ -93,3 +93,15 @@ export function updateRoom(
   room.boundary = points;
   return validateProject(next);
 }
+
+export function addPolygonRoom(
+  project: Project,
+  floorId: string,
+  name: string,
+  boundary: readonly Point[],
+): Project {
+  const points = validateRoomBoundary(boundary);
+  const next = structuredClone(project);
+  next.rooms.push({ id: crypto.randomUUID(), floorId, name, boundary: points });
+  return validateProject(next);
+}

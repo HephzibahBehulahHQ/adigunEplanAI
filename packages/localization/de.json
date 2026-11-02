@@ -363,5 +363,11 @@
   "editRoom": "Raum bearbeiten",
   "roomVertices": "Grenzpunkte (x,y mm je Zeile)",
   "roomVerticesHelp": "3–256 verschiedene Punkte entlang des Umfangs eingeben. Kreuzende, berührende oder überlappende Kanten werden abgelehnt.",
-  "applyRoom": "Raum anwenden"
+  "applyRoom": "Raum anwenden",
+  "drawRoom": "Raum zeichnen",
+  "roomGrid": "Fangraster (mm)",
+  "roomDrawingHelp": "Raumecken der Reihe nach anklicken. Fertigstellen speichert den Raum; Escape verwirft die Zeichnung ohne Projektänderung.",
+  "removeLastVertex": "Letzten Punkt entfernen",
+  "finishRoom": "Raum fertigstellen",
+  "cancelRoomDrawing": "Zeichnung abbrechen"
 }

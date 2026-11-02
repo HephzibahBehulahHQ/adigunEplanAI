@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
+  addPolygonRoom,
   validateRoomBoundary,
   parseRoomBoundary,
   updateRoom,
@@ -110,6 +111,31 @@ test("room edits retain identity, floor and board references and never mutate pr
       p,
       p.rooms[0].id,
       "Bad",
+      pts([
+        [0, 0],
+        [1, 1],
+        [0, 1],
+        [1, 0],
+      ]),
+    ),
+  );
+  assert.deepEqual(p, before);
+});
+
+test("polygon creation validates before committing and keeps the source project intact", () => {
+  let p = addBuilding(nativeProject(), "Building", "");
+  p = addFloor(p, p.buildings[0].id, "Floor", 0, 3000);
+  const before = structuredClone(p);
+  const next = addPolygonRoom(p, p.floors[0].id, "Drawn", lShape);
+  assert.deepEqual(p, before);
+  assert.deepEqual(next.rooms[0].boundary, lShape);
+  assert.equal(next.rooms[0].floorId, p.floors[0].id);
+  assert.throws(() => addPolygonRoom(p, "missing", "Room", lShape));
+  assert.throws(() =>
+    addPolygonRoom(
+      p,
+      p.floors[0].id,
+      "Room",
       pts([
         [0, 0],
         [1, 1],

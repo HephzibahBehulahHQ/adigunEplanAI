@@ -363,5 +363,11 @@
   "editRoom": "Ṣàtúnṣe yàrá",
   "roomVertices": "Àwọn igun ààlà (x,y mm ní ìlà kọ̀ọ̀kan)",
   "roomVerticesHelp": "Lo igun 3–256 tí kò jọra ní ìtẹ̀lé ààlà. A kọ àwọn etí tí ń kọjá tàbí kan ara wọn.",
-  "applyRoom": "Fi yàrá sílò"
+  "applyRoom": "Fi yàrá sílò",
+  "drawRoom": "Fa yàrá",
+  "roomGrid": "Àwọ̀n ìdìmú (mm)",
+  "roomDrawingHelp": "Tẹ àwọn igun yàrá ní ìtẹ̀lé. Pari fi yàrá pamọ́; Escape fagilé láìyí iṣẹ́ padà.",
+  "removeLastVertex": "Yọ igun ìkẹyìn",
+  "finishRoom": "Pari yàrá",
+  "cancelRoomDrawing": "Fagilé àwòrán"
 }

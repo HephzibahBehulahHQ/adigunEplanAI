@@ -91,3 +91,85 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator("[data-room-id]")).toHaveCount(1);
 });
+
+test("graphical room drawing snaps vertices and commits only on Finish", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog.getByLabel("Project name", { exact: true }).fill("Drawn room");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Building");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Floor");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const read = () =>
+    page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
+          .projects[0],
+    );
+  const before = await read();
+  const draw = page.getByRole("form", { name: "Draw room", exact: true });
+  await draw.getByLabel("Room name", { exact: true }).fill("Drawn");
+  await draw.getByRole("button", { name: "Draw room", exact: true }).click();
+  const canvas = page.locator(".building-plan");
+  const click = async (x: number, y: number) => {
+    await canvas.scrollIntoViewIfNeeded();
+    const point = await canvas.evaluate(
+      (svg, p) => {
+        const point = new DOMPoint(p.x, p.y).matrixTransform(
+          (svg as SVGSVGElement).getScreenCTM()!,
+        );
+        return { x: point.x, y: point.y };
+      },
+      { x, y },
+    );
+    await page.mouse.click(point.x, point.y);
+  };
+  await click(1060, 1060);
+  await click(3060, 1060);
+  expect(await read()).toEqual(before);
+  await canvas.press("Escape");
+  await expect(page.locator("[data-room-draft]")).toHaveCount(0);
+  expect(await read()).toEqual(before);
+  await draw.getByRole("button", { name: "Draw room", exact: true }).click();
+  for (const [x, y] of [
+    [1060, 1060],
+    [3060, 1060],
+    [3060, 2060],
+    [1060, 2060],
+  ])
+    await click(x, y);
+  await page
+    .getByRole("button", { name: "Remove last vertex", exact: true })
+    .click();
+  await expect(page.locator("[data-room-draft]")).toHaveAttribute(
+    "points",
+    "1100,1100 3100,1100 3100,2100",
+  );
+  await click(1060, 2060);
+  expect(await read()).toEqual(before);
+  await page.getByRole("button", { name: "Finish room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "1100,1100 3100,1100 3100,2100 1100,2100",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await read()).rooms).toHaveLength(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  const after = await read();
+  await page.reload();
+  expect((await read()).rooms).toEqual(after.rooms);
+});
