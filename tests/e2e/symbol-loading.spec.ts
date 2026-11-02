@@ -83,3 +83,30 @@ test("failed engineering-symbol download leaves native editing and export functi
   expect(exported.devices).toEqual(data.devices);
   expect(exported.pins).toEqual(data.pins);
 });
+
+test("secondary category browsing and search leave native project unchanged", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.locator(".component-library > summary").click();
+  await summary(page).click();
+  const category = page.getByRole("combobox", {
+    name: "Symbol category",
+    exact: true,
+  });
+  await category.selectOption("power");
+  await expect(
+    page.locator('[data-library-preview="busbar-four-taps"]'),
+  ).toBeVisible();
+  await expect(
+    page.locator('[data-library-preview="distribution-three-way"]'),
+  ).toBeVisible();
+  await page.getByLabel("Search symbols", { exact: true }).fill("busbar");
+  await expect(page.locator("[data-library-preview]")).toHaveCount(1);
+  await category.selectOption("connections");
+  await expect(
+    page.locator('[data-library-preview="busbar-four-taps"]'),
+  ).toBeVisible();
+  expect(await project(page)).toEqual(before);
+});

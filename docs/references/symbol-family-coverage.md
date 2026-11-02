@@ -4,7 +4,7 @@ This records drawing/interface coverage for MASTER_SPECIFICATION.md Part 5.2. Th
 
 | Group | Native drawing coverage | Scope limits |
 |---|---|---|
-| Power | Transformer, generator, UPS, inverter, rectifier, DC/DC converter, supply, battery, busbar, isolator and distribution-board interfaces | Busbar and distribution-board drawings currently have connection/building primary categories; cross-category browsing needs review. |
+| Power | Transformer, generator, UPS, inverter, rectifier, DC/DC converter, supply, battery, busbar, isolator and distribution-board interfaces | Busbar and distribution-board drawings are browsable under Power and their connection/building primary categories. |
 | Protection | Native fuse; MCB, MCCB, RCD, RCBO, overload relay, motor-protection switch, surge protection and protection-relay interfaces | Independent component ports; no inferred trip curves, coordination or protection operation. |
 | Switching | Native NO contact/coil; NC/auxiliary contact, relay, contactor, pushbutton, selector, emergency-stop and limit-switch drawings | Wiring documentation; actuator/coil/contact simulation remains separate. |
 | Motors | Native DC motor; single-phase run/start windings, three-phase, servo, stepper and starter assembly | No torque, rotation, startup or thermal behavior is calculated. |
@@ -18,4 +18,4 @@ The 22 new definitions are in packages/component-library/extended-symbols.ts. Sh
 
 Verification: every definition installs, places, validates bounded artwork/connection points and serializes as a native document. Four additional domain tests verify independent module ports, explicit shield/PE bonding, shared PE-clamp taps and plug/socket pole isolation. Twenty-two individual Chromium workflows verify each new interface's declared pin/node counts, real external wiring where applicable and reload. The complete 101-test unit/tooling gate and 79-scenario Chromium suite passed. The 22 rendered previews were visually reviewed without clipped artwork or labels.
 
-These are symbol definitions, not 69 verified manufacturer parts or tested engineering example projects. The catalog still contains four source-backed records. Broader manufacturer metadata, standards-version documentation, cross-category browsing and real 3D mappings remain acceptance work; the 500-project requirement is unchanged.
+These are symbol definitions, not 69 verified manufacturer parts or tested engineering example projects. The catalog still contains four source-backed records. Broader manufacturer metadata, standards-version documentation and real 3D mappings remain acceptance work; the 500-project requirement is unchanged.

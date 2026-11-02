@@ -3,6 +3,7 @@ import { SymbolArtwork } from "./SymbolArtwork";
 import {
   engineeringSymbols,
   installSymbol,
+  searchSymbols,
 } from "../../../packages/component-library/symbols.ts";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
@@ -16,22 +17,7 @@ export function EngineeringSymbols({
 }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
-  const words = query
-    .normalize("NFKC")
-    .toLowerCase()
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  const matches = engineeringSymbols.filter(
-    (symbol) =>
-      (!category || symbol.category === category) &&
-      words.every((word) =>
-        `${symbol.name} ${t(symbol.id as MessageKey)} ${symbol.category}`
-          .normalize("NFKC")
-          .toLowerCase()
-          .includes(word),
-      ),
-  );
+  const matches = searchSymbols(query, category, (key) => t(key as MessageKey));
   return (
     <>
       <p>{t("originalSymbolsScope")}</p>

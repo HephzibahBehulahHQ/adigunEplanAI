@@ -1354,20 +1354,53 @@ export const engineeringSymbols = [
   ...extendedSymbols,
 ] as const;
 
-export function searchSymbols(query: string, category = "") {
-  const words = query
-    .normalize("NFKC")
-    .toLowerCase()
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-  return engineeringSymbols.filter(
-    (symbol) =>
-      (!category || symbol.category === category) &&
-      words.every((word) =>
-        `${symbol.name} ${symbol.category}`.toLowerCase().includes(word),
-      ),
-  );
+type EngineeringSymbol = (typeof engineeringSymbols)[number];
+type SymbolCategory = EngineeringSymbol["category"];
+
+// Browsing metadata only: never changes installed definitions or electrical topology.
+const additionalCategories: Partial<
+  Record<EngineeringSymbol["id"], readonly SymbolCategory[]>
+> = {
+  "busbar-four-taps": ["power"],
+  "distribution-three-way": ["power"],
+  "measurement-disconnect-terminal": ["connections"],
+  "wall-switch-single-pole": ["switching"],
+  "starter-three-phase-trip": ["industrial"],
+  "soft-starter-three-phase": ["motors"],
+  "variable-frequency-drive": ["motors"],
+  "dc-motor-controller": ["motors"],
+  "safety-relay-two-channel": ["automation"],
+  "hmi-serial-interface": ["automation"],
+  "industrial-serial-bridge": ["automation"],
+};
+export function symbolCategories(
+  symbol: EngineeringSymbol,
+): readonly SymbolCategory[] {
+  return [symbol.category, ...(additionalCategories[symbol.id] ?? [])];
+}
+export function searchSymbols(
+  query: string,
+  category = "",
+  translate: (key: string) => string = (key) => key,
+) {
+  const normalize = (text: string) => text.normalize("NFKC").toLowerCase();
+  const words = normalize(query).trim().split(/\s+/).filter(Boolean);
+  return engineeringSymbols.filter((symbol) => {
+    const categories = symbolCategories(symbol);
+    const text = normalize(
+      [
+        symbol.id,
+        symbol.name,
+        translate(symbol.id),
+        ...categories,
+        ...categories.map((value) => translate(`category-${value}`)),
+      ].join(" "),
+    );
+    return (
+      (!category || categories.includes(category as SymbolCategory)) &&
+      words.every((word) => text.includes(word))
+    );
+  });
 }
 export function installSymbol(project: Project, symbolId: string): Project {
   const symbol = engineeringSymbols.find((item) => item.id === symbolId);
