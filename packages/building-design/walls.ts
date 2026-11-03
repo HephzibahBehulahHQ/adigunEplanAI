@@ -29,7 +29,7 @@ export function setPlanLayer(
   if (change.locked !== undefined) layer.locked = change.locked;
   return validateProject(next);
 }
-function editableLayer(project: Project, layerId: string) {
+export function editableLayer(project: Project, layerId: string) {
   const layer = project.architecturalLayers.find((l) => l.id === layerId);
   if (
     !layer ||
@@ -67,6 +67,8 @@ export function removeWall(project: Project, wallId: string): Project {
   const wall = project.walls.find((w) => w.id === wallId);
   if (!wall) throw new Error("Unknown wall");
   editableLayer(project, wall.layerId);
+  if (project.wallOpenings.some((o) => o.wallId === wallId))
+    throw new Error("Remove wall openings first");
   const next = structuredClone(project);
   next.walls = next.walls.filter((w) => w.id !== wallId);
   return validateProject(next);
@@ -90,4 +92,25 @@ export function wallFootprint(wall: Project["walls"][number]): Point[] {
     { x: wall.end.x - ox, y: wall.end.y - oy },
     { x: wall.start.x - ox, y: wall.start.y - oy },
   ];
+}
+
+export function updateWall(
+  project: Project,
+  wallId: string,
+  changes: Pick<
+    Project["walls"][number],
+    "name" | "start" | "end" | "thicknessMm" | "heightMm"
+  >,
+): Project {
+  const wall = project.walls.find((w) => w.id === wallId);
+  if (!wall) throw new Error("Unknown wall");
+  editableLayer(project, wall.layerId);
+  const next = structuredClone(project);
+  const target = next.walls.find((w) => w.id === wallId)!;
+  target.name = changes.name;
+  target.start = { ...changes.start };
+  target.end = { ...changes.end };
+  target.thicknessMm = changes.thicknessMm;
+  target.heightMm = changes.heightMm;
+  return validateProject(next);
 }
