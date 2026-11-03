@@ -410,5 +410,13 @@
   "hingeEnd": "Öffnungsende",
   "openingSwing": "Türöffnungsseite",
   "swingLeft": "Links der Wandrichtung",
-  "swingRight": "Rechts der Wandrichtung"
+  "swingRight": "Rechts der Wandrichtung",
+  "importSvgPlan": "SVG-Grundriss importieren",
+  "svgPlanScope": "Linien, Polylinien, Polygone und einfache Rechtecke importieren. Millimeter pro SVG-Benutzereinheit ausdrücklich festlegen: Viewport-Breite, Höhe und viewBox bestimmen diesen Maßstab nicht. Gruppennamen werden Architekturebenen. Nicht unterstützte Geometrie wird gemeldet; Gestaltung wird nicht importiert.",
+  "svgFile": "SVG-Datei",
+  "svgUnitScale": "Millimeter pro SVG-Benutzereinheit",
+  "previewSvg": "SVG-Import prüfen",
+  "svgImportReport": "SVG-Importbericht",
+  "applySvgImport": "SVG-Import übernehmen",
+  "removePlanGeometry": "Importierte Geometrie entfernen"
 }

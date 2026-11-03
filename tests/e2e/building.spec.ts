@@ -333,3 +333,118 @@ test("native walls obey architectural layer visibility and locking and survive r
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator("[data-opening-id] path")).toHaveCount(1);
 });
+
+test("SVG architectural import previews scale and unsupported objects without executing content", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("SVG import reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".plan-import > summary").click();
+  const form = page.getByRole("form", { name: "Import SVG plan", exact: true });
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400mm" viewBox="0 0 40 30"><g id="ImportedArchitecture"><rect id="outline" width="40" height="30"/><line id="axis" x1="0" y1="15" x2="40" y2="15"/><circle id="unsupported-circle" r="4"/></g></svg>';
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "floor.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await form
+    .getByLabel("Millimetres per SVG user unit", { exact: true })
+    .fill("100");
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText("unsupported-circle: unsupported circle");
+  await page
+    .getByRole("button", { name: "Apply SVG import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 4000 0 L 4000 3000 L 0 3000 Z",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", {
+      name: "Locked: ImportedArchitecture",
+      exact: true,
+    })
+    .check();
+  await expect(
+    page.getByRole("button", {
+      name: "Remove imported geometry: outline",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", {
+      name: "Visible: ImportedArchitecture",
+      exact: true,
+    })
+    .uncheck();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("checkbox", {
+      name: "Visible: ImportedArchitecture",
+      exact: true,
+    })
+    .check();
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  for (const malicious of [
+    "<script>window.svgExecuted=true</script>",
+    '<image href="https://example.invalid/track"/>',
+    "<style>rect {width: 999px}</style>",
+  ]) {
+    await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+      name: "unsafe.svg",
+      mimeType: "image/svg+xml",
+      buffer: Buffer.from(
+        '<svg xmlns="http://www.w3.org/2000/svg">' + malicious + "</svg>",
+      ),
+    });
+    await form
+      .getByRole("button", { name: "Preview SVG import", exact: true })
+      .click();
+    await expect(page.getByRole("alert")).toContainText(
+      "Active, linked or embedded",
+    );
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("adiguneplanai.projects.v1"),
+      ),
+    ).toBe(before);
+  }
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+});

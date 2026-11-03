@@ -1,3 +1,4 @@
+import { PlanImportTools } from "./PlanImportTools";
 import {
   openingGeometry,
   wallSegments,
@@ -70,7 +71,13 @@ export function BuildingEditor({
     const wall = visibleWalls.find((w) => w.id === o.wallId);
     return wall ? [{ opening: o, geometry: openingGeometry(wall, o) }] : [];
   });
+  const importedShapes = p.planGeometry.filter(
+    (s) =>
+      s.floorId === floor?.id &&
+      p.architecturalLayers.some((l) => l.id === s.layerId && l.visible),
+  );
   const planShapes = [
+    ...importedShapes.map((s) => s.points),
     ...rooms.map((r) => r.boundary),
     ...visibleOpenings
       .filter(({ opening }) => opening.kind === "door")
@@ -272,6 +279,12 @@ export function BuildingEditor({
             ))}
             <button>{t("addRoom")}</button>
           </form>
+          <PlanImportTools
+            key={`import-${floor.id}`}
+            native={native}
+            floorId={floor.id}
+            t={t}
+          />
           <WallTools key={floor.id} native={native} floorId={floor.id} t={t} />
           <form
             aria-label={t("drawRoom")}
@@ -449,6 +462,23 @@ export function BuildingEditor({
                 ))}
               </>
             )}
+            {importedShapes.map((s) => (
+              <path
+                key={s.id}
+                data-plan-geometry-id={s.id}
+                d={
+                  s.points
+                    .map((p, i) => `${i ? "L" : "M"} ${p.x} ${p.y}`)
+                    .join(" ") + (s.closed ? " Z" : "")
+                }
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1}
+                vectorEffect="non-scaling-stroke"
+              >
+                <title>{s.name}</title>
+              </path>
+            ))}
             {visibleWalls.flatMap((wall) =>
               wallSegments(wall, p.wallOpenings).map((w, index) => (
                 <polygon

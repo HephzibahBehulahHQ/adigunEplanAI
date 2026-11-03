@@ -410,5 +410,13 @@
   "hingeEnd": "Opening end",
   "openingSwing": "Door swing side",
   "swingLeft": "Left of wall direction",
-  "swingRight": "Right of wall direction"
+  "swingRight": "Right of wall direction",
+  "importSvgPlan": "Import SVG plan",
+  "svgPlanScope": "Import line, polyline, polygon and plain rectangle coordinates. Set millimetres per SVG user unit explicitly: viewport width, height and viewBox do not set this scale. Group names become architectural layers. Unsupported geometry is reported; appearance is not imported.",
+  "svgFile": "SVG file",
+  "svgUnitScale": "Millimetres per SVG user unit",
+  "previewSvg": "Preview SVG import",
+  "svgImportReport": "SVG import report",
+  "applySvgImport": "Apply SVG import",
+  "removePlanGeometry": "Remove imported geometry"
 }
