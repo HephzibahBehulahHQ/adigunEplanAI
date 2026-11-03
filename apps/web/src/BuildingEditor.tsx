@@ -1,3 +1,4 @@
+import { DxfImportTools } from "./DxfImportTools";
 import { PlanImportTools } from "./PlanImportTools";
 import {
   openingGeometry,
@@ -279,6 +280,12 @@ export function BuildingEditor({
             ))}
             <button>{t("addRoom")}</button>
           </form>
+          <DxfImportTools
+            key={`dxf-${floor.id}`}
+            native={native}
+            floorId={floor.id}
+            t={t}
+          />
           <PlanImportTools
             key={`import-${floor.id}`}
             native={native}

@@ -419,5 +419,18 @@
   "svgImportReport": "Ìròyìn SVG",
   "applySvgImport": "Gbé SVG wọlé",
   "removePlanGeometry": "Yọ àwòrán tí a gbé wọlé",
-  "svgAutomaticUnits": "Lo ìwọ̀n viewport SVG àti ẹyọ gidi"
+  "svgAutomaticUnits": "Lo ìwọ̀n viewport SVG àti ẹyọ gidi",
+  "importDxfPlan": "Gbé àwòrán DXF wọlé",
+  "dxfPlanScope": "Gbé ASCII DXF LINE àti LWPOLYLINE tààrà wọlé. Ẹyọ àti ìfarahàn/títì fẹ́lẹ́fẹ́lẹ́ wà; Y yí padà fún àwòrán. A ó ròyìn ohun mìíràn, a kò ṣe àfojúsùn rẹ̀.",
+  "dxfFile": "Fáìlì DXF",
+  "dxfManualUnits": "Rọ́pò ẹyọ DXF",
+  "dxfUnitScale": "Milimita fún ẹyọ DXF",
+  "previewDxf": "Ṣàyẹ̀wò DXF",
+  "dxfImportReport": "Ìròyìn DXF",
+  "applyDxfImport": "Gbé DXF wọlé",
+  "cancelDxf": "Fagilé DXF",
+  "dxfParsing": "Ń ka DXF…",
+  "dxfWorkerFailed": "DXF kò ṣiṣẹ́; iṣẹ́ kò yí padà.",
+  "dxfTimeout": "Àkókò DXF ti parí; iṣẹ́ kò yí padà.",
+  "importedPlanGeometry": "Àwòrán ilé tí a gbé wọlé"
 }

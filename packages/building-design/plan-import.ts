@@ -5,6 +5,7 @@ export type PlanImport = {
   mmPerUnit: number;
   shapes: { name: string; layer: string; points: Point[]; closed: boolean }[];
   issues: string[];
+  layerStates?: Record<string, { visible: boolean; locked: boolean }>;
 };
 export function importPlanGeometry(
   project: Project,
@@ -27,8 +28,8 @@ export function importPlanGeometry(
         name: shape.layer,
         floorId,
         kind: "architectural",
-        visible: true,
-        locked: false,
+        visible: draft.layerStates?.[shape.layer]?.visible ?? true,
+        locked: draft.layerStates?.[shape.layer]?.locked ?? false,
       });
     }
     next.planGeometry.push({

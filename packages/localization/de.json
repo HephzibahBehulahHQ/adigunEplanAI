@@ -419,5 +419,18 @@
   "svgImportReport": "SVG-Importbericht",
   "applySvgImport": "SVG-Import übernehmen",
   "removePlanGeometry": "Importierte Geometrie entfernen",
-  "svgAutomaticUnits": "SVG-Viewport-Abmessungen und physikalische Einheiten verwenden"
+  "svgAutomaticUnits": "SVG-Viewport-Abmessungen und physikalische Einheiten verwenden",
+  "importDxfPlan": "DXF-Grundriss importieren",
+  "dxfPlanScope": "Begrenzte ASCII-DXF-Modellgeometrie LINE und gerade LWPOLYLINE importieren. Einheiten und Ebenensichtbarkeit/Sperren bleiben erhalten; Y wird für den Plan umgekehrt. Andere Objekte werden gemeldet, nicht angenähert.",
+  "dxfFile": "DXF-Datei",
+  "dxfManualUnits": "Angegebene DXF-Einheiten überschreiben",
+  "dxfUnitScale": "Millimeter pro DXF-Einheit",
+  "previewDxf": "DXF-Import prüfen",
+  "dxfImportReport": "DXF-Importbericht",
+  "applyDxfImport": "DXF-Import übernehmen",
+  "cancelDxf": "DXF-Import abbrechen",
+  "dxfParsing": "DXF wird gelesen…",
+  "dxfWorkerFailed": "DXF-Worker fehlgeschlagen; Projekt unverändert.",
+  "dxfTimeout": "Zeitlimit beim DXF-Lesen; Projekt unverändert.",
+  "importedPlanGeometry": "Importierte Plangeometrie"
 }

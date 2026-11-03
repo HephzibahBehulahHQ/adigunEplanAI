@@ -61,3 +61,11 @@ SVG transform attributes now support matrix, translate, scale, rotate (optionall
 
 
 Use SVG viewport dimensions and physical units enables automatic conversion from absolute root width/height (unitless/px, mm, cm, in, pt, pc or Q). It maps a valid viewBox origin and dimensions with preserveAspectRatio none or the Min/Mid/Max meet/slice alignments. Transform attributes compose outside the root viewport mapping, then coordinates convert at 96 CSS pixels/inch. The stored mmPerUnit is the final post-transform conversion (25.4/96 in this mode); original viewport syntax is normalized into native points. No viewport clipping is performed; the preview reports this. Percentage/relative/missing root dimensions, invalid viewBoxes and unsupported alignment syntax are rejected without changing the project. Manual scaling remains available and is unchanged.
+
+## DXF architectural reference import
+
+Building design > Import DXF plan previews ASCII DXF LINE and straight LWPOLYLINE model-space geometry in a cancellable worker before explicit Apply. Declared INSUNITS supports millimetres, centimetres, decimetres, metres, kilometres, inches, feet, yards and mils. Missing or unsupported units require an explicit millimetres-per-unit override. DXF Y coordinates are reversed into the screen plan coordinate system; geometry is stored in millimetres. Source layer names and locked/off/frozen states are retained (frozen maps to hidden). Imported geometry shares layer controls, protected removal, undo and native persistence.
+
+Limits: 1 MiB input, 2,000 model records, 10,000 vertices per polyline, native coordinate bounds and a 10-second worker timeout. Malformed/binary input is rejected. Unsupported entities are reported, including circles, arcs, legacy POLYLINE, blocks, text and solids; nonplanar geometry, bulges, widths, thickness, non-default extrusion and paper-space entities are skipped. Appearance, layouts and other DXF sections are not imported. This is a supported reference-geometry subset, not full CAD fidelity or completion of Milestone 7.
+
+Source semantics: [Autodesk INSUNITS](https://help.autodesk.com/cloudhelp/2023/ENU/AutoCAD-Core/files/GUID-A58A87BB-482B-4042-A00A-EEF55A2B4FD8.htm) and [LWPOLYLINE group codes](https://help.autodesk.com/cloudhelp/2024/ENU/AutoCAD-DXF/files/GUID-748FC305-F3F2-4F74-825A-61F04D757A50.htm).

@@ -419,5 +419,18 @@
   "svgImportReport": "SVG import report",
   "applySvgImport": "Apply SVG import",
   "removePlanGeometry": "Remove imported geometry",
-  "svgAutomaticUnits": "Use SVG viewport size and physical units"
+  "svgAutomaticUnits": "Use SVG viewport size and physical units",
+  "importDxfPlan": "Import DXF plan",
+  "dxfPlanScope": "Import bounded ASCII DXF LINE and straight LWPOLYLINE model geometry. Declared units and layer visibility/locks remain; Y reverse for plan. We report other entities, no approximation.",
+  "dxfFile": "DXF file",
+  "dxfManualUnits": "Override declared DXF units",
+  "dxfUnitScale": "Millimetres for each DXF unit",
+  "previewDxf": "Preview DXF import",
+  "dxfImportReport": "DXF import report",
+  "applyDxfImport": "Apply DXF import",
+  "cancelDxf": "Cancel DXF import",
+  "dxfParsing": "Parsing DXF…",
+  "dxfWorkerFailed": "DXF worker fail; project no change.",
+  "dxfTimeout": "DXF parsing time finish; project no change.",
+  "importedPlanGeometry": "Imported plan geometry"
 }

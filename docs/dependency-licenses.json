@@ -315,6 +315,11 @@
     "license": "Apache-2.0"
   },
   {
+    "path": "node_modules/dxf-parser",
+    "version": "1.1.2",
+    "license": "MIT"
+  },
+  {
     "path": "node_modules/escape-string-regexp",
     "version": "4.0.0",
     "license": "MIT"
@@ -532,6 +537,11 @@
   {
     "path": "node_modules/locate-path",
     "version": "6.0.0",
+    "license": "MIT"
+  },
+  {
+    "path": "node_modules/loglevel",
+    "version": "1.9.2",
     "license": "MIT"
   },
   {

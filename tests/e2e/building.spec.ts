@@ -1,3 +1,4 @@
+import { dxfFixture } from "../fixtures/dxf-plan.mjs";
 import { test, expect } from "@playwright/test";
 
 test("buildings, floors and dimensioned room outlines persist with undo and isolated floor views", async ({
@@ -614,4 +615,164 @@ test("SVG physical units map viewport dimensions and reject unresolved percentag
     "d",
     path!,
   );
+});
+
+test("DXF worker import preserves declared units and locked layers with preview and undo", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("DXF import plan");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".dxf-import > summary").click();
+  const form = page.getByRole("form", { name: "Import DXF plan", exact: true });
+  await form.getByLabel("DXF file", { exact: true }).setInputFiles({
+    name: "reference.dxf",
+    mimeType: "application/dxf",
+    buffer: Buffer.from(dxfFixture({ units: 1, layerFlags: 4 })),
+  });
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "DXF import report", exact: true }),
+  ).toContainText("A3: unsupported CIRCLE");
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Cancel DXF import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "DXF import report", exact: true }),
+  ).toHaveCount(0);
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Apply DXF import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 254 -127",
+  );
+  await expect(
+    page.getByRole("button", {
+      name: "Remove imported geometry: A1",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await page.locator(".wall-tools > summary").click();
+  await expect(
+    page.getByRole("checkbox", { name: "Locked: Plan", exact: true }),
+  ).toBeChecked();
+  await page
+    .getByRole("checkbox", { name: "Visible: Plan", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("checkbox", { name: "Visible: Plan", exact: true })
+    .check();
+  await page
+    .getByRole("checkbox", { name: "Locked: Plan", exact: true })
+    .uncheck();
+  await page
+    .getByRole("button", { name: "Remove imported geometry: A1", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(1);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 254 -127",
+  );
+});
+
+test("DXF units require explicit override and failed worker loading preserves projects", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("DXF unit override");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".dxf-import > summary").click();
+  const form = page.getByRole("form", { name: "Import DXF plan", exact: true });
+  await form.getByLabel("DXF file", { exact: true }).setInputFiles({
+    name: "unitless.dxf",
+    mimeType: "application/dxf",
+    buffer: Buffer.from(dxfFixture({ units: 0 })),
+  });
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText(
+    "units are missing/unsupported",
+  );
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await form
+    .getByRole("checkbox", { name: "Override declared DXF units", exact: true })
+    .check();
+  await form.getByLabel("Millimetres per DXF unit", { exact: true }).fill("10");
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Apply DXF import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 100 -50",
+  );
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  await page.route("**/*dxfImport.worker*", (route) => route.abort());
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText("DXF worker failed");
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.projects.v1"),
+    ),
+  ).toBe(before);
 });

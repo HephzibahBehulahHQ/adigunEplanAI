@@ -1,5 +1,12 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
-const names = ["react", "react-dom", "scheduler", "zod"];
+const names = [
+  "react",
+  "react-dom",
+  "scheduler",
+  "zod",
+  "dxf-parser",
+  "loglevel",
+];
 const text =
   "AdigunEplanAI third-party runtime notices\n\n" +
   names
@@ -7,7 +14,12 @@ const text =
       const pkg = JSON.parse(
         readFileSync(`node_modules/${name}/package.json`, "utf8"),
       );
-      return `${name} ${pkg.version}\n${readFileSync(`node_modules/${name}/LICENSE`, "utf8").replace(/\r\n/g, "\n").trim()}\n`;
+      return `${name} ${pkg.version}\n${readFileSync(
+        `node_modules/${name}/${name === "loglevel" ? "LICENSE-MIT" : "LICENSE"}`,
+        "utf8",
+      )
+        .replace(/\r\n/g, "\n")
+        .trim()}\n`;
     })
     .join("\n---\n\n");
 const path = "apps/web/public/THIRD_PARTY_NOTICES.txt";
