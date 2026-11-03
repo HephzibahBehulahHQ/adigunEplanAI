@@ -448,3 +448,82 @@ test("SVG architectural import previews scale and unsupported objects without ex
     .click();
   await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
 });
+
+test("SVG nested transforms preserve order and invalid transform subtrees are reported", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("SVG transformed plan");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".plan-import > summary").click();
+  const form = page.getByRole("form", { name: "Import SVG plan", exact: true });
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" transform="translate(100 0)"><g id="Translated" transform="translate(10 20)"><g id="Scaled" transform="scale(2 3)"><rect id="transformed-rect" x="1" y="2" width="4" height="5"/></g></g><line id="reflected-line" transform="matrix(-1 0 0 1 0 0)" x2="10" y2="10"/><g id="custom-origin" transform-origin="50% 50%"><rect width="10" height="10"/></g><g id="invalid-group" transform="scale(0)"><rect width="10" height="20"/></g></svg>';
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "transformed.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await form
+    .getByLabel("Millimetres per SVG user unit", { exact: true })
+    .fill("10");
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText(
+    "invalid-group: Nonfinite or singular SVG transform; subtree skipped",
+  );
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText("custom-origin: styling/visibility subtree skipped");
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Apply SVG import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 1120 260 L 1200 260 L 1200 410 L 1120 410 Z",
+  );
+  await expect(page.locator("[data-plan-geometry-id]").last()).toHaveAttribute(
+    "d",
+    "M 1000 0 L 900 100",
+  );
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", { name: "Visible: Scaled", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(1);
+  await page
+    .getByRole("checkbox", { name: "Visible: Scaled", exact: true })
+    .check();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 1120 260 L 1200 260 L 1200 410 L 1120 410 Z",
+  );
+});

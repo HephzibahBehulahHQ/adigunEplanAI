@@ -1,3 +1,10 @@
+import {
+  identity,
+  multiplyAffine,
+  parseSvgTransform,
+  transformPoint,
+  type Affine,
+} from "../../../packages/building-design/svg-transform.ts";
 import type { PlanImport } from "../../../packages/building-design/plan-import.ts";
 const numberPattern = /^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i;
 function numbers(value: string): number[] {
@@ -49,24 +56,35 @@ export function parseSvgPlan(
   )
     throw new Error("Active, linked or embedded SVG content is not supported");
   const result: PlanImport = { sourceFile, mmPerUnit, shapes: [], issues: [] };
-  function visit(e: Element, layer: string, depth: number) {
+  function visit(e: Element, layer: string, depth: number, parent: Affine) {
     if (depth > 64) throw new Error("SVG nesting exceeds 64 levels");
     const label = (e.getAttribute("id") || e.localName).slice(0, 160);
     if (["title", "desc", "metadata"].includes(e.localName)) return;
-    // Unsupported styling/transforms affect descendants, so skip the whole subtree.
+    // Unsupported styling affects descendants, so skip the whole subtree.
     if (
       [
-        "transform",
         "style",
         "class",
         "clip-path",
         "mask",
         "display",
         "visibility",
+        "transform-origin",
+        "transform-box",
       ].some((a) => e.hasAttribute(a))
     ) {
+      result.issues.push(`${label}: styling/visibility subtree skipped`);
+      return;
+    }
+    let matrix: Affine;
+    try {
+      matrix = multiplyAffine(
+        parent,
+        parseSvgTransform(e.getAttribute("transform")),
+      );
+    } catch (error) {
       result.issues.push(
-        `${label}: styling/transform/visibility subtree skipped`,
+        `${label}: ${error instanceof Error ? error.message : "Invalid SVG transform"}; subtree skipped`,
       );
       return;
     }
@@ -80,7 +98,8 @@ export function parseSvgPlan(
               e.getAttribute("id") ||
               layer
             ).slice(0, 160);
-      for (const child of e.children) visit(child, nextLayer, depth + 1);
+      for (const child of e.children)
+        visit(child, nextLayer, depth + 1, matrix);
       return;
     }
     try {
@@ -124,7 +143,10 @@ export function parseSvgPlan(
         ];
         closed = true;
       } else throw new Error(`unsupported ${e.localName}`);
-      points = points.map((p) => ({ x: p.x * mmPerUnit, y: p.y * mmPerUnit }));
+      points = points.map((p) => {
+        const transformed = transformPoint(matrix, p);
+        return { x: transformed.x * mmPerUnit, y: transformed.y * mmPerUnit };
+      });
       if (
         points.length < (closed ? 3 : 2) ||
         points.length > 10000 ||
@@ -146,7 +168,7 @@ export function parseSvgPlan(
       );
     }
   }
-  visit(root, "SVG", 0);
+  visit(root, "SVG", 0, identity);
   if (result.shapes.length > 2000)
     throw new Error("SVG exceeds 2000 supported shapes");
   return result;
