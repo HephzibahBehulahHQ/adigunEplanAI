@@ -11,3 +11,9 @@ Run tests/project-ownership.sql through an administrative SQL connection: all fi
 Verified 2026-11-03: the Data API exposed-schema selection now includes adiguneplanai, retaining the five prior selections. Column grants and RLS remain unchanged. A publishable-key REST request using Accept-Profile: adiguneplanai returns HTTP 401 / 42501 (guest schema access denied). The existing production redirect allowlist already includes https://adiguneplanai.hephzibahbehulah.com/**; the shared Site URL remains unchanged.
 
 Still pending: authenticated REST round-trip, frontend authentication/cloud saving, history/recovery, profiles and avatars. This backend foundation does not make the current local-only app cloud-connected. No privileged key belongs in browser code.
+
+## Native cloud transport
+
+packages/project-storage/cloud.ts provides authenticated load/create/update transport for this schema. It validates the complete native model before sending, validates ownership/identity/revision on responses, and rejects account changes during requests. New snapshots use POST; existing snapshots require an explicit revision filter and reject zero-row updates as conflicts. It never automatically retries writes: a lost response may follow a successful server save, so callers must reload before deciding whether to retry. Redirects are rejected and server error bodies are not surfaced.
+
+Five focused transport tests cover payload preservation, revision filters, conflicts, invalid models/responses, account changes and sanitized errors. These use an injected HTTP transport; they do not establish authenticated live REST or frontend integration. The current UI still saves locally.
