@@ -8,4 +8,6 @@ projects stores owner-scoped native JSON snapshots with server timestamps and re
 
 Run tests/project-ownership.sql through an administrative SQL connection: all fixtures are transactionally rolled back. Verified owner insert/read/update and revision increment, denied owner reassignment, cross-owner read/update/delete isolation, and guest denial. No real user records are read by this test.
 
-Still pending: custom schema Data API exposure, production redirect allowlist, frontend authentication/cloud saving, history/recovery, profiles and avatars. This backend foundation does not make the current local-only app cloud-connected. No privileged key belongs in browser code.
+Verified 2026-11-03: the Data API exposed-schema selection now includes adiguneplanai, retaining the five prior selections. Column grants and RLS remain unchanged. A publishable-key REST request using Accept-Profile: adiguneplanai returns HTTP 401 / 42501 (guest schema access denied). The existing production redirect allowlist already includes https://adiguneplanai.hephzibahbehulah.com/**; the shared Site URL remains unchanged.
+
+Still pending: authenticated REST round-trip, frontend authentication/cloud saving, history/recovery, profiles and avatars. This backend foundation does not make the current local-only app cloud-connected. No privileged key belongs in browser code.

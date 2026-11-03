@@ -15,3 +15,11 @@ Git Credential Manager's official sign-in flow returned Windows Access is denied
 ## Remaining production work
 
 Cloudflare DNS administration was not changed in this task. Supabase authentication/cloud persistence and its production Site URL/redirect verification remain part of Milestone 12. Do not select another product's backend without verified ownership and authorization. Never place privileged keys in the frontend. Full production readiness, security/backup/performance checks, engineering acceptance and the 500-example validation remain required by MASTER_SPECIFICATION.md; a successful development deployment does not satisfy those gates.
+
+## Verified domain and backend checkpoint — 2026-11-03
+
+Source f8c9109ef356e00d1c84d29922dd83a164ff0f52 is synchronized locally/remotely, with hosted CI runs 41612800375 and 41612792082 successful. The equipment application from e05a96523884d4c5e337b90bf33b057bbe0036e9 is live in deployment 495391b7790fdc1dc8b1fc590418632e648153a5; Pages run 41600847758 and the live equipment browser workflow passed.
+
+Cloudflare administration confirms a DNS-only CNAME from adiguneplanai.hephzibahbehulah.com to hephzibahbehulahhq.github.io (Auto TTL). GitHub Pages main/root serves the canonical HTTPS domain. No DNS replacement was necessary.
+
+The authorized shared Supabase HQ project now has an isolated adiguneplanai schema, private project snapshots, revision trigger, restricted column grants and owner RLS. API schema exposure was saved and verified after reload; existing schema selections and shared Auth Site URL were preserved. The canonical-domain redirect was already allowed. Rollback SQL tests and an anonymous REST denial passed. Authenticated browser cloud saving is still unimplemented; no cloud-connected UI status is claimed. See supabase/README.md for exact evidence and remaining integration work.
