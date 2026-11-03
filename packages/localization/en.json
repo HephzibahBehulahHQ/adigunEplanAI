@@ -393,5 +393,22 @@
   "wallEndY": "End Y (mm)",
   "wallThickness": "Thickness (mm)",
   "wallHeight": "Wall height (mm)",
-  "removeWall": "Remove wall"
+  "removeWall": "Remove wall",
+  "editWall": "Edit wall",
+  "addOpening": "Add opening",
+  "removeOpening": "Remove opening",
+  "openingName": "Opening name",
+  "openingKind": "Opening type",
+  "doorOpening": "Door",
+  "windowOpening": "Window",
+  "openingOffset": "Offset along wall (mm)",
+  "openingWidth": "Opening width (mm)",
+  "openingHeight": "Opening height (mm)",
+  "openingSill": "Sill height (mm)",
+  "openingHinge": "Door hinge",
+  "hingeStart": "Opening start",
+  "hingeEnd": "Opening end",
+  "openingSwing": "Door swing side",
+  "swingLeft": "Left of wall direction",
+  "swingRight": "Right of wall direction"
 }

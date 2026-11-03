@@ -393,5 +393,22 @@
   "wallEndY": "Òpin Y (mm)",
   "wallThickness": "Sísanra (mm)",
   "wallHeight": "Gíga ògiri (mm)",
-  "removeWall": "Yọ ògiri"
+  "removeWall": "Yọ ògiri",
+  "editWall": "Ṣàtúnṣe ògiri",
+  "addOpening": "Fi ẹnu ògiri kún",
+  "removeOpening": "Yọ ẹnu ògiri",
+  "openingName": "Orúkọ ẹnu ògiri",
+  "openingKind": "Irú ẹnu ògiri",
+  "doorOpening": "Ilẹ̀kùn",
+  "windowOpening": "Fèrèsé",
+  "openingOffset": "Ìjìnnà lẹ́gbẹ̀ẹ́ ògiri (mm)",
+  "openingWidth": "Ìbú ẹnu ògiri (mm)",
+  "openingHeight": "Gíga ẹnu ògiri (mm)",
+  "openingSill": "Gíga ìsàlẹ̀ fèrèsé (mm)",
+  "openingHinge": "Ìsopọ̀ ilẹ̀kùn",
+  "hingeStart": "Ìbẹ̀rẹ̀ ẹnu ògiri",
+  "hingeEnd": "Òpin ẹnu ògiri",
+  "openingSwing": "Ẹ̀gbẹ́ ṣíṣí ilẹ̀kùn",
+  "swingLeft": "Òsì ìtọ́sọ́nà ògiri",
+  "swingRight": "Ọ̀tún ìtọ́sọ́nà ògiri"
 }

@@ -393,5 +393,22 @@
   "wallEndY": "Ende Y (mm)",
   "wallThickness": "Dicke (mm)",
   "wallHeight": "Wandhöhe (mm)",
-  "removeWall": "Wand entfernen"
+  "removeWall": "Wand entfernen",
+  "editWall": "Wand bearbeiten",
+  "addOpening": "Öffnung hinzufügen",
+  "removeOpening": "Öffnung entfernen",
+  "openingName": "Öffnungsname",
+  "openingKind": "Öffnungstyp",
+  "doorOpening": "Tür",
+  "windowOpening": "Fenster",
+  "openingOffset": "Abstand entlang der Wand (mm)",
+  "openingWidth": "Öffnungsbreite (mm)",
+  "openingHeight": "Öffnungshöhe (mm)",
+  "openingSill": "Brüstungshöhe (mm)",
+  "openingHinge": "Türanschlag",
+  "hingeStart": "Öffnungsanfang",
+  "hingeEnd": "Öffnungsende",
+  "openingSwing": "Türöffnungsseite",
+  "swingLeft": "Links der Wandrichtung",
+  "swingRight": "Rechts der Wandrichtung"
 }

@@ -1,3 +1,4 @@
+import { WallDetails } from "./WallDetails";
 import {
   addPlanLayer,
   setPlanLayer,
@@ -160,11 +161,20 @@ export function WallTools({
             <li key={w.id}>
               {w.name} · {w.thicknessMm} mm × {w.heightMm} mm{" "}
               <button
-                disabled={!editable.some((l) => l.id === w.layerId)}
+                disabled={
+                  !editable.some((l) => l.id === w.layerId) ||
+                  p.wallOpenings.some((o) => o.wallId === w.id)
+                }
                 onClick={() => native.update((p) => removeWall(p, w.id))}
               >
                 {t("removeWall")}: {w.name}
               </button>
+              <WallDetails
+                wall={w}
+                native={native}
+                disabled={!editable.some((l) => l.id === w.layerId)}
+                t={t}
+              />
             </li>
           ))}
       </ul>

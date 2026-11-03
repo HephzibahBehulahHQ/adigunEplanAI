@@ -259,4 +259,77 @@ test("native walls obey architectural layer visibility and locking and survive r
   await expect(page.locator("[data-wall-id]")).toHaveCount(0);
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator("[data-wall-id]")).toHaveCount(1);
+  await page.getByText("Edit wall: North wall", { exact: true }).click();
+  const opening = page.getByRole("form", {
+    name: "Add opening: North wall",
+    exact: true,
+  });
+  await opening.getByLabel("Opening name", { exact: true }).fill("D1");
+  await opening
+    .getByRole("button", { name: "Add opening", exact: true })
+    .click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(2);
+  await expect(page.locator("[data-opening-id] path")).toHaveAttribute(
+    "d",
+    "M 1400 0 A 900 900 0 0 1 500 900",
+  );
+  await expect(
+    page.getByRole("button", { name: "Remove wall: North wall", exact: true }),
+  ).toBeDisabled();
+  await opening.getByLabel("Opening name", { exact: true }).fill("W1");
+  await opening
+    .getByLabel("Opening type", { exact: true })
+    .selectOption("window");
+  await opening
+    .getByLabel("Offset along wall (mm)", { exact: true })
+    .fill("2200");
+  await opening.getByLabel("Opening width (mm)", { exact: true }).fill("1000");
+  await opening.getByLabel("Opening height (mm)", { exact: true }).fill("1000");
+  await opening.getByLabel("Sill height (mm)", { exact: true }).fill("1000");
+  await opening
+    .getByRole("button", { name: "Add opening", exact: true })
+    .click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(3);
+  await expect(page.locator("[data-opening-id] polygon")).toHaveAttribute(
+    "points",
+    "2200,100 3200,100 3200,-100 2200,-100",
+  );
+  const edit = page.getByRole("form", {
+    name: "Edit wall: North wall",
+    exact: true,
+  });
+  await edit.getByLabel("End X (mm)", { exact: true }).fill("1000");
+  await edit.getByRole("button", { name: "Edit wall", exact: true }).click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(3);
+  await edit.getByLabel("End X (mm)", { exact: true }).fill("5000");
+  await edit.getByRole("button", { name: "Edit wall", exact: true }).click();
+  await expect(page.locator("[data-wall-id]").last()).toHaveAttribute(
+    "points",
+    "3200,100 5000,100 5000,-100 3200,-100",
+  );
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .check();
+  await expect(
+    opening.getByRole("button", { name: "Add opening", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    edit.getByRole("button", { name: "Edit wall", exact: true }),
+  ).toBeDisabled();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-opening-id]")).toHaveCount(2);
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .uncheck();
+  await page.getByText("Edit wall: North wall", { exact: true }).click();
+  await page
+    .getByRole("button", { name: "Remove opening: D1", exact: true })
+    .click();
+  await expect(page.locator("[data-opening-id] path")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-opening-id] path")).toHaveCount(1);
 });

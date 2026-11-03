@@ -1,3 +1,7 @@
+import {
+  openingGeometry,
+  wallSegments,
+} from "../../../packages/building-design/openings.ts";
 import { WallTools } from "./WallTools";
 import { wallFootprint } from "../../../packages/building-design/walls.ts";
 import {
@@ -62,8 +66,24 @@ export function BuildingEditor({
       w.floorId === floor?.id &&
       p.architecturalLayers.some((l) => l.id === w.layerId && l.visible),
   );
+  const visibleOpenings = p.wallOpenings.flatMap((o) => {
+    const wall = visibleWalls.find((w) => w.id === o.wallId);
+    return wall ? [{ opening: o, geometry: openingGeometry(wall, o) }] : [];
+  });
   const planShapes = [
     ...rooms.map((r) => r.boundary),
+    ...visibleOpenings
+      .filter(({ opening }) => opening.kind === "door")
+      .map(({ opening, geometry }) => [
+        {
+          x: geometry.hinge.x - opening.widthMm,
+          y: geometry.hinge.y - opening.widthMm,
+        },
+        {
+          x: geometry.hinge.x + opening.widthMm,
+          y: geometry.hinge.y + opening.widthMm,
+        },
+      ]),
     ...visibleWalls.map((w) => wallFootprint(w)),
   ];
   const bounds = planShapes.reduce(
@@ -429,21 +449,59 @@ export function BuildingEditor({
                 ))}
               </>
             )}
-            {visibleWalls.map((w) => (
-              <polygon
-                key={w.id}
-                data-wall-id={w.id}
-                points={wallFootprint(w)
-                  .map((p) => `${p.x},${p.y}`)
-                  .join(" ")}
-                fill="currentColor"
-                fillOpacity={0.2}
+            {visibleWalls.flatMap((wall) =>
+              wallSegments(wall, p.wallOpenings).map((w, index) => (
+                <polygon
+                  key={`${w.id}-${index}`}
+                  data-wall-id={w.id}
+                  points={wallFootprint(w)
+                    .map((p) => `${p.x},${p.y}`)
+                    .join(" ")}
+                  fill="currentColor"
+                  fillOpacity={0.2}
+                  stroke="currentColor"
+                  strokeWidth={1}
+                  vectorEffect="non-scaling-stroke"
+                >
+                  <title>{w.name}</title>
+                </polygon>
+              )),
+            )}
+            {visibleOpenings.map(({ opening: o, geometry: g }) => (
+              <g
+                key={o.id}
+                data-opening-id={o.id}
+                fill="none"
                 stroke="currentColor"
-                strokeWidth={1}
-                vectorEffect="non-scaling-stroke"
               >
-                <title>{w.name}</title>
-              </polygon>
+                <title>{o.name}</title>
+                {o.kind === "door" ? (
+                  <>
+                    <line
+                      x1={g.hinge.x}
+                      y1={g.hinge.y}
+                      x2={g.leaf.x}
+                      y2={g.leaf.y}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                    <path d={g.arc} vectorEffect="non-scaling-stroke" />
+                  </>
+                ) : (
+                  <>
+                    <polygon
+                      points={g.frame.map((p) => `${p.x},${p.y}`).join(" ")}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                    <line
+                      x1={g.start.x}
+                      y1={g.start.y}
+                      x2={g.end.x}
+                      y2={g.end.y}
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </>
+                )}
+              </g>
             ))}
             {rooms.map((room) => (
               <g key={room.id} data-room-id={room.id}>
