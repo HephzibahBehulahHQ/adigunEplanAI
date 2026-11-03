@@ -348,6 +348,12 @@ export const schemas = {
     hinge: z.enum(["start", "end"]),
     swing: z.enum(["left", "right"]),
   }),
+  planZones: entity.extend({
+    floorId: id,
+    kind: z.enum(["electrical", "distribution"]),
+    roomIds: z.array(id).min(1).max(10000),
+    boardId: id.optional(),
+  }),
   rooms: entity.extend({
     floorId: id,
     boundary: z.array(point).min(3).max(10000),
@@ -384,7 +390,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(12),
+    schemaVersion: z.literal(13),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -398,7 +404,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 12;
+  schemaVersion: 13;
   id: string;
   name: string;
   createdAt: string;
@@ -414,7 +420,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 12,
+    schemaVersion: 13,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -467,11 +473,41 @@ const references: Partial<
   wallOpenings: { wallId: "walls" },
   planGeometry: { floorId: "floors", layerId: "architecturalLayers" },
   rooms: { floorId: "floors" },
+  planZones: {
+    floorId: "floors",
+    roomIds: "rooms",
+    boardId: "distributionBoards",
+  },
   circuits: { boardId: "distributionBoards", deviceIds: "devices" },
   distributionBoards: { deviceId: "devices", roomId: "rooms" },
   reports: { documentId: "documents", revisionId: "revisions" },
 };
 function validateReferences(project: Project): void {
+  for (const zone of project.planZones) {
+    if (new Set(zone.roomIds).size !== zone.roomIds.length)
+      throw new Error("Zone room membership must be unique");
+    if (
+      zone.roomIds.some(
+        (id) =>
+          !project.rooms.some((r) => r.id === id && r.floorId === zone.floorId),
+      )
+    )
+      throw new Error("Zone rooms must belong to its floor");
+    if (zone.boardId) {
+      const board = project.distributionBoards.find(
+        (b) => b.id === zone.boardId,
+      );
+      if (zone.kind !== "distribution" || !board)
+        throw new Error("Only distribution zones can reference a board");
+      if (
+        board.roomId &&
+        !project.rooms.some(
+          (r) => r.id === board.roomId && r.floorId === zone.floorId,
+        )
+      )
+        throw new Error("Zone board must be on the same floor when located");
+    }
+  }
   for (const shape of project.planGeometry) {
     const layer = project.architecturalLayers.find(
       (l) => l.id === shape.layerId,
@@ -808,7 +844,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -816,8 +852,8 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 12)
-    return { project: validateProject(raw), migratedFrom: 12 };
+  if (version === 13)
+    return { project: validateProject(raw), migratedFrom: 13 };
   if (
     version === 2 ||
     version === 3 ||
@@ -828,16 +864,18 @@ export function parseProject(text: string): {
     version === 8 ||
     version === 9 ||
     version === 10 ||
-    version === 11
+    version === 11 ||
+    version === 12
   )
     return {
       project: validateProject({
+        planZones: [],
         architecturalLayers: [],
         walls: [],
         wallOpenings: [],
         planGeometry: [],
         ...raw,
-        schemaVersion: 12,
+        schemaVersion: 13,
       }),
       migratedFrom: version,
     };
@@ -846,7 +884,7 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 12,
+      schemaVersion: 13,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

@@ -44,7 +44,7 @@ test("reassignment preserves older catalog snapshots and migration never fabrica
   delete legacy.manufacturerParts[0].catalogSnapshot;
   const migrated = parseProject(JSON.stringify(legacy));
   assert.equal(migrated.migratedFrom, 8);
-  assert.equal(migrated.project.schemaVersion, 12);
+  assert.equal(migrated.project.schemaVersion, 13);
   assert.equal(
     migrated.project.manufacturerParts[0].catalogSnapshot,
     undefined,

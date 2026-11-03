@@ -432,5 +432,18 @@
   "dxfParsing": "DXF wird gelesen…",
   "dxfWorkerFailed": "DXF-Worker fehlgeschlagen; Projekt unverändert.",
   "dxfTimeout": "Zeitlimit beim DXF-Lesen; Projekt unverändert.",
-  "importedPlanGeometry": "Importierte Plangeometrie"
+  "importedPlanGeometry": "Importierte Plangeometrie",
+  "planZones": "Planungszonen",
+  "planZoneScope": "Zonen gruppieren Räume dieser Etage. Die Auswahl hebt Räume hervor; eine Verteilerzuordnung erzeugt keine Stromkreise.",
+  "selectedZone": "Ausgewählte Zone",
+  "newZone": "Neue Zone",
+  "saveZone": "Zone speichern",
+  "removeZone": "Zone entfernen",
+  "zoneName": "Zonenname",
+  "zoneKind": "Zonentyp",
+  "electricalZone": "Elektrozone",
+  "distributionZone": "Verteilungszone",
+  "zoneRooms": "Zugeordnete Räume (mindestens einen wählen)",
+  "zoneBoard": "Verteiler",
+  "noZoneBoard": "Kein Verteiler zugeordnet"
 }

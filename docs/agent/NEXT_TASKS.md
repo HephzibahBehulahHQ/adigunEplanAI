@@ -1,6 +1,6 @@
 # Next tasks
 
-1. Continue M7: implement native electrical/distribution zones and plan scales with reference validation, persistence, undo/reload and four-language controls.
+1. Continue M7: implement plan scales and electrical equipment placement. Schema 13 room-based electrical/distribution zones now pass native reference/migration tests and the browser edit/highlight/undo/reload workflow. Broader zone geometry remains open.
 2. Add lighting, sockets, switches, distribution equipment/routes and circuit associations; produce verified equipment/circuit schedules.
 3. Expand supported architectural geometry/import fidelity with explicit unsupported-content reporting; retain current working SVG/DXF workflows.
 4. Complete M8–20 and BOT/menu/domain addenda using the criteria and release gates in MILESTONES.md. No 500-project completion or final production readiness is claimed.

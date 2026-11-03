@@ -776,3 +776,98 @@ test("DXF units require explicit override and failed worker loading preserves pr
     ),
   ).toBe(before);
 });
+
+test("plan zones edit room membership, highlight plans and preserve protected rooms through undo and reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Zone reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Site");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await room.getByLabel("Room name", { exact: true }).fill("Hall");
+  await room.getByLabel("Room X (mm)", { exact: true }).fill("4000");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await page.locator(".zone-tools > summary").click();
+  const zone = page.getByRole("form", { name: "Save zone", exact: true });
+  await zone.getByLabel("Zone name", { exact: true }).fill("Lighting area");
+  await zone.getByRole("checkbox", { name: "Office", exact: true }).check();
+  await zone.getByRole("button", { name: "Save zone", exact: true }).click();
+  const id = await page
+    .getByLabel("Selected zone", { exact: true })
+    .inputValue();
+  expect(id).not.toBe("");
+  await expect(page.locator("polygon[data-zone-id]")).toHaveCount(1);
+  await expect(page.locator("polygon[data-zone-id]")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,3000 0,3000",
+  );
+  await zone.getByRole("checkbox", { name: "Office", exact: true }).uncheck();
+  await zone.getByRole("checkbox", { name: "Hall", exact: true }).check();
+  await zone
+    .getByLabel("Zone type", { exact: true })
+    .selectOption("distribution");
+  await zone.getByRole("button", { name: "Save zone", exact: true }).click();
+  await expect(page.getByLabel("Selected zone", { exact: true })).toHaveValue(
+    id,
+  );
+  await expect(page.locator("polygon[data-zone-id]")).toHaveAttribute(
+    "points",
+    "4000,0 8000,0 8000,3000 4000,3000",
+  );
+  await page
+    .locator(".building-editor summary")
+    .filter({ hasText: /^Hall$/ })
+    .click();
+  await page
+    .getByRole("button", { name: "Remove room: Hall", exact: true })
+    .click();
+  await expect(page.locator("[data-room-id]")).toHaveCount(2);
+  await expect(page.getByRole("alert")).toContainText(
+    "The project is invalid. Existing work has been preserved.",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(
+    zone.getByRole("checkbox", { name: "Office", exact: true }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(
+    zone.getByRole("checkbox", { name: "Hall", exact: true }),
+  ).toBeChecked();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".zone-tools > summary").click();
+  await page.getByLabel("Selected zone", { exact: true }).selectOption(id);
+  await expect(zone.getByLabel("Zone type", { exact: true })).toHaveValue(
+    "distribution",
+  );
+  await expect(
+    zone.getByRole("checkbox", { name: "Hall", exact: true }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "Remove zone", exact: true }).click();
+  await expect(page.locator("polygon[data-zone-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page.getByLabel("Selected zone", { exact: true }).selectOption(id);
+  await expect(page.locator("polygon[data-zone-id]")).toHaveCount(1);
+});

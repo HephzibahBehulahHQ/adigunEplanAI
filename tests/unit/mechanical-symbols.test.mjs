@@ -144,7 +144,7 @@ test("schema seven migration preserves electrical and undeclared empty definitio
   });
   const migrated = parseProject(JSON.stringify({ ...p, schemaVersion: 7 }));
   assert.equal(migrated.migratedFrom, 7);
-  assert.equal(migrated.project.schemaVersion, 12);
+  assert.equal(migrated.project.schemaVersion, 13);
   assert.deepEqual(migrated.project.pins, p.pins);
   assert.equal(
     migrated.project.symbolDefinitions.find((d) => d.id === "legacy-empty")

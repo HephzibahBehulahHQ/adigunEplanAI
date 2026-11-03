@@ -432,5 +432,18 @@
   "dxfParsing": "Parsing DXF…",
   "dxfWorkerFailed": "DXF worker failed; project unchanged.",
   "dxfTimeout": "DXF parsing timed out; project unchanged.",
-  "importedPlanGeometry": "Imported plan geometry"
+  "importedPlanGeometry": "Imported plan geometry",
+  "planZones": "Plan zones",
+  "planZoneScope": "Zones group rooms on this floor. Selecting a zone highlights its rooms; board assignment does not create circuits.",
+  "selectedZone": "Selected zone",
+  "newZone": "New zone",
+  "saveZone": "Save zone",
+  "removeZone": "Remove zone",
+  "zoneName": "Zone name",
+  "zoneKind": "Zone type",
+  "electricalZone": "Electrical zone",
+  "distributionZone": "Distribution zone",
+  "zoneRooms": "Member rooms (select at least one)",
+  "zoneBoard": "Distribution board",
+  "noZoneBoard": "No board assigned"
 }

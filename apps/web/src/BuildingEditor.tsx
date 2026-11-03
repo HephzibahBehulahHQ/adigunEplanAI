@@ -1,3 +1,4 @@
+import { ZoneTools } from "./ZoneTools";
 import { DxfImportTools } from "./DxfImportTools";
 import { PlanImportTools } from "./PlanImportTools";
 import {
@@ -40,6 +41,7 @@ export function BuildingEditor({
     points: Point[];
     viewBox: string;
   } | null>(null);
+  const [selectedZoneId, setSelectedZoneId] = useState("");
   const [showDimensions, setShowDimensions] = useState(false);
   const [buildingId, setBuildingId] = useState("");
   const [floorId, setFloorId] = useState("");
@@ -62,6 +64,9 @@ export function BuildingEditor({
     p.buildings.find((b) => b.id === buildingId) ?? p.buildings[0];
   const floors = p.floors.filter((f) => f.buildingId === building?.id);
   const floor = floors.find((f) => f.id === floorId) ?? floors[0];
+  const selectedZone = p.planZones.find(
+    (z) => z.id === selectedZoneId && z.floorId === floor?.id,
+  );
   const rooms = p.rooms.filter((r) => r.floorId === floor?.id);
   const visibleWalls = p.walls.filter(
     (w) =>
@@ -280,6 +285,14 @@ export function BuildingEditor({
             ))}
             <button>{t("addRoom")}</button>
           </form>
+          <ZoneTools
+            key={`zones-${floor.id}`}
+            native={native}
+            floorId={floor.id}
+            selectedId={selectedZoneId}
+            select={setSelectedZoneId}
+            t={t}
+          />
           <DxfImportTools
             key={`dxf-${floor.id}`}
             native={native}
@@ -544,9 +557,19 @@ export function BuildingEditor({
               <g key={room.id} data-room-id={room.id}>
                 <polygon
                   points={room.boundary.map((v) => `${v.x},${v.y}`).join(" ")}
-                  fill="none"
+                  data-zone-id={
+                    selectedZone?.roomIds.includes(room.id)
+                      ? selectedZone.id
+                      : undefined
+                  }
+                  fill={
+                    selectedZone?.roomIds.includes(room.id)
+                      ? "currentColor"
+                      : "none"
+                  }
+                  fillOpacity={0.15}
                   stroke="currentColor"
-                  strokeWidth={2}
+                  strokeWidth={selectedZone?.roomIds.includes(room.id) ? 4 : 2}
                   vectorEffect="non-scaling-stroke"
                 />
                 {showDimensions &&

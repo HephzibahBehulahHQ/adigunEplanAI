@@ -432,5 +432,18 @@
   "dxfParsing": "Ń ka DXF…",
   "dxfWorkerFailed": "DXF kò ṣiṣẹ́; iṣẹ́ kò yí padà.",
   "dxfTimeout": "Àkókò DXF ti parí; iṣẹ́ kò yí padà.",
-  "importedPlanGeometry": "Àwòrán ilé tí a gbé wọlé"
+  "importedPlanGeometry": "Àwòrán ilé tí a gbé wọlé",
+  "planZones": "Àwọn agbègbè ètò",
+  "planZoneScope": "Agbègbè ń kó àwọn yàrá ilẹ̀ yìí jọ. Yíyan agbègbè ń fi àwọn yàrá hàn; fífi pánẹ́ẹ̀lì sílẹ̀ kò dá ìyíká iná.",
+  "selectedZone": "Agbègbè tí a yàn",
+  "newZone": "Agbègbè tuntun",
+  "saveZone": "Fi agbègbè pamọ́",
+  "removeZone": "Yọ agbègbè",
+  "zoneName": "Orúkọ agbègbè",
+  "zoneKind": "Irú agbègbè",
+  "electricalZone": "Agbègbè iná",
+  "distributionZone": "Agbègbè ìpín iná",
+  "zoneRooms": "Àwọn yàrá (yan ó kéré tán ọ̀kan)",
+  "zoneBoard": "Pánẹ́ẹ̀lì ìpín iná",
+  "noZoneBoard": "A kò tíì yan pánẹ́ẹ̀lì"
 }
