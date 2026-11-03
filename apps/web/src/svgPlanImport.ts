@@ -1,4 +1,8 @@
 import {
+  mmPerCssPixel,
+  svgViewportMatrix,
+} from "../../../packages/building-design/svg-viewport.ts";
+import {
   identity,
   multiplyAffine,
   parseSvgTransform,
@@ -17,10 +21,11 @@ function numbers(value: string): number[] {
 export function parseSvgPlan(
   text: string,
   sourceFile: string,
-  mmPerUnit: number,
+  scale: number | "viewport",
 ): PlanImport {
   if (new TextEncoder().encode(text).length > 1024 * 1024)
     throw new Error("SVG exceeds 1 MiB");
+  const mmPerUnit = scale === "viewport" ? mmPerCssPixel : scale;
   if (!Number.isFinite(mmPerUnit) || mmPerUnit <= 0 || mmPerUnit > 1000000)
     throw new Error("Invalid millimetres per SVG user unit");
   if (/<!DOCTYPE|<!ENTITY/i.test(text))
@@ -33,6 +38,15 @@ export function parseSvgPlan(
     root.namespaceURI !== "http://www.w3.org/2000/svg"
   )
     throw new Error("Invalid SVG document");
+  const viewport =
+    scale === "viewport"
+      ? svgViewportMatrix(
+          root.getAttribute("width"),
+          root.getAttribute("height"),
+          root.getAttribute("viewBox"),
+          root.getAttribute("preserveAspectRatio"),
+        )
+      : identity;
   const all = [root, ...root.querySelectorAll("*")];
   if (all.length > 10000) throw new Error("SVG exceeds 10000 elements");
   if (
@@ -56,6 +70,10 @@ export function parseSvgPlan(
   )
     throw new Error("Active, linked or embedded SVG content is not supported");
   const result: PlanImport = { sourceFile, mmPerUnit, shapes: [], issues: [] };
+  if (scale === "viewport")
+    result.issues.push(
+      "Physical viewport mapping applied at 96 CSS px/in; viewport clipping is not imported",
+    );
   function visit(e: Element, layer: string, depth: number, parent: Affine) {
     if (depth > 64) throw new Error("SVG nesting exceeds 64 levels");
     const label = (e.getAttribute("id") || e.localName).slice(0, 160);
@@ -82,6 +100,7 @@ export function parseSvgPlan(
         parent,
         parseSvgTransform(e.getAttribute("transform")),
       );
+      if (e === root) matrix = multiplyAffine(matrix, viewport);
     } catch (error) {
       result.issues.push(
         `${label}: ${error instanceof Error ? error.message : "Invalid SVG transform"}; subtree skipped`,

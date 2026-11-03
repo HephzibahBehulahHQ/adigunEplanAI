@@ -18,6 +18,7 @@ export function PlanImportTools({
 }) {
   const [draft, setDraft] = useState<PlanImport | null>(null),
     [error, setError] = useState("");
+  const [automatic, setAutomatic] = useState(false);
   const request = useRef(0);
   const p = native.project;
   if (!p) return null;
@@ -41,7 +42,7 @@ export function PlanImportTools({
             const parsed = parseSvgPlan(
               await file.text(),
               file.name,
-              Number(d.get("scale")),
+              d.get("automatic") === "on" ? "viewport" : Number(d.get("scale")),
             );
             if (seq === request.current) setDraft(parsed);
           } catch (err) {
@@ -65,8 +66,23 @@ export function PlanImportTools({
           />
         </label>
         <label>
+          <input
+            type="checkbox"
+            name="automatic"
+            checked={automatic}
+            onChange={(e) => {
+              setAutomatic(e.target.checked);
+              request.current++;
+              setDraft(null);
+              setError("");
+            }}
+          />
+          {t("svgAutomaticUnits")}
+        </label>
+        <label>
           {t("svgUnitScale")}
           <input
+            disabled={automatic}
             name="scale"
             type="number"
             min="0.000001"

@@ -412,11 +412,12 @@
   "swingLeft": "Left for wall direction",
   "swingRight": "Right for wall direction",
   "importSvgPlan": "Import SVG plan",
-  "svgPlanScope": "Import line, polyline, polygon and plain rectangle coordinates. Set millimetres for each SVG user unit: viewport width, height and viewBox no set this scale. Group names become architecture layers. We report unsupported geometry; appearance no dey imported.",
+  "svgPlanScope": "Import line, polyline, polygon and plain rectangle coordinates. Set millimetres for each SVG user unit: viewport width, height and viewBox no set this scale. Group names become architecture layers. We report unsupported geometry; appearance no dey imported. For automatic mode, absolute root width/height and viewBox set the physical mapping.",
   "svgFile": "SVG file",
   "svgUnitScale": "Millimetres for each SVG user unit",
   "previewSvg": "Preview SVG import",
   "svgImportReport": "SVG import report",
   "applySvgImport": "Apply SVG import",
-  "removePlanGeometry": "Remove imported geometry"
+  "removePlanGeometry": "Remove imported geometry",
+  "svgAutomaticUnits": "Use SVG viewport size and physical units"
 }

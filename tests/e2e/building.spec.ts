@@ -527,3 +527,91 @@ test("SVG nested transforms preserve order and invalid transform subtrees are re
     "M 1120 260 L 1200 260 L 1200 410 L 1120 410 Z",
   );
 });
+
+test("SVG physical units map viewport dimensions and reject unresolved percentages", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Physical SVG units");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".plan-import > summary").click();
+  const form = page.getByRole("form", { name: "Import SVG plan", exact: true });
+  await form
+    .getByRole("checkbox", {
+      name: "Use SVG viewport dimensions and physical units",
+      exact: true,
+    })
+    .check();
+  await expect(
+    form.getByLabel("Millimetres per SVG user unit", { exact: true }),
+  ).toBeDisabled();
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400mm" height="300mm" viewBox="10 20 40 30"><g id="Physical"><rect id="room-outline" x="10" y="20" width="40" height="30"/></g></svg>';
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "physical.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText("Physical viewport mapping applied");
+  await page
+    .getByRole("button", { name: "Apply SVG import", exact: true })
+    .click();
+  const path = await page.locator("[data-plan-geometry-id]").getAttribute("d");
+  const coords = path!
+    .match(/[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/gi)!
+    .map(Number);
+  const expected = [0, 0, 400, 0, 400, 300, 0, 300];
+  expect(coords).toHaveLength(8);
+  coords.forEach((v, i) => expect(v).toBeCloseTo(expected[i], 8));
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "unresolved.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg.replace('width="400mm"', 'width="100%"')),
+  });
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText(
+    "requires absolute width and height",
+  );
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.projects.v1"),
+    ),
+  ).toBe(before);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveAttribute(
+    "d",
+    path!,
+  );
+});

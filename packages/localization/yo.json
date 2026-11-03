@@ -412,11 +412,12 @@
   "swingLeft": "Òsì ìtọ́sọ́nà ògiri",
   "swingRight": "Ọ̀tún ìtọ́sọ́nà ògiri",
   "importSvgPlan": "Gbé àwòrán SVG wọlé",
-  "svgPlanScope": "Gbé ìlà, ọ̀pọ̀ ìlà, ọ̀pọ̀ igun àti onígun mẹ́rin wọlé. Yan milimita fún ẹyọ SVG: ìbú, gíga àti viewBox kò yan ìwọ̀n yìí. Orúkọ ẹgbẹ́ di fẹ́lẹ́fẹ́lẹ́ ilé. A ó sọ ohun tí a kò lè gbé wọlé; àṣà àwòrán kò wọlé.",
+  "svgPlanScope": "Gbé ìlà, ọ̀pọ̀ ìlà, ọ̀pọ̀ igun àti onígun mẹ́rin wọlé. Yan milimita fún ẹyọ SVG: ìbú, gíga àti viewBox kò yan ìwọ̀n yìí. Orúkọ ẹgbẹ́ di fẹ́lẹ́fẹ́lẹ́ ilé. A ó sọ ohun tí a kò lè gbé wọlé; àṣà àwòrán kò wọlé. Ní ipò aládàáṣe, ìbú/gíga gidi àti viewBox ni wọ́n yan ìwọ̀n.",
   "svgFile": "Fáìlì SVG",
   "svgUnitScale": "Milimita fún ẹyọ SVG",
   "previewSvg": "Ṣàyẹ̀wò SVG",
   "svgImportReport": "Ìròyìn SVG",
   "applySvgImport": "Gbé SVG wọlé",
-  "removePlanGeometry": "Yọ àwòrán tí a gbé wọlé"
+  "removePlanGeometry": "Yọ àwòrán tí a gbé wọlé",
+  "svgAutomaticUnits": "Lo ìwọ̀n viewport SVG àti ẹyọ gidi"
 }
