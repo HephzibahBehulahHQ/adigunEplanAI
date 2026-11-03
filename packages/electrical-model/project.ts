@@ -1,3 +1,4 @@
+import { pointInPolygon } from "../engineering-core/polygon.ts";
 import { transform, type Point } from "../engineering-core/geometry.ts";
 import { z } from "zod";
 
@@ -349,6 +350,26 @@ export const schemas = {
     hinge: z.enum(["start", "end"]),
     swing: z.enum(["left", "right"]),
   }),
+  planEquipment: entity.extend({
+    floorId: id,
+    layerId: id,
+    roomId: id.optional(),
+    symbolInstanceId: id,
+    position: z
+      .object({
+        x: finite.min(-1000000).max(1000000),
+        y: finite.min(-1000000).max(1000000),
+      })
+      .strict(),
+    rotation: z.union([
+      z.literal(0),
+      z.literal(90),
+      z.literal(180),
+      z.literal(270),
+    ]),
+    symbolScale: finite.min(0.1).max(1000),
+    mountingHeightMm: finite.min(0).max(1000000).optional(),
+  }),
   planZones: entity.extend({
     floorId: id,
     kind: z.enum(["electrical", "distribution"]),
@@ -391,7 +412,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(14),
+    schemaVersion: z.literal(15),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -405,7 +426,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 14;
+  schemaVersion: 15;
   id: string;
   name: string;
   createdAt: string;
@@ -421,7 +442,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 14,
+    schemaVersion: 15,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -474,6 +495,12 @@ const references: Partial<
   wallOpenings: { wallId: "walls" },
   planGeometry: { floorId: "floors", layerId: "architecturalLayers" },
   rooms: { floorId: "floors" },
+  planEquipment: {
+    floorId: "floors",
+    layerId: "architecturalLayers",
+    roomId: "rooms",
+    symbolInstanceId: "symbolInstances",
+  },
   planZones: {
     floorId: "floors",
     roomIds: "rooms",
@@ -484,6 +511,35 @@ const references: Partial<
   reports: { documentId: "documents", revisionId: "revisions" },
 };
 function validateReferences(project: Project): void {
+  const placedDevices = new Set<string>();
+  for (const equipment of project.planEquipment) {
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === equipment.layerId,
+    );
+    const symbol = project.symbolInstances.find(
+      (s) => s.id === equipment.symbolInstanceId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== equipment.floorId ||
+      layer.kind !== "electrical"
+    )
+      throw new Error("Equipment requires an electrical layer on its floor");
+    if (!symbol || placedDevices.has(symbol.deviceId))
+      throw new Error("Each native device can have only one floor placement");
+    placedDevices.add(symbol.deviceId);
+    if (equipment.roomId) {
+      const room = project.rooms.find((r) => r.id === equipment.roomId);
+      if (
+        !room ||
+        room.floorId !== equipment.floorId ||
+        !pointInPolygon(equipment.position, room.boundary)
+      )
+        throw new Error(
+          "Equipment anchor must lie in its assigned room on the same floor",
+        );
+    }
+  }
   for (const zone of project.planZones) {
     if (new Set(zone.roomIds).size !== zone.roomIds.length)
       throw new Error("Zone room membership must be unique");
@@ -845,7 +901,8 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
+  migratedFrom:
+    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -853,8 +910,8 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 14)
-    return { project: validateProject(raw), migratedFrom: 14 };
+  if (version === 15)
+    return { project: validateProject(raw), migratedFrom: 15 };
   const oldFloors = (raw as { floors?: unknown }).floors;
   const floors = Array.isArray(oldFloors)
     ? oldFloors.map((floor) => ({ drawingScale: 100, ...floor }))
@@ -871,10 +928,12 @@ export function parseProject(text: string): {
     version === 10 ||
     version === 11 ||
     version === 12 ||
-    version === 13
+    version === 13 ||
+    version === 14
   )
     return {
       project: validateProject({
+        planEquipment: [],
         planZones: [],
         architecturalLayers: [],
         walls: [],
@@ -882,7 +941,7 @@ export function parseProject(text: string): {
         planGeometry: [],
         ...raw,
         floors,
-        schemaVersion: 14,
+        schemaVersion: 15,
       }),
       migratedFrom: version,
     };
@@ -892,7 +951,7 @@ export function parseProject(text: string): {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
       floors,
-      schemaVersion: 14,
+      schemaVersion: 15,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

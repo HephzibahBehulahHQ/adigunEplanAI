@@ -964,3 +964,158 @@ test("floor drawing scale exports physical SVG dimensions while preserving model
     points!,
   );
 });
+
+test("floor equipment shares schematic identity, protects layers and persists a room schedule", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Equipment reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Symbols", exact: true })
+    .selectOption("lamp");
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const point = await canvas.evaluate((svg) => {
+    const p = new DOMPoint(30, 30).matrixTransform(
+      (svg as SVGSVGElement).getScreenCTM()!,
+    );
+    return { x: p.x, y: p.y };
+  });
+  await page.mouse.click(point.x, point.y);
+  const read = () =>
+    page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
+          .projects[0],
+    );
+  await expect.poll(async () => (await read()).symbolInstances.length).toBe(1);
+  const original = await read();
+  const reference = original.devices[0].reference;
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Site");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await page.locator(".wall-tools > summary").click();
+  const layer = page.getByRole("form", { name: "Add plan layer", exact: true });
+  await layer.getByLabel("Plan layer name", { exact: true }).fill("Lighting");
+  await layer.locator("select[name=kind]").selectOption("electrical");
+  await layer
+    .getByRole("button", { name: "Add plan layer", exact: true })
+    .click();
+  await page.locator(".equipment-tools > summary").click();
+  const equipment = page.getByRole("form", {
+    name: "Save floor placement",
+    exact: true,
+  });
+  await equipment
+    .getByLabel("Room", { exact: true })
+    .selectOption({ label: "Office" });
+  await equipment.getByLabel("Equipment X (mm)", { exact: true }).fill("1012");
+  await equipment.getByLabel("Equipment Y (mm)", { exact: true }).fill("493");
+  await equipment
+    .getByLabel("Mounting height (mm)", { exact: true })
+    .fill("2500");
+  await equipment
+    .getByRole("button", { name: "Save floor placement", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1000 500) rotate(0) scale(20)",
+  );
+  const schedule = page.getByRole("table", {
+    name: "Room equipment schedule",
+    exact: true,
+  });
+  await expect(schedule).toContainText(reference);
+  await expect(schedule).toContainText("Office");
+  await expect(schedule).toContainText("2500");
+  await expect(schedule).toContainText("Not specified");
+  const placed = await read();
+  for (const key of [
+    "devices",
+    "symbolInstances",
+    "pins",
+    "terminals",
+    "wires",
+  ])
+    expect(placed[key]).toEqual(original[key]);
+  await equipment.getByLabel("Equipment X (mm)", { exact: true }).fill("1500");
+  await equipment
+    .getByLabel("Plan rotation", { exact: true })
+    .selectOption("90");
+  await equipment
+    .getByRole("button", { name: "Save floor placement", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1500 500) rotate(90) scale(20)",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1000 500) rotate(0) scale(20)",
+  );
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("checkbox", { name: "Locked: Lighting", exact: true })
+    .check();
+  await expect(
+    equipment.getByRole("button", {
+      name: "Save floor placement",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Remove floor placement", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", { name: "Visible: Lighting", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(0);
+  await expect(schedule.locator("tbody tr")).toHaveCount(1);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", { name: "Visible: Lighting", exact: true })
+    .check();
+  await page
+    .getByRole("checkbox", { name: "Locked: Lighting", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1500 500) rotate(90) scale(20)",
+  );
+  await page.locator(".equipment-tools > summary").click();
+  await page
+    .getByLabel("Selected equipment", { exact: true })
+    .selectOption({ label: reference });
+  await page
+    .getByRole("button", { name: "Remove floor placement", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(0);
+  expect((await read()).devices).toEqual(original.devices);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
+});

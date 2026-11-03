@@ -1,3 +1,7 @@
+import { EquipmentTools } from "./EquipmentTools";
+import { equipmentCorners } from "../../../packages/building-design/equipment.ts";
+import { SymbolArtwork } from "./SymbolArtwork";
+import { Glyph } from "./Glyph";
 import { scaledPlanSvg } from "./scaledPlanSvg";
 import {
   scaledPlanSize,
@@ -39,6 +43,7 @@ export function BuildingEditor({
   native: NativeProjects;
   t: (key: MessageKey) => string;
 }) {
+  const [selectedEquipmentId, setSelectedEquipmentId] = useState("");
   const planRef = useRef<SVGSVGElement>(null);
   const [drawing, setDrawing] = useState<{
     floorId: string;
@@ -88,7 +93,34 @@ export function BuildingEditor({
       s.floorId === floor?.id &&
       p.architecturalLayers.some((l) => l.id === s.layerId && l.visible),
   );
+  const equipment = p.planEquipment.filter(
+    (e) =>
+      e.floorId === floor?.id &&
+      p.architecturalLayers.some((l) => l.id === e.layerId && l.visible),
+  );
   const planShapes = [
+    ...equipment.map((e) => {
+      const symbol = p.symbolInstances.find(
+        (s) => s.id === e.symbolInstanceId,
+      )!;
+      const definition = p.symbolDefinitions.find(
+        (d) => d.id === symbol.definitionId,
+      )!;
+      const reference = p.devices.find(
+        (d) => d.id === symbol.deviceId,
+      )!.reference;
+      const halfLabel = Math.min(16, reference.length) * 50;
+      const baseline =
+        e.position.y +
+        (Math.max(definition.widthMm, definition.heightMm) * e.symbolScale) /
+          2 +
+        80;
+      return [
+        ...equipmentCorners(p, e),
+        { x: e.position.x - halfLabel, y: baseline - 100 },
+        { x: e.position.x + halfLabel, y: baseline + 30 },
+      ];
+    }),
     ...importedShapes.map((s) => s.points),
     ...rooms.map((r) => r.boundary),
     ...visibleOpenings
@@ -294,6 +326,14 @@ export function BuildingEditor({
             ))}
             <button>{t("addRoom")}</button>
           </form>
+          <EquipmentTools
+            key={`equipment-${floor.id}`}
+            native={native}
+            floorId={floor.id}
+            selectedId={selectedEquipmentId}
+            select={setSelectedEquipmentId}
+            t={t}
+          />
           <ZoneTools
             key={`zones-${floor.id}`}
             native={native}
@@ -673,6 +713,68 @@ export function BuildingEditor({
                 </text>
               </g>
             ))}
+            {equipment.map((e) => {
+              const instance = p.symbolInstances.find(
+                (s) => s.id === e.symbolInstanceId,
+              )!;
+              const definition = p.symbolDefinitions.find(
+                (d) => d.id === instance.definitionId,
+              )!;
+              const device = p.devices.find((d) => d.id === instance.deviceId)!;
+              return (
+                <g
+                  key={e.id}
+                  data-plan-equipment-id={e.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${t("equipmentReference")}: ${device.reference}`}
+                  onClick={() => setSelectedEquipmentId(e.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedEquipmentId(e.id);
+                    }
+                  }}
+                >
+                  <title>
+                    {device.reference} · {device.name}
+                  </title>
+                  <g
+                    transform={`translate(${e.position.x} ${e.position.y}) rotate(${e.rotation}) scale(${e.symbolScale})`}
+                    stroke="currentColor"
+                    strokeWidth={0.6}
+                    fill="none"
+                  >
+                    {definition.artwork ? (
+                      <SymbolArtwork artwork={definition.artwork} />
+                    ) : (
+                      <Glyph
+                        kind={definition.glyph}
+                        width={definition.widthMm}
+                        height={definition.heightMm}
+                      />
+                    )}
+                  </g>
+                  <text
+                    x={e.position.x}
+                    y={
+                      e.position.y +
+                      (Math.max(definition.widthMm, definition.heightMm) *
+                        e.symbolScale) /
+                        2 +
+                      80
+                    }
+                    textAnchor="middle"
+                    fontSize={100}
+                    fill="currentColor"
+                  >
+                    {device.reference.length > 16
+                      ? device.reference.slice(0, 14) + "…"
+                      : device.reference}
+                  </text>
+                </g>
+              );
+            })}
           </svg>
           <ul>
             {rooms.map((room) => (

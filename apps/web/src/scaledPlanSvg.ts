@@ -11,6 +11,11 @@ export function scaledPlanSvg(source: SVGSVGElement, scale: number): string {
   svg.removeAttribute("class");
   svg.removeAttribute("style");
   svg.removeAttribute("tabindex");
+  for (const element of svg.querySelectorAll("[tabindex], [role=button]")) {
+    element.removeAttribute("tabindex");
+    if (element.getAttribute("role") === "button")
+      element.removeAttribute("role");
+  }
   const description = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "desc",

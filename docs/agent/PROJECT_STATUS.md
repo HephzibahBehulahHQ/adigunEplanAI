@@ -50,3 +50,7 @@ Schema 13 adds floor-owned electrical/distribution room zones with unique nonemp
 
 
 Schema 14 adds explicit per-floor drawing scales (1:1–1:10000, default 1:100 on migration) without rescaling native geometry. The four-language scale form participates in undo/reload, and SVG download uses physical millimetre dimensions derived from the visible viewBox. Three domain tests cover exact conversions, invalid scale/bounds, persistence and schema-13 migration. All ten building browser workflows passed, including SVG parsing/escaped title, exact physical dimensions, unchanged native storage and scale undo/reload. Full local checks passed; publication/hosted CI remain pending at this checkpoint. No new dependencies. Standard-sheet layouts/tiling, title blocks and broader report formats remain M11 work; M7 equipment/routes/schedules remain open.
+
+## Equipment placement checkpoint
+
+Schema 15 adds native-device floor placements, optional room assignment with anchor containment, snapped position, rotation, annotation scale and mounting height. Existing schematic identity and wiring remain unchanged. Layer locks/visibility protect mutations; room/device deletion protects references. The room equipment schedule derives native references and assigned parts, including hidden placements. Six new domain tests and all 11 building browser workflows pass; the complete local check, licensing, notices and build pass. Hosted CI and deployment for this increment remain pending publication. Floor-first device creation, routes and circuit schedules remain open.

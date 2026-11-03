@@ -64,6 +64,8 @@ export function removeRoom(project: Project, roomId: string): Project {
     throw new Error("Unknown room");
   if (project.distributionBoards.some((b) => b.roomId === roomId))
     throw new Error("Room has an assigned board");
+  if (project.planEquipment.some((e) => e.roomId === roomId))
+    throw new Error("Room has assigned equipment");
   if (project.planZones.some((z) => z.roomIds.includes(roomId)))
     throw new Error(
       "Room belongs to a plan zone; update or remove the zone first",

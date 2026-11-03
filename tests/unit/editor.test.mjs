@@ -229,7 +229,7 @@ test("schema one migration preserves entities and adds independent graphical lay
   for (const path of legacy.wirePaths) delete path.layerId;
   const migrated = parseProject(JSON.stringify(legacy));
   assert.equal(migrated.migratedFrom, 1);
-  assert.equal(migrated.project.schemaVersion, 14);
+  assert.equal(migrated.project.schemaVersion, 15);
   assert.deepEqual(migrated.project.wires, legacy.wires);
   assert.equal(migrated.project.layers.length, 1);
   assert.deepEqual(

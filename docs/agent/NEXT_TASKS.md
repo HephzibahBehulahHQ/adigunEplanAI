@@ -1,6 +1,6 @@
 # Next tasks
 
-1. Continue M7: implement electrical equipment placement. Schema 14 drawing scales and physical-size SVG view export now pass conversion, migration and browser download/undo/reload checks. Schema 13 room-based electrical/distribution zones now pass native reference/migration tests and the browser edit/highlight/undo/reload workflow. Broader zone geometry remains open.
+1. Continue M7: extend existing-device floor placements to floor-first device creation, routes and circuits. Schema 15 placement, layer protection and room schedules pass six new domain tests and 11 building browser workflows. Schema 14 drawing scales and physical-size SVG view export now pass conversion, migration and browser download/undo/reload checks. Schema 13 room-based electrical/distribution zones now pass native reference/migration tests and the browser edit/highlight/undo/reload workflow. Broader zone geometry remains open.
 2. Add lighting, sockets, switches, distribution equipment/routes and circuit associations; produce verified equipment/circuit schedules.
 3. Expand supported architectural geometry/import fidelity with explicit unsupported-content reporting; retain current working SVG/DXF workflows.
 4. Complete M8–20 and BOT/menu/domain addenda using the criteria and release gates in MILESTONES.md. No 500-project completion or final production readiness is claimed.
