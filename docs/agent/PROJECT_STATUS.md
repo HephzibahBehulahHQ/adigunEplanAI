@@ -1,5 +1,11 @@
 # Project status
 
+Current checkpoint: M0–6 implementation records published; M7 active. Approximately 33% of milestone checkpoints recorded, 67% remaining; final production acceptance remains open. See MILESTONES.md for categories and verifiable criteria.
+
+Source 64a93a9c44145792c9b9ab55e62b74e725b4f42a is synchronized locally and remotely. Hosted runs 41588032897/41588027882 passed 138 unit/tooling tests, 92 browser scenarios, build, licensing and audit. Pages deployment bffcdd90bf48b82c95a185980a14da5f40fbc165 passed run 41588405373; HTTPS build-info matched the source and two live DXF workflows passed. This is a development deployment; Cloudflare administrative configuration, Supabase integration and production release acceptance remain unverified.
+
+## Historical checkpoints (superseded where noted above)
+
 Milestones 0–5 are implemented and published in stacked draft PRs #1–#5 with successful hosted CI. They remain unmerged; production deployment is not verified.
 
 Milestone 6 is in progress on codex/milestone-6-library, draft PR #6. The library contains 69 original generic schematic definitions and four source-backed catalog records across three manufacturers. Search/category/manufacturer filtering, compatible native part assignment, custom-symbol creation/editing, bounded vector artwork and schema-6 typed/shared terminal groups are functional. These definitions do not assert manufacturer pinouts, ratings or equipment simulation.

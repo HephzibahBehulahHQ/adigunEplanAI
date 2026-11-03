@@ -1,11 +1,15 @@
 # Next tasks
 
-1. Milestones 0–6 implementation checkpoints are published and tested. M6 final hosted runs 41544056477 and 41544045519 passed; see docs/MILESTONE_6_ACCEPTANCE.md for scope and remaining integrations.
-2. Milestone 7 first increment implements native buildings, floors with elevations/heights, rectangular room boundaries in mm, per-floor outline rendering, protected room deletion and shared project undo/reload. Local check passed 111 unit/tooling tests; all 82 Chromium scenarios passed. Verify publication CI.
-3. Continue MASTER_SPECIFICATION.md Part 7 in full: editable architectural geometry, room dimensions/zones/levels/scales, separate layers, equipment and routes, supported SVG/DXF imports with reports, distribution/circuit associations and schedules. Room boundaries now support validated concave polygons through explicit vertex editing; this does not substitute for graphical wall/door/window tools or electrical design.
-4. Continue milestones 8–20 and all recorded BOT/menu/domain addenda. Real 3D mapping and broader catalog/standards evidence remain required. No 500-project count has been claimed.
+1. Continue M7: implement native electrical/distribution zones and plan scales with reference validation, persistence, undo/reload and four-language controls.
+2. Add lighting, sockets, switches, distribution equipment/routes and circuit associations; produce verified equipment/circuit schedules.
+3. Expand supported architectural geometry/import fidelity with explicit unsupported-content reporting; retain current working SVG/DXF workflows.
+4. Complete M8–20 and BOT/menu/domain addenda using the criteria and release gates in MILESTONES.md. No 500-project completion or final production readiness is claimed.
 
-Owner constraints: publish reviewed source to visible branches/draft PRs, preserve work, no deployment/force-push/history rewriting, approval before accessing another project. Exclude dependencies, build/test artifacts and logs.
+Current verified source: 64a93a9c44145792c9b9ab55e62b74e725b4f42a. Both hosted CI runs passed; live Pages deployment bffcdd90bf48b82c95a185980a14da5f40fbc165 passed two DXF smoke workflows. Local/source branch commits match. GitHub connector publication plus public fetch/fast-forward preserves identical commits despite native GCM authentication failure.
+
+Owner constraints: publish reviewed source to visible branches/draft PRs; deploy verified increments through the configured process; preserve work; no force-push/history rewriting; approval before accessing another project. Exclude secrets, dependencies, caches and build/test/log artifacts from source. Latest deployment authorization supersedes the earlier no-deployment instruction.
+
+## Historical implementation evidence
 
 Room editing increment: rename and edit 3–256-vertex simple polygons, preserving room/floor IDs and board references. Coordinates are bounded to ±1,000,000 mm; closed last vertices normalize to an open vertex list. Self-crossings, nonadjacent touches, overlapping edges, duplicate vertices and zero-area loops are rejected atomically. Existing imported boundaries are not silently rewritten. Local 114-test check/build/licenses passed; the extended building browser workflow passed after an explicit textarea accessibility-label fix. Prior M7 checkpoint b2c71a812ada64a1daa4ffff34bc07e119b6acec has green hosted runs 41544905226 and 41544900533.
 
