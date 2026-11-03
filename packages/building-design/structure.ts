@@ -25,6 +25,7 @@ export function addFloor(
     name,
     elevationMm,
     heightMm,
+    drawingScale: 100,
   });
   return validateProject(next);
 }

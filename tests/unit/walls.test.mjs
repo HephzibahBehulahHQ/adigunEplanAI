@@ -80,7 +80,7 @@ test("schema nine migrates with empty architectural collections without inventin
   delete legacy.walls;
   const result = parseProject(JSON.stringify(legacy));
   assert.equal(result.migratedFrom, 9);
-  assert.equal(result.project.schemaVersion, 13);
+  assert.equal(result.project.schemaVersion, 14);
   assert.deepEqual(result.project.walls, []);
   assert.deepEqual(result.project.architecturalLayers, []);
   assert.deepEqual(result.project.devices, legacy.devices);

@@ -871,3 +871,96 @@ test("plan zones edit room membership, highlight plans and preserve protected ro
   await page.getByLabel("Selected zone", { exact: true }).selectOption(id);
   await expect(page.locator("polygon[data-zone-id]")).toHaveCount(1);
 });
+
+test("floor drawing scale exports physical SVG dimensions while preserving model geometry and undo", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog.getByLabel("Project name", { exact: true }).fill("Scaled floor");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Site");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground & <plan>");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  const scale = page.getByRole("form", { name: "Drawing scale", exact: true });
+  await scale.getByLabel("Scale denominator (1:n)", { exact: true }).fill("50");
+  await scale
+    .getByRole("button", { name: "Apply drawing scale", exact: true })
+    .click();
+  await expect(page.getByLabel("Scaled plan size", { exact: true })).toHaveText(
+    "1:50 · 88.00 × 68.00 mm",
+  );
+  const points = await page
+    .locator("[data-room-id] polygon")
+    .getAttribute("points");
+  const before = await page.evaluate(() => JSON.stringify(localStorage));
+  const pending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export scaled plan SVG", exact: true })
+    .click();
+  const download = await pending;
+  const stream = await download.createReadStream();
+  let text = "";
+  for await (const chunk of stream!) text += chunk.toString();
+  const parsed = await page.evaluate((xml) => {
+    const doc = new DOMParser().parseFromString(xml, "image/svg+xml");
+    return {
+      error: !!doc.querySelector("parsererror"),
+      width: doc.documentElement.getAttribute("width"),
+      height: doc.documentElement.getAttribute("height"),
+      viewBox: doc.documentElement.getAttribute("viewBox"),
+      title: doc.querySelector("title")?.textContent,
+      description: doc.querySelector("desc")?.textContent,
+      points: doc
+        .querySelector("[data-room-id] polygon")
+        ?.getAttribute("points"),
+      className: doc.documentElement.getAttribute("class"),
+    };
+  }, text);
+  expect(parsed).toMatchObject({
+    error: false,
+    width: "88mm",
+    height: "68mm",
+    viewBox: "-200 -200 4400 3400",
+    title: "Ground & <plan>",
+    points,
+    className: null,
+  });
+  expect(parsed.description).toContain("Scale 1:50");
+  expect(await page.evaluate(() => JSON.stringify(localStorage))).toBe(before);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.getByLabel("Scaled plan size", { exact: true })).toHaveText(
+    "1:100 · 44.00 × 34.00 mm",
+  );
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    points!,
+  );
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(
+    scale.getByLabel("Scale denominator (1:n)", { exact: true }),
+  ).toHaveValue("50");
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    points!,
+  );
+});

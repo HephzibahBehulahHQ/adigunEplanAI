@@ -445,5 +445,11 @@
   "distributionZone": "Distribution zone",
   "zoneRooms": "Member rooms (select at least one)",
   "zoneBoard": "Distribution board",
-  "noZoneBoard": "No board assigned"
+  "noZoneBoard": "No board assigned",
+  "planScale": "Drawing scale",
+  "scaleDenominator": "Scale denominator (1:n)",
+  "applyPlanScale": "Apply drawing scale",
+  "planScaleScope": "The screen fits the plan. SVG uses physical millimetre dimensions at the saved scale, including margins and visible geometry. Print at actual size; page fitting changes scale.",
+  "scaledPlanSize": "Scaled plan size",
+  "exportScaledPlan": "Export scaled plan SVG"
 }

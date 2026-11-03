@@ -1,3 +1,8 @@
+import { scaledPlanSvg } from "./scaledPlanSvg";
+import {
+  scaledPlanSize,
+  setFloorDrawingScale,
+} from "../../../packages/building-design/scale.ts";
 import { ZoneTools } from "./ZoneTools";
 import { DxfImportTools } from "./DxfImportTools";
 import { PlanImportTools } from "./PlanImportTools";
@@ -17,7 +22,7 @@ import {
   snap,
   type Point,
 } from "../../../packages/engineering-core/geometry.ts";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
 import {
@@ -34,6 +39,7 @@ export function BuildingEditor({
   native: NativeProjects;
   t: (key: MessageKey) => string;
 }) {
+  const planRef = useRef<SVGSVGElement>(null);
   const [drawing, setDrawing] = useState<{
     floorId: string;
     name: string;
@@ -119,6 +125,9 @@ export function BuildingEditor({
   const margin = Math.max(width, height, 1000) * 0.05;
   const activeDrawing = drawing?.floorId === floor?.id ? drawing : null;
   const planViewBox = `${minX - margin} ${minY - margin} ${Math.max(width, 1) + 2 * margin} ${Math.max(height, 1) + 2 * margin}`;
+  const paperSize = floor
+    ? scaledPlanSize(planViewBox, floor.drawingScale)
+    : null;
   return (
     <section
       className="building-editor"
@@ -392,7 +401,56 @@ export function BuildingEditor({
             />
             {t("showRoomDimensions")}
           </label>
+          <form
+            key={`scale-${floor.id}-${floor.drawingScale}`}
+            aria-label={t("planScale")}
+            onSubmit={(e) => {
+              e.preventDefault();
+              const data = new FormData(e.currentTarget);
+              native.update((p) =>
+                setFloorDrawingScale(p, floor.id, Number(data.get("scale"))),
+              );
+            }}
+          >
+            <label>
+              {t("scaleDenominator")}
+              <input
+                name="scale"
+                type="number"
+                min="1"
+                max="10000"
+                step="any"
+                defaultValue={floor.drawingScale}
+                required
+              />
+            </label>
+            <button disabled={!!activeDrawing}>{t("applyPlanScale")}</button>
+          </form>
+          <p>{t("planScaleScope")}</p>
+          <output aria-label={t("scaledPlanSize")}>
+            1:{floor.drawingScale} · {paperSize!.widthMm.toFixed(2)} ×{" "}
+            {paperSize!.heightMm.toFixed(2)} mm
+          </output>
+          <button
+            disabled={!!activeDrawing}
+            onClick={() => {
+              if (!planRef.current) return;
+              const url = URL.createObjectURL(
+                new Blob([scaledPlanSvg(planRef.current, floor.drawingScale)], {
+                  type: "image/svg+xml",
+                }),
+              );
+              const anchor = document.createElement("a");
+              anchor.href = url;
+              anchor.download = `${floor.name.replace(/[^A-Za-z0-9_-]/g, "_")}-1-${floor.drawingScale}.svg`;
+              anchor.click();
+              window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }}
+          >
+            {t("exportScaledPlan")}
+          </button>
           <svg
+            ref={planRef}
             className="building-plan"
             role="img"
             aria-label={t("roomOutlines")}

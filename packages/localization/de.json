@@ -445,5 +445,11 @@
   "distributionZone": "Verteilungszone",
   "zoneRooms": "Zugeordnete Räume (mindestens einen wählen)",
   "zoneBoard": "Verteiler",
-  "noZoneBoard": "Kein Verteiler zugeordnet"
+  "noZoneBoard": "Kein Verteiler zugeordnet",
+  "planScale": "Zeichnungsmaßstab",
+  "scaleDenominator": "Maßstabsnenner (1:n)",
+  "applyPlanScale": "Maßstab übernehmen",
+  "planScaleScope": "Die Bildschirmansicht passt den Plan ein. SVG verwendet physische Millimetermaße im gespeicherten Maßstab, einschließlich Rändern und sichtbarer Geometrie. In tatsächlicher Größe drucken; Seitenanpassung ändert den Maßstab.",
+  "scaledPlanSize": "Skalierte Plangröße",
+  "exportScaledPlan": "Maßstäblichen Plan als SVG exportieren"
 }

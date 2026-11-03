@@ -280,6 +280,7 @@ export const schemas = {
     buildingId: id,
     elevationMm: finite,
     heightMm: positive,
+    drawingScale: finite.min(1).max(10000),
   }),
   architecturalLayers: entity.extend({
     floorId: id,
@@ -390,7 +391,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(13),
+    schemaVersion: z.literal(14),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -404,7 +405,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 13;
+  schemaVersion: 14;
   id: string;
   name: string;
   createdAt: string;
@@ -420,7 +421,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 13,
+    schemaVersion: 14,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -844,7 +845,7 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -852,8 +853,12 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 13)
-    return { project: validateProject(raw), migratedFrom: 13 };
+  if (version === 14)
+    return { project: validateProject(raw), migratedFrom: 14 };
+  const oldFloors = (raw as { floors?: unknown }).floors;
+  const floors = Array.isArray(oldFloors)
+    ? oldFloors.map((floor) => ({ drawingScale: 100, ...floor }))
+    : (oldFloors ?? []);
   if (
     version === 2 ||
     version === 3 ||
@@ -865,7 +870,8 @@ export function parseProject(text: string): {
     version === 9 ||
     version === 10 ||
     version === 11 ||
-    version === 12
+    version === 12 ||
+    version === 13
   )
     return {
       project: validateProject({
@@ -875,7 +881,8 @@ export function parseProject(text: string): {
         wallOpenings: [],
         planGeometry: [],
         ...raw,
-        schemaVersion: 13,
+        floors,
+        schemaVersion: 14,
       }),
       migratedFrom: version,
     };
@@ -884,7 +891,8 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 13,
+      floors,
+      schemaVersion: 14,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

@@ -445,5 +445,11 @@
   "distributionZone": "Agbègbè ìpín iná",
   "zoneRooms": "Àwọn yàrá (yan ó kéré tán ọ̀kan)",
   "zoneBoard": "Pánẹ́ẹ̀lì ìpín iná",
-  "noZoneBoard": "A kò tíì yan pánẹ́ẹ̀lì"
+  "noZoneBoard": "A kò tíì yan pánẹ́ẹ̀lì",
+  "planScale": "Ìwọ̀n àwòrán",
+  "scaleDenominator": "Olùpín ìwọ̀n (1:n)",
+  "applyPlanScale": "Lo ìwọ̀n àwòrán",
+  "planScaleScope": "Iboju ń fi gbogbo ètò hàn. SVG lo ìwọ̀n milimita gidi ní ìwọ̀n tí a fipamọ́, pẹ̀lú ààlà àti àwòrán tí a lè rí. Tẹ̀ ẹ́ jáde ní ìwọ̀n gidi; fífi sí ojúewé ń yí ìwọ̀n padà.",
+  "scaledPlanSize": "Ìwọ̀n ètò tí a ṣe àtúnṣe",
+  "exportScaledPlan": "Gbe ètò SVG ní ìwọ̀n jáde"
 }
