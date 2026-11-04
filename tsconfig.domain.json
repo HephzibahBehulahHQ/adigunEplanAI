@@ -1,0 +1,7 @@
+{
+  "extends": "./packages/config/tsconfig.json",
+  "include": [
+    "packages/electrical-model/**/*.ts",
+    "packages/project-storage/**/*.ts"
+  ]
+}

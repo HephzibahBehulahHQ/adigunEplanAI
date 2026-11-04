@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "npm run dev --workspace @adiguneplanai/web --",
     "build": "npm run build --workspace @adiguneplanai/web",
-    "typecheck": "tsc -p apps/web/tsconfig.json",
+    "typecheck": "tsc -p apps/web/tsconfig.json && tsc -p tsconfig.domain.json",
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -36,7 +36,8 @@
     "react-dom": "19.3.1",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1",
-    "vite": "8.3.5"
+    "vite": "8.3.5",
+    "zod": "4.6.7"
   },
   "overrides": {
     "minimatch": "11.0.4"

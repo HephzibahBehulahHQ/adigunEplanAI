@@ -14,10 +14,18 @@ import {
   type PanelState,
   type Preferences,
 } from "./preferences";
+import { useNativeProjects } from "./useNativeProjects";
+import {
+  ProjectTools,
+  ProjectNavigator,
+  ProjectProperties,
+  NativeDrawing,
+} from "./NativeWorkspace";
 import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
 
 export function App() {
+  const native = useNativeProjects();
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
       return restorePreferences(localStorage.getItem(storageKey));
@@ -78,9 +86,21 @@ export function App() {
         </header>
         {!state.collapsed && (
           <div className="panel-body">
-            <p className="empty-hint">
-              {t(id === "diagnostics" ? "noDiagnostics" : "emptyPanel")}
-            </p>
+            {id === "project" ? (
+              <ProjectNavigator native={native} t={t} />
+            ) : id === "properties" ? (
+              <ProjectProperties native={native} t={t} />
+            ) : (
+              <p className="empty-hint">
+                {t(
+                  id === "diagnostics"
+                    ? native.project
+                      ? "modelValid"
+                      : "noDiagnostics"
+                    : "emptyPanel",
+                )}
+              </p>
+            )}
             <details open={layoutOpen[id] ?? false}>
               <summary
                 onClick={(event) => {
@@ -152,7 +172,9 @@ export function App() {
           <strong>AdigunEplanAI</strong>
           <small>{t("division")}</small>
         </div>
-        <span className="project-title">{t("noProject")}</span>
+        <span className="project-title">
+          {native.project?.name ?? t("noProject")}
+        </span>
         <span className="local-status">
           <i />
           {t("local")}
@@ -170,6 +192,12 @@ export function App() {
         </button>
         <button onClick={() => help.current?.showModal()}>{t("help")}</button>
       </nav>
+      <ProjectTools native={native} t={t} />
+      {native.error && (
+        <p className="storage-error" role="alert">
+          {t(native.error)}
+        </p>
+      )}
       <div className="ribbon" aria-label={t(tab)}>
         {tab === "view" ? (
           <>
@@ -289,13 +317,17 @@ export function App() {
                       : "#ffffff",
               }}
             >
-              <div className="empty-workspace">
-                <span className="drawing-mark" aria-hidden="true">
-                  ⌁
-                </span>
-                <h1>{t("noProject")}</h1>
-                <p>{t("emptyProject")}</p>
-              </div>
+              {native.project ? (
+                <NativeDrawing native={native} t={t} />
+              ) : (
+                <div className="empty-workspace">
+                  <span className="drawing-mark" aria-hidden="true">
+                    ⌁
+                  </span>
+                  <h1>{t("noProject")}</h1>
+                  <p>{t("emptyProject")}</p>
+                </div>
+              )}
             </div>
           </div>
         </main>
@@ -307,7 +339,11 @@ export function App() {
           <i />
           {t("ready")}
         </span>
-        <span>{t("local")}</span>
+        <span>
+          {native.project
+            ? t(native.saved ? "savedLocally" : "notSaved")
+            : t("local")}
+        </span>
         <span>
           © {new Date().getFullYear()}{" "}
           <a

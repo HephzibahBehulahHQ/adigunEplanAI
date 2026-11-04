@@ -12,3 +12,9 @@
 
 - GitHub connector publication is verified by comparing Git tree hashes; local intake history is retained separately. Foundation PR #1 head 9db77462dc9c620badf1227a5f966624c66385b0 has successful hosted CI.
 - Milestone 2 exposes only implemented interface actions. Engineering panels use honest empty states until the native document model and tools exist. No dummy cloud/profile/BOT indicators are shown.
+
+- Owner reconfirmed the attached target interface on 2026-11-02; see PURSUED_GOAL.md and docs/references/target-workspace.png. The corporate shell is an intermediate step toward that complete engineering workspace.
+
+- Native project version 1 uses Zod 4.6.7 strict schemas, separated wire geometry, explicit reference checks and bounded JSON imports. Atomic browser-local storage is an adapter-backed first persistence implementation; cloud storage is deferred to its approved milestone.
+- Undo/redo stores isolated validated snapshots rather than UI state. Corrupt local storage is preserved until explicit reset, with recovery download available.
+- Docking-menu state is now controlled from explicit activation rather than asynchronous native toggle events; repeated local tests and both corrected hosted CI runs pass.

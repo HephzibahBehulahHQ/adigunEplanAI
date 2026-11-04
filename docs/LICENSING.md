@@ -7,3 +7,5 @@ React 19.3.1, Vite 8.3.5, ESLint 10.14.0 and Prettier 3.9.10 declare MIT. TypeSc
 Preserve upstream notices when packaging/distributing dependencies. The production bundle is accompanied by THIRD_PARTY_NOTICES.txt, generated from the installed React, React DOM and scheduler license files and verified against those files in CI. A full distribution notice inventory remains a production-release gate. No general license for proprietary product source or corporate assets is granted. Owner-authorized corporate assets are used only for this product. Vendor models, standards text, fonts and proprietary formats require specific provenance/rights review before inclusion.
 
 Milestone 2 adds @playwright/test 1.64.1 (Apache-2.0), used only for testing. The metadata gate now covers 147 lockfile entries. Human translation review and final distribution notice review remain production gates.
+
+Milestone 3 adds Zod 4.6.7 (MIT) for actual runtime schema validation. Its installed license is included in the generated runtime notices. The lockfile metadata gate covers 148 entries.
