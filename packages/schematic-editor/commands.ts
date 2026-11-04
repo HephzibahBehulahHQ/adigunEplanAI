@@ -465,6 +465,10 @@ export function connect(
   return project;
 }
 export function remove(project: Project, ids: string[]) {
+  if (project.planEquipment.some((e) => ids.includes(e.symbolInstanceId)))
+    throw new Error(
+      "Remove the floor placement before deleting its schematic symbol",
+    );
   editable(project, ids);
   const removedPins = new Set(
     project.pins

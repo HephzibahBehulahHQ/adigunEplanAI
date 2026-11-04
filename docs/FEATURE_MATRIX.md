@@ -10,7 +10,7 @@ All requirements within each referenced part remain authoritative. Audit complet
 | P04 | Part 4: APPLICATION EXPERIENCE AND SCREENSHOT RECONSTRUCTION | Shell, native 2D tools and live data panels tested; 3D/BOT/domain expansion pending | MASTER_SPECIFICATION.md |
 | P05 | Part 5: ELECTRICAL SCHEMATIC ENGINE | Native schemas and initial 2D glyph/wiring editor tested; expanded library pending | MASTER_SPECIFICATION.md |
 | P06 | Part 6: WIRING, NETLISTS AND DEVICE CONNECTIONS | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P07 | Part 7: BUILDING ELECTRICAL AND ARCHITECTURAL DESIGN | Pending implementation / validation | MASTER_SPECIFICATION.md |
+| P07 | Part 7: BUILDING ELECTRICAL AND ARCHITECTURAL DESIGN | Building/floor/room drawing and measurement plus native walls/layers tested; openings, equipment, circuits, routes and imports pending | MASTER_SPECIFICATION.md |
 | P08 | Part 8: ENGINEERING CALCULATION ENGINE | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P09 | Part 9: 3D PANEL AND ENCLOSURE ENGINEERING | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P10 | Part 10: INDUSTRIAL AUTOMATION AND PLC DESIGN | Pending implementation / validation | MASTER_SPECIFICATION.md |

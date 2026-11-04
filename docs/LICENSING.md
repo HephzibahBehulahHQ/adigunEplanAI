@@ -11,3 +11,5 @@ Milestone 2 adds @playwright/test 1.64.1 (Apache-2.0), used only for testing. Th
 Milestone 3 adds Zod 4.6.7 (MIT) for actual runtime schema validation. Its installed license is included in the generated runtime notices. The lockfile metadata gate covers 148 entries.
 
 Milestone 4 generic schematic glyphs and geometry/router code are original product source. They are IEC-style representations, not copied official standards artwork or manufacturer CAD assets. No new third-party runtime dependency is added.
+
+Milestone 7 DXF import pins dxf-parser 1.1.2 (MIT, GDS Storefront Estimating) with loglevel 1.9.2 (MIT, Tim Perry). Installed LICENSE and LICENSE-MIT files were reviewed and included in generated runtime notices. The dependency gate covers 150 lockfile entries; npm installation reported zero vulnerabilities. The parser is shipped in a bounded, cancellable worker and does not imply support for every DXF entity. Source: https://github.com/gdsestimating/dxf-parser .

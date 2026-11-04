@@ -1,3 +1,4 @@
+import { pointInPolygon } from "../engineering-core/polygon.ts";
 import { transform, type Point } from "../engineering-core/geometry.ts";
 import { z } from "zod";
 
@@ -280,6 +281,100 @@ export const schemas = {
     buildingId: id,
     elevationMm: finite,
     heightMm: positive,
+    drawingScale: finite.min(1).max(10000),
+  }),
+  architecturalLayers: entity.extend({
+    floorId: id,
+    kind: z.enum(["architectural", "electrical"]),
+    visible: z.boolean(),
+    locked: z.boolean(),
+  }),
+  walls: entity
+    .extend({
+      floorId: id,
+      layerId: id,
+      start: point,
+      end: point,
+      thicknessMm: positive.max(10000),
+      heightMm: positive.max(100000),
+    })
+    .superRefine((wall, ctx) => {
+      if (wall.start.x === wall.end.x && wall.start.y === wall.end.y)
+        ctx.addIssue({
+          code: "custom",
+          message: "Wall must have nonzero length",
+        });
+      if (
+        [wall.start.x, wall.start.y, wall.end.x, wall.end.y].some(
+          (v) => Math.abs(v) > 1000000,
+        )
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Wall coordinate exceeds plan bounds",
+        });
+    }),
+  planGeometry: entity
+    .extend({
+      floorId: id,
+      layerId: id,
+      points: z.array(point).min(2).max(10000),
+      closed: z.boolean(),
+      sourceFile: z.string().min(1).max(160),
+      sourceElement: z.string().max(160),
+      mmPerUnit: positive,
+    })
+    .superRefine((shape, ctx) => {
+      if (
+        shape.points.some(
+          (p) => Math.abs(p.x) > 1000000 || Math.abs(p.y) > 1000000,
+        )
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Plan geometry exceeds bounds",
+        });
+      if (shape.closed && shape.points.length < 3)
+        ctx.addIssue({
+          code: "custom",
+          message: "Closed geometry needs three points",
+        });
+    }),
+  wallOpenings: entity.extend({
+    wallId: id,
+    kind: z.enum(["door", "window"]),
+    offsetMm: finite.nonnegative(),
+    widthMm: positive,
+    heightMm: positive,
+    sillMm: finite.nonnegative(),
+    hinge: z.enum(["start", "end"]),
+    swing: z.enum(["left", "right"]),
+  }),
+  planEquipment: entity.extend({
+    floorId: id,
+    layerId: id,
+    roomId: id.optional(),
+    symbolInstanceId: id,
+    position: z
+      .object({
+        x: finite.min(-1000000).max(1000000),
+        y: finite.min(-1000000).max(1000000),
+      })
+      .strict(),
+    rotation: z.union([
+      z.literal(0),
+      z.literal(90),
+      z.literal(180),
+      z.literal(270),
+    ]),
+    symbolScale: finite.min(0.1).max(1000),
+    mountingHeightMm: finite.min(0).max(1000000).optional(),
+  }),
+  planZones: entity.extend({
+    floorId: id,
+    kind: z.enum(["electrical", "distribution"]),
+    roomIds: z.array(id).min(1).max(10000),
+    boardId: id.optional(),
   }),
   rooms: entity.extend({
     floorId: id,
@@ -317,7 +412,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(9),
+    schemaVersion: z.literal(15),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -331,7 +426,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 9;
+  schemaVersion: 15;
   id: string;
   name: string;
   createdAt: string;
@@ -347,7 +442,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 9,
+    schemaVersion: 15,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -395,12 +490,130 @@ const references: Partial<
   plcAddresses: { moduleId: "plcModules" },
   equipment3d: { deviceId: "devices", enclosureId: "enclosures" },
   floors: { buildingId: "buildings" },
+  architecturalLayers: { floorId: "floors" },
+  walls: { floorId: "floors", layerId: "architecturalLayers" },
+  wallOpenings: { wallId: "walls" },
+  planGeometry: { floorId: "floors", layerId: "architecturalLayers" },
   rooms: { floorId: "floors" },
+  planEquipment: {
+    floorId: "floors",
+    layerId: "architecturalLayers",
+    roomId: "rooms",
+    symbolInstanceId: "symbolInstances",
+  },
+  planZones: {
+    floorId: "floors",
+    roomIds: "rooms",
+    boardId: "distributionBoards",
+  },
   circuits: { boardId: "distributionBoards", deviceIds: "devices" },
   distributionBoards: { deviceId: "devices", roomId: "rooms" },
   reports: { documentId: "documents", revisionId: "revisions" },
 };
 function validateReferences(project: Project): void {
+  const placedDevices = new Set<string>();
+  for (const equipment of project.planEquipment) {
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === equipment.layerId,
+    );
+    const symbol = project.symbolInstances.find(
+      (s) => s.id === equipment.symbolInstanceId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== equipment.floorId ||
+      layer.kind !== "electrical"
+    )
+      throw new Error("Equipment requires an electrical layer on its floor");
+    if (!symbol || placedDevices.has(symbol.deviceId))
+      throw new Error("Each native device can have only one floor placement");
+    placedDevices.add(symbol.deviceId);
+    if (equipment.roomId) {
+      const room = project.rooms.find((r) => r.id === equipment.roomId);
+      if (
+        !room ||
+        room.floorId !== equipment.floorId ||
+        !pointInPolygon(equipment.position, room.boundary)
+      )
+        throw new Error(
+          "Equipment anchor must lie in its assigned room on the same floor",
+        );
+    }
+  }
+  for (const zone of project.planZones) {
+    if (new Set(zone.roomIds).size !== zone.roomIds.length)
+      throw new Error("Zone room membership must be unique");
+    if (
+      zone.roomIds.some(
+        (id) =>
+          !project.rooms.some((r) => r.id === id && r.floorId === zone.floorId),
+      )
+    )
+      throw new Error("Zone rooms must belong to its floor");
+    if (zone.boardId) {
+      const board = project.distributionBoards.find(
+        (b) => b.id === zone.boardId,
+      );
+      if (zone.kind !== "distribution" || !board)
+        throw new Error("Only distribution zones can reference a board");
+      if (
+        board.roomId &&
+        !project.rooms.some(
+          (r) => r.id === board.roomId && r.floorId === zone.floorId,
+        )
+      )
+        throw new Error("Zone board must be on the same floor when located");
+    }
+  }
+  for (const shape of project.planGeometry) {
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === shape.layerId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== shape.floorId ||
+      layer.kind !== "architectural"
+    )
+      throw new Error("Plan geometry requires architectural floor layer");
+  }
+  const openingsByWall = new Map<string, Project["wallOpenings"]>();
+  for (const opening of project.wallOpenings) {
+    const wall = project.walls.find((w) => w.id === opening.wallId);
+    if (
+      !wall ||
+      opening.offsetMm + opening.widthMm >
+        Math.hypot(wall.end.x - wall.start.x, wall.end.y - wall.start.y) +
+          1e-7 ||
+      opening.sillMm + opening.heightMm > wall.heightMm ||
+      (opening.kind === "door" && opening.sillMm !== 0)
+    )
+      throw new Error("Opening exceeds wall bounds");
+    const existing = openingsByWall.get(wall.id) ?? [];
+    if (existing.length >= 256) throw new Error("Too many openings on wall");
+    if (
+      existing.some(
+        (other) =>
+          opening.offsetMm < other.offsetMm + other.widthMm &&
+          opening.offsetMm + opening.widthMm > other.offsetMm &&
+          opening.sillMm < other.sillMm + other.heightMm &&
+          opening.sillMm + opening.heightMm > other.sillMm,
+      )
+    )
+      throw new Error("Wall openings overlap");
+    existing.push(opening);
+    openingsByWall.set(wall.id, existing);
+  }
+  for (const wall of project.walls) {
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === wall.layerId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== wall.floorId ||
+      layer.kind !== "architectural"
+    )
+      throw new Error("Wall requires an architectural layer on its floor");
+  }
   const pageOrders = new Set<string>();
   for (const page of project.pages) {
     const key = `${page.documentId}:${page.order}`;
@@ -688,7 +901,8 @@ export function serializeProject(project: Project): string {
 }
 export function parseProject(text: string): {
   project: Project;
-  migratedFrom: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  migratedFrom:
+    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -696,7 +910,12 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 9) return { project: validateProject(raw), migratedFrom: 9 };
+  if (version === 15)
+    return { project: validateProject(raw), migratedFrom: 15 };
+  const oldFloors = (raw as { floors?: unknown }).floors;
+  const floors = Array.isArray(oldFloors)
+    ? oldFloors.map((floor) => ({ drawingScale: 100, ...floor }))
+    : (oldFloors ?? []);
   if (
     version === 2 ||
     version === 3 ||
@@ -704,10 +923,26 @@ export function parseProject(text: string): {
     version === 5 ||
     version === 6 ||
     version === 7 ||
-    version === 8
+    version === 8 ||
+    version === 9 ||
+    version === 10 ||
+    version === 11 ||
+    version === 12 ||
+    version === 13 ||
+    version === 14
   )
     return {
-      project: validateProject({ ...raw, schemaVersion: 9 }),
+      project: validateProject({
+        planEquipment: [],
+        planZones: [],
+        architecturalLayers: [],
+        walls: [],
+        wallOpenings: [],
+        planGeometry: [],
+        ...raw,
+        floors,
+        schemaVersion: 15,
+      }),
       migratedFrom: version,
     };
   if (version === 0 || version === 1) {
@@ -715,7 +950,8 @@ export function parseProject(text: string): {
     const migrated: Record<string, unknown> = {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
-      schemaVersion: 9,
+      floors,
+      schemaVersion: 15,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

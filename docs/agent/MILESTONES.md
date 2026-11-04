@@ -1,13 +1,36 @@
 # Milestones
 
-- 0: repository and feasibility audit complete.
-- 1: application foundation published; hosted CI passed.
-- 2: corporate interface published; hosted CI passed.
-- 3: versioned native projects/persistence/validation/migration/undo-redo published; hosted CI passed.
-- 4: 2D schematic tools published in PR #4; local and hosted CI passed.
-- 5: published in PR #5; both hosted CI runs passed. See MILESTONE_5_ACCEPTANCE.md for scope and evidence.
-- 6: implementation locally verified; see MILESTONE_6_ACCEPTANCE.md. Final publication CI gate pending before transition to Milestone 7.
-- 7–20: pending; MASTER_SPECIFICATION.md Part 22 is authoritative.
+Source of scope: MASTER_SPECIFICATION.md Part 22 and its referenced engineering sections. Recorded implementation checkpoints are not final production acceptance; retained integration requirements remain in the acceptance records. Progress is approximately 33% by milestone count (7 of 21 checkpoints), not by equal engineering effort. M7 is active; M8–20 remain pending. Remaining effort estimate: 300–800+ hours, rough and subject to integration evidence.
+
+| Category | Milestone | Status | Verifiable completion criteria |
+| --- | --- | --- | --- |
+| Foundation | M0 Audit | Checkpoint recorded | Reference repositories, branding, licensing and architecture audited; risk register and feature matrix recorded. |
+| Foundation | M1 Build foundation | Checkpoint recorded | Reproducible install, type/lint/format/unit/build gates and hosted CI pass. |
+| Foundation | M2 Corporate workspace | Checkpoint recorded | Header/ribbon/panels/themes and four-language controls pass interaction/responsive checks; final visual acceptance remains an integration gate. |
+| Native engineering | M3 Project model | Checkpoint recorded | Versioned schema validation, migration, persistence, undo/redo and corrupted-data recovery tests pass. |
+| Native engineering | M4 Schematic editor | Checkpoint recorded | Canvas, symbols, selection, zoom/snap/layers, wire editing and native round trips pass browser tests. |
+| Native engineering | M5 Connectivity | Checkpoint recorded | Nets, terminal grouping, cross-references, numbering and rule diagnostics pass reference topology tests; see MILESTONE_5_ACCEPTANCE.md. |
+| Native engineering | M6 Component library | Checkpoint recorded | Catalog metadata/search/filter/mapping/custom revisions pass tests with source provenance; see MILESTONE_6_ACCEPTANCE.md for retained 3D integration limits. |
+| Building engineering | M7 Building design | In progress | Architectural plans/imports, rooms/zones/scales, lighting/sockets/boards/routes and circuit/equipment schedules persist, undo and pass geometric/electrical workflow tests. |
+| Building engineering | M8 Calculations | Pending | Unit-aware calculations pass independent engineering reference cases and invalid-input checks. |
+| Panel engineering | M9 3D panels | Pending | Enclosures, mounting/DIN rails, placement, 2D/3D synchronization and collision checks pass geometric workflows. |
+| Automation | M10 PLC/automation | Pending | PLC wiring, I/O mapping and motor-control documentation pass representative project tests. |
+| Documentation | M11 Reports/exports | Pending | Real PDF/SVG/CSV/JSON and other required outputs open correctly and agree with native project data. |
+| Cloud/security | M12 Accounts/cloud | Pending | Authentication/profiles, ownership isolation, explicit cloud persistence/recovery and true menu status pass multi-user/security/responsive tests. |
+| AI assistance | M13 Adigun BOT | Pending | Secure grounded backend, previewed/accepted reversible actions and both BOT addenda pass interaction/security tests. |
+| Example validation | M14 First 50 | Pending | 50 distinct representative native projects each have independent validation evidence. |
+| Example validation | M15 Reach 150 | Pending | 150 cumulative distinct projects load and pass their own applicable engineering checks. |
+| Example validation | M16 Reach 300 | Pending | 300 cumulative projects cover commercial/industrial/automation/panels with individual validation. |
+| Example validation | M17 Reach 500 | Pending | Complete manifest of 500 distinct projects; every project passes loading/connectivity/calculation/applicable-export checks. |
+| Integration | M18 Regression | Pending | End-to-end engineering, synchronized 2D/3D, AI design, security, accessibility and four-language suites pass. |
+| Release | M19 Production readiness | Pending | Performance, backups/recovery, security review, licensing and deployment/release checklist gates pass. |
+| Release | M20 Verified release | Pending | Versioned release and documentation published; canonical live domain and production workflows verified. |
+
+For every increment: inspect diff/status, preserve existing work, run required checks, publish reviewed source without rewriting history, verify identical local/remote commit, wait for green hosted CI, deploy using existing Pages main/root configuration, then verify deployment and live workflows. Do not count development deployment as M19/M20 completion. Source excludes secrets, caches, build/test outputs and logs; the dedicated main deployment commit contains only reviewed distributable assets and provenance.
+
+Current verified checkpoint: source 64a93a9c44145792c9b9ab55e62b74e725b4f42a; hosted CI 41588032897 and 41588027882 passed (138 unit/tooling and 92 browser tests, licensing/build/audit). Development deployment bffcdd90bf48b82c95a185980a14da5f40fbc165 passed Pages run 41588405373; live build-info matched source and both DXF browser workflows passed. Earlier cold-start failures were fixed by prebundling the worker dependency. The Windows fresh-cache run reported 92 successful scenarios but stalled in teardown and was interrupted; hosted CI provides the clean full-suite completion evidence.
+
+M7 delivered so far: buildings/floors, editable/drawn measured polygon rooms, protected architectural/electrical layers, wall editing and door/window openings, bounded transformed/physical-unit SVG import, and bounded ASCII LINE/LWPOLYLINE DXF import with unit/layer preservation and unsupported-content reports. Room-based electrical/distribution zones now support validated membership and board references, plan highlighting, editing/removal and undo/reload (schema 13, 142 unit/tooling tests and nine building browser workflows). Schema 14 adds persisted plan scales and physical-size SVG export, with exact dimension and unchanged-geometry tests. Schema 15 adds existing-device plan placements and native room equipment schedules with layer/deletion protection and undo/reload. Next: floor-first device creation, routes and circuit schedules; broader zone geometry and documentation layouts remain open. Broader geometry and final visual acceptance remain open.
 
 The owner authorizes continuous approved milestone execution. The full targeted engineering platform remains the goal; milestone completion is not final product acceptance.
 

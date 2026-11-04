@@ -969,12 +969,19 @@ test("cross-page net labels persist memberships and navigate to the real drawing
       (item: { id: string }) => item.id === net.id,
     ).terminalIds,
   ).toEqual(net.terminalIds);
-  page.once("dialog", (dialog) => dialog.accept());
+  const importAccepted = page
+    .waitForEvent("dialog")
+    .then((dialog) => dialog.accept());
+  const importedName = `${data.name} imported`;
   await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "recompute.adeplan.json",
     mimeType: "application/json",
-    buffer: Buffer.from(JSON.stringify({ ...data, nets: [], findings: [] })),
+    buffer: Buffer.from(
+      JSON.stringify({ ...data, name: importedName, nets: [], findings: [] }),
+    ),
   });
+  await importAccepted;
+  await expect.poll(async () => (await project(page)).name).toBe(importedName);
   expect(
     (await project(page)).nets.find((item: { labels: string[] }) =>
       item.labels.includes("CONTROL_24V"),
@@ -1123,7 +1130,7 @@ test("catalog filters, favorites and recent assignments persist without changing
   expect(after.pins).toEqual(before.pins);
   expect(after.wires).toEqual(before.wires);
   expect(after.devices[0].partId).toBeDefined();
-  expect(after.schemaVersion).toBe(9);
+  expect(after.schemaVersion).toBe(15);
   const terminalPart = after.manufacturerParts.find(
     (part: { partNumber: string }) => part.partNumber === "3044076",
   );

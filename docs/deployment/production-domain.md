@@ -1,24 +1,25 @@
-# Production domain
+# Production domain and development deployment
 
-Owner-required public origin: **https://adiguneplanai.hephzibahbehulah.com/**.
+Required public origin: **https://adiguneplanai.hephzibahbehulah.com/**.
 
-Migration source supplied by owner: https://hephzibahbehulahhq.github.io/adigunEplanAI/.
+GitHub Pages settings were inspected on 2026-11-03: deployment source is `main` at `/ (root)`, the required custom domain is configured, and HTTPS enforcement is enabled. The previous root contained CNAME, README.md and _config.yml. These files were preserved when publishing the built development application.
 
-Cloudflare manages the public domain/DNS configuration. Supabase supports the approved authentication/cloud milestone. Production URLs, auth Site URL and permitted production redirects must use the required origin. Configure only actual implemented callback routes. Keep production redirect entries explicit; do not use a blanket wildcard.
+Verified deployment checkpoint: source commit `74706bcff2b9c749f9faed36c0ebf1619ba1c6e2`, source tree `be8c487534fd692b60879f746be2417acf3352dc`, deployment commit `e88f400912737dc3896deaf9bfa4d3d81763bd7f`. Pages run [41583498469](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/41583498469) succeeded. HTTPS build-info.json returned the expected source identity and a live nested SVG-import browser workflow passed. This is a development milestone, not completion of production acceptance.
 
-## Current evidence
+## Publishing verified increments
 
-- No Cloudflare administration connector, CLI or credential environment variable was found in this session. No DNS mutation has been performed.
-- The Supabase connector lists VoltPRo and HephzibahBehulahHQ projects. Neither is explicitly named AdigunEplanAI; no existing project's auth settings or database were changed. Project ownership/tenant architecture must be verified before choosing an existing shared backend or provisioning a dedicated one.
-- The repository CI currently verifies builds/tests; it does not deploy. The GitHub connector's generic fetch endpoint does not permit the Pages-settings resource, so remote Pages/custom-domain settings remain unverified.
-- Custom-domain HTTPS, DNS resolution, old-address redirection, Supabase redirect acceptance and cloud round trips are not yet verified.
+Run the required checks, license/notices gates and production dependency audit; publish reviewed source to its visible branch and wait for hosted CI. Build the verified source tree and publish runtime files, notices, .nojekyll and build-info.json to the existing Pages main/root branch without replacing unrelated files or custom-domain settings. Use expected-head checks and ordinary forward commits. Verify the Pages run, live source provenance and relevant live behavior. Keep dependencies, caches, credentials, logs and test artifacts out of publication.
 
-## Configuration and acceptance
+Git Credential Manager's official sign-in flow returned Windows Access is denied in this environment. The connected GitHub app can publish canonical source commits; public Git fetch and fast-forward synchronization work. The prior independent local history is retained on codex/milestone-7-building-local-preserved. Do not force-push or discard local changes to synchronize.
 
-Configure the actual hosting origin and associate the custom domain before changing DNS. If GitHub Pages remains the origin, set its custom-domain setting first; the Cloudflare subdomain CNAME target is `hephzibahbehulahhq.github.io` without the repository path. A CNAME artifact alone does not configure custom Actions-based Pages deployments. If the approved deployment uses Cloudflare Pages/Workers, use that deployment's assigned custom-domain target.
+## Remaining production work
 
-After selecting the verified AdigunEplanAI Supabase backend, configure Auth Site URL to the required HTTPS origin and allow the actual application's production redirect URLs. Verify sign-in/sign-out, confirmation/recovery callbacks, access isolation, persistence and reload on the real domain in the cloud/auth milestone. Never place privileged Supabase keys in frontend configuration.
+Cloudflare DNS administration was not changed in this task. Supabase authentication/cloud persistence and its production Site URL/redirect verification remain part of Milestone 12. Do not select another product's backend without verified ownership and authorization. Never place privileged keys in the frontend. Full production readiness, security/backup/performance checks, engineering acceptance and the 500-example validation remain required by MASTER_SPECIFICATION.md; a successful development deployment does not satisfy those gates.
 
-Release acceptance requires valid DNS and TLS, a successful production asset load at the domain root, correct application/auth links, the intended old-address transition, and authenticated cloud-project round trips. Record deployed commit, hosting origin, backend project and verification results when those operations are completed.
+## Verified domain and backend checkpoint — 2026-11-03
 
-Sources: [GitHub custom-domain documentation](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site), [Supabase redirect documentation](https://supabase.com/docs/guides/auth/redirect-urls).
+Source f8c9109ef356e00d1c84d29922dd83a164ff0f52 is synchronized locally/remotely, with hosted CI runs 41612800375 and 41612792082 successful. The equipment application from e05a96523884d4c5e337b90bf33b057bbe0036e9 is live in deployment 495391b7790fdc1dc8b1fc590418632e648153a5; Pages run 41600847758 and the live equipment browser workflow passed.
+
+Cloudflare administration confirms a DNS-only CNAME from adiguneplanai.hephzibahbehulah.com to hephzibahbehulahhq.github.io (Auto TTL). GitHub Pages main/root serves the canonical HTTPS domain. No DNS replacement was necessary.
+
+The authorized shared Supabase HQ project now has an isolated adiguneplanai schema, private project snapshots, revision trigger, restricted column grants and owner RLS. API schema exposure was saved and verified after reload; existing schema selections and shared Auth Site URL were preserved. The canonical-domain redirect was already allowed. Rollback SQL tests and an anonymous REST denial passed. Authenticated browser cloud saving is still unimplemented; no cloud-connected UI status is claimed. See supabase/README.md for exact evidence and remaining integration work.

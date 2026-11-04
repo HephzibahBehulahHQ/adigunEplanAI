@@ -1,0 +1,1121 @@
+import { dxfFixture } from "../fixtures/dxf-plan.mjs";
+import { test, expect } from "@playwright/test";
+
+test("buildings, floors and dimensioned room outlines persist with undo and isolated floor views", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Building reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Workshop");
+  await building.getByLabel("Building address", { exact: true }).fill("Site A");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByLabel("Room X (mm)", { exact: true }).fill("-1000");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "-1000,0 3000,0 3000,3000 -1000,3000",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-room-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(page.locator("[data-room-id]")).toHaveCount(1);
+  await floor.getByLabel("Floor name", { exact: true }).fill("Upper");
+  await floor.getByLabel("Elevation (mm)", { exact: true }).fill("3000");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Floor name", exact: true })
+    .selectOption({ label: "Upper" });
+  await expect(page.locator("[data-room-id]")).toHaveCount(0);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "-1000,0 3000,0 3000,3000 -1000,3000",
+  );
+  await page
+    .locator(".building-editor summary")
+    .filter({ hasText: /^Office$/ })
+    .click();
+  await expect(page.locator(".building-editor dl")).toContainText("12 m²");
+  await expect(page.locator(".building-editor dl")).toContainText("14 m");
+  await page
+    .getByRole("checkbox", { name: "Show room edge dimensions", exact: true })
+    .check();
+  await expect(page.locator("[data-room-dimension]")).toHaveCount(4);
+  await expect(page.locator("[data-room-dimension]").first()).toHaveText(
+    "4000 mm",
+  );
+  const edit = page.getByRole("form", {
+    name: "Edit room: Office",
+    exact: true,
+  });
+  await edit
+    .getByLabel("Boundary vertices (x,y mm per line)", { exact: true })
+    .fill("0,0\n4000,0\n4000,2000\n2000,2000\n2000,4000\n0,4000");
+  await edit.getByRole("button", { name: "Apply room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
+  );
+  await expect(page.locator(".building-editor dl")).toContainText("12 m²");
+  await expect(page.locator(".building-editor dl")).toContainText("16 m");
+  await expect(page.locator("[data-room-dimension]")).toHaveCount(6);
+  await edit
+    .getByLabel("Boundary vertices (x,y mm per line)", { exact: true })
+    .fill("0,0\n4000,4000\n0,4000\n4000,0");
+  await edit.getByRole("button", { name: "Apply room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
+  );
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
+  );
+  await page
+    .getByRole("button", { name: "Remove room: Office", exact: true })
+    .click();
+  await expect(page.locator("[data-room-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-room-id]")).toHaveCount(1);
+});
+
+test("graphical room drawing snaps vertices and commits only on Finish", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog.getByLabel("Project name", { exact: true }).fill("Drawn room");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Building");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Floor");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const read = () =>
+    page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
+          .projects[0],
+    );
+  const before = await read();
+  const draw = page.getByRole("form", { name: "Draw room", exact: true });
+  await draw.getByLabel("Room name", { exact: true }).fill("Drawn");
+  await draw.getByRole("button", { name: "Draw room", exact: true }).click();
+  const canvas = page.locator(".building-plan");
+  const click = async (x: number, y: number) => {
+    await canvas.scrollIntoViewIfNeeded();
+    const point = await canvas.evaluate(
+      (svg, p) => {
+        const point = new DOMPoint(p.x, p.y).matrixTransform(
+          (svg as SVGSVGElement).getScreenCTM()!,
+        );
+        return { x: point.x, y: point.y };
+      },
+      { x, y },
+    );
+    await page.mouse.click(point.x, point.y);
+  };
+  await click(1060, 1060);
+  await click(3060, 1060);
+  expect(await read()).toEqual(before);
+  await canvas.press("Escape");
+  await expect(page.locator("[data-room-draft]")).toHaveCount(0);
+  expect(await read()).toEqual(before);
+  await draw.getByRole("button", { name: "Draw room", exact: true }).click();
+  for (const [x, y] of [
+    [1060, 1060],
+    [3060, 1060],
+    [3060, 2060],
+    [1060, 2060],
+  ])
+    await click(x, y);
+  await page
+    .getByRole("button", { name: "Remove last vertex", exact: true })
+    .click();
+  await expect(page.locator("[data-room-draft]")).toHaveAttribute(
+    "points",
+    "1100,1100 3100,1100 3100,2100",
+  );
+  await click(1060, 2060);
+  expect(await read()).toEqual(before);
+  await page.getByRole("button", { name: "Finish room", exact: true }).click();
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    "1100,1100 3100,1100 3100,2100 1100,2100",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await read()).rooms).toHaveLength(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  const after = await read();
+  await page.reload();
+  expect((await read()).rooms).toEqual(after.rooms);
+});
+
+test("native walls obey architectural layer visibility and locking and survive reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Walls reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  await page.locator(".wall-tools > summary").click();
+  const layer = page.getByRole("form", { name: "Add plan layer", exact: true });
+  await layer
+    .getByLabel("Plan layer name", { exact: true })
+    .fill("Architecture");
+  await layer
+    .getByRole("button", { name: "Add plan layer", exact: true })
+    .click();
+  const wall = page.getByRole("form", { name: "Add wall", exact: true });
+  await wall.getByLabel("Wall name", { exact: true }).fill("North wall");
+  await wall.getByRole("button", { name: "Add wall", exact: true }).click();
+  await expect(page.locator("[data-wall-id]")).toHaveAttribute(
+    "points",
+    "0,100 4000,100 4000,-100 0,-100",
+  );
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .check();
+  await expect(
+    wall.getByRole("button", { name: "Add wall", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Remove wall: North wall", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", { name: "Visible: Architecture", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(0);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".wall-tools > summary").click();
+  await expect(
+    page.getByRole("checkbox", { name: "Locked: Architecture", exact: true }),
+  ).toBeChecked();
+  await page
+    .getByRole("checkbox", { name: "Visible: Architecture", exact: true })
+    .check();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(1);
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .uncheck();
+  await page
+    .getByRole("button", { name: "Remove wall: North wall", exact: true })
+    .click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(1);
+  await page.getByText("Edit wall: North wall", { exact: true }).click();
+  const opening = page.getByRole("form", {
+    name: "Add opening: North wall",
+    exact: true,
+  });
+  await opening.getByLabel("Opening name", { exact: true }).fill("D1");
+  await opening
+    .getByRole("button", { name: "Add opening", exact: true })
+    .click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(2);
+  await expect(page.locator("[data-opening-id] path")).toHaveAttribute(
+    "d",
+    "M 1400 0 A 900 900 0 0 1 500 900",
+  );
+  await expect(
+    page.getByRole("button", { name: "Remove wall: North wall", exact: true }),
+  ).toBeDisabled();
+  await opening.getByLabel("Opening name", { exact: true }).fill("W1");
+  await opening
+    .getByLabel("Opening type", { exact: true })
+    .selectOption("window");
+  await opening
+    .getByLabel("Offset along wall (mm)", { exact: true })
+    .fill("2200");
+  await opening.getByLabel("Opening width (mm)", { exact: true }).fill("1000");
+  await opening.getByLabel("Opening height (mm)", { exact: true }).fill("1000");
+  await opening.getByLabel("Sill height (mm)", { exact: true }).fill("1000");
+  await opening
+    .getByRole("button", { name: "Add opening", exact: true })
+    .click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(3);
+  await expect(page.locator("[data-opening-id] polygon")).toHaveAttribute(
+    "points",
+    "2200,100 3200,100 3200,-100 2200,-100",
+  );
+  const edit = page.getByRole("form", {
+    name: "Edit wall: North wall",
+    exact: true,
+  });
+  await edit.getByLabel("End X (mm)", { exact: true }).fill("1000");
+  await edit.getByRole("button", { name: "Edit wall", exact: true }).click();
+  await expect(page.locator("[data-wall-id]")).toHaveCount(3);
+  await edit.getByLabel("End X (mm)", { exact: true }).fill("5000");
+  await edit.getByRole("button", { name: "Edit wall", exact: true }).click();
+  await expect(page.locator("[data-wall-id]").last()).toHaveAttribute(
+    "points",
+    "3200,100 5000,100 5000,-100 3200,-100",
+  );
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .check();
+  await expect(
+    opening.getByRole("button", { name: "Add opening", exact: true }),
+  ).toBeDisabled();
+  await expect(
+    edit.getByRole("button", { name: "Edit wall", exact: true }),
+  ).toBeDisabled();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-opening-id]")).toHaveCount(2);
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", { name: "Locked: Architecture", exact: true })
+    .uncheck();
+  await page.getByText("Edit wall: North wall", { exact: true }).click();
+  await page
+    .getByRole("button", { name: "Remove opening: D1", exact: true })
+    .click();
+  await expect(page.locator("[data-opening-id] path")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-opening-id] path")).toHaveCount(1);
+});
+
+test("SVG architectural import previews scale and unsupported objects without executing content", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("SVG import reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".plan-import > summary").click();
+  const form = page.getByRole("form", { name: "Import SVG plan", exact: true });
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400mm" viewBox="0 0 40 30"><g id="ImportedArchitecture"><rect id="outline" width="40" height="30"/><line id="axis" x1="0" y1="15" x2="40" y2="15"/><circle id="unsupported-circle" r="4"/></g></svg>';
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "floor.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await form
+    .getByLabel("Millimetres per SVG user unit", { exact: true })
+    .fill("100");
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText("unsupported-circle: unsupported circle");
+  await page
+    .getByRole("button", { name: "Apply SVG import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 4000 0 L 4000 3000 L 0 3000 Z",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", {
+      name: "Locked: ImportedArchitecture",
+      exact: true,
+    })
+    .check();
+  await expect(
+    page.getByRole("button", {
+      name: "Remove imported geometry: outline",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", {
+      name: "Visible: ImportedArchitecture",
+      exact: true,
+    })
+    .uncheck();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("checkbox", {
+      name: "Visible: ImportedArchitecture",
+      exact: true,
+    })
+    .check();
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  for (const malicious of [
+    "<script>window.svgExecuted=true</script>",
+    '<image href="https://example.invalid/track"/>',
+    "<style>rect {width: 999px}</style>",
+  ]) {
+    await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+      name: "unsafe.svg",
+      mimeType: "image/svg+xml",
+      buffer: Buffer.from(
+        '<svg xmlns="http://www.w3.org/2000/svg">' + malicious + "</svg>",
+      ),
+    });
+    await form
+      .getByRole("button", { name: "Preview SVG import", exact: true })
+      .click();
+    await expect(page.getByRole("alert")).toContainText(
+      "Active, linked or embedded",
+    );
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("adiguneplanai.projects.v1"),
+      ),
+    ).toBe(before);
+  }
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+});
+
+test("SVG nested transforms preserve order and invalid transform subtrees are reported", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("SVG transformed plan");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".plan-import > summary").click();
+  const form = page.getByRole("form", { name: "Import SVG plan", exact: true });
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" transform="translate(100 0)"><g id="Translated" transform="translate(10 20)"><g id="Scaled" transform="scale(2 3)"><rect id="transformed-rect" x="1" y="2" width="4" height="5"/></g></g><line id="reflected-line" transform="matrix(-1 0 0 1 0 0)" x2="10" y2="10"/><g id="custom-origin" transform-origin="50% 50%"><rect width="10" height="10"/></g><g id="invalid-group" transform="scale(0)"><rect width="10" height="20"/></g></svg>';
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "transformed.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await form
+    .getByLabel("Millimetres per SVG user unit", { exact: true })
+    .fill("10");
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText(
+    "invalid-group: Nonfinite or singular SVG transform; subtree skipped",
+  );
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText("custom-origin: styling/visibility subtree skipped");
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Apply SVG import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 1120 260 L 1200 260 L 1200 410 L 1120 410 Z",
+  );
+  await expect(page.locator("[data-plan-geometry-id]").last()).toHaveAttribute(
+    "d",
+    "M 1000 0 L 900 100",
+  );
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", { name: "Visible: Scaled", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(1);
+  await page
+    .getByRole("checkbox", { name: "Visible: Scaled", exact: true })
+    .check();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 1120 260 L 1200 260 L 1200 410 L 1120 410 Z",
+  );
+});
+
+test("SVG physical units map viewport dimensions and reject unresolved percentages", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Physical SVG units");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".plan-import > summary").click();
+  const form = page.getByRole("form", { name: "Import SVG plan", exact: true });
+  await form
+    .getByRole("checkbox", {
+      name: "Use SVG viewport dimensions and physical units",
+      exact: true,
+    })
+    .check();
+  await expect(
+    form.getByLabel("Millimetres per SVG user unit", { exact: true }),
+  ).toBeDisabled();
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400mm" height="300mm" viewBox="10 20 40 30"><g id="Physical"><rect id="room-outline" x="10" y="20" width="40" height="30"/></g></svg>';
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "physical.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "SVG import report", exact: true }),
+  ).toContainText("Physical viewport mapping applied");
+  await page
+    .getByRole("button", { name: "Apply SVG import", exact: true })
+    .click();
+  const path = await page.locator("[data-plan-geometry-id]").getAttribute("d");
+  const coords = path!
+    .match(/[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?/gi)!
+    .map(Number);
+  const expected = [0, 0, 400, 0, 400, 300, 0, 300];
+  expect(coords).toHaveLength(8);
+  coords.forEach((v, i) => expect(v).toBeCloseTo(expected[i], 8));
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  await form.getByLabel("SVG file", { exact: true }).setInputFiles({
+    name: "unresolved.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg.replace('width="400mm"', 'width="100%"')),
+  });
+  await form
+    .getByRole("button", { name: "Preview SVG import", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText(
+    "requires absolute width and height",
+  );
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.projects.v1"),
+    ),
+  ).toBe(before);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveAttribute(
+    "d",
+    path!,
+  );
+});
+
+test("DXF worker import preserves declared units and locked layers with preview and undo", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("DXF import plan");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".dxf-import > summary").click();
+  const form = page.getByRole("form", { name: "Import DXF plan", exact: true });
+  await form.getByLabel("DXF file", { exact: true }).setInputFiles({
+    name: "reference.dxf",
+    mimeType: "application/dxf",
+    buffer: Buffer.from(dxfFixture({ units: 1, layerFlags: 4 })),
+  });
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "DXF import report", exact: true }),
+  ).toContainText("A3: unsupported CIRCLE");
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Cancel DXF import", exact: true })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "DXF import report", exact: true }),
+  ).toHaveCount(0);
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Apply DXF import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 254 -127",
+  );
+  await expect(
+    page.getByRole("button", {
+      name: "Remove imported geometry: A1",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await page.locator(".wall-tools > summary").click();
+  await expect(
+    page.getByRole("checkbox", { name: "Locked: Plan", exact: true }),
+  ).toBeChecked();
+  await page
+    .getByRole("checkbox", { name: "Visible: Plan", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await page
+    .getByRole("checkbox", { name: "Visible: Plan", exact: true })
+    .check();
+  await page
+    .getByRole("checkbox", { name: "Locked: Plan", exact: true })
+    .uncheck();
+  await page
+    .getByRole("button", { name: "Remove imported geometry: A1", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(1);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 254 -127",
+  );
+});
+
+test("DXF units require explicit override and failed worker loading preserves projects", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("DXF unit override");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("B");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+
+  await page.locator(".dxf-import > summary").click();
+  const form = page.getByRole("form", { name: "Import DXF plan", exact: true });
+  await form.getByLabel("DXF file", { exact: true }).setInputFiles({
+    name: "unitless.dxf",
+    mimeType: "application/dxf",
+    buffer: Buffer.from(dxfFixture({ units: 0 })),
+  });
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText(
+    "units are missing/unsupported",
+  );
+  await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
+  await form
+    .getByRole("checkbox", { name: "Override declared DXF units", exact: true })
+    .check();
+  await form.getByLabel("Millimetres per DXF unit", { exact: true }).fill("10");
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await page
+    .getByRole("button", { name: "Apply DXF import", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-geometry-id]").first()).toHaveAttribute(
+    "d",
+    "M 0 0 L 100 -50",
+  );
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  await page.route("**/*dxfImport.worker*", (route) => route.abort());
+  await form
+    .getByRole("button", { name: "Preview DXF import", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText("DXF worker failed");
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.projects.v1"),
+    ),
+  ).toBe(before);
+});
+
+test("plan zones edit room membership, highlight plans and preserve protected rooms through undo and reload", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Zone reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Site");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await room.getByLabel("Room name", { exact: true }).fill("Hall");
+  await room.getByLabel("Room X (mm)", { exact: true }).fill("4000");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await page.locator(".zone-tools > summary").click();
+  const zone = page.getByRole("form", { name: "Save zone", exact: true });
+  await zone.getByLabel("Zone name", { exact: true }).fill("Lighting area");
+  await zone.getByRole("checkbox", { name: "Office", exact: true }).check();
+  await zone.getByRole("button", { name: "Save zone", exact: true }).click();
+  const id = await page
+    .getByLabel("Selected zone", { exact: true })
+    .inputValue();
+  expect(id).not.toBe("");
+  await expect(page.locator("polygon[data-zone-id]")).toHaveCount(1);
+  await expect(page.locator("polygon[data-zone-id]")).toHaveAttribute(
+    "points",
+    "0,0 4000,0 4000,3000 0,3000",
+  );
+  await zone.getByRole("checkbox", { name: "Office", exact: true }).uncheck();
+  await zone.getByRole("checkbox", { name: "Hall", exact: true }).check();
+  await zone
+    .getByLabel("Zone type", { exact: true })
+    .selectOption("distribution");
+  await zone.getByRole("button", { name: "Save zone", exact: true }).click();
+  await expect(page.getByLabel("Selected zone", { exact: true })).toHaveValue(
+    id,
+  );
+  await expect(page.locator("polygon[data-zone-id]")).toHaveAttribute(
+    "points",
+    "4000,0 8000,0 8000,3000 4000,3000",
+  );
+  await page
+    .locator(".building-editor summary")
+    .filter({ hasText: /^Hall$/ })
+    .click();
+  await page
+    .getByRole("button", { name: "Remove room: Hall", exact: true })
+    .click();
+  await expect(page.locator("[data-room-id]")).toHaveCount(2);
+  await expect(page.getByRole("alert")).toContainText(
+    "The project is invalid. Existing work has been preserved.",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(
+    zone.getByRole("checkbox", { name: "Office", exact: true }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await expect(
+    zone.getByRole("checkbox", { name: "Hall", exact: true }),
+  ).toBeChecked();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".zone-tools > summary").click();
+  await page.getByLabel("Selected zone", { exact: true }).selectOption(id);
+  await expect(zone.getByLabel("Zone type", { exact: true })).toHaveValue(
+    "distribution",
+  );
+  await expect(
+    zone.getByRole("checkbox", { name: "Hall", exact: true }),
+  ).toBeChecked();
+  await page.getByRole("button", { name: "Remove zone", exact: true }).click();
+  await expect(page.locator("polygon[data-zone-id]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page.getByLabel("Selected zone", { exact: true }).selectOption(id);
+  await expect(page.locator("polygon[data-zone-id]")).toHaveCount(1);
+});
+
+test("floor drawing scale exports physical SVG dimensions while preserving model geometry and undo", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog.getByLabel("Project name", { exact: true }).fill("Scaled floor");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Site");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground & <plan>");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  const scale = page.getByRole("form", { name: "Drawing scale", exact: true });
+  await scale.getByLabel("Scale denominator (1:n)", { exact: true }).fill("50");
+  await scale
+    .getByRole("button", { name: "Apply drawing scale", exact: true })
+    .click();
+  await expect(page.getByLabel("Scaled plan size", { exact: true })).toHaveText(
+    "1:50 · 88.00 × 68.00 mm",
+  );
+  const points = await page
+    .locator("[data-room-id] polygon")
+    .getAttribute("points");
+  const before = await page.evaluate(() => JSON.stringify(localStorage));
+  const pending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export scaled plan SVG", exact: true })
+    .click();
+  const download = await pending;
+  const stream = await download.createReadStream();
+  let text = "";
+  for await (const chunk of stream!) text += chunk.toString();
+  const parsed = await page.evaluate((xml) => {
+    const doc = new DOMParser().parseFromString(xml, "image/svg+xml");
+    return {
+      error: !!doc.querySelector("parsererror"),
+      width: doc.documentElement.getAttribute("width"),
+      height: doc.documentElement.getAttribute("height"),
+      viewBox: doc.documentElement.getAttribute("viewBox"),
+      title: doc.querySelector("title")?.textContent,
+      description: doc.querySelector("desc")?.textContent,
+      points: doc
+        .querySelector("[data-room-id] polygon")
+        ?.getAttribute("points"),
+      className: doc.documentElement.getAttribute("class"),
+    };
+  }, text);
+  expect(parsed).toMatchObject({
+    error: false,
+    width: "88mm",
+    height: "68mm",
+    viewBox: "-200 -200 4400 3400",
+    title: "Ground & <plan>",
+    points,
+    className: null,
+  });
+  expect(parsed.description).toContain("Scale 1:50");
+  expect(await page.evaluate(() => JSON.stringify(localStorage))).toBe(before);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.getByLabel("Scaled plan size", { exact: true })).toHaveText(
+    "1:100 · 44.00 × 34.00 mm",
+  );
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    points!,
+  );
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(
+    scale.getByLabel("Scale denominator (1:n)", { exact: true }),
+  ).toHaveValue("50");
+  await expect(page.locator("[data-room-id] polygon")).toHaveAttribute(
+    "points",
+    points!,
+  );
+});
+
+test("floor equipment shares schematic identity, protects layers and persists a room schedule", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Equipment reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Symbols", exact: true })
+    .selectOption("lamp");
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const point = await canvas.evaluate((svg) => {
+    const p = new DOMPoint(30, 30).matrixTransform(
+      (svg as SVGSVGElement).getScreenCTM()!,
+    );
+    return { x: p.x, y: p.y };
+  });
+  await page.mouse.click(point.x, point.y);
+  const read = () =>
+    page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
+          .projects[0],
+    );
+  await expect.poll(async () => (await read()).symbolInstances.length).toBe(1);
+  const original = await read();
+  const reference = original.devices[0].reference;
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Site");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  const room = page.getByRole("form", { name: "Add room", exact: true });
+  await room.getByLabel("Room name", { exact: true }).fill("Office");
+  await room.getByRole("button", { name: "Add room", exact: true }).click();
+  await page.locator(".wall-tools > summary").click();
+  const layer = page.getByRole("form", { name: "Add plan layer", exact: true });
+  await layer.getByLabel("Plan layer name", { exact: true }).fill("Lighting");
+  await layer.locator("select[name=kind]").selectOption("electrical");
+  await layer
+    .getByRole("button", { name: "Add plan layer", exact: true })
+    .click();
+  await page.locator(".equipment-tools > summary").click();
+  const equipment = page.getByRole("form", {
+    name: "Save floor placement",
+    exact: true,
+  });
+  await equipment
+    .getByLabel("Room", { exact: true })
+    .selectOption({ label: "Office" });
+  await equipment.getByLabel("Equipment X (mm)", { exact: true }).fill("1012");
+  await equipment.getByLabel("Equipment Y (mm)", { exact: true }).fill("493");
+  await equipment
+    .getByLabel("Mounting height (mm)", { exact: true })
+    .fill("2500");
+  await equipment
+    .getByRole("button", { name: "Save floor placement", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1000 500) rotate(0) scale(20)",
+  );
+  const schedule = page.getByRole("table", {
+    name: "Room equipment schedule",
+    exact: true,
+  });
+  await expect(schedule).toContainText(reference);
+  await expect(schedule).toContainText("Office");
+  await expect(schedule).toContainText("2500");
+  await expect(schedule).toContainText("Not specified");
+  const placed = await read();
+  for (const key of [
+    "devices",
+    "symbolInstances",
+    "pins",
+    "terminals",
+    "wires",
+  ])
+    expect(placed[key]).toEqual(original[key]);
+  await equipment.getByLabel("Equipment X (mm)", { exact: true }).fill("1500");
+  await equipment
+    .getByLabel("Plan rotation", { exact: true })
+    .selectOption("90");
+  await equipment
+    .getByRole("button", { name: "Save floor placement", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1500 500) rotate(90) scale(20)",
+  );
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1000 500) rotate(0) scale(20)",
+  );
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("checkbox", { name: "Locked: Lighting", exact: true })
+    .check();
+  await expect(
+    equipment.getByRole("button", {
+      name: "Save floor placement",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  await expect(
+    page.getByRole("button", { name: "Remove floor placement", exact: true }),
+  ).toBeDisabled();
+  await page
+    .getByRole("checkbox", { name: "Visible: Lighting", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(0);
+  await expect(schedule.locator("tbody tr")).toHaveCount(1);
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".wall-tools > summary").click();
+  await page
+    .getByRole("checkbox", { name: "Visible: Lighting", exact: true })
+    .check();
+  await page
+    .getByRole("checkbox", { name: "Locked: Lighting", exact: true })
+    .uncheck();
+  await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
+    "transform",
+    "translate(1500 500) rotate(90) scale(20)",
+  );
+  await page.locator(".equipment-tools > summary").click();
+  await page
+    .getByLabel("Selected equipment", { exact: true })
+    .selectOption({ label: reference });
+  await page
+    .getByRole("button", { name: "Remove floor placement", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(0);
+  expect((await read()).devices).toEqual(original.devices);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
+});

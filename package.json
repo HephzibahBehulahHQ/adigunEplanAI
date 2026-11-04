@@ -41,5 +41,8 @@
   },
   "overrides": {
     "minimatch": "11.0.4"
+  },
+  "dependencies": {
+    "dxf-parser": "1.1.2"
   }
 }
