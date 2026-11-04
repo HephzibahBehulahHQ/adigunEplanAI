@@ -1,0 +1,8 @@
+node_modules
+**/dist
+package-lock.json
+docs/MASTER_SPECIFICATION.md
+docs/references
+docs/
+AGENTS.md
+README.md

@@ -1,0 +1,7 @@
+# Dependency licensing
+
+Milestone 1 uses exact direct versions and package-lock.json integrity records. docs/dependency-licenses.json records every locked third-party entry, including optional platform binaries. scripts/check-licenses.mjs fails on missing or unreviewed license identifiers; this metadata gate is not legal certification.
+
+React 19.3.1, Vite 8.3.5, ESLint 10.14.0 and Prettier 3.9.10 declare MIT. TypeScript 6.0.3 declares Apache-2.0. Installed package LICENSE files and npm registry metadata were inspected for the Lightning CSS exception. Lightning CSS 1.33.0 and its matching native platform packages declare MPL-2.0; their unmodified build-tool use is accepted for this foundation. Preserve MPL notices and make corresponding covered source available if distributing these binaries or modified covered files (MPL sections 3.1–3.4). Source: https://github.com/parcel-bundler/lightningcss . The gate restricts this exception to the reviewed release and package names. Vite build tools are not part of the current client bundle.
+
+Preserve upstream notices when packaging/distributing dependencies. The production React bundle retains its upstream license comments. A full distribution notice inventory remains a production-release gate. No general license for proprietary product source or corporate assets is granted. Owner-authorized corporate assets are used only for this product. Vendor models, standards text, fonts and proprietary formats require specific provenance/rights review before inclusion.
