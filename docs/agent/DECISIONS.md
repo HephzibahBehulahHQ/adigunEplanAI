@@ -18,3 +18,7 @@
 - Native project version 1 uses Zod 4.6.7 strict schemas, separated wire geometry, explicit reference checks and bounded JSON imports. Atomic browser-local storage is an adapter-backed first persistence implementation; cloud storage is deferred to its approved milestone.
 - Undo/redo stores isolated validated snapshots rather than UI state. Corrupt local storage is preserved until explicit reset, with recovery download available.
 - Docking-menu state is now controlled from explicit activation rather than asynchronous native toggle events; repeated local tests and both corrected hosted CI runs pass.
+
+- Schema version 2 adds explicit graphical layers, geometry/mirror metadata, groups and annotations; native version-1 projects migrate without changing engineering identities.
+- Millimetres, inverse SVG transforms and native commands govern editing. The router checks device bodies, with bounded grid search for multi-turn paths. No electrical validation success is inferred from visual routing.
+- Contextual properties are shown in the sidebar; Home exposes real project actions while View exposes layout controls. Native devices drive the inventory panel immediately.

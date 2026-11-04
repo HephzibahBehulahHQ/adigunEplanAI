@@ -38,6 +38,7 @@ export function useNativeProjects() {
     }
   });
   const histories = useRef(new Map<string, ProjectHistory>());
+  const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   const project =
     state.library.projects.find(
       (p) => p.id === state.library.activeProjectId,
@@ -78,6 +79,8 @@ export function useNativeProjects() {
   }
   return {
     project,
+    selectedPageId,
+    selectPage: setSelectedPageId,
     projects: state.library.projects,
     error: state.error,
     saved: state.saved,
@@ -102,6 +105,8 @@ export function useNativeProjects() {
           widthMm: 420,
           heightMm: 297,
           order: 0,
+          gridMm: 5,
+          snapping: true,
         });
         persist({
           projects: [...state.library.projects, validateProject(p)],
@@ -136,6 +141,8 @@ export function useNativeProjects() {
           widthMm: 420,
           heightMm: 297,
           order: p.pages.length,
+          gridMm: 5,
+          snapping: true,
         });
         return p;
       });

@@ -1,5 +1,6 @@
 # Next tasks
 
-1. Finish Milestone 3 final gate, commit and publish its exact source tree; inspect hosted CI.
-2. Implement Milestone 4 native 2D editor interactions on the validated model.
-3. Continue the approved roadmap through connectivity, libraries, engineering tools, AI, tested examples and production acceptance.
+1. Publish the verified Milestone 4 source and inspect hosted CI.
+2. Implement Milestone 5 connectivity/netlists, electrical findings and cross-references.
+3. Refine imported nonpreset paper-size labeling during integration; preset A4–A0 operations are tested.
+4. Continue the complete approved roadmap through the verified project library and production acceptance.

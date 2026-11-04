@@ -30,6 +30,7 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   page,
 }) => {
   await page.goto("/");
+  await page.getByRole("button", { name: "View", exact: true }).click();
   const panel = page.locator('[data-panel="project"]');
   await panel.locator("summary").click();
   await panel.getByLabel("Dock", { exact: true }).selectOption("right");
@@ -52,6 +53,7 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   await expect(
     page.locator('.dock-right [data-panel="project"] button').first(),
   ).toHaveAttribute("aria-expanded", "false");
+  await page.getByRole("button", { name: "View", exact: true }).click();
   await page.getByRole("button", { name: "Reset layout", exact: true }).click();
   await expect(page.locator('.dock-left [data-panel="project"]')).toBeVisible();
   await page

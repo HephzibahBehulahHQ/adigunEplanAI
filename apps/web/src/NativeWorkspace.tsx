@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
 import type { MessageKey } from "../../../packages/localization";
 import {
   maxProjectBytes,
@@ -134,23 +135,101 @@ export function ProjectTools({ native, t }: Props) {
   );
 }
 export function ProjectNavigator({ native, t }: Props) {
+  const project = native.project;
   return native.projects.length ? (
-    <label>
-      {t("chooseProject")}
-      <select
-        aria-label={t("chooseProject")}
-        value={native.project?.id ?? ""}
-        onChange={(e) => native.select(e.target.value)}
-      >
-        {native.projects.map((p) => (
-          <option key={p.id} value={p.id}>
-            {p.name}
-          </option>
-        ))}
-      </select>
-    </label>
+    <>
+      <label>
+        {t("chooseProject")}
+        <select
+          aria-label={t("chooseProject")}
+          value={project?.id ?? ""}
+          onChange={(event) => native.select(event.target.value)}
+        >
+          {native.projects.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      {project?.documents.map((document) => (
+        <details open key={document.id}>
+          <summary>{document.name}</summary>
+          <div className="navigator-pages">
+            {project.pages
+              .filter((page) => page.documentId === document.id)
+              .sort((a, b) => a.order - b.order)
+              .map((page) => (
+                <button
+                  key={page.id}
+                  onClick={() => native.selectPage(page.id)}
+                >
+                  {page.name}
+                </button>
+              ))}
+          </div>
+        </details>
+      ))}
+    </>
   ) : (
     <p className="empty-hint">{t("noProject")}</p>
+  );
+}
+export function NativeDataPanel({
+  native,
+  t,
+  kind,
+}: Props & { kind: "bom" | "panel3d" | "calculations" | "reports" }) {
+  const project = native.project;
+  if (!project) return <p className="empty-hint">{t("noProject")}</p>;
+  if (kind === "bom")
+    return project.devices.length ? (
+      <table className="native-bom">
+        <thead>
+          <tr>
+            <th>{t("reference")}</th>
+            <th>{t("device")}</th>
+            <th>{t("partNumber")}</th>
+            <th>{t("quantity")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {project.devices.map((device) => (
+            <tr key={device.id}>
+              <td>{device.reference}</td>
+              <td>{device.name}</td>
+              <td>
+                {project.manufacturerParts.find(
+                  (part) => part.id === device.partId,
+                )?.partNumber ?? "—"}
+              </td>
+              <td>1</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p className="empty-hint">{t("noRecords")}</p>
+    );
+  const records =
+    kind === "panel3d"
+      ? project.enclosures
+      : kind === "calculations"
+        ? project.calculations
+        : project.reports;
+  return records.length ? (
+    <ul>
+      {records.map((record) => (
+        <li key={record.id}>
+          {record.name}
+          {"widthMm" in record
+            ? ` · ${record.widthMm} × ${record.heightMm} × ${record.depthMm} mm`
+            : ""}
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p className="empty-hint">{t("noRecords")}</p>
   );
 }
 export function ProjectProperties({ native, t }: Props) {
@@ -211,7 +290,9 @@ export function ProjectProperties({ native, t }: Props) {
   );
 }
 export function NativeDrawing({ native, t }: Props) {
-  const [selected, setSelected] = useState<string | null>(null);
+  const selected = native.selectedPageId;
+  const setSelected = native.selectPage;
+  const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
   if (!p) return null;
   const page = p.pages.find((item) => item.id === selected) ?? p.pages[0];
@@ -234,30 +315,14 @@ export function NativeDrawing({ native, t }: Props) {
         </button>
       </nav>
       {page ? (
-        <svg
-          className="native-sheet"
-          viewBox={`0 0 ${page.widthMm} ${page.heightMm}`}
-          role="img"
-          aria-label={page.name}
-        >
-          <rect
-            x="8"
-            y="8"
-            width={page.widthMm - 16}
-            height={page.heightMm - 16}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="0.3"
-          />
-          <path
-            d={`M8 ${page.heightMm - 22} H${page.widthMm - 8}`}
-            stroke="currentColor"
-            strokeWidth="0.3"
-          />
-          <text x="12" y={page.heightMm - 13} fontSize="3.5">
-            {p.name} · {page.name} · {page.widthMm} × {page.heightMm} mm
-          </text>
-        </svg>
+        <SchematicEditor
+          key={`${p.id}:${page.id}`}
+          native={native}
+          page={page}
+          t={t}
+          clipboard={clipboard}
+          setClipboard={setClipboard}
+        />
       ) : (
         <p>{t("noPages")}</p>
       )}

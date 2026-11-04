@@ -2,6 +2,7 @@
   "extends": "./packages/config/tsconfig.json",
   "include": [
     "packages/electrical-model/**/*.ts",
-    "packages/project-storage/**/*.ts"
+    "packages/project-storage/**/*.ts",
+    "packages/schematic-editor/**/*.ts"
   ]
 }

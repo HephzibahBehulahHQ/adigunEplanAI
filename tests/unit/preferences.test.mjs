@@ -1,3 +1,4 @@
+import { drawingInk } from "../../apps/web/src/preferences.ts";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -73,4 +74,11 @@ test("corporate token values match pinned canonical manifests", () => {
     brands.elektroniker.accent,
   ])
     assert.ok(css.includes(color.toLowerCase()));
+});
+
+test("custom drawing backgrounds choose high-contrast black or white ink", () => {
+  assert.equal(drawingInk("#ffffff"), "#000000");
+  assert.equal(drawingInk("#000000"), "#ffffff");
+  assert.equal(drawingInk("#123456"), "#ffffff");
+  assert.equal(drawingInk("#ff0000"), "#000000");
 });
