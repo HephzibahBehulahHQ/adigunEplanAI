@@ -6,3 +6,6 @@ docs/references
 docs/
 AGENTS.md
 README.md
+assets/
+build-info.json
+index.html
