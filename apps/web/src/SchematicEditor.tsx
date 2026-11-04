@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { WireProperties } from "./WireProperties";
 import "./schematic-editor.css";
 import {
   useEffect,
@@ -25,6 +26,7 @@ import {
   primitives,
   remove,
   removeWire,
+  setWireRoute,
   rotate,
   type Primitive,
 } from "../../../packages/schematic-editor/commands.ts";
@@ -470,7 +472,7 @@ export function SchematicEditor({
       ([, v]) =>
         Math.max(page.widthMm, page.heightMm) === v[0] &&
         Math.min(page.widthMm, page.heightMm) === v[1],
-    )?.[0] ?? "A3";
+    )?.[0] ?? "custom";
   const wire = project.wires.find((w) => w.id === selectedWire);
   return (
     <div
@@ -684,9 +686,14 @@ export function SchematicEditor({
             value={size}
             onChange={(e) => {
               const dimensions = sizes[e.target.value as keyof typeof sizes];
-              resize(dimensions);
+              if (dimensions) resize(dimensions);
             }}
           >
+            {size === "custom" && (
+              <option value="custom" disabled>
+                {t("custom")}
+              </option>
+            )}
             {Object.keys(sizes).map((size) => (
               <option key={size}>{size}</option>
             ))}
@@ -851,6 +858,63 @@ export function SchematicEditor({
             document.querySelector(".schematic-editor")!,
         )}
       {wire && (
+        <WireProperties project={project} wire={wire} edit={edit} t={t} />
+      )}
+      {wire && (
+        <form
+          className="editor-toolbar"
+          aria-label={t("manualRoute")}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const text = String(new FormData(e.currentTarget).get("points"));
+            edit((p) => {
+              const points = text
+                .trim()
+                .split(/\r?\n/)
+                .map((line) => {
+                  const pair = line
+                    .split(",")
+                    .map((value) => Number(value.trim()));
+                  if (
+                    pair.length !== 2 ||
+                    line.split(",").some((value) => !value.trim())
+                  )
+                    throw new Error("Invalid route point");
+                  return { x: pair[0], y: pair[1] };
+                });
+              return setWireRoute(p, wire.id, points);
+            });
+          }}
+        >
+          <label>
+            {t("routePoints")}
+            <textarea
+              name="points"
+              key={
+                wire.id +
+                JSON.stringify(
+                  project.wirePaths.find((path) => path.wireId === wire.id)
+                    ?.points,
+                )
+              }
+              required
+              maxLength={200000}
+              defaultValue={project.wirePaths
+                .find((path) => path.wireId === wire.id)
+                ?.points.map((point) => `${point.x}, ${point.y}`)
+                .join("\n")}
+            />
+          </label>
+          <button>{t("manualRoute")}</button>
+          <button
+            type="button"
+            onClick={() => edit((p) => setWireRoute(p, wire.id, null))}
+          >
+            {t("automaticRoute")}
+          </button>
+        </form>
+      )}
+      {wire && (
         <form
           className="editor-toolbar"
           onSubmit={(e) => {
@@ -1006,7 +1070,11 @@ export function SchematicEditor({
                 <polyline
                   points={points.map((p) => `${p.x},${p.y}`).join(" ")}
                   fill="none"
-                  stroke={selectedWire === wire.id ? "#e67e00" : "#d02030"}
+                  stroke={
+                    selectedWire === wire.id
+                      ? "#e67e00"
+                      : (wire.color ?? "#d02030")
+                  }
                   strokeWidth={0.6}
                 />
               </g>

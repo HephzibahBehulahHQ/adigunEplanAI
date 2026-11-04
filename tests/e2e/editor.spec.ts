@@ -38,6 +38,175 @@ async function project(page: Page) {
     key,
   );
 }
+
+test("custom native sheet dimensions display their actual size category", async ({
+  page,
+}) => {
+  await create(page);
+  await page.evaluate((storageKey) => {
+    const library = JSON.parse(localStorage.getItem(storageKey)!);
+    library.projects[0].pages[0].widthMm = 500;
+    library.projects[0].pages[0].heightMm = 350;
+    localStorage.setItem(storageKey, JSON.stringify(library));
+  }, key);
+  await page.reload();
+  await page.locator(".editor-options summary").click();
+  await expect(
+    page.getByRole("combobox", { name: "Sheet size", exact: true }),
+  ).toHaveValue("custom");
+  await page
+    .getByRole("combobox", { name: "Sheet size", exact: true })
+    .selectOption("A4");
+  expect((await project(page)).pages[0].widthMm).toBe(297);
+});
+
+test("manual route edits persist and reset through native undo history", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 150, 50);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await clickWorld(page, 100, 50);
+  const route = page.getByRole("form", {
+    name: "Apply manual route",
+    exact: true,
+  });
+  await route
+    .getByRole("textbox")
+    .fill("60, 50\n70, 50\n70, 80\n130, 80\n130, 50\n144, 50");
+  await route
+    .getByRole("button", { name: "Apply manual route", exact: true })
+    .click();
+  let data = await project(page);
+  expect(data.wirePaths[0].routingMode).toBe("manual");
+  expect(data.wirePaths[0].points).toHaveLength(6);
+  const manual = data.wirePaths[0].points;
+  await route
+    .getByRole("button", { name: "Restore automatic route", exact: true })
+    .click();
+  expect((await project(page)).wirePaths[0].routingMode).toBe("auto");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).wirePaths[0].points).toEqual(manual);
+  await page.reload();
+  data = await project(page);
+  expect(data.wirePaths[0].points).toEqual(manual);
+  expect(data.wires).toHaveLength(1);
+});
+
+test("wire properties and shielded cable cores persist as native engineering metadata", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 150, 50);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await clickWorld(page, 100, 50);
+  await page.locator(".wire-properties summary").click();
+  const wire = page.getByRole("form", { name: "Wire properties", exact: true });
+  await wire.getByLabel("Wire", { exact: true }).fill("W20");
+  await wire
+    .getByLabel("Drawing color (#RRGGBB)", { exact: true })
+    .fill("#123abc");
+  await wire
+    .getByLabel("Declared physical length (m)", { exact: true })
+    .fill("12.5");
+  await wire.getByRole("button", { name: "Apply", exact: true }).click();
+  const core = page.getByRole("form", {
+    name: "Create and assign core",
+    exact: true,
+  });
+  await core.getByLabel("Conductor core", { exact: true }).fill("1");
+  await core
+    .getByLabel("Core color or designation", { exact: true })
+    .fill("BU");
+  await core.getByLabel("Cross-section (mm²)", { exact: true }).fill("2.5");
+  await core
+    .getByRole("button", { name: "Create and assign core", exact: true })
+    .click();
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await connectivity
+    .locator("summary")
+    .filter({ hasText: /^Cable$/ })
+    .click();
+  const cable = connectivity.getByRole("form", { name: "Cable", exact: true });
+  await cable.getByLabel("Cable name", { exact: true }).fill("W-C1");
+  let data = await project(page);
+  await cable
+    .getByLabel("Conductor core", { exact: true })
+    .selectOption(data.conductors[0].id);
+  await cable.getByLabel("Shielded cable", { exact: true }).check();
+  await cable
+    .getByLabel("Shield bond terminals", { exact: true })
+    .selectOption(data.terminals[0].id);
+  await cable.getByRole("button", { name: "Apply", exact: true }).click();
+  data = await project(page);
+  expect(data.wires[0]).toMatchObject({
+    name: "W20",
+    color: "#123abc",
+    physicalLengthM: 12.5,
+    conductorId: data.conductors[0].id,
+  });
+  expect(data.cables[0]).toMatchObject({
+    name: "W-C1",
+    shielded: true,
+    conductorIds: [data.conductors[0].id],
+    shieldBondTerminalIds: [data.terminals[0].id],
+  });
+  await page.reload();
+  expect((await project(page)).cables).toEqual(data.cables);
+  const panel = page.getByRole("region", { name: "Connectivity", exact: true });
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Edit core$/ })
+    .click();
+  const editor = panel.getByRole("form", { name: "Edit core", exact: true });
+  await editor.getByLabel("Cross-section (mm²)", { exact: true }).fill("4");
+  await editor.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).conductors[0].crossSectionMm2).toBe(4);
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Terminal properties$/ })
+    .click();
+  const terminal = panel.getByRole("form", {
+    name: "Terminal properties",
+    exact: true,
+  });
+  await terminal.getByLabel("Connection required", { exact: true }).check();
+  await terminal
+    .getByLabel("Declared maximum wire connections", { exact: true })
+    .fill("1");
+  await terminal.getByRole("button", { name: "Apply", exact: true }).click();
+  await expect(panel).toContainText("Errors: 1");
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Terminal strip$/ })
+    .click();
+  const strip = panel.getByRole("form", {
+    name: "Terminal strip",
+    exact: true,
+  });
+  await strip.getByLabel("Strip name", { exact: true }).fill("X1");
+  await strip
+    .getByLabel("Strip members", { exact: true })
+    .selectOption([data.terminals[0].id, data.terminals[3].id]);
+  await strip.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).terminalStrips[0].terminalIds).toEqual([
+    data.terminals[0].id,
+    data.terminals[3].id,
+  ]);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).terminalStrips).toHaveLength(0);
+});
 test("symbols create native terminals, connect through real pins and reroute after editing", async ({
   page,
 }) => {
@@ -51,6 +220,15 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await expect(page.locator("[data-wire]")).toHaveCount(1);
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await expect(connectivity).toContainText("Netlist (3)");
+  await connectivity.getByText("Connections (1)", { exact: true }).click();
+  await expect(connectivity.getByRole("table")).toContainText("W1");
+  await expect(connectivity.getByRole("table")).toContainText("R1:2");
+  await expect(connectivity.getByRole("table")).toContainText("H1:1");
   await page.getByRole("button", { name: "Select", exact: true }).click();
   await clickWorld(page, 50, 50);
   await page.getByRole("application", { name: "Sheet 1", exact: true }).focus();
@@ -78,6 +256,42 @@ test("symbols create native terminals, connect through real pins and reroute aft
   ).toBe(0);
   await expect(page.locator("[data-wire]")).toHaveCount(1);
   expect(errors).toEqual([]);
+});
+
+test("numbering preview can be cancelled, applied and undone", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await clickWorld(page, 50, 50);
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("Reference", { exact: true }).fill("R9");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await connectivity
+    .getByLabel("Renumber", { exact: true })
+    .selectOption("devices");
+  await connectivity
+    .getByRole("button", { name: "Preview numbering", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", {
+    name: "Preview numbering",
+    exact: true,
+  });
+  await expect(dialog).toContainText("R9 → R1");
+  await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+  expect((await project(page)).devices[0].reference).toBe("R9");
+  await connectivity
+    .getByRole("button", { name: "Preview numbering", exact: true })
+    .click();
+  await dialog.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).devices[0].reference).toBe("R1");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).devices[0].reference).toBe("R9");
 });
 test("property editing, labels, layer locks, sheet sizes and zoom change real state", async ({
   page,
@@ -260,4 +474,62 @@ test("desktop engineering workspace stays within the viewport", async ({
       () => document.documentElement.scrollHeight <= window.innerHeight,
     ),
   ).toBe(true);
+});
+
+test("cross-page net labels persist memberships and navigate to the real drawing", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  async function label(pin: string) {
+    await page.getByRole("button", { name: "Net label", exact: true }).click();
+    await page.getByRole("button", { name: pin, exact: true }).click();
+    await page.getByLabel("Label text", { exact: true }).fill("CONTROL_24V");
+    await page.getByRole("button", { name: "Add label", exact: true }).click();
+  }
+  await label("R1:1");
+  await page
+    .getByRole("button", { name: "New drawing page", exact: true })
+    .click();
+  await page
+    .locator(".drawing-tabs")
+    .getByRole("button", { name: "Sheet 2", exact: true })
+    .click();
+  await place(page, "lamp", 50, 50);
+  await label("H1:1");
+  const data = await project(page);
+  const net = data.nets.find((item: { labels: string[] }) =>
+    item.labels.includes("CONTROL_24V"),
+  );
+  expect(net.terminalIds).toHaveLength(2);
+  const panel = page.getByRole("region", { name: "Connectivity", exact: true });
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Netlist/ })
+    .click();
+  await panel.getByRole("button", { name: "R1:1", exact: true }).click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 1", exact: true }),
+  ).toBeVisible();
+  await panel.getByRole("button", { name: "H1:1", exact: true }).click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 2", exact: true }),
+  ).toBeVisible();
+  await page.reload();
+  expect(
+    (await project(page)).nets.find(
+      (item: { id: string }) => item.id === net.id,
+    ).terminalIds,
+  ).toEqual(net.terminalIds);
+  page.once("dialog", (dialog) => dialog.accept());
+  await page.locator("input[type=file]").setInputFiles({
+    name: "recompute.adeplan.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify({ ...data, nets: [], findings: [] })),
+  });
+  expect(
+    (await project(page)).nets.find((item: { labels: string[] }) =>
+      item.labels.includes("CONTROL_24V"),
+    ).terminalIds,
+  ).toEqual(net.terminalIds);
 });

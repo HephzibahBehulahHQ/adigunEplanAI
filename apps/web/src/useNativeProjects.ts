@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import { electricalTransaction } from "../../../packages/connectivity-engine/transaction.ts";
+import { synchronizeConnectivity } from "../../../packages/connectivity-engine/analyze.ts";
 import {
   createProject,
   parseProject,
@@ -22,8 +24,14 @@ type State = {
 export function useNativeProjects() {
   const [state, setState] = useState<State>(() => {
     try {
+      const library = loadLibrary(localStorage);
       return {
-        library: loadLibrary(localStorage),
+        library: {
+          ...library,
+          projects: library.projects.map((project) =>
+            synchronizeConnectivity(structuredClone(project)),
+          ),
+        },
         error: null,
         corrupt: false,
         saved: true,
@@ -64,7 +72,7 @@ export function useNativeProjects() {
     if (!project || !history) return;
     try {
       const updated = history.execute((draft) => {
-        const next = change(draft);
+        const next = electricalTransaction(draft, change);
         return { ...next, updatedAt: new Date().toISOString() };
       });
       persist({
@@ -174,7 +182,7 @@ export function useNativeProjects() {
     },
     importText(text: string, confirmReplace: () => boolean) {
       try {
-        const p = parseProject(text).project;
+        const p = synchronizeConnectivity(parseProject(text).project);
         if (
           state.library.projects.some((old) => old.id === p.id) &&
           !confirmReplace()

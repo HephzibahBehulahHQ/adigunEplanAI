@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { ConnectivityPanel } from "./ConnectivityPanel";
 import {
   dictionaries,
   type MessageKey,
@@ -100,6 +101,8 @@ export function App() {
               id === "calculations" ||
               id === "reports" ? (
               <NativeDataPanel native={native} t={t} kind={id} />
+            ) : id === "diagnostics" ? (
+              <ConnectivityPanel native={native} t={t} />
             ) : (
               <p className="empty-hint">
                 {t(

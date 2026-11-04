@@ -7,3 +7,5 @@ Required target experience: branded professional ribbon; project/library/example
 The target also includes all specification requirements beyond the screenshot: building design, engineering calculations, automation, four-language support, 500 individually tested projects, persistence, security and production acceptance. Preserve the full scope and use MASTER_SPECIFICATION.md as the authoritative behavior/acceptance source.
 
 Target image SHA256: c99e97fccec545612872ddc5466df9109bc9af63f0d64b9e27420c6321d961c9.
+
+Owner reconfirmation: the latest attachment, codex-clipboard-4bebfa81-84fb-4508-9f7b-4edcfcfec8e5.png, is byte-identical to the saved target (SHA256 verified). Keep this visual target throughout the remaining milestones.
