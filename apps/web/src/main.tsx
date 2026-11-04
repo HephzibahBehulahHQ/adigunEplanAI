@@ -1,11 +1,5 @@
 import { createRoot } from "react-dom/client";
-
+import { App } from "./App";
 const root = document.getElementById("root");
 if (!root) throw new Error("Application root is missing");
-createRoot(root).render(
-  <main>
-    <h1>AdigunEplanAI</h1>
-    <p>Hephzibah Behulah · HB Elektroniker</p>
-    <p>Application foundation</p>
-  </main>,
-);
+createRoot(root).render(<App />);

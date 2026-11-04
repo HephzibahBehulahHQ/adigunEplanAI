@@ -9,3 +9,6 @@
 - TypeScript 6.0.3 is selected because typescript-eslint 8.72.1 does not support TypeScript 7. Windows sandbox blocks workspace links: local install uses --workspaces=false with centrally pinned build dependencies; Linux CI retains normal npm ci workspace linking.
 
 - Pin minimatch 11.0.4 through npm overrides to address GHSA-g3hv-75wg-m249; lint and the full foundation gate pass with this version.
+
+- GitHub connector publication is verified by comparing Git tree hashes; local intake history is retained separately. Foundation PR #1 head 9db77462dc9c620badf1227a5f966624c66385b0 has successful hosted CI.
+- Milestone 2 exposes only implemented interface actions. Engineering panels use honest empty states until the native document model and tools exist. No dummy cloud/profile/BOT indicators are shown.

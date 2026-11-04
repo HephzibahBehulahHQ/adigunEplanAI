@@ -6,7 +6,10 @@ export default [
   { ignores: ["**/dist/**", "**/node_modules/**"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  { files: ["**/*.mjs"], languageOptions: { globals: globals.node } },
+  {
+    files: ["**/*.mjs", "playwright.config.ts", "tests/e2e/**/*.ts"],
+    languageOptions: { globals: globals.node },
+  },
   {
     files: ["apps/web/src/**/*.{ts,tsx}"],
     languageOptions: { globals: globals.browser },

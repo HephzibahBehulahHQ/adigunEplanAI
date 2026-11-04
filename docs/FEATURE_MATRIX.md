@@ -6,8 +6,8 @@ All requirements within each referenced part remain authoritative. Audit complet
 |---|---|---|---|
 | P01 | Part 1: YOUR MISSION | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P02 | Part 2: MANDATORY GITHUB REPOSITORIES | Audit documented | MASTER_SPECIFICATION.md |
-| P03 | Part 3: CORPORATE IDENTITY | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P04 | Part 4: APPLICATION EXPERIENCE AND SCREENSHOT RECONSTRUCTION | Pending implementation / validation | MASTER_SPECIFICATION.md |
+| P03 | Part 3: CORPORATE IDENTITY | Interface implemented/tested; human translation review pending | MASTER_SPECIFICATION.md |
+| P04 | Part 4: APPLICATION EXPERIENCE AND SCREENSHOT RECONSTRUCTION | Shell/panel controls tested; domain views pending | MASTER_SPECIFICATION.md |
 | P05 | Part 5: ELECTRICAL SCHEMATIC ENGINE | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P06 | Part 6: WIRING, NETLISTS AND DEVICE CONNECTIONS | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P07 | Part 7: BUILDING ELECTRICAL AND ARCHITECTURAL DESIGN | Pending implementation / validation | MASTER_SPECIFICATION.md |

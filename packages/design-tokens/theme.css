@@ -1,0 +1,24 @@
+:root {
+  --cyan: var(--brand-cyan);
+  --surface: #08111e;
+  --panel: #0e1e2e;
+  --raised: #142a3e;
+  --line: #395269;
+  --text: var(--ivory);
+  --muted: #afc4d6;
+  --hover: #1c3b54;
+  --link: #6ce9fa;
+  color-scheme: dark;
+}
+html[data-theme="light"] {
+  --surface: #e7edf4;
+  --panel: #f8fafc;
+  --raised: #e1eaf3;
+  --line: #8096ac;
+  --text: #142337;
+  --muted: #41566c;
+  --hover: #cbddeb;
+  --link: #174bbb;
+  --cyan: #007b91;
+  color-scheme: light;
+}
