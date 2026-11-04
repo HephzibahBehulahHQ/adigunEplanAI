@@ -476,6 +476,454 @@ test("desktop engineering workspace stays within the viewport", async ({
   ).toBe(true);
 });
 
+test("component catalog searches and maps a sourced part to a real terminal", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("WAGO");
+  const wago = library.getByRole("article", {
+    name: "WAGO 2002-1201",
+    exact: true,
+  });
+  await expect(wago).toContainText("Not declared");
+  await expect(wago).not.toContainText("undefined");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("missing-part");
+  await expect(library.getByRole("status")).toHaveText("Results: 0");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("phoenix 3004362");
+  await library
+    .getByRole("combobox", { name: "Category", exact: true })
+    .selectOption("connections");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("Phoenix Contact");
+  await expect(library.getByRole("status")).toHaveText("Results: 1");
+  await expect(
+    library.getByRole("link", { name: "Manufacturer source", exact: true }),
+  ).toHaveAttribute("href", /phoenixcontact\.com/);
+  const data = await project(page);
+  await library
+    .getByLabel("Compatible device", { exact: true })
+    .selectOption(data.devices[0].id);
+  await library
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  let assigned = await project(page);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("3004362");
+  expect(assigned.terminals[0].capacity).toBe(2);
+  const bom = page.getByRole("region", {
+    name: "Bill of materials",
+    exact: true,
+  });
+  await expect(bom).toContainText("3004362");
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).devices[0].partId).toBeUndefined();
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  assigned = await project(page);
+  expect(assigned.devices[0].partId).toBe(assigned.manufacturerParts[0].id);
+  await expect(bom).toContainText("3004362");
+});
+
+test("engineering symbol search imports distinct transformer pins for native placement", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
+  await page
+    .getByLabel("Symbol category", { exact: true })
+    .selectOption("power");
+  const preview = page.locator(
+    '[data-library-preview="transformer-two-winding"]',
+  );
+  await expect(preview).toHaveAttribute("role", "img");
+  await expect(preview.locator("text")).toHaveCount(4);
+  await expect(preview.locator("circle")).toHaveCount(8);
+  await page
+    .getByRole("button", {
+      name: "Import symbol: Two-winding transformer",
+      exact: true,
+    })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-transformer-two-winding");
+  await clickWorld(page, 100, 100);
+  for (const pin of ["P1", "P2", "S1", "S2"])
+    await expect(
+      page.getByRole("button", { name: `U1:${pin}`, exact: true }),
+    ).toBeVisible();
+  const data = await project(page);
+  expect(data.terminals).toHaveLength(4);
+  expect(data.nets).toHaveLength(4);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).symbolInstances).toHaveLength(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "U1:S1", exact: true }),
+  ).toBeVisible();
+});
+
+test("NO contact catalog mapping preserves native pins and offers only compatible devices", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "contact", 80, 80);
+  await place(page, "terminal", 140, 80);
+  await page.locator(".component-library > summary").click();
+  const library = page.locator(".component-library");
+  await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await library
+    .getByRole("combobox", { name: "Category", exact: true })
+    .selectOption("switching");
+  const article = library.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  const select = article.getByLabel("Compatible device", { exact: true });
+  await expect(select.locator("option")).toHaveCount(2);
+  const data = await project(page);
+  const device = data.devices.find(
+    (d: { reference: string }) => d.reference === "S1",
+  );
+  await select.selectOption(device.id);
+  await article
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  const assigned = await project(page);
+  expect(assigned.pins).toEqual(data.pins);
+  expect(assigned.terminals).toEqual(data.terminals);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("ZBE101");
+});
+
+test("busbar tap wiring shares one physical node and survives reload", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("busbar");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-busbar-four-taps");
+  await clickWorld(page, 100, 100);
+  await place(page, "terminal", 40, 60);
+  await place(page, "terminal", 160, 60);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "U1:bus/tap1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  await page.getByRole("button", { name: "U1:bus/tap3", exact: true }).click();
+  await page.getByRole("button", { name: "X2:1", exact: true }).click();
+  const data = await project(page);
+  expect(data.wires).toHaveLength(2);
+  expect(data.nets).toHaveLength(1);
+  expect(data.terminals).toHaveLength(3);
+  await page.reload();
+  expect((await project(page)).nets).toEqual(data.nets);
+});
+
+test("connector poles retain separate electrical nodes while each pole passes through", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page
+    .getByLabel("Search symbols", { exact: true })
+    .fill("two-pole pass-through");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-connector-two-pole");
+  await clickWorld(page, 100, 100);
+  let data = await project(page);
+  expect(data.pins).toHaveLength(4);
+  expect(data.terminals).toHaveLength(2);
+  expect(data.nets).toHaveLength(2);
+  const groups = data.nets.map(
+    (net: { pinIds: string[] }) => net.pinIds.length,
+  );
+  expect(groups).toEqual([2, 2]);
+  await place(page, "terminal", 40, 60);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "U1:pole1/in1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  data = await project(page);
+  expect(data.nets).toHaveLength(2);
+  await page.reload();
+  expect((await project(page)).nets).toEqual(data.nets);
+});
+
+for (const [id, query, terminals, pins] of [
+  ["distribution-three-way", "distribution board", 6, 12],
+  ["contactor-three-pole", "contactor", 8, 8],
+  ["isolator-three-pole-pe", "isolator", 7, 8],
+] as const)
+  test(`distribution and switching interface ${id} preserves declared node groups`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 120, 120);
+    const data = await project(page);
+    expect(data.terminals).toHaveLength(terminals);
+    expect(data.pins).toHaveLength(pins);
+    expect(data.nets).toHaveLength(terminals);
+    if (id === "distribution-three-way") {
+      const neutral = data.terminals.find(
+        (t: { designation: string }) => t.designation === "N_bus",
+      );
+      const pe = data.terminals.find(
+        (t: { designation: string }) => t.designation === "PE_bus",
+      );
+      expect(neutral.id).not.toBe(pe.id);
+      expect(neutral.kind).toBe("neutral");
+      expect(pe.kind).toBe("pe");
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(neutral.id),
+        ).pinIds,
+      ).toHaveLength(4);
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(pe.id),
+        ).pinIds,
+      ).toHaveLength(4);
+    }
+    if (id === "isolator-three-pole-pe") {
+      const pe = data.terminals.find((t: { kind: string }) => t.kind === "pe");
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(pe.id),
+        ).pinIds,
+      ).toHaveLength(2);
+    }
+    await page.reload();
+    expect((await project(page)).nets).toEqual(data.nets);
+  });
+
+for (const [id, query, endpoint, count] of [
+  ["ac-dc-supply", "AC/DC supply", "positive", 5],
+  ["isolated-dc-dc", "isolated DC/DC", "OUT_positive", 4],
+  ["dc-ac-inverter", "DC/AC inverter", "L_out", 5],
+  ["ups-external-battery", "UPS interface", "L_out", 7],
+] as const)
+  test(`power interface ${id} retains independent ports and native wiring`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    let data = await project(page);
+    expect(data.terminals).toHaveLength(count);
+    expect(data.nets).toHaveLength(count);
+    await place(page, "terminal", 160, 80);
+    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("button", { name: `U1:${endpoint}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "X1:1", exact: true }).click();
+    data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(count);
+    await page.reload();
+    expect((await project(page)).wires).toEqual(data.wires);
+  });
+
+for (const [id, query, endpoint, count] of [
+  ["rcbo-two-pole", "RCBO", "L_out", 4],
+  ["motor-protection-three-pole", "motor-protection switch", "L1_out", 6],
+  ["surge-protector-l-pe", "surge protective", "L", 2],
+  ["protection-relay-trip", "protection relay", "trip_NO", 7],
+] as const)
+  test(`protection interface ${id} keeps isolated ports through wiring and reload`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page
+      .locator("li")
+      .filter({ has: page.locator(`[data-library-preview="${id}"]`) })
+      .getByRole("button", { name: /^Import symbol:/ })
+      .click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    let data = await project(page);
+    expect(data.terminals).toHaveLength(count);
+    expect(data.nets).toHaveLength(count);
+    await place(page, "terminal", 160, 80);
+    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("button", { name: `U1:${endpoint}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "X1:1", exact: true }).click();
+    data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(count);
+    const joined = data.nets.find(
+      (net: { terminalIds: string[] }) => net.terminalIds.length === 2,
+    );
+    expect(joined).toBeDefined();
+    expect(
+      data.nets.filter(
+        (net: { terminalIds: string[] }) => net.terminalIds.length === 1,
+      ),
+    ).toHaveLength(count - 1);
+    await page.reload();
+    expect((await project(page)).wires).toEqual(data.wires);
+    expect((await project(page)).nets).toEqual(data.nets);
+  });
+
+for (const [id, query, channel] of [
+  ["digital-input-four", "digital input", "IN0"],
+  ["digital-output-four", "digital output", "OUT0"],
+  ["analog-input-two", "analog input", "IN0_plus"],
+  ["analog-output-two", "analog output", "OUT0_plus"],
+])
+  test(`automation interface ${id} places and wires distinct native channels`, async ({
+    page,
+  }) => {
+    await create(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    expect((await project(page)).terminals).toHaveLength(6);
+    await place(page, "resistor", 150, 80);
+    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("button", { name: `U1:${channel}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "R1:1", exact: true }).click();
+    const data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(7);
+    await page.reload();
+    expect((await project(page)).wires).toEqual(data.wires);
+  });
+
+test("custom symbols create native pins that wire and survive undo and reload", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Custom symbols$/ })
+    .click();
+  const form = page.getByRole("form", { name: "Custom symbols", exact: true });
+  await form.getByLabel("Symbol name", { exact: true }).fill("Interface");
+  await form.getByLabel("Body width (mm)", { exact: true }).fill("20");
+  await form.getByLabel("Body height (mm)", { exact: true }).fill("20");
+  await form.getByLabel(/^Pins:/).fill("IN, -10, 0\nOUT, 10, 0");
+  await form
+    .getByLabel(/^Artwork in mm:/)
+    .fill("line, -10, 0, 10, 0\ncircle, 0, 0, 4");
+  await form.getByRole("button", { name: "Create", exact: true }).click();
+  const definition = (await project(page)).symbolDefinitions.find(
+    (d: { name: string }) => d.name === "Interface",
+  );
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption(definition.id);
+  await clickWorld(page, 80, 80);
+  await expect(page.locator("[data-custom-artwork] line")).toHaveCount(1);
+  await expect(page.locator("[data-custom-artwork] circle")).toHaveCount(1);
+  await place(page, "lamp", 150, 80);
+  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page.getByRole("button", { name: "U1:OUT", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  expect((await project(page)).wires).toHaveLength(1);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect((await project(page)).wires).toHaveLength(0);
+  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page.reload();
+  await expect(
+    page.getByRole("button", { name: "U1:IN", exact: true }),
+  ).toBeVisible();
+  expect((await project(page)).wires).toHaveLength(1);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Custom symbols$/ })
+    .click();
+  await page
+    .getByLabel("Edit custom symbol", { exact: true })
+    .selectOption(definition.id);
+  const editForm = page.getByRole("form", {
+    name: "Custom symbols",
+    exact: true,
+  });
+  await editForm.getByLabel("Body width (mm)", { exact: true }).fill("24");
+  await editForm.getByLabel(/^Pins:/).fill("IN, -12, 0\nOUT, 12, 0");
+  const old = (await project(page)).wires[0];
+  await editForm.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).wires[0]).toEqual(old);
+  expect((await project(page)).wirePaths[0].points[0].x).toBe(92);
+  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  expect(
+    (await project(page)).symbolDefinitions.find(
+      (d: { id: string }) => d.id === definition.id,
+    ).widthMm,
+  ).toBe(20);
+});
+
 test("cross-page net labels persist memberships and navigate to the real drawing", async ({
   page,
 }) => {
@@ -522,7 +970,7 @@ test("cross-page net labels persist memberships and navigate to the real drawing
     ).terminalIds,
   ).toEqual(net.terminalIds);
   page.once("dialog", (dialog) => dialog.accept());
-  await page.locator("input[type=file]").setInputFiles({
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "recompute.adeplan.json",
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify({ ...data, nets: [], findings: [] })),
@@ -532,4 +980,244 @@ test("cross-page net labels persist memberships and navigate to the real drawing
       item.labels.includes("CONTROL_24V"),
     ).terminalIds,
   ).toEqual(net.terminalIds);
+});
+
+test("component comparison preserves selections through search and shows missing ratings explicitly", async ({
+  page,
+}) => {
+  await create(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Schneider Electric ZBE101",
+      exact: true,
+    })
+    .check();
+  const table = page.getByRole("table", {
+    name: "Compare components",
+    exact: true,
+  });
+  await expect(table).toBeVisible();
+  const voltage = table.getByRole("row").filter({
+    has: page.getByRole("rowheader", {
+      name: "Nominal voltage",
+      exact: true,
+    }),
+  });
+  await expect(voltage.getByRole("cell")).toHaveText(["800 V", "Not declared"]);
+  const section = table.getByRole("row").filter({
+    has: page.getByRole("rowheader", {
+      name: "Rated cross-section",
+      exact: true,
+    }),
+  });
+  await expect(section.getByRole("cell")).toHaveText(["4 mm²", "Not declared"]);
+  await page.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await expect(
+    table.getByRole("columnheader", {
+      name: "Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeVisible();
+  const card = page.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  await expect(
+    card
+      .locator("dt")
+      .filter({ hasText: /^Rated cross-section$/ })
+      .locator("+ dd"),
+  ).toHaveText("Not declared");
+  await expect(
+    table.getByRole("link", { name: "3004362", exact: true }),
+  ).toHaveAttribute("href", /^https:\/\/www\.phoenixcontact\.com\//);
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Schneider Electric ZBE101",
+      exact: true,
+    })
+    .uncheck();
+  await expect(table).toHaveCount(0);
+  expect((await project(page)).manufacturerParts).toHaveLength(0);
+  expect((await project(page)).devices).toHaveLength(0);
+});
+
+test("catalog filters, favorites and recent assignments persist without changing circuit topology", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  const before = await project(page);
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByLabel("Minimum declared voltage (V)", { exact: true })
+    .fill("1000");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await expect(library.getByRole("article")).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3044076",
+  );
+  await library
+    .getByLabel("Minimum declared current (A)", { exact: true })
+    .fill("25");
+  await expect(library.getByRole("article")).toHaveCount(0);
+  await library
+    .getByLabel("Minimum declared voltage (V)", { exact: true })
+    .fill("");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  expect(await project(page)).toEqual(before);
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeChecked();
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("favorites");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await library.getByLabel("Catalog view", { exact: true }).selectOption("all");
+  for (const part of ["3004362", "3044076", "3004362"]) {
+    const card = library.getByRole("article", {
+      name: `Phoenix Contact ${part}`,
+      exact: true,
+    });
+    await card
+      .getByLabel("Compatible device", { exact: true })
+      .selectOption(before.devices[0].id);
+    await card
+      .getByRole("button", { name: "Assign part", exact: true })
+      .click();
+  }
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("recent");
+  await expect(library.getByRole("article")).toHaveCount(2);
+  await expect(library.getByRole("article").nth(0)).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3004362",
+  );
+  await expect(library.getByRole("article").nth(1)).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3044076",
+  );
+  const after = await project(page);
+  expect(after.pins).toEqual(before.pins);
+  expect(after.wires).toEqual(before.wires);
+  expect(after.devices[0].partId).toBeDefined();
+  expect(after.schemaVersion).toBe(9);
+  const terminalPart = after.manufacturerParts.find(
+    (part: { partNumber: string }) => part.partNumber === "3044076",
+  );
+  expect(terminalPart.catalogSnapshot.dimensionsMm).toEqual({
+    width: 5.2,
+    height: 47.7,
+    depth: 46.9,
+  });
+  expect(terminalPart.catalogSnapshot.mountedDepthsMm[1]).toEqual({
+    rail: "NS 35/15",
+    depth: 55,
+  });
+  expect(terminalPart.catalogSnapshot.sourceRevision).toBeUndefined();
+});
+
+test("corrupt catalog preferences remain intact until explicit reset without touching the project", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.evaluate(() =>
+    localStorage.setItem("adiguneplanai.catalog-preferences.v1", "{broken"),
+  );
+  await page.reload();
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await expect(library.getByRole("alert")).toContainText(
+    "Stored data has been preserved",
+  );
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.catalog-preferences.v1"),
+    ),
+  ).toBe("{broken");
+  expect(await project(page)).toEqual(before);
+  await library
+    .getByRole("button", { name: "Reset catalog preferences", exact: true })
+    .click();
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeChecked();
+  expect(await project(page)).toEqual(before);
+});
+
+test("catalog preference quota failure retains session favorites and reports unsaved state", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === "adiguneplanai.catalog-preferences.v1")
+        throw new DOMException("Quota", "QuotaExceededError");
+      original.call(this, key, value);
+    };
+  });
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await expect(library.getByRole("alert")).toContainText("could not be saved");
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("favorites");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  expect(await project(page)).toEqual(before);
+  await page.reload();
+  await library.locator(":scope > summary").click();
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).not.toBeChecked();
 });

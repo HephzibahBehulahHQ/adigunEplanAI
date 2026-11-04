@@ -54,6 +54,38 @@ test("wire path must refer to endpoints on its drawing page", () => {
   p.wirePaths[0].pageId = "other-page";
   assert.throws(() => validateProject(p), /page mismatch/);
 });
+
+test("native pin mappings must be complete, unique and consistent with declared kinds", () => {
+  const p = nativeProject();
+  const pin = p.pins[0];
+  const instance = p.symbolInstances.find((s) => s.id === pin.symbolInstanceId);
+  const definition = p.symbolDefinitions.find(
+    (d) => d.id === instance.definitionId,
+  );
+  const declaration = definition.pins.find((d) => d.id === pin.definitionPinId);
+  const terminal = p.terminals.find((t) => t.id === pin.terminalId);
+  declaration.kind = terminal.kind;
+  validateProject(p);
+  const mismatch = structuredClone(p);
+  mismatch.terminals.find((t) => t.id === terminal.id).kind =
+    terminal.kind === "pe" ? "power" : "pe";
+  assert.throws(() => validateProject(mismatch), /kind mismatch/);
+  const duplicate = structuredClone(p);
+  duplicate.pins.push({ ...pin, id: "duplicate-pin" });
+  assert.throws(
+    () => validateProject(duplicate),
+    /Duplicate symbol pin mapping/,
+  );
+  const incomplete = structuredClone(p);
+  incomplete.symbolDefinitions
+    .find((d) => d.id === definition.id)
+    .pins.push({ id: "unmapped", position: { x: 0, y: 0 } });
+  assert.throws(() => validateProject(incomplete), /Incomplete/);
+  const history = new ProjectHistory(p);
+  assert.throws(() => history.execute(() => mismatch));
+  assert.equal(history.canUndo, false);
+  assert.deepEqual(history.current, p);
+});
 test("PLC addresses are bounded by real module channels", () => {
   const p = nativeProject();
   p.plcModules.push({
@@ -84,7 +116,7 @@ test("version zero migration fills only missing collections and rejects future v
   };
   const migrated = parseProject(JSON.stringify(legacy));
   assert.equal(migrated.migratedFrom, 0);
-  assert.equal(migrated.project.schemaVersion, 3);
+  assert.equal(migrated.project.schemaVersion, 9);
   assert.deepEqual(migrated.project.documents, []);
   assert.throws(
     () => parseProject(JSON.stringify({ ...legacy, schemaVersion: 99 })),

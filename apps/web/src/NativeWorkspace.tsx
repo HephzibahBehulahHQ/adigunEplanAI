@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
 import type { MessageKey } from "../../../packages/localization";
 import {
@@ -170,6 +171,7 @@ export function ProjectNavigator({ native, t }: Props) {
           </div>
         </details>
       ))}
+      <ComponentLibrary native={native} t={t} />
     </>
   ) : (
     <p className="empty-hint">{t("noProject")}</p>

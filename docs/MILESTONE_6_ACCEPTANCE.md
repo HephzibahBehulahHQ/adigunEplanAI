@@ -1,0 +1,17 @@
+# Milestone 6 implementation acceptance
+
+Scope: MASTER_SPECIFICATION.md Part 22, Milestone 6 — component metadata, symbol mapping, search, filtering and verified catalog records. This audit does not close every Part 13 integration or product-release requirement.
+
+| Requirement | Implemented evidence | Limits retained |
+|---|---|---|
+| Component metadata | Four manufacturer-source-backed records; review/source links, explicit verification/reuse scope, declared ratings and missing-data warnings. UT 2,5 body dimensions and rail-specific depths retain source attribution. Schema-9 assignment snapshots survive native export/reload; changed assignments preserve older records. catalog-metadata and catalog-snapshot tests passed. | Missing manufacturer markings/revisions and unsourced dimensions remain absent. Review is factual source comparison, not physical certification. |
+| Symbol mapping | 69 original engineering definitions plus nine drawing primitives; native pins, explicit shared-node groups, mechanical pinless definitions, exact compatible catalog/custom assignment and replacement. catalog, extended-symbols, mechanical-symbols and custom-components tests plus browser wiring/reload workflows passed. | Generic mappings are engineering interpretations. No IEC/ANSI edition certification or copied proprietary artwork. |
+| Search | Normalized multiword catalog search, original/localized symbol names and categories, secondary category browsing; symbol-search tests and Chromium library scenarios passed. | Only the included catalog and native definitions are searchable; no advertised manufacturer database beyond those records. |
+| Filtering | Category/manufacturer and numeric voltage/current thresholds; unknown ratings excluded from numeric queries. catalog-preferences tests and browser filtering scenarios passed. | No inferred ratings or equipment suitability conclusions. |
+| Verified catalog records | Official Phoenix Contact, WAGO and Schneider sources are recorded in references/component-catalog-sources.md. UI distinguishes source-reviewed facts from user-supplied unverified components and displays missing-data warnings. | Four records, not 69 manufacturer parts or 500 engineering projects. Full distribution licensing review remains a release gate. |
+
+Additional Part 13 capabilities already implemented and tested: favorites, recent assignments, 2–4-part comparison, source links, custom revision creation, exact symbol mapping, atomic custom-component import/export, explicit replacement, and missing-data warnings. User data never gains a verification badge from imported snapshot fields.
+
+Validation: schema-9 checkpoint e5c435f27e9a9a6ae654ce02c9ffadfca48ae48b passed 108 local unit/tooling tests, all 81 Chromium scenarios, typecheck/lint/format, build, dependency-license metadata and runtime-notice gates. Hosted runs 41543277750 and 41543266695 succeeded. The final verification/reuse-status display increment passed the full local check and four targeted browser scenarios; its hosted run remains pending publication.
+
+Transition gate: after the final increment's hosted checks pass, continue Milestone 7. Preserve these remaining requirements in later work: real part-to-3D mapping and spatial verification (M9/M18), broader manufacturer/standards evidence and tested project data (M14–18), translation review and full distribution/production acceptance (M18–20). No placeholder 3D mapping, invented certification or test-project count substitutes for those requirements.

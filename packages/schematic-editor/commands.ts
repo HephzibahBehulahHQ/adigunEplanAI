@@ -217,19 +217,51 @@ export function ensureLayer(
   project.layers.push({ id, name, pageId, visible: true, locked: false });
   return id;
 }
+
+export function refreshDefinitionInstances(
+  project: Project,
+  definitionId: string,
+): Project {
+  const ids = project.symbolInstances
+    .filter((s) => s.definitionId === definitionId)
+    .map((s) => s.id);
+  editable(project, ids);
+  checkBounds(project, ids);
+  checkCollisions(project, ids);
+  reroute(project, ids);
+  return validateProject(project);
+}
 export function place(
   project: Project,
   pageId: string,
   layerId: string,
-  kind: Primitive,
+  kind: Primitive | "custom",
   position: Point,
   grid: number,
+  customDefinitionId?: string,
 ): string {
   const layer = project.layers.find((l) => l.id === layerId);
   if (!layer || layer.pageId !== pageId || layer.locked || !layer.visible)
     throw new Error("Invalid placement layer");
-  const primitive = primitives[kind];
+  const custom =
+    kind === "custom"
+      ? project.symbolDefinitions.find(
+          (d) => d.id === customDefinitionId && d.category === "custom",
+        )
+      : undefined;
+  if (kind === "custom" && !custom)
+    throw new Error("Unknown custom definition");
+  const primitive = custom
+    ? {
+        glyph: custom.glyph,
+        prefix: custom.connectionClass === "mechanical" ? "ME" : "U",
+        w: custom.widthMm,
+        h: custom.heightMm,
+        pins: custom.pins,
+      }
+    : primitives[kind as Primitive];
   const definitionId =
+    custom?.id ??
     project.symbolDefinitions.find(
       (d) =>
         d.category === "generic" &&
@@ -238,7 +270,8 @@ export function place(
         d.widthMm === primitive.w &&
         d.heightMm === primitive.h &&
         JSON.stringify(d.pins) === JSON.stringify(primitive.pins),
-    )?.id ?? uid();
+    )?.id ??
+    uid();
   if (!project.symbolDefinitions.some((d) => d.id === definitionId))
     project.symbolDefinitions.push({
       id: definitionId,
@@ -259,7 +292,7 @@ export function place(
   )
     index++;
   const reference = `${primitive.prefix}${index}`;
-  project.devices.push({ id: deviceId, name: kind, reference });
+  project.devices.push({ id: deviceId, name: custom?.name ?? kind, reference });
   const instanceId = uid();
   project.symbolInstances.push({
     id: instanceId,
@@ -272,21 +305,32 @@ export function place(
     rotation: 0,
     position: { x: quantize(position.x, grid), y: quantize(position.y, grid) },
   });
+  const groupedTerminals = new Map<string, string>();
   for (const pin of primitive.pins) {
-    const terminalId = uid();
-    project.terminals.push({
-      id: terminalId,
-      name: pin.id,
-      deviceId,
-      designation:
-        kind === "motor" ? (pin.id === "positive" ? "+" : "-") : pin.id,
-      kind:
-        kind === "ground"
-          ? "pe"
-          : kind === "motor" || kind === "fuse"
-            ? "power"
-            : "control",
-    });
+    const declared = custom?.pins.find((p) => p.id === pin.id);
+    const group = declared?.terminalGroup;
+    const key = group ? `group:${group}` : `pin:${pin.id}`;
+    const terminalId = groupedTerminals.get(key) ?? uid();
+    if (!groupedTerminals.has(key))
+      project.terminals.push({
+        id: terminalId,
+        name: group ?? pin.id,
+        deviceId,
+        designation:
+          group ??
+          (kind === "motor" ? (pin.id === "positive" ? "+" : "-") : pin.id),
+        kind:
+          (group
+            ? custom?.pins.find((p) => p.terminalGroup === group && p.kind)
+                ?.kind
+            : declared?.kind) ??
+          (kind === "ground"
+            ? "pe"
+            : kind === "motor" || kind === "fuse"
+              ? "power"
+              : "control"),
+      });
+    groupedTerminals.set(key, terminalId);
     project.pins.push({
       id: uid(),
       name: pin.id,

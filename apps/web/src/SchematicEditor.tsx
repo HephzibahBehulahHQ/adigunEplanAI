@@ -1,4 +1,5 @@
 import { createPortal } from "react-dom";
+import { SymbolArtwork } from "./SymbolArtwork";
 import { WireProperties } from "./WireProperties";
 import "./schematic-editor.css";
 import {
@@ -127,8 +128,9 @@ export function SchematicEditor({
 }: Props) {
   const project = native.project!;
   const [tool, setTool] = useState<
-    "select" | "pan" | "wire" | "label" | Primitive
+    "select" | "pan" | "wire" | "label" | "custom" | Primitive
   >("select");
+  const [customDefinition, setCustomDefinition] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
   const [selectedWire, setSelectedWire] = useState<string | null>(null);
   const [fromPin, setFromPin] = useState<string | null>(null);
@@ -252,10 +254,18 @@ export function SchematicEditor({
       svg.current!.setPointerCapture(event.pointerId);
       return;
     }
-    if (Object.hasOwn(primitives, tool)) {
+    if (Object.hasOwn(primitives, tool) || tool === "custom") {
       edit((p) => {
         const target = layerId ?? ensureLayer(p, page.id, t("layers"));
-        const id = place(p, page.id, target, tool as Primitive, world, grid);
+        const id = place(
+          p,
+          page.id,
+          target,
+          tool as Primitive | "custom",
+          world,
+          grid,
+          customDefinition,
+        );
         setSelected([id]);
         setActiveLayer(target);
         return p;
@@ -577,6 +587,25 @@ export function SchematicEditor({
               {t(kind as Primitive)}
             </option>
           ))}
+        </select>
+        <select
+          aria-label={t("customSymbols")}
+          value={tool === "custom" ? customDefinition : ""}
+          onChange={(e) => {
+            setCustomDefinition(e.target.value);
+            setTool("custom");
+          }}
+        >
+          <option value="" disabled>
+            {t("customSymbols")}
+          </option>
+          {project.symbolDefinitions
+            .filter((d) => d.category === "custom")
+            .map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name}
+              </option>
+            ))}
         </select>
         <button onClick={() => zoom(1.2)} aria-label="+">
           +
@@ -1121,11 +1150,17 @@ export function SchematicEditor({
                   }
                   strokeDasharray="1 1"
                 />
-                <Glyph
-                  kind={definition.glyph}
-                  width={definition.widthMm}
-                  height={definition.heightMm}
-                />
+                {definition.artwork ? (
+                  <g data-custom-artwork={definition.id}>
+                    <SymbolArtwork artwork={definition.artwork} />
+                  </g>
+                ) : (
+                  <Glyph
+                    kind={definition.glyph}
+                    width={definition.widthMm}
+                    height={definition.heightMm}
+                  />
+                )}
               </g>
               <text
                 x={position.x}
@@ -1171,7 +1206,7 @@ export function SchematicEditor({
                 data-pin={pin.id}
                 role="button"
                 tabIndex={0}
-                aria-label={`${device.reference}:${terminal.designation}`}
+                aria-label={`${device.reference}:${terminal.designation}${project.pins.filter((p) => p.symbolInstanceId === instance.id && p.terminalId === terminal.id).length > 1 ? `/${pin.definitionPinId}` : ""}`}
                 onPointerDown={(e) => {
                   if (tool === "pan" || Object.hasOwn(primitives, tool)) return;
                   if (tool === "select") {

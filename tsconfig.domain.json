@@ -4,6 +4,7 @@
     "packages/electrical-model/**/*.ts",
     "packages/project-storage/**/*.ts",
     "packages/schematic-editor/**/*.ts",
-    "packages/connectivity-engine/**/*.ts"
+    "packages/connectivity-engine/**/*.ts",
+    "packages/component-library/**/*.ts"
   ]
 }
