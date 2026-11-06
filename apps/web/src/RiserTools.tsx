@@ -7,6 +7,8 @@ import {
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
+import { riserElevationSvg } from "../../../packages/building-design/riser-drawing.ts";
+import { downloadFile } from "./download";
 
 type Props = {
   native: NativeProjects;
@@ -34,6 +36,15 @@ export function RiserTools(props: Props) {
     (r) => r.start.floorId === floorId || r.end.floorId === floorId,
   );
   const selected = risers.find((r) => r.id === selectedId);
+  const diagram = selected
+    ? riserElevationSvg(project, selected.id, {
+        title: t("riserElevationDiagram"),
+        note: t("planRiserScope"),
+        start: t("riserStartFloor"),
+        end: t("riserEndFloor"),
+        length: t("riserVerticalLength"),
+      })
+    : null;
   return (
     <details className="riser-tools engineering-tools">
       <summary>{t("planRisers")}</summary>
@@ -105,6 +116,27 @@ export function RiserTools(props: Props) {
           </tbody>
         </table>
       </div>
+      {diagram && (
+        <details className="riser-elevation-preview">
+          <summary>{t("riserElevationDiagram")}</summary>
+          <button
+            onClick={() =>
+              downloadFile(
+                `${selected!.name}-elevation.svg`,
+                diagram,
+                "image/svg+xml",
+              )
+            }
+          >
+            {t("downloadRiserDiagram")}
+          </button>
+          <img
+            className="single-line-preview"
+            alt={t("riserElevationDiagram")}
+            src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(diagram)}`}
+          />
+        </details>
+      )}
     </details>
   );
 }

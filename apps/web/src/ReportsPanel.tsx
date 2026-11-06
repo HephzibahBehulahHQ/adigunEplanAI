@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { MessageKey } from "../../../packages/localization";
+import { dictionaries, type MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 import {
   reportKinds,
@@ -13,6 +13,7 @@ import {
 } from "../../../packages/reporting/drawings.ts";
 import { csvReport } from "../../../packages/reporting/csv.ts";
 import { downloadFile } from "./download";
+import { schematicDxf } from "../../../packages/reporting/dxf.ts";
 
 export function ReportsPanel({
   native,
@@ -50,7 +51,14 @@ export function ReportsPanel({
     calculations: "reportCalculations",
   };
   const label = (key: string) => t(key as MessageKey);
-  const title = `${project.name} · ${t(reportNames[kind])}`;
+  const outputLanguage =
+    project.documents.find((item) => item.id === page?.documentId)
+      ?.outputLanguage ?? "en";
+  const outputLabel = (key: string) =>
+    dictionaries[outputLanguage][key as MessageKey];
+  const outputTable =
+    kind === "drawing" ? null : projectReport(project, kind, outputLabel);
+  const outputTitle = `${project.name} · ${outputLabel(reportNames[kind])}`;
   const pngScale = page
     ? Math.min(150 / 25.4, 4096 / page.widthMm, 4096 / page.heightMm)
     : 1;
@@ -90,6 +98,9 @@ export function ReportsPanel({
         </label>
       )}
       <p>{t("reportNativeScope")}</p>
+      <p>
+        {t("documentLanguage")}: {outputLanguage.toUpperCase()}
+      </p>
       {svg && page && (
         <>
           <button
@@ -98,6 +109,17 @@ export function ReportsPanel({
             }
           >
             {t("reportDownloadSvg")}
+          </button>
+          <button
+            onClick={() =>
+              downloadFile(
+                `${page.name}.dxf`,
+                schematicDxf(project, page.id),
+                "application/dxf;charset=utf-8",
+              )
+            }
+          >
+            {t("reportDownloadDxf")}
           </button>
           <button
             disabled={busy}
@@ -146,7 +168,10 @@ export function ReportsPanel({
             onClick={() =>
               downloadFile(
                 `${kind}.csv`,
-                csvReport([table.columns.map(label), ...table.rows]),
+                csvReport([
+                  outputTable!.columns.map(outputLabel),
+                  ...outputTable!.rows,
+                ]),
                 "text/csv;charset=utf-8",
               )
             }
@@ -162,7 +187,8 @@ export function ReportsPanel({
                     projectId: project.id,
                     sourceUpdatedAt: project.updatedAt,
                     kind,
-                    ...table,
+                    outputLanguage,
+                    ...outputTable,
                   },
                   null,
                   2,
@@ -179,7 +205,8 @@ export function ReportsPanel({
         disabled={!svg && !table}
         onClick={() => {
           setError(false);
-          const content = svg ?? reportHtml(title, table!, label);
+          const content =
+            svg ?? reportHtml(outputTitle, outputTable!, outputLabel);
           const popup = window.open("", "_blank");
           if (!popup) {
             setError(true);
@@ -187,7 +214,7 @@ export function ReportsPanel({
           }
           popup.document.open();
           popup.document.write(
-            printDocument(title, content, svg ? page : undefined),
+            printDocument(outputTitle, content, svg ? page : undefined),
           );
           popup.document.close();
           void popup.document.fonts.ready.then(() => {

@@ -1022,5 +1022,8 @@
   "reportSources": "Quellen",
   "reportCheckMet": "Bedingung erfüllt",
   "reportCheckNotMet": "Bedingung nicht erfüllt",
-  "reportCalculationUnavailable": "Nicht verfügbar: nicht unterstützte Methodenversion oder ungültige gespeicherte Berechnung."
+  "reportCalculationUnavailable": "Nicht verfügbar: nicht unterstützte Methodenversion oder ungültige gespeicherte Berechnung.",
+  "reportDownloadDxf": "Zeichnung als DXF herunterladen",
+  "riserElevationDiagram": "Steigleitungs-Höhenschema",
+  "downloadRiserDiagram": "Steigleitungs-Höhenschema als SVG herunterladen"
 }

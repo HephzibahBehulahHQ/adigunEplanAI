@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
 import {
   addBuilding,
@@ -124,6 +125,16 @@ test("riser forms preserve exact coordinates, calculate only vertical geometry a
   await form.getByRole("button", { name: "Save riser", exact: true }).click();
   const row = page.locator("[data-riser-schedule-id]");
   await expect(row.locator("td").last()).toHaveText("3.1");
+  await page.locator(".riser-elevation-preview > summary").click();
+  const elevation = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Download riser elevation SVG", exact: true })
+    .click();
+  const drawing = await readFile((await (await elevation).path())!, "utf8");
+  expect(drawing).toContain(
+    'data-start-elevation-mm="100" data-end-elevation-mm="3200" data-vertical-length-m="3.1"',
+  );
+  expect(drawing).toContain('width="297mm" height="210mm"');
   await expect(
     form.getByLabel("Snap riser position to grid", { exact: true }),
   ).not.toBeChecked();

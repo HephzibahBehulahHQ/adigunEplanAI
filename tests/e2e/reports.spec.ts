@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
+import DxfParser from "dxf-parser";
 
 test("native SVG, actual PNG, CSV and print PDF agree with the stored project", async ({
   page,
@@ -36,6 +37,21 @@ test("native SVG, actual PNG, CSV and print PDF agree with the stored project", 
     };
   }, svg);
   expect(parsed).toEqual({ errors: 0, devices: 2 });
+  const dxfDownload = page.waitForEvent("download");
+  await tools
+    .getByRole("button", { name: "Download drawing DXF", exact: true })
+    .click();
+  const dxf = new DxfParser().parseSync(
+    await readFile((await (await dxfDownload).path())!, "utf8"),
+  )!;
+  expect(dxf.header.$INSUNITS).toBe(4);
+  const dxfWire = dxf.entities.find(
+    (entity) => entity.type === "LWPOLYLINE",
+  ) as { vertices: { x: number; y: number }[] } | undefined;
+  expect(dxfWire?.vertices.map(({ x, y }) => [x, y])).toEqual([
+    [10, -20],
+    [50, -20],
+  ]);
   const pngDownload = page.waitForEvent("download");
   await tools.getByRole("button", { name: /^Download drawing PNG/ }).click();
   const png = await readFile((await (await pngDownload).path())!);
@@ -69,6 +85,20 @@ test("native SVG, actual PNG, CSV and print PDF agree with the stored project", 
     .click();
   const csv = await readFile((await (await csvDownload).path())!, "utf8");
   expect(csv).toContain('"W1","Xa:1","Xb:1",""');
+  const deMessages = JSON.parse(
+    await readFile(
+      new URL("../../packages/localization/de.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  const enMessages = JSON.parse(
+    await readFile(
+      new URL("../../packages/localization/en.json", import.meta.url),
+      "utf8",
+    ),
+  );
+  expect(csv).toContain(deMessages.reportFrom);
+  expect(csv).not.toContain(`"${enMessages.reportFrom}"`);
   await page.setViewportSize({ width: 390, height: 844 });
   expect(
     await page.evaluate(

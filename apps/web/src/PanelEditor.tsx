@@ -27,6 +27,7 @@ import {
   type Vector3,
   type PanelDiagnostic,
 } from "../../../packages/panel-engineering/geometry.ts";
+import { orderProjectedFaces } from "../../../packages/panel-engineering/visibility.ts";
 import {
   panelReport,
   panelLayoutSvg,
@@ -839,10 +840,11 @@ function PanelViews({
     min: { x: 0, y: 0, z: 0 },
     max: { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
   }).map((point) => projectPoint3d(point, yaw, pitch));
-  const faces = objects
-    .filter((item) => !("kind" in item && item.kind === "compartment"))
-    .flatMap((item) => projectedFaces(item, yaw, pitch))
-    .sort((a, b) => a.depth - b.depth);
+  const faces = orderProjectedFaces(
+    objects
+      .filter((item) => !("kind" in item && item.kind === "compartment"))
+      .flatMap((item) => projectedFaces(item, yaw, pitch)),
+  );
   const access = equipment.find((item) => item.id === selectedId);
   const accessZone = access ? accessBounds(access) : null;
   const accessPoints = accessZone
@@ -1061,27 +1063,37 @@ function PanelViews({
             orbit.current = null;
           }}
         >
-          {faces.map((face) => {
+          {faces.map((face, fragment) => {
             const item = objects.find((object) => object.id === face.objectId)!;
             return (
-              <polygon
-                key={`${item.id}:${face.side}`}
+              <g
+                key={`${item.id}:${face.side}:${fragment}`}
                 data-panel-object={item.id}
-                points={face.points
-                  .map((point) => `${point.x},${point.y}`)
-                  .join(" ")}
-                fill={color(item)}
-                fillOpacity={
-                  "kind" in item && item.kind === "door"
-                    ? 0.18
-                    : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
-                }
-                stroke={selectedId === item.id ? "#22d3ee" : "#0b1220"}
-                strokeWidth={selectedId === item.id ? 3 : 0.8}
+                data-panel-side={face.side}
                 onClick={() => select(item.id)}
               >
                 <title>{label(item)}</title>
-              </polygon>
+                <polygon
+                  points={face.points
+                    .map((point) => `${point.x},${point.y}`)
+                    .join(" ")}
+                  fill={color(item)}
+                  fillOpacity={
+                    "kind" in item && item.kind === "door"
+                      ? 0.18
+                      : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
+                  }
+                />
+                <path
+                  d={face.edges
+                    .map(([a, b]) => `M${a.x},${a.y}L${b.x},${b.y}`)
+                    .join(" ")}
+                  fill="none"
+                  stroke={selectedId === item.id ? "#22d3ee" : "#0b1220"}
+                  strokeWidth={selectedId === item.id ? 3 : 0.8}
+                  pointerEvents="none"
+                />
+              </g>
             );
           })}
           {objects

@@ -1022,5 +1022,8 @@
   "reportSources": "Àwọn orísun",
   "reportCheckMet": "Ipò pé",
   "reportCheckNotMet": "Ipò kò pé",
-  "reportCalculationUnavailable": "Kò sí: ẹ̀dà ọ̀nà kò ní atilẹyin tàbí ìṣírò tí a fipamọ́ kò pé."
+  "reportCalculationUnavailable": "Kò sí: ẹ̀dà ọ̀nà kò ní atilẹyin tàbí ìṣírò tí a fipamọ́ kò pé.",
+  "reportDownloadDxf": "Ṣe àgbàsílẹ̀ àwòrán DXF",
+  "riserElevationDiagram": "Àwòrán gíga ọ̀nà ìgòkè",
+  "downloadRiserDiagram": "Ṣe àgbàsílẹ̀ SVG gíga ọ̀nà ìgòkè"
 }

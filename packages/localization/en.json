@@ -1022,5 +1022,8 @@
   "reportSources": "Sources",
   "reportCheckMet": "Condition met",
   "reportCheckNotMet": "Condition not met",
-  "reportCalculationUnavailable": "Unavailable: unsupported method version or invalid saved calculation."
+  "reportCalculationUnavailable": "Unavailable: unsupported method version or invalid saved calculation.",
+  "reportDownloadDxf": "Download drawing DXF",
+  "riserElevationDiagram": "Riser elevation diagram",
+  "downloadRiserDiagram": "Download riser elevation SVG"
 }
