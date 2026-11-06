@@ -1,0 +1,76 @@
+name: Verify reviewed Pages release
+on:
+  push:
+    branches:
+      - codex/prepare-pages-17580877
+    paths:
+      - .github/workflows/verify-pages.yml
+permissions:
+  contents: read
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 17580877be2f4036137c8e832e213c580b870fab
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+      - name: Verify canonical HTTPS provenance and all runtime hashes
+        run: |
+          node <<'VERIFY'
+          const crypto = require("node:crypto");
+          const origin = "https://adiguneplanai.hephzibahbehulah.com/";
+          const source = "17580877be2f4036137c8e832e213c580b870fab";
+          const tree = "d9768e4802f86b01d01a6c331be0d8493e24309b";
+          const artifact = "6880d3ec77532e2c8c555f0223f2c7cf44879f87a26b9b01ed62b290bc14daeb";
+          async function read(url, limit) {
+            const response = await fetch(url, { signal: AbortSignal.timeout(20000), redirect: "error", headers: { "Cache-Control": "no-cache" } });
+            if (!response.ok) throw new Error("HTTP " + response.status + " for " + url);
+            if (Number(response.headers.get("content-length")) > limit) throw new Error("Oversized response");
+            const reader = response.body.getReader();
+            const chunks = [];
+            let size = 0;
+            try {
+              for (;;) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                size += value.byteLength;
+                if (size > limit) { void reader.cancel().catch(() => {}); throw new Error("Oversized response"); }
+                chunks.push(Buffer.from(value));
+              }
+            } finally { reader.releaseLock(); }
+            return Buffer.concat(chunks);
+          }
+          (async () => {
+            const info = JSON.parse((await read(origin + "build-info.json?release=" + process.env.GITHUB_RUN_ID, 65536)).toString("utf8"));
+            if (info.sourceCommit !== source || info.sourceTree !== tree || info.artifactDigest !== artifact) throw new Error("Live source provenance mismatch");
+            const files = Object.entries(info.assets || {});
+            if (files.length !== 24) throw new Error("Unexpected asset manifest");
+            for (const [p, expected] of files) {
+              if (!/^(index\.html|THIRD_PARTY_NOTICES\.txt|assets\/[A-Za-z0-9_./-]+)$/.test(p) || p.split("/").includes("..") || !/^[a-f0-9]{64}$/.test(expected)) throw new Error("Invalid asset receipt");
+              const data = await read(origin + p + "?release=" + process.env.GITHUB_RUN_ID, 4194304);
+              if (crypto.createHash("sha256").update(data).digest("hex") !== expected) throw new Error("Live asset mismatch: " + p);
+            }
+            console.log("LIVE_PROVENANCE=" + source);
+            console.log("LIVE_ASSET_SHA256_MATCHES=" + files.length);
+          })().catch(error => { console.error(error.message); process.exitCode = 1; });
+          VERIFY
+      - run: npm ci
+      - run: npm exec playwright -- install --with-deps chromium
+      - name: Test live cabinet and export workflows
+        run: |
+          cat > playwright.pages-live.config.ts <<'CONFIG'
+          import { defineConfig } from "@playwright/test";
+          export default defineConfig({
+            testDir: "./tests/e2e",
+            fullyParallel: true,
+            workers: 2,
+            use: { baseURL: "https://adiguneplanai.hephzibahbehulah.com/", headless: true },
+          });
+          CONFIG
+          npm exec playwright -- test --config=playwright.pages-live.config.ts tests/e2e/panel-engineering.spec.ts tests/e2e/reports.spec.ts tests/e2e/risers-equipment.spec.ts
