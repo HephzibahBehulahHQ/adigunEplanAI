@@ -31,3 +31,13 @@ Production bundling separates React runtime and schema validation without changi
 
 
 Hosted final-candidate evidence: `296bac8d5c4dfecd87b802868da66b7fc02d58f7` passed both push run 42171235299 and pull-request run 42171243149. The inspected PR job log confirms 171 tests, 97 browser scenarios and zero production vulnerabilities. The subsequent merge preserves exactly the candidate tree. Mobile schedule width was additionally verified in both built-app workflows without page overflow.
+
+## Schema 17: M7–M12 continuation (2026-11-06)
+
+An isolated source snapshot passed `npm run check`: 278 unit/tooling tests, web/domain TypeScript, ESLint, formatting, all 159 locked dependency-license entries, runtime notice fidelity and production build. Runtime notices now include the Supabase packages and their shipped dependencies. `npm audit --omit=dev --audit-level=high` reports zero vulnerabilities. Main bundle is 359.49 kB, account runtime 216.00 kB and React runtime 218.77 kB; no warning threshold increase.
+
+The full isolated Chromium suite passed all 116 scenarios in one completed run. New workflows cover vertical risers/additional floor devices, all calculation controls and four locales, synchronized panel geometry and face features, PLC mappings, real SVG/PNG/PDF/CSV exports, account isolation/stale replies, cloud conflicts/history/recovery, registration/reset/profile/password states, anonymous rejection, bounded private avatars, offline owner storage and the compact truthful header. Deliberately blocked lazy-import tests exercise the existing error boundary; their expected console errors are not product-load failures.
+
+Review reproduced and fixed last-symbol deletion of a device referenced by a PLC signal assignment or control note. Regression tests verify the retained device/terminals through atomic history, undo and native reload. CSV lint correction did not change output behavior. No real production account credentials or model key were used by mocked account/browser checks. The Supabase rollback security fixture was not executed because mandatory confirmation expired; live authenticated REST/storage remains a release gate.
+
+The local browser version and environment limitations remain those recorded for schema 16. Hosted CI and live deployment evidence must be recorded against the canonical source commit separately. Later M13/example source remains outside this tested snapshot.

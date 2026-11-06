@@ -512,6 +512,8 @@ export function remove(project: Project, ids: string[]) {
     if (
       !project.symbolInstances.some((s) => s.deviceId === id) &&
       !project.plcModules.some((m) => m.deviceId === id) &&
+      !project.plcAddresses.some((address) => address.signalDeviceId === id) &&
+      !project.automationNotes.some((note) => note.deviceIds.includes(id)) &&
       !project.equipment3d.some((e) => e.deviceId === id) &&
       !project.distributionBoards.some((b) => b.deviceId === id) &&
       !project.circuits.some((c) => c.deviceIds.includes(id))

@@ -64,7 +64,7 @@ test("schema 13 floors migrate to explicit 1:100 without scaling model geometry"
   delete legacy.floors[0].drawingScale;
   const r = parseProject(JSON.stringify(legacy));
   assert.equal(r.migratedFrom, 13);
-  assert.equal(r.project.schemaVersion, 16);
+  assert.equal(r.project.schemaVersion, 17);
   assert.equal(r.project.floors[0].drawingScale, 100);
   assert.deepEqual(r.project.rooms, p.rooms);
 });

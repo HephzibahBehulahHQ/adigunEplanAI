@@ -1,12 +1,11 @@
 # Next tasks
 
-1. Complete remaining M7 coverage: broader supported architectural geometry/import fidelity, emergency/fire/data/earthing equipment and vertical risers, circuit documentation/single-line and panel schedules. Preserve explicit unsupported-content reports and truthful geometry/engineering limits.
-2. Schema 16 now provides floor-first luminaires/sockets/switches/generic board interfaces, floor board/circuit associations, explicit active-load schedules, and cable/conduit/tray polylines. Grid snapping is explicit during edits; missing loads remain unknown. Release evidence is tracked in PROJECT_STATUS.md and VERIFICATION.md.
-3. Continue M8–20 and BOT/menu/domain addenda using MILESTONES.md acceptance criteria. No full M7, 500-project or final-production completion is claimed.
-
-Source branch: codex/m7-floor-circuits-routes, PR #9. Use PROJECT_STATUS.md for the latest verified source/deployment receipts rather than historical checkpoints below.
-
-Owner constraints: publish reviewed source through visible branches/PRs; deploy verified increments through the existing main/root Pages process; preserve work and never force-push or rewrite history. Exclude secrets, dependencies, caches and test/log artifacts from source. The later recorded deployment authorization supersedes the earlier publication-only instruction. Human review of Yoruba/Pidgin engineering terminology remains an acceptance gate.
+1. Publish the locally verified schema-17 M7–M12 source (278 unit/tooling tests, 116 browser scenarios, zero production vulnerabilities), confirm hosted CI and deploy. Preserve source/deployment separation and exact tested-tree provenance.
+2. Continue M13 against both complete BOT addenda: verified account acceptance, preview/reversal/stale-state checks, actual canvas context, no automatic engineering persistence, grounded server gateway and fully accessible floating window.
+3. Validate and publish the first 50 distinct original native examples across all eleven categories, then reach 150, 300 and 500 with individual engineering and export evidence. Count only validated distinct projects.
+4. Complete remaining M7–M12 acceptance requirements, including specified interchange formats and representative automation/integrated projects. Do not promote estimates to manufacturer or compliance verification.
+5. Obtain successful authorized rollback security-fixture execution and a legitimate live account REST/storage round trip. The prior mandatory tool confirmation expired; do not bypass it. Hosted model credentials and authenticated backend acceptance remain gates when unavailable.
+6. Run M18 integration, M19 readiness and M20 versioned release gates from the master specification. Keep human translation/engineering, licensing and production acceptance explicit. Continue all unblocked work autonomously.
 
 ## Historical implementation evidence
 

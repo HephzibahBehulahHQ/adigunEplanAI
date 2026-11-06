@@ -497,7 +497,7 @@ test("schema two documents migrate without changing their native electrical iden
   const p = pair();
   p.schemaVersion = 2;
   const result = parseProject(JSON.stringify(p));
-  assert.equal(result.project.schemaVersion, 16);
+  assert.equal(result.project.schemaVersion, 17);
   assert.deepEqual(result.project.wires, p.wires);
 });
 

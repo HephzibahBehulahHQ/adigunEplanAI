@@ -9,6 +9,10 @@ export const floorDeviceKinds = [
   "socket-l-n-pe",
   "wall-switch-single-pole",
   "distribution-board-l-n-pe",
+  "emergency-luminaire-battery",
+  "fire-alarm-loop-interface",
+  "data-outlet-8p8c-shielded",
+  "earthing-bond-point",
 ] as const;
 export type FloorDeviceKind = (typeof floorDeviceKinds)[number];
 export type FloorDeviceInput = Omit<
@@ -47,6 +51,90 @@ const boardDefinition: Project["symbolDefinitions"][number] = {
   ],
 };
 
+// Original interfaces, without manufacturer ratings, protocol, cable pairing or
+// certification claims. Signal contacts remain separate. The earthing point is
+// explicitly one bonded PE terminal with two graphical connection points.
+const fireDefinition: Project["symbolDefinitions"][number] = {
+  id: "building-fire-alarm-loop-interface",
+  name: "Fire alarm device (two-wire loop interface)",
+  category: "custom",
+  glyph: "box",
+  widthMm: 32,
+  heightMm: 28,
+  pins: [
+    { id: "LOOP_positive", position: { x: -16, y: -6 }, kind: "signal" },
+    { id: "LOOP_negative", position: { x: -16, y: 6 }, kind: "signal" },
+  ],
+  artwork: [
+    { kind: "circle", center: { x: 2, y: 0 }, radiusMm: 10 },
+    { kind: "line", from: { x: -16, y: -6 }, to: { x: -6, y: -6 } },
+    { kind: "line", from: { x: -16, y: 6 }, to: { x: -6, y: 6 } },
+    { kind: "line", from: { x: 2, y: -6 }, to: { x: 2, y: 3 } },
+    { kind: "circle", center: { x: 2, y: 6 }, radiusMm: 1 },
+  ],
+};
+const dataDefinition: Project["symbolDefinitions"][number] = {
+  id: "building-data-outlet-8p8c-shielded",
+  name: "Data outlet (8P8C with independent shield contact)",
+  category: "custom",
+  glyph: "box",
+  widthMm: 40,
+  heightMm: 40,
+  pins: [
+    ...Array.from({ length: 8 }, (_, i) => ({
+      id: `P${i + 1}`,
+      position: { x: i < 4 ? -20 : 20, y: (i % 4) * 8 - 12 },
+      kind: "signal" as const,
+    })),
+    { id: "SHIELD", position: { x: 0, y: 20 }, kind: "signal" },
+  ],
+  artwork: [
+    { kind: "line", from: { x: -12, y: -16 }, to: { x: 12, y: -16 } },
+    { kind: "line", from: { x: 12, y: -16 }, to: { x: 12, y: 16 } },
+    { kind: "line", from: { x: 12, y: 16 }, to: { x: -12, y: 16 } },
+    { kind: "line", from: { x: -12, y: 16 }, to: { x: -12, y: -16 } },
+    ...Array.from({ length: 8 }, (_, i) => ({
+      kind: "line" as const,
+      from: { x: i < 4 ? -20 : 20, y: (i % 4) * 8 - 12 },
+      to: { x: i < 4 ? -8 : 8, y: (i % 4) * 8 - 12 },
+    })),
+    { kind: "line", from: { x: 0, y: 20 }, to: { x: 0, y: 16 } },
+  ],
+};
+const earthDefinition: Project["symbolDefinitions"][number] = {
+  id: "building-earthing-bond-point",
+  name: "Earthing point (common bonded PE terminal)",
+  category: "custom",
+  glyph: "box",
+  widthMm: 28,
+  heightMm: 28,
+  pins: [
+    {
+      id: "PE_1",
+      position: { x: -14, y: -6 },
+      kind: "pe",
+      terminalGroup: "PE",
+    },
+    { id: "PE_2", position: { x: 14, y: -6 }, kind: "pe", terminalGroup: "PE" },
+  ],
+  artwork: [
+    { kind: "line", from: { x: -14, y: -6 }, to: { x: 14, y: -6 } },
+    { kind: "circle", center: { x: 0, y: -6 }, radiusMm: 2 },
+    { kind: "line", from: { x: 0, y: -6 }, to: { x: 0, y: 4 } },
+    { kind: "line", from: { x: -10, y: 4 }, to: { x: 10, y: 4 } },
+    { kind: "line", from: { x: -6, y: 8 }, to: { x: 6, y: 8 } },
+    { kind: "line", from: { x: -2, y: 12 }, to: { x: 2, y: 12 } },
+  ],
+};
+const buildingDefinitions: Partial<
+  Record<FloorDeviceKind, Project["symbolDefinitions"][number]>
+> = {
+  "distribution-board-l-n-pe": boardDefinition,
+  "fire-alarm-loop-interface": fireDefinition,
+  "data-outlet-8p8c-shielded": dataDefinition,
+  "earthing-bond-point": earthDefinition,
+};
+
 export function createFloorDevice(
   project: Project,
   input: FloorDeviceInput,
@@ -80,21 +168,22 @@ export function createFloorDevice(
 
   let next: Project;
   let definitionId: string;
-  if (input.kind === "distribution-board-l-n-pe") {
-    definitionId = boardDefinition.id;
+  const buildingDefinition = buildingDefinitions[input.kind];
+  if (buildingDefinition) {
+    definitionId = buildingDefinition.id;
     const existing = project.symbolDefinitions.find(
       (d) => d.id === definitionId,
     );
     if (
       existing &&
-      JSON.stringify(existing) !== JSON.stringify(boardDefinition)
+      JSON.stringify(existing) !== JSON.stringify(buildingDefinition)
     )
       throw new Error(
-        "Keep the locally edited board definition under its own ID",
+        "Keep the locally edited building definition under its own ID",
       );
     next = existing
       ? structuredClone(project)
-      : createCustomSymbol(project, structuredClone(boardDefinition));
+      : createCustomSymbol(project, structuredClone(buildingDefinition));
   } else {
     next = installSymbol(project, input.kind);
     definitionId = `library-${input.kind}`;

@@ -535,3 +535,65 @@ button:disabled {
   height: 360px;
   background: var(--panel);
 }
+
+.single-line-preview {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-height: 36rem;
+  object-fit: contain;
+  object-position: left top;
+  background: white;
+  margin: 0.75rem 0;
+}
+.building-documentation {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.engineering-tools {
+  min-width: 0;
+  color: var(--text);
+}
+.engineering-tools label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+.engineering-tools button {
+  margin: 0.25rem;
+}
+.engineering-tools input,
+.engineering-tools select,
+.engineering-tools textarea {
+  min-width: 0;
+  max-width: 100%;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.35rem;
+}
+.engineering-tools .native-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.engineering-tools table {
+  min-width: 32rem;
+}
+
+.automation-editor {
+  background: var(--panel);
+  color: var(--text);
+  width: 100%;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.canvas-empty {
+  background: var(--panel);
+  color: var(--text);
+  padding: 1rem;
+  margin: 0;
+}

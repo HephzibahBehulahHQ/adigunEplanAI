@@ -17,6 +17,8 @@ import {
   type Preferences,
 } from "./preferences";
 import { useNativeProjects } from "./useNativeProjects";
+import { useAccount, profileName, type Account } from "./useAccount";
+import { AccountPanel } from "./AccountPanel";
 import {
   ProjectTools,
   NativeDataPanel,
@@ -26,9 +28,19 @@ import {
 } from "./NativeWorkspace";
 import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
+import "./account.css";
 
 export function App() {
-  const native = useNativeProjects();
+  const account = useAccount();
+  return <Workspace key={account.user?.id ?? "guest"} account={account} />;
+}
+function Workspace({ account }: { account: Account }) {
+  const native = useNativeProjects(account.user?.id ?? null);
+  const accountDialog = useRef<HTMLDialogElement>(null);
+  const searchDialog = useRef<HTMLDialogElement>(null);
+  const languageSelect = useRef<HTMLSelectElement>(null);
+  const [search, setSearch] = useState("");
+  const focusLanguage = useRef(false);
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
       return restorePreferences(localStorage.getItem(storageKey));
@@ -43,6 +55,12 @@ export function App() {
     Partial<Record<PanelId, boolean>>
   >({});
   const t = (key: MessageKey) => dictionaries[prefs.language][key];
+  useEffect(() => {
+    if (tab === "settings" && focusLanguage.current) {
+      languageSelect.current?.focus();
+      focusLanguage.current = false;
+    }
+  }, [tab]);
   useEffect(() => {
     document.documentElement.lang = prefs.language;
     document.documentElement.dataset.theme = prefs.theme;
@@ -175,7 +193,7 @@ export function App() {
       (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
     );
   return (
-    <div className="application">
+    <div className="application" inert={account.checking && !account.user}>
       <a className="skip-link" href="#workspace">
         {t("skip")}
       </a>
@@ -188,10 +206,94 @@ export function App() {
         <span className="project-title">
           {native.project?.name ?? t("noProject")}
         </span>
-        <span className="local-status">
-          <i />
-          {t("local")}
-        </span>
+        <div className="owner-toolbar" aria-label={t("accountToolbar")}>
+          <span
+            className="local-status"
+            title={t(native.saved ? "savedLocally" : "notSaved")}
+          >
+            {t(native.saved ? "savedLocally" : "notSaved")}
+          </span>
+          <button
+            className="owner-icon profile-button"
+            aria-label={t("account")}
+            title={
+              profileName(account.user) ||
+              account.user?.email ||
+              t("accountGuest")
+            }
+            onClick={() => accountDialog.current?.showModal()}
+          >
+            <>
+              {account.avatarUrl ? (
+                <img
+                  src={account.avatarUrl}
+                  alt=""
+                  className="profile-avatar"
+                />
+              ) : (
+                <ToolbarIcon kind="profile" />
+              )}
+            </>
+            <span
+              className={`account-dot ${account.verified ? "verified" : ""}`}
+              data-account-state={
+                account.verified
+                  ? "verified"
+                  : account.checking
+                    ? "checking"
+                    : account.user
+                      ? "unverified"
+                      : "guest"
+              }
+              aria-label={t(
+                account.verified
+                  ? "accountSignedIn"
+                  : account.user
+                    ? "accountOffline"
+                    : "accountGuest",
+              )}
+            />
+          </button>
+          <button
+            className="owner-icon"
+            aria-label={t("languageOptions")}
+            title={t("languageOptions")}
+            onClick={() => {
+              if (tab === "settings") languageSelect.current?.focus();
+              else {
+                focusLanguage.current = true;
+                setTab("settings");
+              }
+            }}
+          >
+            {prefs.language.toUpperCase()}
+          </button>
+          <button
+            className="owner-icon"
+            aria-label={t("settings")}
+            title={t("settings")}
+            aria-pressed={tab === "settings"}
+            onClick={() => setTab("settings")}
+          >
+            <ToolbarIcon kind="settings" />
+          </button>
+          <button
+            className="owner-icon"
+            aria-label={t("workspaceSearch")}
+            title={t("workspaceSearch")}
+            onClick={() => searchDialog.current?.showModal()}
+          >
+            <ToolbarIcon kind="search" />
+          </button>
+          <button
+            className="owner-icon"
+            aria-label={t("help")}
+            title={t("help")}
+            onClick={() => help.current?.showModal()}
+          >
+            <ToolbarIcon kind="help" />
+          </button>
+        </div>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
         <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
@@ -200,17 +302,15 @@ export function App() {
         <button aria-pressed={tab === "view"} onClick={() => setTab("view")}>
           {t("view")}
         </button>
-        <button
-          aria-pressed={tab === "settings"}
-          onClick={() => setTab("settings")}
-        >
-          {t("settings")}
-        </button>
-        <button onClick={() => help.current?.showModal()}>{t("help")}</button>
       </nav>
       {native.error && (
         <p className="storage-error" role="alert">
           {t(native.error)}
+        </p>
+      )}
+      {account.checking && (
+        <p className="storage-error" role="status">
+          {t("accountChecking")}
         </p>
       )}
       <div className="ribbon" aria-label={t(tab)}>
@@ -256,6 +356,7 @@ export function App() {
             <label>
               {t("language")}
               <select
+                ref={languageSelect}
                 aria-label={t("language")}
                 value={prefs.language}
                 onChange={(e) => set("language", e.target.value as Language)}
@@ -390,6 +491,112 @@ export function App() {
           <button>{t("close")}</button>
         </form>
       </dialog>
+      <AccountPanel
+        account={account}
+        native={native}
+        dialog={accountDialog}
+        t={t}
+      />
+      <dialog
+        ref={searchDialog}
+        className="account-dialog"
+        aria-label={t("workspaceSearch")}
+      >
+        <h2>{t("workspaceSearch")}</h2>
+        <p>{t("workspaceSearchScope")}</p>
+        <label>
+          {t("workspaceSearchQuery")}
+          <input
+            type="search"
+            value={search}
+            maxLength={160}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </label>
+        <ul className="workspace-search-results">
+          {native.projects
+            .flatMap((project) => [
+              {
+                key: project.id,
+                projectId: project.id,
+                pageId: null as string | null,
+                label: project.name,
+              },
+              ...project.pages.map((page) => ({
+                key: `${project.id}:${page.id}`,
+                projectId: project.id,
+                pageId: page.id,
+                label: `${page.name} · ${project.name}`,
+              })),
+            ])
+            .filter(
+              (result) =>
+                search.trim() &&
+                result.label
+                  .toLocaleLowerCase()
+                  .includes(search.trim().toLocaleLowerCase()),
+            )
+            .slice(0, 50)
+            .map((result) => (
+              <li key={result.key}>
+                <button
+                  onClick={() => {
+                    native.select(result.projectId);
+                    native.selectPage(result.pageId);
+                    searchDialog.current?.close();
+                  }}
+                >
+                  {result.label}
+                </button>
+              </li>
+            ))}
+        </ul>
+        <form method="dialog">
+          <button>{t("close")}</button>
+        </form>
+      </dialog>
     </div>
+  );
+}
+
+function ToolbarIcon({
+  kind,
+}: {
+  kind: "profile" | "settings" | "search" | "help";
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="21"
+      height="21"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {kind === "profile" ? (
+        <>
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+        </>
+      ) : kind === "search" ? (
+        <>
+          <circle cx="10" cy="10" r="6.5" />
+          <path d="m15 15 6 6" />
+        </>
+      ) : kind === "help" ? (
+        <>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 4h.01" />
+        </>
+      ) : (
+        <>
+          <circle cx="12" cy="12" r="3" />
+          <path d="m9 3-.5 3-2 1-3-.5L2 10l2.5 2L4 15l3 2 .5 3h5l1-3 3-1 2.5 1 2-4-2-2 .5-3-3-2-1-3Z" />
+        </>
+      )}
+    </svg>
   );
 }

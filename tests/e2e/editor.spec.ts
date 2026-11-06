@@ -1130,7 +1130,7 @@ test("catalog filters, favorites and recent assignments persist without changing
   expect(after.pins).toEqual(before.pins);
   expect(after.wires).toEqual(before.wires);
   expect(after.devices[0].partId).toBeDefined();
-  expect(after.schemaVersion).toBe(16);
+  expect(after.schemaVersion).toBe(17);
   const terminalPart = after.manufacturerParts.find(
     (part: { partNumber: string }) => part.partNumber === "3044076",
   );

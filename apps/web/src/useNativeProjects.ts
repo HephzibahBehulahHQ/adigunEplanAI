@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { electricalTransaction } from "../../../packages/connectivity-engine/transaction.ts";
 import { synchronizeConnectivity } from "../../../packages/connectivity-engine/analyze.ts";
 import {
@@ -11,6 +11,8 @@ import { ProjectHistory } from "../../../packages/electrical-model/history.ts";
 import {
   loadLibrary,
   saveLibrary,
+  accountStorage,
+  projectStorageKey,
   type ProjectLibrary,
 } from "../../../packages/project-storage/repository.ts";
 import type { MessageKey } from "../../../packages/localization";
@@ -21,10 +23,30 @@ type State = {
   corrupt: boolean;
   saved: boolean;
 };
-export function useNativeProjects() {
+export function useNativeProjects(ownerId: string | null = null) {
+  const owner = useRef(ownerId);
+  if (owner.current !== ownerId)
+    throw new Error("Account changes require a fresh workspace");
+  const storage = useRef(
+    accountStorage(
+      {
+        getItem: (key) => localStorage.getItem(key),
+        setItem: (key, value) => localStorage.setItem(key, value),
+      },
+      ownerId,
+    ),
+  );
+  const active = useRef(true);
+  useEffect(() => {
+    active.current = true;
+    return () => {
+      active.current = false;
+      histories.current.clear();
+    };
+  }, []);
   const [state, setState] = useState<State>(() => {
     try {
-      const library = loadLibrary(localStorage);
+      const library = loadLibrary(storage.current);
       return {
         library: {
           ...library,
@@ -57,19 +79,21 @@ export function useNativeProjects() {
   if (project && history && !histories.current.has(project.id))
     histories.current.set(project.id, history);
   function persist(library: ProjectLibrary) {
+    if (!active.current) return false;
     if (state.corrupt) {
       setState((previous) => ({ ...previous, error: "corruptStorage" }));
-      return;
+      return false;
     }
     try {
-      saveLibrary(localStorage, library);
+      saveLibrary(storage.current, library);
       setState({ library, error: null, corrupt: false, saved: true });
     } catch {
       setState({ library, error: "saveError", corrupt: false, saved: false });
     }
+    return true;
   }
   function update(change: (draft: Project) => Project) {
-    if (!project || !history) return false;
+    if (!active.current || !project || !history) return false;
     try {
       const updated = history.execute((draft) => {
         const next = electricalTransaction(draft, change);
@@ -98,7 +122,7 @@ export function useNativeProjects() {
     canUndo: history?.canUndo ?? false,
     canRedo: history?.canRedo ?? false,
     create(name: string, pageName: string, documentName: string) {
-      if (state.corrupt) return;
+      if (!active.current || state.corrupt) return;
       try {
         const p = createProject(name);
         const documentId = crypto.randomUUID();
@@ -183,15 +207,16 @@ export function useNativeProjects() {
       persist(state.library);
     },
     importText(text: string, confirmReplace: () => boolean) {
+      if (!active.current) return false;
       try {
         const p = synchronizeConnectivity(parseProject(text).project);
         if (
           state.library.projects.some((old) => old.id === p.id) &&
           !confirmReplace()
         )
-          return;
+          return false;
         histories.current.delete(p.id);
-        persist({
+        return persist({
           projects: [
             ...state.library.projects.filter((old) => old.id !== p.id),
             p,
@@ -200,15 +225,23 @@ export function useNativeProjects() {
         });
       } catch {
         setState((previous) => ({ ...previous, error: "invalidProject" }));
+        return false;
       }
     },
     invalidImport() {
+      if (!active.current) return;
       setState((previous) => ({ ...previous, error: "invalidProject" }));
     },
+    recoveryText() {
+      return active.current
+        ? (storage.current.getItem(projectStorageKey) ?? "")
+        : "";
+    },
     resetStorage() {
+      if (!active.current) return;
       try {
         const library = { projects: [], activeProjectId: null };
-        saveLibrary(localStorage, library);
+        saveLibrary(storage.current, library);
         histories.current.clear();
         setState({ library, error: null, corrupt: false, saved: true });
       } catch {

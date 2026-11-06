@@ -8,6 +8,35 @@ export type StorageAdapter = {
   setItem(key: string, value: string): void;
 };
 export const projectStorageKey = "adiguneplanai.projects.v1";
+export function accountStorageKey(ownerId: string | null): string {
+  if (ownerId === null) return projectStorageKey;
+  if (
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+      ownerId,
+    )
+  )
+    throw new Error("Invalid account storage identity");
+  return `${projectStorageKey}.owner.${ownerId.toLowerCase()}`;
+}
+/** Guest data retains its original key; it is never adopted by a signed-in account. */
+export function accountStorage(
+  storage: StorageAdapter,
+  ownerId: string | null,
+): StorageAdapter {
+  const scopedKey = accountStorageKey(ownerId);
+  return {
+    getItem(key) {
+      if (key !== projectStorageKey)
+        throw new Error("Unknown project storage key");
+      return storage.getItem(scopedKey);
+    },
+    setItem(key, value) {
+      if (key !== projectStorageKey)
+        throw new Error("Unknown project storage key");
+      storage.setItem(scopedKey, value);
+    },
+  };
+}
 export type ProjectLibrary = {
   projects: Project[];
   activeProjectId: string | null;
