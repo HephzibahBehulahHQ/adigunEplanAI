@@ -1,4 +1,5 @@
 import { EquipmentTools } from "./EquipmentTools";
+import { CircuitRouteTools } from "./CircuitRouteTools";
 import { equipmentCorners } from "../../../packages/building-design/equipment.ts";
 import { SymbolArtwork } from "./SymbolArtwork";
 import { Glyph } from "./Glyph";
@@ -44,6 +45,7 @@ export function BuildingEditor({
   t: (key: MessageKey) => string;
 }) {
   const [selectedEquipmentId, setSelectedEquipmentId] = useState("");
+  const [selectedRouteId, setSelectedRouteId] = useState("");
   const planRef = useRef<SVGSVGElement>(null);
   const [drawing, setDrawing] = useState<{
     floorId: string;
@@ -98,7 +100,29 @@ export function BuildingEditor({
       e.floorId === floor?.id &&
       p.architecturalLayers.some((l) => l.id === e.layerId && l.visible),
   );
+  const visibleRoutes = p.planRoutes.filter(
+    (route) =>
+      route.floorId === floor?.id &&
+      p.architecturalLayers.some(
+        (layer) => layer.id === route.layerId && layer.visible,
+      ),
+  );
+  const routeLabels = new Map(
+    visibleRoutes.map((route) => {
+      const circuit = p.circuits.find((item) => item.id === route.circuitId);
+      const full = circuit ? `${route.name} · ${circuit.name}` : route.name;
+      return [route.id, full.length > 34 ? full.slice(0, 32) + "…" : full];
+    }),
+  );
   const planShapes = [
+    ...visibleRoutes.map((route) => [
+      ...route.points,
+      { x: route.points[0].x, y: route.points[0].y - 220 },
+      {
+        x: route.points[0].x + routeLabels.get(route.id)!.length * 70,
+        y: route.points[0].y,
+      },
+    ]),
     ...equipment.map((e) => {
       const symbol = p.symbolInstances.find(
         (s) => s.id === e.symbolInstanceId,
@@ -332,6 +356,14 @@ export function BuildingEditor({
             floorId={floor.id}
             selectedId={selectedEquipmentId}
             select={setSelectedEquipmentId}
+            t={t}
+          />
+          <CircuitRouteTools
+            key={`circuits-${floor.id}`}
+            native={native}
+            floorId={floor.id}
+            selectedRouteId={selectedRouteId}
+            selectRoute={setSelectedRouteId}
             t={t}
           />
           <ZoneTools
@@ -710,6 +742,61 @@ export function BuildingEditor({
                   fill="currentColor"
                 >
                   {room.name}
+                </text>
+              </g>
+            ))}
+            {visibleRoutes.map((route) => (
+              <g
+                key={route.id}
+                data-plan-route-id={route.id}
+                role="button"
+                tabIndex={activeDrawing ? -1 : 0}
+                aria-label={`${t("planRouteName")}: ${route.name}`}
+                aria-pressed={selectedRouteId === route.id}
+                aria-disabled={!!activeDrawing}
+                onClick={() => {
+                  if (!activeDrawing) setSelectedRouteId(route.id);
+                }}
+                onKeyDown={(event) => {
+                  if (
+                    !activeDrawing &&
+                    (event.key === "Enter" || event.key === " ")
+                  ) {
+                    event.preventDefault();
+                    setSelectedRouteId(route.id);
+                  }
+                }}
+              >
+                <title>
+                  {route.name}
+                  {route.circuitId
+                    ? ` · ${p.circuits.find((item) => item.id === route.circuitId)!.name}`
+                    : ""}
+                </title>
+                <polyline
+                  points={route.points
+                    .map((point) => `${point.x},${point.y}`)
+                    .join(" ")}
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={selectedRouteId === route.id ? 4 : 2}
+                  strokeDasharray={
+                    route.kind === "tray"
+                      ? "10 4 2 4"
+                      : route.kind === "conduit"
+                        ? "8 4"
+                        : undefined
+                  }
+                  vectorEffect="non-scaling-stroke"
+                />
+                <text
+                  data-plan-route-label={route.id}
+                  x={route.points[0].x}
+                  y={route.points[0].y - 100}
+                  fontSize={100}
+                  fill="currentColor"
+                >
+                  {routeLabels.get(route.id)}
                 </text>
               </g>
             ))}

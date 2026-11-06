@@ -36,8 +36,8 @@ export function savePlanRoute(
     ...input,
     id: id ?? crypto.randomUUID(),
     points: input.points.map((p) => ({
-      x: snap(p.x, gridMm),
-      y: snap(p.y, gridMm),
+      x: gridMm === 0 ? p.x : snap(p.x, gridMm),
+      y: gridMm === 0 ? p.y : snap(p.y, gridMm),
     })),
   };
   const next = structuredClone(project);

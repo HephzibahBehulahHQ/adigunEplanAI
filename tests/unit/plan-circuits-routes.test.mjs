@@ -333,6 +333,47 @@ test("routes never create netlist connections and circuit schedules report actua
   assert.equal(c.planRoutes[0].circuitId, undefined);
 });
 
+test("route metadata edits preserve exact points unless snapping is explicitly requested", () => {
+  const p = fixture();
+  const input = {
+    ...routeInput(p),
+    points: [
+      { x: 1012.5, y: 986.25 },
+      { x: 3012.5, y: 1986.25 },
+    ],
+  };
+  const a = savePlanRoute(p, input, 0);
+  const b = savePlanRoute(
+    a,
+    { ...input, name: "Renamed route" },
+    0,
+    a.planRoutes[0].id,
+  );
+  assert.deepEqual(b.planRoutes[0].points, input.points);
+  assert.equal(b.planRoutes[0].id, a.planRoutes[0].id);
+  assert.equal(b.planRoutes[0].name, "Renamed route");
+  const c = savePlanRoute(b, input, 50, b.planRoutes[0].id);
+  assert.deepEqual(c.planRoutes[0].points, [
+    { x: 1000, y: 1000 },
+    { x: 3000, y: 2000 },
+  ]);
+  for (const invalid of [
+    { x: NaN, y: 0 },
+    { x: Infinity, y: 0 },
+    { x: 1000001, y: 0 },
+    input.points[0],
+  ])
+    assert.throws(() =>
+      savePlanRoute(
+        b,
+        { ...input, points: [input.points[0], invalid] },
+        0,
+        b.planRoutes[0].id,
+      ),
+    );
+  assert.deepEqual(b.planRoutes[0].points, input.points);
+});
+
 test("routes reject degenerate or unbounded geometry and incompatible layers or circuit floors", () => {
   let p = fixture();
   p = savePlanCircuit(p, circuitInput(p));
@@ -359,7 +400,7 @@ test("routes reject degenerate or unbounded geometry and incompatible layers or 
     ],
   ])
     assert.throws(() => savePlanRoute(p, { ...input, points }, 50));
-  for (const grid of [0, -1, NaN, Infinity])
+  for (const grid of [-1, NaN, Infinity])
     assert.throws(() => savePlanRoute(p, input, grid));
   assert.throws(() => savePlanRoute(p, { ...input, circuitId: "missing" }, 50));
   const q = addPlanLayer(p, p.floors[0].id, "Walls", "architectural");

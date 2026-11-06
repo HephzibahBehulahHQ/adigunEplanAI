@@ -97,7 +97,7 @@ test("floor-first creation respects both floor and schematic layer protection at
     { layerId: "missing" },
   ])
     assert.throws(() => createFloorDevice(p, { ...entry, ...change }, 50));
-  assert.throws(() => createFloorDevice(p, entry, 0));
+  assert.throws(() => createFloorDevice(p, entry, -1));
   assert.equal(serializeProject(p), before);
 });
 
