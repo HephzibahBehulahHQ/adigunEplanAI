@@ -226,6 +226,22 @@ test("floor-first devices, board/circuit schedules and geometric routes survive 
     "0,0 3000,0 3000,4000",
   );
   expect(JSON.stringify(await readProject(page))).toBe(beforeReload);
+  await page.setViewportSize({ width: 390, height: 844 });
+  const table = page.getByRole("table", {
+    name: "Circuit schedule",
+    exact: true,
+  });
+  expect(
+    await table.evaluate((element) => {
+      const wrapper = element.parentElement!;
+      return wrapper.scrollWidth > wrapper.clientWidth;
+    }),
+  ).toBe(true);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
 });
 
 test("floor equipment and routes reject invalid changes and respect locked/hidden plan layers", async ({
