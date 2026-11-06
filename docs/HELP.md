@@ -6,6 +6,9 @@
 - [Component revisions and replacement](#component-revisions-and-replacement)
 - [Component files](#component-files)
 - [Mechanical symbols](#mechanical-symbols)
+- [Create equipment from a floor plan](#create-equipment-from-a-floor-plan)
+- [Distribution boards and circuit schedules](#distribution-boards-and-circuit-schedules)
+- [Cable, conduit and tray routes](#cable-conduit-and-tray-routes)
 - [Loading engineering symbols](#loading-engineering-symbols)
 
 ## Custom components
@@ -87,4 +90,29 @@ Export scaled plan SVG downloads the current visible floor plan with a millimetr
 
 Create the device in the schematic, then open Building design > Floor equipment. Choose its native symbol, a visible unlocked electrical layer and optionally a room. Position uses millimetres and the selected snap grid; rotation and annotation scale control the plan symbol. Mounting height is optional. Save, edit, remove, undo and redo preserve the shared device identity and schematic wiring.
 
-A device has one physical plan placement. Assigned room containment checks the anchor, not a certified physical footprint; annotation scale is not equipment size. Locked/hidden layers reject changes. Remove the plan placement before deleting its schematic device or assigned room. The room equipment schedule includes hidden placements and reports missing room, height and part values explicitly. Circuit assignment, route design and floor-first device creation remain unfinished.
+A device has one physical plan placement. Assigned room containment checks the anchor, not a certified physical footprint; annotation scale is not equipment size. Locked/hidden layers reject changes. Remove the plan placement before deleting its schematic device or assigned room. The room equipment schedule includes hidden placements and reports missing room, height and part values explicitly. Floor-first creation, circuit assignments and routes are described in the sections below. Broader building-design acceptance remains open.
+
+
+## Create equipment from a floor plan
+
+In Building design, select a floor and create a visible, unlocked electrical plan layer. Open Floor equipment → Create floor equipment. Choose a luminaire, socket, wall switch or generic distribution-board interface; enter a unique reference and description; select the linked schematic page, plan layer, optional room, coordinates and symbol scale. Mounting height is optional and remains unspecified when blank. Submit once to create the device, its real typed schematic terminals/pins, linked schematic symbol and floor placement as one undoable operation.
+
+The linked schematic symbol uses a free position on the selected drawing sheet. Existing wires and device identities are preserved. If all existing sheet layers are hidden or locked, creation is blocked; a page with no layers obtains its first layer. An assigned room must contain the equipment anchor. These are generic original symbols with no manufacturer identity or invented ratings. The distribution-board symbol declares independent L/N/PE supply-interface terminals; it does not invent internal connections or downstream protective devices. Designating a device as a distribution board is a separate explicit action.
+
+Use Selected equipment to edit an existing placement. Snap equipment to grid is off by default during edits so changing height, room or rotation preserves exact coordinates. Check it deliberately to quantize coordinates to the stated millimetre grid. New placements snap by default. Room schedules include hidden equipment and derive references from the shared native device.
+
+## Distribution boards and circuit schedules
+
+Open Circuits and cable routes. Select a placed native device and save its distribution-board name. Create a named circuit on an electrical layer, choose its board, explicitly enter supply voltage and phase count, and select its load devices. Each floor device can belong to one floor circuit. The board and all members must have placements on that floor. This increment does not represent multi-floor circuits or device subcircuits.
+
+For each selected device, enter active load in watts if known. A blank load remains unknown; zero means an explicitly known zero load. The schedule shows device count, voltage, phases, known subtotal, count of unspecified loads and a total only when every member has an explicit load. Values are user supplied. No demand factor, protective-device sizing, current calculation or code-compliance result is implied. The route-length column sums associated route records, including overlaps; it is not an installed cable quantity.
+
+Rename/edit the selected board or circuit with Save. Remove associated routes before deleting a circuit, and remove circuits/distribution-zone associations before deleting a board. Assigned floor placements and native devices cannot be removed while referenced. Hidden or locked circuit/device layers protect editing. These explicit associations do not create schematic wires or connect terminals.
+
+## Cable, conduit and tray routes
+
+Create a named Cable, Conduit or Cable tray route on an electrical plan layer. Enter at least two X,Y coordinate pairs, one pair per line, in native millimetres. Optionally assign an existing floor circuit. New routes snap to the chosen grid by default. Editing defaults to exact coordinates; enable Snap route points to grid explicitly when resnapping is intended. Empty/invalid points, zero-length segments, out-of-bounds coordinates and wrong-floor references are rejected without partial saves.
+
+The floor view renders the route and optional circuit label. Click it or focus it and press Enter/Space to select; use Save or Remove plan route to update it. Hidden layers omit geometry while retaining schedule entries. Locked layers block edits. Routes participate in the floor view bounds and physical-size SVG export, native JSON import/export, undo/redo and save/reload.
+
+Route lengths are sums of horizontal polyline segments in metres, excluding rises, drops, slack, bend allowances and installation allowances. Crossing routes do not create electrical connections. A conduit/tray route is not a count of cables inside it. Vertical risers, branch/junction engineering, route-capacity checks and physical conductor routing remain open.

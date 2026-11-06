@@ -63,6 +63,7 @@ async function createDevice(
     .getByLabel("Room", { exact: true })
     .selectOption({ label: "Office" });
   await form.getByLabel("Equipment X (mm)", { exact: true }).fill(String(x));
+  await form.getByLabel("Placement grid (mm)", { exact: true }).fill("1");
   await form.getByLabel("Equipment Y (mm)", { exact: true }).fill("1000");
   await form
     .getByRole("button", { name: "Create floor equipment", exact: true })
@@ -78,7 +79,7 @@ test("floor-first devices, board/circuit schedules and geometric routes survive 
   await prepareFloor(page);
   for (const [kind, reference, x] of [
     ["distribution-board-l-n-pe", "DB1", 500],
-    ["luminaire-l-n-pe", "L1", 1500],
+    ["luminaire-l-n-pe", "L1", 1512],
     ["socket-l-n-pe", "X1", 2500],
     ["wall-switch-single-pole", "S1", 3500],
   ] as const)
@@ -93,6 +94,23 @@ test("floor-first devices, board/circuit schedules and geometric routes survive 
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(3);
   await page.getByRole("button", { name: "Redo", exact: true }).click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(4);
+  await page
+    .getByLabel("Selected equipment", { exact: true })
+    .selectOption({ label: "L1" });
+  const placement = page.getByRole("form", {
+    name: "Save floor placement",
+    exact: true,
+  });
+  await expect(
+    placement.getByLabel("Snap equipment to grid", { exact: true }),
+  ).not.toBeChecked();
+  await placement
+    .getByLabel("Mounting height (mm)", { exact: true })
+    .fill("2200");
+  await placement
+    .getByRole("button", { name: "Save floor placement", exact: true })
+    .click();
+  expect((await readProject(page)).planEquipment[1].position.x).toBe(1512);
 
   await page.locator(".circuit-route-tools > summary").click();
   const board = page.getByRole("form", {
@@ -232,11 +250,22 @@ test("floor equipment and routes reject invalid changes and respect locked/hidde
   });
   await route.getByLabel("Route name", { exact: true }).fill("Tray A");
   await route.locator("select[name=kind]").selectOption("tray");
-  await route.locator("textarea").fill("0,0\n1000,0");
+  await route.locator("textarea").fill("12,7\n1012,7");
+  await route
+    .getByLabel("Snap route points to grid", { exact: true })
+    .uncheck();
   await route
     .getByRole("button", { name: "Save plan route", exact: true })
     .click();
   await expect(page.locator("[data-plan-route-id]")).toHaveCount(1);
+  await route.getByLabel("Route name", { exact: true }).fill("Tray A renamed");
+  await route
+    .getByRole("button", { name: "Save plan route", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-route-id] polyline")).toHaveAttribute(
+    "points",
+    "12,7 1012,7",
+  );
   const saved = JSON.stringify(await readProject(page));
   await route.locator("textarea").fill("0,0\n0,0");
   await route

@@ -1,13 +1,12 @@
 # Next tasks
 
-1. Continue M7: extend existing-device floor placements to floor-first device creation, routes and circuits. Schema 15 placement, layer protection and room schedules pass six new domain tests and 11 building browser workflows. Schema 14 drawing scales and physical-size SVG view export now pass conversion, migration and browser download/undo/reload checks. Schema 13 room-based electrical/distribution zones now pass native reference/migration tests and the browser edit/highlight/undo/reload workflow. Broader zone geometry remains open.
-2. Add lighting, sockets, switches, distribution equipment/routes and circuit associations; produce verified equipment/circuit schedules.
-3. Expand supported architectural geometry/import fidelity with explicit unsupported-content reporting; retain current working SVG/DXF workflows.
-4. Complete M8–20 and BOT/menu/domain addenda using the criteria and release gates in MILESTONES.md. No 500-project completion or final production readiness is claimed.
+1. Complete remaining M7 coverage: broader supported architectural geometry/import fidelity, emergency/fire/data/earthing equipment and vertical risers, circuit documentation/single-line and panel schedules. Preserve explicit unsupported-content reports and truthful geometry/engineering limits.
+2. Schema 16 now provides floor-first luminaires/sockets/switches/generic board interfaces, floor board/circuit associations, explicit active-load schedules, and cable/conduit/tray polylines. Grid snapping is explicit during edits; missing loads remain unknown. Release evidence is tracked in PROJECT_STATUS.md and VERIFICATION.md.
+3. Continue M8–20 and BOT/menu/domain addenda using MILESTONES.md acceptance criteria. No full M7, 500-project or final-production completion is claimed.
 
-Current published source: 1dc3375c98439ef2d41fa73d4ff16c285c42144d, with both hosted CI runs green and exact local/remote synchronization. Equipment source e05a965 is live in Pages deployment 495391b7790fdc1dc8b1fc590418632e648153a5; live equipment workflow passed. The isolated Supabase schema and API exposure are configured; production redirect was already allowed. Frontend authentication/cloud saving remain open.
+Source branch: codex/m7-floor-circuits-routes, PR #9. Use PROJECT_STATUS.md for the latest verified source/deployment receipts rather than historical checkpoints below.
 
-Owner constraints: publish reviewed source to visible branches/draft PRs; deploy verified increments through the configured process; preserve work; no force-push/history rewriting; approval before accessing another project. Exclude secrets, dependencies, caches and build/test/log artifacts from source. Latest deployment authorization supersedes the earlier no-deployment instruction.
+Owner constraints: publish reviewed source through visible branches/PRs; deploy verified increments through the existing main/root Pages process; preserve work and never force-push or rewrite history. Exclude secrets, dependencies, caches and test/log artifacts from source. The later recorded deployment authorization supersedes the earlier publication-only instruction. Human review of Yoruba/Pidgin engineering terminology remains an acceptance gate.
 
 ## Historical implementation evidence
 
