@@ -135,7 +135,22 @@ test("placement rejects architectural, hidden and locked layers, duplicate devic
       50,
     ),
   );
-  assert.throws(() => savePlanEquipment(p, entry, 0));
+  assert.throws(() => savePlanEquipment(p, entry, -1));
+  assert.throws(() => savePlanEquipment(p, entry, NaN));
+});
+
+test("editing placement metadata without snapping preserves exact non-grid geometry", () => {
+  const p = fixture();
+  const placed = savePlanEquipment(p, input(p), 0);
+  assert.deepEqual(placed.planEquipment[0].position, { x: 1012, y: 493 });
+  const updated = savePlanEquipment(
+    placed,
+    { ...input(p), rotation: 90, mountingHeightMm: 1800 },
+    0,
+    placed.planEquipment[0].id,
+  );
+  assert.deepEqual(updated.planEquipment[0].position, { x: 1012, y: 493 });
+  assert.equal(updated.planEquipment[0].mountingHeightMm, 1800);
 });
 test("room and schematic deletion are protected before mutation; shrinking rooms cannot orphan anchors", () => {
   const p = fixture();

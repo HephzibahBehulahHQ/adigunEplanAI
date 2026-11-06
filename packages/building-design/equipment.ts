@@ -14,6 +14,8 @@ export function savePlanEquipment(
   id?: string,
 ): Project {
   editable(project, input.layerId);
+  if (!Number.isFinite(gridMm) || gridMm < 0)
+    throw new Error("Invalid equipment grid");
   const next = structuredClone(project);
   const old = next.planEquipment.find((e) => e.id === id);
   if (id && !old) throw new Error("Unknown plan equipment");
@@ -31,8 +33,8 @@ export function savePlanEquipment(
     ...input,
     id: id ?? crypto.randomUUID(),
     position: {
-      x: snap(input.position.x, gridMm),
-      y: snap(input.position.y, gridMm),
+      x: gridMm === 0 ? input.position.x : snap(input.position.x, gridMm),
+      y: gridMm === 0 ? input.position.y : snap(input.position.y, gridMm),
     },
   };
   if (old) next.planEquipment[next.planEquipment.indexOf(old)] = record;

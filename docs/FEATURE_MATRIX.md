@@ -9,17 +9,17 @@ All requirements within each referenced part remain authoritative. Audit complet
 | P03 | Part 3: CORPORATE IDENTITY | Interface implemented/tested; human translation review pending | MASTER_SPECIFICATION.md |
 | P04 | Part 4: APPLICATION EXPERIENCE AND SCREENSHOT RECONSTRUCTION | Shell, native 2D tools and live data panels tested; 3D/BOT/domain expansion pending | MASTER_SPECIFICATION.md |
 | P05 | Part 5: ELECTRICAL SCHEMATIC ENGINE | Native schemas and initial 2D glyph/wiring editor tested; expanded library pending | MASTER_SPECIFICATION.md |
-| P06 | Part 6: WIRING, NETLISTS AND DEVICE CONNECTIONS | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P07 | Part 7: BUILDING ELECTRICAL AND ARCHITECTURAL DESIGN | Building/floor/room drawing and measurement plus native walls/layers tested; openings, equipment, circuits, routes and imports pending | MASTER_SPECIFICATION.md |
+| P06 | Part 6: WIRING, NETLISTS AND DEVICE CONNECTIONS | Native connectivity/netlists/numbering/diagnostics have M5 evidence; retained integration gates are in MILESTONE_5_ACCEPTANCE.md | MASTER_SPECIFICATION.md |
+| P07 | Part 7: BUILDING ELECTRICAL AND ARCHITECTURAL DESIGN | Floors/rooms/walls/openings, supported SVG/DXF imports, zones/scales, native equipment, board/circuit schedules and horizontal cable/conduit/tray routes implemented; broader geometry, risers and complete building-design acceptance remain open | MASTER_SPECIFICATION.md |
 | P08 | Part 8: ENGINEERING CALCULATION ENGINE | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P09 | Part 9: 3D PANEL AND ENCLOSURE ENGINEERING | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P10 | Part 10: INDUSTRIAL AUTOMATION AND PLC DESIGN | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P11 | Part 11: POWER ENGINEERING | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P12 | Part 12: ADIGUN BOT: FUNCTIONAL AI ENGINEERING ASSISTANT | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P13 | Part 13: COMPONENT AND MANUFACTURER LIBRARIES | Pending implementation / validation | MASTER_SPECIFICATION.md |
+| P13 | Part 13: COMPONENT AND MANUFACTURER LIBRARIES | Generic symbols, sourced catalog/custom components and revision/import/export workflows recorded; 3D mapping and retained M6 acceptance remain open | MASTER_SPECIFICATION.md |
 | P14 | Part 14: 500 READY-MADE ELECTRICAL AND ARCHITECTURAL PROJECTS | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P15 | Part 15: PROJECT TEMPLATES AND WIZARDS | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P16 | Part 16: DOCUMENTATION AND EXPORTS | Pending implementation / validation | MASTER_SPECIFICATION.md |
+| P16 | Part 16: DOCUMENTATION AND EXPORTS | Native JSON and physical-size floor SVG implemented; complete report/documentation formats remain M11 work | MASTER_SPECIFICATION.md |
 | P17 | Part 17: ACCOUNTS, DATABASE AND PROJECT SAVING | Local native persistence/recovery tested; accounts/cloud pending | MASTER_SPECIFICATION.md |
 | P18 | Part 18: TECHNOLOGY ARCHITECTURE | Audit documented | MASTER_SPECIFICATION.md |
 | P19 | Part 19: REPOSITORY STRUCTURE | Pending implementation / validation | MASTER_SPECIFICATION.md |

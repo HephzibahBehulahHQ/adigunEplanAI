@@ -281,7 +281,7 @@ test("custom artwork is bounded native geometry and schema three migrates withou
   p.schemaVersion = 3;
   const migrated = parseProject(JSON.stringify(p));
   assert.equal(migrated.migratedFrom, 3);
-  assert.equal(migrated.project.schemaVersion, 15);
+  assert.equal(migrated.project.schemaVersion, 16);
   assert.deepEqual(migrated.project.wires, p.wires);
 });
 

@@ -5,6 +5,10 @@ import {
 } from "../../../packages/building-design/equipment.ts";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
+import {
+  createFloorDevice,
+  type FloorDeviceKind,
+} from "../../../packages/building-design/floor-devices.ts";
 type Props = {
   native: NativeProjects;
   floorId: string;
@@ -22,6 +26,7 @@ export function EquipmentTools(props: Props) {
     <details className="equipment-tools">
       <summary>{t("planEquipment")}</summary>
       <p>{t("planEquipmentScope")}</p>
+      <CreateFloorDeviceForm {...props} />
       <label>
         {t("selectedEquipment")}
         <select
@@ -91,6 +96,194 @@ export function EquipmentTools(props: Props) {
     </details>
   );
 }
+function CreateFloorDeviceForm({ native, floorId, select, t }: Props) {
+  const p = native.project!;
+  const layers = p.architecturalLayers.filter(
+    (l) => l.floorId === floorId && l.kind === "electrical",
+  );
+  const pages = p.pages.filter((page) =>
+    p.documents.some((d) => d.id === page.documentId && d.kind === "schematic"),
+  );
+  return (
+    <details>
+      <summary>{t("createFloorDevice")}</summary>
+      <p>{t("createFloorDeviceScope")}</p>
+      <form
+        key={floorId}
+        aria-label={t("createFloorDevice")}
+        onSubmit={(event) => {
+          event.preventDefault();
+          const form = event.currentTarget;
+          const data = new FormData(form);
+          let saved = "";
+          if (
+            native.update((project) => {
+              const next = createFloorDevice(
+                project,
+                {
+                  kind: String(data.get("kind")) as FloorDeviceKind,
+                  pageId: String(data.get("page")),
+                  reference: String(data.get("reference")),
+                  description: String(data.get("description")),
+                  floorId,
+                  layerId: String(data.get("layer")),
+                  position: {
+                    x: Number(data.get("x")),
+                    y: Number(data.get("y")),
+                  },
+                  rotation: Number(data.get("rotation")) as 0 | 90 | 180 | 270,
+                  symbolScale: Number(data.get("size")),
+                  ...(data.get("room")
+                    ? { roomId: String(data.get("room")) }
+                    : {}),
+                  ...(String(data.get("height")).trim()
+                    ? { mountingHeightMm: Number(data.get("height")) }
+                    : {}),
+                },
+                Number(data.get("grid")),
+              );
+              saved = next.planEquipment.at(-1)!.id;
+              return next;
+            })
+          ) {
+            select(saved);
+            (form.elements.namedItem("reference") as HTMLInputElement).value =
+              "";
+          }
+        }}
+      >
+        <label>
+          {t("floorDeviceKind")}
+          <select name="kind" aria-label={t("floorDeviceKind")}>
+            {(
+              [
+                "luminaire-l-n-pe",
+                "socket-l-n-pe",
+                "wall-switch-single-pole",
+              ] as const
+            ).map((kind) => (
+              <option key={kind} value={kind}>
+                {t(kind)}
+              </option>
+            ))}
+            <option value="distribution-board-l-n-pe">
+              {t("floorDistributionBoard")}
+            </option>
+          </select>
+        </label>
+        <label>
+          {t("floorDeviceReference")}
+          <input name="reference" required maxLength={160} />
+        </label>
+        <label>
+          {t("floorDeviceName")}
+          <input name="description" required maxLength={160} />
+        </label>
+        <label>
+          {t("floorDevicePage")}
+          <select
+            name="page"
+            aria-label={t("floorDevicePage")}
+            required
+            defaultValue={native.selectedPageId ?? pages[0]?.id}
+          >
+            {pages.map((page) => {
+              const pageLayers = p.layers.filter((l) => l.pageId === page.id);
+              return (
+                <option
+                  key={page.id}
+                  value={page.id}
+                  disabled={
+                    pageLayers.length > 0 &&
+                    !pageLayers.some((l) => l.visible && !l.locked)
+                  }
+                >
+                  {page.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
+        <label>
+          {t("equipmentLayer")}
+          <select name="layer" aria-label={t("equipmentLayer")} required>
+            {layers.map((l) => (
+              <option key={l.id} value={l.id} disabled={!l.visible || l.locked}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          {t("equipmentRoom")}
+          <select name="room" aria-label={t("equipmentRoom")}>
+            <option value="">{t("unassignedEquipmentRoom")}</option>
+            {p.rooms
+              .filter((r) => r.floorId === floorId)
+              .map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+          </select>
+        </label>
+        {(
+          [
+            ["x", "equipmentX", 0, -1000000, 1000000],
+            ["y", "equipmentY", 0, -1000000, 1000000],
+            ["size", "equipmentSymbolScale", 20, 0.1, 1000],
+            ["grid", "equipmentGrid", 50, 1, 1000],
+          ] as const
+        ).map(([name, label, value, min, max]) => (
+          <label key={name}>
+            {t(label)}
+            <input
+              name={name}
+              type="number"
+              defaultValue={value}
+              min={min}
+              max={max}
+              step="any"
+              required
+            />
+          </label>
+        ))}
+        <label>
+          {t("equipmentRotation")}
+          <select
+            name="rotation"
+            aria-label={t("equipmentRotation")}
+            defaultValue={0}
+          >
+            {[0, 90, 180, 270].map((r) => (
+              <option key={r} value={r}>
+                {r}°
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          {t("equipmentMountingHeight")}
+          <input name="height" type="number" min={0} max={1000000} step="any" />
+        </label>
+        <button
+          disabled={
+            !layers.some((l) => l.visible && !l.locked) ||
+            !pages.some(
+              (page) =>
+                !p.layers.some((l) => l.pageId === page.id) ||
+                p.layers.some(
+                  (l) => l.pageId === page.id && l.visible && !l.locked,
+                ),
+            )
+          }
+        >
+          {t("createFloorDevice")}
+        </button>
+      </form>
+    </details>
+  );
+}
 function EquipmentForm({ native, floorId, selectedId, select, t }: Props) {
   const p = native.project!;
   const old = p.planEquipment.find((e) => e.id === selectedId);
@@ -142,7 +335,7 @@ function EquipmentForm({ native, floorId, selectedId, select, t }: Props) {
                   ? { mountingHeightMm: Number(data.get("height")) }
                   : {}),
               },
-              Number(data.get("grid")),
+              data.get("snap") === "on" ? Number(data.get("grid")) : 0,
               old?.id,
             );
             saved = old?.id ?? next.planEquipment.at(-1)!.id;
@@ -202,6 +395,10 @@ function EquipmentForm({ native, floorId, selectedId, select, t }: Props) {
               </option>
             ))}
         </select>
+      </label>
+      <label>
+        <input type="checkbox" name="snap" defaultChecked={!old} />
+        {t("snapEquipmentToGrid")}
       </label>
       {(
         [
