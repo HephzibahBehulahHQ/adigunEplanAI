@@ -1,11 +1,12 @@
 # Next tasks
 
-1. Publish and deploy the reviewed BSP visibility/DXF/riser follow-up to merged PR #10. Its example-driven occlusion fix is required before new-runtime deployment. Preserve source/deployment separation and exact tested-tree provenance.
-2. Continue M13 against both complete BOT addenda: verified account acceptance, preview/reversal/stale-state checks, actual canvas context, no automatic engineering persistence, grounded server gateway and fully accessible floating window.
-3. Validate and publish the first 50 distinct original native examples across all eleven categories, then reach 150, 300 and 500 with individual engineering and export evidence. Count only validated distinct projects.
-4. Complete remaining M7–M12 acceptance requirements, including specified interchange formats and representative automation/integrated projects. Do not promote estimates to manufacturer or compliance verification.
-5. Obtain successful authorized rollback security-fixture execution and a legitimate live account REST/storage round trip. The prior mandatory tool confirmation expired; do not bypass it. Hosted model credentials and authenticated backend acceptance remain gates when unavailable.
-6. Run M18 integration, M19 readiness and M20 versioned release gates from the master specification. Keep human translation/engineering, licensing and production acceptance explicit. Continue all unblocked work autonomously.
+1. Complete PR #12 Pages, integrated-revision and canonical-origin verification; publish exact receipts.
+2. Recover and inspect the unavailable local workspace before editing. Preserve every staged, unstaged and untracked project file; verify/reconcile the remote head and publish a scoped WIP checkpoint without reset, force-push or discarded work. Follow [the recovery record](CONTINUATION_2026_11_06.md).
+3. Fix the known BOT save-error visibility condition, then rerun all 14 strict-persistence browser cases and gateway/unit security checks. Preserve explicit authenticated acceptance, stale/replay guards and rollback on failed storage.
+4. Connect and verify multiline native annotation rendering; integrate example tests and generated-artifact checks into CI, then regenerate affected example outputs.
+5. Review/register the validated additions and complete the remaining 267 distinct projects. Meet the exact category totals and 150/300/500 gates with individual native/engineering/export evidence and representative visual checks.
+6. Complete retained M7–M12 requirements, legitimate authenticated account/storage and rollback-fixture acceptance, and hosted BOT deployment/configuration. Respect mandatory confirmations and product-only credentials.
+7. Run M18 integration, M19 readiness and M20 versioned release gates. Keep engineering/language/licensing, real browser/performance and independent backup/restore acceptance explicit. Continue all work that is actually unblocked.
 
 ## Historical implementation evidence
 
