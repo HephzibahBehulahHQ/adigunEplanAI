@@ -1,6 +1,6 @@
 # Next tasks
 
-1. Publish the locally verified schema-17 M7–M12 source (278 unit/tooling tests, 116 browser scenarios, zero production vulnerabilities), confirm hosted CI and deploy. Preserve source/deployment separation and exact tested-tree provenance.
+1. Publish and deploy the reviewed BSP visibility/DXF/riser follow-up to merged PR #10. Its example-driven occlusion fix is required before new-runtime deployment. Preserve source/deployment separation and exact tested-tree provenance.
 2. Continue M13 against both complete BOT addenda: verified account acceptance, preview/reversal/stale-state checks, actual canvas context, no automatic engineering persistence, grounded server gateway and fully accessible floating window.
 3. Validate and publish the first 50 distinct original native examples across all eleven categories, then reach 150, 300 and 500 with individual engineering and export evidence. Count only validated distinct projects.
 4. Complete remaining M7–M12 acceptance requirements, including specified interchange formats and representative automation/integrated projects. Do not promote estimates to manufacturer or compliance verification.

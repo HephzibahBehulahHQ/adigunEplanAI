@@ -19,7 +19,7 @@ All requirements within each referenced part remain authoritative. Audit complet
 | P13 | Part 13: COMPONENT AND MANUFACTURER LIBRARIES | Generic symbols, sourced catalog/custom components and revision/import/export workflows recorded; 3D mapping and retained M6 acceptance remain open | MASTER_SPECIFICATION.md |
 | P14 | Part 14: 500 READY-MADE ELECTRICAL AND ARCHITECTURAL PROJECTS | Pending implementation / validation | MASTER_SPECIFICATION.md |
 | P15 | Part 15: PROJECT TEMPLATES AND WIZARDS | Pending implementation / validation | MASTER_SPECIFICATION.md |
-| P16 | Part 16: DOCUMENTATION AND EXPORTS | Native JSON/SVG/PNG, physical-size browser PDF, CSV schedules and versioned calculation reports implemented; required DXF/STEP export remains open | MASTER_SPECIFICATION.md |
+| P16 | Part 16: DOCUMENTATION AND EXPORTS | Native JSON/SVG/PNG/DXF, physical-size browser PDF, document-language CSV schedules and versioned calculation reports implemented; STEP export remains open | MASTER_SPECIFICATION.md |
 | P17 | Part 17: ACCOUNTS, DATABASE AND PROJECT SAVING | Verified account UI, owner-scoped local data, explicit cloud history/conflicts/recovery and private avatars implemented; legitimate live authenticated round trip and rollback database fixture remain unverified | MASTER_SPECIFICATION.md |
 | P18 | Part 18: TECHNOLOGY ARCHITECTURE | Audit documented | MASTER_SPECIFICATION.md |
 | P19 | Part 19: REPOSITORY STRUCTURE | Pending implementation / validation | MASTER_SPECIFICATION.md |

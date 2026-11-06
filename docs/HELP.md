@@ -125,7 +125,7 @@ Route lengths are sums of horizontal polyline segments in metres, excluding rise
 
 ## Vertical risers and building documentation
 
-Building design supports emergency luminaires, original generic fire-loop devices, data interfaces and bonded PE equipment in addition to lighting, sockets, switches and boards. Each floor placement references an actual native schematic device. Vertical risers join two different floors in the same building, with an electrical layer and explicit height for each endpoint. Their floor markers and schedule retain the actual endpoint geometry; locked/hidden layers prevent edits. Risers document physical routes and do not invent conductor connectivity.
+Building design supports emergency luminaires, original generic fire-loop devices, data interfaces and bonded PE equipment in addition to lighting, sockets, switches and boards. Each floor placement references an actual native schematic device. Vertical risers join two different floors in the same building, with an electrical layer and explicit height for each endpoint. Their floor markers and schedule retain the actual endpoint geometry; select a riser and open its elevation diagram to preview or download a dimensioned SVG. The diagram retains floor elevations, endpoint heights and the actual vertical distance. Locked/hidden layers prevent edits. Risers document physical routes and do not invent conductor connectivity.
 
 The circuit assignment diagram derives from native distribution boards and circuit membership. Download its SVG or the panel schedule CSV. The PE schedule contains actual native wires with PE endpoints; unconnected bonds are not fabricated. Unknown equipment loads remain unknown in circuit totals.
 
@@ -147,7 +147,7 @@ Choose PLC and automation to create generic CPU, digital/analog I/O or communica
 
 ## Reports and real exports
 
-Open Reports, select a drawing page or a native schedule, then download the offered format. SVG retains native drawing vectors and physical page size. PNG is actually rasterized, with dimensions displayed before download. Print/save PDF opens a print document with physical millimetre page dimensions; choose Save as PDF in the browser print dialog. Review printer scaling and margins when using physical paper.
+Open Reports, select a drawing page or a native schedule, then download the offered format. SVG retains native drawing vectors and physical page size. DXF exports the supported native lines, circles, wires, layers and text in millimetres; [format scope](references/dxf-export.md) describes coordinate conversion and limits. Schedule CSV/JSON/PDF uses the selected drawing document’s output language independently of the interface. PNG is actually rasterized, with dimensions displayed before download. Print/save PDF opens a print document with physical millimetre page dimensions; choose Save as PDF in the browser print dialog. Review printer scaling and margins when using physical paper.
 
 CSV/JSON reports derive from devices, assigned parts, cables, terminals, actual connections, PLC mappings, drawing pages, revisions and saved calculations. Calculation reports replay the stored method and identify unavailable versions instead of inventing results. CSV output quotes cells and protects text cells from spreadsheet formula interpretation.
 

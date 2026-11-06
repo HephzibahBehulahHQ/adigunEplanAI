@@ -2,6 +2,172 @@ import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
 
+for (const scenario of ["instrument", "marshalling"] as const) {
+  test(`${scenario} foreground equipment remains visible in an oblique cabinet view`, async ({
+    page,
+  }) => {
+    const p = nativeProject();
+    const instrument = scenario === "instrument";
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("console", (message) => {
+      if (message.type() === "error") errors.push(message.text());
+    });
+    const enclosureId = `visibility-${scenario}`;
+    const equipmentId = `foreground-${scenario}`;
+    p.enclosures = [
+      {
+        id: enclosureId,
+        name: "Visibility regression cabinet",
+        widthMm: instrument ? 260 : 550,
+        heightMm: instrument ? 400 : 450,
+        depthMm: instrument ? 160 : 180,
+      },
+    ];
+    p.panelStructures = [
+      {
+        id: "back-plate",
+        name: "Rear mounting plate",
+        enclosureId,
+        kind: "plate",
+        positionMm: { x: 10, y: 10, z: 0 },
+        sizeMm: { x: instrument ? 240 : 530, y: instrument ? 380 : 430, z: 2 },
+      },
+      {
+        id: "support-rail",
+        name: "Mounting rail",
+        enclosureId,
+        kind: "din-rail",
+        positionMm: { x: instrument ? 180 : 30, y: instrument ? 80 : 90, z: 2 },
+        sizeMm: { x: instrument ? 200 : 460, y: 35, z: 8 },
+        rotationDeg: instrument ? 90 : 0,
+      },
+    ];
+    p.equipment3d = [
+      {
+        id: equipmentId,
+        name: instrument ? "Instrument PSU" : "Field terminals",
+        enclosureId,
+        deviceId: "device-a",
+        dimensionSource: "manual",
+        positionMm: {
+          x: instrument ? 40 : 50,
+          y: instrument ? 80 : 85,
+          z: instrument ? 2 : 10,
+        },
+        sizeMm: {
+          x: instrument ? 60 : 160,
+          y: instrument ? 100 : 60,
+          z: instrument ? 50 : 35,
+        },
+        mountingStructureId: instrument ? "back-plate" : "support-rail",
+      },
+      {
+        id: "secondary-equipment",
+        name: "Receiver",
+        enclosureId,
+        deviceId: "device-b",
+        dimensionSource: "manual",
+        positionMm: {
+          x: instrument ? 175 : 280,
+          y: instrument ? 110 : 70,
+          z: 10,
+        },
+        sizeMm: {
+          x: instrument ? 100 : 130,
+          y: instrument ? 45 : 100,
+          z: instrument ? 50 : 60,
+        },
+        rotationDeg: instrument ? 90 : 0,
+        mountingStructureId: "support-rail",
+      },
+    ];
+    await page.goto("/");
+    await page.getByLabel("Import project", { exact: true }).setInputFiles({
+      name: `${scenario}.json`,
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify(p)),
+    });
+    await page
+      .getByRole("button", { name: "Panel design", exact: true })
+      .click();
+    const panel = page.locator(".native-drawing .panel-editor");
+    const view = panel.locator(".panel-3d-view");
+    await expect(view).toBeVisible();
+    await expect
+      .poll(() =>
+        page.evaluate(() => localStorage.getItem("adiguneplanai.projects.v1")),
+      )
+      .toContain(equipmentId);
+    const saved = await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.projects.v1"),
+    );
+    for (const [label, value] of [
+      ["View yaw (°)", "25"],
+      ["View pitch (°)", "-18"],
+    ]) {
+      await panel
+        .getByLabel(label, { exact: true })
+        .evaluate((element, value) => {
+          Object.getOwnPropertyDescriptor(
+            HTMLInputElement.prototype,
+            "value",
+          )!.set!.call(element, value);
+          element.dispatchEvent(new Event("input", { bubbles: true }));
+        }, value);
+    }
+    await view.scrollIntoViewIfNeeded();
+    const centre = instrument
+      ? { x: 70, y: 130, z: 52 }
+      : { x: 130, y: 115, z: 45 };
+    const yaw = (25 * Math.PI) / 180,
+      pitch = (-18 * Math.PI) / 180;
+    const projected = {
+      x: Math.cos(yaw) * centre.x - Math.sin(yaw) * centre.z,
+      y:
+        Math.sin(pitch) * Math.sin(yaw) * centre.x +
+        Math.cos(pitch) * centre.y +
+        Math.sin(pitch) * Math.cos(yaw) * centre.z,
+    };
+    const hit = await view.evaluate((element, point) => {
+      const svg = element as SVGSVGElement;
+      const screen = new DOMPoint(point.x, point.y).matrixTransform(
+        svg.getScreenCTM()!,
+      );
+      return {
+        x: screen.x,
+        y: screen.y,
+        id: document
+          .elementFromPoint(screen.x, screen.y)
+          ?.closest("[data-panel-object]")
+          ?.getAttribute("data-panel-object"),
+      };
+    }, projected);
+    expect(hit.id).toBe(equipmentId);
+    const front = panel.locator(
+      `.panel-front-view [data-panel-object="${equipmentId}"]`,
+    );
+    await expect(front.locator("rect")).toHaveAttribute(
+      "x",
+      instrument ? "40" : "50",
+    );
+    await expect(front.locator("rect")).toHaveAttribute(
+      "width",
+      instrument ? "60" : "160",
+    );
+    expect(
+      await page.evaluate(() =>
+        localStorage.getItem("adiguneplanai.projects.v1"),
+      ),
+    ).toBe(saved);
+    await page.screenshot({
+      path: test.info().outputPath(`${scenario}-visibility.png`),
+      fullPage: true,
+    });
+    expect(errors).toEqual([]);
+  });
+}
+
 test("native panel editing synchronizes front and 3D geometry, undo, diagnostics and exports", async ({
   page,
 }) => {
