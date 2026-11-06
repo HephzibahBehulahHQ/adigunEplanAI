@@ -28,3 +28,6 @@ Two complete new browser workflows pass: create all four floor-device types, des
 Local browser validation uses repository Playwright 1.64.1 with recovered Chromium headless shell 141.0.7390.37 via a temporary config. The browser normally pinned to this Playwright release could not download locally; full Chrome also hit the environment's singleton-socket restriction. The standard headless shell launched normally; no repository dependency or sandbox/network policy changed. Hosted CI uses the configured Playwright browser. These local results do not establish other-browser or human-translation acceptance.
 
 Production bundling separates React runtime and schema validation without changing the 500 kB warning threshold. Main: 203.56 kB; React runtime: 218.77 kB; schema validation: 91.91 kB. The building editor remains lazy loaded.
+
+
+Hosted final-candidate evidence: `296bac8d5c4dfecd87b802868da66b7fc02d58f7` passed both push run 42171235299 and pull-request run 42171243149. The inspected PR job log confirms 171 tests, 97 browser scenarios and zero production vulnerabilities. The subsequent merge preserves exactly the candidate tree. Mobile schedule width was additionally verified in both built-app workflows without page overflow.
