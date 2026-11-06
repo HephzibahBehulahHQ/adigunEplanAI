@@ -1,12 +1,11 @@
 # Next tasks
 
-1. Complete PR #12 Pages, integrated-revision and canonical-origin verification; publish exact receipts.
-2. Recover and inspect the unavailable local workspace before editing. Preserve every staged, unstaged and untracked project file; verify/reconcile the remote head and publish a scoped WIP checkpoint without reset, force-push or discarded work. Follow [the recovery record](CONTINUATION_2026_11_06.md).
-3. Fix the known BOT save-error visibility condition, then rerun all 14 strict-persistence browser cases and gateway/unit security checks. Preserve explicit authenticated acceptance, stale/replay guards and rollback on failed storage.
-4. Connect and verify multiline native annotation rendering; integrate example tests and generated-artifact checks into CI, then regenerate affected example outputs.
-5. Review/register the validated additions and complete the remaining 267 distinct projects. Meet the exact category totals and 150/300/500 gates with individual native/engineering/export evidence and representative visual checks.
-6. Complete retained M7–M12 requirements, legitimate authenticated account/storage and rollback-fixture acceptance, and hosted BOT deployment/configuration. Respect mandatory confirmations and product-only credentials.
-7. Run M18 integration, M19 readiness and M20 versioned release gates. Keep engineering/language/licensing, real browser/performance and independent backup/restore acceptance explicit. Continue all work that is actually unblocked.
+1. Recover and inspect the unavailable local workspace before editing. Preserve every staged, unstaged and untracked project file; verify/reconcile the remote head and publish a scoped WIP checkpoint without reset, force-push or discarded work. Follow [the recovery record](CONTINUATION_2026_11_06.md).
+2. Fix the known BOT save-error visibility condition, then rerun all 14 strict-persistence browser cases and gateway/unit security checks. Preserve explicit authenticated acceptance, stale/replay guards and rollback on failed storage.
+3. Connect and verify multiline native annotation rendering; integrate example tests and generated-artifact checks into CI, then regenerate affected example outputs.
+4. Review/register the validated additions and complete the remaining 267 distinct projects. Meet the exact category totals and 150/300/500 gates with individual native/engineering/export evidence and representative visual checks.
+5. Complete retained M7–M12 requirements, legitimate authenticated account/storage and rollback-fixture acceptance, and hosted BOT deployment/configuration. Respect mandatory confirmations and product-only credentials.
+6. Run M18 integration, M19 readiness and M20 versioned release gates. Keep engineering/language/licensing, real browser/performance and independent backup/restore acceptance explicit. Continue all work that is actually unblocked.
 
 ## Historical implementation evidence
 
