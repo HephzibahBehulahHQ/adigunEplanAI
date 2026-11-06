@@ -108,6 +108,7 @@ function CreateFloorDeviceForm({ native, floorId, select, t }: Props) {
     <details>
       <summary>{t("createFloorDevice")}</summary>
       <p>{t("createFloorDeviceScope")}</p>
+      <p>{t("floorSpecialEquipmentScope")}</p>
       <form
         key={floorId}
         aria-label={t("createFloorDevice")}
@@ -160,6 +161,7 @@ function CreateFloorDeviceForm({ native, floorId, select, t }: Props) {
                 "luminaire-l-n-pe",
                 "socket-l-n-pe",
                 "wall-switch-single-pole",
+                "emergency-luminaire-battery",
               ] as const
             ).map((kind) => (
               <option key={kind} value={kind}>
@@ -168,6 +170,15 @@ function CreateFloorDeviceForm({ native, floorId, select, t }: Props) {
             ))}
             <option value="distribution-board-l-n-pe">
               {t("floorDistributionBoard")}
+            </option>
+            <option value="fire-alarm-loop-interface">
+              {t("floorFireAlarm")}
+            </option>
+            <option value="data-outlet-8p8c-shielded">
+              {t("floorDataOutlet")}
+            </option>
+            <option value="earthing-bond-point">
+              {t("floorEarthingPoint")}
             </option>
           </select>
         </label>

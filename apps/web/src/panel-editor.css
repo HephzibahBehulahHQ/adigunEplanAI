@@ -1,0 +1,190 @@
+.panel-editor {
+  padding: 1rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow: auto;
+  color: var(--text);
+  background: var(--surface);
+}
+.panel-editor h2,
+.panel-editor h3 {
+  margin: 0.6rem 0;
+}
+.panel-editor p {
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+.panel-editor label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  min-width: 0;
+}
+.panel-editor input,
+.panel-editor select {
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+.panel-editor input[readonly] {
+  opacity: 0.75;
+}
+.panel-editor form {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: 0.7rem;
+}
+.panel-editor details {
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  padding: 0.6rem;
+  margin-top: 0.7rem;
+  min-width: 0;
+}
+.panel-editor summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.panel-editor fieldset {
+  min-width: 0;
+  border: 1px solid var(--line);
+  padding: 0.7rem;
+}
+.panel-editor .panel-checkbox {
+  display: flex;
+  align-items: center;
+}
+.panel-editor .panel-checkbox input {
+  width: auto;
+}
+.panel-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 0.7rem;
+}
+.panel-views {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.panel-views figure {
+  min-width: 0;
+  margin: 0;
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 0.35rem;
+}
+.panel-views figcaption {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+.panel-views svg {
+  display: block;
+  width: 100%;
+  height: 340px;
+  touch-action: none;
+}
+.panel-enclosure-outline {
+  fill: var(--raised);
+  stroke: currentColor;
+  stroke-width: 2;
+}
+.panel-object {
+  cursor: move;
+}
+.panel-object text {
+  pointer-events: none;
+  user-select: none;
+}
+.panel-object:focus-visible {
+  outline: 3px solid #22d3ee;
+}
+.panel-3d-view {
+  cursor: grab;
+}
+.panel-3d-view:active {
+  cursor: grabbing;
+}
+.panel-view-hint {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.panel-editors {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 0.8rem;
+  align-items: start;
+}
+.panel-move-controls,
+.panel-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: end;
+  margin: 0.7rem 0;
+}
+.panel-move-controls label {
+  max-width: 130px;
+}
+.panel-editor button {
+  font-size: 0.78rem;
+}
+.panel-diagnostics {
+  padding-left: 1.3rem;
+  font-size: 0.8rem;
+}
+.panel-diagnostics [data-severity="error"] {
+  color: #ef7d87;
+}
+.panel-diagnostics [data-severity="warning"] {
+  color: #d4af37;
+}
+.panel-editor dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+.panel-editor dd {
+  margin: 0;
+}
+.panel-preview {
+  min-width: 0;
+  padding: 0.5rem;
+}
+.panel-preview label {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.75rem;
+}
+.panel-preview select {
+  max-width: 100%;
+}
+.panel-preview .panel-views {
+  grid-template-columns: minmax(0, 1fr);
+}
+.panel-preview .panel-views svg {
+  height: 230px;
+}
+.panel-preview p {
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+.panel-feature-tools figure {
+  margin: 0.7rem 0;
+}
+.panel-feature-tools svg {
+  width: 100%;
+  height: 280px;
+}
+@media (max-width: 500px) {
+  .panel-editor {
+    padding: 0.6rem;
+  }
+  .panel-views svg {
+    height: 280px;
+  }
+}

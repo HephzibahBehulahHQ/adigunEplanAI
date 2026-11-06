@@ -1,5 +1,7 @@
+import { RiserTools } from "./RiserTools";
 import { EquipmentTools } from "./EquipmentTools";
 import { CircuitRouteTools } from "./CircuitRouteTools";
+import { BuildingDocumentation } from "./BuildingDocumentation";
 import { equipmentCorners } from "../../../packages/building-design/equipment.ts";
 import { SymbolArtwork } from "./SymbolArtwork";
 import { Glyph } from "./Glyph";
@@ -107,6 +109,15 @@ export function BuildingEditor({
         (layer) => layer.id === route.layerId && layer.visible,
       ),
   );
+  const visibleRisers = p.planRisers.filter((riser) =>
+    [riser.start, riser.end].some(
+      (end) =>
+        end.floorId === floor?.id &&
+        p.architecturalLayers.some(
+          (layer) => layer.id === end.layerId && layer.visible,
+        ),
+    ),
+  );
   const routeLabels = new Map(
     visibleRoutes.map((route) => {
       const circuit = p.circuits.find((item) => item.id === route.circuitId);
@@ -115,6 +126,13 @@ export function BuildingEditor({
     }),
   );
   const planShapes = [
+    ...visibleRisers.map((riser) => [
+      { x: riser.position.x - 100, y: riser.position.y - 100 },
+      {
+        x: riser.position.x + Math.min(34, riser.name.length) * 70 + 160,
+        y: riser.position.y + 150,
+      },
+    ]),
     ...visibleRoutes.map((route) => [
       ...route.points,
       { x: route.points[0].x, y: route.points[0].y - 220 },
@@ -366,6 +384,13 @@ export function BuildingEditor({
             selectRoute={setSelectedRouteId}
             t={t}
           />
+          <RiserTools
+            key={`risers-${floor.id}`}
+            native={native}
+            floorId={floor.id}
+            t={t}
+          />
+          <BuildingDocumentation project={p} floorId={floor.id} t={t} />
           <ZoneTools
             key={`zones-${floor.id}`}
             native={native}
@@ -742,6 +767,40 @@ export function BuildingEditor({
                   fill="currentColor"
                 >
                   {room.name}
+                </text>
+              </g>
+            ))}
+            {visibleRisers.map((riser) => (
+              <g
+                key={riser.id}
+                data-plan-riser={riser.id}
+                transform={`translate(${riser.position.x} ${riser.position.y})`}
+              >
+                <title>
+                  {riser.name} ·{" "}
+                  {
+                    p.floors.find((item) => item.id === riser.start.floorId)
+                      ?.name
+                  }{" "}
+                  ↕{" "}
+                  {p.floors.find((item) => item.id === riser.end.floorId)?.name}
+                </title>
+                <circle
+                  r={90}
+                  fill="white"
+                  stroke="currentColor"
+                  strokeWidth={12}
+                />
+                <path
+                  d="M0 -60V60 M-28 -30L0 -60L28 -30 M-28 30L0 60L28 30"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={12}
+                />
+                <text x={130} y={45} fontSize={140} fill="currentColor">
+                  {riser.name.length > 34
+                    ? riser.name.slice(0, 32) + "…"
+                    : riser.name}
                 </text>
               </g>
             ))}

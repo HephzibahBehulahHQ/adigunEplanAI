@@ -7,8 +7,24 @@ import {
   maxProjectBytes,
   serializeProject,
 } from "../../../packages/electrical-model/project.ts";
-import { projectStorageKey } from "../../../packages/project-storage/repository.ts";
 import type { NativeProjects } from "./useNativeProjects";
+const PanelPreview = lazy(() =>
+  import("./PanelEditor").then((module) => ({ default: module.PanelPreview })),
+);
+const PanelEditor = lazy(() => import("./PanelEditor"));
+const CalculationsPanel = lazy(() =>
+  import("./CalculationsPanel").then((module) => ({
+    default: module.CalculationsPanel,
+  })),
+);
+const ReportsPanel = lazy(() =>
+  import("./ReportsPanel").then((module) => ({ default: module.ReportsPanel })),
+);
+const AutomationEditor = lazy(() =>
+  import("./AutomationEditor").then((module) => ({
+    default: module.AutomationEditor,
+  })),
+);
 const BuildingEditor = lazy(() =>
   import("./BuildingEditor").then((module) => ({
     default: module.BuildingEditor,
@@ -82,7 +98,7 @@ export function ProjectTools({ native, t }: Props) {
         <button
           onClick={() => {
             try {
-              const raw = localStorage.getItem(projectStorageKey) ?? "";
+              const raw = native.recoveryText();
               const url = URL.createObjectURL(
                 new Blob([raw], { type: "application/json" }),
               );
@@ -191,6 +207,22 @@ export function NativeDataPanel({
 }: Props & { kind: "bom" | "panel3d" | "calculations" | "reports" }) {
   const project = native.project;
   if (!project) return <p className="empty-hint">{t("noProject")}</p>;
+  if (kind === "calculations")
+    return (
+      <LazyPanelBoundary message={t("reportExportError")}>
+        <Suspense fallback={<p role="status">{t("calculations")}…</p>}>
+          <CalculationsPanel native={native} t={t} />
+        </Suspense>
+      </LazyPanelBoundary>
+    );
+  if (kind === "reports")
+    return (
+      <LazyPanelBoundary message={t("reportExportError")}>
+        <Suspense fallback={<p role="status">{t("reports")}…</p>}>
+          <ReportsPanel native={native} t={t} />
+        </Suspense>
+      </LazyPanelBoundary>
+    );
   if (kind === "bom")
     return project.devices.length ? (
       <table className="native-bom">
@@ -220,25 +252,12 @@ export function NativeDataPanel({
     ) : (
       <p className="empty-hint">{t("noRecords")}</p>
     );
-  const records =
-    kind === "panel3d"
-      ? project.enclosures
-      : kind === "calculations"
-        ? project.calculations
-        : project.reports;
-  return records.length ? (
-    <ul>
-      {records.map((record) => (
-        <li key={record.id}>
-          {record.name}
-          {"widthMm" in record
-            ? ` · ${record.widthMm} × ${record.heightMm} × ${record.depthMm} mm`
-            : ""}
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p className="empty-hint">{t("noRecords")}</p>
+  return (
+    <LazyPanelBoundary message={t("reportExportError")}>
+      <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
+        <PanelPreview native={native} t={t} />
+      </Suspense>
+    </LazyPanelBoundary>
   );
 }
 export function ProjectProperties({ native, t }: Props) {
@@ -301,7 +320,9 @@ export function ProjectProperties({ native, t }: Props) {
 export function NativeDrawing({ native, t }: Props) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
-  const [buildingView, setBuildingView] = useState(false);
+  const [view, setView] = useState<
+    "schematic" | "building" | "automation" | "panel"
+  >("schematic");
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
   if (!p) return null;
@@ -310,22 +331,46 @@ export function NativeDrawing({ native, t }: Props) {
     <div className="native-drawing">
       <nav className="drawing-tabs" aria-label={t("workspaceView")}>
         <button
-          aria-pressed={!buildingView}
-          onClick={() => setBuildingView(false)}
+          aria-pressed={view === "schematic"}
+          onClick={() => setView("schematic")}
         >
           {t("schematicView")}
         </button>
         <button
-          aria-pressed={buildingView}
-          onClick={() => setBuildingView(true)}
+          aria-pressed={view === "building"}
+          onClick={() => setView("building")}
         >
           {t("buildingDesign")}
         </button>
+        <button
+          aria-pressed={view === "automation"}
+          onClick={() => setView("automation")}
+        >
+          {t("automationDesign")}
+        </button>
+        <button
+          aria-pressed={view === "panel"}
+          onClick={() => setView("panel")}
+        >
+          {t("panelDesign")}
+        </button>
       </nav>
-      {buildingView ? (
+      {view === "building" ? (
         <LazyPanelBoundary message={t("buildingLoadError")}>
           <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
             <BuildingEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : view === "panel" ? (
+        <LazyPanelBoundary message={t("reportExportError")}>
+          <Suspense fallback={<p role="status">{t("panelDesign")}…</p>}>
+            <PanelEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : view === "automation" ? (
+        <LazyPanelBoundary message={t("reportExportError")}>
+          <Suspense fallback={<p role="status">{t("automationDesign")}…</p>}>
+            <AutomationEditor key={p.id} native={native} t={t} />
           </Suspense>
         </LazyPanelBoundary>
       ) : (
@@ -358,7 +403,7 @@ export function NativeDrawing({ native, t }: Props) {
               setClipboard={setClipboard}
             />
           ) : (
-            <p>{t("noPages")}</p>
+            <p className="canvas-empty">{t("noPages")}</p>
           )}
         </>
       )}

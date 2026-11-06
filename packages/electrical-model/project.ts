@@ -258,23 +258,120 @@ export const schemas = {
   plcModules: entity.extend({
     deviceId: id,
     channelCount: z.number().int().min(1).max(4096),
+    moduleKind: z
+      .enum([
+        "cpu",
+        "digital-input",
+        "digital-output",
+        "analog-input",
+        "analog-output",
+        "communication",
+      ])
+      .optional(),
   }),
   plcAddresses: entity.extend({
     moduleId: id,
     channel: z.number().int().nonnegative(),
     address: name,
     dataType: z.enum(["BOOL", "INT", "REAL", "TIME"]),
+    terminalIds: z.array(id).max(32).optional(),
+    signalDeviceId: id.optional(),
+  }),
+  automationNotes: entity.extend({
+    kind: z.enum([
+      "interlock",
+      "emergency-stop",
+      "motor-control",
+      "sequence",
+      "safety",
+    ]),
+    deviceIds: z.array(id).min(1).max(1000),
+    description: z.string().trim().min(1).max(4000),
   }),
   enclosures: entity.extend({
-    widthMm: positive,
-    heightMm: positive,
-    depthMm: positive,
+    widthMm: positive.max(1e6),
+    heightMm: positive.max(1e6),
+    depthMm: positive.max(1e6),
+    features: z
+      .array(
+        entity.extend({
+          kind: z.enum(["mounting-hole", "cable-entry"]),
+          face: z.enum(["back", "front", "left", "right", "top", "bottom"]),
+          shape: z.enum(["circle", "rectangle"]),
+          positionMm: z
+            .object({ x: finite.min(0).max(1e6), y: finite.min(0).max(1e6) })
+            .strict(),
+          widthMm: positive.max(1e6),
+          heightMm: positive.max(1e6),
+        }),
+      )
+      .max(10000)
+      .optional(),
+    thermal: z
+      .object({
+        ambientC: finite.min(-273.15).max(1000),
+        heatTransferCoefficientWm2K: positive.min(1e-9).max(1e6),
+        exposedAreaM2: positive.min(1e-9).max(1e12),
+        additionalLossW: finite.min(0).max(1e12),
+        coolingW: finite.min(0).max(1e12),
+      })
+      .strict()
+      .optional(),
   }),
   equipment3d: entity.extend({
     deviceId: id,
     enclosureId: id,
-    positionMm: z.object({ x: finite, y: finite, z: finite }).strict(),
-    sizeMm: z.object({ x: positive, y: positive, z: positive }).strict(),
+    positionMm: z
+      .object({
+        x: finite.min(-1e6).max(1e6),
+        y: finite.min(-1e6).max(1e6),
+        z: finite.min(-1e6).max(1e6),
+      })
+      .strict(),
+    sizeMm: z
+      .object({
+        x: positive.max(1e6),
+        y: positive.max(1e6),
+        z: positive.max(1e6),
+      })
+      .strict(),
+    rotationDeg: z
+      .union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)])
+      .optional(),
+    clearanceMm: finite.min(0).max(1e6).optional(),
+    dimensionSource: z.enum(["manual", "catalog", "custom"]).optional(),
+    lossPowerW: finite.min(0).max(1e12).optional(),
+    mountingStructureId: id.optional(),
+    requiredMountingProfile: name.optional(),
+    accessDirection: z
+      .enum(["front", "back", "left", "right", "top", "bottom"])
+      .optional(),
+    accessClearanceMm: positive.max(1e6).optional(),
+  }),
+  panelStructures: entity.extend({
+    enclosureId: id,
+    kind: z.enum(["plate", "din-rail", "duct", "door", "compartment"]),
+    mountingProfile: name.optional(),
+    positionMm: z
+      .object({
+        x: finite.min(-1e6).max(1e6),
+        y: finite.min(-1e6).max(1e6),
+        z: finite.min(-1e6).max(1e6),
+      })
+      .strict(),
+    sizeMm: z
+      .object({
+        x: positive.max(1e6),
+        y: positive.max(1e6),
+        z: positive.max(1e6),
+      })
+      .strict(),
+    cableDiametersMm: z.array(positive.max(1e6)).max(10000).optional(),
+    usableCrossSectionMm2: positive.min(1e-9).max(1e12).optional(),
+    maximumFillPercent: positive.max(100).optional(),
+    rotationDeg: z
+      .union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)])
+      .optional(),
   }),
   buildings: entity.extend({ address: z.string().max(500) }),
   floors: entity.extend({
@@ -404,6 +501,29 @@ export const schemas = {
     roomIds: z.array(id).min(1).max(10000),
     boardId: id.optional(),
   }),
+  planRisers: entity.extend({
+    kind: z.enum(["cable", "conduit", "tray"]),
+    position: z
+      .object({
+        x: finite.min(-1000000).max(1000000),
+        y: finite.min(-1000000).max(1000000),
+      })
+      .strict(),
+    start: z
+      .object({
+        floorId: id,
+        layerId: id,
+        heightMm: finite.min(0).max(1000000),
+      })
+      .strict(),
+    end: z
+      .object({
+        floorId: id,
+        layerId: id,
+        heightMm: finite.min(0).max(1000000),
+      })
+      .strict(),
+  }),
   rooms: entity.extend({
     floorId: id,
     boundary: z.array(point).min(3).max(10000),
@@ -454,7 +574,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(16),
+    schemaVersion: z.literal(17),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -468,7 +588,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 16;
+  schemaVersion: 17;
   id: string;
   name: string;
   createdAt: string;
@@ -484,7 +604,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 16,
+    schemaVersion: 17,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -529,8 +649,18 @@ const references: Partial<
   connectionPoints: { terminalIds: "terminals" },
   terminalStrips: { terminalIds: "terminals" },
   plcModules: { deviceId: "devices" },
-  plcAddresses: { moduleId: "plcModules" },
-  equipment3d: { deviceId: "devices", enclosureId: "enclosures" },
+  plcAddresses: {
+    moduleId: "plcModules",
+    terminalIds: "terminals",
+    signalDeviceId: "devices",
+  },
+  automationNotes: { deviceIds: "devices" },
+  equipment3d: {
+    deviceId: "devices",
+    enclosureId: "enclosures",
+    mountingStructureId: "panelStructures",
+  },
+  panelStructures: { enclosureId: "enclosures" },
   floors: { buildingId: "buildings" },
   architecturalLayers: { floorId: "floors" },
   walls: { floorId: "floors", layerId: "architecturalLayers" },
@@ -567,6 +697,93 @@ const references: Partial<
   reports: { documentId: "documents", revisionId: "revisions" },
 };
 function validateReferences(project: Project): void {
+  const featureIds = new Set<string>();
+  for (const enclosure of project.enclosures)
+    for (const feature of enclosure.features ?? []) {
+      if (featureIds.has(feature.id))
+        throw new Error("Duplicate panel feature ID");
+      featureIds.add(feature.id);
+      const width = ["left", "right"].includes(feature.face)
+        ? enclosure.depthMm
+        : enclosure.widthMm;
+      const height = ["top", "bottom"].includes(feature.face)
+        ? enclosure.depthMm
+        : enclosure.heightMm;
+      const epsilon = 16 * Number.EPSILON * Math.max(width, height);
+      if (
+        (feature.shape === "circle" && feature.widthMm !== feature.heightMm) ||
+        feature.positionMm.x - feature.widthMm / 2 < -epsilon ||
+        feature.positionMm.y - feature.heightMm / 2 < -epsilon ||
+        feature.positionMm.x + feature.widthMm / 2 > width + epsilon ||
+        feature.positionMm.y + feature.heightMm / 2 > height + epsilon
+      )
+        throw new Error(
+          "Panel feature must fit its enclosure face; circles require equal dimensions",
+        );
+    }
+  for (const structure of project.panelStructures)
+    if (
+      structure.kind !== "duct" &&
+      (structure.cableDiametersMm !== undefined ||
+        structure.usableCrossSectionMm2 !== undefined ||
+        structure.maximumFillPercent !== undefined)
+    )
+      throw new Error("Only cable ducts can contain occupancy assumptions");
+  for (const structure of project.panelStructures)
+    if (
+      structure.mountingProfile &&
+      !["plate", "din-rail"].includes(structure.kind)
+    )
+      throw new Error(
+        "Only mounting plates and rails can declare a support profile",
+      );
+  const mountedDevices = new Set<string>();
+  for (const item of project.equipment3d) {
+    if (Boolean(item.accessDirection) !== Boolean(item.accessClearanceMm))
+      throw new Error(
+        "Service access requires both a direction and positive clearance",
+      );
+    if (mountedDevices.has(item.deviceId))
+      throw new Error("Device has multiple 3D placements");
+    mountedDevices.add(item.deviceId);
+    if (item.mountingStructureId) {
+      const structure = project.panelStructures.find(
+        (record) => record.id === item.mountingStructureId,
+      );
+      if (
+        !structure ||
+        structure.enclosureId !== item.enclosureId ||
+        !["plate", "din-rail"].includes(structure.kind)
+      )
+        throw new Error(
+          "3D mounting structure must be a plate or rail in the same enclosure",
+        );
+    }
+    if (
+      item.dimensionSource === "catalog" ||
+      item.dimensionSource === "custom"
+    ) {
+      const device = project.devices.find(
+        (record) => record.id === item.deviceId,
+      );
+      const part = project.manufacturerParts.find(
+        (record) => record.id === device?.partId,
+      );
+      const dimensions =
+        item.dimensionSource === "catalog"
+          ? part?.catalogSnapshot?.dimensionsMm
+          : part?.custom?.dimensionsMm;
+      if (
+        !dimensions ||
+        dimensions.width !== item.sizeMm.x ||
+        dimensions.height !== item.sizeMm.y ||
+        dimensions.depth !== item.sizeMm.z
+      )
+        throw new Error(
+          "3D dimensions do not match their assigned part source",
+        );
+    }
+  }
   const placementByDevice = new Map(
     project.planEquipment.map((equipment) => [
       project.symbolInstances.find((s) => s.id === equipment.symbolInstanceId)
@@ -657,6 +874,48 @@ function validateReferences(project: Project): void {
       )
     )
       throw new Error("Plan route circuit must belong to the same floor");
+  }
+  const riserNames = new Set<string>();
+  for (const riser of project.planRisers) {
+    const startFloor = project.floors.find((f) => f.id === riser.start.floorId);
+    const endFloor = project.floors.find((f) => f.id === riser.end.floorId);
+    if (
+      !startFloor ||
+      !endFloor ||
+      startFloor.id === endFloor.id ||
+      startFloor.buildingId !== endFloor.buildingId
+    )
+      throw new Error(
+        "Riser endpoints require different floors of the same building",
+      );
+    for (const endpoint of [riser.start, riser.end]) {
+      const floor = project.floors.find((f) => f.id === endpoint.floorId)!;
+      const layer = project.architecturalLayers.find(
+        (l) => l.id === endpoint.layerId,
+      );
+      if (!layer || layer.floorId !== floor.id || layer.kind !== "electrical")
+        throw new Error(
+          "Riser endpoint requires an electrical layer on its floor",
+        );
+      if (endpoint.heightMm > floor.heightMm)
+        throw new Error("Riser endpoint height exceeds its floor height");
+    }
+    const startZ = startFloor.elevationMm + riser.start.heightMm;
+    const endZ = endFloor.elevationMm + riser.end.heightMm;
+    if (
+      !Number.isFinite(startZ) ||
+      !Number.isFinite(endZ) ||
+      !Number.isFinite(endZ - startZ) ||
+      startZ === endZ
+    )
+      throw new Error("Riser must have finite nonzero vertical length");
+    const label = JSON.stringify([
+      startFloor.buildingId,
+      riser.name.toLowerCase(),
+    ]);
+    if (riserNames.has(label))
+      throw new Error("Riser names must be unique within a building");
+    riserNames.add(label);
   }
   const placedDevices = new Set<string>();
   for (const equipment of project.planEquipment) {
@@ -1009,6 +1268,12 @@ function validateReferences(project: Project): void {
   }
   const addresses = new Set<string>();
   const channels = new Set<string>();
+  const moduleDevices = new Set<string>();
+  for (const module of project.plcModules) {
+    if (moduleDevices.has(module.deviceId))
+      throw new Error("A native device can represent only one PLC module");
+    moduleDevices.add(module.deviceId);
+  }
   for (const address of project.plcAddresses) {
     const module = project.plcModules.find(
       (item) => item.id === address.moduleId,
@@ -1016,13 +1281,38 @@ function validateReferences(project: Project): void {
     const channel = `${module.id}:${address.channel}`;
     if (
       address.channel >= module.channelCount ||
-      addresses.has(address.address) ||
+      addresses.has(address.address.toLowerCase()) ||
       channels.has(channel)
     )
       throw new Error(`Invalid or duplicate PLC address: ${address.id}`);
-    addresses.add(address.address);
+    const terminalIds = address.terminalIds ?? [];
+    if (
+      new Set(terminalIds).size !== terminalIds.length ||
+      terminalIds.some(
+        (terminalId) =>
+          !project.terminals.some(
+            (terminal) =>
+              terminal.id === terminalId &&
+              terminal.deviceId === module.deviceId,
+          ),
+      )
+    )
+      throw new Error(
+        "PLC channel terminals must uniquely belong to its module device",
+      );
+    if (
+      (module.moduleKind?.startsWith("digital-") &&
+        address.dataType !== "BOOL") ||
+      (module.moduleKind?.startsWith("analog-") &&
+        !["INT", "REAL"].includes(address.dataType))
+    )
+      throw new Error("PLC channel data type does not match its module kind");
+    addresses.add(address.address.toLowerCase());
     channels.add(channel);
   }
+  for (const note of project.automationNotes)
+    if (new Set(note.deviceIds).size !== note.deviceIds.length)
+      throw new Error("Automation note devices must be distinct");
 }
 export function pinAnchor(project: Project, pinId: string): Point {
   const pin = project.pins.find((p) => p.id === pinId),
@@ -1051,7 +1341,24 @@ export function serializeProject(project: Project): string {
 export function parseProject(text: string): {
   project: Project;
   migratedFrom:
-    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16;
+    | 0
+    | 1
+    | 2
+    | 3
+    | 4
+    | 5
+    | 6
+    | 7
+    | 8
+    | 9
+    | 10
+    | 11
+    | 12
+    | 13
+    | 14
+    | 15
+    | 16
+    | 17;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -1059,8 +1366,8 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 16)
-    return { project: validateProject(raw), migratedFrom: 16 };
+  if (version === 17)
+    return { project: validateProject(raw), migratedFrom: 17 };
   const oldFloors = (raw as { floors?: unknown }).floors;
   const floors = Array.isArray(oldFloors)
     ? oldFloors.map((floor) => ({ drawingScale: 100, ...floor }))
@@ -1079,10 +1386,14 @@ export function parseProject(text: string): {
     version === 12 ||
     version === 13 ||
     version === 14 ||
-    version === 15
+    version === 15 ||
+    version === 16
   )
     return {
       project: validateProject({
+        panelStructures: [],
+        automationNotes: [],
+        planRisers: [],
         planRoutes: [],
         planEquipment: [],
         planZones: [],
@@ -1092,7 +1403,7 @@ export function parseProject(text: string): {
         planGeometry: [],
         ...raw,
         floors,
-        schemaVersion: 16,
+        schemaVersion: 17,
       }),
       migratedFrom: version,
     };
@@ -1102,7 +1413,7 @@ export function parseProject(text: string): {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
       floors,
-      schemaVersion: 16,
+      schemaVersion: 17,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

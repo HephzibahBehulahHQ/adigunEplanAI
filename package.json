@@ -43,6 +43,7 @@
     "minimatch": "11.0.4"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.119.0",
     "dxf-parser": "1.1.2"
   }
 }

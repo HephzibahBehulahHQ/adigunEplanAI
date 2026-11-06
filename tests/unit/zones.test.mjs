@@ -103,7 +103,7 @@ test("schema 12 migration preserves existing rooms and adds no invented zones", 
   delete legacy.planZones;
   const r = parseProject(JSON.stringify(legacy));
   assert.equal(r.migratedFrom, 12);
-  assert.equal(r.project.schemaVersion, 16);
+  assert.equal(r.project.schemaVersion, 17);
   assert.deepEqual(r.project.planZones, []);
   assert.deepEqual(r.project.rooms, p.rooms);
   assert.throws(() => validateProject({ ...p, planZones: undefined }));

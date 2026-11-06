@@ -17,6 +17,10 @@ export default defineConfig({
               name: "schema-validation",
               test: /[\\/]node_modules[\\/]zod[\\/]/,
             },
+            {
+              name: "account-runtime",
+              test: /[\\/]node_modules[\\/]@supabase[\\/]/,
+            },
           ],
         },
       },

@@ -2,6 +2,12 @@
 
 ## Contents
 
+- [Vertical risers and building documentation](#vertical-risers-and-building-documentation)
+- [Engineering calculations](#engineering-calculations)
+- [Panel design](#panel-design)
+- [PLC and automation](#plc-and-automation)
+- [Reports and real exports](#reports-and-real-exports)
+- [Accounts and cloud projects](#accounts-and-cloud-projects)
 - [Custom components](#custom-components)
 - [Component revisions and replacement](#component-revisions-and-replacement)
 - [Component files](#component-files)
@@ -116,3 +122,39 @@ Create a named Cable, Conduit or Cable tray route on an electrical plan layer. E
 The floor view renders the route and optional circuit label. Click it or focus it and press Enter/Space to select; use Save or Remove plan route to update it. Hidden layers omit geometry while retaining schedule entries. Locked layers block edits. Routes participate in the floor view bounds and physical-size SVG export, native JSON import/export, undo/redo and save/reload.
 
 Route lengths are sums of horizontal polyline segments in metres, excluding rises, drops, slack, bend allowances and installation allowances. Crossing routes do not create electrical connections. A conduit/tray route is not a count of cables inside it. Vertical risers, branch/junction engineering, route-capacity checks and physical conductor routing remain open.
+
+## Vertical risers and building documentation
+
+Building design supports emergency luminaires, original generic fire-loop devices, data interfaces and bonded PE equipment in addition to lighting, sockets, switches and boards. Each floor placement references an actual native schematic device. Vertical risers join two different floors in the same building, with an electrical layer and explicit height for each endpoint. Their floor markers and schedule retain the actual endpoint geometry; locked/hidden layers prevent edits. Risers document physical routes and do not invent conductor connectivity.
+
+The circuit assignment diagram derives from native distribution boards and circuit membership. Download its SVG or the panel schedule CSV. The PE schedule contains actual native wires with PE endpoints; unconnected bonds are not fabricated. Unknown equipment loads remain unknown in circuit totals.
+
+## Engineering calculations
+
+Open the Calculations dock, choose one of the 25 categories and enter the required numeric values and units. Read the formula, assumptions, source references and any requested evidence. Compute displays the result and limited checks. Save creates a versioned native calculation record; reopening replays its exact method. Update replaces the selected record only after explicit action. CSV/JSON reports contain the inputs, units, method version, assumptions, evidence and results.
+
+Manufacturer ratings, soil data, protective-device curves, battery behavior and installation limits must come from appropriate supplied sources. Generic calculations and estimated checks are not certification. See [calculation methods and limits](engineering-calculations.md).
+
+## Panel design
+
+Choose Panel design and create an enclosure with explicit millimetre dimensions. Add plates, DIN rails, ducts, compartments or doors, then place existing native devices. Catalog dimensions are retained from the assigned source snapshot; manual and custom dimensions remain explicitly identified. Front and orbitable 3D views read the same records. Inspect bounds, collision, clearance, mounting, directional access, duct and heat diagnostics, including their assumptions.
+
+Six-face holes and entries retain their face and local geometry. Export SVG for the front layout or OBJ for generic 3D geometry. These outputs are not a STEP/manufacturer CAD conversion or machining certification.
+
+## PLC and automation
+
+Choose PLC and automation to create generic CPU, digital/analog I/O or communication modules. Each mapped address references a module channel and its actual terminals; address/channel/type constraints reject conflicting records. A signal assignment documents a relationship and does not insert a wire. The wiring schedule lists real native wire endpoints. Export the I/O CSV and add interlock, motor-control, sequence or safety notes linked to native devices. Notes do not execute a PLC or prove a safety function.
+
+## Reports and real exports
+
+Open Reports, select a drawing page or a native schedule, then download the offered format. SVG retains native drawing vectors and physical page size. PNG is actually rasterized, with dimensions displayed before download. Print/save PDF opens a print document with physical millimetre page dimensions; choose Save as PDF in the browser print dialog. Review printer scaling and margins when using physical paper.
+
+CSV/JSON reports derive from devices, assigned parts, cables, terminals, actual connections, PLC mappings, drawing pages, revisions and saved calculations. Calculation reports replay the stored method and identify unavailable versions instead of inventing results. CSV output quotes cells and protects text cells from spreadsheet formula interpretation.
+
+## Accounts and cloud projects
+
+Use the profile icon to register or sign in. The green status dot means the current session was verified; local saving alone does not make it green. Profile name, password, reset and private avatar controls belong to the signed-in account. Language, settings, native search and help retain independent labelled controls.
+
+Guest and each authenticated account have separate local project stores. Switching accounts remounts the workspace, preventing stale responses from becoming another account's data. Cloud projects are saved only through explicit controls. Reopen the current cloud revision or an available history snapshot; a revision conflict asks for review rather than overwriting another saved version. If a response is lost, reload the cloud record before retrying because the server may already have accepted the write. Pending local recovery remains available to its owner.
+
+If an already verified account loses its connection, local editing can continue in that owner's workspace while cloud controls remain unavailable. Initial offline visitors remain guests. The application never embeds a privileged Supabase key. Production authenticated REST/storage acceptance is still tracked in [M7–M12 acceptance](MILESTONES_7_12_ACCEPTANCE.md).

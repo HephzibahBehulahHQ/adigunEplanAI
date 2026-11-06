@@ -61,12 +61,59 @@ test("floor-first creation supplies native device, typed pins and placement with
     assert.equal(device.partId, undefined);
     assert.equal(q.manufacturerParts.length, p.manufacturerParts.length);
     const terminals = q.terminals.filter((t) => t.deviceId === device.id);
-    assert.ok(terminals.length >= 2);
-    if (kind !== "wall-switch-single-pole") {
+    assert.ok(terminals.length >= 1);
+    if (
+      [
+        "luminaire-l-n-pe",
+        "socket-l-n-pe",
+        "distribution-board-l-n-pe",
+        "emergency-luminaire-battery",
+      ].includes(kind)
+    ) {
       assert.ok(terminals.some((t) => t.kind === "neutral"));
       assert.ok(terminals.some((t) => t.kind === "pe"));
     }
     assert.deepEqual(parseProject(serializeProject(q)).project, q);
+  }
+});
+
+test("special equipment exposes explicit native interfaces without invented internal wiring", () => {
+  for (const [kind, expectedKinds, expectedPins] of [
+    [
+      "emergency-luminaire-battery",
+      ["power", "neutral", "pe", "power", "power"],
+      5,
+    ],
+    ["fire-alarm-loop-interface", ["signal", "signal"], 2],
+    ["data-outlet-8p8c-shielded", Array(9).fill("signal"), 9],
+    ["earthing-bond-point", ["pe"], 2],
+  ]) {
+    const p = fixture();
+    const q = createFloorDevice(p, input(p, kind), 0);
+    const symbolId = q.planEquipment[0].symbolInstanceId;
+    const symbol = q.symbolInstances.find((s) => s.id === symbolId);
+    const terminals = q.terminals.filter((t) => t.deviceId === symbol.deviceId);
+    const pins = q.pins.filter((pin) => pin.symbolInstanceId === symbolId);
+    assert.deepEqual(
+      terminals.map((t) => t.kind),
+      expectedKinds,
+    );
+    assert.equal(pins.length, expectedPins);
+    assert.equal(
+      new Set(pins.map((pin) => pin.terminalId)).size,
+      terminals.length,
+    );
+    if (kind === "earthing-bond-point")
+      assert.equal(pins[0].terminalId, pins[1].terminalId);
+    assert.deepEqual(q.nets, p.nets);
+    assert.deepEqual(q.wires, p.wires);
+    assert.deepEqual(q.planEquipment[0].position, input(p).position);
+    const r = createFloorDevice(
+      q,
+      { ...input(q, kind), reference: "OTHER" },
+      0,
+    );
+    assert.equal(r.symbolDefinitions.length, q.symbolDefinitions.length);
   }
 });
 
