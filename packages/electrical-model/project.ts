@@ -370,6 +370,34 @@ export const schemas = {
     symbolScale: finite.min(0.1).max(1000),
     mountingHeightMm: finite.min(0).max(1000000).optional(),
   }),
+  planRoutes: entity
+    .extend({
+      floorId: id,
+      layerId: id,
+      kind: z.enum(["cable", "conduit", "tray"]),
+      points: z.array(point).min(2).max(10000),
+      circuitId: id.optional(),
+    })
+    .superRefine((route, ctx) => {
+      if (
+        route.points.some(
+          (p) => Math.abs(p.x) > 1000000 || Math.abs(p.y) > 1000000,
+        )
+      )
+        ctx.addIssue({ code: "custom", message: "Plan route exceeds bounds" });
+      if (
+        route.points.some(
+          (p, i) =>
+            i > 0 &&
+            p.x === route.points[i - 1].x &&
+            p.y === route.points[i - 1].y,
+        )
+      )
+        ctx.addIssue({
+          code: "custom",
+          message: "Plan route segments must have nonzero length",
+        });
+    }),
   planZones: entity.extend({
     floorId: id,
     kind: z.enum(["electrical", "distribution"]),
@@ -385,8 +413,22 @@ export const schemas = {
     deviceIds: z.array(id).max(10000),
     voltageV: positive,
     phases: z.union([z.literal(1), z.literal(3)]),
+    floorId: id.optional(),
+    layerId: id.optional(),
+    loads: z
+      .array(
+        z
+          .object({ deviceId: id, activePowerW: finite.min(0).max(1e12) })
+          .strict(),
+      )
+      .max(10000)
+      .optional(),
   }),
-  distributionBoards: entity.extend({ deviceId: id, roomId: id.optional() }),
+  distributionBoards: entity.extend({
+    deviceId: id,
+    roomId: id.optional(),
+    floorId: id.optional(),
+  }),
   calculations: entity.extend({
     kind: name,
     inputs: z.record(z.string(), finite),
@@ -412,7 +454,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(15),
+    schemaVersion: z.literal(16),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -426,7 +468,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 15;
+  schemaVersion: 16;
   id: string;
   name: string;
   createdAt: string;
@@ -442,7 +484,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 15,
+    schemaVersion: 16,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -501,16 +543,121 @@ const references: Partial<
     roomId: "rooms",
     symbolInstanceId: "symbolInstances",
   },
+  planRoutes: {
+    floorId: "floors",
+    layerId: "architecturalLayers",
+    circuitId: "circuits",
+  },
   planZones: {
     floorId: "floors",
     roomIds: "rooms",
     boardId: "distributionBoards",
   },
-  circuits: { boardId: "distributionBoards", deviceIds: "devices" },
-  distributionBoards: { deviceId: "devices", roomId: "rooms" },
+  circuits: {
+    boardId: "distributionBoards",
+    deviceIds: "devices",
+    floorId: "floors",
+    layerId: "architecturalLayers",
+  },
+  distributionBoards: {
+    deviceId: "devices",
+    roomId: "rooms",
+    floorId: "floors",
+  },
   reports: { documentId: "documents", revisionId: "revisions" },
 };
 function validateReferences(project: Project): void {
+  const placementByDevice = new Map(
+    project.planEquipment.map((equipment) => [
+      project.symbolInstances.find((s) => s.id === equipment.symbolInstanceId)
+        ?.deviceId,
+      equipment,
+    ]),
+  );
+  const floorBoardDevices = new Set<string>();
+  for (const board of project.distributionBoards) {
+    if (!board.floorId) continue;
+    const placement = placementByDevice.get(board.deviceId);
+    if (!placement || placement.floorId !== board.floorId)
+      throw new Error("Floor board requires a device placement on its floor");
+    if (
+      floorBoardDevices.has(board.deviceId) ||
+      project.distributionBoards.some(
+        (other) => other.id !== board.id && other.deviceId === board.deviceId,
+      )
+    )
+      throw new Error(
+        "A native device can represent only one distribution board",
+      );
+    floorBoardDevices.add(board.deviceId);
+    if (board.roomId && board.roomId !== placement.roomId)
+      throw new Error("Floor board room must match its equipment placement");
+  }
+  const assignedDevices = new Set<string>();
+  const circuitLabels = new Set<string>();
+  for (const circuit of project.circuits) {
+    const loadDevices = circuit.loads?.map((load) => load.deviceId) ?? [];
+    if (
+      new Set(loadDevices).size !== loadDevices.length ||
+      loadDevices.some((deviceId) => !circuit.deviceIds.includes(deviceId))
+    )
+      throw new Error("Circuit loads must uniquely reference member devices");
+    if (Boolean(circuit.floorId) !== Boolean(circuit.layerId))
+      throw new Error(
+        "Floor circuit requires both a floor and electrical layer",
+      );
+    if (!circuit.floorId) continue;
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === circuit.layerId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== circuit.floorId ||
+      layer.kind !== "electrical"
+    )
+      throw new Error(
+        "Floor circuit requires an electrical layer on its floor",
+      );
+    const board = project.distributionBoards.find(
+      (b) => b.id === circuit.boardId,
+    );
+    if (!board || board.floorId !== circuit.floorId)
+      throw new Error("Circuit board must belong to the same floor");
+    const label = JSON.stringify([circuit.boardId, circuit.name]);
+    if (circuitLabels.has(label))
+      throw new Error("Circuit labels must be unique within a board");
+    circuitLabels.add(label);
+    for (const deviceId of circuit.deviceIds) {
+      const placement = placementByDevice.get(deviceId);
+      if (!placement || placement.floorId !== circuit.floorId)
+        throw new Error("Circuit devices must be placed on the same floor");
+      if (deviceId === board.deviceId)
+        throw new Error(
+          "A circuit cannot contain its supplying board as a load",
+        );
+      if (assignedDevices.has(deviceId))
+        throw new Error("A floor device can belong to only one floor circuit");
+      assignedDevices.add(deviceId);
+    }
+  }
+  for (const route of project.planRoutes) {
+    const layer = project.architecturalLayers.find(
+      (l) => l.id === route.layerId,
+    );
+    if (
+      !layer ||
+      layer.floorId !== route.floorId ||
+      layer.kind !== "electrical"
+    )
+      throw new Error("Plan route requires an electrical layer on its floor");
+    if (
+      route.circuitId &&
+      !project.circuits.some(
+        (c) => c.id === route.circuitId && c.floorId === route.floorId,
+      )
+    )
+      throw new Error("Plan route circuit must belong to the same floor");
+  }
   const placedDevices = new Set<string>();
   for (const equipment of project.planEquipment) {
     const layer = project.architecturalLayers.find(
@@ -556,6 +703,8 @@ function validateReferences(project: Project): void {
       );
       if (zone.kind !== "distribution" || !board)
         throw new Error("Only distribution zones can reference a board");
+      if (board.floorId && board.floorId !== zone.floorId)
+        throw new Error("Zone board must be on the same floor");
       if (
         board.roomId &&
         !project.rooms.some(
@@ -902,7 +1051,7 @@ export function serializeProject(project: Project): string {
 export function parseProject(text: string): {
   project: Project;
   migratedFrom:
-    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
+    0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -910,8 +1059,8 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 15)
-    return { project: validateProject(raw), migratedFrom: 15 };
+  if (version === 16)
+    return { project: validateProject(raw), migratedFrom: 16 };
   const oldFloors = (raw as { floors?: unknown }).floors;
   const floors = Array.isArray(oldFloors)
     ? oldFloors.map((floor) => ({ drawingScale: 100, ...floor }))
@@ -929,10 +1078,12 @@ export function parseProject(text: string): {
     version === 11 ||
     version === 12 ||
     version === 13 ||
-    version === 14
+    version === 14 ||
+    version === 15
   )
     return {
       project: validateProject({
+        planRoutes: [],
         planEquipment: [],
         planZones: [],
         architecturalLayers: [],
@@ -941,7 +1092,7 @@ export function parseProject(text: string): {
         planGeometry: [],
         ...raw,
         floors,
-        schemaVersion: 15,
+        schemaVersion: 16,
       }),
       migratedFrom: version,
     };
@@ -951,7 +1102,7 @@ export function parseProject(text: string): {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
       floors,
-      schemaVersion: 15,
+      schemaVersion: 16,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);
