@@ -1,3 +1,4 @@
+import { annotationLayout } from "../../../packages/reporting/annotation-layout.ts";
 import { Glyph } from "./Glyph";
 import { createPortal } from "react-dom";
 import { SymbolArtwork } from "./SymbolArtwork";
@@ -59,11 +60,22 @@ export function SchematicEditor({
   setClipboard,
 }: Props) {
   const project = native.project!;
-  const [tool, setTool] = useState<
+  const [activeTool, setTool] = useState<
     "select" | "pan" | "wire" | "label" | "custom" | Primitive
   >("select");
+  // A ribbon tool is effective in the parent render, before deferred effects acknowledge it.
+  const requestedTool = native.editorCommand?.action;
+  const tool =
+    requestedTool &&
+    (["select", "pan", "wire", "label"].includes(requestedTool) ||
+      Object.hasOwn(primitives, requestedTool))
+      ? (requestedTool as typeof activeTool)
+      : activeTool;
   const [customDefinition, setCustomDefinition] = useState("");
-  const [selected, setSelected] = useState<string[]>([]);
+  const selected = native.selectedSymbolIds.filter((id) =>
+    project.symbolInstances.some((s) => s.id === id && s.pageId === page.id),
+  );
+  const setSelected = native.selectSymbols;
   const [selectedWire, setSelectedWire] = useState<string | null>(null);
   const [fromPin, setFromPin] = useState<string | null>(null);
   const [labelPin, setLabelPin] = useState<string | null>(null);
@@ -402,6 +414,35 @@ export function SchematicEditor({
     element.addEventListener("wheel", handler, { passive: false });
     return () => element.removeEventListener("wheel", handler);
   }, [page.widthMm]);
+  // Requests are ephemeral UI commands. A request runs once, including after switching views.
+  const handledCommand = useRef(0);
+  useEffect(() => {
+    const request = native.editorCommand;
+    if (!request || handledCommand.current === request.id) return;
+    handledCommand.current = request.id;
+    native.consumeEditorCommand(request.id);
+    const action = request.action;
+    if (
+      ["select", "pan", "wire", "label"].includes(action) ||
+      Object.hasOwn(primitives, action)
+    ) {
+      setTool(action as typeof tool);
+      setFromPin(null);
+    } else if (action === "fit")
+      setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
+    else if (action === "zoomIn") zoom(1.2);
+    else if (action === "zoomOut") zoom(1 / 1.2);
+    else if (action === "rotate" && selected.length)
+      edit((p) => rotate(p, selected));
+    else if (action === "mirror" && selected.length)
+      edit((p) => mirror(p, selected));
+    else if (action === "delete") deleteSelected();
+    else if (action === "duplicate") duplicateSelected();
+    else if (action === "paste") pasteClipboard();
+    else if (action === "copy" && selected.length)
+      setClipboard({ project: structuredClone(project), ids: [...selected] });
+    svg.current?.focus();
+  }, [native.editorCommand]);
   const sizes = {
     A4: [297, 210],
     A3: [420, 297],
@@ -416,6 +457,25 @@ export function SchematicEditor({
         Math.min(page.widthMm, page.heightMm) === v[1],
     )?.[0] ?? "custom";
   const wire = project.wires.find((w) => w.id === selectedWire);
+  const visibleAnnotations = project.annotations
+    .filter(
+      (a) =>
+        a.pageId === page.id &&
+        project.layers.find((layer) => layer.id === a.layerId)?.visible,
+    )
+    .map((annotation) => ({
+      annotation,
+      layout: annotationLayout(
+        annotation.text,
+        annotation.position.x,
+        annotation.position.y,
+        page.widthMm,
+        page.heightMm,
+      ),
+    }));
+  const overflowingNotes = visibleAnnotations.filter(
+    ({ layout }) => layout.overflow,
+  ).length;
   return (
     <div
       className="schematic-editor"
@@ -485,7 +545,26 @@ export function SchematicEditor({
         }
       }}
     >
-      <div className="editor-toolbar" aria-label={t("components")}>
+      <p className="active-editor-tool" aria-live="polite">
+        {t("activeEditorTool")}:{" "}
+        {t(
+          tool === "select"
+            ? "selectTool"
+            : tool === "pan"
+              ? "panTool"
+              : tool === "wire"
+                ? "wireTool"
+                : tool === "label"
+                  ? "labelTool"
+                  : tool === "custom"
+                    ? "customSymbols"
+                    : tool,
+        )}
+      </p>
+      <div
+        className="editor-toolbar compact-editor-tools"
+        aria-label={t("components")}
+      >
         {(["select", "pan", "wire", "label"] as const).map((mode) => (
           <button
             key={mode}
@@ -584,7 +663,10 @@ export function SchematicEditor({
           {t("snapping")}
         </label>
       </div>
-      <div className="editor-toolbar" aria-label={t("selection")}>
+      <div
+        className="editor-toolbar compact-editor-tools"
+        aria-label={t("selection")}
+      >
         {[
           ["rotate", () => edit((p) => rotate(p, selected))],
           ["mirror", () => edit((p) => mirror(p, selected))],
@@ -933,9 +1015,15 @@ export function SchematicEditor({
         </form>
       )}
       <p className="editor-hint">{t("editorHint")}</p>
+      {overflowingNotes > 0 && (
+        <p className="annotation-overflow" role="status">
+          {t("annotationOverflow")} ({overflowingNotes})
+        </p>
+      )}
       <svg
         ref={svg}
         className="native-sheet engineering-canvas"
+        data-tool={tool}
         viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
         role="application"
         aria-label={page.name}
@@ -1059,6 +1147,16 @@ export function SchematicEditor({
               key={instance.id}
               data-instance={instance.id}
               aria-label={device.reference}
+              role="button"
+              tabIndex={0}
+              aria-pressed={selected.includes(instance.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setSelected([instance.id]);
+                }
+              }}
               onPointerDown={(e) => beginSymbol(e, instance.id)}
             >
               <g
@@ -1173,23 +1271,31 @@ export function SchematicEditor({
               </g>
             );
           })}
-        {project.annotations
-          .filter(
-            (a) =>
-              a.pageId === page.id &&
-              project.layers.find((l) => l.id === a.layerId)?.visible,
-          )
-          .map((a) => (
+        {visibleAnnotations.map(({ annotation: a, layout }) => {
+          return (
             <text
               key={a.id}
+              data-annotation-id={a.id}
+              data-overflow={layout.overflow}
               x={a.position.x}
               y={a.position.y}
-              fontSize={3.5}
+              fontSize={layout.fontSizeMm}
               fill="currentColor"
+              aria-label={a.text}
             >
-              {a.text}
+              <title>{a.text}</title>
+              {layout.lines.map((line, index) => (
+                <tspan
+                  key={index}
+                  x={a.position.x}
+                  dy={index ? layout.lineHeightMm : 0}
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
-          ))}
+          );
+        })}
         {marquee && (
           <rect
             x={Math.min(marquee.a.x, marquee.b.x)}

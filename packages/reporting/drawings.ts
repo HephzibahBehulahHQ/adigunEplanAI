@@ -1,3 +1,4 @@
+import { annotationLayout } from "./annotation-layout.ts";
 import type { Project } from "../electrical-model/project.ts";
 import { xmlText } from "../building-design/documentation.ts";
 
@@ -75,10 +76,16 @@ export function schematicSvg(project: Project, pageId: string) {
     .join("");
   const notes = project.annotations
     .filter((note) => note.pageId === pageId && visible.has(note.layerId))
-    .map(
-      (note) =>
-        `<text x="${note.position.x}" y="${note.position.y}" font-size="3" fill="#102035">${xmlText(note.text)}</text>`,
-    )
+    .map((note) => {
+      const layout = annotationLayout(
+        note.text,
+        note.position.x,
+        note.position.y,
+        page.widthMm,
+        page.heightMm,
+      );
+      return `<text data-annotation-id="${xmlText(note.id)}" data-overflow="${layout.overflow}" x="${note.position.x}" y="${note.position.y}" font-size="${layout.fontSizeMm}" fill="#102035" aria-label="${xmlText(note.text)}"><title>${xmlText(note.text)}</title>${layout.lines.map((line, index) => `<tspan x="${note.position.x}" dy="${index ? layout.lineHeightMm : 0}">${xmlText(line)}</tspan>`).join("")}</text>`;
+    })
     .join("");
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${page.widthMm}mm" height="${page.heightMm}mm" viewBox="0 0 ${page.widthMm} ${page.heightMm}"><title>${xmlText(project.name + " · " + page.name)}</title><rect width="100%" height="100%" fill="white"/><g font-family="sans-serif">${wires}${symbols}${notes}</g></svg>`;
 }

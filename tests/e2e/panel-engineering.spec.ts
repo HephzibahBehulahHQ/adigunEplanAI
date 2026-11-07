@@ -479,7 +479,7 @@ test("face features, non-solid compartments, closed doors and the read-only dock
     .screenshot({ path: test.info().outputPath("panel-geometry.png") });
   const preview = page.locator('[data-panel="panel3d"] .panel-preview');
   await expect(
-    preview.getByRole("img", {
+    preview.getByRole("group", {
       name: "Interactive panel 3D view",
       exact: true,
     }),

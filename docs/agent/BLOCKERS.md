@@ -1,9 +1,16 @@
 # Blockers
 
-The execution workspace became unavailable on 2026-11-06. M13, example-library and readiness work saved there cannot currently be inspected, changed, tested or synchronized. Its recovery is unverified. GitHub connectors remain available for reviewed source publication, hosted checks and documentation. See [the recovery checkpoint](CONTINUATION_2026_11_06.md) for the exact last confirmed state and offline exception.
+The managed environment is available as of 2026-11-07, and native Git HTTPS push
+with exact remote readback now works. The clean published source was recovered.
+The prior session's unpublished BOT/example/readiness files are absent from this
+workspace and from its recorded work-branch head. Their contents remain
+unrecovered; this continuation does not claim to restore the 233-example WIP.
 
-M13 has a known unapplied save-error visibility fix and two unfinished quota rollback browser cases. The local example checkpoint contains 50 registered originals plus 183 unregistered additions; none of that example work has a confirmed external commit. These are not released examples.
+The current branch implements a separate, bounded read-only local BOT foundation
+and four original examples. No hosted AI endpoint or product-scoped provider
+credential is configured in this environment. Hosted AI, authenticated mutating
+proposal acceptance and 500 individually validated projects remain incomplete.
 
 Legitimate authenticated Supabase REST/storage acceptance, the mandatory-confirmation rollback fixture, BOT deployment/server configuration, licensed manufacturer and standards evidence, remaining specified interchange/geometry, human language/engineering review, browser/performance acceptance and independent backup/restore evidence remain open.
 
-Native Git credential-helper authentication is unavailable; the connected GitHub app supports ordinary reviewed commits/branches/PRs with exact remote readback. Do not force-push, discard local work or bypass a failed mandatory confirmation.
+Native Git HTTPS push and the connected GitHub app are available; source checkpoints use ordinary fast-forward pushes and exact remote readback. Do not force-push, discard local work or bypass a failed mandatory confirmation.

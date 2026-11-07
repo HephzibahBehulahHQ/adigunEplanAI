@@ -1,3 +1,4 @@
+import { annotationLayout } from "../../../packages/reporting/annotation-layout.ts";
 import { useState } from "react";
 import { dictionaries, type MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
@@ -59,11 +60,30 @@ export function ReportsPanel({
   const outputTable =
     kind === "drawing" ? null : projectReport(project, kind, outputLabel);
   const outputTitle = `${project.name} · ${outputLabel(reportNames[kind])}`;
+  const overflowingNotes = page
+    ? project.annotations.filter(
+        (note) =>
+          note.pageId === page.id &&
+          project.layers.find((layer) => layer.id === note.layerId)?.visible &&
+          annotationLayout(
+            note.text,
+            note.position.x,
+            note.position.y,
+            page.widthMm,
+            page.heightMm,
+          ).overflow,
+      ).length
+    : 0;
   const pngScale = page
     ? Math.min(150 / 25.4, 4096 / page.widthMm, 4096 / page.heightMm)
     : 1;
   return (
     <section className="engineering-tools" aria-label={t("reportTools")}>
+      {kind === "drawing" && overflowingNotes > 0 && (
+        <p role="status">
+          {t("annotationOverflow")} ({overflowingNotes})
+        </p>
+      )}
       <label>
         {t("reportType")}
         <select

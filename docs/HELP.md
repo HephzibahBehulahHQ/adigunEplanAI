@@ -2,6 +2,11 @@
 
 ## Contents
 
+- [Engineering ribbon and compact workspace](#engineering-ribbon-and-compact-workspace)
+- [Original example projects](#original-example-projects)
+- [Using the Adigun BOT floating window](#using-the-adigun-bot-floating-window)
+- [The live co-pilot](#the-live-co-pilot)
+
 - [Vertical risers and building documentation](#vertical-risers-and-building-documentation)
 - [Engineering calculations](#engineering-calculations)
 - [Panel design](#panel-design)
@@ -158,3 +163,86 @@ Use the profile icon to register or sign in. The green status dot means the curr
 Guest and each authenticated account have separate local project stores. Switching accounts remounts the workspace, preventing stale responses from becoming another account's data. Cloud projects are saved only through explicit controls. Reopen the current cloud revision or an available history snapshot; a revision conflict asks for review rather than overwriting another saved version. If a response is lost, reload the cloud record before retrying because the server may already have accepted the write. Pending local recovery remains available to its owner.
 
 If an already verified account loses its connection, local editing can continue in that owner's workspace while cloud controls remain unavailable. Initial offline visitors remain guests. The application never embeds a privileged Supabase key. Production authenticated REST/storage acceptance is still tracked in [M7–M12 acceptance](MILESTONES_7_12_ACCEPTANCE.md).
+
+## Engineering ribbon and compact workspace
+
+The ribbon opens existing native workflows: File/Home/Project manage projects;
+Insert places original symbols; Edit uses native clipboard, transforms and undo;
+Electrical/Connections select wiring tools and native rule checks; Components
+opens the real catalog; Automation/PLC opens I/O documentation; Building Design
+opens the floor editor; Power Engineering opens the schematic, checks and
+calculators; 3D Panel opens the native cabinet editor; Documentation opens actual
+reports; Analysis and Tools expose checks, calculations and drawing view controls.
+AI Tools opens the local BOT. Settings and Help retain the existing controls.
+The active tool is always identified above the drawing; a ribbon placement tool
+is effective immediately when its request renders.
+
+View → Compact engineering workspace hides the duplicate canvas toolbars on a
+large desktop display. Ribbon commands remain available. Turn it off to expose
+all canvas controls, including sheet/grid/layer configuration. Examples open in
+compact mode. The preference does not change engineering data. Small screens
+retain the full controls and use scrolling panels.
+
+Selecting a schematic device highlights its mapped cabinet envelope. A cabinet
+face can be selected by clicking, or by focusing it and pressing Enter/Space;
+this selects the associated native device and opens its schematic page. Only
+explicit device-ID mappings synchronize. These selections never edit the project.
+
+Long annotations wrap by Unicode grapheme in native millimetres; explicit
+paragraphs and full text remain intact. Notes that extend beyond the sheet are
+reported in the editor and report panel. SVG retains full text and an overflow
+attribute. Review such notes before publishing a drawing.
+
+## Original example projects
+
+Home → Example projects opens four independently authored educational documents:
+a transformer station with secondary trip interfaces, a maintained-run motor
+starter, a two-room residential layout and a PLC cabinet with two mapped/wired
+I/O channels. Each opening creates new internal identities and preserves earlier
+projects. Save/export and reopen them through the normal project tools.
+
+The transformer is a single-phase equivalent, not a complete medium-voltage
+design. The motor uses a maintained run switch without a seal-in circuit;
+protection selection remains an engineering input. Residential loads are explicit
+educational assumptions (24 W lighting and 600 W socket allowances), and circuit
+assignment does not create physical wiring. The PLC example documents two I/O
+associations and channel wiring; it executes no PLC code. Unused/open interfaces
+remain visible in checks. All cabinet equipment uses manually dimensioned generic
+envelopes; no manufacturer CAD or certified design is implied. These four examples
+do not replace the unrecovered prior-session examples or satisfy the 500-project
+release gate.
+
+## Using the Adigun BOT floating window
+
+Open **Adigun BOT** from its launcher or AI Tools. It is a nonmodal window: the
+workspace remains usable. Drag the title bar to move it; the title remains within
+the viewport. Drag the corner to resize. The title and resize handle also accept
+arrow keys in 10 px steps. Header buttons minimize, maximize, restore and close.
+Escape closes and returns focus to the launcher. Closing/reloading preserves the
+last window state. On a phone the open window fits the viewport and retains its
+close control. Window preferences are local and separated by account; they do not
+sync between devices. If preference storage fails, the window remains usable and
+displays the failure.
+
+The current mode is **deterministic local tools**. Hosted AI is not configured.
+The BOT inspects actual project counts, native connection findings, the selected
+device and the device/BOM list. It does not claim simulation, energization,
+standards certification, generated engineering changes or a hosted AI response.
+Prompts select a bounded read-only tool; they cannot execute code or mutate data.
+No project context or chat is transmitted to a provider. Conversation is held in
+memory, bounded to twenty results and cleared when switching projects/accounts.
+Use Clear conversation to clear it immediately. Earlier results are marked as
+snapshots when the native project revision changes.
+
+## The live co-pilot
+
+The Live connection findings switch enables a subscription to committed native
+project changes and the existing connectivity rules. It offers at most one
+previously unseen finding per 25 seconds, after a two-second editing pause. It
+suppresses offers during pointer interaction and keyboard activity. A finding
+creates a launcher badge without opening the window or stealing focus. Inspect
+shows the actual rule evidence; Dismiss prevents immediate repetition. Resolved
+or previous-project findings are not presented as current. These local offers are
+read-only and never save or repair a project automatically. Hosted natural-language
+reasoning, mutation proposals and authenticated acceptance remain unimplemented;
+the original live-copilot milestone is not declared complete.

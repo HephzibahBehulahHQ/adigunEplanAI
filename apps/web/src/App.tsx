@@ -1,4 +1,17 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+  type CSSProperties,
+} from "react";
+import {
+  WorkspaceCommands,
+  ribbonTabs,
+  type RibbonTab,
+} from "./WorkspaceRibbon";
+import { BotWindow } from "./BotWindow";
 import { ConnectivityPanel } from "./ConnectivityPanel";
 import {
   dictionaries,
@@ -30,12 +43,19 @@ import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
 import "./account.css";
 
+const ExampleLibrary = lazy(() =>
+  import("./ExampleLibrary").then((module) => ({
+    default: module.ExampleLibrary,
+  })),
+);
+
 export function App() {
   const account = useAccount();
   return <Workspace key={account.user?.id ?? "guest"} account={account} />;
 }
 function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
+  const examplesDialog = useRef<HTMLDialogElement>(null);
   const accountDialog = useRef<HTMLDialogElement>(null);
   const searchDialog = useRef<HTMLDialogElement>(null);
   const languageSelect = useRef<HTMLSelectElement>(null);
@@ -48,7 +68,8 @@ function Workspace({ account }: { account: Account }) {
       return defaults();
     }
   });
-  const [tab, setTab] = useState<"home" | "view" | "settings">("home");
+  const [botSignal, setBotSignal] = useState(0);
+  const [tab, setTab] = useState<RibbonTab>("home");
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
@@ -80,6 +101,26 @@ function Workspace({ account }: { account: Account }) {
     }));
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
+  const reveal = (id: PanelId) => {
+    panel(id, { visible: true, collapsed: false });
+    requestAnimationFrame(() => {
+      const element = document.querySelector<HTMLElement>(
+        `[data-panel="${id}"]`,
+      );
+      element
+        ?.querySelector<HTMLButtonElement>(".panel-heading button")
+        ?.focus();
+      if (id === "project") {
+        const library =
+          element?.querySelector<HTMLDetailsElement>(".component-library");
+        if (library) {
+          library.open = true;
+          library.querySelector<HTMLElement>("summary")?.focus();
+          library.scrollIntoView({ block: "nearest" });
+        }
+      }
+    });
+  };
   const renderPanel = (id: PanelId) => {
     const state = prefs.panels[id];
     return (
@@ -193,7 +234,11 @@ function Workspace({ account }: { account: Account }) {
       (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
     );
   return (
-    <div className="application" inert={account.checking && !account.user}>
+    <div
+      className="application"
+      data-compact={prefs.compact}
+      inert={account.checking && !account.user}
+    >
       <a className="skip-link" href="#workspace">
         {t("skip")}
       </a>
@@ -296,12 +341,26 @@ function Workspace({ account }: { account: Account }) {
         </div>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
-        <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
-          {t("home")}
-        </button>
-        <button aria-pressed={tab === "view"} onClick={() => setTab("view")}>
-          {t("view")}
-        </button>
+        {ribbonTabs.map(([id, key]) => (
+          <button
+            key={id}
+            aria-pressed={tab === id}
+            aria-label={
+              id === "home" || id === "view"
+                ? t(key)
+                : `${t(key)} ${t("ribbonMenu")}`
+            }
+            onClick={() =>
+              id === "help"
+                ? help.current?.showModal()
+                : id === "ai"
+                  ? setBotSignal((value) => value + 1)
+                  : setTab(id)
+            }
+          >
+            {t(key)}
+          </button>
+        ))}
       </nav>
       {native.error && (
         <p className="storage-error" role="alert">
@@ -313,11 +372,36 @@ function Workspace({ account }: { account: Account }) {
           {t("accountChecking")}
         </p>
       )}
-      <div className="ribbon" aria-label={t(tab)}>
-        {tab === "home" ? (
-          <ProjectTools native={native} t={t} />
+      <div
+        className="ribbon"
+        aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
+      >
+        {tab === "home" || tab === "file" || tab === "project" ? (
+          <>
+            <ProjectTools native={native} t={t} />
+            <button
+              className="ribbon-example-button"
+              onClick={() => examplesDialog.current?.showModal()}
+            >
+              {t("demoProjects")}
+            </button>
+            <WorkspaceCommands
+              tab={tab}
+              native={native}
+              t={t}
+              reveal={reveal}
+            />
+          </>
         ) : tab === "view" ? (
           <>
+            <label>
+              <input
+                type="checkbox"
+                checked={prefs.compact}
+                onChange={(event) => set("compact", event.target.checked)}
+              />
+              {t("compactWorkspace")}
+            </label>
             <div className="panel-toggles">
               {panelIds.map((id) => (
                 <label key={id}>
@@ -338,7 +422,7 @@ function Workspace({ account }: { account: Account }) {
               {t("reset")}
             </button>
           </>
-        ) : (
+        ) : tab === "settings" ? (
           <>
             <label>
               {t("theme")}
@@ -401,6 +485,8 @@ function Workspace({ account }: { account: Account }) {
               </label>
             )}
           </>
+        ) : (
+          <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
         )}
       </div>
       {storageError && (
@@ -452,6 +538,9 @@ function Workspace({ account }: { account: Account }) {
                   </span>
                   <h1>{t("noProject")}</h1>
                   <p>{t("emptyProject")}</p>
+                  <button onClick={() => examplesDialog.current?.showModal()}>
+                    {t("demoProjects")}
+                  </button>
                 </div>
               )}
             </div>
@@ -460,11 +549,27 @@ function Workspace({ account }: { account: Account }) {
         {has("right") && region("right")}
         {has("bottom") && region("bottom")}
       </div>
+      <BotWindow
+        native={native}
+        ownerId={account.user?.id ?? null}
+        t={t}
+        openSignal={botSignal}
+      />
       <footer className="status-bar">
         <span>
           <i />
           {t("ready")}
         </span>
+        {native.project && (
+          <span className="engineering-status">
+            {native.project.name} ·{" "}
+            {native.project.pages.find((p) => p.id === native.selectedPageId)
+              ?.name ?? native.project.pages[0]?.name}
+            {" · "}
+            {t("selectionCount")}: {native.selectedSymbolIds.length}
+            {" · mm"}
+          </span>
+        )}
         <span>
           {native.project
             ? t(native.saved ? "savedLocally" : "notSaved")
@@ -482,6 +587,31 @@ function Workspace({ account }: { account: Account }) {
           · HB Elektroniker · AdigunEplanAI
         </span>
       </footer>
+      <dialog
+        ref={examplesDialog}
+        className="examples-dialog"
+        aria-label={t("demoProjects")}
+      >
+        <header>
+          <h2>{t("demoProjects")}</h2>
+          <button
+            aria-label={`${t("close")} ${t("demoProjects")}`}
+            onClick={() => examplesDialog.current?.close()}
+          >
+            ×
+          </button>
+        </header>
+        <Suspense fallback={<p role="status">{t("catalogLoading")}</p>}>
+          <ExampleLibrary
+            native={native}
+            t={t}
+            opened={() => {
+              set("compact", true);
+              examplesDialog.current?.close();
+            }}
+          />
+        </Suspense>
+      </dialog>
       <dialog ref={help} aria-labelledby="guide-title">
         <h2 id="guide-title">{t("guide")}</h2>
         <p>{t("guideText")}</p>
