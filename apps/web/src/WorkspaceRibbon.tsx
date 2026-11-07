@@ -80,6 +80,7 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
     <button
       key={key}
       className="ribbon-command"
+      aria-label={`${t(key)} · ${t("ribbonWorkspace")}`}
       disabled={disabled}
       onClick={action}
     >

@@ -1089,6 +1089,16 @@ export function SchematicEditor({
               key={instance.id}
               data-instance={instance.id}
               aria-label={device.reference}
+              role="button"
+              tabIndex={0}
+              aria-pressed={selected.includes(instance.id)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setSelected([instance.id]);
+                }
+              }}
               onPointerDown={(e) => beginSymbol(e, instance.id)}
             >
               <g

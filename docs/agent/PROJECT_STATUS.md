@@ -1,5 +1,21 @@
 # Project status
 
+## Active continuation — 2026-11-07
+
+Branch: `codex/target-workspace-continuation`, based on clean published `0316973`.
+The managed environment is available again, but it is a fresh workspace: prior
+unpublished BOT/example files are absent both locally and on the recorded remote
+branch. Their recovery remains unverified; no files were reset or overwritten.
+Git HTTPS push and exact remote readback work in this environment.
+
+Current increment: engineering ribbon delegates to native editing/view/report
+commands; schematic and docked cabinet selection share native device identities.
+Keyboard selection is available for schematic symbols and cabinet faces. View
+commands are transient and acknowledged to prevent replay on editor remount.
+Type checks passed. Focused browser verification is in progress. Full release,
+hosted BOT, 500 examples and external account/engineering review gates remain open.
+Owner has requested continued work through the existing goal within two hours.
+
 ## Current publication and recovery — 2026-11-06 08:32 UTC
 
 PR #11 source `17580877be2f4036137c8e832e213c580b870fab` is merged. Both exact-source CI runs passed 289 unit/tooling and 118 browser tests. Hosted staging run [42186682807](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42186682807) passed seven production-build browser workflows and published candidate `e2c5da75f304cbf347f9006324a457814f0aac26`; its exact remote head and distribution-only changes were verified. PR #12 passed its CI and merged as `c0bc73bca9f6722e6ad90341f125d325abf0f617`. [Pages 42187418138](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42187418138) and integrated-revision CI 42187419006 passed. [Live verification 42188098759](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42188098759) confirmed the exact source, all 24 runtime SHA-256 hashes and seven cabinet/report/riser browser workflows at the canonical HTTPS origin. This development release is deployed; full M7–M20 acceptance remains open.
