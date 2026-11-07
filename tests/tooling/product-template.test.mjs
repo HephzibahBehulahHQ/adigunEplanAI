@@ -10,6 +10,33 @@ test("product adapter satisfies canonical brand, authority and capability gates"
 });
 for (const [label, change] of [
   [
+    "unreviewed authority revision",
+    (b) => {
+      b.config.authorityPins.designSystem = "0".repeat(40);
+    },
+  ],
+  [
+    "foreign corporate link",
+    (b) => {
+      b.config.links.corporateWebsite = "https://example.com/";
+    },
+  ],
+  [
+    "foreign specification binding",
+    (b) => {
+      b.config.specification.masterPlan = "other.md";
+    },
+  ],
+  [
+    "joint master-plan drift",
+    (b) => {
+      const text = b.master.trimEnd() + "\nChanged acceptance";
+      b.master = text;
+      b.ownerMaster = text;
+    },
+  ],
+
+  [
     "foreign product identity",
     (b) => {
       b.config.product.name = "AdigunSPs";

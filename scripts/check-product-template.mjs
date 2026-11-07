@@ -20,6 +20,13 @@ const references = {
   masterPlanRepository: repository,
   interfaceRepository: repository,
 };
+const authorityPins = {
+  policy: "d42d4e04ac6ab77ebafa1d4fccb724a4dde8d02e",
+  designSystem: "52f01f9986d97088413ca9785bc7a2d3f2967123",
+  artificialIntelligence: "4d4eb7e9108f88f6a406cec52e3e9a551eb09bdd",
+  division: "1daeed88df067a235b33516fb4cce111350ab80c",
+  corporate: "bd116504412b37105166805018f64a6e7bbe3cde",
+};
 const logoHash =
   "409c401be5189b80593797cbaf00a3a42a91ab8c0645e3648ff91205b47d4c95";
 const targetHash =
@@ -65,16 +72,19 @@ export function productTemplateIssues(bundle) {
       expected, `Authority repository changed: ${key}`);
   require(c.authorityPins?.policy ===
     "d42d4e04ac6ab77ebafa1d4fccb724a4dde8d02e", "Adopted policy pin changed without adoption");
-  for (const key of [
-    "policy",
-    "designSystem",
-    "artificialIntelligence",
-    "division",
-    "corporate",
-  ])
-    require(/^[a-f0-9]{40}$/.test(
-      c.authorityPins?.[key] ?? "",
-    ), `Missing immutable authority pin: ${key}`);
+  for (const [key, expected] of Object.entries(authorityPins))
+    require(c.authorityPins?.[key] ===
+      expected, `Unreviewed authority pin: ${key}`);
+  require(c.features?.administration?.owner === "Hephzibah Behulah" &&
+    c.links?.corporateWebsite ===
+      "https://hephzibahbehulah.com/", "Corporate ownership or public link changed");
+  require(c.specification?.masterPlan === "docs/MASTER_SPECIFICATION.md" &&
+    c.specification?.ownerMasterPlan === "AdidunEplanAI Master PlanGoals" &&
+    c.specification?.interface === "docs/references/target-workspace.png" &&
+    c.specification?.ownerInterface ===
+      "AdigunEplanTarget interface.png", "Specification bindings changed");
+  require(crypto.createHash("sha256").update(ownerMaster).digest("hex") ===
+    "4f3847a5d0b78313643abe54cc6852136c3aef179d1a8b26890228eae41e8525", "Approved owner master plan changed");
   require(c.branding?.logoPolicy === "single-corporate-logo" &&
     c.branding?.header?.productWordmark === true &&
     c.branding?.header?.divisionTextLabel === true &&
