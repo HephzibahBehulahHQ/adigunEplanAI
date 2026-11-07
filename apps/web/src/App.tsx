@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+  type CSSProperties,
+} from "react";
 import {
   WorkspaceCommands,
   ribbonTabs,
@@ -35,12 +42,19 @@ import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
 import "./account.css";
 
+const ExampleLibrary = lazy(() =>
+  import("./ExampleLibrary").then((module) => ({
+    default: module.ExampleLibrary,
+  })),
+);
+
 export function App() {
   const account = useAccount();
   return <Workspace key={account.user?.id ?? "guest"} account={account} />;
 }
 function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
+  const examplesDialog = useRef<HTMLDialogElement>(null);
   const accountDialog = useRef<HTMLDialogElement>(null);
   const searchDialog = useRef<HTMLDialogElement>(null);
   const languageSelect = useRef<HTMLSelectElement>(null);
@@ -355,6 +369,12 @@ function Workspace({ account }: { account: Account }) {
         {tab === "home" || tab === "file" || tab === "project" ? (
           <>
             <ProjectTools native={native} t={t} />
+            <button
+              className="ribbon-example-button"
+              onClick={() => examplesDialog.current?.showModal()}
+            >
+              {t("demoProjects")}
+            </button>
             <WorkspaceCommands
               tab={tab}
               native={native}
@@ -500,6 +520,9 @@ function Workspace({ account }: { account: Account }) {
                   </span>
                   <h1>{t("noProject")}</h1>
                   <p>{t("emptyProject")}</p>
+                  <button onClick={() => examplesDialog.current?.showModal()}>
+                    {t("demoProjects")}
+                  </button>
                 </div>
               )}
             </div>
@@ -540,6 +563,28 @@ function Workspace({ account }: { account: Account }) {
           · HB Elektroniker · AdigunEplanAI
         </span>
       </footer>
+      <dialog
+        ref={examplesDialog}
+        className="examples-dialog"
+        aria-label={t("demoProjects")}
+      >
+        <header>
+          <h2>{t("demoProjects")}</h2>
+          <button
+            aria-label={`${t("close")} ${t("demoProjects")}`}
+            onClick={() => examplesDialog.current?.close()}
+          >
+            ×
+          </button>
+        </header>
+        <Suspense fallback={<p role="status">{t("catalogLoading")}</p>}>
+          <ExampleLibrary
+            native={native}
+            t={t}
+            opened={() => examplesDialog.current?.close()}
+          />
+        </Suspense>
+      </dialog>
       <dialog ref={help} aria-labelledby="guide-title">
         <h2 id="guide-title">{t("guide")}</h2>
         <p>{t("guideText")}</p>

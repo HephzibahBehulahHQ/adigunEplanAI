@@ -730,3 +730,54 @@ button:disabled {
     gap: 0;
   }
 }
+.examples-dialog {
+  width: min(780px, calc(100vw - 2rem));
+  max-width: 780px;
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+}
+.examples-dialog > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.examples-dialog h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.example-library > p {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.example-grid article {
+  border: 1px solid var(--line);
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.example-grid svg {
+  width: 40px;
+  height: 40px;
+  color: var(--cyan);
+}
+.example-grid h3 {
+  font-size: 0.95rem;
+}
+.example-grid p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.ribbon-example-button {
+  font-size: 0.75rem;
+}
+@media (max-width: 600px) {
+  .example-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
