@@ -837,10 +837,11 @@ button:disabled {
 }
 
 @media (min-width: 1001px) and (min-height: 780px) {
-  .application .engineering-layout:has(> .dock-bottom .calculations-panel) {
+  .application[data-compact="true"]
+    .engineering-layout:has(> .dock-bottom .calculations-panel) {
     grid-template-rows: minmax(0, 1fr) 180px;
   }
-  .application .dock-bottom:has(.calculations-panel) {
+  .application[data-compact="true"] .dock-bottom:has(.calculations-panel) {
     min-height: 0;
     height: 180px;
   }
@@ -858,7 +859,8 @@ button:disabled {
   }
 }
 @media (min-width: 1001px) and (min-height: 780px) {
-  .application [data-panel="calculations"]:has(.calculations-panel),
+  .application[data-compact="true"]
+    [data-panel="calculations"]:has(.calculations-panel),
   .application
     [data-panel="calculations"]
     > .panel-body:has(.calculations-panel) {
