@@ -489,5 +489,7 @@
   "botAsk": "Ask",
   "botTopic": "BOT topic",
   "botSearchHelp": "Search English help",
-  "botNoHelpMatches": "No help heading match. Try word like DXF."
+  "botNoHelpMatches": "No help heading match. Try word like DXF.",
+  "botDock": "Dock BOT for workspace",
+  "botFloat": "Float BOT window"
 }

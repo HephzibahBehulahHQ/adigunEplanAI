@@ -17,7 +17,10 @@ type Props = {
 
 const layoutKey = "adiguneplanai.bot.layout.v1";
 type Bounds = { x: number; y: number; width: number; height: number };
-type Layout = Bounds & { mode: "normal" | "minimized" | "maximized" };
+type Layout = Bounds & {
+  mode: "normal" | "minimized" | "maximized";
+  docked?: boolean;
+};
 function readLayout(): Layout {
   const initial: Layout = {
     x: window.innerWidth - 348,
@@ -34,6 +37,7 @@ function readLayout(): Layout {
     for (const key of ["x", "y", "width", "height"] as const)
       if (typeof saved[key] === "number" && Number.isFinite(saved[key]))
         initial[key] = saved[key];
+    if (saved.docked === true) initial.docked = true;
     if (saved.mode === "minimized" || saved.mode === "maximized")
       initial.mode = saved.mode;
   } catch {
@@ -90,6 +94,8 @@ export function AdigunBot({
   const closeButton = useRef<HTMLButtonElement>(null);
   const chatInput = useRef<HTMLInputElement>(null);
   const mobile = viewport.width <= 680;
+  const canDock = viewport.width >= 1350;
+  const docked = canDock && layout.docked === true;
   const normal = fit(layout, viewport);
   const bounds =
     layout.mode === "maximized"
@@ -124,6 +130,7 @@ export function AdigunBot({
   function start(event: PointerEvent<HTMLElement>, resize: boolean) {
     if (
       mobile ||
+      docked ||
       layout.mode === "maximized" ||
       event.button !== 0 ||
       !event.isPrimary ||
@@ -176,10 +183,11 @@ export function AdigunBot({
     <section
       className="bot-panel"
       data-mode={layout.mode}
+      data-docked={docked || undefined}
       id="adigun-bot"
       aria-labelledby="adigun-bot-title"
       style={
-        mobile
+        mobile || docked
           ? undefined
           : {
               left: bounds.x,
@@ -213,7 +221,19 @@ export function AdigunBot({
           <circle cx="15" cy="11" r="1" />
         </svg>
         <strong id="adigun-bot-title">Adigun BOT</strong>
-        {!mobile && (
+        {canDock && (
+          <button
+            type="button"
+            title={t(docked ? "botFloat" : "botDock")}
+            aria-label={t(docked ? "botFloat" : "botDock")}
+            onClick={() =>
+              setLayout((previous) => ({ ...previous, docked: !docked }))
+            }
+          >
+            {docked ? "↗" : "▥"}
+          </button>
+        )}
+        {!mobile && !docked && (
           <>
             <button
               type="button"
@@ -264,7 +284,10 @@ export function AdigunBot({
           ×
         </button>
       </header>
-      <div className="bot-body" hidden={!mobile && layout.mode === "minimized"}>
+      <div
+        className="bot-body"
+        hidden={!mobile && !docked && layout.mode === "minimized"}
+      >
         <p className="bot-mode">{t("botLocalTools")}</p>
         <p className="bot-context">{project?.name ?? t("noProject")}</p>
         <div
@@ -336,7 +359,7 @@ export function AdigunBot({
           />
         )}
       </div>
-      {!mobile && layout.mode === "normal" && (
+      {!mobile && !docked && layout.mode === "normal" && (
         <span
           className="bot-resize"
           aria-hidden="true"

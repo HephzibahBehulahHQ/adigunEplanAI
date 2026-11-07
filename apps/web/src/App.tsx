@@ -409,28 +409,30 @@ export function App() {
         {has("right") && (
           <div className="workspace-right">{region("right")}</div>
         )}
+        {botOpen && (
+          <LazyPanelBoundary message={t("botLoadError")}>
+            <Suspense fallback={<p role="status">Adigun BOT…</p>}>
+              <AdigunBot
+                project={native.project}
+                suggestions={botFinding}
+                t={t}
+                close={() => {
+                  setBotOpen(false);
+                  botToggle.current?.focus();
+                }}
+                openDiagnostics={() =>
+                  panel("diagnostics", { visible: true, collapsed: false })
+                }
+                openBom={() =>
+                  panel("bom", { visible: true, collapsed: false })
+                }
+                openHelp={() => help.current?.showModal()}
+              />
+            </Suspense>
+          </LazyPanelBoundary>
+        )}
         {has("bottom") && region("bottom")}
       </div>
-      {botOpen && (
-        <LazyPanelBoundary message={t("botLoadError")}>
-          <Suspense fallback={<p role="status">Adigun BOT…</p>}>
-            <AdigunBot
-              project={native.project}
-              suggestions={botFinding}
-              t={t}
-              close={() => {
-                setBotOpen(false);
-                botToggle.current?.focus();
-              }}
-              openDiagnostics={() =>
-                panel("diagnostics", { visible: true, collapsed: false })
-              }
-              openBom={() => panel("bom", { visible: true, collapsed: false })}
-              openHelp={() => help.current?.showModal()}
-            />
-          </Suspense>
-        </LazyPanelBoundary>
-      )}
       <footer className="status-bar">
         <span>
           <i />

@@ -489,5 +489,7 @@
   "botAsk": "Béèrè",
   "botTopic": "Kókó BOT",
   "botSearchHelp": "Wá nínú ìrànlọ́wọ́ Gẹ̀ẹ́sì",
-  "botNoHelpMatches": "Kò sí àkọlé tó bá a mu. Gbìyànjú ọ̀rọ̀ bí DXF."
+  "botNoHelpMatches": "Kò sí àkọlé tó bá a mu. Gbìyànjú ọ̀rọ̀ bí DXF.",
+  "botDock": "So BOT mọ́ ààyè iṣẹ́",
+  "botFloat": "Jẹ́ kí fèrèsé BOT léfòó"
 }

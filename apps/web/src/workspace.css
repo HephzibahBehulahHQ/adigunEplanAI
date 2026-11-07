@@ -738,6 +738,35 @@ button:disabled {
   .engineering-layout.has-left.has-right {
     grid-template-columns: minmax(240px, 20%) minmax(0, 1fr) minmax(255px, 22%);
   }
+  .engineering-layout:has(> .bot-panel[data-docked]) {
+    grid-template-columns: minmax(0, 1fr) minmax(235px, 15.5%);
+  }
+  .engineering-layout.has-left:has(> .bot-panel[data-docked]) {
+    grid-template-columns: minmax(240px, 20%) minmax(0, 1fr) minmax(
+        235px,
+        15.5%
+      );
+  }
+  .engineering-layout.has-right:has(> .bot-panel[data-docked]) {
+    grid-template-columns: minmax(0, 1fr) minmax(255px, 22%) minmax(
+        235px,
+        15.5%
+      );
+  }
+  .engineering-layout.has-left.has-right:has(> .bot-panel[data-docked]) {
+    grid-template-columns:
+      minmax(240px, 20%) minmax(0, 1fr) minmax(255px, 22%)
+      minmax(235px, 15.5%);
+  }
+  .bot-panel[data-docked] {
+    position: relative;
+    z-index: auto;
+    box-shadow: none;
+    min-height: 0;
+  }
+  .bot-panel[data-docked] .bot-heading {
+    cursor: default;
+  }
 }
 
 .bot-resize {
