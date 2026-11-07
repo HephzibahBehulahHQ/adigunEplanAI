@@ -878,3 +878,23 @@ button:disabled {
   background: var(--panel);
   color: var(--gold);
 }
+.navigator-filter {
+  flex-direction: column;
+  align-items: stretch !important;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.navigator-filter input {
+  width: 100%;
+}
+.navigator-root {
+  font-weight: 600;
+  color: var(--cyan);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.navigator-pages button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  background: var(--hover);
+}

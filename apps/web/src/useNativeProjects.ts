@@ -175,7 +175,14 @@ export function useNativeProjects(ownerId: string | null = null) {
     selectSymbols,
     selectDevice,
     selectedPageId,
-    selectPage: setSelectedPageId,
+    selectPage(pageId: string | null) {
+      setSelectedPageId(pageId);
+      setSelection({
+        projectId: project?.id ?? null,
+        symbols: [],
+        deviceId: null,
+      });
+    },
     projects: state.library.projects,
     error: state.error,
     saved: state.saved,

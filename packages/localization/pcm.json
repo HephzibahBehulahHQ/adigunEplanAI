@@ -1097,5 +1097,9 @@
   "compactWorkspace": "Compact engineering workspace",
   "zoomIn": "Zoom in",
   "zoomOut": "Zoom out",
-  "annotationOverflow": "Drawing notes pass the sheet edge. Full text still dey inside native project and SVG metadata."
+  "annotationOverflow": "Drawing notes pass the sheet edge. Full text still dey inside native project and SVG metadata.",
+  "navigatorFilter": "Filter project tree",
+  "navigatorBuildings": "Buildings and floors",
+  "navigatorPanels": "Cabinet layouts",
+  "navigatorLimit": "Na first 100 matches we show. Narrow the filter to find more."
 }

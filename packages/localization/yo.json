@@ -1097,5 +1097,9 @@
   "compactWorkspace": "Ààyè iṣẹ́ ẹ̀rọ kékeré",
   "zoomIn": "Mú àwòrán tóbi",
   "zoomOut": "Dín àwòrán kù",
-  "annotationOverflow": "Àwọn àkọsílẹ̀ àwòrán kọjá ojú ewé. Gbogbo ọ̀rọ̀ wà nínú iṣẹ́ ìpilẹ̀ àti dátà SVG."
+  "annotationOverflow": "Àwọn àkọsílẹ̀ àwòrán kọjá ojú ewé. Gbogbo ọ̀rọ̀ wà nínú iṣẹ́ ìpilẹ̀ àti dátà SVG.",
+  "navigatorFilter": "Ṣàyẹ̀wò igi iṣẹ́",
+  "navigatorBuildings": "Àwọn ilé àti ilẹ̀",
+  "navigatorPanels": "Àwọn àpẹẹrẹ kọ́bọdù",
+  "navigatorLimit": "A fi àbájáde 100 àkọ́kọ́ hàn. Ṣètò àlẹ̀mọ́ láti rí síi."
 }

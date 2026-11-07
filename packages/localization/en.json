@@ -1097,5 +1097,9 @@
   "compactWorkspace": "Compact engineering workspace",
   "zoomIn": "Zoom in",
   "zoomOut": "Zoom out",
-  "annotationOverflow": "Drawing notes extend beyond the sheet. Full text remains in the native project and SVG metadata."
+  "annotationOverflow": "Drawing notes extend beyond the sheet. Full text remains in the native project and SVG metadata.",
+  "navigatorFilter": "Filter project tree",
+  "navigatorBuildings": "Buildings and floors",
+  "navigatorPanels": "Cabinet layouts",
+  "navigatorLimit": "Showing the first 100 matches. Refine the filter to find more."
 }
