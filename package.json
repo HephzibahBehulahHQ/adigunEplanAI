@@ -19,11 +19,12 @@
     "format:check": "prettier --check .",
     "test": "node --test tests/tooling/*.test.mjs tests/unit/*.test.mjs",
     "licenses": "node scripts/check-licenses.mjs",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm test && npm run licenses && npm run notices:check && npm run build",
+    "check": "npm run template:check && npm run typecheck && npm run lint && npm run format:check && npm test && npm run licenses && npm run notices:check && npm run build",
     "test:e2e": "playwright test",
     "notices": "node scripts/generate-notices.mjs",
     "notices:check": "node scripts/generate-notices.mjs --check",
-    "test:e2e:production": "playwright test --config playwright.production.config.ts"
+    "test:e2e:production": "playwright test --config playwright.production.config.ts",
+    "template:check": "node scripts/check-product-template.mjs"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

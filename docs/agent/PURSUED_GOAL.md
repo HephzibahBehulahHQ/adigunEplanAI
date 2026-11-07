@@ -1,5 +1,18 @@
 # Pursued product goal
 
+**Product Name:** AdigunEplanAI
+
+**State:** Active — continue the full approved specification.
+
+The owner requested a Codex task-bar goal with pause/resume/clear controls. No
+callable tool in this session exposes that host interface. This repository goal
+is a durable continuation record; it does not create or control a Codex task-bar
+item, and no substitute application controls or scheduled automation are claimed.
+
+Canonical Global/Brand Template adoption is recorded in
+[product.config.json](../../product.config.json) and
+[the adoption record](../references/global-template-adoption.md).
+
 Implement the complete approved AdigunEplanAI specification in HephzibahBehulahHQ/adigunEplanAI, progressing through all milestones under standing user authorization. The owner reconfirmed docs/references/target-workspace.png on 2026-11-02 as the targeted visual and functional end state.
 
 Required target experience: branded professional ribbon; project/library/example navigator and properties; real central 2D electrical drawings; synchronized 3D cabinet workspace; integrated Adigun BOT; bottom diagnostics, calculations, BOM and reports; truthful project/save/connection status. All controls must perform tested native actions. The present shell is an intermediate milestone, not the final target. Apply canonical corporate assets and tokens even where reference artwork differs. Do not imitate sample pass counts, cloud status, account data or engineering results before they are real and verified.

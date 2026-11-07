@@ -1,5 +1,19 @@
 # Project status
 
+## Active template continuation — 2026-11-07
+
+Active product goal: **AdigunEplanAI — complete the approved master plan and
+interface under the canonical global and HB Elektroniker templates**. Owner
+authorization continues through commit, main integration and Actions deployment.
+The Codex task-bar goal API is not exposed; no task-bar controls are claimed.
+
+Current branch: `codex/product-goal-continuation`, based on verified main
+`542a22d7b4a27b1bb3c4d0e4a4906ad757c2f094`. The universal product adapter now
+feeds header/footer identity. CI enforces approved identity, destinations,
+reference repositories, tokens/logo, master/interface consistency and truthful
+capabilities. Fourteen focused template checks and TypeScript passed; full
+integration and deployed verification are pending. Full-spec gates remain open.
+
 ## Active delivery — 2026-11-07
 
 Current delivery and exact CI/live-publication receipts:
