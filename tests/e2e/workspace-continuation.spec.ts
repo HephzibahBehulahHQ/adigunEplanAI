@@ -134,13 +134,11 @@ test("project tree filtering selects genuine mapped devices without changing nat
   page,
 }) => {
   await page.goto("/");
-  await page
-    .getByLabel("Import project", { exact: true })
-    .setInputFiles({
-      name: "mapped.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(mappedProject())),
-    });
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "mapped.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(mappedProject())),
+  });
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
@@ -218,13 +216,11 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
     deviceId: "device-c",
   });
   await page.goto("/");
-  await page
-    .getByLabel("Import project", { exact: true })
-    .setInputFiles({
-      name: "mapped.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(project)),
-    });
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "mapped.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(project)),
+  });
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
@@ -258,4 +254,82 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
       localStorage.getItem("adiguneplanai.projects.v1"),
     ),
   ).toBe(before);
+});
+
+test("compact target workspace gives the drawing space and keeps native insert, undo, zoom and layout controls functional", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: "Example projects", exact: true })
+    .first()
+    .click();
+  await page
+    .getByRole("article")
+    .filter({ hasText: "Transformer station documentation" })
+    .getByRole("button", { name: "Open a copy", exact: true })
+    .click();
+  await expect(page.locator(".application")).toHaveAttribute(
+    "data-compact",
+    "true",
+  );
+  const canvas = page.locator(".engineering-canvas");
+  await expect
+    .poll(async () => (await canvas.boundingBox())!.height)
+    .toBeGreaterThan(450);
+  const drawing = (await canvas.boundingBox())!;
+  const bottom = (await page.locator(".dock-bottom").boundingBox())!;
+  const footer = (await page.locator(".status-bar").boundingBox())!;
+  expect(drawing.y + drawing.height).toBeLessThanOrEqual(bottom.y);
+  expect(bottom.y + bottom.height).toBeLessThanOrEqual(footer.y);
+  await page.getByRole("button", { name: "Insert menu", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Fuse · Engineering commands", exact: true })
+    .click();
+  const point = await canvas.evaluate((svg: SVGSVGElement) => {
+    const p = new DOMPoint(210, 220).matrixTransform(svg.getScreenCTM()!);
+    return { x: p.x, y: p.y };
+  });
+  await page.mouse.click(point.x, point.y);
+  const deviceCount = () =>
+    page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
+          .projects[0].devices.length,
+    );
+  await expect.poll(deviceCount).toBe(16);
+  await page.getByRole("button", { name: "Edit menu", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Engineering commands", exact: true })
+    .click();
+  await expect.poll(deviceCount).toBe(15);
+  await page.getByRole("button", { name: "Tools menu", exact: true }).click();
+  await page
+    .getByRole("button", {
+      name: "Zoom in · Engineering commands",
+      exact: true,
+    })
+    .click();
+  await expect(canvas).not.toHaveAttribute("viewBox", "0 0 420 297");
+  await page
+    .getByRole("button", {
+      name: "Fit page · Engineering commands",
+      exact: true,
+    })
+    .click();
+  await expect(canvas).toHaveAttribute("viewBox", "0 0 420 297");
+  await page.getByRole("button", { name: "View", exact: true }).click();
+  await page
+    .getByRole("checkbox", {
+      name: "Compact engineering workspace",
+      exact: true,
+    })
+    .uncheck();
+  await expect(page.locator(".compact-editor-tools").first()).toBeVisible();
+  await page.reload();
+  await expect(page.locator(".application")).toHaveAttribute(
+    "data-compact",
+    "false",
+  );
 });

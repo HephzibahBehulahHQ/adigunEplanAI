@@ -845,6 +845,10 @@ function PanelViews({
       .filter((item) => !("kind" in item && item.kind === "compartment"))
       .flatMap((item) => projectedFaces(item, yaw, pitch)),
   );
+  const firstFace = new Map<string, number>();
+  faces.forEach((face, index) => {
+    if (!firstFace.has(face.objectId)) firstFace.set(face.objectId, index);
+  });
   const access = equipment.find((item) => item.id === selectedId);
   const accessZone = access ? accessBounds(access) : null;
   const accessPoints = accessZone
@@ -1028,7 +1032,7 @@ function PanelViews({
         <figcaption>{t("panel3dView")}</figcaption>
         <svg
           className="panel-3d-view"
-          role="img"
+          role="group"
           aria-label={t("panel3dView")}
           viewBox={`${minX} ${minY} ${projectedWidth} ${projectedHeight}`}
           onPointerDown={(event) => {
@@ -1070,10 +1074,21 @@ function PanelViews({
                 key={`${item.id}:${face.side}:${fragment}`}
                 data-panel-object={item.id}
                 data-panel-side={face.side}
-                role="button"
-                tabIndex={0}
-                aria-label={label(item)}
-                aria-pressed={selectedId === item.id}
+                role={
+                  firstFace.get(item.id) === fragment ? "button" : undefined
+                }
+                tabIndex={firstFace.get(item.id) === fragment ? 0 : undefined}
+                aria-label={
+                  firstFace.get(item.id) === fragment ? label(item) : undefined
+                }
+                aria-pressed={
+                  firstFace.get(item.id) === fragment
+                    ? selectedId === item.id
+                    : undefined
+                }
+                aria-hidden={
+                  firstFace.get(item.id) === fragment ? undefined : true
+                }
                 onKeyDown={(event) => {
                   if (event.key === "Enter" || event.key === " ") {
                     event.preventDefault();
