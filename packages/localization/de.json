@@ -477,5 +477,8 @@
   "botLocalTools": "Lokale Projektwerkzeuge",
   "botQuickActions": "Schnellaktionen",
   "botRunCheck": "Elektroprüfung ausführen",
-  "botLoadError": "Adigun BOT konnte nicht geladen werden."
+  "botLoadError": "Adigun BOT konnte nicht geladen werden.",
+  "botMinimize": "Minimieren",
+  "botMaximize": "Maximieren",
+  "botRestore": "Fenster wiederherstellen"
 }

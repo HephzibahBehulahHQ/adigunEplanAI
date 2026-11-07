@@ -593,8 +593,12 @@ button:disabled {
   flex: 1 1 0;
 }
 .bot-panel {
-  min-width: 0;
-  flex: 1 1 0;
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--navy) 65%, transparent);
   border: 1px solid var(--cyan);
   border-radius: 6px;
   background: var(--panel);
@@ -612,10 +616,20 @@ button:disabled {
   flex-shrink: 0;
   color: var(--cyan);
 }
+.bot-heading {
+  touch-action: none;
+  user-select: none;
+  cursor: move;
+}
+.bot-heading strong {
+  margin-inline-end: auto;
+}
 .bot-heading button {
-  margin-inline-start: auto;
+  min-width: 28px;
+  padding: 0.25rem;
 }
 .bot-body {
+  overflow: auto;
   padding: 0.55rem;
   overflow-wrap: anywhere;
 }
@@ -637,19 +651,6 @@ button:disabled {
   font-size: inherit;
   color: var(--cyan);
 }
-@media (min-width: 1350px) {
-  .engineering-layout.has-left.has-right:has(.workspace-right.has-bot) {
-    grid-template-columns: minmax(240px, 20%) minmax(0, 1fr) 37%;
-  }
-  .workspace-right.has-bot > .dock {
-    flex-grow: 1.4;
-  }
-}
-@media (max-width: 1349px) {
-  .workspace-right.has-bot {
-    flex-direction: column;
-  }
-}
 @media (max-width: 1000px) {
   .engineering-layout.has-left.has-right > .workspace-right {
     grid-column: 1 / -1;
@@ -659,5 +660,32 @@ button:disabled {
 @media (min-width: 1350px) {
   .engineering-layout.has-left.has-right {
     grid-template-columns: minmax(240px, 20%) minmax(0, 1fr) minmax(255px, 22%);
+  }
+}
+
+.bot-resize {
+  position: absolute;
+  inset: auto 0 0 auto;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize;
+  touch-action: none;
+  background: linear-gradient(
+    135deg,
+    transparent 50%,
+    var(--cyan) 51%,
+    transparent 61%,
+    transparent 70%,
+    var(--cyan) 71%,
+    transparent 81%
+  );
+}
+@media (max-width: 680px) {
+  .bot-panel {
+    inset: 0;
+    border-radius: 0;
+  }
+  .bot-heading {
+    cursor: default;
   }
 }

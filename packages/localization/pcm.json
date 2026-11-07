@@ -477,5 +477,8 @@
   "botLocalTools": "Local project tools",
   "botQuickActions": "Quick actions",
   "botRunCheck": "Run electrical check",
-  "botLoadError": "Adigun BOT no fit load."
+  "botLoadError": "Adigun BOT no fit load.",
+  "botMinimize": "Make am small",
+  "botMaximize": "Make am big",
+  "botRestore": "Restore window"
 }

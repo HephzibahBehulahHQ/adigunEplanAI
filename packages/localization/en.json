@@ -477,5 +477,8 @@
   "botLocalTools": "Local project tools",
   "botQuickActions": "Quick actions",
   "botRunCheck": "Run electrical check",
-  "botLoadError": "Adigun BOT could not load."
+  "botLoadError": "Adigun BOT could not load.",
+  "botMinimize": "Minimize",
+  "botMaximize": "Maximize",
+  "botRestore": "Restore window"
 }

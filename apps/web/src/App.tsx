@@ -55,7 +55,20 @@ export function App() {
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const botToggle = useRef<HTMLButtonElement>(null);
-  const [botOpen, setBotOpen] = useState(false);
+  const [botOpen, setBotOpen] = useState(() => {
+    try {
+      return localStorage.getItem("adiguneplanai.bot.open.v1") === "true";
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem("adiguneplanai.bot.open.v1", String(botOpen));
+    } catch {
+      /* Preferences are optional. */
+    }
+  }, [botOpen]);
   const [layoutOpen, setLayoutOpen] = useState<
     Partial<Record<PanelId, boolean>>
   >({});
@@ -337,7 +350,7 @@ export function App() {
         </p>
       )}
       <div
-        className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") || botOpen ? "has-right" : ""}`}
+        className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") ? "has-right" : ""}`}
       >
         {has("left") && region("left")}
         <main
@@ -385,34 +398,30 @@ export function App() {
             </div>
           </div>
         </main>
-        {(has("right") || botOpen) && (
-          <div className={`workspace-right ${botOpen ? "has-bot" : ""}`}>
-            {has("right") && region("right")}
-            {botOpen && (
-              <LazyPanelBoundary message={t("botLoadError")}>
-                <Suspense fallback={<p role="status">Adigun BOT…</p>}>
-                  <AdigunBot
-                    project={native.project}
-                    t={t}
-                    close={() => {
-                      setBotOpen(false);
-                      botToggle.current?.focus();
-                    }}
-                    openDiagnostics={() =>
-                      panel("diagnostics", { visible: true, collapsed: false })
-                    }
-                    openBom={() =>
-                      panel("bom", { visible: true, collapsed: false })
-                    }
-                    openHelp={() => help.current?.showModal()}
-                  />
-                </Suspense>
-              </LazyPanelBoundary>
-            )}
-          </div>
+        {has("right") && (
+          <div className="workspace-right">{region("right")}</div>
         )}
         {has("bottom") && region("bottom")}
       </div>
+      {botOpen && (
+        <LazyPanelBoundary message={t("botLoadError")}>
+          <Suspense fallback={<p role="status">Adigun BOT…</p>}>
+            <AdigunBot
+              project={native.project}
+              t={t}
+              close={() => {
+                setBotOpen(false);
+                botToggle.current?.focus();
+              }}
+              openDiagnostics={() =>
+                panel("diagnostics", { visible: true, collapsed: false })
+              }
+              openBom={() => panel("bom", { visible: true, collapsed: false })}
+              openHelp={() => help.current?.showModal()}
+            />
+          </Suspense>
+        </LazyPanelBoundary>
+      )}
       <footer className="status-bar">
         <span>
           <i />

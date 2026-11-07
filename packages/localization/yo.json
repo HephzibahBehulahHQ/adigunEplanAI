@@ -477,5 +477,8 @@
   "botLocalTools": "Àwọn irinṣẹ́ iṣẹ́ agbègbè",
   "botQuickActions": "Àwọn ìṣe kíákíá",
   "botRunCheck": "Ṣàyẹ̀wò ètò iná",
-  "botLoadError": "A kò lè ṣí Adigun BOT."
+  "botLoadError": "A kò lè ṣí Adigun BOT.",
+  "botMinimize": "Dín kù",
+  "botMaximize": "Mú tóbi",
+  "botRestore": "Dá fèrèsé padà"
 }
