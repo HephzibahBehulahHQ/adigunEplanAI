@@ -16,6 +16,7 @@ export type PanelState = {
   size: number;
 };
 export type Preferences = {
+  compact: boolean;
   theme: "dark" | "light";
   language: "en" | "de" | "yo" | "pcm";
   background: "white" | "dark" | "custom";
@@ -25,6 +26,7 @@ export type Preferences = {
 export const storageKey = "adiguneplanai.interface.v1";
 export function defaults(): Preferences {
   return {
+    compact: false,
     theme: "dark",
     language: "en",
     background: "white",
@@ -53,6 +55,7 @@ export function restorePreferences(raw: string | null): Preferences {
     const value: unknown = raw ? JSON.parse(raw) : null;
     if (!value || typeof value !== "object") return result;
     const data = value as Record<string, unknown>;
+    if (typeof data.compact === "boolean") result.compact = data.compact;
     if (data.theme === "light" || data.theme === "dark")
       result.theme = data.theme;
     if (["en", "de", "yo", "pcm"].includes(String(data.language)))

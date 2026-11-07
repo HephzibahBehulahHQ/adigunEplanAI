@@ -227,6 +227,8 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
         <>
           {wiring}
           {tool("fitPage", "fit", "fit")}
+          {tool("zoomIn", "zoomIn", "fit")}
+          {tool("zoomOut", "zoomOut", "fit")}
           {analysis}
         </>
       )}

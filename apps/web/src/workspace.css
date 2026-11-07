@@ -835,3 +835,44 @@ button:disabled {
     flex: 0 1 auto;
   }
 }
+
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application .engineering-layout:has(> .dock-bottom .calculations-panel) {
+    grid-template-rows: minmax(0, 1fr) 180px;
+  }
+  .application .dock-bottom:has(.calculations-panel) {
+    min-height: 0;
+    height: 180px;
+  }
+  .application[data-compact="true"] .workspace-heading,
+  .application[data-compact="true"] .compact-editor-tools,
+  .application[data-compact="true"] .schematic-editor > .editor-hint,
+  .application[data-compact="true"] .schematic-editor > .editor-options,
+  .application[data-compact="true"]
+    .native-drawing
+    > .drawing-tabs:first-child {
+    display: none;
+  }
+  .application[data-compact="true"] .drawing-sheet:before {
+    display: none;
+  }
+}
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application [data-panel="calculations"]:has(.calculations-panel),
+  .application
+    [data-panel="calculations"]
+    > .panel-body:has(.calculations-panel) {
+    min-height: 0;
+    max-height: none;
+  }
+}
+.native-bom th:first-child {
+  white-space: nowrap;
+}
+.annotation-overflow {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  background: var(--panel);
+  color: var(--gold);
+}

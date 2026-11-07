@@ -36,7 +36,7 @@
   "guide": "Work area guide",
   "guideText": "Use View show or hide panels. You fit dock, resize or collapse each panel. Settings dey control theme, language and drawing background. This browser dey save your layout.",
   "privacy": "Storage",
-  "privacyText": "Na only interface settings this work area dey save. Cloud services never connect.",
+  "privacyText": "Projects and interface settings dey save for this browser. Cloud save need service wey connect and account wey sign in. Keep exported project backups.",
   "storageError": "This browser no fit save the settings.",
   "skip": "Go straight to work area",
   "division": "BY HB ELEKTRONIKER",
@@ -1093,5 +1093,9 @@
   "botInspect": "Check finding",
   "botPreferenceError": "Window settings no fit save.",
   "botPrivacy": "Local tools na read-only. Project data stay for this browser.",
-  "botNoFindings": "Supported connection rules no find electrical issue."
+  "botNoFindings": "Supported connection rules no find electrical issue.",
+  "compactWorkspace": "Compact engineering workspace",
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "annotationOverflow": "Drawing notes pass the sheet edge. Full text still dey inside native project and SVG metadata."
 }

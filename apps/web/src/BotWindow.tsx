@@ -153,7 +153,8 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
     };
   }, [windowState.live]);
   const currentSuggestion =
-    suggestion?.projectId === project?.id &&
+    suggestion &&
+    suggestion.projectId === project?.id &&
     windowState.live &&
     findings.some(
       (finding) => findingKey(finding) === findingKey(suggestion.finding),

@@ -1,3 +1,4 @@
+import { annotationLayout } from "../../../packages/reporting/annotation-layout.ts";
 import { Glyph } from "./Glyph";
 import { createPortal } from "react-dom";
 import { SymbolArtwork } from "./SymbolArtwork";
@@ -421,6 +422,8 @@ export function SchematicEditor({
       setFromPin(null);
     } else if (action === "fit")
       setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
+    else if (action === "zoomIn") zoom(1.2);
+    else if (action === "zoomOut") zoom(1 / 1.2);
     else if (action === "rotate" && selected.length)
       edit((p) => rotate(p, selected));
     else if (action === "mirror" && selected.length)
@@ -446,6 +449,25 @@ export function SchematicEditor({
         Math.min(page.widthMm, page.heightMm) === v[1],
     )?.[0] ?? "custom";
   const wire = project.wires.find((w) => w.id === selectedWire);
+  const visibleAnnotations = project.annotations
+    .filter(
+      (a) =>
+        a.pageId === page.id &&
+        project.layers.find((layer) => layer.id === a.layerId)?.visible,
+    )
+    .map((annotation) => ({
+      annotation,
+      layout: annotationLayout(
+        annotation.text,
+        annotation.position.x,
+        annotation.position.y,
+        page.widthMm,
+        page.heightMm,
+      ),
+    }));
+  const overflowingNotes = visibleAnnotations.filter(
+    ({ layout }) => layout.overflow,
+  ).length;
   return (
     <div
       className="schematic-editor"
@@ -515,7 +537,10 @@ export function SchematicEditor({
         }
       }}
     >
-      <div className="editor-toolbar" aria-label={t("components")}>
+      <div
+        className="editor-toolbar compact-editor-tools"
+        aria-label={t("components")}
+      >
         {(["select", "pan", "wire", "label"] as const).map((mode) => (
           <button
             key={mode}
@@ -614,7 +639,10 @@ export function SchematicEditor({
           {t("snapping")}
         </label>
       </div>
-      <div className="editor-toolbar" aria-label={t("selection")}>
+      <div
+        className="editor-toolbar compact-editor-tools"
+        aria-label={t("selection")}
+      >
         {[
           ["rotate", () => edit((p) => rotate(p, selected))],
           ["mirror", () => edit((p) => mirror(p, selected))],
@@ -963,6 +991,11 @@ export function SchematicEditor({
         </form>
       )}
       <p className="editor-hint">{t("editorHint")}</p>
+      {overflowingNotes > 0 && (
+        <p className="annotation-overflow" role="status">
+          {t("annotationOverflow")} ({overflowingNotes})
+        </p>
+      )}
       <svg
         ref={svg}
         className="native-sheet engineering-canvas"
@@ -1213,23 +1246,31 @@ export function SchematicEditor({
               </g>
             );
           })}
-        {project.annotations
-          .filter(
-            (a) =>
-              a.pageId === page.id &&
-              project.layers.find((l) => l.id === a.layerId)?.visible,
-          )
-          .map((a) => (
+        {visibleAnnotations.map(({ annotation: a, layout }) => {
+          return (
             <text
               key={a.id}
+              data-annotation-id={a.id}
+              data-overflow={layout.overflow}
               x={a.position.x}
               y={a.position.y}
-              fontSize={3.5}
+              fontSize={layout.fontSizeMm}
               fill="currentColor"
+              aria-label={a.text}
             >
-              {a.text}
+              <title>{a.text}</title>
+              {layout.lines.map((line, index) => (
+                <tspan
+                  key={index}
+                  x={a.position.x}
+                  dy={index ? layout.lineHeightMm : 0}
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
-          ))}
+          );
+        })}
         {marquee && (
           <rect
             x={Math.min(marquee.a.x, marquee.b.x)}

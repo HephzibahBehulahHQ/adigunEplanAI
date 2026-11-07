@@ -234,7 +234,11 @@ function Workspace({ account }: { account: Account }) {
       (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
     );
   return (
-    <div className="application" inert={account.checking && !account.user}>
+    <div
+      className="application"
+      data-compact={prefs.compact}
+      inert={account.checking && !account.user}
+    >
       <a className="skip-link" href="#workspace">
         {t("skip")}
       </a>
@@ -390,6 +394,14 @@ function Workspace({ account }: { account: Account }) {
           </>
         ) : tab === "view" ? (
           <>
+            <label>
+              <input
+                type="checkbox"
+                checked={prefs.compact}
+                onChange={(event) => set("compact", event.target.checked)}
+              />
+              {t("compactWorkspace")}
+            </label>
             <div className="panel-toggles">
               {panelIds.map((id) => (
                 <label key={id}>
@@ -593,7 +605,10 @@ function Workspace({ account }: { account: Account }) {
           <ExampleLibrary
             native={native}
             t={t}
-            opened={() => examplesDialog.current?.close()}
+            opened={() => {
+              set("compact", true);
+              examplesDialog.current?.close();
+            }}
           />
         </Suspense>
       </dialog>

@@ -36,7 +36,7 @@
   "guide": "Anleitung zum Arbeitsbereich",
   "guideText": "Über Ansicht können Sie Fenster ein- oder ausblenden. Jedes Fenster lässt sich andocken, vergrößern oder einklappen. Die Einstellungen steuern Design, Sprache und Zeichenhintergrund. Das Layout wird in diesem Browser gespeichert.",
   "privacy": "Speicherung",
-  "privacyText": "Dieser Arbeitsbereich speichert nur Oberflächeneinstellungen. Cloud-Dienste sind nicht verbunden.",
+  "privacyText": "Projekte und Oberflächeneinstellungen werden in diesem Browser gespeichert. Cloud-Speicherung erfordert einen konfigurierten Dienst und ein angemeldetes Konto. Exportierte Projektsicherungen aufbewahren.",
   "storageError": "Die Einstellungen konnten in diesem Browser nicht gespeichert werden.",
   "skip": "Zum Arbeitsbereich springen",
   "division": "VON HB ELEKTRONIKER",
@@ -1093,5 +1093,9 @@
   "botInspect": "Hinweis prüfen",
   "botPreferenceError": "Fenstereinstellungen konnten nicht gespeichert werden.",
   "botPrivacy": "Lokale Lesewerkzeuge. Projektdaten bleiben in diesem Browser.",
-  "botNoFindings": "Keine elektrischen Hinweise aus den unterstützten Topologieregeln."
+  "botNoFindings": "Keine elektrischen Hinweise aus den unterstützten Topologieregeln.",
+  "compactWorkspace": "Kompakter Engineering-Arbeitsbereich",
+  "zoomIn": "Vergrößern",
+  "zoomOut": "Verkleinern",
+  "annotationOverflow": "Zeichnungsnotizen reichen über das Blatt hinaus. Der vollständige Text bleibt im nativen Projekt und in den SVG-Metadaten erhalten."
 }
