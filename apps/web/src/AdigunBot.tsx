@@ -3,6 +3,7 @@ import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
 import type { useBotFinding } from "./useBotFinding";
+import { BotProjectChat } from "./BotProjectChat";
 
 type Props = {
   project: Project | null;
@@ -87,6 +88,7 @@ export function AdigunBot({
     resize: boolean;
   } | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
+  const chatInput = useRef<HTMLInputElement>(null);
   const mobile = viewport.width <= 680;
   const normal = fit(layout, viewport);
   const bounds =
@@ -113,7 +115,10 @@ export function AdigunBot({
     }
   }, [layout]);
   useEffect(() => {
-    closeButton.current?.focus({ preventScroll: true });
+    const target = chatInput.current?.getClientRects().length
+      ? chatInput.current
+      : closeButton.current;
+    target?.focus({ preventScroll: true });
   }, []);
 
   function start(event: PointerEvent<HTMLElement>, resize: boolean) {
@@ -322,6 +327,14 @@ export function AdigunBot({
             </div>
           )}
         </section>
+        {project && (
+          <BotProjectChat
+            key={project.id}
+            project={project}
+            t={t}
+            inputRef={chatInput}
+          />
+        )}
       </div>
       {!mobile && layout.mode === "normal" && (
         <span

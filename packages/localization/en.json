@@ -483,5 +483,8 @@
   "botRestore": "Restore window",
   "botLiveChecks": "Live electrical checks",
   "botFindingPending": "Adigun BOT found an issue.",
-  "botDismiss": "Dismiss"
+  "botDismiss": "Dismiss",
+  "botDeviceLookup": "Look up a device reference",
+  "botReferenceMissing": "No device with that reference is in this project.",
+  "botAsk": "Ask"
 }

@@ -483,5 +483,8 @@
   "botRestore": "Dá fèrèsé padà",
   "botLiveChecks": "Àyẹ̀wò iná aláàyè",
   "botFindingPending": "Adigun BOT rí ìṣòro kan.",
-  "botDismiss": "Pa á mọ́"
+  "botDismiss": "Pa á mọ́",
+  "botDeviceLookup": "Wá àmì ìtọ́kasí ẹ̀rọ",
+  "botReferenceMissing": "Kò sí ẹ̀rọ pẹ̀lú àmì yẹn nínú iṣẹ́ yìí.",
+  "botAsk": "Béèrè"
 }
