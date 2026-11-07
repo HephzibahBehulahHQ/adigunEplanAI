@@ -42,3 +42,14 @@ Verified source: PR #11 merge `17580877be2f4036137c8e832e213c580b870fab`, tree `
 The one-off preparation and verification workflows remain on `codex/prepare-pages-17580877`; they were not merged into main. The established Pages main/root configuration remains unchanged. A build artifact has limited Actions retention; the published Git distribution and its checksums are the durable release record.
 
 This is a verified development increment. M13, the example library and readiness work remain unpublished in an unavailable execution workspace. Read [the continuation/recovery checkpoint](../agent/CONTINUATION_2026_11_06.md). Hosted authenticated acceptance, final engineering requirements and M18–M20 acceptance remain open.
+
+
+## Workspace and local BOT continuation — 2026-11-07
+
+The owner explicitly authorized source integration and live deployment. The
+source, CI, staged artifact and canonical HTTPS verification receipts for this
+increment are maintained in [PR #14](https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/14).
+Publication retains the established Pages `main`/root configuration, CNAME,
+.nojekyll and earlier hashed assets. It is a tested development increment; hosted
+AI, legitimate authenticated acceptance and the full product release gates remain
+open. Never infer final M20 acceptance from the publication of this increment.

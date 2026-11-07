@@ -1,20 +1,35 @@
 # Project status
 
-## Active continuation — 2026-11-07
+## Active delivery — 2026-11-07
 
-Branch: `codex/target-workspace-continuation`, based on clean published `0316973`.
-The managed environment is available again, but it is a fresh workspace: prior
-unpublished BOT/example files are absent both locally and on the recorded remote
-branch. Their recovery remains unverified; no files were reset or overwritten.
-Git HTTPS push and exact remote readback work in this environment.
+Current delivery and exact CI/live-publication receipts:
+[PR #14](https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/14).
+Receipts are maintained there so a new status-only commit does not invalidate its
+own source identity. The owner explicitly authorized commit, push, merge to main
+and deployment in this session; no further routine confirmation is required.
 
-Current increment: engineering ribbon delegates to native editing/view/report
-commands; schematic and docked cabinet selection share native device identities.
-Keyboard selection is available for schematic symbols and cabinet faces. View
-commands are transient and acknowledged to prevent replay on editor remount.
-Type checks passed. Focused browser verification is in progress. Full release,
-hosted BOT, 500 examples and external account/engineering review gates remain open.
-Owner has requested continued work through the existing goal within two hours.
+Implemented: functional engineering ribbon, searchable native hierarchy,
+transient native device selection synchronized between schematic and cabinet,
+compact drawing mode, multiline annotation preservation/overflow reporting,
+four original educational examples and a persistent nonmodal BOT window with
+read-only local project/selection/BOM tools and grounded live connection findings.
+Hosted AI and engineering mutation proposals are unavailable and labeled as such.
+
+Frozen source `8d0296035634595c51dcb8e67e082440db62abec` passed 306 unit/tooling,
+135 source browser and 18 production-build browser tests locally. A subsequent
+active-tool timing improvement passed five repeated built-app checks; final
+exact-head hosted evidence is recorded in PR #14. The production dependency audit
+found zero vulnerabilities. A clean remote clone restored that source and passed
+17 new domain tests using the already installed dependency set. This does not
+claim independent-machine disaster recovery.
+
+The managed workspace and native Git HTTPS push now work. Prior unpublished work
+was not present in this fresh workspace or its recorded remote branch and was
+not discarded. The four new examples do not establish recovery of that work or
+completion of the required 500-project library. Legitimate live authenticated
+account/storage verification, hosted AI configuration, remaining engineering and
+interchange requirements, human review and full M18–M20 acceptance remain open.
+Deployment of this tested development increment does not close those gates.
 
 ## Current publication and recovery — 2026-11-06 08:32 UTC
 

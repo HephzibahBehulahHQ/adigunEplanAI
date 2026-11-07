@@ -174,6 +174,8 @@ opens the floor editor; Power Engineering opens the schematic, checks and
 calculators; 3D Panel opens the native cabinet editor; Documentation opens actual
 reports; Analysis and Tools expose checks, calculations and drawing view controls.
 AI Tools opens the local BOT. Settings and Help retain the existing controls.
+The active tool is always identified above the drawing; a ribbon placement tool
+is effective immediately when its request renders.
 
 View → Compact engineering workspace hides the duplicate canvas toolbars on a
 large desktop display. Ribbon commands remain available. Turn it off to expose
