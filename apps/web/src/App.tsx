@@ -1,4 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  WorkspaceCommands,
+  ribbonTabs,
+  type RibbonTab,
+} from "./WorkspaceRibbon";
 import { ConnectivityPanel } from "./ConnectivityPanel";
 import {
   dictionaries,
@@ -48,7 +53,7 @@ function Workspace({ account }: { account: Account }) {
       return defaults();
     }
   });
-  const [tab, setTab] = useState<"home" | "view" | "settings">("home");
+  const [tab, setTab] = useState<RibbonTab>("home");
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
@@ -80,6 +85,26 @@ function Workspace({ account }: { account: Account }) {
     }));
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
+  const reveal = (id: PanelId) => {
+    panel(id, { visible: true, collapsed: false });
+    requestAnimationFrame(() => {
+      const element = document.querySelector<HTMLElement>(
+        `[data-panel="${id}"]`,
+      );
+      element
+        ?.querySelector<HTMLButtonElement>(".panel-heading button")
+        ?.focus();
+      if (id === "project") {
+        const library =
+          element?.querySelector<HTMLDetailsElement>(".component-library");
+        if (library) {
+          library.open = true;
+          library.querySelector<HTMLElement>("summary")?.focus();
+          library.scrollIntoView({ block: "nearest" });
+        }
+      }
+    });
+  };
   const renderPanel = (id: PanelId) => {
     const state = prefs.panels[id];
     return (
@@ -296,12 +321,22 @@ function Workspace({ account }: { account: Account }) {
         </div>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
-        <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
-          {t("home")}
-        </button>
-        <button aria-pressed={tab === "view"} onClick={() => setTab("view")}>
-          {t("view")}
-        </button>
+        {ribbonTabs.map(([id, key]) => (
+          <button
+            key={id}
+            aria-pressed={tab === id}
+            aria-label={
+              id === "home" || id === "view"
+                ? t(key)
+                : `${t(key)} ${t("ribbonMenu")}`
+            }
+            onClick={() =>
+              id === "help" ? help.current?.showModal() : setTab(id)
+            }
+          >
+            {t(key)}
+          </button>
+        ))}
       </nav>
       {native.error && (
         <p className="storage-error" role="alert">
@@ -313,9 +348,20 @@ function Workspace({ account }: { account: Account }) {
           {t("accountChecking")}
         </p>
       )}
-      <div className="ribbon" aria-label={t(tab)}>
-        {tab === "home" ? (
-          <ProjectTools native={native} t={t} />
+      <div
+        className="ribbon"
+        aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
+      >
+        {tab === "home" || tab === "file" || tab === "project" ? (
+          <>
+            <ProjectTools native={native} t={t} />
+            <WorkspaceCommands
+              tab={tab}
+              native={native}
+              t={t}
+              reveal={reveal}
+            />
+          </>
         ) : tab === "view" ? (
           <>
             <div className="panel-toggles">
@@ -338,7 +384,7 @@ function Workspace({ account }: { account: Account }) {
               {t("reset")}
             </button>
           </>
-        ) : (
+        ) : tab === "settings" ? (
           <>
             <label>
               {t("theme")}
@@ -401,6 +447,8 @@ function Workspace({ account }: { account: Account }) {
               </label>
             )}
           </>
+        ) : (
+          <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
         )}
       </div>
       {storageError && (
@@ -465,6 +513,16 @@ function Workspace({ account }: { account: Account }) {
           <i />
           {t("ready")}
         </span>
+        {native.project && (
+          <span className="engineering-status">
+            {native.project.name} ·{" "}
+            {native.project.pages.find((p) => p.id === native.selectedPageId)
+              ?.name ?? native.project.pages[0]?.name}
+            {" · "}
+            {t("selectionCount")}: {native.selectedSymbolIds.length}
+            {" · mm"}
+          </span>
+        )}
         <span>
           {native.project
             ? t(native.saved ? "savedLocally" : "notSaved")

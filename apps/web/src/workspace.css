@@ -597,3 +597,136 @@ button:disabled {
   padding: 1rem;
   margin: 0;
 }
+
+/* Dense engineering shell, with one horizontally scrollable ribbon on narrow screens. */
+.ribbon-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  gap: 1px;
+  padding: 0 0.35rem;
+  flex-shrink: 0;
+}
+.ribbon-tabs button {
+  white-space: nowrap;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.74rem;
+}
+.ribbon-command-groups {
+  display: flex;
+  align-items: stretch;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+}
+.ribbon-command {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-color: transparent;
+  background: transparent;
+  max-width: 8rem;
+  min-height: 60px;
+  font-size: 0.7rem;
+}
+.ribbon-command svg {
+  width: 23px;
+  height: 23px;
+  color: var(--cyan);
+}
+.ribbon-command span {
+  text-align: center;
+}
+.navigator-pages button[aria-current="page"] {
+  border-color: var(--cyan);
+  background: var(--hover);
+}
+.engineering-status {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+@media (min-width: 1100px) {
+  .app-header {
+    flex-wrap: nowrap;
+    min-height: 60px;
+    padding: 0.35rem 0.7rem;
+    gap: 0.8rem;
+  }
+  .corporate-logo {
+    width: 155px;
+    height: 44px;
+  }
+  .wordmark {
+    flex-shrink: 0;
+    padding-left: 0.8rem;
+  }
+  .wordmark strong {
+    font-size: 1.25rem;
+  }
+  .project-title {
+    min-width: 0;
+    max-width: 38vw;
+    padding: 0.6rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .owner-toolbar {
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+  .owner-toolbar .local-status {
+    flex: 0 1 auto;
+  }
+  .owner-toolbar .owner-icon {
+    width: 33px;
+    height: 33px;
+    flex-basis: 33px;
+  }
+  .ribbon {
+    min-height: 76px;
+    padding: 0.3rem 0.65rem;
+    gap: 0.7rem;
+  }
+  .ribbon .native-tools {
+    align-items: center;
+    max-width: 48%;
+  }
+  .engineering-layout.has-left.has-right {
+    grid-template-columns: minmax(210px, 19%) minmax(0, 1fr) minmax(250px, 26%);
+  }
+  .drawing-viewport {
+    padding: 5px;
+  }
+  .workspace-heading {
+    padding: 0.4rem 0.6rem;
+  }
+  .drawing-tabs {
+    padding: 0.2rem;
+  }
+  .drawing-tabs button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  .status-bar {
+    padding: 0.4rem 0.6rem;
+    gap: 0.6rem;
+  }
+}
+@media (max-width: 680px) {
+  .ribbon-command {
+    min-height: 44px;
+  }
+  .ribbon-command svg {
+    width: 20px;
+    height: 20px;
+  }
+  .ribbon-command-groups {
+    gap: 0;
+  }
+}

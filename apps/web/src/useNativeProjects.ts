@@ -70,6 +70,11 @@ export function useNativeProjects(ownerId: string | null = null) {
     }
   });
   const histories = useRef(new Map<string, ProjectHistory>());
+  const editorSequence = useRef(0);
+  const [editorCommand, setEditorCommand] = useState<{
+    id: number;
+    action: string;
+  } | null>(null);
   const [view, setView] = useState<WorkspaceView>("schematic");
   const [selection, setSelection] = useState<{
     projectId: string | null;
@@ -157,6 +162,14 @@ export function useNativeProjects(ownerId: string | null = null) {
     project,
     view,
     setView,
+    editorCommand,
+    consumeEditorCommand(id: number) {
+      setEditorCommand((previous) => (previous?.id === id ? null : previous));
+    },
+    requestEditorCommand(action: string) {
+      setView("schematic");
+      setEditorCommand({ id: ++editorSequence.current, action });
+    },
     selectedSymbolIds,
     selectedDeviceId,
     selectSymbols,

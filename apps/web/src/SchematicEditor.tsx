@@ -405,6 +405,33 @@ export function SchematicEditor({
     element.addEventListener("wheel", handler, { passive: false });
     return () => element.removeEventListener("wheel", handler);
   }, [page.widthMm]);
+  // Requests are ephemeral UI commands. A request runs once, including after switching views.
+  const handledCommand = useRef(0);
+  useEffect(() => {
+    const request = native.editorCommand;
+    if (!request || handledCommand.current === request.id) return;
+    handledCommand.current = request.id;
+    native.consumeEditorCommand(request.id);
+    const action = request.action;
+    if (
+      ["select", "pan", "wire", "label"].includes(action) ||
+      Object.hasOwn(primitives, action)
+    ) {
+      setTool(action as typeof tool);
+      setFromPin(null);
+    } else if (action === "fit")
+      setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
+    else if (action === "rotate" && selected.length)
+      edit((p) => rotate(p, selected));
+    else if (action === "mirror" && selected.length)
+      edit((p) => mirror(p, selected));
+    else if (action === "delete") deleteSelected();
+    else if (action === "duplicate") duplicateSelected();
+    else if (action === "paste") pasteClipboard();
+    else if (action === "copy" && selected.length)
+      setClipboard({ project: structuredClone(project), ids: [...selected] });
+    svg.current?.focus();
+  }, [native.editorCommand]);
   const sizes = {
     A4: [297, 210],
     A3: [420, 297],
