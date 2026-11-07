@@ -1,0 +1,219 @@
+.bot-launcher {
+  position: fixed;
+  right: 16px;
+  bottom: 38px;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-color: var(--cyan);
+  box-shadow: 0 4px 18px #0006;
+  font-size: 0.72rem;
+}
+.bot-launcher svg {
+  width: 26px;
+  height: 26px;
+  color: var(--cyan);
+}
+.bot-launcher i {
+  background: var(--gold);
+}
+.bot-window {
+  position: fixed;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--cyan);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 10px 36px #0008;
+  font-size: 0.78rem;
+}
+.bot-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  min-height: 47px;
+  padding: 4px 7px;
+  background: var(--raised);
+  border-bottom: 1px solid var(--line);
+  touch-action: none;
+  cursor: move;
+}
+.bot-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.bot-title svg {
+  color: var(--cyan);
+  width: 30px;
+  height: 30px;
+}
+.bot-window-controls {
+  display: flex;
+  gap: 2px;
+}
+.bot-window-controls button {
+  padding: 3px 7px;
+  border: 0;
+  background: transparent;
+  font-size: 1.1rem;
+}
+.bot-mode {
+  margin: 0;
+  padding: 8px 10px;
+  color: var(--cyan);
+  font-size: 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+.bot-live {
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+}
+.bot-context {
+  margin: 0;
+  padding: 6px 10px;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 0.68rem;
+  border-bottom: 1px solid var(--line);
+}
+.bot-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 8px;
+  gap: 4px;
+}
+.bot-quick-actions button {
+  padding: 6px;
+  font-size: 0.68rem;
+}
+.bot-transcript {
+  flex: 1;
+  min-height: 40px;
+  overflow: auto;
+  padding: 0 10px;
+  overscroll-behavior: contain;
+}
+.bot-transcript article {
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow-wrap: anywhere;
+}
+.bot-query {
+  padding-bottom: 8px;
+  margin: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--cyan);
+}
+.bot-tool-result small,
+.bot-empty {
+  color: var(--muted);
+}
+.bot-tool-result dl {
+  margin: 8px 0;
+}
+.bot-tool-result dl > div {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px;
+}
+.bot-tool-result dd {
+  margin: 0;
+}
+.bot-tool-result ul {
+  padding-left: 1.2rem;
+}
+.bot-composer {
+  display: flex;
+  gap: 5px;
+  padding: 8px;
+  border-top: 1px solid var(--line);
+}
+.bot-composer input {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 0.72rem;
+}
+.bot-composer button {
+  font-size: 0.72rem;
+}
+.bot-window footer {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px 8px 8px;
+}
+.bot-window footer small {
+  color: var(--muted);
+  font-size: 0.6rem;
+}
+.bot-window footer button {
+  flex-shrink: 0;
+  font-size: 0.63rem;
+  padding: 4px;
+}
+.bot-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 17px;
+  height: 17px;
+  color: var(--cyan);
+  cursor: nwse-resize;
+  touch-action: none;
+}
+.bot-suggestion {
+  margin: 4px 8px;
+  padding: 7px;
+  border: 1px solid var(--gold);
+  border-radius: 5px;
+}
+.bot-suggestion p {
+  margin: 0 0 6px;
+}
+.bot-suggestion button {
+  font-size: 0.68rem;
+  padding: 4px 8px;
+  margin-right: 4px;
+}
+.bot-error {
+  color: var(--gold);
+  font-size: 0.65rem;
+  padding: 4px;
+  margin: 0;
+}
+@media (max-width: 680px) {
+  .bot-window:not(.bot-minimized) {
+    inset: 8px !important;
+    width: auto !important;
+    height: auto !important;
+  }
+  .bot-launcher {
+    right: 10px;
+    bottom: 12px;
+  }
+  .bot-resize {
+    display: none;
+  }
+  .bot-header {
+    cursor: default;
+  }
+}

@@ -781,3 +781,57 @@ button:disabled {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application .engineering-layout {
+    min-height: 0;
+    overflow: hidden;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .application .engineering-layout:has(> .dock-bottom) {
+    grid-template-rows: minmax(0, 1fr) 180px;
+  }
+  .application .workspace,
+  .workspace .drawing-viewport,
+  .workspace .drawing-sheet,
+  .drawing-sheet .native-drawing,
+  .native-drawing .schematic-editor {
+    min-height: 0;
+  }
+  .application .workspace {
+    height: 100%;
+  }
+  .workspace .drawing-viewport {
+    overflow: hidden;
+  }
+  .drawing-sheet .native-drawing {
+    flex: 1;
+  }
+  .schematic-editor .engineering-canvas {
+    flex: 1;
+    height: 0;
+    min-height: 0;
+  }
+  .application .panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .panel .panel-body {
+    min-height: 0;
+    overflow: auto;
+    flex: 1;
+  }
+  .app-header .owner-toolbar {
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+  .app-header .owner-toolbar .owner-icon {
+    width: 33px;
+    height: 33px;
+    flex-basis: 33px;
+  }
+  .app-header .owner-toolbar .local-status {
+    flex: 0 1 auto;
+  }
+}

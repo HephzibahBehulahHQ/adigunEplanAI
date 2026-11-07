@@ -11,6 +11,7 @@ import {
   ribbonTabs,
   type RibbonTab,
 } from "./WorkspaceRibbon";
+import { BotWindow } from "./BotWindow";
 import { ConnectivityPanel } from "./ConnectivityPanel";
 import {
   dictionaries,
@@ -67,6 +68,7 @@ function Workspace({ account }: { account: Account }) {
       return defaults();
     }
   });
+  const [botSignal, setBotSignal] = useState(0);
   const [tab, setTab] = useState<RibbonTab>("home");
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
@@ -345,7 +347,11 @@ function Workspace({ account }: { account: Account }) {
                 : `${t(key)} ${t("ribbonMenu")}`
             }
             onClick={() =>
-              id === "help" ? help.current?.showModal() : setTab(id)
+              id === "help"
+                ? help.current?.showModal()
+                : id === "ai"
+                  ? setBotSignal((value) => value + 1)
+                  : setTab(id)
             }
           >
             {t(key)}
@@ -531,6 +537,12 @@ function Workspace({ account }: { account: Account }) {
         {has("right") && region("right")}
         {has("bottom") && region("bottom")}
       </div>
+      <BotWindow
+        native={native}
+        ownerId={account.user?.id ?? null}
+        t={t}
+        openSignal={botSignal}
+      />
       <footer className="status-bar">
         <span>
           <i />

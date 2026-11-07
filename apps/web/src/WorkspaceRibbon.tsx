@@ -19,6 +19,7 @@ export const ribbonTabs = [
   ["panel", "panel3d"],
   ["documentation", "menuDocumentation"],
   ["analysis", "menuAnalysis"],
+  ["ai", "menuAiTools"],
   ["tools", "menuTools"],
   ["settings", "settings"],
   ["help", "help"],
