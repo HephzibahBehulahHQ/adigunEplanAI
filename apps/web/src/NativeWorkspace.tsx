@@ -47,9 +47,31 @@ export function ProjectTools({ native, t }: Props) {
         disabled={native.corrupt}
         onClick={() => dialog.current?.showModal()}
       >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M5 2h9l5 5v15H5z M14 2v6h5 M9 15h6 M12 12v6" />
+        </svg>
         {t("newProject")}
       </button>
       <button onClick={() => file.current?.click()}>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M2 6h8l2 2h10l-3 12H2z M2 10h18" />
+        </svg>
         {t("importProject")}
       </button>
       <input
@@ -75,7 +97,20 @@ export function ProjectTools({ native, t }: Props) {
       />
       {native.project && (
         <>
-          <button onClick={() => native.save()}>{t("save")}</button>
+          <button onClick={() => native.save()}>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M3 3h15l3 3v15H3z M7 3v6h10V3 M7 21v-7h10v7" />
+            </svg>
+            {t("save")}
+          </button>
           <button
             onClick={() => {
               if (!native.project) return;
@@ -90,12 +125,45 @@ export function ProjectTools({ native, t }: Props) {
               setTimeout(() => URL.revokeObjectURL(url), 1000);
             }}
           >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M13 3H5v18h14v-8 M12 12l9-9 M15 3h6v6" />
+            </svg>
             {t("exportProject")}
           </button>
           <button disabled={!native.canUndo} onClick={() => native.undo()}>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 4l-5 5 5 5 M4 9h10a5 5 0 0 1 0 10h-3" />
+            </svg>
             {t("undo")}
           </button>
           <button disabled={!native.canRedo} onClick={() => native.redo()}>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M15 4l5 5-5 5 M20 9H10a5 5 0 0 0 0 10h3" />
+            </svg>
             {t("redo")}
           </button>
         </>
