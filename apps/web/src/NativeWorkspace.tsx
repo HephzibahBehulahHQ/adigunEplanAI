@@ -359,7 +359,11 @@ export function ProjectProperties({ native, t }: Props) {
     </>
   );
 }
-export function NativeDrawing({ native, t }: Props) {
+export function NativeDrawing({
+  native,
+  t,
+  ribbon,
+}: Props & { ribbon: HTMLElement | null }) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
   const [buildingView, setBuildingView] = useState(false);
@@ -417,6 +421,7 @@ export function NativeDrawing({ native, t }: Props) {
               t={t}
               clipboard={clipboard}
               setClipboard={setClipboard}
+              ribbon={ribbon}
             />
           ) : (
             <p>{t("noPages")}</p>

@@ -41,6 +41,7 @@ type Props = {
   native: NativeProjects;
   page: Project["pages"][number];
   t: (key: MessageKey) => string;
+  ribbon: HTMLElement | null;
 };
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
@@ -57,6 +58,7 @@ export function SchematicEditor({
   t,
   clipboard,
   setClipboard,
+  ribbon,
 }: Props) {
   const project = native.project!;
   const [tool, setTool] = useState<
@@ -416,76 +418,9 @@ export function SchematicEditor({
         Math.min(page.widthMm, page.heightMm) === v[1],
     )?.[0] ?? "custom";
   const wire = project.wires.find((w) => w.id === selectedWire);
-  return (
-    <div
-      className="schematic-editor"
-      onKeyDown={(event) => {
-        if ((event.target as HTMLElement).closest("input,select,textarea"))
-          return;
-        const key = event.key.toLowerCase();
-        if (
-          (event.ctrlKey || event.metaKey) &&
-          ["z", "y", "c", "v", "d", "x"].includes(key)
-        ) {
-          event.preventDefault();
-          if (key === "z") {
-            if (event.shiftKey) native.redo();
-            else native.undo();
-          }
-          if (key === "y") native.redo();
-          if (key === "c")
-            setClipboard({
-              project: structuredClone(project),
-              ids: [...selected],
-            });
-          if (key === "v") pasteClipboard();
-          if (key === "d") duplicateSelected();
-          if (key === "x") {
-            setClipboard({
-              project: structuredClone(project),
-              ids: [...selected],
-            });
-            deleteSelected();
-          }
-        } else if (key === "delete") {
-          event.preventDefault();
-          deleteSelected();
-        } else if (key === "r" && selected.length) {
-          edit((p) => rotate(p, selected));
-        } else if (key === "escape") {
-          setFromPin(null);
-          setLabelPin(null);
-          setTool("select");
-        } else if (
-          selected.length &&
-          ["arrowleft", "arrowright", "arrowup", "arrowdown"].includes(key)
-        ) {
-          event.preventDefault();
-          edit((p) =>
-            move(
-              p,
-              selected,
-              {
-                x:
-                  key === "arrowleft"
-                    ? -moveStep
-                    : key === "arrowright"
-                      ? moveStep
-                      : 0,
-                y:
-                  key === "arrowup"
-                    ? -moveStep
-                    : key === "arrowdown"
-                      ? moveStep
-                      : 0,
-              },
-              grid,
-            ),
-          );
-        }
-      }}
-    >
-      <div className="editor-toolbar" aria-label={t("components")}>
+  const controls = (
+    <>
+      <div className="editor-toolbar" role="group" aria-label={t("components")}>
         {(["select", "pan", "wire", "label"] as const).map((mode) => (
           <button
             key={mode}
@@ -584,7 +519,7 @@ export function SchematicEditor({
           {t("snapping")}
         </label>
       </div>
-      <div className="editor-toolbar" aria-label={t("selection")}>
+      <div className="editor-toolbar" role="group" aria-label={t("selection")}>
         {[
           ["rotate", () => edit((p) => rotate(p, selected))],
           ["mirror", () => edit((p) => mirror(p, selected))],
@@ -637,6 +572,78 @@ export function SchematicEditor({
           {t("paste")}
         </button>
       </div>
+    </>
+  );
+  return (
+    <div
+      className="schematic-editor"
+      onKeyDown={(event) => {
+        if ((event.target as HTMLElement).closest("input,select,textarea"))
+          return;
+        const key = event.key.toLowerCase();
+        if (
+          (event.ctrlKey || event.metaKey) &&
+          ["z", "y", "c", "v", "d", "x"].includes(key)
+        ) {
+          event.preventDefault();
+          if (key === "z") {
+            if (event.shiftKey) native.redo();
+            else native.undo();
+          }
+          if (key === "y") native.redo();
+          if (key === "c")
+            setClipboard({
+              project: structuredClone(project),
+              ids: [...selected],
+            });
+          if (key === "v") pasteClipboard();
+          if (key === "d") duplicateSelected();
+          if (key === "x") {
+            setClipboard({
+              project: structuredClone(project),
+              ids: [...selected],
+            });
+            deleteSelected();
+          }
+        } else if (key === "delete") {
+          event.preventDefault();
+          deleteSelected();
+        } else if (key === "r" && selected.length) {
+          edit((p) => rotate(p, selected));
+        } else if (key === "escape") {
+          setFromPin(null);
+          setLabelPin(null);
+          setTool("select");
+        } else if (
+          selected.length &&
+          ["arrowleft", "arrowright", "arrowup", "arrowdown"].includes(key)
+        ) {
+          event.preventDefault();
+          edit((p) =>
+            move(
+              p,
+              selected,
+              {
+                x:
+                  key === "arrowleft"
+                    ? -moveStep
+                    : key === "arrowright"
+                      ? moveStep
+                      : 0,
+                y:
+                  key === "arrowup"
+                    ? -moveStep
+                    : key === "arrowdown"
+                      ? moveStep
+                      : 0,
+              },
+              grid,
+            ),
+          );
+        }
+      }}
+    >
+      {ribbon ? createPortal(controls, ribbon) : controls}
       <details className="editor-options">
         <summary>
           {t("layers")} / {t("sheetSize")}

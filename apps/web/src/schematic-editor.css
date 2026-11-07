@@ -194,3 +194,25 @@
     overflow: auto;
   }
 }
+
+.schematic-ribbon {
+  flex: 1 1 35rem;
+  min-width: 0;
+  border-inline-start: 1px solid var(--line);
+  padding-inline-start: 0.45rem;
+}
+.schematic-ribbon:empty {
+  display: none;
+}
+.schematic-ribbon .editor-toolbar {
+  background: transparent;
+  padding: 0.2rem;
+}
+@media (max-width: 680px) {
+  .schematic-ribbon {
+    flex-basis: 100%;
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line);
+    padding-inline-start: 0;
+  }
+}

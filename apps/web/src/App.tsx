@@ -37,6 +37,9 @@ export function App() {
     }
   });
   const [tab, setTab] = useState<"home" | "view" | "settings">("home");
+  const [schematicRibbon, setSchematicRibbon] = useState<HTMLDivElement | null>(
+    null,
+  );
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
@@ -215,7 +218,10 @@ export function App() {
       )}
       <div className="ribbon" aria-label={t(tab)}>
         {tab === "home" ? (
-          <ProjectTools native={native} t={t} />
+          <>
+            <ProjectTools native={native} t={t} />
+            <div className="schematic-ribbon" ref={setSchematicRibbon} />
+          </>
         ) : tab === "view" ? (
           <>
             <div className="panel-toggles">
@@ -343,7 +349,7 @@ export function App() {
               }
             >
               {native.project ? (
-                <NativeDrawing native={native} t={t} />
+                <NativeDrawing native={native} t={t} ribbon={schematicRibbon} />
               ) : (
                 <div className="empty-workspace">
                   <span className="drawing-mark" aria-hidden="true">
