@@ -194,3 +194,12 @@
     overflow: auto;
   }
 }
+
+.active-editor-tool {
+  margin: 0;
+  padding: 4px 7px;
+  font-size: 0.65rem;
+  color: var(--cyan);
+  background: var(--panel);
+  flex-shrink: 0;
+}

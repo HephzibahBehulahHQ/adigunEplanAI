@@ -1101,5 +1101,6 @@
   "navigatorFilter": "Filter project tree",
   "navigatorBuildings": "Buildings and floors",
   "navigatorPanels": "Cabinet layouts",
-  "navigatorLimit": "Showing the first 100 matches. Refine the filter to find more."
+  "navigatorLimit": "Showing the first 100 matches. Refine the filter to find more.",
+  "activeEditorTool": "Active tool"
 }

@@ -60,9 +60,17 @@ export function SchematicEditor({
   setClipboard,
 }: Props) {
   const project = native.project!;
-  const [tool, setTool] = useState<
+  const [activeTool, setTool] = useState<
     "select" | "pan" | "wire" | "label" | "custom" | Primitive
   >("select");
+  // A ribbon tool is effective in the parent render, before deferred effects acknowledge it.
+  const requestedTool = native.editorCommand?.action;
+  const tool =
+    requestedTool &&
+    (["select", "pan", "wire", "label"].includes(requestedTool) ||
+      Object.hasOwn(primitives, requestedTool))
+      ? (requestedTool as typeof activeTool)
+      : activeTool;
   const [customDefinition, setCustomDefinition] = useState("");
   const selected = native.selectedSymbolIds.filter((id) =>
     project.symbolInstances.some((s) => s.id === id && s.pageId === page.id),
@@ -537,6 +545,22 @@ export function SchematicEditor({
         }
       }}
     >
+      <p className="active-editor-tool" aria-live="polite">
+        {t("activeEditorTool")}:{" "}
+        {t(
+          tool === "select"
+            ? "selectTool"
+            : tool === "pan"
+              ? "panTool"
+              : tool === "wire"
+                ? "wireTool"
+                : tool === "label"
+                  ? "labelTool"
+                  : tool === "custom"
+                    ? "customSymbols"
+                    : tool,
+        )}
+      </p>
       <div
         className="editor-toolbar compact-editor-tools"
         aria-label={t("components")}
@@ -999,6 +1023,7 @@ export function SchematicEditor({
       <svg
         ref={svg}
         className="native-sheet engineering-canvas"
+        data-tool={tool}
         viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
         role="application"
         aria-label={page.name}

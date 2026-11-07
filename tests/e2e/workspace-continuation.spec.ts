@@ -287,6 +287,7 @@ test("compact target workspace gives the drawing space and keeps native insert, 
   await page
     .getByRole("button", { name: "Fuse · Engineering commands", exact: true })
     .click();
+  await expect(canvas).toHaveAttribute("data-tool", "fuse");
   const point = await canvas.evaluate((svg: SVGSVGElement) => {
     const p = new DOMPoint(210, 220).matrixTransform(svg.getScreenCTM()!);
     return { x: p.x, y: p.y };
