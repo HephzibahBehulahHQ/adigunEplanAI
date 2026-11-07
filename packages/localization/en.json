@@ -473,5 +473,9 @@
   "equipmentSymbolScale": "Plan symbol scale",
   "equipmentGrid": "Placement grid (mm)",
   "equipmentRotation": "Plan rotation",
-  "enclosureLoadError": "The 3D panel could not load."
+  "enclosureLoadError": "The 3D panel could not load.",
+  "botLocalTools": "Local project tools",
+  "botQuickActions": "Quick actions",
+  "botRunCheck": "Run electrical check",
+  "botLoadError": "Adigun BOT could not load."
 }

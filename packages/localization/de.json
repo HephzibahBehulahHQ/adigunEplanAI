@@ -473,5 +473,9 @@
   "equipmentSymbolScale": "Plansymbolfaktor",
   "equipmentGrid": "Platzierungsraster (mm)",
   "equipmentRotation": "Plandrehung",
-  "enclosureLoadError": "Die 3D-Ansicht konnte nicht geladen werden."
+  "enclosureLoadError": "Die 3D-Ansicht konnte nicht geladen werden.",
+  "botLocalTools": "Lokale Projektwerkzeuge",
+  "botQuickActions": "Schnellaktionen",
+  "botRunCheck": "Elektroprüfung ausführen",
+  "botLoadError": "Adigun BOT konnte nicht geladen werden."
 }

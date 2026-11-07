@@ -1,5 +1,13 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { ConnectivityPanel } from "./ConnectivityPanel";
+import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import {
   dictionaries,
   type MessageKey,
@@ -27,6 +35,10 @@ import {
 import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
 
+const AdigunBot = lazy(() =>
+  import("./AdigunBot").then(({ AdigunBot }) => ({ default: AdigunBot })),
+);
+
 export function App() {
   const native = useNativeProjects();
   const [prefs, setPrefs] = useState<Preferences>(() => {
@@ -42,6 +54,8 @@ export function App() {
   );
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
+  const botToggle = useRef<HTMLButtonElement>(null);
+  const [botOpen, setBotOpen] = useState(false);
   const [layoutOpen, setLayoutOpen] = useState<
     Partial<Record<PanelId, boolean>>
   >({});
@@ -195,6 +209,15 @@ export function App() {
           <i />
           {t("local")}
         </span>
+        <button
+          type="button"
+          ref={botToggle}
+          aria-expanded={botOpen}
+          aria-controls={botOpen ? "adigun-bot" : undefined}
+          onClick={() => setBotOpen((open) => !open)}
+        >
+          Adigun BOT
+        </button>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
         <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
@@ -314,7 +337,7 @@ export function App() {
         </p>
       )}
       <div
-        className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") ? "has-right" : ""}`}
+        className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") || botOpen ? "has-right" : ""}`}
       >
         {has("left") && region("left")}
         <main
@@ -362,7 +385,32 @@ export function App() {
             </div>
           </div>
         </main>
-        {has("right") && region("right")}
+        {(has("right") || botOpen) && (
+          <div className={`workspace-right ${botOpen ? "has-bot" : ""}`}>
+            {has("right") && region("right")}
+            {botOpen && (
+              <LazyPanelBoundary message={t("botLoadError")}>
+                <Suspense fallback={<p role="status">Adigun BOT…</p>}>
+                  <AdigunBot
+                    project={native.project}
+                    t={t}
+                    close={() => {
+                      setBotOpen(false);
+                      botToggle.current?.focus();
+                    }}
+                    openDiagnostics={() =>
+                      panel("diagnostics", { visible: true, collapsed: false })
+                    }
+                    openBom={() =>
+                      panel("bom", { visible: true, collapsed: false })
+                    }
+                    openHelp={() => help.current?.showModal()}
+                  />
+                </Suspense>
+              </LazyPanelBoundary>
+            )}
+          </div>
+        )}
         {has("bottom") && region("bottom")}
       </div>
       <footer className="status-bar">

@@ -473,5 +473,9 @@
   "equipmentSymbolScale": "Ìwọ̀n àmì ètò",
   "equipmentGrid": "Àwọ̀n fífi sí (mm)",
   "equipmentRotation": "Yíyí ètò",
-  "enclosureLoadError": "A kò lè ṣí àwòrán 3D náà."
+  "enclosureLoadError": "A kò lè ṣí àwòrán 3D náà.",
+  "botLocalTools": "Àwọn irinṣẹ́ iṣẹ́ agbègbè",
+  "botQuickActions": "Àwọn ìṣe kíákíá",
+  "botRunCheck": "Ṣàyẹ̀wò ètò iná",
+  "botLoadError": "A kò lè ṣí Adigun BOT."
 }
