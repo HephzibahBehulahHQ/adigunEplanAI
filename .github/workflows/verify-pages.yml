@@ -7,6 +7,7 @@ on:
       - .github/workflows/verify-pages.yml
 permissions:
   contents: read
+  actions: read
 jobs:
   live:
     runs-on: ubuntu-latest
@@ -20,6 +21,10 @@ jobs:
         with:
           node-version: 24
           cache: npm
+      - name: Wait for the exact Pages publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run watch 42369570435 --interval 10 --exit-status
       - name: Verify canonical HTTPS provenance and all runtime hashes
         run: |
           node <<'VERIFY'
