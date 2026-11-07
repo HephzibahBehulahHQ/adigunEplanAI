@@ -472,5 +472,6 @@
   "equipmentY": "Betriebsmittel Y (mm)",
   "equipmentSymbolScale": "Plansymbolfaktor",
   "equipmentGrid": "Platzierungsraster (mm)",
-  "equipmentRotation": "Plandrehung"
+  "equipmentRotation": "Plandrehung",
+  "enclosureLoadError": "Die 3D-Ansicht konnte nicht geladen werden."
 }

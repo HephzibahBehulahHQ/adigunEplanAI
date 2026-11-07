@@ -1,5 +1,4 @@
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
-import { EnclosureView } from "./EnclosureView";
 import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -13,6 +12,11 @@ import type { NativeProjects } from "./useNativeProjects";
 const BuildingEditor = lazy(() =>
   import("./BuildingEditor").then((module) => ({
     default: module.BuildingEditor,
+  })),
+);
+const EnclosureView = lazy(() =>
+  import("./EnclosureView").then(({ EnclosureView }) => ({
+    default: EnclosureView,
   })),
 );
 
@@ -289,7 +293,16 @@ export function NativeDataPanel({
     ) : (
       <p className="empty-hint">{t("noRecords")}</p>
     );
-  if (kind === "panel3d") return <EnclosureView project={project} t={t} />;
+  if (kind === "panel3d")
+    return project.enclosures.length ? (
+      <LazyPanelBoundary message={t("enclosureLoadError")}>
+        <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
+          <EnclosureView project={project} t={t} />
+        </Suspense>
+      </LazyPanelBoundary>
+    ) : (
+      <p className="empty-hint">{t("noRecords")}</p>
+    );
   const records =
     kind === "calculations" ? project.calculations : project.reports;
   return records.length ? (

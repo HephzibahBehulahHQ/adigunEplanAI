@@ -472,5 +472,6 @@
   "equipmentY": "Ẹ̀rọ Y (mm)",
   "equipmentSymbolScale": "Ìwọ̀n àmì ètò",
   "equipmentGrid": "Àwọ̀n fífi sí (mm)",
-  "equipmentRotation": "Yíyí ètò"
+  "equipmentRotation": "Yíyí ètò",
+  "enclosureLoadError": "A kò lè ṣí àwòrán 3D náà."
 }

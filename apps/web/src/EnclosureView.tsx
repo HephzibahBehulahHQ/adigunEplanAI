@@ -18,6 +18,14 @@ const edges = [
   [5, 7],
   [6, 7],
 ] as const;
+const faces = [
+  { indices: [0, 4, 6, 2], normal: { x: -1, y: 0, z: 0 }, tone: "side" },
+  { indices: [1, 3, 7, 5], normal: { x: 1, y: 0, z: 0 }, tone: "side" },
+  { indices: [0, 1, 5, 4], normal: { x: 0, y: -1, z: 0 }, tone: "top" },
+  { indices: [2, 6, 7, 3], normal: { x: 0, y: 1, z: 0 }, tone: "top" },
+  { indices: [0, 2, 3, 1], normal: { x: 0, y: 0, z: -1 }, tone: "front" },
+  { indices: [4, 5, 7, 6], normal: { x: 0, y: 0, z: 1 }, tone: "front" },
+] as const;
 
 export function EnclosureView({ project, t }: Props) {
   const [id, setId] = useState("");
@@ -29,8 +37,13 @@ export function EnclosureView({ project, t }: Props) {
   const radians = (angle * Math.PI) / 180;
   const cosine = Math.cos(radians);
   const sine = Math.sin(radians);
+  const cameraDepth = ({ x, y, z }: Vector) => sine * x + cosine * z + 0.45 * y;
   function projectPoint({ x, y, z }: Vector) {
-    return { x: cosine * x - sine * z, y: (sine * x + cosine * z) * 0.45 - y };
+    return {
+      x: cosine * x - sine * z,
+      y: (sine * x + cosine * z) * 0.45 - y,
+      depth: cameraDepth({ x, y, z }),
+    };
   }
   function corners(position: Vector, size: Vector) {
     return Array.from({ length: 8 }, (_, i) =>
@@ -45,7 +58,6 @@ export function EnclosureView({ project, t }: Props) {
     {
       key: enclosure.id,
       label: enclosure.name,
-      frame: true,
       points: corners(
         { x: 0, y: 0, z: 0 },
         { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
@@ -58,7 +70,6 @@ export function EnclosureView({ project, t }: Props) {
         label:
           project.devices.find((device) => device.id === item.deviceId)
             ?.reference ?? item.name,
-        frame: false,
         points: corners(item.positionMm, item.sizeMm),
       })),
   ];
@@ -75,6 +86,25 @@ export function EnclosureView({ project, t }: Props) {
     }
   }
   const margin = Math.max(right - left, bottom - top) * 0.07;
+  const [frame, ...equipment] = boxes;
+  const visibleFaces = equipment
+    .flatMap(({ key, label, points }) =>
+      faces
+        .filter(({ normal }) => cameraDepth(normal) > 1e-10)
+        .map(({ indices, tone }) => {
+          const vertices = indices.map((index) => points[index]);
+          return {
+            key: `${key}:${tone}`,
+            label,
+            tone,
+            depth:
+              vertices.reduce((sum, point) => sum + point.depth, 0) /
+              vertices.length,
+            coordinates: vertices.map(({ x, y }) => `${x},${y}`).join(" "),
+          };
+        }),
+    )
+    .sort((a, b) => a.depth - b.depth);
   return (
     <div className="enclosure-view">
       <select
@@ -93,23 +123,28 @@ export function EnclosureView({ project, t }: Props) {
         aria-label={enclosure.name}
         viewBox={`${left - margin} ${top - margin} ${right - left + 2 * margin} ${bottom - top + 2 * margin}`}
       >
-        {boxes.map(({ key, label, frame, points }) => (
-          <g
+        <g className="enclosure-frame">
+          <title>{frame.label}</title>
+          {edges.map(([a, b]) => (
+            <line
+              key={`${a}-${b}`}
+              x1={frame.points[a].x}
+              y1={frame.points[a].y}
+              x2={frame.points[b].x}
+              y2={frame.points[b].y}
+              vectorEffect="non-scaling-stroke"
+            />
+          ))}
+        </g>
+        {visibleFaces.map(({ key, label, tone, coordinates }) => (
+          <polygon
             key={key}
-            className={frame ? "enclosure-frame" : "enclosure-equipment"}
+            className={`enclosure-face enclosure-face-${tone}`}
+            points={coordinates}
+            vectorEffect="non-scaling-stroke"
           >
             <title>{label}</title>
-            {edges.map(([a, b]) => (
-              <line
-                key={`${a}-${b}`}
-                x1={points[a].x}
-                y1={points[a].y}
-                x2={points[b].x}
-                y2={points[b].y}
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-          </g>
+          </polygon>
         ))}
       </svg>
       <label>

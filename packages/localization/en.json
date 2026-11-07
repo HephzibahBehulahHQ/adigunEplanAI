@@ -472,5 +472,6 @@
   "equipmentY": "Equipment Y (mm)",
   "equipmentSymbolScale": "Plan symbol scale",
   "equipmentGrid": "Placement grid (mm)",
-  "equipmentRotation": "Plan rotation"
+  "equipmentRotation": "Plan rotation",
+  "enclosureLoadError": "The 3D panel could not load."
 }

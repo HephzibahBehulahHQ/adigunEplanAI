@@ -570,9 +570,18 @@ button:disabled {
   stroke: var(--navy);
   stroke-width: 1.2;
 }
-.enclosure-equipment {
-  stroke: var(--royal-blue);
-  stroke-width: 1.5;
+.enclosure-face {
+  stroke: var(--navy);
+  stroke-width: 1;
+}
+.enclosure-face-front {
+  fill: color-mix(in srgb, var(--navy) 30%, var(--ivory));
+}
+.enclosure-face-side {
+  fill: color-mix(in srgb, var(--navy) 54%, var(--ivory));
+}
+.enclosure-face-top {
+  fill: color-mix(in srgb, var(--navy) 13%, var(--ivory));
 }
 
 @media (min-width: 1350px) {
