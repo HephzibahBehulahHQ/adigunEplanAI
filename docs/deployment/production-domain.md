@@ -79,3 +79,18 @@ requests a fresh full publication with a new main revision, preserving the exact
 tested runtime and all deployment settings. Canonical-origin hashes and the 18
 live browser cases must pass before the increment is described as live; the final
 receipt is maintained in PR #14.
+
+### Actions-based publication
+
+A read of the hosting API during incident diagnosis showed that Pages had changed
+from the earlier `legacy` configuration to `workflow`. The continuing legacy
+publisher did not publish the current main revision. The maintained
+`.github/workflows/pages.yml` now matches the observed Actions mode; it does not
+change Pages settings, the domain, application data or access policies.
+
+Publication verifies every runtime SHA-256, the source tree and Git ancestry
+before packaging the root distribution. It includes CNAME, .nojekyll, the receipt,
+notices and all prior hashed assets, while excluding source directories. The
+read-only packaging job and short-lived Pages/OIDC deployment permissions are
+separate. Official actions are pinned to resolved commits. Source/application
+changes still require a reviewed distribution update before they can ship.
