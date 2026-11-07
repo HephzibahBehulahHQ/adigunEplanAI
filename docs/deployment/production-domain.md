@@ -53,3 +53,29 @@ Publication retains the established Pages `main`/root configuration, CNAME,
 .nojekyll and earlier hashed assets. It is a tested development increment; hosted
 AI, legitimate authenticated acceptance and the full product release gates remain
 open. Never infer final M20 acceptance from the publication of this increment.
+
+### Verified workspace bundle and publication incident
+
+Source PR #14 merged as `bee2928403a137487d4e65cc978e145918525a47`
+(tree `ce8f372d7d963183566b7bca260e2d04835ac28c`). Exact-head source
+[CI 42368805304](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42368805304)
+and integrated-source CI 42369095529 passed 306 unit/tooling, 135 browser and 18
+production workflows. [Hosted staging 42369119630](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42369119630)
+independently passed the 18 built-app workflows. Its archived artifact SHA-256 is
+`348f35ff0b5ce1b6f128cff1b22027061107dc1644dbffb6a29fde997a288caa`.
+
+Distribution candidate `ea94b0502f29458f0022c9ae704a1db2d62baf4b` changed
+17 distribution/receipt paths and preserved configuration, source and earlier
+hashed assets. PR #15 passed CI 42369274638 and merged as
+`2856b3dde8bf4019bff9e28b7f811e3a4490ed47`; integrated CI 42369570399 also
+passed. The runtime manifest contains 28 independently hashed files.
+
+The first Pages publication (run 42369570435, attempt 1) timed out at the hosting
+service's `syncing_files` stage after its build succeeded. This was a publication
+failure, not a passing live release. A deployment-only retry was then observed.
+The connected integration cannot use the direct Pages rebuild API (HTTP 403), so
+publication continues through the established Pages workflow. This receipt commit
+requests a fresh full publication with a new main revision, preserving the exact
+tested runtime and all deployment settings. Canonical-origin hashes and the 18
+live browser cases must pass before the increment is described as live; the final
+receipt is maintained in PR #14.
