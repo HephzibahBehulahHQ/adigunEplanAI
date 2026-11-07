@@ -480,5 +480,8 @@
   "botLoadError": "Adigun BOT could not load.",
   "botMinimize": "Minimize",
   "botMaximize": "Maximize",
-  "botRestore": "Restore window"
+  "botRestore": "Restore window",
+  "botLiveChecks": "Live electrical checks",
+  "botFindingPending": "Adigun BOT found an issue.",
+  "botDismiss": "Dismiss"
 }

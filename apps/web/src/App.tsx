@@ -25,6 +25,7 @@ import {
   type Preferences,
 } from "./preferences";
 import { useNativeProjects } from "./useNativeProjects";
+import { useBotFinding } from "./useBotFinding";
 import {
   ProjectTools,
   NativeDataPanel,
@@ -41,6 +42,7 @@ const AdigunBot = lazy(() =>
 
 export function App() {
   const native = useNativeProjects();
+  const botFinding = useBotFinding(native.project);
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
       return restorePreferences(localStorage.getItem(storageKey));
@@ -230,7 +232,13 @@ export function App() {
           onClick={() => setBotOpen((open) => !open)}
         >
           Adigun BOT
+          {botFinding.active && !botOpen && (
+            <span className="bot-badge" aria-hidden="true" />
+          )}
         </button>
+        <span className="bot-announcement" role="status">
+          {botFinding.active && !botOpen ? t("botFindingPending") : ""}
+        </span>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
         <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
@@ -408,6 +416,7 @@ export function App() {
           <Suspense fallback={<p role="status">Adigun BOT…</p>}>
             <AdigunBot
               project={native.project}
+              suggestions={botFinding}
               t={t}
               close={() => {
                 setBotOpen(false);

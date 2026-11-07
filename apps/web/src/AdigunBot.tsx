@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type PointerEvent } from "react";
 import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
+import type { useBotFinding } from "./useBotFinding";
 
 type Props = {
   project: Project | null;
@@ -10,6 +11,7 @@ type Props = {
   openDiagnostics: () => void;
   openBom: () => void;
   openHelp: () => void;
+  suggestions: ReturnType<typeof useBotFinding>;
 };
 
 const layoutKey = "adiguneplanai.bot.layout.v1";
@@ -70,6 +72,7 @@ export function AdigunBot({
   openDiagnostics,
   openBom,
   openHelp,
+  suggestions,
 }: Props) {
   const [layout, setLayout] = useState(readLayout);
   const [viewport, setViewport] = useState(() => ({
@@ -298,6 +301,27 @@ export function AdigunBot({
             </p>
           )}
         </div>
+        <section className="bot-suggestions" aria-label={t("botLiveChecks")}>
+          <label>
+            <input
+              type="checkbox"
+              checked={suggestions.enabled}
+              onChange={(event) => suggestions.setEnabled(event.target.checked)}
+            />
+            {t("botLiveChecks")}
+          </label>
+          {suggestions.active && (
+            <div className="bot-finding">
+              <p>{t(`rule${suggestions.active.finding.code}`)}</p>
+              <button type="button" onClick={openDiagnostics}>
+                {t("diagnostics")}
+              </button>
+              <button type="button" onClick={suggestions.dismiss}>
+                {t("botDismiss")}
+              </button>
+            </div>
+          )}
+        </section>
       </div>
       {!mobile && layout.mode === "normal" && (
         <span

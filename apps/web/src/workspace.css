@@ -636,6 +636,41 @@ button:disabled {
 .bot-mode {
   color: var(--muted);
 }
+.bot-badge {
+  display: inline-block;
+  margin-inline-start: 0.4rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.bot-announcement {
+  color: var(--cyan);
+  font-size: 0.72rem;
+}
+.bot-announcement:empty {
+  position: absolute;
+}
+.bot-suggestions {
+  border-top: 1px solid var(--line);
+  margin-top: 0.7rem;
+  padding-top: 0.45rem;
+}
+.bot-suggestions label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.bot-finding {
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.45rem;
+  margin-top: 0.35rem;
+}
+.bot-finding button {
+  margin-inline-end: 0.3rem;
+}
 .bot-context {
   padding: 0.5rem;
   border: 1px solid var(--line);

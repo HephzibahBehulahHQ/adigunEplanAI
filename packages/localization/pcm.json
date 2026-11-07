@@ -480,5 +480,8 @@
   "botLoadError": "Adigun BOT no fit load.",
   "botMinimize": "Make am small",
   "botMaximize": "Make am big",
-  "botRestore": "Restore window"
+  "botRestore": "Restore window",
+  "botLiveChecks": "Live electrical checks",
+  "botFindingPending": "Adigun BOT see one problem.",
+  "botDismiss": "Dismiss am"
 }

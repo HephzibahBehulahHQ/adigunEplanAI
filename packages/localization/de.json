@@ -480,5 +480,8 @@
   "botLoadError": "Adigun BOT konnte nicht geladen werden.",
   "botMinimize": "Minimieren",
   "botMaximize": "Maximieren",
-  "botRestore": "Fenster wiederherstellen"
+  "botRestore": "Fenster wiederherstellen",
+  "botLiveChecks": "Laufende Elektroprüfung",
+  "botFindingPending": "Adigun BOT hat ein Problem gefunden.",
+  "botDismiss": "Ausblenden"
 }
