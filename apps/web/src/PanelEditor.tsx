@@ -1070,6 +1070,16 @@ function PanelViews({
                 key={`${item.id}:${face.side}:${fragment}`}
                 data-panel-object={item.id}
                 data-panel-side={face.side}
+                role="button"
+                tabIndex={0}
+                aria-label={label(item)}
+                aria-pressed={selectedId === item.id}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    select(item.id);
+                  }
+                }}
                 onClick={() => select(item.id)}
               >
                 <title>{label(item)}</title>
@@ -1206,7 +1216,11 @@ export function PanelPreview({
 }) {
   const [selectedId, setSelectedId] = useState("");
   const project = native.project;
+  const mapped = project?.equipment3d.find(
+    (item) => item.deviceId === native.selectedDeviceId,
+  );
   const enclosure =
+    project?.enclosures.find((item) => item.id === mapped?.enclosureId) ??
     project?.enclosures.find((item) => item.id === selectedId) ??
     project?.enclosures[0];
   if (!project || !enclosure) return <p>{t("noRecords")}</p>;
@@ -1229,8 +1243,12 @@ export function PanelPreview({
       <PanelViews
         project={project}
         enclosure={enclosure}
-        selectedId=""
-        select={() => {}}
+        selectedId={mapped?.id ?? ""}
+        select={(id) => {
+          const device = project.equipment3d.find((item) => item.id === id);
+          native.selectDevice(device?.deviceId ?? null);
+          if (device) native.setView("schematic");
+        }}
         move={() => {}}
         t={t}
         preview

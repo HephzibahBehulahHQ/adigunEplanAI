@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type SetStateAction } from "react";
 import { electricalTransaction } from "../../../packages/connectivity-engine/transaction.ts";
 import { synchronizeConnectivity } from "../../../packages/connectivity-engine/analyze.ts";
 import {
@@ -16,6 +16,8 @@ import {
   type ProjectLibrary,
 } from "../../../packages/project-storage/repository.ts";
 import type { MessageKey } from "../../../packages/localization";
+
+export type WorkspaceView = "schematic" | "building" | "automation" | "panel";
 
 type State = {
   library: ProjectLibrary;
@@ -68,6 +70,12 @@ export function useNativeProjects(ownerId: string | null = null) {
     }
   });
   const histories = useRef(new Map<string, ProjectHistory>());
+  const [view, setView] = useState<WorkspaceView>("schematic");
+  const [selection, setSelection] = useState<{
+    projectId: string | null;
+    symbols: string[];
+    deviceId: string | null;
+  }>({ projectId: null, symbols: [], deviceId: null });
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
   const project =
     state.library.projects.find(
@@ -111,8 +119,48 @@ export function useNativeProjects(ownerId: string | null = null) {
       return false;
     }
   }
+  const selectedSymbolIds =
+    selection.projectId === project?.id
+      ? selection.symbols.filter((id) =>
+          project.symbolInstances.some((s) => s.id === id),
+        )
+      : [];
+  const selectedDeviceId =
+    selection.projectId === project?.id &&
+    project.devices.some((d) => d.id === selection.deviceId)
+      ? selection.deviceId
+      : null;
+  function selectSymbols(value: SetStateAction<string[]>) {
+    setSelection((previous) => {
+      const before = previous.projectId === project?.id ? previous.symbols : [];
+      const symbols = typeof value === "function" ? value(before) : value;
+      if (symbols === before) return previous;
+      const deviceId =
+        project?.symbolInstances.find((s) => s.id === symbols[0])?.deviceId ??
+        null;
+      return { projectId: project?.id ?? null, symbols, deviceId };
+    });
+  }
+  function selectDevice(deviceId: string | null) {
+    const symbols =
+      project?.symbolInstances.filter((s) => s.deviceId === deviceId) ?? [];
+    const symbol =
+      symbols.find((s) => s.pageId === selectedPageId) ?? symbols[0];
+    if (symbol) setSelectedPageId(symbol.pageId);
+    setSelection({
+      projectId: project?.id ?? null,
+      symbols: symbol ? [symbol.id] : [],
+      deviceId,
+    });
+  }
   return {
     project,
+    view,
+    setView,
+    selectedSymbolIds,
+    selectedDeviceId,
+    selectSymbols,
+    selectDevice,
     selectedPageId,
     selectPage: setSelectedPageId,
     projects: state.library.projects,

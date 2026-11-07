@@ -63,7 +63,10 @@ export function SchematicEditor({
     "select" | "pan" | "wire" | "label" | "custom" | Primitive
   >("select");
   const [customDefinition, setCustomDefinition] = useState("");
-  const [selected, setSelected] = useState<string[]>([]);
+  const selected = native.selectedSymbolIds.filter((id) =>
+    project.symbolInstances.some((s) => s.id === id && s.pageId === page.id),
+  );
+  const setSelected = native.selectSymbols;
   const [selectedWire, setSelectedWire] = useState<string | null>(null);
   const [fromPin, setFromPin] = useState<string | null>(null);
   const [labelPin, setLabelPin] = useState<string | null>(null);

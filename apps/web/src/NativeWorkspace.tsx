@@ -320,9 +320,7 @@ export function ProjectProperties({ native, t }: Props) {
 export function NativeDrawing({ native, t }: Props) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
-  const [view, setView] = useState<
-    "schematic" | "building" | "automation" | "panel"
-  >("schematic");
+  const { view, setView } = native;
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
   if (!p) return null;
