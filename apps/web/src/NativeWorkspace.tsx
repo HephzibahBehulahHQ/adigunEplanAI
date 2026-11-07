@@ -1,4 +1,5 @@
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
+import { EnclosureView } from "./EnclosureView";
 import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -288,21 +289,13 @@ export function NativeDataPanel({
     ) : (
       <p className="empty-hint">{t("noRecords")}</p>
     );
+  if (kind === "panel3d") return <EnclosureView project={project} t={t} />;
   const records =
-    kind === "panel3d"
-      ? project.enclosures
-      : kind === "calculations"
-        ? project.calculations
-        : project.reports;
+    kind === "calculations" ? project.calculations : project.reports;
   return records.length ? (
     <ul>
       {records.map((record) => (
-        <li key={record.id}>
-          {record.name}
-          {"widthMm" in record
-            ? ` · ${record.widthMm} × ${record.heightMm} × ${record.depthMm} mm`
-            : ""}
-        </li>
+        <li key={record.id}>{record.name}</li>
       ))}
     </ul>
   ) : (

@@ -556,6 +556,25 @@ button:disabled {
   opacity: 0.45;
 }
 
+.enclosure-view {
+  display: grid;
+  gap: 0.45rem;
+}
+.enclosure-view svg {
+  width: 100%;
+  height: clamp(180px, 38vh, 400px);
+  background: var(--ivory);
+  border: 1px solid var(--line);
+}
+.enclosure-frame {
+  stroke: var(--navy);
+  stroke-width: 1.2;
+}
+.enclosure-equipment {
+  stroke: var(--royal-blue);
+  stroke-width: 1.5;
+}
+
 @media (min-width: 1350px) {
   .engineering-layout.has-left.has-right {
     grid-template-columns: minmax(240px, 20%) minmax(0, 1fr) minmax(255px, 22%);
