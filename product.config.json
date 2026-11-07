@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 3,
+  "brandKey": "elektroniker",
+  "product": {
+    "name": "AdigunEplanAI",
+    "description": "AI-assisted electrical CAD, building design and panel engineering",
+    "repository": "HephzibahBehulahHQ/adigunEplanAI",
+    "legacyRepository": null
+  },
+  "references": {
+    "corporateWebsiteRepository": "HephzibahBehulahHQ/HephzibahBehulahHQ.github.io",
+    "designSystemRepository": "HephzibahBehulahHQ/hb-design-system",
+    "divisionRepository": "HephzibahBehulahHQ/hb-elektroniker",
+    "policyRepository": "HephzibahBehulahHQ/hb-AI-policy",
+    "artificialIntelligenceRepository": "HephzibahBehulahHQ/hb-artificial-intelligence",
+    "masterPlanRepository": "HephzibahBehulahHQ/adigunEplanAI",
+    "interfaceRepository": "HephzibahBehulahHQ/adigunEplanAI"
+  },
+  "features": {
+    "languages": ["en", "de", "yo", "pcm"],
+    "defaultLanguage": "en",
+    "themeSwitcher": true,
+    "adigunBot": {
+      "enabled": true,
+      "displayName": "Adigun BOT",
+      "mode": "deterministic-local-tools",
+      "actionsRequireConfirmation": true
+    },
+    "accounts": {
+      "enabled": true,
+      "provider": "supabase",
+      "emailPassword": true,
+      "profileAvatar": true,
+      "guestAccess": {
+        "enabled": true,
+        "trialMinutes": null,
+        "permanentSaving": true
+      }
+    },
+    "projects": {
+      "localSaving": true,
+      "cloudSaving": true,
+      "ownerScopedAccess": true
+    },
+    "administration": {
+      "owner": "Hephzibah Behulah",
+      "serverAuthorizedRoles": false
+    }
+  },
+  "links": {
+    "documentation": "https://github.com/HephzibahBehulahHQ/adigunEplanAI/blob/main/docs/HELP.md",
+    "support": "https://hephzibahbehulah.com/",
+    "corporateWebsite": "https://hephzibahbehulah.com/"
+  },
+  "integrations": {
+    "assistantEndpoint": null,
+    "productActionAdapter": "packages/assistant/local-tools.ts",
+    "supabaseProject": "fqcbfnktdvqojyezxeis",
+    "cloudflareDeployment": null
+  },
+  "branding": {
+    "logoPolicy": "single-corporate-logo",
+    "corporateLogo": {
+      "asset": "apps/web/src/assets/hephzibah-behulah-official.jpg",
+      "status": "verified",
+      "source": "user-supplied official logo image",
+      "alt": "Hephzibah Behulah",
+      "sha256": "409c401be5189b80593797cbaf00a3a42a91ab8c0645e3648ff91205b47d4c95"
+    },
+    "header": {
+      "productWordmark": true,
+      "divisionTextLabel": true,
+      "additionalBrandLogos": false,
+      "profilePosition": "top-right"
+    }
+  },
+  "authorityPins": {
+    "policy": "d42d4e04ac6ab77ebafa1d4fccb724a4dde8d02e",
+    "designSystem": "52f01f9986d97088413ca9785bc7a2d3f2967123",
+    "artificialIntelligence": "4d4eb7e9108f88f6a406cec52e3e9a551eb09bdd",
+    "division": "1daeed88df067a235b33516fb4cce111350ab80c",
+    "corporate": "bd116504412b37105166805018f64a6e7bbe3cde"
+  },
+  "specification": {
+    "masterPlan": "docs/MASTER_SPECIFICATION.md",
+    "ownerMasterPlan": "AdidunEplanAI Master PlanGoals",
+    "interface": "docs/references/target-workspace.png",
+    "ownerInterface": "AdigunEplanTarget interface.png",
+    "interfaceSha256": "c99e97fccec545612872ddc5466df9109bc9af63f0d64b9e27420c6321d961c9"
+  },
+  "acceptance": {
+    "fullSpecificationComplete": false,
+    "hostedAiVerified": false,
+    "authenticatedCloudRoundTripVerified": false,
+    "sampleProjects": {
+      "validatedCount": 4,
+      "requiredCount": 500
+    },
+    "stage": "tested-development"
+  }
+}

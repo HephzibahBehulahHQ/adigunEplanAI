@@ -1,3 +1,5 @@
+import productConfig from "../../../product.config.json";
+import brands from "../../../packages/design-tokens/brands.json";
 import {
   useEffect,
   useRef,
@@ -243,9 +245,13 @@ function Workspace({ account }: { account: Account }) {
         {t("skip")}
       </a>
       <header className="app-header">
-        <img className="corporate-logo" src={logo} alt="Hephzibah Behulah" />
+        <img
+          className="corporate-logo"
+          src={logo}
+          alt={productConfig.branding.corporateLogo.alt}
+        />
         <div className="wordmark">
-          <strong>AdigunEplanAI</strong>
+          <strong>{productConfig.product.name}</strong>
           <small>{t("division")}</small>
         </div>
         <span className="project-title">
@@ -578,13 +584,13 @@ function Workspace({ account }: { account: Account }) {
         <span>
           © {new Date().getFullYear()}{" "}
           <a
-            href="https://hephzibahbehulah.com/"
+            href={productConfig.links.corporateWebsite}
             target="_blank"
             rel="noreferrer"
           >
             Hephzibah Behulah
           </a>{" "}
-          · HB Elektroniker · AdigunEplanAI
+          · {brands.elektroniker.name} · {productConfig.product.name}
         </span>
       </footer>
       <dialog
