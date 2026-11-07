@@ -1,11 +1,47 @@
 import { useState, type RefObject } from "react";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
+import help from "../../../docs/HELP.md?raw";
 
+type Device = { reference: string; name: string; part?: string };
+type HelpSection = { title: string; excerpt: string; body: string };
 type Reply = {
   question: string;
-  devices: { reference: string; name: string; part?: string }[];
-};
+} & (
+  | { kind: "devices"; devices: Device[] }
+  | { kind: "help"; sections: HelpSection[] }
+);
+
+const helpSections: HelpSection[] = help
+  .split(/^## /m)
+  .slice(1)
+  .flatMap((section) => {
+    const newline = section.indexOf("\n");
+    if (newline < 0) return [];
+    const title = section.slice(0, newline).trim();
+    if (title === "Contents") return [];
+    const body = section.slice(newline).trim().replace(/`/g, "");
+    return [{ title, body, excerpt: body.split(/\r?\n\s*\r?\n/)[0] }];
+  });
+
+function findHelp(query: string) {
+  const words = [...new Set(query.toLowerCase().match(/[a-z0-9]+/g) ?? [])];
+  if (!words.length) return [];
+  return helpSections
+    .map((section) => {
+      const heading = new Set(
+        section.title.toLowerCase().match(/[a-z0-9]+/g) ?? [],
+      );
+      return {
+        section,
+        score: words.filter((word) => heading.has(word)).length,
+      };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(({ section }) => section);
+}
 
 export function BotProjectChat({
   project,
@@ -17,14 +53,23 @@ export function BotProjectChat({
   inputRef: RefObject<HTMLInputElement | null>;
 }) {
   const [question, setQuestion] = useState("");
+  const [mode, setMode] = useState<"devices" | "help">("devices");
   const [history, setHistory] = useState<Reply[]>([]);
 
   function ask() {
     const text = question.trim();
     if (!text) return;
-    const reference = text.toLocaleUpperCase();
+    if (mode === "help") {
+      setHistory((previous) => [
+        ...previous.slice(-19),
+        { question: text, kind: "help", sections: findHelp(text) },
+      ]);
+      setQuestion("");
+      return;
+    }
+    const reference = text.toUpperCase();
     const devices = project.devices
-      .filter((device) => device.reference.toLocaleUpperCase() === reference)
+      .filter((device) => device.reference.toUpperCase() === reference)
       .map(({ reference, name, partId }) => ({
         reference,
         name,
@@ -33,7 +78,7 @@ export function BotProjectChat({
       }));
     setHistory((previous) => [
       ...previous.slice(-19),
-      { question: text, devices },
+      { question: text, kind: "devices", devices },
     ]);
     setQuestion("");
   }
@@ -45,12 +90,28 @@ export function BotProjectChat({
         role="log"
         aria-label={t("botDeviceLookup")}
       >
-        {history.map(({ question, devices }, index) => (
+        {history.map((reply, index) => (
           <div key={index} className="bot-exchange">
-            <p className="bot-question">{question}</p>
-            {devices.length ? (
+            <p className="bot-question">{reply.question}</p>
+            {reply.kind === "help" ? (
+              reply.sections.length ? (
+                <ul lang="en">
+                  {reply.sections.map(({ title, excerpt, body }) => (
+                    <li key={title}>
+                      <details>
+                        <summary>{title} · HELP.md</summary>
+                        <p className="bot-help-body">{body}</p>
+                      </details>
+                      <p>{excerpt}</p>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{t("botNoHelpMatches")}</p>
+              )
+            ) : reply.devices.length ? (
               <ul>
-                {devices.map((device, position) => (
+                {reply.devices.map((device, position) => (
                   <li key={position}>
                     <strong>{device.reference}</strong> · {device.name}
                     {device.part && (
@@ -74,7 +135,19 @@ export function BotProjectChat({
           ask();
         }}
       >
-        <label htmlFor="bot-device-reference">{t("botDeviceLookup")}</label>
+        <select
+          aria-label={t("botTopic")}
+          value={mode}
+          onChange={(event) =>
+            setMode(event.target.value === "help" ? "help" : "devices")
+          }
+        >
+          <option value="devices">{t("botDeviceLookup")}</option>
+          <option value="help">{t("botSearchHelp")}</option>
+        </select>
+        <label htmlFor="bot-device-reference">
+          {t(mode === "devices" ? "botDeviceLookup" : "botSearchHelp")}
+        </label>
         <div className="bot-compose">
           <input
             id="bot-device-reference"

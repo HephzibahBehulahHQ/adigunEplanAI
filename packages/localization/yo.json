@@ -486,5 +486,8 @@
   "botDismiss": "Pa á mọ́",
   "botDeviceLookup": "Wá àmì ìtọ́kasí ẹ̀rọ",
   "botReferenceMissing": "Kò sí ẹ̀rọ pẹ̀lú àmì yẹn nínú iṣẹ́ yìí.",
-  "botAsk": "Béèrè"
+  "botAsk": "Béèrè",
+  "botTopic": "Kókó BOT",
+  "botSearchHelp": "Wá nínú ìrànlọ́wọ́ Gẹ̀ẹ́sì",
+  "botNoHelpMatches": "Kò sí àkọlé tó bá a mu. Gbìyànjú ọ̀rọ̀ bí DXF."
 }

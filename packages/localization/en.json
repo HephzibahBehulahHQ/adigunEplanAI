@@ -486,5 +486,8 @@
   "botDismiss": "Dismiss",
   "botDeviceLookup": "Look up a device reference",
   "botReferenceMissing": "No device with that reference is in this project.",
-  "botAsk": "Ask"
+  "botAsk": "Ask",
+  "botTopic": "BOT topic",
+  "botSearchHelp": "Search English help",
+  "botNoHelpMatches": "No matching help heading. Try a product term such as DXF."
 }

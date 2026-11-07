@@ -486,5 +486,8 @@
   "botDismiss": "Ausblenden",
   "botDeviceLookup": "Betriebsmittelkennzeichen suchen",
   "botReferenceMissing": "Dieses Kennzeichen ist im Projekt nicht vorhanden.",
-  "botAsk": "Fragen"
+  "botAsk": "Fragen",
+  "botTopic": "BOT-Thema",
+  "botSearchHelp": "Englische Hilfe durchsuchen",
+  "botNoHelpMatches": "Keine passende Hilfeüberschrift. Versuchen Sie einen Produktbegriff wie DXF."
 }

@@ -692,6 +692,13 @@ button:disabled {
 .bot-question {
   font-weight: bold;
 }
+.bot-help-body {
+  white-space: pre-wrap;
+}
+.bot-chat form > label {
+  display: block;
+  margin-top: 0.35rem;
+}
 .bot-compose {
   display: flex;
   gap: 0.35rem;
