@@ -61,6 +61,7 @@ export function EnclosureView({
   unmount,
 }: Props) {
   const [id, setId] = useState("");
+  const [previousDeviceId, setPreviousDeviceId] = useState<string | null>(null);
   const createDialog = useRef<HTMLDialogElement>(null);
   const [magnification, setMagnification] = useState(1);
   const drag = useRef<{
@@ -75,6 +76,19 @@ export function EnclosureView({
   );
   const enclosure =
     project.enclosures.find((item) => item.id === id) ?? project.enclosures[0];
+  if (selectedDeviceId !== previousDeviceId) {
+    setPreviousDeviceId(selectedDeviceId);
+    const mounts = project.equipment3d.filter(
+      (item) => item.deviceId === selectedDeviceId,
+    );
+    if (
+      mounts.length &&
+      !mounts.some((item) => item.enclosureId === enclosure?.id)
+    ) {
+      setId(mounts[0].enclosureId);
+      setMagnification(1);
+    }
+  }
   const createControl = (
     <>
       <button type="button" onClick={() => createDialog.current?.showModal()}>

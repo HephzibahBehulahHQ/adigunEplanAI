@@ -22,6 +22,18 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     positionMm: { x: 100, y: 200, z: 20 },
     sizeMm: { x: 100, y: 80, z: 45 },
   });
+  project.enclosures.push({
+    ...project.enclosures[0],
+    id: "cabinet-secondary",
+    name: "Secondary cabinet",
+  });
+  project.equipment3d.push({
+    ...project.equipment3d[0],
+    id: "mount-secondary",
+    name: project.devices[1].name,
+    deviceId: project.devices[1].id,
+    enclosureId: "cabinet-secondary",
+  });
   await page.goto("/");
   await page.getByLabel("Import project", { exact: true }).setInputFiles({
     name: "cabinet.adeplan",
@@ -48,6 +60,14 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     .locator(`[data-instance="${project.symbolInstances[1].id}"] text`)
     .first()
     .click();
+  const secondary = cabinet.getByRole("img", { name: "Secondary cabinet" });
+  await expect(secondary.locator("[data-highlighted] title")).toHaveText(
+    project.devices[1].reference,
+  );
+  await cabinet
+    .getByRole("combobox", { name: "3D panel" })
+    .selectOption("cabinet-review");
+  await expect(model).toBeVisible();
   await expect(highlighted).toHaveCount(0);
 
   await page.getByRole("button", { name: "Adigun BOT", exact: true }).click();
