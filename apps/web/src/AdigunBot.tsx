@@ -111,6 +111,7 @@ export function AdigunBot({
       );
   }, [accountRequest]);
   const chatInput = useRef<HTMLInputElement>(null);
+  const [composer, setComposer] = useState<HTMLDivElement | null>(null);
   const mobile = viewport.width <= 680;
   const canDock = viewport.width >= 1350;
   const docked = canDock && layout.docked === true;
@@ -238,7 +239,10 @@ export function AdigunBot({
           <circle cx="9" cy="11" r="1" />
           <circle cx="15" cy="11" r="1" />
         </svg>
-        <strong id="adigun-bot-title">Adigun BOT</strong>
+        <div className="bot-title">
+          <strong id="adigun-bot-title">Adigun BOT</strong>
+          <span>{t("botLocalTools")}</span>
+        </div>
         {canDock && (
           <button
             type="button"
@@ -306,7 +310,6 @@ export function AdigunBot({
         className="bot-body"
         hidden={!mobile && !docked && layout.mode === "minimized"}
       >
-        <p className="bot-mode">{t("botLocalTools")}</p>
         <p className="bot-context">{project?.name ?? t("noProject")}</p>
         <div
           className="bot-actions"
@@ -319,6 +322,7 @@ export function AdigunBot({
             disabled={!canCreateProject}
             onClick={openNewProject}
           >
+            <BotActionIcon path="M5 2h9l5 5v15H5z M14 2v6h5 M9 15h6 M12 12v6" />
             {t("newProject")}
           </button>
           <button
@@ -337,12 +341,15 @@ export function AdigunBot({
               openDiagnostics();
             }}
           >
+            <BotActionIcon path="M12 2l8 4v6c0 5-4 8-8 10-4-2-8-5-8-10V6z M8 12l3 3 5-6" />
             {t("botRunCheck")}
           </button>
           <button type="button" disabled={!project} onClick={openBom}>
+            <BotActionIcon path="M3 4h18v16H3z M3 9h18 M3 14h18 M9 9v11" />
             {t("bom")}
           </button>
           <button type="button" onClick={openHelp}>
+            <BotActionIcon path="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z M9 9a3 3 0 1 1 4 3l-1 1v1 M12 17h.01" />
             {t("help")}
           </button>
         </div>
@@ -375,14 +382,6 @@ export function AdigunBot({
             </div>
           )}
         </section>
-        {project && (
-          <BotProjectChat
-            key={project.id}
-            project={project}
-            t={t}
-            inputRef={chatInput}
-          />
-        )}
         {hostedBotKey && (
           <HostedBotHelp
             publishableKey={hostedBotKey}
@@ -391,7 +390,21 @@ export function AdigunBot({
             t={t}
           />
         )}
+        {project && composer && (
+          <BotProjectChat
+            key={project.id}
+            project={project}
+            t={t}
+            inputRef={chatInput}
+            composer={composer}
+          />
+        )}
       </div>
+      <div
+        className="bot-footer"
+        ref={setComposer}
+        hidden={!project || (!mobile && !docked && layout.mode === "minimized")}
+      />
       {!mobile && !docked && layout.mode === "normal" && (
         <span
           className="bot-resize"
@@ -402,5 +415,21 @@ export function AdigunBot({
         />
       )}
     </section>
+  );
+}
+
+function BotActionIcon({ path }: { path: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={path} />
+    </svg>
   );
 }

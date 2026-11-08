@@ -1,4 +1,5 @@
-import { useState, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import { createPortal } from "react-dom";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
 import help from "../../../docs/HELP.md?raw";
@@ -47,14 +48,23 @@ export function BotProjectChat({
   project,
   t,
   inputRef,
+  composer,
 }: {
   project: Project;
   t: (key: MessageKey) => string;
   inputRef: RefObject<HTMLInputElement | null>;
+  composer: HTMLElement;
 }) {
   const [question, setQuestion] = useState("");
   const [mode, setMode] = useState<"devices" | "help">("devices");
   const [history, setHistory] = useState<Reply[]>([]);
+  const transcript = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (history.length) {
+      transcript.current?.lastElementChild?.scrollIntoView({ block: "end" });
+    }
+  }, [history]);
 
   function ask() {
     const text = question.trim();
@@ -87,6 +97,7 @@ export function BotProjectChat({
     <section className="bot-chat" aria-label={t("botDeviceLookup")}>
       <div
         className="bot-transcript"
+        ref={transcript}
         role="log"
         aria-label={t("botDeviceLookup")}
       >
@@ -129,39 +140,56 @@ export function BotProjectChat({
           </div>
         ))}
       </div>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          ask();
-        }}
-      >
-        <select
-          aria-label={t("botTopic")}
-          value={mode}
-          onChange={(event) =>
-            setMode(event.target.value === "help" ? "help" : "devices")
-          }
+      {createPortal(
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            ask();
+          }}
         >
-          <option value="devices">{t("botDeviceLookup")}</option>
-          <option value="help">{t("botSearchHelp")}</option>
-        </select>
-        <label htmlFor="bot-device-reference">
-          {t(mode === "devices" ? "botDeviceLookup" : "botSearchHelp")}
-        </label>
-        <div className="bot-compose">
-          <input
-            id="bot-device-reference"
-            ref={inputRef}
-            value={question}
-            onChange={(event) => setQuestion(event.target.value)}
-            maxLength={160}
-            required
-          />
-          <button type="submit" disabled={!question.trim()}>
-            {t("botAsk")}
-          </button>
-        </div>
-      </form>
+          <select
+            aria-label={t("botTopic")}
+            value={mode}
+            onChange={(event) =>
+              setMode(event.target.value === "help" ? "help" : "devices")
+            }
+          >
+            <option value="devices">{t("botDeviceLookup")}</option>
+            <option value="help">{t("botSearchHelp")}</option>
+          </select>
+          <label htmlFor="bot-device-reference">
+            {t(mode === "devices" ? "botDeviceLookup" : "botSearchHelp")}
+          </label>
+          <div className="bot-compose">
+            <input
+              id="bot-device-reference"
+              ref={inputRef}
+              value={question}
+              onChange={(event) => setQuestion(event.target.value)}
+              maxLength={160}
+              required
+            />
+            <button
+              type="submit"
+              aria-label={t("botAsk")}
+              title={t("botAsk")}
+              disabled={!question.trim()}
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinejoin="round"
+              >
+                <path d="M3 10l18-7-7 18-3-8z M11 13l10-10" />
+              </svg>
+            </button>
+          </div>
+        </form>,
+        composer,
+      )}
     </section>
   );
 }

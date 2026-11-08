@@ -59,6 +59,21 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   expect(drawingBounds!.y + drawingBounds!.height).toBeLessThan(lowerDock!.y);
   await expect(bot.getByRole("log")).toContainText(device.name);
 
+  const composerBounds = await lookup.boundingBox();
+  const scroller = bot.locator(".bot-body");
+  for (let i = 0; i < 10; i++) {
+    await lookup.fill(device.reference);
+    await bot.getByRole("button", { name: "Ask", exact: true }).click();
+  }
+  await expect
+    .poll(() => scroller.evaluate((element) => element.scrollTop))
+    .toBeGreaterThan(0);
+  await scroller.evaluate((element) => (element.scrollTop = 0));
+  expect(await lookup.boundingBox()).toEqual(composerBounds);
+  expect(composerBounds!.y + composerBounds!.height).toBeLessThanOrEqual(
+    botBounds!.y + botBounds!.height,
+  );
+
   const status = page.locator(".status-context");
   await expect(status).toContainText(project.pages[0].name);
   await expect(status).toContainText(`Grid (mm) ${project.pages[0].gridMm}`);
