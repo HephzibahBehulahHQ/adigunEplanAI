@@ -517,5 +517,7 @@
   "botHostedWorking": "E dey work…",
   "botHostedSignInFailed": "Sign-in no work.",
   "botHostedRate": "Requests too many. Try again after one minute.",
-  "botHostedUnavailable": "Hosted help no dey available."
+  "botHostedUnavailable": "Hosted help no dey available.",
+  "reportDrawingIndexCsv": "Drawing index (CSV)",
+  "reportBomCsv": "Bill of materials (CSV)"
 }

@@ -346,6 +346,13 @@ i {
   color: var(--text);
   font-weight: 500;
 }
+.report-actions {
+  display: grid;
+  gap: 0.3rem;
+}
+.report-actions button {
+  text-align: start;
+}
 dialog {
   background: var(--panel);
   color: var(--text);

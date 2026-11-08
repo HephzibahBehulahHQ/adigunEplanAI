@@ -1,5 +1,10 @@
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import { mountCabinetDevice } from "../../../packages/electrical-model/cabinet.ts";
+import {
+  drawingIndex,
+  projectBom,
+  reportCsv,
+} from "../../../packages/electrical-model/project-reports.ts";
 import { useRef, useState, lazy, Suspense, type RefObject } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -327,28 +332,29 @@ export function NativeDataPanel({
 }: Props & { kind: "bom" | "panel3d" | "calculations" | "reports" }) {
   const project = native.project;
   if (!project) return <p className="empty-hint">{t("noProject")}</p>;
+  const bomHeaders = [
+    t("reference"),
+    t("device"),
+    t("partNumber"),
+    t("quantity"),
+  ];
   if (kind === "bom")
     return project.devices.length ? (
       <table className="native-bom">
         <thead>
           <tr>
-            <th>{t("reference")}</th>
-            <th>{t("device")}</th>
-            <th>{t("partNumber")}</th>
-            <th>{t("quantity")}</th>
+            {bomHeaders.map((label, index) => (
+              <th key={index}>{label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {project.devices.map((device) => (
+          {projectBom(project).map((device) => (
             <tr key={device.id}>
               <td>{device.reference}</td>
               <td>{device.name}</td>
-              <td>
-                {project.manufacturerParts.find(
-                  (part) => part.id === device.partId,
-                )?.partNumber ?? "—"}
-              </td>
-              <td>1</td>
+              <td>{device.partNumber || "—"}</td>
+              <td>{device.quantity}</td>
             </tr>
           ))}
         </tbody>
@@ -383,8 +389,66 @@ export function NativeDataPanel({
         </Suspense>
       </LazyPanelBoundary>
     );
-  const records =
-    kind === "calculations" ? project.calculations : project.reports;
+  if (kind === "reports") {
+    const download = (filename: string, rows: (string | number)[][]) => {
+      const url = URL.createObjectURL(
+        new Blob([reportCsv(rows)], { type: "text/csv;charset=utf-8" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+    return (
+      <div className="report-actions">
+        <button
+          type="button"
+          disabled={!project.pages.length}
+          onClick={() =>
+            download("drawing-index.csv", [
+              [
+                t("document"),
+                t("pageName"),
+                t("cabinetWidth"),
+                t("cabinetHeight"),
+              ],
+              ...drawingIndex(project),
+            ])
+          }
+        >
+          {t("reportDrawingIndexCsv")}
+        </button>
+        <button
+          type="button"
+          disabled={!project.devices.length}
+          onClick={() =>
+            download("bill-of-materials.csv", [
+              bomHeaders,
+              ...projectBom(project).map(
+                ({ reference, name, partNumber, quantity }) => [
+                  reference,
+                  name,
+                  partNumber,
+                  quantity,
+                ],
+              ),
+            ])
+          }
+        >
+          {t("reportBomCsv")}
+        </button>
+        {project.reports.length > 0 && (
+          <ul>
+            {project.reports.map(({ id, name }) => (
+              <li key={id}>{name}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+  const records = project.calculations;
   return records.length ? (
     <ul>
       {records.map((record) => (

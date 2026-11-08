@@ -517,5 +517,7 @@
   "botHostedWorking": "Wird verarbeitet…",
   "botHostedSignInFailed": "Anmeldung fehlgeschlagen.",
   "botHostedRate": "Zu viele Anfragen. Versuchen Sie es in einer Minute.",
-  "botHostedUnavailable": "Online-Hilfe ist nicht verfügbar."
+  "botHostedUnavailable": "Online-Hilfe ist nicht verfügbar.",
+  "reportDrawingIndexCsv": "Zeichnungsverzeichnis (CSV)",
+  "reportBomCsv": "Stückliste (CSV)"
 }

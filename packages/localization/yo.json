@@ -517,5 +517,7 @@
   "botHostedWorking": "Ó ń ṣiṣẹ́…",
   "botHostedSignInFailed": "Wíwọlé kùnà.",
   "botHostedRate": "Ìbéèrè pọ̀ ju. Dúró fún ìṣẹ́jú kan.",
-  "botHostedUnavailable": "Ìrànlọ́wọ́ kò sí ní báyìí."
+  "botHostedUnavailable": "Ìrànlọ́wọ́ kò sí ní báyìí.",
+  "reportDrawingIndexCsv": "Àtòjọ àwòrán (CSV)",
+  "reportBomCsv": "Àtòjọ ohun èlò (CSV)"
 }
