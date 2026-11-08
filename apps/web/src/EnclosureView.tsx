@@ -3,7 +3,16 @@ import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
 
 type Vector = { x: number; y: number; z: number };
-type Props = { project: Project; t: (key: MessageKey) => string };
+type Props = {
+  project: Project;
+  t: (key: MessageKey) => string;
+  addEnclosure: (enclosure: Project["enclosures"][number]) => boolean;
+};
+const dimensionFields = [
+  ["widthMm", "cabinetWidth"],
+  ["heightMm", "cabinetHeight"],
+  ["depthMm", "cabinetDepth"],
+] as const;
 const edges = [
   [0, 1],
   [0, 2],
@@ -34,8 +43,9 @@ const views = {
   cabinetTop: { azimuth: 0, elevation: 90 },
 } as const;
 
-export function EnclosureView({ project, t }: Props) {
+export function EnclosureView({ project, t, addEnclosure }: Props) {
   const [id, setId] = useState("");
+  const createDialog = useRef<HTMLDialogElement>(null);
   const [magnification, setMagnification] = useState(1);
   const drag = useRef<{
     pointer: number;
@@ -49,7 +59,57 @@ export function EnclosureView({ project, t }: Props) {
   );
   const enclosure =
     project.enclosures.find((item) => item.id === id) ?? project.enclosures[0];
-  if (!enclosure) return <p className="empty-hint">{t("noRecords")}</p>;
+  const createControl = (
+    <>
+      <button type="button" onClick={() => createDialog.current?.showModal()}>
+        {t("cabinetCreate")}
+      </button>
+      <dialog ref={createDialog} aria-label={t("cabinetCreate")}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            const form = event.currentTarget;
+            const fields = new FormData(form);
+            const name = String(fields.get("name") ?? "").trim();
+            const widthMm = Number(fields.get("widthMm"));
+            const heightMm = Number(fields.get("heightMm"));
+            const depthMm = Number(fields.get("depthMm"));
+            const id = crypto.randomUUID();
+            if (addEnclosure({ id, name, widthMm, heightMm, depthMm })) {
+              setId(id);
+              setMagnification(1);
+              form.reset();
+              createDialog.current?.close();
+            }
+          }}
+        >
+          <label>
+            {t("cabinetName")} <input name="name" required maxLength={160} />
+          </label>
+          {dimensionFields.map(([name, label]) => (
+            <label key={name}>
+              {t(label)}{" "}
+              <input
+                name={name}
+                type="number"
+                required
+                min="0.01"
+                max="1000000"
+                step="any"
+              />
+            </label>
+          ))}
+          <div className="dialog-actions">
+            <button type="button" onClick={() => createDialog.current?.close()}>
+              {t("cancel")}
+            </button>
+            <button type="submit">{t("create")}</button>
+          </div>
+        </form>
+      </dialog>
+    </>
+  );
+  if (!enclosure) return <div className="enclosure-view">{createControl}</div>;
 
   const radians = (camera.azimuth * Math.PI) / 180;
   const cosine = Math.cos(radians);
@@ -130,6 +190,7 @@ export function EnclosureView({ project, t }: Props) {
     .sort((a, b) => a.depth - b.depth);
   return (
     <div className="enclosure-view">
+      {createControl}
       <select
         aria-label={t("panel3d")}
         value={enclosure.id}

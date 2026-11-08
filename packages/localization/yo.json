@@ -497,5 +497,10 @@
   "cabinetSide": "Ẹ̀gbẹ́",
   "cabinetTop": "Òkè",
   "searchProject": "Wá nínú iṣẹ́",
-  "noProjectSearchMatches": "Kò sí ojú ìwé tàbí ẹ̀rọ tó bá a mu."
+  "noProjectSearchMatches": "Kò sí ojú ìwé tàbí ẹ̀rọ tó bá a mu.",
+  "cabinetCreate": "Àpótí tuntun",
+  "cabinetName": "Orúkọ àpótí",
+  "cabinetWidth": "Ìbú (mm)",
+  "cabinetHeight": "Gíga (mm)",
+  "cabinetDepth": "Ìjìnlẹ̀ (mm)"
 }

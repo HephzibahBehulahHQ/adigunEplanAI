@@ -497,5 +497,10 @@
   "cabinetSide": "Side",
   "cabinetTop": "Top",
   "searchProject": "Search project",
-  "noProjectSearchMatches": "No matching sheets or devices."
+  "noProjectSearchMatches": "No matching sheets or devices.",
+  "cabinetCreate": "New cabinet",
+  "cabinetName": "Cabinet name",
+  "cabinetWidth": "Width (mm)",
+  "cabinetHeight": "Height (mm)",
+  "cabinetDepth": "Depth (mm)"
 }

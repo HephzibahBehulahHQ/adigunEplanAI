@@ -348,14 +348,22 @@ export function NativeDataPanel({
       <p className="empty-hint">{t("noRecords")}</p>
     );
   if (kind === "panel3d")
-    return project.enclosures.length ? (
+    return (
       <LazyPanelBoundary message={t("enclosureLoadError")}>
         <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
-          <EnclosureView project={project} t={t} />
+          <EnclosureView
+            key={project.id}
+            project={project}
+            t={t}
+            addEnclosure={(enclosure) =>
+              native.update((draft) => ({
+                ...draft,
+                enclosures: [...draft.enclosures, enclosure],
+              }))
+            }
+          />
         </Suspense>
       </LazyPanelBoundary>
-    ) : (
-      <p className="empty-hint">{t("noRecords")}</p>
     );
   const records =
     kind === "calculations" ? project.calculations : project.reports;

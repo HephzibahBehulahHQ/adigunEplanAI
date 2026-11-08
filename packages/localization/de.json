@@ -497,5 +497,10 @@
   "cabinetSide": "Seite",
   "cabinetTop": "Oben",
   "searchProject": "Projekt durchsuchen",
-  "noProjectSearchMatches": "Keine passenden Seiten oder Betriebsmittel."
+  "noProjectSearchMatches": "Keine passenden Seiten oder Betriebsmittel.",
+  "cabinetCreate": "Neuer Schaltschrank",
+  "cabinetName": "Schaltschrankname",
+  "cabinetWidth": "Breite (mm)",
+  "cabinetHeight": "Höhe (mm)",
+  "cabinetDepth": "Tiefe (mm)"
 }
