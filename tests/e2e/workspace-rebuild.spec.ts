@@ -71,6 +71,17 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   await expect(status).toContainText(project.pages[0].name);
 
   const ribbon = page.locator(".schematic-ribbon");
+  const groups = await ribbon.getByRole("group").evaluateAll((elements) =>
+    elements.map((element) => {
+      const { top, right } = element.getBoundingClientRect();
+      return { top, right };
+    }),
+  );
+  expect(groups).toHaveLength(4);
+  for (const group of groups) {
+    expect(group.top).toBe(groups[0].top);
+    expect(group.right).toBeLessThanOrEqual(1672);
+  }
   await ribbon.getByRole("button", { name: "Wire", exact: true }).click();
   await expect(
     ribbon.getByRole("button", { name: "Wire", exact: true }),

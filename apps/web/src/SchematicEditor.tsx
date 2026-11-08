@@ -453,7 +453,11 @@ export function SchematicEditor({
   const wire = project.wires.find((w) => w.id === selectedWire);
   const controls = (
     <>
-      <div className="editor-toolbar" role="group" aria-label={t("components")}>
+      <div
+        className="editor-toolbar ribbon-drawing"
+        role="group"
+        aria-label={t("schematicView")}
+      >
         {(["select", "pan", "wire", "label"] as const).map((mode) => (
           <button
             key={mode}
@@ -475,6 +479,12 @@ export function SchematicEditor({
             )}
           </button>
         ))}
+      </div>
+      <div
+        className="editor-toolbar ribbon-library"
+        role="group"
+        aria-label={t("components")}
+      >
         <select
           aria-label={t("components")}
           value={Object.hasOwn(primitives, tool) ? tool : ""}
@@ -508,6 +518,12 @@ export function SchematicEditor({
               </option>
             ))}
         </select>
+      </div>
+      <div
+        className="editor-toolbar ribbon-view"
+        role="group"
+        aria-label={t("view")}
+      >
         <button onClick={() => zoom(1.2)} aria-label="+">
           +
         </button>
@@ -553,7 +569,11 @@ export function SchematicEditor({
           {t("snapping")}
         </label>
       </div>
-      <div className="editor-toolbar" role="group" aria-label={t("selection")}>
+      <div
+        className="editor-toolbar ribbon-selection"
+        role="group"
+        aria-label={t("selection")}
+      >
         {[
           ["rotate", () => edit((p) => rotate(p, selected))],
           ["mirror", () => edit((p) => mirror(p, selected))],
