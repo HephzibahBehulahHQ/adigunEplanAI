@@ -507,5 +507,15 @@
   "cabinetMountError": "Prüfen Sie Maße und Position. Das Betriebsmittel muss ohne Überlappung passen.",
   "cabinetMountedDevices": "Montierte Betriebsmittel",
   "cabinetEditMount": "Montage bearbeiten",
-  "cabinetUnmount": "Montage entfernen"
+  "cabinetUnmount": "Montage entfernen",
+  "botHostedHelp": "KI-Hilfe online",
+  "botHostedSignIn": "Für Online-Hilfe anmelden",
+  "botHostedSignOut": "Von Online-Hilfe abmelden",
+  "botHostedQuestion": "Frage an die Online-KI",
+  "botEmail": "E-Mail",
+  "botPassword": "Passwort",
+  "botHostedWorking": "Wird verarbeitet…",
+  "botHostedSignInFailed": "Anmeldung fehlgeschlagen.",
+  "botHostedRate": "Zu viele Anfragen. Versuchen Sie es in einer Minute.",
+  "botHostedUnavailable": "Online-Hilfe ist nicht verfügbar."
 }

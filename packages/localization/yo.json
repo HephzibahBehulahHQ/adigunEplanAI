@@ -507,5 +507,15 @@
   "cabinetMountError": "Ṣàyẹ̀wò ìwọ̀n àti ipò. Ẹ̀rọ gbọ́dọ̀ wọ inú àpótí láìkọlu ẹlòmíràn.",
   "cabinetMountedDevices": "Àwọn ẹ̀rọ inú àpótí",
   "cabinetEditMount": "Ṣàtúnṣe ìfìmọ́",
-  "cabinetUnmount": "Yọ ìfìmọ́"
+  "cabinetUnmount": "Yọ ìfìmọ́",
+  "botHostedHelp": "Ìrànlọ́wọ́ AI lórí ayélujára",
+  "botHostedSignIn": "Wọlé fún ìrànlọ́wọ́",
+  "botHostedSignOut": "Jáde kúrò ní ìrànlọ́wọ́",
+  "botHostedQuestion": "Ìbéèrè fún AI lórí ayélujára",
+  "botEmail": "Ímeèlì",
+  "botPassword": "Ọ̀rọ̀ aṣínà",
+  "botHostedWorking": "Ó ń ṣiṣẹ́…",
+  "botHostedSignInFailed": "Wíwọlé kùnà.",
+  "botHostedRate": "Ìbéèrè pọ̀ ju. Dúró fún ìṣẹ́jú kan.",
+  "botHostedUnavailable": "Ìrànlọ́wọ́ kò sí ní báyìí."
 }

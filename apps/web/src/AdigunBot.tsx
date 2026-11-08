@@ -4,6 +4,11 @@ import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
 import type { useBotFinding } from "./useBotFinding";
 import { BotProjectChat } from "./BotProjectChat";
+import { HostedBotHelp } from "./HostedBotHelp";
+import { isPublishableKey } from "./botAccount";
+
+const botPublishableKey: unknown = import.meta.env
+  .VITE_SUPABASE_PUBLISHABLE_KEY;
 
 type Props = {
   project: Project | null;
@@ -369,6 +374,10 @@ export function AdigunBot({
             inputRef={chatInput}
           />
         )}
+        {import.meta.env.VITE_ADIGUN_HOSTED_HELP === "true" &&
+          isPublishableKey(botPublishableKey) && (
+            <HostedBotHelp publishableKey={botPublishableKey} t={t} />
+          )}
       </div>
       {!mobile && !docked && layout.mode === "normal" && (
         <span

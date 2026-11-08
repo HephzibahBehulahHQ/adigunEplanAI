@@ -507,5 +507,15 @@
   "cabinetMountError": "Check size and position. Di device must fit without touching inside another device.",
   "cabinetMountedDevices": "Mounted devices",
   "cabinetEditMount": "Edit mounting",
-  "cabinetUnmount": "Remove mount"
+  "cabinetUnmount": "Remove mount",
+  "botHostedHelp": "Hosted AI help",
+  "botHostedSignIn": "Sign in for hosted help",
+  "botHostedSignOut": "Sign out of hosted help",
+  "botHostedQuestion": "Question to send to hosted AI",
+  "botEmail": "Email",
+  "botPassword": "Password",
+  "botHostedWorking": "E dey work…",
+  "botHostedSignInFailed": "Sign-in no work.",
+  "botHostedRate": "Requests too many. Try again after one minute.",
+  "botHostedUnavailable": "Hosted help no dey available."
 }
