@@ -70,6 +70,15 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     .selectOption("calc-control");
   await expect(calculations).toContainText("24 V");
   await expect(calculations).not.toContainText("Feeder study worksheet A");
+  const tabs = page.locator(".ribbon-tabs");
+  await calculations.getByRole("button", { name: "Hide Calculations" }).click();
+  await tabs.getByRole("button", { name: "Analysis", exact: true }).click();
+  await page.getByRole("button", { name: "Show Calculations" }).click();
+  await expect(calculations).toBeVisible();
+  await expect(
+    calculations.locator(".panel-heading button").first(),
+  ).toBeFocused();
+  await tabs.getByRole("button", { name: "Home", exact: true }).click();
   const titleBlock = page.locator(".drawing-title-block");
   await expect(titleBlock).toContainText("Projektname");
   await expect(titleBlock).toContainText(project.name);

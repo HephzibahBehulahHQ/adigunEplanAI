@@ -56,6 +56,28 @@ const headerIcons = {
   help: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3m0 3h.01",
 } as const;
 
+const panelRibbon = {
+  panel3d: ["panel3d"],
+  documentation: ["bom", "reports"],
+  analysis: ["diagnostics", "calculations"],
+} as const satisfies Record<string, readonly PanelId[]>;
+const ribbonTabs = [
+  "file",
+  "home",
+  "view",
+  "panel3d",
+  "documentation",
+  "analysis",
+  "settings",
+] as const;
+const panelRibbonIcons = {
+  panel3d: "M12 2l9 5v10l-9 5-9-5V7z M3 7l9 5 9-5 M12 12v10",
+  bom: "M3 4h18v16H3z M3 9h18 M3 14h18 M9 9v11",
+  reports: "M5 2h9l5 5v15H5z M14 2v6h5 M8 12h8 M8 16h8",
+  diagnostics: "M12 2l8 4v6c0 5-4 8-8 10-4-2-8-5-8-10V6z M8 12l3 3 5-6",
+  calculations: "M5 2h14v20H5z M8 6h8 M8 11h2 M14 11h2 M8 16h2 M14 16h2",
+} as const;
+
 function HeaderIcon({ name }: { name: keyof typeof headerIcons }) {
   return (
     <svg
@@ -96,7 +118,7 @@ export function App() {
       return defaults();
     }
   });
-  const [tab, setTab] = useState<"home" | "view" | "settings">("home");
+  const [tab, setTab] = useState<(typeof ribbonTabs)[number]>("home");
   const [schematicRibbon, setSchematicRibbon] = useState<HTMLDivElement | null>(
     null,
   );
@@ -145,6 +167,12 @@ export function App() {
         [id]: { ...previous.panels[id], ...change },
       },
     }));
+  function revealPanel(id: PanelId) {
+    flushSync(() => panel(id, { visible: true, collapsed: false }));
+    document
+      .querySelector<HTMLElement>(`[data-panel="${id}"] .panel-heading button`)
+      ?.focus();
+  }
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const renderPanel = (id: PanelId) => {
@@ -382,18 +410,15 @@ export function App() {
         </span>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
-        <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
-          {t("home")}
-        </button>
-        <button aria-pressed={tab === "view"} onClick={() => setTab("view")}>
-          {t("view")}
-        </button>
-        <button
-          aria-pressed={tab === "settings"}
-          onClick={() => setTab("settings")}
-        >
-          {t("settings")}
-        </button>
+        {ribbonTabs.map((key) => (
+          <button
+            key={key}
+            aria-pressed={tab === key}
+            onClick={() => setTab(key)}
+          >
+            {t(key)}
+          </button>
+        ))}
         <button onClick={() => help.current?.showModal()}>{t("help")}</button>
       </nav>
       {native.error && (
@@ -402,15 +427,41 @@ export function App() {
         </p>
       )}
       <div className="ribbon" aria-label={t(tab)}>
-        {tab === "home" ? (
+        {tab === "home" || tab === "file" ? (
           <>
             <ProjectTools
               native={native}
               t={t}
               openNewProject={openNewProject}
             />
-            <div className="schematic-ribbon" ref={setSchematicRibbon} />
+            {tab === "home" && (
+              <div className="schematic-ribbon" ref={setSchematicRibbon} />
+            )}
           </>
+        ) : tab === "panel3d" ||
+          tab === "documentation" ||
+          tab === "analysis" ? (
+          <div className="native-tools" role="group" aria-label={t(tab)}>
+            {panelRibbon[tab].map((id) => (
+              <button
+                key={id}
+                type="button"
+                aria-label={`${t("show")} ${t(id)}`}
+                onClick={() => revealPanel(id)}
+              >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path d={panelRibbonIcons[id]} />
+                </svg>
+                {t(id)}
+              </button>
+            ))}
+          </div>
         ) : tab === "view" ? (
           <>
             <div className="panel-toggles">
@@ -637,16 +688,7 @@ export function App() {
             className="status-diagnostics"
             type="button"
             data-severity={errors ? "error" : warnings ? "warning" : "clear"}
-            onClick={() => {
-              flushSync(() =>
-                panel("diagnostics", { visible: true, collapsed: false }),
-              );
-              document
-                .querySelector<HTMLElement>(
-                  '[data-panel="diagnostics"] .panel-heading button',
-                )
-                ?.focus();
-            }}
+            onClick={() => revealPanel("diagnostics")}
           >
             {t("diagnostics")} · {t("errors")} {errors} · {t("warnings")}{" "}
             {warnings}
