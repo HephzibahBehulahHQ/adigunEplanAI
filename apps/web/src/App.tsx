@@ -2,11 +2,13 @@ import {
   lazy,
   Suspense,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
 } from "react";
 import { ConnectivityPanel } from "./ConnectivityPanel";
+import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
 import { flushSync } from "react-dom";
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import {
@@ -72,6 +74,16 @@ function HeaderIcon({ name }: { name: keyof typeof headerIcons }) {
 
 export function App() {
   const native = useNativeProjects();
+  const connectivity = useMemo(
+    () => (native.project ? analyze(native.project) : null),
+    [native.project],
+  );
+  const errors =
+    connectivity?.findings.filter(({ severity }) => severity === "error")
+      .length ?? 0;
+  const warnings =
+    connectivity?.findings.filter(({ severity }) => severity === "warning")
+      .length ?? 0;
   const [buildingView, setBuildingView] = useState(false);
   const activeSheet =
     native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
@@ -178,7 +190,7 @@ export function App() {
               id === "reports" ? (
               <NativeDataPanel native={native} t={t} kind={id} />
             ) : id === "diagnostics" ? (
-              <ConnectivityPanel native={native} t={t} />
+              <ConnectivityPanel native={native} t={t} result={connectivity} />
             ) : (
               <p className="empty-hint">
                 {t(
@@ -608,6 +620,26 @@ export function App() {
               )
             )}
           </div>
+        )}
+        {connectivity && (
+          <button
+            className="status-diagnostics"
+            type="button"
+            data-severity={errors ? "error" : warnings ? "warning" : "clear"}
+            onClick={() => {
+              flushSync(() =>
+                panel("diagnostics", { visible: true, collapsed: false }),
+              );
+              document
+                .querySelector<HTMLElement>(
+                  '[data-panel="diagnostics"] .panel-heading button',
+                )
+                ?.focus();
+            }}
+          >
+            {t("diagnostics")} · {t("errors")} {errors} · {t("warnings")}{" "}
+            {warnings}
+          </button>
         )}
         <span>
           © {new Date().getFullYear()}{" "}

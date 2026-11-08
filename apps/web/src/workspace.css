@@ -389,6 +389,21 @@ i {
   color: var(--text);
   font-weight: 500;
 }
+.status-diagnostics {
+  padding: 0.22rem 0.45rem;
+  border-color: var(--line);
+  font-size: inherit;
+}
+.status-diagnostics[data-severity="clear"] {
+  color: var(--cyan);
+}
+.status-diagnostics[data-severity="warning"] {
+  color: var(--gold);
+}
+.status-diagnostics[data-severity="error"] {
+  font-weight: bold;
+  border-color: currentColor;
+}
 .report-actions {
   display: grid;
   gap: 0.3rem;

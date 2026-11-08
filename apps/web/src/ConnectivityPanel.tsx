@@ -1,8 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { CableEditor } from "./CableEditor";
 import { ElectricalMetadata } from "./ElectricalMetadata";
 import {
-  analyze,
+  type analyze,
   type RuleCode,
 } from "../../../packages/connectivity-engine/analyze.ts";
 import {
@@ -17,12 +17,13 @@ import type { NativeProjects } from "./useNativeProjects";
 export function ConnectivityPanel({
   native,
   t,
+  result,
 }: {
   native: NativeProjects;
   t: (key: MessageKey) => string;
+  result: ReturnType<typeof analyze> | null;
 }) {
   const project = native.project;
-  const result = useMemo(() => (project ? analyze(project) : null), [project]);
   const dialog = useRef<HTMLDialogElement>(null);
   const [scope, setScope] = useState<NumberingScope>("wires");
   const [preview, setPreview] = useState<NumberChange[]>([]);
