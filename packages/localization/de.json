@@ -126,6 +126,8 @@
   "file": "Datei",
   "documentation": "Dokumentation",
   "analysis": "Analyse",
+  "buildingWorkspace": "Gebäudeplanung",
+  "aiTools": "KI-Werkzeuge",
   "connectivity": "Verbindungen",
   "connectivityScope": "Nur Topologie und angegebene Bemessungswerte. Zeichenlänge ist keine installierte Kabellänge.",
   "netlist": "Netzliste",

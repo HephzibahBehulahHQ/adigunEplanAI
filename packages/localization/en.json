@@ -126,6 +126,8 @@
   "file": "File",
   "documentation": "Documentation",
   "analysis": "Analysis",
+  "buildingWorkspace": "Building workspace",
+  "aiTools": "AI tools",
   "connectivity": "Connectivity",
   "connectivityScope": "Topology and declared ratings only. Drawing length is not installed cable length.",
   "netlist": "Netlist",

@@ -234,11 +234,17 @@ export function ProjectNavigator({
   native,
   t,
   searchRef,
-}: Props & { searchRef: RefObject<HTMLInputElement | null> }) {
+  showLibrary,
+  libraryOpened,
+  changeLibraryView,
+}: Props & {
+  searchRef: RefObject<HTMLInputElement | null>;
+  showLibrary: boolean;
+  libraryOpened: boolean;
+  changeLibraryView: (show: boolean) => void;
+}) {
   const project = native.project;
   const [query, setQuery] = useState("");
-  const [showLibrary, setShowLibrary] = useState(false);
-  const [libraryOpened, setLibraryOpened] = useState(false);
   const term = query.trim().toLowerCase();
   const matches = (value: string) => value.toLowerCase().includes(term);
   const devices = new Map(
@@ -276,17 +282,14 @@ export function ProjectNavigator({
         <button
           type="button"
           aria-pressed={!showLibrary}
-          onClick={() => setShowLibrary(false)}
+          onClick={() => changeLibraryView(false)}
         >
           {t("project")}
         </button>
         <button
           type="button"
           aria-pressed={showLibrary}
-          onClick={() => {
-            setLibraryOpened(true);
-            setShowLibrary(true);
-          }}
+          onClick={() => changeLibraryView(true)}
         >
           {t("componentLibrary")}
         </button>
@@ -316,7 +319,7 @@ export function ProjectNavigator({
             ref={searchRef}
             value={query}
             maxLength={160}
-            onFocus={() => setShowLibrary(false)}
+            onFocus={() => changeLibraryView(false)}
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>

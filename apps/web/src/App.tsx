@@ -65,18 +65,61 @@ const ribbonTabs = [
   "file",
   "home",
   "view",
+  "componentLibrary",
+  "buildingWorkspace",
   "panel3d",
   "documentation",
   "analysis",
+  "aiTools",
   "settings",
 ] as const;
-const panelRibbonIcons = {
+const ribbonIcons = {
+  library: "M3 5h4v14H3z M9 5h4v14H9z M15 6l4-1 4 13-4 1z",
+  building: "M3 21h18 M5 21V7l7-5 7 5v14 M9 21v-6h6v6 M9 10h1 M14 10h1",
+  schematic: "M2 12h4m12 0h4M6 12l2-4 3 8 2-8 3 8 2-4",
+  bot: "M12 6V2M9 15h6M2 10v5m20-5v5 M9 11h.01 M15 11h.01 M9 6h6a5 5 0 0 1 5 5v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5z",
   panel3d: "M12 2l9 5v10l-9 5-9-5V7z M3 7l9 5 9-5 M12 12v10",
   bom: "M3 4h18v16H3z M3 9h18 M3 14h18 M9 9v11",
   reports: "M5 2h9l5 5v15H5z M14 2v6h5 M8 12h8 M8 16h8",
   diagnostics: "M12 2l8 4v6c0 5-4 8-8 10-4-2-8-5-8-10V6z M8 12l3 3 5-6",
   calculations: "M5 2h14v20H5z M8 6h8 M8 11h2 M14 11h2 M8 16h2 M14 16h2",
 } as const;
+
+function RibbonCommand({
+  icon,
+  label,
+  accessibleName,
+  disabled,
+  onClick,
+}: {
+  icon: keyof typeof ribbonIcons;
+  label: string;
+  accessibleName: string;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={accessibleName}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d={ribbonIcons[icon]} />
+      </svg>
+      {label}
+    </button>
+  );
+}
 
 function HeaderIcon({ name }: { name: keyof typeof headerIcons }) {
   return (
@@ -107,6 +150,12 @@ export function App() {
     connectivity?.findings.filter(({ severity }) => severity === "warning")
       .length ?? 0;
   const [buildingView, setBuildingView] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [libraryOpened, setLibraryOpened] = useState(false);
+  function changeLibraryView(show: boolean) {
+    setShowLibrary(show);
+    if (show) setLibraryOpened(true);
+  }
   const activeSheet =
     native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
     native.project?.pages[0];
@@ -207,6 +256,9 @@ export function App() {
                 native={native}
                 t={t}
                 searchRef={navigatorSearch}
+                showLibrary={showLibrary}
+                libraryOpened={libraryOpened}
+                changeLibraryView={changeLibraryView}
               />
             ) : id === "properties" ? (
               <>
@@ -443,24 +495,55 @@ export function App() {
           tab === "analysis" ? (
           <div className="native-tools" role="group" aria-label={t(tab)}>
             {panelRibbon[tab].map((id) => (
-              <button
+              <RibbonCommand
                 key={id}
-                type="button"
-                aria-label={`${t("show")} ${t(id)}`}
+                icon={id}
+                label={t(id)}
+                accessibleName={`${t("show")} ${t(id)}`}
                 onClick={() => revealPanel(id)}
-              >
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                >
-                  <path d={panelRibbonIcons[id]} />
-                </svg>
-                {t(id)}
-              </button>
+              />
             ))}
+          </div>
+        ) : tab === "componentLibrary" ||
+          tab === "buildingWorkspace" ||
+          tab === "aiTools" ? (
+          <div className="native-tools" role="group" aria-label={t(tab)}>
+            {tab === "componentLibrary" ? (
+              <RibbonCommand
+                icon="library"
+                label={t("componentLibrary")}
+                accessibleName={`${t("show")} ${t("componentLibrary")}`}
+                disabled={!native.project}
+                onClick={() => {
+                  changeLibraryView(true);
+                  revealPanel("project");
+                }}
+              />
+            ) : tab === "buildingWorkspace" ? (
+              <>
+                <RibbonCommand
+                  icon="building"
+                  label={t("buildingDesign")}
+                  accessibleName={`${t("show")} ${t("buildingDesign")}`}
+                  disabled={!native.project}
+                  onClick={() => setBuildingView(true)}
+                />
+                <RibbonCommand
+                  icon="schematic"
+                  label={t("schematicView")}
+                  accessibleName={`${t("show")} ${t("schematicView")}`}
+                  disabled={!native.project}
+                  onClick={() => setBuildingView(false)}
+                />
+              </>
+            ) : (
+              <RibbonCommand
+                icon="bot"
+                label="Adigun BOT"
+                accessibleName={`${t("show")} Adigun BOT`}
+                onClick={() => setBotOpen(true)}
+              />
+            )}
           </div>
         ) : tab === "view" ? (
           <>

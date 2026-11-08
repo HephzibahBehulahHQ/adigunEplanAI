@@ -126,6 +126,8 @@
   "file": "File",
   "documentation": "Project documents",
   "analysis": "Analysis",
+  "buildingWorkspace": "Building workspace",
+  "aiTools": "AI tools",
   "connectivity": "Connections",
   "connectivityScope": "Na connections and ratings wey you enter only. Drawing length no be installed cable length.",
   "netlist": "Net list",

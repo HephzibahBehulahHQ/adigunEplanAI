@@ -114,7 +114,11 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   await expect(model).toBeVisible();
   await expect(highlighted).toHaveCount(0);
 
-  await page.getByRole("button", { name: "Adigun BOT", exact: true }).click();
+  await tabs.getByRole("button", { name: "AI tools", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Show Adigun BOT", exact: true })
+    .click();
+  await tabs.getByRole("button", { name: "Home", exact: true }).click();
   const bot = page.getByRole("region", { name: "Adigun BOT", exact: true });
   const lookup = bot.getByRole("textbox", {
     name: "Look up a device reference",
@@ -162,13 +166,19 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   await expect(sheetProperties).toContainText("420 × 297 mm");
   await expect(status).toContainText(project.pages[0].name);
   await expect(status).toContainText(`Grid (mm) ${project.pages[0].gridMm}`);
+  await tabs
+    .getByRole("button", { name: "Building workspace", exact: true })
+    .click();
   await page
-    .getByRole("button", { name: "Building design", exact: true })
+    .getByRole("button", { name: "Show Building design", exact: true })
     .click();
   await expect(status).toContainText("Building design");
   await expect(sheetProperties).toHaveCount(0);
   await expect(status).not.toContainText("Grid (mm)");
-  await page.getByRole("button", { name: "Schematic", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Show Schematic", exact: true })
+    .click();
+  await tabs.getByRole("button", { name: "Home", exact: true }).click();
   await expect(status).toContainText(project.pages[0].name);
   await expect(sheetProperties).toContainText(project.pages[0].name);
 
