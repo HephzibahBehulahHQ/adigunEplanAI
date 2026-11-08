@@ -502,5 +502,7 @@
   "cabinetName": "Schaltschrankname",
   "cabinetWidth": "Breite (mm)",
   "cabinetHeight": "Höhe (mm)",
-  "cabinetDepth": "Tiefe (mm)"
+  "cabinetDepth": "Tiefe (mm)",
+  "cabinetMount": "Betriebsmittel montieren",
+  "cabinetMountError": "Prüfen Sie Maße und Position. Das Betriebsmittel muss ohne Überlappung passen."
 }

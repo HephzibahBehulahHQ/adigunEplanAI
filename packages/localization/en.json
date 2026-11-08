@@ -502,5 +502,7 @@
   "cabinetName": "Cabinet name",
   "cabinetWidth": "Width (mm)",
   "cabinetHeight": "Height (mm)",
-  "cabinetDepth": "Depth (mm)"
+  "cabinetDepth": "Depth (mm)",
+  "cabinetMount": "Mount device",
+  "cabinetMountError": "Check the dimensions and position. The device must fit without overlapping other equipment."
 }

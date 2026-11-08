@@ -502,5 +502,7 @@
   "cabinetName": "Cabinet name",
   "cabinetWidth": "Width (mm)",
   "cabinetHeight": "Height (mm)",
-  "cabinetDepth": "Depth (mm)"
+  "cabinetDepth": "Depth (mm)",
+  "cabinetMount": "Mount device",
+  "cabinetMountError": "Check size and position. Di device must fit without touching inside another device."
 }

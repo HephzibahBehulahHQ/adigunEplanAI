@@ -1,4 +1,5 @@
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
+import { mountCabinetDevice } from "../../../packages/electrical-model/cabinet.ts";
 import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -360,6 +361,9 @@ export function NativeDataPanel({
                 ...draft,
                 enclosures: [...draft.enclosures, enclosure],
               }))
+            }
+            mount={(placement) =>
+              native.update((draft) => mountCabinetDevice(draft, placement))
             }
           />
         </Suspense>

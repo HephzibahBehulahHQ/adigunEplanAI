@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
+import { CabinetMount } from "./CabinetMount";
 
 type Vector = { x: number; y: number; z: number };
 type Props = {
   project: Project;
   t: (key: MessageKey) => string;
   addEnclosure: (enclosure: Project["enclosures"][number]) => boolean;
+  mount: (placement: Project["equipment3d"][number]) => boolean;
 };
 const dimensionFields = [
   ["widthMm", "cabinetWidth"],
@@ -43,7 +45,7 @@ const views = {
   cabinetTop: { azimuth: 0, elevation: 90 },
 } as const;
 
-export function EnclosureView({ project, t, addEnclosure }: Props) {
+export function EnclosureView({ project, t, addEnclosure, mount }: Props) {
   const [id, setId] = useState("");
   const createDialog = useRef<HTMLDialogElement>(null);
   const [magnification, setMagnification] = useState(1);
@@ -191,6 +193,13 @@ export function EnclosureView({ project, t, addEnclosure }: Props) {
   return (
     <div className="enclosure-view">
       {createControl}
+      <CabinetMount
+        key={enclosure.id}
+        project={project}
+        enclosure={enclosure}
+        mount={mount}
+        t={t}
+      />
       <select
         aria-label={t("panel3d")}
         value={enclosure.id}
