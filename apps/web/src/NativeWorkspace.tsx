@@ -217,6 +217,38 @@ export function ProjectTools({ native, t }: Props) {
 }
 export function ProjectNavigator({ native, t }: Props) {
   const project = native.project;
+  const [query, setQuery] = useState("");
+  const term = query.trim().toLowerCase();
+  const matches = (value: string) => value.toLowerCase().includes(term);
+  const devices = new Map(
+    term
+      ? project?.devices
+          .filter((device) => matches(device.reference) || matches(device.name))
+          .map((device) => [device.id, device] as const)
+      : [],
+  );
+  const pageDevices = new Map<string, Set<string>>();
+  if (devices.size) {
+    for (const symbol of project?.symbolInstances ?? []) {
+      const device = devices.get(symbol.deviceId);
+      if (!device) continue;
+      const references = pageDevices.get(symbol.pageId) ?? new Set<string>();
+      references.add(device.reference);
+      pageDevices.set(symbol.pageId, references);
+    }
+  }
+  const documents = project?.documents.flatMap((document) => {
+    const pages = project.pages
+      .filter((page) => page.documentId === document.id)
+      .filter(
+        (page) =>
+          matches(document.name) ||
+          matches(page.name) ||
+          pageDevices.has(page.id),
+      )
+      .sort((a, b) => a.order - b.order);
+    return matches(document.name) || pages.length ? [{ document, pages }] : [];
+  });
   return native.projects.length ? (
     <>
       <label>
@@ -224,7 +256,10 @@ export function ProjectNavigator({ native, t }: Props) {
         <select
           aria-label={t("chooseProject")}
           value={project?.id ?? ""}
-          onChange={(event) => native.select(event.target.value)}
+          onChange={(event) => {
+            native.select(event.target.value);
+            setQuery("");
+          }}
         >
           {native.projects.map((p) => (
             <option key={p.id} value={p.id}>
@@ -233,21 +268,40 @@ export function ProjectNavigator({ native, t }: Props) {
           ))}
         </select>
       </label>
-      {project?.documents.map((document) => (
+      {project && (
+        <label className="navigator-search">
+          {t("searchProject")}
+          <input
+            type="search"
+            value={query}
+            maxLength={160}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+        </label>
+      )}
+      {term && !documents?.length && (
+        <p role="status">{t("noProjectSearchMatches")}</p>
+      )}
+      {documents?.map(({ document, pages }) => (
         <details open key={document.id}>
           <summary>{document.name}</summary>
           <div className="navigator-pages">
-            {project.pages
-              .filter((page) => page.documentId === document.id)
-              .sort((a, b) => a.order - b.order)
-              .map((page) => (
-                <button
-                  key={page.id}
-                  onClick={() => native.selectPage(page.id)}
-                >
-                  {page.name}
-                </button>
-              ))}
+            {pages.map((page) => (
+              <button
+                key={page.id}
+                aria-current={
+                  native.selectedPageId === page.id ? "page" : undefined
+                }
+                onClick={() => native.selectPage(page.id)}
+              >
+                {page.name}
+                {pageDevices.has(page.id) && (
+                  <small>
+                    {Array.from(pageDevices.get(page.id) ?? []).join(", ")}
+                  </small>
+                )}
+              </button>
+            ))}
           </div>
         </details>
       ))}

@@ -497,6 +497,18 @@ dialog form {
   border-inline-start: 1px solid var(--line);
   flex: 1 1 13rem;
 }
+.panel-body .navigator-search {
+  display: grid;
+  justify-content: stretch;
+}
+.navigator-pages button[aria-current="page"] {
+  border-color: var(--cyan);
+}
+.navigator-pages button small {
+  display: block;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
 .drawing-tabs button {
   font-size: 0.75rem;
 }

@@ -495,5 +495,7 @@
   "cabinetOblique": "Slant",
   "cabinetFront": "Front",
   "cabinetSide": "Side",
-  "cabinetTop": "Top"
+  "cabinetTop": "Top",
+  "searchProject": "Search project",
+  "noProjectSearchMatches": "No sheet or device match."
 }

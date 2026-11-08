@@ -495,5 +495,7 @@
   "cabinetOblique": "Schräg",
   "cabinetFront": "Vorne",
   "cabinetSide": "Seite",
-  "cabinetTop": "Oben"
+  "cabinetTop": "Oben",
+  "searchProject": "Projekt durchsuchen",
+  "noProjectSearchMatches": "Keine passenden Seiten oder Betriebsmittel."
 }
