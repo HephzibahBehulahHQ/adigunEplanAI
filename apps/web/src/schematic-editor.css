@@ -195,6 +195,23 @@
   }
 }
 
+@media (min-width: 1350px) and (min-height: 780px) {
+  .engineering-layout.has-left:has(> .dock-bottom) {
+    grid-template-rows: minmax(0, 1fr) 166px;
+  }
+  .engineering-layout.has-left:has(> .dock-bottom) > .dock-left {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+  .engineering-layout.has-left > .dock-bottom {
+    grid-column: 2 / -1;
+    flex-wrap: nowrap;
+  }
+  .engineering-layout.has-left > .dock-bottom > .panel {
+    flex: 1 1 0;
+  }
+}
+
 .schematic-ribbon {
   flex: 1 1 35rem;
   min-width: 0;

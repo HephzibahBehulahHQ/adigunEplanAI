@@ -52,6 +52,11 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     cabinetBounds!.x,
   );
   expect(cabinetBounds!.x + cabinetBounds!.width).toBeLessThan(botBounds!.x);
+  const leftDock = await page.locator(".dock-left").boundingBox();
+  const lowerDock = await page.locator(".dock-bottom").boundingBox();
+  expect(lowerDock!.x).toBe(drawingBounds!.x);
+  expect(leftDock!.y + leftDock!.height).toBe(lowerDock!.y + lowerDock!.height);
+  expect(drawingBounds!.y + drawingBounds!.height).toBeLessThan(lowerDock!.y);
   await expect(bot.getByRole("log")).toContainText(device.name);
 
   const ribbon = page.locator(".schematic-ribbon");
