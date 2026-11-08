@@ -583,6 +583,19 @@ button:disabled {
 .cabinet-viewport {
   position: relative;
 }
+.cabinet-viewport svg {
+  cursor: grab;
+  touch-action: none;
+}
+.cabinet-viewport svg:active {
+  cursor: grabbing;
+}
+.cabinet-zoom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
 .cabinet-views {
   position: absolute;
   inset: 0.35rem 0.35rem auto auto;

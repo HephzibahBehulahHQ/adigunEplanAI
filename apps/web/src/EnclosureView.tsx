@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import type { MessageKey } from "../../../packages/localization";
 
@@ -36,6 +36,14 @@ const views = {
 
 export function EnclosureView({ project, t }: Props) {
   const [id, setId] = useState("");
+  const [magnification, setMagnification] = useState(1);
+  const drag = useRef<{
+    pointer: number;
+    x: number;
+    y: number;
+    azimuth: number;
+    elevation: number;
+  } | null>(null);
   const [camera, setCamera] = useState<{ azimuth: number; elevation: number }>(
     views.cabinetOblique,
   );
@@ -99,6 +107,8 @@ export function EnclosureView({ project, t }: Props) {
     }
   }
   const margin = Math.max(right - left, bottom - top) * 0.07;
+  const width = (right - left + 2 * margin) / magnification;
+  const height = (bottom - top + 2 * margin) / magnification;
   const [frame, ...equipment] = boxes;
   const visibleFaces = equipment
     .flatMap(({ key, label, points }) =>
@@ -123,7 +133,10 @@ export function EnclosureView({ project, t }: Props) {
       <select
         aria-label={t("panel3d")}
         value={enclosure.id}
-        onChange={(event) => setId(event.target.value)}
+        onChange={(event) => {
+          setId(event.target.value);
+          setMagnification(1);
+        }}
       >
         {project.enclosures.map((item) => (
           <option key={item.id} value={item.id}>
@@ -135,7 +148,32 @@ export function EnclosureView({ project, t }: Props) {
         <svg
           role="img"
           aria-label={enclosure.name}
-          viewBox={`${left - margin} ${top - margin} ${right - left + 2 * margin} ${bottom - top + 2 * margin}`}
+          viewBox={`${(left + right - width) / 2} ${(top + bottom - height) / 2} ${width} ${height}`}
+          onPointerDown={(event) => {
+            if (!event.isPrimary || event.button !== 0) return;
+            event.currentTarget.setPointerCapture(event.pointerId);
+            drag.current = {
+              pointer: event.pointerId,
+              x: event.clientX,
+              y: event.clientY,
+              ...camera,
+            };
+          }}
+          onPointerMove={(event) => {
+            const start = drag.current;
+            if (start?.pointer !== event.pointerId) return;
+            const azimuth = start.azimuth + (event.clientX - start.x) / 2;
+            setCamera({
+              azimuth: ((azimuth % 360) + 360) % 360,
+              elevation: Math.max(
+                -90,
+                Math.min(90, start.elevation - (event.clientY - start.y) / 2),
+              ),
+            });
+          }}
+          onLostPointerCapture={() => {
+            drag.current = null;
+          }}
         >
           <g className="enclosure-frame">
             <title>{frame.label}</title>
@@ -181,12 +219,41 @@ export function EnclosureView({ project, t }: Props) {
           ))}
         </div>
       </div>
+      <div className="cabinet-zoom" role="group" aria-label={t("zoom")}>
+        <button
+          type="button"
+          aria-label={`${t("zoom")} −`}
+          disabled={magnification <= 0.5}
+          onClick={() =>
+            setMagnification((value) => Math.max(0.5, value / 1.25))
+          }
+        >
+          −
+        </button>
+        <output>{Math.round(magnification * 100)}%</output>
+        <button
+          type="button"
+          aria-label={`${t("zoom")} +`}
+          disabled={magnification >= 4}
+          onClick={() => setMagnification((value) => Math.min(4, value * 1.25))}
+        >
+          +
+        </button>
+        <button
+          type="button"
+          disabled={magnification === 1}
+          onClick={() => setMagnification(1)}
+        >
+          {t("fitPage")}
+        </button>
+      </div>
       <label>
         {t("rotate")}{" "}
         <input
           type="range"
           min="0"
-          max="359"
+          max="360"
+          step="any"
           value={camera.azimuth}
           onChange={(event) =>
             setCamera({
