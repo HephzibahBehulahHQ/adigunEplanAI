@@ -12,6 +12,7 @@ import type { MessageKey } from "../../../packages/localization";
 import {
   maxProjectBytes,
   serializeProject,
+  type Project,
 } from "../../../packages/electrical-model/project.ts";
 import { projectStorageKey } from "../../../packages/project-storage/repository.ts";
 import type { NativeProjects } from "./useNativeProjects";
@@ -458,15 +459,62 @@ export function NativeDataPanel({
       </div>
     );
   }
+  return <CalculationRecords key={project.id} project={project} t={t} />;
+}
+
+function CalculationRecords({
+  project,
+  t,
+}: Pick<Props, "t"> & { project: Project }) {
+  const [recordId, setRecordId] = useState("");
   const records = project.calculations;
-  return records.length ? (
-    <ul>
-      {records.map((record) => (
-        <li key={record.id}>{record.name}</li>
-      ))}
-    </ul>
-  ) : (
-    <p className="empty-hint">{t("noRecords")}</p>
+  const record = records.find(({ id }) => id === recordId) ?? records[0];
+  if (!record) return <p className="empty-hint">{t("noRecords")}</p>;
+  return (
+    <div className="calculation-record">
+      <select
+        aria-label={t("calculations")}
+        value={record.id}
+        onChange={(event) => setRecordId(event.target.value)}
+      >
+        {records.map(({ id, name }) => (
+          <option key={id} value={id}>
+            {name}
+          </option>
+        ))}
+      </select>
+      <div className="calculation-details">
+        <section>
+          <h3>{t("calculationInputs")}</h3>
+          <dl>
+            {Object.entries(record.inputs).map(([input, value]) => (
+              <div key={input}>
+                <dt>{input}</dt>
+                <dd>
+                  {value}{" "}
+                  {Object.hasOwn(record.units, input) && record.units[input]}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+        <section>
+          <h3>{t("calculationMethod")}</h3>
+          <p>{record.kind}</p>
+          <p>{record.methodReference}</p>
+          {record.assumptions.length > 0 && (
+            <details>
+              <summary>{t("calculationAssumptions")}</summary>
+              <ul>
+                {record.assumptions.map((assumption, index) => (
+                  <li key={index}>{assumption}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </section>
+      </div>
+    </div>
   );
 }
 export function ProjectProperties({ native, t }: Props) {

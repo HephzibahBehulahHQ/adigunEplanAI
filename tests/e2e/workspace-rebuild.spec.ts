@@ -6,6 +6,26 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
 }) => {
   await page.setViewportSize({ width: 1672, height: 941 });
   const project = nativeProject();
+  project.calculations.push(
+    {
+      id: "calc-feeder",
+      name: "Feeder inputs",
+      kind: "Load study",
+      inputs: { voltage: 400, offset: 0 },
+      units: { voltage: "V" },
+      assumptions: ["Balanced phases"],
+      methodReference: "Feeder study worksheet A",
+    },
+    {
+      id: "calc-control",
+      name: "Control inputs",
+      kind: "Load study",
+      inputs: { voltage: 24 },
+      units: { voltage: "V" },
+      assumptions: [],
+      methodReference: "Control study worksheet B",
+    },
+  );
   const device = project.devices[0];
   project.enclosures.push({
     id: "cabinet-review",
@@ -40,6 +60,16 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  const calculations = page.getByRole("region", { name: "Calculations" });
+  await expect(calculations).toContainText("400 V");
+  await expect(calculations).toContainText("Feeder study worksheet A");
+  await calculations.getByText("Assumptions", { exact: true }).click();
+  await expect(calculations.getByText("Balanced phases")).toBeVisible();
+  await calculations
+    .getByRole("combobox", { name: "Calculations" })
+    .selectOption("calc-control");
+  await expect(calculations).toContainText("24 V");
+  await expect(calculations).not.toContainText("Feeder study worksheet A");
   const cabinet = page.getByRole("region", { name: "3D panel", exact: true });
   const model = cabinet.getByRole("img", { name: "Cabinet review" });
   const axes = cabinet.locator(".cabinet-axes text");

@@ -235,6 +235,46 @@ i {
 .dock-bottom .panel {
   flex: 1 1 220px;
 }
+.calculation-record {
+  display: grid;
+  gap: 0.35rem;
+  overflow-wrap: anywhere;
+}
+.calculation-record select {
+  width: 100%;
+  min-width: 0;
+}
+.calculation-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: 0.35rem;
+}
+.calculation-details section {
+  min-width: 0;
+  padding: 0.35rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface);
+}
+.calculation-details h3,
+.calculation-details p,
+.calculation-details dl {
+  margin: 0 0 0.25rem;
+  font-size: inherit;
+}
+.calculation-details h3 {
+  color: var(--cyan);
+}
+.calculation-details dl > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0 0.35rem;
+}
+.calculation-details dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
 .panel {
   min-width: 0;
   background: var(--panel);
