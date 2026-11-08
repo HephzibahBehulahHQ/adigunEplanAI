@@ -237,6 +237,8 @@ export function ProjectNavigator({
 }: Props & { searchRef: RefObject<HTMLInputElement | null> }) {
   const project = native.project;
   const [query, setQuery] = useState("");
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [libraryOpened, setLibraryOpened] = useState(false);
   const term = query.trim().toLowerCase();
   const matches = (value: string) => value.toLowerCase().includes(term);
   const devices = new Map(
@@ -270,6 +272,25 @@ export function ProjectNavigator({
   });
   return native.projects.length ? (
     <>
+      <nav className="navigator-tabs" aria-label={t("project")}>
+        <button
+          type="button"
+          aria-pressed={!showLibrary}
+          onClick={() => setShowLibrary(false)}
+        >
+          {t("project")}
+        </button>
+        <button
+          type="button"
+          aria-pressed={showLibrary}
+          onClick={() => {
+            setLibraryOpened(true);
+            setShowLibrary(true);
+          }}
+        >
+          {t("componentLibrary")}
+        </button>
+      </nav>
       <label>
         {t("chooseProject")}
         <select
@@ -295,40 +316,72 @@ export function ProjectNavigator({
             ref={searchRef}
             value={query}
             maxLength={160}
+            onFocus={() => setShowLibrary(false)}
             onChange={(event) => setQuery(event.target.value)}
           />
         </label>
       )}
-      {term && !documents?.length && (
-        <p role="status">{t("noProjectSearchMatches")}</p>
+      <div className="navigator-tree" hidden={showLibrary}>
+        {term && !documents?.length && (
+          <p role="status">{t("noProjectSearchMatches")}</p>
+        )}
+        {documents?.map(({ document, pages }) => (
+          <details open key={document.id}>
+            <summary>
+              <NavigatorIcon folder />
+              {document.name}
+            </summary>
+            <div className="navigator-pages">
+              {pages.map((page) => (
+                <button
+                  key={page.id}
+                  aria-current={
+                    native.selectedPageId === page.id ? "page" : undefined
+                  }
+                  onClick={() => native.selectPage(page.id)}
+                >
+                  <NavigatorIcon />
+                  <span>{page.name}</span>
+                  {pageDevices.has(page.id) && (
+                    <small>
+                      {Array.from(pageDevices.get(page.id) ?? []).join(", ")}
+                    </small>
+                  )}
+                </button>
+              ))}
+            </div>
+          </details>
+        ))}
+      </div>
+      {libraryOpened && (
+        <div hidden={!showLibrary}>
+          <ComponentLibrary native={native} t={t} />
+        </div>
       )}
-      {documents?.map(({ document, pages }) => (
-        <details open key={document.id}>
-          <summary>{document.name}</summary>
-          <div className="navigator-pages">
-            {pages.map((page) => (
-              <button
-                key={page.id}
-                aria-current={
-                  native.selectedPageId === page.id ? "page" : undefined
-                }
-                onClick={() => native.selectPage(page.id)}
-              >
-                {page.name}
-                {pageDevices.has(page.id) && (
-                  <small>
-                    {Array.from(pageDevices.get(page.id) ?? []).join(", ")}
-                  </small>
-                )}
-              </button>
-            ))}
-          </div>
-        </details>
-      ))}
-      <ComponentLibrary native={native} t={t} />
     </>
   ) : (
     <p className="empty-hint">{t("noProject")}</p>
+  );
+}
+
+function NavigatorIcon({ folder = false }: { folder?: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="navigator-icon"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.25"
+    >
+      <path
+        d={
+          folder
+            ? "M1.5 4h5l1.5 2h6.5v7H1.5z"
+            : "M4 2h5l3 3v9H4z M9 2v3h3 M6 8h4 M6 11h4"
+        }
+      />
+    </svg>
   );
 }
 export function NativeDataPanel({

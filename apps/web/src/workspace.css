@@ -624,6 +624,51 @@ dialog form {
   display: grid;
   justify-content: stretch;
 }
+.navigator-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem;
+  border-bottom: 1px solid var(--line);
+}
+.navigator-tabs button {
+  padding: 0.3rem 0.45rem;
+  border-color: transparent;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+}
+.navigator-tabs button[aria-pressed="true"] {
+  border-color: var(--line);
+  background: var(--raised);
+  box-shadow: inset 0 -2px var(--cyan);
+}
+.panel .navigator-tree details {
+  padding-top: 0.15rem;
+}
+.navigator-tree summary {
+  overflow-wrap: anywhere;
+}
+.navigator-icon {
+  display: inline-block;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-inline-end: 0.3rem;
+  vertical-align: text-bottom;
+  color: var(--cyan);
+}
+.navigator-tree summary .navigator-icon {
+  color: var(--gold);
+}
+.navigator-tree .navigator-pages {
+  margin-inline-start: 0.7rem;
+  padding: 0 0 0 0.4rem;
+  border-inline-start: 1px solid var(--line);
+}
+.navigator-pages button {
+  padding: 0.22rem 0.35rem;
+  overflow-wrap: anywhere;
+  background: transparent;
+  border-color: transparent;
+}
 .navigator-pages button[aria-current="page"] {
   border-color: var(--cyan);
 }

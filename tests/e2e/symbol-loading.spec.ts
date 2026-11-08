@@ -157,12 +157,13 @@ test("catalog loads only when opened and retains query after collapse", async ({
   await create(page);
   expect(requests).toBe(0);
   const before = await project(page);
-  const summary = page.locator(".component-library > summary");
-  await summary.click();
+  const tabs = page.locator(".navigator-tabs");
+  const library = tabs.getByRole("button", { name: "Component library" });
+  await library.click();
   await page.getByLabel("Search parts", { exact: true }).fill("3044076");
   expect(requests).toBe(1);
-  await summary.click();
-  await summary.click();
+  await tabs.getByRole("button", { name: "Project navigator" }).click();
+  await library.click();
   await expect(page.getByLabel("Search parts", { exact: true })).toHaveValue(
     "3044076",
   );
@@ -179,7 +180,10 @@ test("failed catalog download preserves project export and schematic tools", asy
   );
   await create(page);
   const before = await project(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library" })
+    .click();
   await expect(
     page.locator(".component-library").getByRole("alert"),
   ).toHaveText(
