@@ -5,9 +5,13 @@ import { HostedBotError, requestHostedHelp } from "./requestHostedHelp";
 
 export function HostedBotHelp({
   publishableKey,
+  accountRequest,
+  setSignedIn,
   t,
 }: {
   publishableKey: string;
+  accountRequest: number;
+  setSignedIn: (signedIn: boolean) => void;
   t: (key: MessageKey) => string;
 }) {
   const [session, setSession] =
@@ -17,6 +21,21 @@ export function HostedBotHelp({
   const [status, setStatus] = useState<MessageKey>();
   const [busy, setBusy] = useState(false);
   const activeRequest = useRef<AbortController | null>(null);
+  const accountDetails = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    if (!accountRequest || !accountDetails.current) return;
+    accountDetails.current.open = true;
+    const frame = requestAnimationFrame(() =>
+      accountDetails.current
+        ?.querySelector<HTMLElement>("input,button")
+        ?.focus(),
+    );
+    return () => cancelAnimationFrame(frame);
+  }, [accountRequest]);
+  useEffect(() => {
+    setSignedIn(Boolean(session));
+    return () => setSignedIn(false);
+  }, [session, setSignedIn]);
   useEffect(() => () => activeRequest.current?.abort(), []);
   useEffect(() => {
     if (!session) return;
@@ -68,7 +87,7 @@ export function HostedBotHelp({
   }
 
   return (
-    <details className="bot-chat">
+    <details className="bot-chat" ref={accountDetails}>
       <summary>{t("botHostedHelp")}</summary>
       {session ? (
         <>

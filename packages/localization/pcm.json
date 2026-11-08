@@ -519,5 +519,8 @@
   "botHostedRate": "Requests too many. Try again after one minute.",
   "botHostedUnavailable": "Hosted help no dey available.",
   "reportDrawingIndexCsv": "Drawing index (CSV)",
-  "reportBomCsv": "Bill of materials (CSV)"
+  "reportBomCsv": "Bill of materials (CSV)",
+  "account": "Account",
+  "accountGuest": "Guest",
+  "accountSignedIn": "Signed in"
 }

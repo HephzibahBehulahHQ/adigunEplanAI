@@ -519,5 +519,8 @@
   "botHostedRate": "Zu viele Anfragen. Versuchen Sie es in einer Minute.",
   "botHostedUnavailable": "Online-Hilfe ist nicht verfügbar.",
   "reportDrawingIndexCsv": "Zeichnungsverzeichnis (CSV)",
-  "reportBomCsv": "Stückliste (CSV)"
+  "reportBomCsv": "Stückliste (CSV)",
+  "account": "Konto",
+  "accountGuest": "Gast",
+  "accountSignedIn": "Angemeldet"
 }

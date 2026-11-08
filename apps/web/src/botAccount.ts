@@ -11,6 +11,13 @@ export function isPublishableKey(value: unknown): value is string {
   return typeof value === "string" && /^sb_publishable_[\w-]+$/.test(value);
 }
 
+const configuredKey: unknown = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+export const hostedBotKey =
+  import.meta.env.VITE_ADIGUN_HOSTED_HELP === "true" &&
+  isPublishableKey(configuredKey)
+    ? configuredKey
+    : undefined;
+
 export async function signInForBot(
   publishableKey: string,
   email: string,

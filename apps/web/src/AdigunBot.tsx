@@ -5,10 +5,7 @@ import type { MessageKey } from "../../../packages/localization";
 import type { useBotFinding } from "./useBotFinding";
 import { BotProjectChat } from "./BotProjectChat";
 import { HostedBotHelp } from "./HostedBotHelp";
-import { isPublishableKey } from "./botAccount";
-
-const botPublishableKey: unknown = import.meta.env
-  .VITE_SUPABASE_PUBLISHABLE_KEY;
+import { hostedBotKey } from "./botAccount";
 
 type Props = {
   project: Project | null;
@@ -20,6 +17,8 @@ type Props = {
   openNewProject: () => void;
   canCreateProject: boolean;
   suggestions: ReturnType<typeof useBotFinding>;
+  accountRequest: number;
+  setSignedIn: (signedIn: boolean) => void;
 };
 
 const layoutKey = "adiguneplanai.bot.layout.v1";
@@ -87,6 +86,8 @@ export function AdigunBot({
   openNewProject,
   canCreateProject,
   suggestions,
+  accountRequest,
+  setSignedIn,
 }: Props) {
   const [layout, setLayout] = useState(readLayout);
   const [viewport, setViewport] = useState(() => ({
@@ -101,6 +102,14 @@ export function AdigunBot({
     resize: boolean;
   } | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (accountRequest)
+      setLayout((previous) =>
+        previous.mode === "minimized"
+          ? { ...previous, mode: "normal" }
+          : previous,
+      );
+  }, [accountRequest]);
   const chatInput = useRef<HTMLInputElement>(null);
   const mobile = viewport.width <= 680;
   const canDock = viewport.width >= 1350;
@@ -374,10 +383,14 @@ export function AdigunBot({
             inputRef={chatInput}
           />
         )}
-        {import.meta.env.VITE_ADIGUN_HOSTED_HELP === "true" &&
-          isPublishableKey(botPublishableKey) && (
-            <HostedBotHelp publishableKey={botPublishableKey} t={t} />
-          )}
+        {hostedBotKey && (
+          <HostedBotHelp
+            publishableKey={hostedBotKey}
+            accountRequest={accountRequest}
+            setSignedIn={setSignedIn}
+            t={t}
+          />
+        )}
       </div>
       {!mobile && !docked && layout.mode === "normal" && (
         <span

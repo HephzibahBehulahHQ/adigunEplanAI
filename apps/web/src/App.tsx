@@ -26,6 +26,7 @@ import {
   type Preferences,
 } from "./preferences";
 import { useNativeProjects } from "./useNativeProjects";
+import { hostedBotKey } from "./botAccount";
 import { useBotFinding } from "./useBotFinding";
 import {
   ProjectTools,
@@ -43,6 +44,8 @@ const AdigunBot = lazy(() =>
 );
 
 const headerIcons = {
+  account:
+    "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm0-10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM5 18a7 7 0 0 1 14 0",
   language:
     "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-9-10h18M12 2c5 5 5 15 0 20-5-5-5-15 0-20Z",
   settings:
@@ -91,6 +94,9 @@ export function App() {
   const newProjectDialog = useRef<HTMLDialogElement>(null);
   const openNewProject = () => newProjectDialog.current?.showModal();
   const botToggle = useRef<HTMLButtonElement>(null);
+  const guestDialog = useRef<HTMLDialogElement>(null);
+  const [accountRequest, setAccountRequest] = useState(0);
+  const [signedIn, setSignedIn] = useState(false);
   const [botOpen, setBotOpen] = useState(() => {
     try {
       return localStorage.getItem("adiguneplanai.bot.open.v1") === "true";
@@ -270,6 +276,25 @@ export function App() {
             )}
           </span>
           <button
+            className="header-icon account-icon"
+            type="button"
+            title={t(hostedBotKey && !signedIn ? "botHostedSignIn" : "account")}
+            aria-label={`${t("account")} · ${t(signedIn ? "accountSignedIn" : "accountGuest")}`}
+            onClick={() => {
+              if (hostedBotKey) {
+                setBotOpen(true);
+                setAccountRequest((current) => current + 1);
+              } else guestDialog.current?.showModal();
+            }}
+          >
+            <HeaderIcon name="account" />
+            <span
+              className="account-dot"
+              data-signed-in={signedIn}
+              aria-hidden="true"
+            />
+          </button>
+          <button
             className="header-icon"
             type="button"
             title={t("language")}
@@ -319,7 +344,10 @@ export function App() {
             ref={botToggle}
             aria-expanded={botOpen}
             aria-controls={botOpen ? "adigun-bot" : undefined}
-            onClick={() => setBotOpen((open) => !open)}
+            onClick={() => {
+              setAccountRequest(0);
+              setBotOpen((open) => !open);
+            }}
           >
             Adigun BOT
             {botFinding.active && !botOpen && (
@@ -516,10 +544,13 @@ export function App() {
             <Suspense fallback={<p role="status">Adigun BOT…</p>}>
               <AdigunBot
                 project={native.project}
+                accountRequest={accountRequest}
+                setSignedIn={setSignedIn}
                 suggestions={botFinding}
                 t={t}
                 close={() => {
                   setBotOpen(false);
+                  setAccountRequest(0);
                   botToggle.current?.focus();
                 }}
                 openDiagnostics={() =>
@@ -538,6 +569,14 @@ export function App() {
         {has("bottom") && region("bottom")}
       </div>
       <NewProjectDialog native={native} t={t} dialog={newProjectDialog} />
+      <dialog ref={guestDialog} aria-label={t("account")}>
+        <p>
+          {t("accountGuest")} · {t("local")}
+        </p>
+        <form method="dialog">
+          <button>{t("close")}</button>
+        </form>
+      </dialog>
       <footer className="status-bar">
         <span>
           <i />
