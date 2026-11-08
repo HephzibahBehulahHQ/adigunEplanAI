@@ -12,6 +12,8 @@ type Props = {
   openDiagnostics: () => void;
   openBom: () => void;
   openHelp: () => void;
+  openNewProject: () => void;
+  canCreateProject: boolean;
   suggestions: ReturnType<typeof useBotFinding>;
 };
 
@@ -77,6 +79,8 @@ export function AdigunBot({
   openDiagnostics,
   openBom,
   openHelp,
+  openNewProject,
+  canCreateProject,
   suggestions,
 }: Props) {
   const [layout, setLayout] = useState(readLayout);
@@ -296,6 +300,13 @@ export function AdigunBot({
           aria-label={t("botQuickActions")}
         >
           <h3>{t("botQuickActions")}</h3>
+          <button
+            type="button"
+            disabled={!canCreateProject}
+            onClick={openNewProject}
+          >
+            {t("newProject")}
+          </button>
           <button
             type="button"
             disabled={!project}

@@ -28,6 +28,7 @@ import { useNativeProjects } from "./useNativeProjects";
 import { useBotFinding } from "./useBotFinding";
 import {
   ProjectTools,
+  NewProjectDialog,
   NativeDataPanel,
   ProjectNavigator,
   ProjectProperties,
@@ -56,6 +57,8 @@ export function App() {
   );
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
+  const newProjectDialog = useRef<HTMLDialogElement>(null);
+  const openNewProject = () => newProjectDialog.current?.showModal();
   const botToggle = useRef<HTMLButtonElement>(null);
   const [botOpen, setBotOpen] = useState(() => {
     try {
@@ -263,7 +266,11 @@ export function App() {
       <div className="ribbon" aria-label={t(tab)}>
         {tab === "home" ? (
           <>
-            <ProjectTools native={native} t={t} />
+            <ProjectTools
+              native={native}
+              t={t}
+              openNewProject={openNewProject}
+            />
             <div className="schematic-ribbon" ref={setSchematicRibbon} />
           </>
         ) : tab === "view" ? (
@@ -427,12 +434,15 @@ export function App() {
                   panel("bom", { visible: true, collapsed: false })
                 }
                 openHelp={() => help.current?.showModal()}
+                openNewProject={openNewProject}
+                canCreateProject={!native.corrupt}
               />
             </Suspense>
           </LazyPanelBoundary>
         )}
         {has("bottom") && region("bottom")}
       </div>
+      <NewProjectDialog native={native} t={t} dialog={newProjectDialog} />
       <footer className="status-bar">
         <span>
           <i />

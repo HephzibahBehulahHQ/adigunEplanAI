@@ -1,6 +1,6 @@
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import { mountCabinetDevice } from "../../../packages/electrical-model/cabinet.ts";
-import { useRef, useState, lazy, Suspense } from "react";
+import { useRef, useState, lazy, Suspense, type RefObject } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
 import type { MessageKey } from "../../../packages/localization";
@@ -22,15 +22,15 @@ const EnclosureView = lazy(() =>
 );
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
-export function ProjectTools({ native, t }: Props) {
-  const dialog = useRef<HTMLDialogElement>(null);
+export function ProjectTools({
+  native,
+  t,
+  openNewProject,
+}: Props & { openNewProject: () => void }) {
   const file = useRef<HTMLInputElement>(null);
   return (
     <div className="native-tools">
-      <button
-        disabled={native.corrupt}
-        onClick={() => dialog.current?.showModal()}
-      >
+      <button disabled={native.corrupt} onClick={openNewProject}>
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -182,38 +182,46 @@ export function ProjectTools({ native, t }: Props) {
           {t("resetStorage")}
         </button>
       )}
-      <dialog ref={dialog} aria-label={t("newProject")}>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            const name = String(
-              new FormData(event.currentTarget).get("name") ?? "",
-            ).trim();
-            if (!name) return;
-            native.create(name, `${t("sheet")} 1`, t("document"));
-            dialog.current?.close();
-          }}
-        >
-          <h2>{t("newProject")}</h2>
-          <label>
-            {t("projectName")}
-            <input
-              aria-label={t("projectName")}
-              name="name"
-              required
-              maxLength={160}
-              autoFocus
-            />
-          </label>
-          <div className="dialog-actions">
-            <button type="button" onClick={() => dialog.current?.close()}>
-              {t("cancel")}
-            </button>
-            <button>{t("create")}</button>
-          </div>
-        </form>
-      </dialog>
     </div>
+  );
+}
+export function NewProjectDialog({
+  native,
+  t,
+  dialog,
+}: Props & { dialog: RefObject<HTMLDialogElement | null> }) {
+  return (
+    <dialog ref={dialog} aria-label={t("newProject")}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          const name = String(
+            new FormData(event.currentTarget).get("name") ?? "",
+          ).trim();
+          if (!name) return;
+          native.create(name, `${t("sheet")} 1`, t("document"));
+          dialog.current?.close();
+        }}
+      >
+        <h2>{t("newProject")}</h2>
+        <label>
+          {t("projectName")}
+          <input
+            aria-label={t("projectName")}
+            name="name"
+            required
+            maxLength={160}
+            autoFocus
+          />
+        </label>
+        <div className="dialog-actions">
+          <button type="button" onClick={() => dialog.current?.close()}>
+            {t("cancel")}
+          </button>
+          <button>{t("create")}</button>
+        </div>
+      </form>
+    </dialog>
   );
 }
 export function ProjectNavigator({ native, t }: Props) {
