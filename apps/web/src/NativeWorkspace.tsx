@@ -229,7 +229,11 @@ export function NewProjectDialog({
     </dialog>
   );
 }
-export function ProjectNavigator({ native, t }: Props) {
+export function ProjectNavigator({
+  native,
+  t,
+  searchRef,
+}: Props & { searchRef: RefObject<HTMLInputElement | null> }) {
   const project = native.project;
   const [query, setQuery] = useState("");
   const term = query.trim().toLowerCase();
@@ -287,6 +291,7 @@ export function ProjectNavigator({ native, t }: Props) {
           {t("searchProject")}
           <input
             type="search"
+            ref={searchRef}
             value={query}
             maxLength={160}
             onChange={(event) => setQuery(event.target.value)}

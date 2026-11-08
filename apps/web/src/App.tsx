@@ -7,6 +7,7 @@ import {
   type CSSProperties,
 } from "react";
 import { ConnectivityPanel } from "./ConnectivityPanel";
+import { flushSync } from "react-dom";
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import {
   dictionaries,
@@ -41,6 +42,31 @@ const AdigunBot = lazy(() =>
   import("./AdigunBot").then(({ AdigunBot }) => ({ default: AdigunBot })),
 );
 
+const headerIcons = {
+  language:
+    "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-9-10h18M12 2c5 5 5 15 0 20-5-5-5-15 0-20Z",
+  settings:
+    "M10 3h4l1 3 3-1 2 4-2 2v2l2 2-2 4-3-1-1 3h-4l-1-3-3 1-2-4 2-2v-2L4 9l2-4 3 1 1-3Zm2 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z",
+  searchProject: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 6 6",
+  help: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3m0 3h.01",
+} as const;
+
+function HeaderIcon({ name }: { name: keyof typeof headerIcons }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={headerIcons[name]} />
+    </svg>
+  );
+}
+
 export function App() {
   const native = useNativeProjects();
   const [buildingView, setBuildingView] = useState(false);
@@ -61,6 +87,7 @@ export function App() {
   );
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
+  const navigatorSearch = useRef<HTMLInputElement>(null);
   const newProjectDialog = useRef<HTMLDialogElement>(null);
   const openNewProject = () => newProjectDialog.current?.showModal();
   const botToggle = useRef<HTMLButtonElement>(null);
@@ -129,7 +156,11 @@ export function App() {
         {!state.collapsed && (
           <div className="panel-body">
             {id === "project" ? (
-              <ProjectNavigator native={native} t={t} />
+              <ProjectNavigator
+                native={native}
+                t={t}
+                searchRef={navigatorSearch}
+              />
             ) : id === "properties" ? (
               <>
                 <div id="native-object-properties" />
@@ -227,28 +258,75 @@ export function App() {
         <span className="project-title">
           {native.project?.name ?? t("noProject")}
         </span>
-        <span className="local-status">
-          <i />
-          {t(
-            native.project
-              ? native.saved
-                ? "savedLocally"
-                : "notSaved"
-              : "local",
-          )}
-        </span>
-        <button
-          type="button"
-          ref={botToggle}
-          aria-expanded={botOpen}
-          aria-controls={botOpen ? "adigun-bot" : undefined}
-          onClick={() => setBotOpen((open) => !open)}
-        >
-          Adigun BOT
-          {botFinding.active && !botOpen && (
-            <span className="bot-badge" aria-hidden="true" />
-          )}
-        </button>
+        <div className="header-utilities">
+          <span className="local-status">
+            <i />
+            {t(
+              native.project
+                ? native.saved
+                  ? "savedLocally"
+                  : "notSaved"
+                : "local",
+            )}
+          </span>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("language")}
+            aria-label={`${t("interface")} · ${t("language")}`}
+            onClick={() => {
+              flushSync(() => setTab("settings"));
+              document.getElementById("interface-language")?.focus();
+            }}
+          >
+            <HeaderIcon name="language" />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("settings")}
+            aria-label={`${t("workspace")} · ${t("settings")}`}
+            onClick={() => setTab("settings")}
+          >
+            <HeaderIcon name="settings" />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("searchProject")}
+            aria-label={t("searchProject")}
+            disabled={!native.project}
+            onClick={() => {
+              flushSync(() =>
+                panel("project", { visible: true, collapsed: false }),
+              );
+              navigatorSearch.current?.focus();
+            }}
+          >
+            <HeaderIcon name="searchProject" />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("help")}
+            aria-label={`${t("workspace")} · ${t("help")}`}
+            onClick={() => help.current?.showModal()}
+          >
+            <HeaderIcon name="help" />
+          </button>
+          <button
+            type="button"
+            ref={botToggle}
+            aria-expanded={botOpen}
+            aria-controls={botOpen ? "adigun-bot" : undefined}
+            onClick={() => setBotOpen((open) => !open)}
+          >
+            Adigun BOT
+            {botFinding.active && !botOpen && (
+              <span className="bot-badge" aria-hidden="true" />
+            )}
+          </button>
+        </div>
         <span className="bot-announcement" role="status">
           {botFinding.active && !botOpen ? t("botFindingPending") : ""}
         </span>
@@ -324,6 +402,7 @@ export function App() {
               {t("language")}
               <select
                 aria-label={t("language")}
+                id="interface-language"
                 value={prefs.language}
                 onChange={(e) => set("language", e.target.value as Language)}
               >
