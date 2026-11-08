@@ -199,15 +199,17 @@ export function EnclosureView({
     .sort((a, b) => a.depth - b.depth);
   return (
     <div className="enclosure-view">
-      {createControl}
-      <CabinetMount
-        key={enclosure.id}
-        project={project}
-        enclosure={enclosure}
-        mount={mount}
-        unmount={unmount}
-        t={t}
-      />
+      <div className="enclosure-tools">
+        {createControl}
+        <CabinetMount
+          key={enclosure.id}
+          project={project}
+          enclosure={enclosure}
+          mount={mount}
+          unmount={unmount}
+          t={t}
+        />
+      </div>
       <select
         aria-label={t("panel3d")}
         value={enclosure.id}

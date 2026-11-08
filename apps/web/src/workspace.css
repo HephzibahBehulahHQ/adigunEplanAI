@@ -669,6 +669,17 @@ button:disabled {
   display: grid;
   gap: 0.45rem;
 }
+.enclosure-tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+.enclosure-tools > details {
+  grid-column: 1 / -1;
+}
+.enclosure-tools > button {
+  overflow-wrap: anywhere;
+}
 .enclosure-view svg {
   width: 100%;
   height: clamp(180px, 38vh, 400px);
@@ -704,6 +715,30 @@ button:disabled {
 .cabinet-views button[aria-pressed="true"] {
   border-color: var(--cyan);
   color: var(--cyan);
+}
+@media (min-width: 1001px) and (min-height: 780px) {
+  .dock-right [data-panel="panel3d"] > .panel-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .dock-right .enclosure-view:has(.cabinet-viewport) {
+    flex: 1 0 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .dock-right .enclosure-view > :not(.cabinet-viewport) {
+    flex: none;
+  }
+  .dock-right .cabinet-viewport {
+    flex: 1 1 auto;
+    min-height: 180px;
+  }
+  .dock-right .cabinet-viewport svg {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+  }
 }
 .enclosure-frame {
   stroke: var(--navy);
