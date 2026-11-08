@@ -45,6 +45,11 @@ const views = {
   cabinetSide: { azimuth: 90, elevation: 0 },
   cabinetTop: { azimuth: 0, elevation: 90 },
 } as const;
+const axes = [
+  { name: "X", direction: { x: 1, y: 0, z: 0 } },
+  { name: "Y", direction: { x: 0, y: 1, z: 0 } },
+  { name: "Z", direction: { x: 0, y: 0, z: 1 } },
+] as const;
 
 export function EnclosureView({
   project,
@@ -179,22 +184,33 @@ export function EnclosureView({
   const width = (right - left + 2 * margin) / magnification;
   const height = (bottom - top + 2 * margin) / magnification;
   const [frame, ...equipment] = boxes;
+  const cameraFacingFaces = faces.filter(
+    ({ normal }) => cameraDepth(normal) > 1e-10,
+  );
+  const frameEdges = edges
+    .map(([a, b]) => ({
+      a,
+      b,
+      facing: cameraFacingFaces.some(
+        ({ indices }) =>
+          indices.some((i) => i === a) && indices.some((i) => i === b),
+      ),
+    }))
+    .sort((a, b) => Number(a.facing) - Number(b.facing));
   const visibleFaces = equipment
     .flatMap(({ key, label, points }) =>
-      faces
-        .filter(({ normal }) => cameraDepth(normal) > 1e-10)
-        .map(({ indices, tone }) => {
-          const vertices = indices.map((index) => points[index]);
-          return {
-            key: `${key}:${tone}`,
-            label,
-            tone,
-            depth:
-              vertices.reduce((sum, point) => sum + point.depth, 0) /
-              vertices.length,
-            coordinates: vertices.map(({ x, y }) => `${x},${y}`).join(" "),
-          };
-        }),
+      cameraFacingFaces.map(({ indices, tone }) => {
+        const vertices = indices.map((index) => points[index]);
+        return {
+          key: `${key}:${tone}`,
+          label,
+          tone,
+          depth:
+            vertices.reduce((sum, point) => sum + point.depth, 0) /
+            vertices.length,
+          coordinates: vertices.map(({ x, y }) => `${x},${y}`).join(" "),
+        };
+      }),
     )
     .sort((a, b) => a.depth - b.depth);
   return (
@@ -226,6 +242,7 @@ export function EnclosureView({
       </select>
       <div className="cabinet-viewport">
         <svg
+          className="cabinet-model"
           role="img"
           aria-label={enclosure.name}
           viewBox={`${(left + right - width) / 2} ${(top + bottom - height) / 2} ${width} ${height}`}
@@ -257,9 +274,10 @@ export function EnclosureView({
         >
           <g className="enclosure-frame">
             <title>{frame.label}</title>
-            {edges.map(([a, b]) => (
+            {frameEdges.map(({ a, b, facing }) => (
               <line
                 key={`${a}-${b}`}
+                className={facing ? undefined : "enclosure-hidden-edge"}
                 x1={frame.points[a].x}
                 y1={frame.points[a].y}
                 x2={frame.points[b].x}
@@ -278,6 +296,25 @@ export function EnclosureView({
               <title>{label}</title>
             </polygon>
           ))}
+        </svg>
+        <svg
+          className="cabinet-axes"
+          viewBox="-38 -38 76 76"
+          aria-hidden="true"
+        >
+          {axes.map(({ name, direction }) => {
+            const { x, y } = projectPoint(direction);
+            if (Math.hypot(x, y) < 0.08) return null;
+            return (
+              <g key={name} className={`cabinet-axis-${name.toLowerCase()}`}>
+                <line x1="0" y1="0" x2={x * 23} y2={y * 23} />
+                <text x={x * 30} y={y * 30}>
+                  {name}
+                </text>
+              </g>
+            );
+          })}
+          <circle r="2" />
         </svg>
         <div
           className="cabinet-views"

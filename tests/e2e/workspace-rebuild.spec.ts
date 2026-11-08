@@ -30,8 +30,12 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   });
   const cabinet = page.getByRole("region", { name: "3D panel", exact: true });
   const model = cabinet.getByRole("img", { name: "Cabinet review" });
+  const axes = cabinet.locator(".cabinet-axes text");
+  await expect(axes).toHaveText(["X", "Y", "Z"]);
+  await expect(model.locator(".enclosure-hidden-edge")).toHaveCount(3);
   await expect(model.locator("polygon")).toHaveCount(3);
   await cabinet.getByRole("button", { name: "Front", exact: true }).click();
+  await expect(axes).toHaveText(["X", "Y"]);
   await expect(model.locator("polygon")).toHaveCount(1);
 
   await page.getByRole("button", { name: "Adigun BOT", exact: true }).click();
