@@ -43,6 +43,10 @@ const AdigunBot = lazy(() =>
 
 export function App() {
   const native = useNativeProjects();
+  const [buildingView, setBuildingView] = useState(false);
+  const activeSheet =
+    native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
+    native.project?.pages[0];
   const botFinding = useBotFinding(native.project);
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
@@ -225,7 +229,13 @@ export function App() {
         </span>
         <span className="local-status">
           <i />
-          {t("local")}
+          {t(
+            native.project
+              ? native.saved
+                ? "savedLocally"
+                : "notSaved"
+              : "local",
+          )}
         </span>
         <button
           type="button"
@@ -400,7 +410,13 @@ export function App() {
               }
             >
               {native.project ? (
-                <NativeDrawing native={native} t={t} ribbon={schematicRibbon} />
+                <NativeDrawing
+                  native={native}
+                  t={t}
+                  ribbon={schematicRibbon}
+                  buildingView={buildingView}
+                  setBuildingView={setBuildingView}
+                />
               ) : (
                 <div className="empty-workspace">
                   <span className="drawing-mark" aria-hidden="true">
@@ -448,11 +464,33 @@ export function App() {
           <i />
           {t("ready")}
         </span>
-        <span>
-          {native.project
-            ? t(native.saved ? "savedLocally" : "notSaved")
-            : t("local")}
-        </span>
+        {native.project && (
+          <div className="status-context">
+            <span>
+              {t("projectName")} <b>{native.project.name}</b>
+            </span>
+            {buildingView ? (
+              <span>{t("buildingDesign")}</span>
+            ) : (
+              activeSheet && (
+                <>
+                  <span>
+                    {t("pageName")} <b>{activeSheet.name}</b>
+                  </span>
+                  <span>
+                    {t("grid")} <b>{activeSheet.gridMm}</b>
+                  </span>
+                  <span>
+                    {t("sheetSize")}{" "}
+                    <b>
+                      {activeSheet.widthMm} × {activeSheet.heightMm} mm
+                    </b>
+                  </span>
+                </>
+              )
+            )}
+          </div>
+        )}
         <span>
           © {new Date().getFullYear()}{" "}
           <a

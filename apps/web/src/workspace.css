@@ -328,6 +328,24 @@ i {
 .status-bar a {
   color: var(--link);
 }
+.status-context {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0;
+}
+.status-context span {
+  color: var(--muted);
+  border-inline-start: 1px solid var(--line);
+  padding-inline: 0.65rem;
+  overflow-wrap: anywhere;
+}
+.status-context b {
+  color: var(--text);
+  font-weight: 500;
+}
 dialog {
   background: var(--panel);
   color: var(--text);

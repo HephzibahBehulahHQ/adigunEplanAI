@@ -59,6 +59,17 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   expect(drawingBounds!.y + drawingBounds!.height).toBeLessThan(lowerDock!.y);
   await expect(bot.getByRole("log")).toContainText(device.name);
 
+  const status = page.locator(".status-context");
+  await expect(status).toContainText(project.pages[0].name);
+  await expect(status).toContainText(`Grid (mm) ${project.pages[0].gridMm}`);
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await expect(status).toContainText("Building design");
+  await expect(status).not.toContainText("Grid (mm)");
+  await page.getByRole("button", { name: "Schematic", exact: true }).click();
+  await expect(status).toContainText(project.pages[0].name);
+
   const ribbon = page.locator(".schematic-ribbon");
   await ribbon.getByRole("button", { name: "Wire", exact: true }).click();
   await expect(

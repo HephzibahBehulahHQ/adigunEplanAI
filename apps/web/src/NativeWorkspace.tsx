@@ -456,10 +456,15 @@ export function NativeDrawing({
   native,
   t,
   ribbon,
-}: Props & { ribbon: HTMLElement | null }) {
+  buildingView,
+  setBuildingView,
+}: Props & {
+  ribbon: HTMLElement | null;
+  buildingView: boolean;
+  setBuildingView: (building: boolean) => void;
+}) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
-  const [buildingView, setBuildingView] = useState(false);
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
   if (!p) return null;
