@@ -6,24 +6,31 @@ export function CabinetMount({
   project,
   enclosure,
   mount,
+  unmount,
   t,
 }: {
   project: Project;
   enclosure: Project["enclosures"][number];
   mount: (placement: Project["equipment3d"][number]) => boolean;
+  unmount: (id: string) => boolean;
   t: (key: MessageKey) => string;
 }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [failed, setFailed] = useState(false);
+  const [editId, setEditId] = useState<string>();
+  const placements = project.equipment3d.filter(
+    (item) => item.enclosureId === enclosure.id,
+  );
+  const editing = placements.find((item) => item.id === editId);
   const mounted = new Set(project.equipment3d.map(({ deviceId }) => deviceId));
   const devices = project.devices.filter(({ id }) => !mounted.has(id));
   const fields = [
-    ["x", "X (mm)", enclosure.widthMm],
-    ["y", "Y (mm)", enclosure.heightMm],
-    ["z", "Z (mm)", enclosure.depthMm],
-    ["width", t("cabinetWidth"), enclosure.widthMm],
-    ["height", t("cabinetHeight"), enclosure.heightMm],
-    ["depth", t("cabinetDepth"), enclosure.depthMm],
+    ["x", "X (mm)", enclosure.widthMm, editing?.positionMm.x],
+    ["y", "Y (mm)", enclosure.heightMm, editing?.positionMm.y],
+    ["z", "Z (mm)", enclosure.depthMm, editing?.positionMm.z],
+    ["width", t("cabinetWidth"), enclosure.widthMm, editing?.sizeMm.x],
+    ["height", t("cabinetHeight"), enclosure.heightMm, editing?.sizeMm.y],
+    ["depth", t("cabinetDepth"), enclosure.depthMm, editing?.sizeMm.z],
   ] as const;
   return (
     <>
@@ -32,24 +39,50 @@ export function CabinetMount({
         disabled={!devices.length}
         onClick={() => {
           setFailed(false);
+          setEditId(undefined);
           dialog.current?.showModal();
         }}
       >
         {t("cabinetMount")}
       </button>
-      <dialog ref={dialog} aria-label={t("cabinetMount")}>
+      {placements.length > 0 && (
+        <details>
+          <summary>{t("cabinetMountedDevices")}</summary>
+          <div className="navigator-pages">
+            {placements.map((item) => (
+              <button
+                type="button"
+                key={item.id}
+                onClick={() => {
+                  setFailed(false);
+                  setEditId(item.id);
+                  dialog.current?.showModal();
+                }}
+              >
+                {project.devices.find((device) => device.id === item.deviceId)
+                  ?.reference ?? item.name}
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
+      <dialog
+        ref={dialog}
+        aria-label={t(editing ? "cabinetEditMount" : "cabinetMount")}
+      >
         <form
+          key={editing?.id ?? "new"}
           onSubmit={(event) => {
             event.preventDefault();
             const form = event.currentTarget;
             const values = new FormData(form);
-            const device = devices.find(
-              ({ id }) => id === values.get("device"),
+            const device = project.devices.find(
+              ({ id }) => id === (editing?.deviceId ?? values.get("device")),
             );
             if (!device) return;
             const ok = mount({
-              id: crypto.randomUUID(),
-              name: device.name,
+              id: editing?.id ?? crypto.randomUUID(),
+              name: editing?.name ?? device.name,
               deviceId: device.id,
               enclosureId: enclosure.id,
               positionMm: {
@@ -70,25 +103,27 @@ export function CabinetMount({
             }
           }}
         >
-          <label>
-            {t("device")}
-            <select
-              name="device"
-              aria-label={t("device")}
-              required
-              defaultValue=""
-            >
-              <option value="" disabled>
-                {t("device")}
-              </option>
-              {devices.map(({ id, reference, name }) => (
-                <option value={id} key={id}>
-                  {reference} · {name}
+          {!editing && (
+            <label>
+              {t("device")}
+              <select
+                name="device"
+                aria-label={t("device")}
+                required
+                defaultValue=""
+              >
+                <option value="" disabled>
+                  {t("device")}
                 </option>
-              ))}
-            </select>
-          </label>
-          {fields.map(([name, label, max], index) => (
+                {devices.map(({ id, reference, name }) => (
+                  <option value={id} key={id}>
+                    {reference} · {name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          {fields.map(([name, label, max, initial], index) => (
             <label key={name}>
               {label}
               <input
@@ -97,16 +132,29 @@ export function CabinetMount({
                 min={index < 3 ? 0 : 0.01}
                 max={max}
                 step="any"
+                defaultValue={initial}
                 required
               />
             </label>
           ))}
           {failed && <p role="alert">{t("cabinetMountError")}</p>}
           <div className="dialog-actions">
+            {editing && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (unmount(editing.id)) dialog.current?.close();
+                }}
+              >
+                {t("cabinetUnmount")}
+              </button>
+            )}
             <button type="button" onClick={() => dialog.current?.close()}>
               {t("cancel")}
             </button>
-            <button type="submit">{t("cabinetMount")}</button>
+            <button type="submit">
+              {t(editing ? "save" : "cabinetMount")}
+            </button>
           </div>
         </form>
       </dialog>

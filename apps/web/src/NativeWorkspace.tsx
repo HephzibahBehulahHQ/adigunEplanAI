@@ -365,6 +365,12 @@ export function NativeDataPanel({
             mount={(placement) =>
               native.update((draft) => mountCabinetDevice(draft, placement))
             }
+            unmount={(id) =>
+              native.update((draft) => ({
+                ...draft,
+                equipment3d: draft.equipment3d.filter((item) => item.id !== id),
+              }))
+            }
           />
         </Suspense>
       </LazyPanelBoundary>

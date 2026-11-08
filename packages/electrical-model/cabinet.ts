@@ -10,13 +10,23 @@ export function mountCabinetDevice(
   const enclosure = project.enclosures.find(
     ({ id }) => id === placement.enclosureId,
   );
+  const previous = project.equipment3d.find(({ id }) => id === placement.id);
+  if (
+    previous &&
+    (previous.deviceId !== placement.deviceId ||
+      previous.enclosureId !== placement.enclosureId)
+  )
+    throw new Error("A mount cannot change its device or cabinet");
   if (
     !enclosure ||
     !project.devices.some(({ id }) => id === placement.deviceId)
   )
     throw new Error("The cabinet and device must exist");
   if (
-    project.equipment3d.some(({ deviceId }) => deviceId === placement.deviceId)
+    project.equipment3d.some(
+      ({ id, deviceId }) =>
+        id !== placement.id && deviceId === placement.deviceId,
+    )
   )
     throw new Error("The device is already mounted");
   const limits = {
@@ -41,6 +51,7 @@ export function mountCabinetDevice(
   if (
     project.equipment3d.some(
       (existing) =>
+        existing.id !== placement.id &&
         existing.enclosureId === placement.enclosureId &&
         axes.every(
           (axis) =>
@@ -54,6 +65,10 @@ export function mountCabinetDevice(
     throw new Error("Equipment overlaps another mounted device");
   return validateProject({
     ...project,
-    equipment3d: [...project.equipment3d, placement],
+    equipment3d: previous
+      ? project.equipment3d.map((item) =>
+          item.id === placement.id ? placement : item,
+        )
+      : [...project.equipment3d, placement],
   });
 }

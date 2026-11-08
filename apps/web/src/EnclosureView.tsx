@@ -9,6 +9,7 @@ type Props = {
   t: (key: MessageKey) => string;
   addEnclosure: (enclosure: Project["enclosures"][number]) => boolean;
   mount: (placement: Project["equipment3d"][number]) => boolean;
+  unmount: (id: string) => boolean;
 };
 const dimensionFields = [
   ["widthMm", "cabinetWidth"],
@@ -45,7 +46,13 @@ const views = {
   cabinetTop: { azimuth: 0, elevation: 90 },
 } as const;
 
-export function EnclosureView({ project, t, addEnclosure, mount }: Props) {
+export function EnclosureView({
+  project,
+  t,
+  addEnclosure,
+  mount,
+  unmount,
+}: Props) {
   const [id, setId] = useState("");
   const createDialog = useRef<HTMLDialogElement>(null);
   const [magnification, setMagnification] = useState(1);
@@ -198,6 +205,7 @@ export function EnclosureView({ project, t, addEnclosure, mount }: Props) {
         project={project}
         enclosure={enclosure}
         mount={mount}
+        unmount={unmount}
         t={t}
       />
       <select

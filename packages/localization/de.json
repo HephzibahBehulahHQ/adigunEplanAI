@@ -504,5 +504,8 @@
   "cabinetHeight": "Höhe (mm)",
   "cabinetDepth": "Tiefe (mm)",
   "cabinetMount": "Betriebsmittel montieren",
-  "cabinetMountError": "Prüfen Sie Maße und Position. Das Betriebsmittel muss ohne Überlappung passen."
+  "cabinetMountError": "Prüfen Sie Maße und Position. Das Betriebsmittel muss ohne Überlappung passen.",
+  "cabinetMountedDevices": "Montierte Betriebsmittel",
+  "cabinetEditMount": "Montage bearbeiten",
+  "cabinetUnmount": "Montage entfernen"
 }

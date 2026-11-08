@@ -504,5 +504,8 @@
   "cabinetHeight": "Gíga (mm)",
   "cabinetDepth": "Ìjìnlẹ̀ (mm)",
   "cabinetMount": "Gbé ẹ̀rọ sínú àpótí",
-  "cabinetMountError": "Ṣàyẹ̀wò ìwọ̀n àti ipò. Ẹ̀rọ gbọ́dọ̀ wọ inú àpótí láìkọlu ẹlòmíràn."
+  "cabinetMountError": "Ṣàyẹ̀wò ìwọ̀n àti ipò. Ẹ̀rọ gbọ́dọ̀ wọ inú àpótí láìkọlu ẹlòmíràn.",
+  "cabinetMountedDevices": "Àwọn ẹ̀rọ inú àpótí",
+  "cabinetEditMount": "Ṣàtúnṣe ìfìmọ́",
+  "cabinetUnmount": "Yọ ìfìmọ́"
 }
