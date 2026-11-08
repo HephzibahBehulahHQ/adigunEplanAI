@@ -334,7 +334,11 @@ export function NativeDataPanel({
   native,
   t,
   kind,
-}: Props & { kind: "bom" | "panel3d" | "calculations" | "reports" }) {
+  selectedDeviceId,
+}: Props & {
+  kind: "bom" | "panel3d" | "calculations" | "reports";
+  selectedDeviceId: string | null;
+}) {
   const project = native.project;
   if (!project) return <p className="empty-hint">{t("noProject")}</p>;
   const bomHeaders = [
@@ -374,6 +378,7 @@ export function NativeDataPanel({
           <EnclosureView
             key={project.id}
             project={project}
+            selectedDeviceId={selectedDeviceId}
             t={t}
             addEnclosure={(enclosure) =>
               native.update((draft) => ({
@@ -527,10 +532,12 @@ export function NativeDrawing({
   ribbon,
   buildingView,
   setBuildingView,
+  onDeviceSelection,
 }: Props & {
   ribbon: HTMLElement | null;
   buildingView: boolean;
   setBuildingView: (building: boolean) => void;
+  onDeviceSelection: (id: string | null) => void;
 }) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
@@ -593,6 +600,7 @@ export function NativeDrawing({
               clipboard={clipboard}
               setClipboard={setClipboard}
               ribbon={ribbon}
+              onDeviceSelection={onDeviceSelection}
             />
           ) : (
             <p>{t("noPages")}</p>

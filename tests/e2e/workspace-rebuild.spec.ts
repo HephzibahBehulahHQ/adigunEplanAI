@@ -37,6 +37,18 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   await cabinet.getByRole("button", { name: "Front", exact: true }).click();
   await expect(axes).toHaveText(["X", "Y"]);
   await expect(model.locator("polygon")).toHaveCount(1);
+  const highlighted = model.locator("[data-highlighted]");
+  await page
+    .locator(`[data-instance="${project.symbolInstances[0].id}"] text`)
+    .first()
+    .click();
+  await expect(highlighted).toHaveCount(1);
+  await expect(highlighted.locator("title")).toHaveText(device.reference);
+  await page
+    .locator(`[data-instance="${project.symbolInstances[1].id}"] text`)
+    .first()
+    .click();
+  await expect(highlighted).toHaveCount(0);
 
   await page.getByRole("button", { name: "Adigun BOT", exact: true }).click();
   const bot = page.getByRole("region", { name: "Adigun BOT", exact: true });

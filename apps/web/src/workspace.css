@@ -790,6 +790,11 @@ button:disabled {
 .enclosure-face-top {
   fill: color-mix(in srgb, var(--navy) 13%, var(--ivory));
 }
+.enclosure-face[data-highlighted] {
+  stroke: color-mix(in srgb, var(--brand-cyan) 55%, var(--navy));
+  stroke-width: 2;
+  fill: color-mix(in srgb, var(--brand-cyan) 32%, var(--ivory));
+}
 
 .workspace-right {
   display: flex;

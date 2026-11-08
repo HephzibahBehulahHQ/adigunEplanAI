@@ -100,6 +100,7 @@ export function App() {
   const [schematicRibbon, setSchematicRibbon] = useState<HTMLDivElement | null>(
     null,
   );
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const navigatorSearch = useRef<HTMLInputElement>(null);
@@ -188,7 +189,12 @@ export function App() {
               id === "panel3d" ||
               id === "calculations" ||
               id === "reports" ? (
-              <NativeDataPanel native={native} t={t} kind={id} />
+              <NativeDataPanel
+                native={native}
+                t={t}
+                kind={id}
+                selectedDeviceId={selectedDeviceId}
+              />
             ) : id === "diagnostics" ? (
               <ConnectivityPanel native={native} t={t} result={connectivity} />
             ) : (
@@ -535,6 +541,7 @@ export function App() {
                   ribbon={schematicRibbon}
                   buildingView={buildingView}
                   setBuildingView={setBuildingView}
+                  onDeviceSelection={setSelectedDeviceId}
                 />
               ) : (
                 <div className="empty-workspace">

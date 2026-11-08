@@ -6,6 +6,7 @@ import { CabinetMount } from "./CabinetMount";
 type Vector = { x: number; y: number; z: number };
 type Props = {
   project: Project;
+  selectedDeviceId: string | null;
   t: (key: MessageKey) => string;
   addEnclosure: (enclosure: Project["enclosures"][number]) => boolean;
   mount: (placement: Project["equipment3d"][number]) => boolean;
@@ -53,6 +54,7 @@ const axes = [
 
 export function EnclosureView({
   project,
+  selectedDeviceId,
   t,
   addEnclosure,
   mount,
@@ -153,6 +155,7 @@ export function EnclosureView({
     {
       key: enclosure.id,
       label: enclosure.name,
+      selected: false,
       points: corners(
         { x: 0, y: 0, z: 0 },
         { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
@@ -162,6 +165,7 @@ export function EnclosureView({
       .filter((item) => item.enclosureId === enclosure.id)
       .map((item) => ({
         key: item.id,
+        selected: item.deviceId === selectedDeviceId,
         label:
           project.devices.find((device) => device.id === item.deviceId)
             ?.reference ?? item.name,
@@ -198,12 +202,13 @@ export function EnclosureView({
     }))
     .sort((a, b) => Number(a.facing) - Number(b.facing));
   const visibleFaces = equipment
-    .flatMap(({ key, label, points }) =>
+    .flatMap(({ key, label, points, selected }) =>
       cameraFacingFaces.map(({ indices, tone }) => {
         const vertices = indices.map((index) => points[index]);
         return {
           key: `${key}:${tone}`,
           label,
+          selected,
           tone,
           depth:
             vertices.reduce((sum, point) => sum + point.depth, 0) /
@@ -286,10 +291,11 @@ export function EnclosureView({
               />
             ))}
           </g>
-          {visibleFaces.map(({ key, label, tone, coordinates }) => (
+          {visibleFaces.map(({ key, label, tone, coordinates, selected }) => (
             <polygon
               key={key}
               className={`enclosure-face enclosure-face-${tone}`}
+              data-highlighted={selected || undefined}
               points={coordinates}
               vectorEffect="non-scaling-stroke"
             >

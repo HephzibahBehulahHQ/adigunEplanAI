@@ -75,6 +75,7 @@ type Props = {
   page: Project["pages"][number];
   t: (key: MessageKey) => string;
   ribbon: HTMLElement | null;
+  onDeviceSelection: (id: string | null) => void;
 };
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
@@ -92,6 +93,7 @@ export function SchematicEditor({
   clipboard,
   setClipboard,
   ribbon,
+  onDeviceSelection,
 }: Props) {
   const project = native.project!;
   const [tool, setTool] = useState<
@@ -370,6 +372,11 @@ export function SchematicEditor({
   const selectedDevice = project.devices.find(
     (d) => d.id === selectedInstance?.deviceId,
   );
+  const selectedDeviceId = selectedDevice?.id ?? null;
+  useEffect(() => {
+    onDeviceSelection(selectedDeviceId);
+    return () => onDeviceSelection(null);
+  }, [onDeviceSelection, selectedDeviceId]);
   function group() {
     if (selected.length < 2) return;
     edit((p) => {
