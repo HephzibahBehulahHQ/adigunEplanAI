@@ -491,5 +491,9 @@
   "botSearchHelp": "Search English help",
   "botNoHelpMatches": "No matching help heading. Try a product term such as DXF.",
   "botDock": "Dock BOT to workspace",
-  "botFloat": "Float BOT window"
+  "botFloat": "Float BOT window",
+  "cabinetOblique": "Oblique",
+  "cabinetFront": "Front",
+  "cabinetSide": "Side",
+  "cabinetTop": "Top"
 }

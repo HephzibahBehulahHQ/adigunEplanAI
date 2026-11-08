@@ -580,6 +580,23 @@ button:disabled {
   background: var(--ivory);
   border: 1px solid var(--line);
 }
+.cabinet-viewport {
+  position: relative;
+}
+.cabinet-views {
+  position: absolute;
+  inset: 0.35rem 0.35rem auto auto;
+  display: grid;
+  gap: 0.2rem;
+}
+.cabinet-views button {
+  padding: 0.2rem 0.35rem;
+  font-size: 0.7rem;
+}
+.cabinet-views button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
 .enclosure-frame {
   stroke: var(--navy);
   stroke-width: 1.2;

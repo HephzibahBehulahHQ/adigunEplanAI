@@ -27,21 +27,34 @@ const faces = [
   { indices: [4, 5, 7, 6], normal: { x: 0, y: 0, z: 1 }, tone: "front" },
 ] as const;
 
+const views = {
+  cabinetOblique: { azimuth: 35, elevation: 25 },
+  cabinetFront: { azimuth: 0, elevation: 0 },
+  cabinetSide: { azimuth: 90, elevation: 0 },
+  cabinetTop: { azimuth: 0, elevation: 90 },
+} as const;
+
 export function EnclosureView({ project, t }: Props) {
   const [id, setId] = useState("");
-  const [angle, setAngle] = useState(35);
+  const [camera, setCamera] = useState<{ azimuth: number; elevation: number }>(
+    views.cabinetOblique,
+  );
   const enclosure =
     project.enclosures.find((item) => item.id === id) ?? project.enclosures[0];
   if (!enclosure) return <p className="empty-hint">{t("noRecords")}</p>;
 
-  const radians = (angle * Math.PI) / 180;
+  const radians = (camera.azimuth * Math.PI) / 180;
   const cosine = Math.cos(radians);
   const sine = Math.sin(radians);
-  const cameraDepth = ({ x, y, z }: Vector) => sine * x + cosine * z + 0.45 * y;
+  const pitch = (camera.elevation * Math.PI) / 180;
+  const up = Math.cos(pitch);
+  const tilt = Math.sin(pitch);
+  const cameraDepth = ({ x, y, z }: Vector) =>
+    (sine * x + cosine * z) * up + tilt * y;
   function projectPoint({ x, y, z }: Vector) {
     return {
       x: cosine * x - sine * z,
-      y: (sine * x + cosine * z) * 0.45 - y,
+      y: (sine * x + cosine * z) * tilt - up * y,
       depth: cameraDepth({ x, y, z }),
     };
   }
@@ -118,43 +131,69 @@ export function EnclosureView({ project, t }: Props) {
           </option>
         ))}
       </select>
-      <svg
-        role="img"
-        aria-label={enclosure.name}
-        viewBox={`${left - margin} ${top - margin} ${right - left + 2 * margin} ${bottom - top + 2 * margin}`}
-      >
-        <g className="enclosure-frame">
-          <title>{frame.label}</title>
-          {edges.map(([a, b]) => (
-            <line
-              key={`${a}-${b}`}
-              x1={frame.points[a].x}
-              y1={frame.points[a].y}
-              x2={frame.points[b].x}
-              y2={frame.points[b].y}
+      <div className="cabinet-viewport">
+        <svg
+          role="img"
+          aria-label={enclosure.name}
+          viewBox={`${left - margin} ${top - margin} ${right - left + 2 * margin} ${bottom - top + 2 * margin}`}
+        >
+          <g className="enclosure-frame">
+            <title>{frame.label}</title>
+            {edges.map(([a, b]) => (
+              <line
+                key={`${a}-${b}`}
+                x1={frame.points[a].x}
+                y1={frame.points[a].y}
+                x2={frame.points[b].x}
+                y2={frame.points[b].y}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </g>
+          {visibleFaces.map(({ key, label, tone, coordinates }) => (
+            <polygon
+              key={key}
+              className={`enclosure-face enclosure-face-${tone}`}
+              points={coordinates}
               vectorEffect="non-scaling-stroke"
-            />
+            >
+              <title>{label}</title>
+            </polygon>
           ))}
-        </g>
-        {visibleFaces.map(({ key, label, tone, coordinates }) => (
-          <polygon
-            key={key}
-            className={`enclosure-face enclosure-face-${tone}`}
-            points={coordinates}
-            vectorEffect="non-scaling-stroke"
-          >
-            <title>{label}</title>
-          </polygon>
-        ))}
-      </svg>
+        </svg>
+        <div
+          className="cabinet-views"
+          role="group"
+          aria-label={t("workspaceView")}
+        >
+          {(Object.keys(views) as (keyof typeof views)[]).map((key) => (
+            <button
+              type="button"
+              key={key}
+              aria-pressed={
+                camera.azimuth === views[key].azimuth &&
+                camera.elevation === views[key].elevation
+              }
+              onClick={() => setCamera(views[key])}
+            >
+              {t(key)}
+            </button>
+          ))}
+        </div>
+      </div>
       <label>
         {t("rotate")}{" "}
         <input
           type="range"
           min="0"
           max="359"
-          value={angle}
-          onChange={(event) => setAngle(event.target.valueAsNumber)}
+          value={camera.azimuth}
+          onChange={(event) =>
+            setCamera({
+              azimuth: event.target.valueAsNumber,
+              elevation: views.cabinetOblique.elevation,
+            })
+          }
         />
       </label>
       <small>

@@ -491,5 +491,9 @@
   "botSearchHelp": "Wá nínú ìrànlọ́wọ́ Gẹ̀ẹ́sì",
   "botNoHelpMatches": "Kò sí àkọlé tó bá a mu. Gbìyànjú ọ̀rọ̀ bí DXF.",
   "botDock": "So BOT mọ́ ààyè iṣẹ́",
-  "botFloat": "Jẹ́ kí fèrèsé BOT léfòó"
+  "botFloat": "Jẹ́ kí fèrèsé BOT léfòó",
+  "cabinetOblique": "Ìwò oblique",
+  "cabinetFront": "Iwájú",
+  "cabinetSide": "Ẹ̀gbẹ́",
+  "cabinetTop": "Òkè"
 }
