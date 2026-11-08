@@ -191,6 +191,28 @@ i {
   gap: 0.45rem;
   align-items: center;
 }
+.sheet-properties {
+  display: grid;
+  gap: 2px;
+  margin: 0.25rem 0 0.5rem;
+}
+.sheet-properties > div {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: 0.4rem;
+  padding: 0.24rem 0.4rem;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.sheet-properties dt {
+  color: var(--muted);
+}
+.sheet-properties dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
 .panel-toggles {
   display: flex;
   gap: 0.8rem;

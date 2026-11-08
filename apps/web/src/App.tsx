@@ -183,7 +183,11 @@ export function App() {
             ) : id === "properties" ? (
               <>
                 <div id="native-object-properties" />
-                <ProjectProperties native={native} t={t} />
+                <ProjectProperties
+                  native={native}
+                  t={t}
+                  activeSheet={buildingView ? undefined : activeSheet}
+                />
               </>
             ) : id === "bom" ||
               id === "panel3d" ||

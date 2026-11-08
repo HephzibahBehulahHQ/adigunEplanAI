@@ -146,15 +146,22 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
   );
 
   const status = page.locator(".status-context");
+  const sheetProperties = page
+    .getByRole("region", { name: "Properties", exact: true })
+    .locator(".sheet-properties");
+  await expect(sheetProperties).toContainText(project.pages[0].name);
+  await expect(sheetProperties).toContainText("420 × 297 mm");
   await expect(status).toContainText(project.pages[0].name);
   await expect(status).toContainText(`Grid (mm) ${project.pages[0].gridMm}`);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
   await expect(status).toContainText("Building design");
+  await expect(sheetProperties).toHaveCount(0);
   await expect(status).not.toContainText("Grid (mm)");
   await page.getByRole("button", { name: "Schematic", exact: true }).click();
   await expect(status).toContainText(project.pages[0].name);
+  await expect(sheetProperties).toContainText(project.pages[0].name);
 
   const ribbon = page.locator(".schematic-ribbon");
   const groups = await ribbon.getByRole("group").evaluateAll((elements) =>

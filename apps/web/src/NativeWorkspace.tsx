@@ -570,11 +570,40 @@ function CalculationRecords({
     </div>
   );
 }
-export function ProjectProperties({ native, t }: Props) {
+export function ProjectProperties({
+  native,
+  t,
+  activeSheet,
+}: Props & { activeSheet: Project["pages"][number] | undefined }) {
   const p = native.project;
   if (!p) return <p className="empty-hint">{t("emptyPanel")}</p>;
+  const document = p.documents.find(({ id }) => id === activeSheet?.documentId);
   return (
     <>
+      {activeSheet && (
+        <dl className="sheet-properties">
+          <div>
+            <dt>{t("pageName")}</dt>
+            <dd>{activeSheet.name}</dd>
+          </div>
+          {document && (
+            <div>
+              <dt>{t("document")}</dt>
+              <dd>{document.name}</dd>
+            </div>
+          )}
+          <div>
+            <dt>{t("sheetSize")}</dt>
+            <dd>
+              {activeSheet.widthMm} × {activeSheet.heightMm} mm
+            </dd>
+          </div>
+          <div>
+            <dt>{t("grid")}</dt>
+            <dd>{activeSheet.gridMm}</dd>
+          </div>
+        </dl>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
