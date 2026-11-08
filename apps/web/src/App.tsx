@@ -1,5 +1,16 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  lazy,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import { ConnectivityPanel } from "./ConnectivityPanel";
+import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
+import { flushSync } from "react-dom";
+import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import {
   dictionaries,
   type MessageKey,
@@ -17,8 +28,11 @@ import {
   type Preferences,
 } from "./preferences";
 import { useNativeProjects } from "./useNativeProjects";
+import { hostedBotKey } from "./botAccount";
+import { useBotFinding } from "./useBotFinding";
 import {
   ProjectTools,
+  NewProjectDialog,
   NativeDataPanel,
   ProjectNavigator,
   ProjectProperties,
@@ -27,8 +41,125 @@ import {
 import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
 
+const AdigunBot = lazy(() =>
+  import("./AdigunBot").then(({ AdigunBot }) => ({ default: AdigunBot })),
+);
+
+const headerIcons = {
+  account:
+    "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm0-10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM5 18a7 7 0 0 1 14 0",
+  language:
+    "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-9-10h18M12 2c5 5 5 15 0 20-5-5-5-15 0-20Z",
+  settings:
+    "M10 3h4l1 3 3-1 2 4-2 2v2l2 2-2 4-3-1-1 3h-4l-1-3-3 1-2-4 2-2v-2L4 9l2-4 3 1 1-3Zm2 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z",
+  searchProject: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 6 6",
+  help: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3m0 3h.01",
+} as const;
+
+const panelRibbon = {
+  panel3d: ["panel3d"],
+  documentation: ["bom", "reports"],
+  analysis: ["diagnostics", "calculations"],
+} as const satisfies Record<string, readonly PanelId[]>;
+const ribbonTabs = [
+  "file",
+  "home",
+  "view",
+  "componentLibrary",
+  "buildingWorkspace",
+  "panel3d",
+  "documentation",
+  "analysis",
+  "aiTools",
+  "settings",
+] as const;
+const ribbonIcons = {
+  library: "M3 5h4v14H3z M9 5h4v14H9z M15 6l4-1 4 13-4 1z",
+  building: "M3 21h18 M5 21V7l7-5 7 5v14 M9 21v-6h6v6 M9 10h1 M14 10h1",
+  schematic: "M2 12h4m12 0h4M6 12l2-4 3 8 2-8 3 8 2-4",
+  bot: "M12 6V2M9 15h6M2 10v5m20-5v5 M9 11h.01 M15 11h.01 M9 6h6a5 5 0 0 1 5 5v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5z",
+  panel3d: "M12 2l9 5v10l-9 5-9-5V7z M3 7l9 5 9-5 M12 12v10",
+  bom: "M3 4h18v16H3z M3 9h18 M3 14h18 M9 9v11",
+  reports: "M5 2h9l5 5v15H5z M14 2v6h5 M8 12h8 M8 16h8",
+  diagnostics: "M12 2l8 4v6c0 5-4 8-8 10-4-2-8-5-8-10V6z M8 12l3 3 5-6",
+  calculations: "M5 2h14v20H5z M8 6h8 M8 11h2 M14 11h2 M8 16h2 M14 16h2",
+} as const;
+
+function RibbonCommand({
+  icon,
+  label,
+  accessibleName,
+  disabled,
+  onClick,
+}: {
+  icon: keyof typeof ribbonIcons;
+  label: string;
+  accessibleName: string;
+  disabled?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      aria-label={accessibleName}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d={ribbonIcons[icon]} />
+      </svg>
+      {label}
+    </button>
+  );
+}
+
+function HeaderIcon({ name }: { name: keyof typeof headerIcons }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={headerIcons[name]} />
+    </svg>
+  );
+}
+
 export function App() {
   const native = useNativeProjects();
+  const connectivity = useMemo(
+    () => (native.project ? analyze(native.project) : null),
+    [native.project],
+  );
+  const errors =
+    connectivity?.findings.filter(({ severity }) => severity === "error")
+      .length ?? 0;
+  const warnings =
+    connectivity?.findings.filter(({ severity }) => severity === "warning")
+      .length ?? 0;
+  const [buildingView, setBuildingView] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [libraryOpened, setLibraryOpened] = useState(false);
+  function changeLibraryView(show: boolean) {
+    setShowLibrary(show);
+    if (show) setLibraryOpened(true);
+  }
+  const activeSheet =
+    native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
+    native.project?.pages[0];
+  const botFinding = useBotFinding(native.project);
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
       return restorePreferences(localStorage.getItem(storageKey));
@@ -36,9 +167,34 @@ export function App() {
       return defaults();
     }
   });
-  const [tab, setTab] = useState<"home" | "view" | "settings">("home");
+  const [tab, setTab] = useState<(typeof ribbonTabs)[number]>("home");
+  const [schematicRibbon, setSchematicRibbon] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
+  const navigatorSearch = useRef<HTMLInputElement>(null);
+  const newProjectDialog = useRef<HTMLDialogElement>(null);
+  const openNewProject = () => newProjectDialog.current?.showModal();
+  const botToggle = useRef<HTMLButtonElement>(null);
+  const guestDialog = useRef<HTMLDialogElement>(null);
+  const [accountRequest, setAccountRequest] = useState(0);
+  const [signedIn, setSignedIn] = useState(false);
+  const [botOpen, setBotOpen] = useState(() => {
+    try {
+      return localStorage.getItem("adiguneplanai.bot.open.v1") === "true";
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem("adiguneplanai.bot.open.v1", String(botOpen));
+    } catch {
+      /* Preferences are optional. */
+    }
+  }, [botOpen]);
   const [layoutOpen, setLayoutOpen] = useState<
     Partial<Record<PanelId, boolean>>
   >({});
@@ -60,6 +216,12 @@ export function App() {
         [id]: { ...previous.panels[id], ...change },
       },
     }));
+  function revealPanel(id: PanelId) {
+    flushSync(() => panel(id, { visible: true, collapsed: false }));
+    document
+      .querySelector<HTMLElement>(`[data-panel="${id}"] .panel-heading button`)
+      ?.focus();
+  }
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const renderPanel = (id: PanelId) => {
@@ -90,19 +252,35 @@ export function App() {
         {!state.collapsed && (
           <div className="panel-body">
             {id === "project" ? (
-              <ProjectNavigator native={native} t={t} />
+              <ProjectNavigator
+                native={native}
+                t={t}
+                searchRef={navigatorSearch}
+                showLibrary={showLibrary}
+                libraryOpened={libraryOpened}
+                changeLibraryView={changeLibraryView}
+              />
             ) : id === "properties" ? (
               <>
                 <div id="native-object-properties" />
-                <ProjectProperties native={native} t={t} />
+                <ProjectProperties
+                  native={native}
+                  t={t}
+                  activeSheet={buildingView ? undefined : activeSheet}
+                />
               </>
             ) : id === "bom" ||
               id === "panel3d" ||
               id === "calculations" ||
               id === "reports" ? (
-              <NativeDataPanel native={native} t={t} kind={id} />
+              <NativeDataPanel
+                native={native}
+                t={t}
+                kind={id}
+                selectedDeviceId={selectedDeviceId}
+              />
             ) : id === "diagnostics" ? (
-              <ConnectivityPanel native={native} t={t} />
+              <ConnectivityPanel native={native} t={t} result={connectivity} />
             ) : (
               <p className="empty-hint">
                 {t(
@@ -188,24 +366,111 @@ export function App() {
         <span className="project-title">
           {native.project?.name ?? t("noProject")}
         </span>
-        <span className="local-status">
-          <i />
-          {t("local")}
+        <div className="header-utilities">
+          <span className="local-status">
+            <i />
+            {t(
+              native.project
+                ? native.saved
+                  ? "savedLocally"
+                  : "notSaved"
+                : "local",
+            )}
+          </span>
+          <button
+            className="header-icon account-icon"
+            type="button"
+            title={t(hostedBotKey && !signedIn ? "botHostedSignIn" : "account")}
+            aria-label={`${t("account")} · ${t(signedIn ? "accountSignedIn" : "accountGuest")}`}
+            onClick={() => {
+              if (hostedBotKey) {
+                setBotOpen(true);
+                setAccountRequest((current) => current + 1);
+              } else guestDialog.current?.showModal();
+            }}
+          >
+            <HeaderIcon name="account" />
+            <span
+              className="account-dot"
+              data-signed-in={signedIn}
+              aria-hidden="true"
+            />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("language")}
+            aria-label={`${t("interface")} · ${t("language")}`}
+            onClick={() => {
+              flushSync(() => setTab("settings"));
+              document.getElementById("interface-language")?.focus();
+            }}
+          >
+            <HeaderIcon name="language" />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("settings")}
+            aria-label={`${t("workspace")} · ${t("settings")}`}
+            onClick={() => setTab("settings")}
+          >
+            <HeaderIcon name="settings" />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("searchProject")}
+            aria-label={t("searchProject")}
+            disabled={!native.project}
+            onClick={() => {
+              flushSync(() =>
+                panel("project", { visible: true, collapsed: false }),
+              );
+              navigatorSearch.current?.focus();
+            }}
+          >
+            <HeaderIcon name="searchProject" />
+          </button>
+          <button
+            className="header-icon"
+            type="button"
+            title={t("help")}
+            aria-label={`${t("workspace")} · ${t("help")}`}
+            onClick={() => help.current?.showModal()}
+          >
+            <HeaderIcon name="help" />
+          </button>
+          <button
+            type="button"
+            ref={botToggle}
+            aria-expanded={botOpen}
+            aria-controls={botOpen ? "adigun-bot" : undefined}
+            onClick={() => {
+              setAccountRequest(0);
+              setBotOpen((open) => !open);
+            }}
+          >
+            Adigun BOT
+            {botFinding.active && !botOpen && (
+              <span className="bot-badge" aria-hidden="true" />
+            )}
+          </button>
+        </div>
+        <span className="bot-announcement" role="status">
+          {botFinding.active && !botOpen ? t("botFindingPending") : ""}
         </span>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
-        <button aria-pressed={tab === "home"} onClick={() => setTab("home")}>
-          {t("home")}
-        </button>
-        <button aria-pressed={tab === "view"} onClick={() => setTab("view")}>
-          {t("view")}
-        </button>
-        <button
-          aria-pressed={tab === "settings"}
-          onClick={() => setTab("settings")}
-        >
-          {t("settings")}
-        </button>
+        {ribbonTabs.map((key) => (
+          <button
+            key={key}
+            aria-pressed={tab === key}
+            onClick={() => setTab(key)}
+          >
+            {t(key)}
+          </button>
+        ))}
         <button onClick={() => help.current?.showModal()}>{t("help")}</button>
       </nav>
       {native.error && (
@@ -214,8 +479,72 @@ export function App() {
         </p>
       )}
       <div className="ribbon" aria-label={t(tab)}>
-        {tab === "home" ? (
-          <ProjectTools native={native} t={t} />
+        {tab === "home" || tab === "file" ? (
+          <>
+            <ProjectTools
+              native={native}
+              t={t}
+              openNewProject={openNewProject}
+            />
+            {tab === "home" && (
+              <div className="schematic-ribbon" ref={setSchematicRibbon} />
+            )}
+          </>
+        ) : tab === "panel3d" ||
+          tab === "documentation" ||
+          tab === "analysis" ? (
+          <div className="native-tools" role="group" aria-label={t(tab)}>
+            {panelRibbon[tab].map((id) => (
+              <RibbonCommand
+                key={id}
+                icon={id}
+                label={t(id)}
+                accessibleName={`${t("show")} ${t(id)}`}
+                onClick={() => revealPanel(id)}
+              />
+            ))}
+          </div>
+        ) : tab === "componentLibrary" ||
+          tab === "buildingWorkspace" ||
+          tab === "aiTools" ? (
+          <div className="native-tools" role="group" aria-label={t(tab)}>
+            {tab === "componentLibrary" ? (
+              <RibbonCommand
+                icon="library"
+                label={t("componentLibrary")}
+                accessibleName={`${t("show")} ${t("componentLibrary")}`}
+                disabled={!native.project}
+                onClick={() => {
+                  changeLibraryView(true);
+                  revealPanel("project");
+                }}
+              />
+            ) : tab === "buildingWorkspace" ? (
+              <>
+                <RibbonCommand
+                  icon="building"
+                  label={t("buildingDesign")}
+                  accessibleName={`${t("show")} ${t("buildingDesign")}`}
+                  disabled={!native.project}
+                  onClick={() => setBuildingView(true)}
+                />
+                <RibbonCommand
+                  icon="schematic"
+                  label={t("schematicView")}
+                  accessibleName={`${t("show")} ${t("schematicView")}`}
+                  disabled={!native.project}
+                  onClick={() => setBuildingView(false)}
+                />
+              </>
+            ) : (
+              <RibbonCommand
+                icon="bot"
+                label="Adigun BOT"
+                accessibleName={`${t("show")} Adigun BOT`}
+                onClick={() => setBotOpen(true)}
+              />
+            )}
+          </div>
         ) : tab === "view" ? (
           <>
             <div className="panel-toggles">
@@ -257,6 +586,7 @@ export function App() {
               {t("language")}
               <select
                 aria-label={t("language")}
+                id="interface-language"
                 value={prefs.language}
                 onChange={(e) => set("language", e.target.value as Language)}
               >
@@ -343,7 +673,14 @@ export function App() {
               }
             >
               {native.project ? (
-                <NativeDrawing native={native} t={t} />
+                <NativeDrawing
+                  native={native}
+                  t={t}
+                  ribbon={schematicRibbon}
+                  buildingView={buildingView}
+                  setBuildingView={setBuildingView}
+                  onDeviceSelection={setSelectedDeviceId}
+                />
               ) : (
                 <div className="empty-workspace">
                   <span className="drawing-mark" aria-hidden="true">
@@ -356,19 +693,90 @@ export function App() {
             </div>
           </div>
         </main>
-        {has("right") && region("right")}
+        {has("right") && (
+          <div className="workspace-right">{region("right")}</div>
+        )}
+        {botOpen && (
+          <LazyPanelBoundary message={t("botLoadError")}>
+            <Suspense fallback={<p role="status">Adigun BOT…</p>}>
+              <AdigunBot
+                project={native.project}
+                accountRequest={accountRequest}
+                setSignedIn={setSignedIn}
+                suggestions={botFinding}
+                t={t}
+                close={() => {
+                  setBotOpen(false);
+                  setAccountRequest(0);
+                  botToggle.current?.focus();
+                }}
+                openDiagnostics={() =>
+                  panel("diagnostics", { visible: true, collapsed: false })
+                }
+                openBom={() =>
+                  panel("bom", { visible: true, collapsed: false })
+                }
+                openHelp={() => help.current?.showModal()}
+                openNewProject={openNewProject}
+                canCreateProject={!native.corrupt}
+              />
+            </Suspense>
+          </LazyPanelBoundary>
+        )}
         {has("bottom") && region("bottom")}
       </div>
+      <NewProjectDialog native={native} t={t} dialog={newProjectDialog} />
+      <dialog ref={guestDialog} aria-label={t("account")}>
+        <p>
+          {t("accountGuest")} · {t("local")}
+        </p>
+        <form method="dialog">
+          <button>{t("close")}</button>
+        </form>
+      </dialog>
       <footer className="status-bar">
         <span>
           <i />
           {t("ready")}
         </span>
-        <span>
-          {native.project
-            ? t(native.saved ? "savedLocally" : "notSaved")
-            : t("local")}
-        </span>
+        {native.project && (
+          <div className="status-context">
+            <span>
+              {t("projectName")} <b>{native.project.name}</b>
+            </span>
+            {buildingView ? (
+              <span>{t("buildingDesign")}</span>
+            ) : (
+              activeSheet && (
+                <>
+                  <span>
+                    {t("pageName")} <b>{activeSheet.name}</b>
+                  </span>
+                  <span>
+                    {t("grid")} <b>{activeSheet.gridMm}</b>
+                  </span>
+                  <span>
+                    {t("sheetSize")}{" "}
+                    <b>
+                      {activeSheet.widthMm} × {activeSheet.heightMm} mm
+                    </b>
+                  </span>
+                </>
+              )
+            )}
+          </div>
+        )}
+        {connectivity && (
+          <button
+            className="status-diagnostics"
+            type="button"
+            data-severity={errors ? "error" : warnings ? "warning" : "clear"}
+            onClick={() => revealPanel("diagnostics")}
+          >
+            {t("diagnostics")} · {t("errors")} {errors} · {t("warnings")}{" "}
+            {warnings}
+          </button>
+        )}
         <span>
           © {new Date().getFullYear()}{" "}
           <a

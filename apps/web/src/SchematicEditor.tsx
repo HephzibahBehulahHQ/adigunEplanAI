@@ -1,4 +1,5 @@
 import { Glyph } from "./Glyph";
+import { DrawingSheetFrame } from "./DrawingSheetFrame";
 import { createPortal } from "react-dom";
 import { SymbolArtwork } from "./SymbolArtwork";
 import { WireProperties } from "./WireProperties";
@@ -35,12 +36,47 @@ import {
 import type { MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 export type NativeClipboard = { project: Project; ids: string[] };
+const ribbonIcons: Record<string, string> = {
+  select: "M3 2l13 9-6 1-2 5z",
+  pan: "M9 1v16M1 9h16M6 4l3-3 3 3M6 14l3 3 3-3M4 6L1 9l3 3m10-6 3 3-3 3",
+  wire: "M2 14h6V4h8M2 12v4M14 4h4",
+  label: "M2 5h10l4 4-4 4H2zM5 9h4",
+  rotate: "M4 5a6 6 0 1 1-1 7M4 1v4h4",
+  mirror: "M9 1v16M2 13l4-8v8zm14 0-4-8v8z",
+  copy: "M6 6h10v10H6zM3 12V3h9",
+  duplicate: "M6 6h10v10H6zM3 12V3h9M9 11h4m-2-2v4",
+  delete: "M3 5h12M6 5V3h6v2M5 5l1 11h6l1-11M8 8v5m2-5v5",
+  alignX: "M3 2v14M3 4h9v3H3m0 4h13v3H3",
+  alignY: "M2 3h14M4 3v9h3V3m4 0v13h3V3",
+  group: "M2 2h14v14H2zM5 5h3v3H5zm5 5h3v3h-3z",
+  ungroup: "M2 6V2h4m6 0h4v4m0 6v4h-4m-6 0H2v-4m3-7h3v3H5zm5 5h3v3h-3z",
+  paste: "M6 4H4v12h10V4h-2M6 2h6v4H6zM7 9h4m-4 3h4",
+};
+
+function RibbonIcon({ name }: { name: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="schematic-command-icon"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={ribbonIcons[name]} />
+    </svg>
+  );
+}
 type Props = {
   clipboard: NativeClipboard | null;
   setClipboard: (value: NativeClipboard | null) => void;
   native: NativeProjects;
   page: Project["pages"][number];
   t: (key: MessageKey) => string;
+  ribbon: HTMLElement | null;
+  onDeviceSelection: (id: string | null) => void;
 };
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
@@ -57,6 +93,8 @@ export function SchematicEditor({
   t,
   clipboard,
   setClipboard,
+  ribbon,
+  onDeviceSelection,
 }: Props) {
   const project = native.project!;
   const [tool, setTool] = useState<
@@ -335,6 +373,11 @@ export function SchematicEditor({
   const selectedDevice = project.devices.find(
     (d) => d.id === selectedInstance?.deviceId,
   );
+  const selectedDeviceId = selectedDevice?.id ?? null;
+  useEffect(() => {
+    onDeviceSelection(selectedDeviceId);
+    return () => onDeviceSelection(null);
+  }, [onDeviceSelection, selectedDeviceId]);
   function group() {
     if (selected.length < 2) return;
     edit((p) => {
@@ -416,6 +459,185 @@ export function SchematicEditor({
         Math.min(page.widthMm, page.heightMm) === v[1],
     )?.[0] ?? "custom";
   const wire = project.wires.find((w) => w.id === selectedWire);
+  const controls = (
+    <>
+      <div
+        className="editor-toolbar ribbon-drawing"
+        role="group"
+        aria-label={t("schematicView")}
+      >
+        {(["select", "pan", "wire", "label"] as const).map((mode) => (
+          <button
+            key={mode}
+            aria-pressed={tool === mode}
+            onClick={() => {
+              setTool(mode);
+              setFromPin(null);
+            }}
+          >
+            <RibbonIcon name={mode} />
+            {t(
+              mode === "select"
+                ? "selectTool"
+                : mode === "pan"
+                  ? "panTool"
+                  : mode === "wire"
+                    ? "wireTool"
+                    : "labelTool",
+            )}
+          </button>
+        ))}
+      </div>
+      <div
+        className="editor-toolbar ribbon-library"
+        role="group"
+        aria-label={t("components")}
+      >
+        <select
+          aria-label={t("components")}
+          value={Object.hasOwn(primitives, tool) ? tool : ""}
+          onChange={(e) => setTool(e.target.value as Primitive)}
+        >
+          <option value="" disabled>
+            {t("components")}
+          </option>
+          {Object.keys(primitives).map((kind) => (
+            <option key={kind} value={kind}>
+              {t(kind as Primitive)}
+            </option>
+          ))}
+        </select>
+        <select
+          aria-label={t("customSymbols")}
+          value={tool === "custom" ? customDefinition : ""}
+          onChange={(e) => {
+            setCustomDefinition(e.target.value);
+            setTool("custom");
+          }}
+        >
+          <option value="" disabled>
+            {t("customSymbols")}
+          </option>
+          {project.symbolDefinitions
+            .filter((d) => d.category === "custom")
+            .map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.name}
+              </option>
+            ))}
+        </select>
+      </div>
+      <div
+        className="editor-toolbar ribbon-view"
+        role="group"
+        aria-label={t("view")}
+      >
+        <button onClick={() => zoom(1.2)} aria-label="+">
+          +
+        </button>
+        <span>{Math.round((page.widthMm / view.w) * 100)}%</span>
+        <button onClick={() => zoom(1 / 1.2)} aria-label="−">
+          −
+        </button>
+        <button onClick={fit}>{t("fitPage")}</button>
+        <label>
+          {t("grid")}
+          <input
+            type="number"
+            min="1"
+            max="100"
+            value={page.gridMm}
+            onChange={(e) =>
+              edit((p) => ({
+                ...p,
+                pages: p.pages.map((item) =>
+                  item.id === page.id
+                    ? { ...item, gridMm: Number(e.target.value) }
+                    : item,
+                ),
+              }))
+            }
+          />
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={page.snapping}
+            onChange={(e) =>
+              edit((p) => ({
+                ...p,
+                pages: p.pages.map((item) =>
+                  item.id === page.id
+                    ? { ...item, snapping: e.target.checked }
+                    : item,
+                ),
+              }))
+            }
+          />
+          {t("snapping")}
+        </label>
+      </div>
+      <div
+        className="editor-toolbar ribbon-selection"
+        role="group"
+        aria-label={t("selection")}
+      >
+        {[
+          ["rotate", () => edit((p) => rotate(p, selected))],
+          ["mirror", () => edit((p) => mirror(p, selected))],
+          [
+            "copy",
+            () =>
+              setClipboard({
+                project: structuredClone(project),
+                ids: [...selected],
+              }),
+          ],
+          ["duplicate", () => duplicateSelected()],
+          ["delete", deleteSelected],
+          ["alignX", () => edit((p) => align(p, selected, "x"))],
+          ["alignY", () => edit((p) => align(p, selected, "y"))],
+          ["group", group],
+          [
+            "ungroup",
+            () =>
+              edit((p) => ({
+                ...p,
+                groups: p.groups.filter(
+                  (g) => !g.symbolIds.some((id) => selected.includes(id)),
+                ),
+              })),
+          ],
+        ].map(([key, action]) => (
+          <button
+            key={key as string}
+            disabled={
+              key === "delete"
+                ? !selected.length && !selectedWire
+                : key === "group" || key === "alignX" || key === "alignY"
+                  ? selected.length < 2
+                  : key === "ungroup"
+                    ? !project.groups.some((g) =>
+                        g.symbolIds.some((id) => selected.includes(id)),
+                      )
+                    : !selected.length
+            }
+            onClick={action as () => void}
+          >
+            <RibbonIcon name={key as string} />
+            {t(key as MessageKey)}
+          </button>
+        ))}
+        <button
+          disabled={!clipboard?.ids.length}
+          onClick={() => pasteClipboard()}
+        >
+          <RibbonIcon name="paste" />
+          {t("paste")}
+        </button>
+      </div>
+    </>
+  );
   return (
     <div
       className="schematic-editor"
@@ -485,162 +707,12 @@ export function SchematicEditor({
         }
       }}
     >
-      <div className="editor-toolbar" aria-label={t("components")}>
-        {(["select", "pan", "wire", "label"] as const).map((mode) => (
-          <button
-            key={mode}
-            aria-pressed={tool === mode}
-            onClick={() => {
-              setTool(mode);
-              setFromPin(null);
-            }}
-          >
-            {t(
-              mode === "select"
-                ? "selectTool"
-                : mode === "pan"
-                  ? "panTool"
-                  : mode === "wire"
-                    ? "wireTool"
-                    : "labelTool",
-            )}
-          </button>
-        ))}
-        <select
-          aria-label={t("components")}
-          value={Object.hasOwn(primitives, tool) ? tool : ""}
-          onChange={(e) => setTool(e.target.value as Primitive)}
-        >
-          <option value="" disabled>
-            {t("components")}
-          </option>
-          {Object.keys(primitives).map((kind) => (
-            <option key={kind} value={kind}>
-              {t(kind as Primitive)}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label={t("customSymbols")}
-          value={tool === "custom" ? customDefinition : ""}
-          onChange={(e) => {
-            setCustomDefinition(e.target.value);
-            setTool("custom");
-          }}
-        >
-          <option value="" disabled>
-            {t("customSymbols")}
-          </option>
-          {project.symbolDefinitions
-            .filter((d) => d.category === "custom")
-            .map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.name}
-              </option>
-            ))}
-        </select>
-        <button onClick={() => zoom(1.2)} aria-label="+">
-          +
-        </button>
-        <span>{Math.round((page.widthMm / view.w) * 100)}%</span>
-        <button onClick={() => zoom(1 / 1.2)} aria-label="−">
-          −
-        </button>
-        <button onClick={fit}>{t("fitPage")}</button>
-        <label>
-          {t("grid")}
-          <input
-            type="number"
-            min="1"
-            max="100"
-            value={page.gridMm}
-            onChange={(e) =>
-              edit((p) => ({
-                ...p,
-                pages: p.pages.map((item) =>
-                  item.id === page.id
-                    ? { ...item, gridMm: Number(e.target.value) }
-                    : item,
-                ),
-              }))
-            }
-          />
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={page.snapping}
-            onChange={(e) =>
-              edit((p) => ({
-                ...p,
-                pages: p.pages.map((item) =>
-                  item.id === page.id
-                    ? { ...item, snapping: e.target.checked }
-                    : item,
-                ),
-              }))
-            }
-          />
-          {t("snapping")}
-        </label>
-      </div>
-      <div className="editor-toolbar" aria-label={t("selection")}>
-        {[
-          ["rotate", () => edit((p) => rotate(p, selected))],
-          ["mirror", () => edit((p) => mirror(p, selected))],
-          [
-            "copy",
-            () =>
-              setClipboard({
-                project: structuredClone(project),
-                ids: [...selected],
-              }),
-          ],
-          ["duplicate", () => duplicateSelected()],
-          ["delete", deleteSelected],
-          ["alignX", () => edit((p) => align(p, selected, "x"))],
-          ["alignY", () => edit((p) => align(p, selected, "y"))],
-          ["group", group],
-          [
-            "ungroup",
-            () =>
-              edit((p) => ({
-                ...p,
-                groups: p.groups.filter(
-                  (g) => !g.symbolIds.some((id) => selected.includes(id)),
-                ),
-              })),
-          ],
-        ].map(([key, action]) => (
-          <button
-            key={key as string}
-            disabled={
-              key === "delete"
-                ? !selected.length && !selectedWire
-                : key === "group" || key === "alignX" || key === "alignY"
-                  ? selected.length < 2
-                  : key === "ungroup"
-                    ? !project.groups.some((g) =>
-                        g.symbolIds.some((id) => selected.includes(id)),
-                      )
-                    : !selected.length
-            }
-            onClick={action as () => void}
-          >
-            {t(key as MessageKey)}
-          </button>
-        ))}
-        <button
-          disabled={!clipboard?.ids.length}
-          onClick={() => pasteClipboard()}
-        >
-          {t("paste")}
-        </button>
-      </div>
+      {ribbon ? createPortal(controls, ribbon) : controls}
       <details className="editor-options">
         <summary>
           {t("layers")} / {t("sheetSize")}
         </summary>
+        <p className="editor-hint">{t("editorHint")}</p>
         <div className="editor-toolbar">
           <select
             aria-label={t("sheetSize")}
@@ -932,7 +1004,6 @@ export function SchematicEditor({
           <button>{t("addLabel")}</button>
         </form>
       )}
-      <p className="editor-hint">{t("editorHint")}</p>
       <svg
         ref={svg}
         className="native-sheet engineering-canvas"
@@ -964,23 +1035,7 @@ export function SchematicEditor({
           height={page.heightMm}
           fill={`url(#grid-${page.id})`}
         />
-        <rect
-          x={8}
-          y={8}
-          width={page.widthMm - 16}
-          height={page.heightMm - 16}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={0.3}
-        />
-        <path
-          d={`M8 ${page.heightMm - 22}H${page.widthMm - 8}`}
-          stroke="currentColor"
-          strokeWidth={0.3}
-        />
-        <text x={12} y={page.heightMm - 13} fontSize={3.5}>
-          {project.name} · {page.name} · {page.widthMm} × {page.heightMm} mm
-        </text>
+        <DrawingSheetFrame project={project} page={page} />
         {project.wirePaths
           .filter(
             (path) =>
