@@ -1,4 +1,5 @@
 import { Glyph } from "./Glyph";
+import { DrawingSheetFrame } from "./DrawingSheetFrame";
 import { createPortal } from "react-dom";
 import { SymbolArtwork } from "./SymbolArtwork";
 import { WireProperties } from "./WireProperties";
@@ -1034,23 +1035,7 @@ export function SchematicEditor({
           height={page.heightMm}
           fill={`url(#grid-${page.id})`}
         />
-        <rect
-          x={8}
-          y={8}
-          width={page.widthMm - 16}
-          height={page.heightMm - 16}
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={0.3}
-        />
-        <path
-          d={`M8 ${page.heightMm - 22}H${page.widthMm - 8}`}
-          stroke="currentColor"
-          strokeWidth={0.3}
-        />
-        <text x={12} y={page.heightMm - 13} fontSize={3.5}>
-          {project.name} · {page.name} · {page.widthMm} × {page.heightMm} mm
-        </text>
+        <DrawingSheetFrame project={project} page={page} />
         {project.wirePaths
           .filter(
             (path) =>

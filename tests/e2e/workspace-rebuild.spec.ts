@@ -70,6 +70,11 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     .selectOption("calc-control");
   await expect(calculations).toContainText("24 V");
   await expect(calculations).not.toContainText("Feeder study worksheet A");
+  const titleBlock = page.locator(".drawing-title-block");
+  await expect(titleBlock).toContainText("Projektname");
+  await expect(titleBlock).toContainText(project.name);
+  await expect(titleBlock).toContainText(project.pages[0].name);
+  await expect(titleBlock).toContainText("420 × 297 mm");
   const cabinet = page.getByRole("region", { name: "3D panel", exact: true });
   const model = cabinet.getByRole("img", { name: "Cabinet review" });
   const axes = cabinet.locator(".cabinet-axes text");
