@@ -35,6 +35,39 @@ import {
 import type { MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 export type NativeClipboard = { project: Project; ids: string[] };
+const ribbonIcons: Record<string, string> = {
+  select: "M3 2l13 9-6 1-2 5z",
+  pan: "M9 1v16M1 9h16M6 4l3-3 3 3M6 14l3 3 3-3M4 6L1 9l3 3m10-6 3 3-3 3",
+  wire: "M2 14h6V4h8M2 12v4M14 4h4",
+  label: "M2 5h10l4 4-4 4H2zM5 9h4",
+  rotate: "M4 5a6 6 0 1 1-1 7M4 1v4h4",
+  mirror: "M9 1v16M2 13l4-8v8zm14 0-4-8v8z",
+  copy: "M6 6h10v10H6zM3 12V3h9",
+  duplicate: "M6 6h10v10H6zM3 12V3h9M9 11h4m-2-2v4",
+  delete: "M3 5h12M6 5V3h6v2M5 5l1 11h6l1-11M8 8v5m2-5v5",
+  alignX: "M3 2v14M3 4h9v3H3m0 4h13v3H3",
+  alignY: "M2 3h14M4 3v9h3V3m4 0v13h3V3",
+  group: "M2 2h14v14H2zM5 5h3v3H5zm5 5h3v3h-3z",
+  ungroup: "M2 6V2h4m6 0h4v4m0 6v4h-4m-6 0H2v-4m3-7h3v3H5zm5 5h3v3h-3z",
+  paste: "M6 4H4v12h10V4h-2M6 2h6v4H6zM7 9h4m-4 3h4",
+};
+
+function RibbonIcon({ name }: { name: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="schematic-command-icon"
+      viewBox="0 0 18 18"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={ribbonIcons[name]} />
+    </svg>
+  );
+}
 type Props = {
   clipboard: NativeClipboard | null;
   setClipboard: (value: NativeClipboard | null) => void;
@@ -430,6 +463,7 @@ export function SchematicEditor({
               setFromPin(null);
             }}
           >
+            <RibbonIcon name={mode} />
             {t(
               mode === "select"
                 ? "selectTool"
@@ -562,6 +596,7 @@ export function SchematicEditor({
             }
             onClick={action as () => void}
           >
+            <RibbonIcon name={key as string} />
             {t(key as MessageKey)}
           </button>
         ))}
@@ -569,6 +604,7 @@ export function SchematicEditor({
           disabled={!clipboard?.ids.length}
           onClick={() => pasteClipboard()}
         >
+          <RibbonIcon name="paste" />
           {t("paste")}
         </button>
       </div>

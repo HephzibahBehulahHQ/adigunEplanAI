@@ -208,6 +208,29 @@
   background: transparent;
   padding: 0.2rem;
 }
+.editor-toolbar button:has(.schematic-command-icon) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.schematic-command-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+.schematic-ribbon .editor-toolbar button:has(.schematic-command-icon) {
+  border-color: transparent;
+}
+.schematic-ribbon
+  .editor-toolbar
+  button:has(.schematic-command-icon):is(:hover, [aria-pressed="true"]):not(
+    :disabled
+  ) {
+  border-color: var(--cyan);
+}
+.schematic-ribbon .editor-toolbar button:disabled {
+  opacity: 0.5;
+}
 @media (max-width: 680px) {
   .schematic-ribbon {
     flex-basis: 100%;
