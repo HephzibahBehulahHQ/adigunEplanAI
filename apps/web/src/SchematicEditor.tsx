@@ -648,6 +648,7 @@ export function SchematicEditor({
         <summary>
           {t("layers")} / {t("sheetSize")}
         </summary>
+        <p className="editor-hint">{t("editorHint")}</p>
         <div className="editor-toolbar">
           <select
             aria-label={t("sheetSize")}
@@ -939,7 +940,6 @@ export function SchematicEditor({
           <button>{t("addLabel")}</button>
         </form>
       )}
-      <p className="editor-hint">{t("editorHint")}</p>
       <svg
         ref={svg}
         className="native-sheet engineering-canvas"

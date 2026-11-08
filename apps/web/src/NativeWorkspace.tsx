@@ -386,28 +386,22 @@ export function NativeDrawing({
   const page = p.pages.find((item) => item.id === selected) ?? p.pages[0];
   return (
     <div className="native-drawing">
-      <nav className="drawing-tabs" aria-label={t("workspaceView")}>
-        <button
-          aria-pressed={!buildingView}
-          onClick={() => setBuildingView(false)}
-        >
-          {t("schematicView")}
-        </button>
-        <button
-          aria-pressed={buildingView}
-          onClick={() => setBuildingView(true)}
-        >
-          {t("buildingDesign")}
-        </button>
-      </nav>
-      {buildingView ? (
-        <LazyPanelBoundary message={t("buildingLoadError")}>
-          <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
-            <BuildingEditor key={p.id} native={native} t={t} />
-          </Suspense>
-        </LazyPanelBoundary>
-      ) : (
-        <>
+      <div className="drawing-tab-bar">
+        <nav className="drawing-tabs" aria-label={t("workspaceView")}>
+          <button
+            aria-pressed={!buildingView}
+            onClick={() => setBuildingView(false)}
+          >
+            {t("schematicView")}
+          </button>
+          <button
+            aria-pressed={buildingView}
+            onClick={() => setBuildingView(true)}
+          >
+            {t("buildingDesign")}
+          </button>
+        </nav>
+        {!buildingView && (
           <nav className="drawing-tabs" aria-label={t("pageName")}>
             {p.pages.map((item) => (
               <button
@@ -426,6 +420,16 @@ export function NativeDrawing({
               {t("newPage")}
             </button>
           </nav>
+        )}
+      </div>
+      {buildingView ? (
+        <LazyPanelBoundary message={t("buildingLoadError")}>
+          <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
+            <BuildingEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : (
+        <>
           {page ? (
             <SchematicEditor
               key={`${p.id}:${page.id}`}

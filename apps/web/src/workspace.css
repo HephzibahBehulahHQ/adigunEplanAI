@@ -483,6 +483,20 @@ dialog form {
   position: relative;
   z-index: 2;
 }
+.drawing-tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.drawing-tab-bar .drawing-tabs {
+  min-width: 0;
+}
+.drawing-tab-bar .drawing-tabs + .drawing-tabs {
+  border-inline-start: 1px solid var(--line);
+  flex: 1 1 13rem;
+}
 .drawing-tabs button {
   font-size: 0.75rem;
 }
