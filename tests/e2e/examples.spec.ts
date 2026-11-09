@@ -57,3 +57,25 @@ for (const [name, devices, wires, selector] of cases) {
     await expect(page.getByRole("alert")).toHaveCount(0);
   });
 }
+
+test("project navigator tabs expose the real library, examples and search", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const tabs = page.getByRole("tablist", { name: "Project navigator" });
+  await expect(tabs.getByRole("tab", { name: "Examples (5)" })).toBeVisible();
+  await tabs.getByRole("tab", { name: "Examples (5)" }).click();
+  await expect(page.getByRole("article")).toHaveCount(5);
+  await page
+    .getByRole("article")
+    .filter({ hasText: "Photovoltaic string and inverter interfaces" })
+    .getByRole("button", { name: "Open a copy", exact: true })
+    .click();
+  await tabs.getByRole("tab", { name: "Search" }).click();
+  await page
+    .getByRole("searchbox", { name: "Filter project tree" })
+    .fill("INV1");
+  await expect(page.getByText(/INV1 ·/)).toBeVisible();
+  await tabs.getByRole("tab", { name: "Library" }).click();
+  await expect(page.locator(".component-library[open]")).toBeVisible();
+});

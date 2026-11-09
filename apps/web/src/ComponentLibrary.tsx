@@ -8,15 +8,20 @@ const CatalogPanel = lazy(() =>
 export function ComponentLibrary({
   native,
   t,
+  open = false,
 }: {
   native: NativeProjects;
   t: (key: MessageKey) => string;
+  open?: boolean;
 }) {
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(open);
+  const [expanded, setExpanded] = useState(open);
   return (
     <details
       className="component-library"
+      open={expanded}
       onToggle={(e) => {
+        setExpanded(e.currentTarget.open);
         if (e.currentTarget.open) setOpened(true);
       }}
     >

@@ -1,6 +1,7 @@
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
+import { exampleCatalog } from "../../../packages/example-projects/catalog.ts";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
 import type { MessageKey } from "../../../packages/localization";
 import {
@@ -28,6 +29,11 @@ const AutomationEditor = lazy(() =>
 const BuildingEditor = lazy(() =>
   import("./BuildingEditor").then((module) => ({
     default: module.BuildingEditor,
+  })),
+);
+const ExampleLibrary = lazy(() =>
+  import("./ExampleLibrary").then((module) => ({
+    default: module.ExampleLibrary,
   })),
 );
 
@@ -160,9 +166,11 @@ export function ProjectTools({ native, t }: Props) {
 }
 export function ProjectNavigator({ native, t }: Props) {
   const [filter, setFilter] = useState("");
+  const [pane, setPane] = useState<
+    "project" | "library" | "examples" | "search"
+  >("project");
+  const filterInput = useRef<HTMLInputElement>(null);
   const project = native.project;
-  if (!native.projects.length)
-    return <p className="empty-hint">{t("noProject")}</p>;
   const query = filter.normalize("NFKC").toLocaleLowerCase().trim();
   const matches = (...values: string[]) =>
     !query ||
@@ -178,160 +186,219 @@ export function ProjectNavigator({ native, t }: Props) {
     project?.pages[0];
   return (
     <>
-      <label>
-        {t("chooseProject")}
-        <select
-          aria-label={t("chooseProject")}
-          value={project?.id ?? ""}
-          onChange={(event) => native.select(event.target.value)}
+      <nav className="navigator-tabs" role="tablist" aria-label={t("project")}>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={pane === "project"}
+          onClick={() => setPane("project")}
         >
-          {native.projects.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label className="navigator-filter">
-        {t("navigatorFilter")}
-        <input
-          type="search"
-          aria-label={t("navigatorFilter")}
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-        />
-      </label>
-      <p className="navigator-root" title={project?.name}>
-        {project?.name}
-      </p>
-      {project?.documents.map((document) => {
-        const pages = project.pages
-          .filter(
-            (page) =>
-              page.documentId === document.id &&
-              (matches(document.name) || matches(page.name)),
-          )
-          .sort((a, b) => a.order - b.order);
-        if (!pages.length) return null;
-        return (
-          <details open key={document.id}>
-            <summary>
-              {document.name} ({pages.length})
-            </summary>
-            <div className="navigator-pages">
-              {pages.slice(0, 100).map((page) => (
-                <button
-                  key={page.id}
-                  aria-current={page.id === activePage?.id ? "page" : undefined}
-                  onClick={() => {
-                    native.selectPage(page.id);
-                    native.setView("schematic");
-                  }}
-                >
-                  {page.name}
-                </button>
-              ))}
-            </div>
-            {pages.length > 100 && <p>{t("navigatorLimit")}</p>}
-          </details>
-        );
-      })}
-      {!!devices.length && (
-        <details open={query ? true : undefined}>
-          <summary>
-            {t("botDevices")} ({devices.length})
-          </summary>
-          <div className="navigator-pages">
-            {devices.slice(0, 100).map((device) => (
-              <button
-                key={device.id}
-                aria-pressed={native.selectedDeviceId === device.id}
-                onClick={() => {
-                  native.selectDevice(device.id);
-                  if (
-                    project?.symbolInstances.some(
-                      (symbol) => symbol.deviceId === device.id,
-                    )
-                  )
-                    native.setView("schematic");
-                }}
+          {t("navigatorTabProject")}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={pane === "library"}
+          onClick={() => setPane("library")}
+        >
+          {t("navigatorTabLibrary")}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={pane === "examples"}
+          onClick={() => setPane("examples")}
+        >
+          {t("navigatorTabExamples")} ({exampleCatalog.length})
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={pane === "search"}
+          onClick={() => {
+            setPane("search");
+            requestAnimationFrame(() => filterInput.current?.focus());
+          }}
+        >
+          {t("navigatorTabSearch")}
+        </button>
+      </nav>
+      {pane === "library" ? (
+        <ComponentLibrary native={native} t={t} open />
+      ) : pane === "examples" ? (
+        <LazyPanelBoundary message={t("catalogLoadError")}>
+          <Suspense fallback={<p role="status">{t("catalogLoading")}</p>}>
+            <ExampleLibrary
+              native={native}
+              t={t}
+              opened={() => setPane("project")}
+            />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : !project ? (
+        <p className="empty-hint">{t("noProject")}</p>
+      ) : (
+        <div className="navigator-pane" role="tabpanel">
+          {pane === "project" && (
+            <label>
+              {t("chooseProject")}
+              <select
+                aria-label={t("chooseProject")}
+                value={project.id}
+                onChange={(event) => native.select(event.target.value)}
               >
-                {device.reference} · {device.name}
-              </button>
-            ))}
-          </div>
-          {devices.length > 100 && <p>{t("navigatorLimit")}</p>}
-        </details>
-      )}
-      {!!project?.buildings.length && (
-        <details open={query ? true : undefined}>
-          <summary>{t("navigatorBuildings")}</summary>
-          {project.buildings.map((building) => (
-            <details key={building.id} open={query ? true : undefined}>
-              <summary>{building.name}</summary>
-              {project.floors
-                .filter((floor) => floor.buildingId === building.id)
-                .map((floor) => (
-                  <details key={floor.id} open={query ? true : undefined}>
-                    <summary>
-                      {floor.name} · {floor.elevationMm} mm
-                    </summary>
-                    <ul>
-                      {project.rooms
-                        .filter(
-                          (room) =>
-                            room.floorId === floor.id &&
-                            matches(building.name, floor.name, room.name),
+                {native.projects.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <label className="navigator-filter">
+            {t("navigatorFilter")}
+            <input
+              ref={filterInput}
+              type="search"
+              aria-label={t("navigatorFilter")}
+              value={filter}
+              onChange={(event) => setFilter(event.target.value)}
+            />
+          </label>
+          <p className="navigator-root" title={project?.name}>
+            {project?.name}
+          </p>
+          {project?.documents.map((document) => {
+            const pages = project.pages
+              .filter(
+                (page) =>
+                  page.documentId === document.id &&
+                  (matches(document.name) || matches(page.name)),
+              )
+              .sort((a, b) => a.order - b.order);
+            if (!pages.length) return null;
+            return (
+              <details open key={document.id}>
+                <summary>
+                  {document.name} ({pages.length})
+                </summary>
+                <div className="navigator-pages">
+                  {pages.slice(0, 100).map((page) => (
+                    <button
+                      key={page.id}
+                      aria-current={
+                        page.id === activePage?.id ? "page" : undefined
+                      }
+                      onClick={() => {
+                        native.selectPage(page.id);
+                        native.setView("schematic");
+                      }}
+                    >
+                      {page.name}
+                    </button>
+                  ))}
+                </div>
+                {pages.length > 100 && <p>{t("navigatorLimit")}</p>}
+              </details>
+            );
+          })}
+          {!!devices.length && (
+            <details open={query ? true : undefined}>
+              <summary>
+                {t("botDevices")} ({devices.length})
+              </summary>
+              <div className="navigator-pages">
+                {devices.slice(0, 100).map((device) => (
+                  <button
+                    key={device.id}
+                    aria-pressed={native.selectedDeviceId === device.id}
+                    onClick={() => {
+                      native.selectDevice(device.id);
+                      if (
+                        project?.symbolInstances.some(
+                          (symbol) => symbol.deviceId === device.id,
                         )
-                        .map((room) => (
-                          <li key={room.id}>{room.name}</li>
+                      )
+                        native.setView("schematic");
+                    }}
+                  >
+                    {device.reference} · {device.name}
+                  </button>
+                ))}
+              </div>
+              {devices.length > 100 && <p>{t("navigatorLimit")}</p>}
+            </details>
+          )}
+          {!!project?.buildings.length && (
+            <details open={query ? true : undefined}>
+              <summary>{t("navigatorBuildings")}</summary>
+              {project.buildings.map((building) => (
+                <details key={building.id} open={query ? true : undefined}>
+                  <summary>{building.name}</summary>
+                  {project.floors
+                    .filter((floor) => floor.buildingId === building.id)
+                    .map((floor) => (
+                      <details key={floor.id} open={query ? true : undefined}>
+                        <summary>
+                          {floor.name} · {floor.elevationMm} mm
+                        </summary>
+                        <ul>
+                          {project.rooms
+                            .filter(
+                              (room) =>
+                                room.floorId === floor.id &&
+                                matches(building.name, floor.name, room.name),
+                            )
+                            .map((room) => (
+                              <li key={room.id}>{room.name}</li>
+                            ))}
+                        </ul>
+                      </details>
+                    ))}
+                </details>
+              ))}
+              <button onClick={() => native.setView("building")}>
+                {t("openBuilding")}
+              </button>
+            </details>
+          )}
+          {!!project?.enclosures.length && (
+            <details open={query ? true : undefined}>
+              <summary>
+                {t("navigatorPanels")} ({project.enclosures.length})
+              </summary>
+              {project.enclosures
+                .filter((enclosure) => matches(enclosure.name))
+                .map((enclosure) => (
+                  <details key={enclosure.id}>
+                    <summary>{enclosure.name}</summary>
+                    <p>
+                      {enclosure.widthMm} × {enclosure.heightMm} ×{" "}
+                      {enclosure.depthMm} mm
+                    </p>
+                    <ul>
+                      {project.equipment3d
+                        .filter((item) => item.enclosureId === enclosure.id)
+                        .map((item) => (
+                          <li key={item.id}>
+                            {
+                              project.devices.find(
+                                (device) => device.id === item.deviceId,
+                              )?.reference
+                            }{" "}
+                            · {item.name}
+                          </li>
                         ))}
                     </ul>
                   </details>
                 ))}
+              <button onClick={() => native.setView("panel")}>
+                {t("openPanel")}
+              </button>
             </details>
-          ))}
-          <button onClick={() => native.setView("building")}>
-            {t("openBuilding")}
-          </button>
-        </details>
+          )}
+        </div>
       )}
-      {!!project?.enclosures.length && (
-        <details open={query ? true : undefined}>
-          <summary>
-            {t("navigatorPanels")} ({project.enclosures.length})
-          </summary>
-          {project.enclosures
-            .filter((enclosure) => matches(enclosure.name))
-            .map((enclosure) => (
-              <details key={enclosure.id}>
-                <summary>{enclosure.name}</summary>
-                <p>
-                  {enclosure.widthMm} × {enclosure.heightMm} ×{" "}
-                  {enclosure.depthMm} mm
-                </p>
-                <ul>
-                  {project.equipment3d
-                    .filter((item) => item.enclosureId === enclosure.id)
-                    .map((item) => (
-                      <li key={item.id}>
-                        {
-                          project.devices.find(
-                            (device) => device.id === item.deviceId,
-                          )?.reference
-                        }{" "}
-                        · {item.name}
-                      </li>
-                    ))}
-                </ul>
-              </details>
-            ))}
-          <button onClick={() => native.setView("panel")}>
-            {t("openPanel")}
-          </button>
-        </details>
-      )}
-      <ComponentLibrary native={native} t={t} />
     </>
   );
 }

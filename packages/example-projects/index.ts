@@ -26,40 +26,11 @@ import {
   savePlanCircuit,
 } from "../building-design/circuits.ts";
 import { createPlcModule, savePlcAddress } from "../automation/plc.ts";
+import { exampleCatalog } from "./catalog.ts";
+import type { ExampleId } from "./catalog.ts";
 
-export const examples = [
-  {
-    id: "substation",
-    nameKey: "exampleSubstation",
-    view: "schematic",
-    category: "power",
-  },
-  {
-    id: "photovoltaic",
-    nameKey: "examplePhotovoltaic",
-    view: "schematic",
-    category: "power",
-  },
-  {
-    id: "motor",
-    nameKey: "exampleMotor",
-    view: "schematic",
-    category: "industrial",
-  },
-  {
-    id: "building",
-    nameKey: "exampleBuilding",
-    view: "building",
-    category: "building",
-  },
-  {
-    id: "plc",
-    nameKey: "examplePlc",
-    view: "automation",
-    category: "automation",
-  },
-] as const;
-export type ExampleId = (typeof examples)[number]["id"];
+export const examples = exampleCatalog;
+export type { ExampleId } from "./catalog.ts";
 const names: Record<ExampleId, string> = {
   substation: "EES_Original_Energy_Substation_V01",
   photovoltaic: "Photovoltaic_string_and_inverter_interfaces",

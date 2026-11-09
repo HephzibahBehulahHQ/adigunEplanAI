@@ -884,6 +884,25 @@ button:disabled {
   font-size: 0.7rem;
   color: var(--muted);
 }
+.navigator-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+.navigator-tabs button {
+  flex: 1 0 auto;
+  padding: 5px 7px;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+.navigator-tabs button[aria-selected="true"] {
+  border-color: var(--cyan);
+  background: var(--hover);
+}
+.navigator-pane {
+  min-width: 0;
+}
 .navigator-filter input {
   width: 100%;
 }
