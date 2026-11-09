@@ -1,8 +1,8 @@
 # Project status
 
-Current checkpoint: M0–6 implementation records published; M7 active. Approximately 33% of milestone checkpoints recorded, 67% remaining; final production acceptance remains open. See MILESTONES.md for categories and verifiable criteria.
+Current checkpoint: M7 is active on the `codex/milestone-7-building` source branch, currently at `198be702fadd519a6561a77358b4993596058af1` before the floor-first device increment. The local increment adds user-driven schematic and floor-plan device creation and passed the full local check (164 unit/tooling tests) plus all 97 Chromium scenarios. Hosted CI is pending publication. Final visual acceptance against `AdigunEplanTarget interface.png` remains open; the target's populated project, navigator, examples, account/cloud state, and full workbench composition must be implemented and verified without fabricated project data. See MILESTONES.md for verifiable criteria.
 
-Source 64a93a9c44145792c9b9ab55e62b74e725b4f42a is synchronized locally and remotely. Hosted runs 41588032897/41588027882 passed 138 unit/tooling tests, 92 browser scenarios, build, licensing and audit. Pages deployment bffcdd90bf48b82c95a185980a14da5f40fbc165 passed run 41588405373; HTTPS build-info matched the source and two live DXF workflows passed. This is a development deployment; Cloudflare administrative configuration, Supabase integration and production release acceptance remain unverified.
+The latest attempted Pages publication is not live: main is at `f1a4b659af3b4329d331cfacde36ad22fd1544a`, and Pages run `42598565374` failed runtime packaging (`Invalid runtime manifest size`); the public build-info remained on the prior source. M7's source is not yet integrated into main, and merging the open M7 release branch has conflicts in core workspace/localization files. No production deployment or final product acceptance is claimed. The configured production domain is https://adiguneplanai.hephzibahbehulah.com/; Cloudflare administrative configuration and Supabase integration remain unverified.
 
 ## Historical checkpoints (superseded where noted above)
 

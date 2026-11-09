@@ -1119,3 +1119,87 @@ test("floor equipment shares schematic identity, protects layers and persists a 
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
 });
+
+test("floor-first device creation makes one native schematic and plan device", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog.getByLabel("Project name", { exact: true }).fill("Floor-first");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  const building = page.getByRole("form", {
+    name: "Add building",
+    exact: true,
+  });
+  await building.getByLabel("Building name", { exact: true }).fill("Office");
+  await building
+    .getByRole("button", { name: "Add building", exact: true })
+    .click();
+  const floor = page.getByRole("form", { name: "Add floor", exact: true });
+  await floor.getByLabel("Floor name", { exact: true }).fill("Ground");
+  await floor.getByRole("button", { name: "Add floor", exact: true }).click();
+  await page.locator(".wall-tools > summary").click();
+  const layer = page.getByRole("form", { name: "Add plan layer", exact: true });
+  await layer.getByLabel("Plan layer name", { exact: true }).fill("Lighting");
+  await layer.locator("select[name=kind]").selectOption("electrical");
+  await layer
+    .getByRole("button", { name: "Add plan layer", exact: true })
+    .click();
+  await page.locator(".equipment-tools > summary").click();
+  await page.locator(".floor-device-creation > summary").click();
+  const create = page.getByRole("form", {
+    name: "Create and place device",
+    exact: true,
+  });
+  await create
+    .getByLabel("Native schematic device", { exact: true })
+    .selectOption("primitive:lamp");
+  await create.getByLabel("Device reference", { exact: true }).fill("H201");
+  await create
+    .getByLabel("Description", { exact: true })
+    .fill("Office luminaire");
+  await create
+    .getByLabel("Electrical plan layer", { exact: true })
+    .selectOption({ label: "Lighting" });
+  await create.getByLabel("Equipment X (mm)", { exact: true }).fill("1000");
+  await create.getByLabel("Equipment Y (mm)", { exact: true }).fill("1200");
+  await create
+    .getByRole("button", { name: "Create and place device", exact: true })
+    .click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
+  const schedule = page.getByRole("table", {
+    name: "Room equipment schedule",
+  });
+  await expect(schedule).toContainText("H201");
+  await expect(schedule).toContainText("Office luminaire");
+  const project = await page.evaluate(
+    () =>
+      JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
+        .projects[0],
+  );
+  expect(project.devices).toHaveLength(1);
+  expect(project.devices[0]).toMatchObject({
+    name: "Office luminaire",
+    reference: "H201",
+  });
+  expect(project.symbolInstances).toHaveLength(1);
+  expect(project.pins).toHaveLength(2);
+  expect(project.terminals).toHaveLength(2);
+  expect(project.planEquipment).toHaveLength(1);
+  expect(project.planEquipment[0].symbolInstanceId).toBe(
+    project.symbolInstances[0].id,
+  );
+  await page.reload();
+  await page
+    .getByRole("button", { name: "Building design", exact: true })
+    .click();
+  await page.locator(".equipment-tools > summary").click();
+  await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
+  await expect(
+    page.getByRole("table", { name: "Room equipment schedule" }),
+  ).toContainText("Office luminaire");
+});
