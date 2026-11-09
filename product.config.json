@@ -93,7 +93,7 @@
     "hostedAiVerified": false,
     "authenticatedCloudRoundTripVerified": false,
     "sampleProjects": {
-      "validatedCount": 4,
+      "validatedCount": 5,
       "requiredCount": 500
     },
     "stage": "tested-development"

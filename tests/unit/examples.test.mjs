@@ -80,6 +80,40 @@ test("substation documents separate transformer winding nets and secondary trip 
   assert.ok(windingNets.every(Boolean));
 });
 
+test("photovoltaic example preserves distinct DC, AC and protective-earth interfaces", () => {
+  const p = buildExample("photovoltaic");
+  assert.equal(p.pages.length, 2);
+  assert.equal(p.devices.length, 9);
+  assert.equal(p.wires.length, 8);
+  const pin = (reference, designation) => {
+    const device = p.devices.find((item) => item.reference === reference);
+    const symbol = p.symbolInstances.find(
+      (item) => item.deviceId === device.id,
+    );
+    return p.pins.find(
+      (item) =>
+        item.symbolInstanceId === symbol.id &&
+        item.definitionPinId === designation,
+    ).id;
+  };
+  const netId = (pinId) =>
+    analyze(p).nets.find((net) => net.pinIds.includes(pinId))?.id;
+  assert.equal(netId(pin("X1", "1")), netId(pin("F1", "1")));
+  assert.equal(netId(pin("F1", "2")), netId(pin("S1", "1")));
+  assert.equal(netId(pin("S1", "2")), netId(pin("INV1", "DC_positive")));
+  assert.equal(netId(pin("X2", "1")), netId(pin("INV1", "DC_negative")));
+  assert.notEqual(
+    netId(pin("INV1", "DC_positive")),
+    netId(pin("INV1", "DC_negative")),
+  );
+  assert.equal(netId(pin("INV1", "L_out")), netId(pin("Q1", "1")));
+  assert.equal(netId(pin("Q1", "2")), netId(pin("X3", "1")));
+  assert.equal(netId(pin("INV1", "N_out")), netId(pin("X4", "1")));
+  assert.equal(netId(pin("INV1", "PE")), netId(pin("X5", "1")));
+  assert.equal(p.manufacturerParts.length, 0);
+  assert.ok(p.annotations.some((item) => item.text.includes("anti-islanding")));
+});
+
 test("motor example preserves separate phases and explicit PE conductor", () => {
   const p = buildExample("motor");
   assert.equal(p.wires.length, 11);

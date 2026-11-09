@@ -35,6 +35,12 @@ export const examples = [
     category: "power",
   },
   {
+    id: "photovoltaic",
+    nameKey: "examplePhotovoltaic",
+    view: "schematic",
+    category: "power",
+  },
+  {
     id: "motor",
     nameKey: "exampleMotor",
     view: "schematic",
@@ -56,6 +62,7 @@ export const examples = [
 export type ExampleId = (typeof examples)[number]["id"];
 const names: Record<ExampleId, string> = {
   substation: "EES_Original_Energy_Substation_V01",
+  photovoltaic: "Photovoltaic_string_and_inverter_interfaces",
   motor: "Maintained_run_motor_starter",
   building: "Residential_lighting_and_sockets",
   plc: "PLC_sensor_control_cabinet",
@@ -309,6 +316,72 @@ export function buildExample(id: ExampleId): Project {
       230,
     );
     cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
+  } else if (id === "photovoltaic") {
+    note(
+      "ORIGINAL EDUCATIONAL PV SYSTEM · single-phase conversion topology only",
+      20,
+      22,
+    );
+    note("DC string interface", 35, 48);
+    note("Conversion interface", 190, 48);
+    note("AC output interface", 310, 48);
+    symbol("terminal", "X1", 35, 85, 0, "PV string positive interface");
+    symbol("terminal", "X2", 35, 135, 0, "PV string negative interface");
+    symbol(
+      "fuse",
+      "F1",
+      95,
+      85,
+      0,
+      "DC overcurrent protection interface; rating unspecified",
+    );
+    symbol("contact", "S1", 155, 85, 0, "DC isolator interface");
+    symbol(
+      "dc-ac-inverter",
+      "INV1",
+      235,
+      110,
+      0,
+      "Single-phase inverter interface; operating limits unspecified",
+    );
+    symbol("contact", "Q1", 315, 85, 0, "AC output isolator interface");
+    symbol("terminal", "X3", 375, 85, 0, "AC line output interface");
+    symbol("terminal", "X4", 375, 125, 0, "AC neutral output interface");
+    symbol("terminal", "X5", 235, 180, 0, "Protective earth interface");
+    wire("X1", "1", "F1", "1");
+    wire("F1", "2", "S1", "1");
+    wire("S1", "2", "INV1", "DC_positive");
+    wire("X2", "1", "INV1", "DC_negative", "#2563eb");
+    wire("INV1", "L_out", "Q1", "1");
+    wire("Q1", "2", "X3", "1");
+    wire("INV1", "N_out", "X4", "1", "#2563eb");
+    wire("INV1", "PE", "X5", "1", "#16803d");
+    note(
+      "Module count, Voc, Isc, temperature range and series limits are not specified.",
+      20,
+      220,
+    );
+    note(
+      "Grid protection, anti-islanding, earthing and local-code requirements remain design inputs.",
+      20,
+      232,
+    );
+    pageId = page("02 · External connection inputs");
+    note("PV STRING AND GRID CONNECTION INPUTS", 20, 22);
+    note(
+      "Confirm the selected module and inverter documentation before sizing or protection coordination.",
+      20,
+      44,
+    );
+    note(
+      "This topology contains no equipment ratings, manufacturer claims or compliance assessment.",
+      20,
+      56,
+    );
+    cabinet(
+      ["INV1", "F1", "S1", "Q1", "X1", "X2", "X3", "X4", "X5"],
+      "Generic educational PV conversion enclosure",
+    );
   } else if (id === "motor") {
     note(
       "THREE-PHASE MOTOR · maintained run control, without a seal-in circuit",

@@ -1056,6 +1056,7 @@
   "demoScope": "Àwọn iṣẹ́ àpẹẹrẹ fún ẹ̀kọ́. A fi ọwọ́ ṣètò ìwọ̀n ohun èlò; wọn kì í ṣe dátà olùpèsè tàbí àpẹẹrẹ tí a fọwọ́ sí.",
   "loadExample": "Ṣí ẹ̀dà kan",
   "exampleSubstation": "Àkọsílẹ̀ ibùdó tiransifọ́mà",
+  "examplePhotovoltaic": "Àwọn ìsopọ̀ okun PV àti inverter",
   "exampleMotor": "Àkọsílẹ̀ ìbẹ̀rẹ̀ mọ́tò",
   "exampleBuilding": "Iná àti sọ́kẹ́ẹ̀tì ilé gbígbé",
   "examplePlc": "Kọ́bọdù ìṣàkóso PLC",

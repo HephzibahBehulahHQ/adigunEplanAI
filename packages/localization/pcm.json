@@ -1056,6 +1056,7 @@
   "demoScope": "Original projects for learning. We set generic equipment sizes by hand; dem no be manufacturer data or certified design.",
   "loadExample": "Open one copy",
   "exampleSubstation": "Transformer station documents",
+  "examplePhotovoltaic": "PV string and inverter interfaces",
   "exampleMotor": "Motor starter documents",
   "exampleBuilding": "House lights and sockets",
   "examplePlc": "PLC control cabinet",

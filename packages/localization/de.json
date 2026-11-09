@@ -1056,6 +1056,7 @@
   "demoScope": "Eigene Lernprojekte. Generische Geräteabmessungen sind manuell festgelegt; keine Herstellerdaten oder zertifizierten Entwürfe.",
   "loadExample": "Kopie öffnen",
   "exampleSubstation": "Dokumentation einer Trafostation",
+  "examplePhotovoltaic": "PV-String- und Wechselrichterschnittstellen",
   "exampleMotor": "Dokumentation eines Motorstarters",
   "exampleBuilding": "Wohngebäude: Beleuchtung und Steckdosen",
   "examplePlc": "SPS-Steuerschrank",

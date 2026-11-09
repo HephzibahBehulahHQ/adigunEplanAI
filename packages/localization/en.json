@@ -1056,6 +1056,7 @@
   "demoScope": "Original educational projects. Generic equipment dimensions are manually defined; no manufacturer or certified design is implied.",
   "loadExample": "Open a copy",
   "exampleSubstation": "Transformer station documentation",
+  "examplePhotovoltaic": "Photovoltaic string and inverter interfaces",
   "exampleMotor": "Motor starter documentation",
   "exampleBuilding": "Residential lighting and sockets",
   "examplePlc": "PLC control cabinet",

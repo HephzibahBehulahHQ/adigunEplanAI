@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const cases = [
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],
+  ["Photovoltaic string and inverter interfaces", 9, 8, ".engineering-canvas"],
   ["Motor starter documentation", 7, 11, ".engineering-canvas"],
   ["Residential lighting and sockets", 6, 0, ".building-editor"],
   ["PLC control cabinet", 7, 10, ".automation-editor"],
