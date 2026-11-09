@@ -397,6 +397,7 @@ export function ProjectNavigator({ native, t }: Props) {
               </button>
             </details>
           )}
+          <ComponentLibrary native={native} t={t} />
         </div>
       )}
     </>
