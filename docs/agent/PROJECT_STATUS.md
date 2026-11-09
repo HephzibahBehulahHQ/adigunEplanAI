@@ -1,10 +1,10 @@
 # Project status
 
-## 2026-11-09 verified publication and open acceptance
+## 2026-11-09 verified PV release and open acceptance
 
-Main source `448b8f54d9b5fc03cdd91f79cbb1b388adb62bd9` (tree `3794334383240fee4778287a974463bad733899a`) passed hosted CI run 42620814176. Runtime deployment commit `32c93fb9bb23cbadfcc7658f29dd096c9c9816df` passed Pages run 42620814212. The corrected main-root package contains an object manifest with 93 file hashes; packaging passed, 91 existing hashed assets were retained, and live HTTPS provenance plus the current entry JS/CSS hashes matched. The previous attempt `f1a4b659` failed packaging because its runtime manifest had the wrong shape and its source commit was not an ancestor of main; it was superseded by the verified publication.
+Source `b43202a74aa7c19f48cd92f10cbff16cfe8d969e` (tree `19f012c195065095acf8b9d223fb748762055941`) passed hosted CI run 42623282605. Runtime deployment commit `7b94e649f2c4d2e6c15f768dd5ffd5d638e2804a` passed Pages run 42624237147 and exact-head CI run 42624237149. The package verified 107 runtime files and retained 105 earlier hashed assets. Live HTTPS provenance and hashes for the main bundle, example-library chunk and CSS matched. A production browser session opened the PV project with 9 devices, 8 wires, 2 pages and zero manufacturer-part claims. Local `npm run check` and all five example browser workflows passed.
 
-The user's `AdigunEplanTarget interface.png` is the strict visual acceptance target and remains unmet. The current source has four example projects; the 500 individually verified project gate remains open. The screenshot's fully populated project workspace, account/cloud state and connected BOT must reflect real data and verified service state. M7 device creation commit `1f7ec74` passed hosted CI run 42619447459 on its separate branch, but release PR #21 remains conflicted with main and is not integrated.
+The shipped library now has five original validated projects; 495 individually validated projects remain for the 500-project acceptance gate. The documented unpublished 233-example expansion was not recovered from available local project files, remote branches or PR history. Rebuild in validated batches. The user's `AdigunEplanTarget interface.png` remains the strict visual acceptance target and is unmet; the target's dense project data, full workbench details, and verified account/cloud/BOT status remain open. Earlier failed Pages attempt `f1a4b659` was superseded by the successful main-source runtime publication at `32c93fb`.
 
 ## Active template continuation — 2026-11-07
 
