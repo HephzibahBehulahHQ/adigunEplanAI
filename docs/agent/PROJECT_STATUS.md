@@ -1,5 +1,11 @@
 # Project status
 
+## 2026-11-09 verified publication and open acceptance
+
+Main source `448b8f54d9b5fc03cdd91f79cbb1b388adb62bd9` (tree `3794334383240fee4778287a974463bad733899a`) passed hosted CI run 42620814176. Runtime deployment commit `32c93fb9bb23cbadfcc7658f29dd096c9c9816df` passed Pages run 42620814212. The corrected main-root package contains an object manifest with 93 file hashes; packaging passed, 91 existing hashed assets were retained, and live HTTPS provenance plus the current entry JS/CSS hashes matched. The previous attempt `f1a4b659` failed packaging because its runtime manifest had the wrong shape and its source commit was not an ancestor of main; it was superseded by the verified publication.
+
+The user's `AdigunEplanTarget interface.png` is the strict visual acceptance target and remains unmet. The current source has four example projects; the 500 individually verified project gate remains open. The screenshot's fully populated project workspace, account/cloud state and connected BOT must reflect real data and verified service state. M7 device creation commit `1f7ec74` passed hosted CI run 42619447459 on its separate branch, but release PR #21 remains conflicted with main and is not integrated.
+
 ## Active template continuation — 2026-11-07
 
 Current goal and exact CI/deployment receipts: [PR #18](https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/18).

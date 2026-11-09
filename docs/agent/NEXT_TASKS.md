@@ -1,18 +1,10 @@
 # Next tasks
 
-1. Finish current-branch integration/browser/production-build verification and
-   record exact remote source and CI evidence. Review the original target layout.
-2. Recover prior unpublished work if its original environment becomes available;
-   reconcile it without overwriting either implementation. The four new original
-   examples are not a substitute for that recovery or the 500-project gate.
-3. Implement and verify the remaining hosted BOT gateway and authenticated,
-   previewed, rollback-safe mutations with product-only credentials. The current
-   local BOT is deliberately read-only and never persists engineering actions.
-4. Complete the full example category totals with individual engineering/export
-   evidence; do not count renamed or cosmetic variants as distinct projects.
-5. Retain the legitimate account/storage and mandatory-confirmation security
-   acceptance gates, manufacturer/standards rights, unsupported interchange,
-   native-language review and independent backup/restore checks.
+1. Meet the user's strict `AdigunEplanTarget interface.png` acceptance target. Review the live main UI at the reference viewport and implement the real-data workbench composition (navigator, schematic, 3D panel, BOT, diagnostics, calculations, BOM and reports); keep cloud and connection indicators tied to verified state.
+2. Recover the documented 233-example unpublished WIP from an available project history/workspace. If recovery is unavailable, continue original examples in engineering-validated batches; the shipped library currently has four projects and the 500 individually verified project gate remains open.
+3. Complete and verify the hosted BOT gateway and authenticated, previewed, rollback-safe mutations with product-only credentials. The current local BOT is read-only and does not persist engineering actions.
+4. Finish account/storage acceptance, mandatory-confirmation security, manufacturer/standards rights, unsupported interchange, native-language review, and independent backup/restore checks.
+5. Resolve the M7 release integration conflicts without discarding main's newer account, example and product-template work; merge only after exact-head CI and target comparison pass.
 6. Only declare M18–M20 complete after the actual full-product release gates pass.
 
 ## Historical implementation evidence

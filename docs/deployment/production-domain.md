@@ -2,6 +2,10 @@
 
 Required public origin: **https://adiguneplanai.hephzibahbehulah.com/**.
 
+## Current verified checkpoint — 2026-11-09
+
+Source `448b8f54d9b5fc03cdd91f79cbb1b388adb62bd9` passed CI run 42620814176; deployment revision `32c93fb9bb23cbadfcc7658f29dd096c9c9816df` passed Pages run 42620814212. The packaged manifest has 93 individually hashed runtime files, and 91 earlier hashed assets were preserved. Canonical HTTPS now serves the matching source/tree provenance, with live entry JavaScript and CSS matching their recorded SHA-256 values. This restores the verified main-source runtime after failed packaging at `f1a4b659`; it remains a development release and does not meet final product or visual acceptance.
+
 GitHub Pages settings were inspected on 2026-11-03: deployment source is `main` at `/ (root)`, the required custom domain is configured, and HTTPS enforcement is enabled. The previous root contained CNAME, README.md and _config.yml. These files were preserved when publishing the built development application.
 
 Verified deployment checkpoint: source commit `74706bcff2b9c749f9faed36c0ebf1619ba1c6e2`, source tree `be8c487534fd692b60879f746be2417acf3352dc`, deployment commit `e88f400912737dc3896deaf9bfa4d3d81763bd7f`. Pages run [41583498469](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/41583498469) succeeded. HTTPS build-info.json returned the expected source identity and a live nested SVG-import browser workflow passed. This is a development milestone, not completion of production acceptance.
