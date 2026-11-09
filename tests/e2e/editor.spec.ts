@@ -482,7 +482,10 @@ test("component catalog searches and maps a sourced part to a real terminal", as
   await create(page);
   await place(page, "terminal", 100, 100);
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await library
     .getByRole("combobox", { name: "Manufacturer", exact: true })
     .selectOption("WAGO");
@@ -540,7 +543,10 @@ test("engineering symbol search imports distinct transformer pins for native pla
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -587,7 +593,10 @@ test("NO contact catalog mapping preserves native pins and offers only compatibl
   await create(page);
   await place(page, "contact", 80, 80);
   await place(page, "terminal", 140, 80);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   const library = page.locator(".component-library");
   await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
   await library
@@ -617,7 +626,10 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -647,7 +659,10 @@ test("connector poles retain separate electrical nodes while each pole passes th
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -687,7 +702,10 @@ for (const [id, query, terminals, pins] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".navigator-tabs")
+      .getByRole("button", { name: "Component library", exact: true })
+      .click();
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -745,7 +763,10 @@ for (const [id, query, endpoint, count] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".navigator-tabs")
+      .getByRole("button", { name: "Component library", exact: true })
+      .click();
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -782,7 +803,10 @@ for (const [id, query, endpoint, count] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".navigator-tabs")
+      .getByRole("button", { name: "Component library", exact: true })
+      .click();
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -833,7 +857,10 @@ for (const [id, query, channel] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".navigator-tabs")
+      .getByRole("button", { name: "Component library", exact: true })
+      .click();
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -862,7 +889,10 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Custom symbols$/ })
@@ -898,7 +928,10 @@ test("custom symbols create native pins that wire and survive undo and reload", 
     page.getByRole("button", { name: "U1:IN", exact: true }),
   ).toBeVisible();
   expect((await project(page)).wires).toHaveLength(1);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Custom symbols$/ })
@@ -993,7 +1026,10 @@ test("component comparison preserves selections through search and shows missing
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await page
     .getByRole("checkbox", {
       name: "Select for comparison: Phoenix Contact 3004362",
@@ -1063,7 +1099,10 @@ test("catalog filters, favorites and recent assignments persist without changing
   await place(page, "terminal", 100, 100);
   const before = await project(page);
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await library
     .getByLabel("Minimum declared voltage (V)", { exact: true })
     .fill("1000");
@@ -1088,7 +1127,10 @@ test("catalog filters, favorites and recent assignments persist without changing
     .check();
   expect(await project(page)).toEqual(before);
   await page.reload();
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await expect(
     library.getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
@@ -1113,7 +1155,10 @@ test("catalog filters, favorites and recent assignments persist without changing
       .click();
   }
   await page.reload();
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await library
     .getByLabel("Catalog view", { exact: true })
     .selectOption("recent");
@@ -1156,7 +1201,10 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
   );
   await page.reload();
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await expect(library.getByRole("alert")).toContainText(
     "Stored data has been preserved",
   );
@@ -1182,7 +1230,10 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
     })
     .check();
   await page.reload();
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await expect(
     library.getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
@@ -1206,7 +1257,10 @@ test("catalog preference quota failure retains session favorites and reports uns
     };
   });
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await library
     .getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
@@ -1220,7 +1274,10 @@ test("catalog preference quota failure retains session favorites and reports uns
   await expect(library.getByRole("article")).toHaveCount(1);
   expect(await project(page)).toEqual(before);
   await page.reload();
-  await library.locator(":scope > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await expect(
     library.getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
