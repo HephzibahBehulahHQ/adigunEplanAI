@@ -79,6 +79,20 @@ test("the native drawing, cabinet and docked BOT work together on desktop", asyn
     calculations.locator(".panel-heading button").first(),
   ).toBeFocused();
   await tabs.getByRole("button", { name: "Home", exact: true }).click();
+  await page.setViewportSize({ width: 375, height: 812 });
+  const homeRibbon = page.locator('.ribbon[data-tab="home"]');
+  await homeRibbon
+    .getByRole("button", { name: "Fit page", exact: true })
+    .focus();
+  const ribbonSize = await homeRibbon.evaluate((element) => ({
+    height: element.offsetHeight,
+    scroll: element.scrollLeft,
+    documentWidth: document.documentElement.scrollWidth,
+  }));
+  expect(ribbonSize.height).toBeLessThanOrEqual(100);
+  expect(ribbonSize.scroll).toBeGreaterThan(0);
+  expect(ribbonSize.documentWidth).toBe(375);
+  await page.setViewportSize({ width: 1672, height: 941 });
   const titleBlock = page.locator(".drawing-title-block");
   await expect(titleBlock).toContainText("Projektname");
   await expect(titleBlock).toContainText(project.name);

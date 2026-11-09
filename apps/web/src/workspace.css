@@ -191,6 +191,15 @@ i {
   gap: 0.45rem;
   align-items: center;
 }
+.ribbon[data-tab="home"] {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.ribbon[data-tab="home"] .native-tools {
+  flex: none;
+  flex-wrap: nowrap;
+}
 .sheet-properties {
   display: grid;
   gap: 2px;

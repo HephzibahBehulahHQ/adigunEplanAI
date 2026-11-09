@@ -478,7 +478,7 @@ export function App() {
           {t(native.error)}
         </p>
       )}
-      <div className="ribbon" aria-label={t(tab)}>
+      <div className="ribbon" data-tab={tab} aria-label={t(tab)}>
         {tab === "home" || tab === "file" ? (
           <>
             <ProjectTools
