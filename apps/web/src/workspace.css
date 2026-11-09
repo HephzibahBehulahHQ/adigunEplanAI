@@ -849,9 +849,27 @@ button:disabled {
 }
 .cabinet-views {
   position: absolute;
-  inset: 0.35rem 0.35rem auto auto;
+  inset: 0.35rem auto auto 0.35rem;
   display: grid;
+  grid-template-columns: repeat(2, max-content);
   gap: 0.2rem;
+}
+.cabinet-orientation {
+  position: absolute;
+  inset: 0.35rem 0.35rem auto auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  pointer-events: none;
+}
+.cabinet-orientation text {
+  fill: var(--navy);
+  font-size: 8px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: var(--ivory);
+  stroke-width: 1.6px;
 }
 .cabinet-views button {
   padding: 0.2rem 0.35rem;
