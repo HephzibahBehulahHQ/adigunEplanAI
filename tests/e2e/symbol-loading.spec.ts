@@ -30,7 +30,10 @@ test("engineering symbols load only on demand and preserve search while collapse
   });
   await create(page);
   const before = await project(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   expect(requests).toBe(0);
   await summary(page).click();
   await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
@@ -52,7 +55,10 @@ test("failed engineering-symbol download leaves native editing and export functi
     (route) => route.abort("failed"),
   );
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await summary(page).click();
   await expect(
     page.locator(".component-library").getByRole("alert"),
@@ -89,7 +95,10 @@ test("secondary category browsing and search leave native project unchanged", as
 }) => {
   await create(page);
   const before = await project(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   await summary(page).click();
   const category = page.getByRole("combobox", {
     name: "Symbol category",
@@ -115,7 +124,10 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".navigator-tabs")
+    .getByRole("button", { name: "Component library", exact: true })
+    .click();
   const phoenix = page.getByRole("article", {
     name: "Phoenix Contact 3044076",
     exact: true,

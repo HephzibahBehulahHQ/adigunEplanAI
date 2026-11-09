@@ -205,6 +205,10 @@ export function EnclosureView({
   const cameraFacingFaces = faces.filter(
     ({ normal }) => cameraDepth(normal) > 1e-10,
   );
+  const orientationCorners = corners(
+    { x: -14, y: -14, z: -14 },
+    { x: 28, y: 28, z: 28 },
+  );
   const frameEdges = edges
     .map(([a, b]) => ({
       a,
@@ -335,6 +339,37 @@ export function EnclosureView({
             );
           })}
           <circle r="2" />
+        </svg>
+        <svg
+          className="cabinet-orientation"
+          viewBox="-29 -29 58 58"
+          aria-hidden="true"
+        >
+          {cameraFacingFaces.map(({ indices, normal, tone }) => {
+            const axis = normal.x ? "X" : normal.y ? "Y" : "Z";
+            const { x, y } = projectPoint({
+              x: normal.x * 14,
+              y: normal.y * 14,
+              z: normal.z * 14,
+            });
+            return (
+              <g key={tone}>
+                <polygon
+                  className={`enclosure-face enclosure-face-${tone}`}
+                  points={indices
+                    .map((index) => {
+                      const point = orientationCorners[index];
+                      return `${point.x},${point.y}`;
+                    })
+                    .join(" ")}
+                />
+                <text x={x} y={y}>
+                  {normal.x + normal.y + normal.z > 0 ? "+" : "−"}
+                  {axis}
+                </text>
+              </g>
+            );
+          })}
         </svg>
         <div
           className="cabinet-views"
