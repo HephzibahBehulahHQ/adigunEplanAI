@@ -189,6 +189,34 @@ export const catalog: readonly CatalogPart[] = [
       connections: 10,
     },
   },
+  {
+    id: "siemens-p1j122728",
+    name: "SIPROTEC 7SJ82 overcurrent protection; standard variant",
+    category: "protection",
+    manufacturer: "Siemens",
+    partNumber: "P1J122728",
+    sourceUrl:
+      "https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    mounting: "Flush mounting; 1/3 × 19 in housing width",
+    ratings: {
+      binaryInputs: 11,
+      binaryOutputs: 9,
+      currentInputs: 4,
+      voltageInputs: 4,
+      auxiliarySupplyMinV: 24,
+      auxiliarySupplyMaxV: 48,
+      auxiliarySupplyType: "DC",
+    },
+    mapping: {
+      glyph: "component",
+      symbolId: "library-protection-relay-trip",
+      electricalNodes: 7,
+      connections: 7,
+    },
+  },
 ];
 
 export function catalogMissingData(part: CatalogPart) {

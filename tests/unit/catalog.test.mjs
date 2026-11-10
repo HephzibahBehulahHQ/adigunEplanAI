@@ -474,7 +474,12 @@ test("catalog searches factual manufacturer records without fabricating matches"
   );
   assert.equal(searchCatalog("phoenix 3004362").length, 1);
   assert.equal(searchCatalog("ＵＫ ５ Ｎ").length, 1);
-  assert.equal(searchCatalog("", "protection").length, 0);
+  assert.equal(searchCatalog("", "protection").length, 1);
+  assert.equal(
+    searchCatalog("P1J122728", "protection", "Siemens")[0].ratings
+      .currentInputs,
+    4,
+  );
   assert.equal(searchCatalog("", "connections", "Unknown").length, 0);
   assert.equal(catalog[0].ratings.nominalCurrentA, 32);
   assert.match(catalog[0].sourceUrl, /^https:\/\/www\.phoenixcontact\.com\//);

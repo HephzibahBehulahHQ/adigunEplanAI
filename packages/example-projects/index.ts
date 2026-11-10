@@ -564,7 +564,7 @@ export function buildExample(id: ExampleId): Project {
     wire("X7", "1", "P1", "I_plus");
     wire("X8", "1", "P1", "I_minus");
     note(
-      "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
+      "P1 is a limited schematic interface: the selected variant has four current and four voltage measurement inputs, but terminal-level wiring, transformer ratios and trip-actuator selection remain design inputs.",
       20,
       230,
     );
@@ -572,17 +572,7 @@ export function buildExample(id: ExampleId): Project {
       cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
     if (id === "target-substation") {
       const relay = p.devices.find((device) => device.reference === "P1")!;
-      const relayPartId = crypto.randomUUID();
-      p.manufacturerParts.push({
-        id: relayPartId,
-        name: "SIPROTEC 5 7SJ82 standard variant",
-        manufacturer: "Siemens",
-        partNumber: "P1J122728",
-        sourceUrl:
-          "https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728",
-        ratings: {},
-      });
-      relay.partId = relayPartId;
+      p = assignCatalogPart(p, relay.id, "siemens-p1j122728");
 
       pageId = page("03 · Control and communications");
       note(

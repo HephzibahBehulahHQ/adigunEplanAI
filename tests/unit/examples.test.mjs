@@ -94,6 +94,20 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   assert.equal(p.pages.length, 3);
   assert.equal(p.devices.length, 27);
   assert.equal(p.wires.length, 32);
+  const relayPart = p.manufacturerParts.find(
+    (part) => part.partNumber === "P1J122728",
+  );
+  assert.equal(relayPart.manufacturer, "Siemens");
+  assert.deepEqual(relayPart.ratings, {
+    binaryInputs: 11,
+    binaryOutputs: 9,
+    currentInputs: 4,
+    voltageInputs: 4,
+    auxiliarySupplyMinV: 24,
+    auxiliarySupplyMaxV: 48,
+    auxiliarySupplyType: "DC",
+  });
+  assert.equal(relayPart.catalogSnapshot.category, "protection");
   const incomingIsolator = p.devices.find(
     (device) => device.reference === "Q0",
   );
