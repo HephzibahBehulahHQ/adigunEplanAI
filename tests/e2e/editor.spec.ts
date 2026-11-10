@@ -455,6 +455,27 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   expect((await project(page)).symbolInstances[0].position).toEqual(
     before.symbolInstances[0].position,
   );
+  await canvas.scrollIntoViewIfNeeded();
+  const [from, to] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(100, 100), new DOMPoint(112.4, 106.4)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  const symbol = canvas.locator('[data-instance="symbol-a"] > g[transform]');
+  await page.mouse.move(from.x, from.y);
+  await page.mouse.down();
+  await page.mouse.move(to.x, to.y);
+  await expect(symbol).toHaveAttribute("transform", /^translate\(110 105\)/);
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 110,
+    y: 105,
+  });
 });
 
 test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({

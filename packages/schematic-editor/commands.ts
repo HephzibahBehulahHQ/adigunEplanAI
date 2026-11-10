@@ -374,10 +374,7 @@ export function move(
   editable(project, ids);
   const first = project.symbolInstances.find((s) => s.id === ids[0]);
   if (!first) return project;
-  const shift = {
-    x: quantize(first.position.x + delta.x, grid) - first.position.x,
-    y: quantize(first.position.y + delta.y, grid) - first.position.y,
-  };
+  const shift = movementDelta(first.position, delta, grid);
   for (const s of project.symbolInstances)
     if (ids.includes(s.id))
       s.position = { x: s.position.x + shift.x, y: s.position.y + shift.y };
@@ -385,6 +382,17 @@ export function move(
   checkCollisions(project, ids);
   reroute(project, ids);
   return project;
+}
+
+export function movementDelta(
+  anchor: Point,
+  delta: Point,
+  grid: number,
+): Point {
+  return {
+    x: quantize(anchor.x + delta.x, grid) - anchor.x,
+    y: quantize(anchor.y + delta.y, grid) - anchor.y,
+  };
 }
 
 export function moveSymbolTo(project: Project, id: string, position: Point) {

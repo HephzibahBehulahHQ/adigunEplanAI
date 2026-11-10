@@ -26,6 +26,7 @@ import {
   ensureLayer,
   mirror,
   move,
+  movementDelta,
   moveSymbolTo,
   place,
   paste,
@@ -49,6 +50,7 @@ type Props = {
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
   kind: "pan" | "move" | "marquee";
+  anchor?: Point;
   start: Point;
   view: Box;
   matrix: DOMMatrix;
@@ -255,6 +257,8 @@ export function SchematicEditor({
     const world = point(event);
     drag.current = {
       kind: "move",
+      anchor: project.symbolInstances.find((item) => item.id === ids[0])
+        ?.position,
       start: world,
       last: world,
       view,
@@ -280,7 +284,12 @@ export function SchematicEditor({
         x: current.view.x - delta.x,
         y: current.view.y - delta.y,
       });
-    else if (current.kind === "move") setPreview(delta);
+    else if (current.kind === "move")
+      setPreview(
+        current.anchor && (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
+          ? movementDelta(current.anchor, delta, grid)
+          : { x: 0, y: 0 },
+      );
     else setMarquee({ a: current.start, b: current.last });
   }
   function pointerUp() {
