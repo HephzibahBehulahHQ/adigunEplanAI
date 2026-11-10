@@ -50,6 +50,7 @@ type Props = {
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
   coordinateReadout: RefObject<HTMLSpanElement | null>;
+  showGrid: boolean;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
@@ -73,6 +74,7 @@ export function SchematicEditor({
   toggleOrthogonal,
   toggleSnap,
   coordinateReadout,
+  showGrid,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
@@ -1159,7 +1161,7 @@ export function SchematicEditor({
         <rect
           width={page.widthMm}
           height={page.heightMm}
-          fill={`url(#grid-${page.id})`}
+          fill={showGrid ? `url(#grid-${page.id})` : "transparent"}
         />
         <DrawingSheetFrame project={project} page={page} />
         {project.wirePaths

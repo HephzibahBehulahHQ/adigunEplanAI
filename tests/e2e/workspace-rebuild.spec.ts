@@ -123,6 +123,7 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     "Analysis",
     "AI tools",
     "Tools",
+    "Options",
     "Settings",
     "Help",
   ]);
@@ -142,6 +143,10 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     ).toBeLessThanOrEqual(width);
     const help = menus.getByRole("button", { name: "Help menu", exact: true });
     await help.click();
+    await page
+      .locator("#workbench-menu-help")
+      .getByRole("button", { name: "Help", exact: true })
+      .click();
     const guide = page.getByRole("dialog", {
       name: "Workspace guide",
       exact: true,
@@ -172,6 +177,14 @@ test("Home commands print native geometry, open the library and close without lo
       JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!).projects,
   );
   await page.getByRole("button", { name: "Save all", exact: true }).click();
+  await page.evaluate(() => {
+    const open = window.open.bind(window);
+    window.open = (...args) => {
+      const popup = open(...args);
+      if (popup) popup.print = () => {};
+      return popup;
+    };
+  });
   const popupEvent = page.waitForEvent("popup");
   await page.getByRole("button", { name: "Print", exact: true }).click();
   const popup = await popupEvent;

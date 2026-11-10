@@ -12,7 +12,7 @@ import {
 } from "react";
 import {
   WorkspaceCommands,
-  ribbonTabs,
+  CommandIcon,
   type RibbonTab,
 } from "./WorkspaceRibbon";
 import { BotWindow } from "./BotWindow";
@@ -36,6 +36,7 @@ import {
 import { useNativeProjects } from "./useNativeProjects";
 import { useAccount, type Account } from "./useAccount";
 import { WorkspaceHeader } from "./WorkspaceHeader";
+import { WorkbenchMenus } from "./WorkbenchMenus";
 import { HomeRibbon } from "./HomeRibbon";
 import { AccountPanel } from "./AccountPanel";
 import {
@@ -101,7 +102,12 @@ function Workspace({ account }: { account: Account }) {
   });
   const [botSignal, setBotSignal] = useState(0);
   const [librarySignal, setLibrarySignal] = useState(0);
-  const [tab, setTab] = useState<RibbonTab>("home");
+  const [activeMenu, setActiveMenu] = useState<RibbonTab | null>(null);
+  const [sidebars, setSidebars] = useState({ left: true, right: true });
+  const [showGrid, setShowGrid] = useState(true);
+  const toggleSide = (side: "left" | "right") =>
+    setSidebars((previous) => ({ ...previous, [side]: !previous[side] }));
+  const ribbonRef = useRef<HTMLDivElement>(null);
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
@@ -129,6 +135,9 @@ function Workspace({ account }: { account: Account }) {
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const reveal = (id: PanelId) => {
     panel(id, { visible: true, collapsed: false });
+    const dock = prefs.panels[id].dock;
+    if (dock === "left" || dock === "right")
+      setSidebars((previous) => ({ ...previous, [dock]: true }));
     if (id === "project") setLibrarySignal((value) => value + 1);
     requestAnimationFrame(() => {
       const element = document.querySelector<HTMLElement>(
@@ -241,6 +250,7 @@ function Workspace({ account }: { account: Account }) {
   };
   const region = (dock: Dock) => (
     <aside
+      id={`workspace-dock-${dock}`}
       className={`dock dock-${dock}`}
       aria-label={`${t("panels")} ${t(dock)}`}
     >
@@ -252,9 +262,79 @@ function Workspace({ account }: { account: Account }) {
     </aside>
   );
   const has = (dock: Dock) =>
+    (dock === "bottom" || sidebars[dock]) &&
     panelIds.some(
       (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
     );
+  const displayChecks = (
+    <>
+      <label>
+        <input
+          type="checkbox"
+          checked={showGrid}
+          onChange={(event) => setShowGrid(event.target.checked)}
+        />
+        {t("grid")}
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={activePage?.snapping ?? false}
+          disabled={!activePage}
+          onChange={toggleSnap}
+        />
+        {t("snapping")}
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          checked={prefs.compact}
+          onChange={(event) => set("compact", event.target.checked)}
+        />
+        {t("compactWorkspace")}
+      </label>
+    </>
+  );
+  const projectMenu = (
+    <>
+      {(
+        [
+          ["new", "newProject", "new"],
+          ["open", "importProject", "open"],
+          ["save", "save", "save"],
+          ["saveAll", "saveAll", "save"],
+          ["print", "print", "print"],
+          ["export", "exportProject", "export"],
+          ["close", "closeProject", "close"],
+        ] as const
+      ).map(([command, key, icon]) => (
+        <button
+          key={command}
+          disabled={
+            command === "new"
+              ? native.corrupt
+              : command !== "open" && !native.project
+          }
+          onClick={() =>
+            ribbonRef.current
+              ?.querySelector<HTMLButtonElement>(`[data-command="${command}"]`)
+              ?.click()
+          }
+        >
+          <CommandIcon kind={icon} />
+          {t(key)}
+        </button>
+      ))}
+      <hr />
+      <button
+        className="ribbon-example-button"
+        onClick={() => examplesDialog.current?.showModal()}
+      >
+        <CommandIcon kind="library" />
+        {t("demoProjects")}
+      </button>
+    </>
+  );
   return (
     <div
       className="application"
@@ -265,36 +345,213 @@ function Workspace({ account }: { account: Account }) {
       <a className="skip-link" href="#workspace">
         {t("skip")}
       </a>
-      <WorkspaceHeader
-        native={native}
-        account={account}
-        t={t}
-        openAccount={() => accountDialog.current?.showModal()}
-        openDiagnostics={() => reveal("diagnostics")}
-        openHelp={() => help.current?.showModal()}
-      />
-      <nav className="ribbon-tabs" aria-label={t("interface")}>
-        {ribbonTabs.map(([id, key]) => (
-          <button
-            key={id}
-            aria-pressed={tab === id}
-            aria-label={
-              id === "home" || id === "view" || id === "settings"
-                ? t(key)
-                : `${t(key)} ${t("ribbonMenu")}`
-            }
-            onClick={() =>
-              id === "help"
-                ? help.current?.showModal()
-                : id === "ai"
-                  ? setBotSignal((value) => value + 1)
-                  : setTab(id)
-            }
-          >
-            {t(key)}
-          </button>
-        ))}
-      </nav>
+      <div className="workbench-shell">
+        <WorkspaceHeader
+          native={native}
+          account={account}
+          t={t}
+          openAccount={() => accountDialog.current?.showModal()}
+          openDiagnostics={() => reveal("diagnostics")}
+          openHelp={() => help.current?.showModal()}
+        />
+        <div className="workbench-menu-row">
+          <WorkbenchMenus active={activeMenu} setActive={setActiveMenu} t={t}>
+            {activeMenu === "home" ? (
+              (
+                [
+                  ["ribbonSelect", "select"],
+                  ["ribbonMove", "pan"],
+                  ["ribbonWire", "wire"],
+                  ["ribbonPlace", "symbol"],
+                  ["ribbonECheck", "check"],
+                  ["ribbonBom", "report"],
+                ] as const
+              ).map(([key, icon]) => (
+                <button
+                  key={key}
+                  disabled={!native.project}
+                  onClick={() =>
+                    ribbonRef.current
+                      ?.querySelector<HTMLButtonElement>(
+                        `[data-command="${key}"]`,
+                      )
+                      ?.click()
+                  }
+                >
+                  <CommandIcon kind={icon} />
+                  {t(key)}
+                </button>
+              ))
+            ) : activeMenu === "file" || activeMenu === "project" ? (
+              <>
+                {projectMenu}
+                {activeMenu === "project" && (
+                  <WorkspaceCommands
+                    tab="project"
+                    native={native}
+                    t={t}
+                    reveal={reveal}
+                  />
+                )}
+              </>
+            ) : activeMenu === "view" ? (
+              <>
+                {displayChecks}
+                <div className="panel-toggles">
+                  {panelIds.map((id) => (
+                    <label key={id}>
+                      <input
+                        type="checkbox"
+                        checked={prefs.panels[id].visible}
+                        onChange={(e) =>
+                          panel(id, { visible: e.target.checked })
+                        }
+                      />
+                      {t(id)}
+                    </label>
+                  ))}
+                </div>
+                <button
+                  onClick={() => {
+                    setPrefs((p) => ({ ...p, panels: defaults().panels }));
+                    setSidebars({ left: true, right: true });
+                  }}
+                >
+                  {t("reset")}
+                </button>
+              </>
+            ) : activeMenu === "options" ? (
+              displayChecks
+            ) : activeMenu === "settings" ? (
+              <>
+                <button
+                  aria-label={t("workspaceSearch")}
+                  onClick={() => searchDialog.current?.showModal()}
+                >
+                  {t("workspaceSearch")}
+                </button>
+                <label>
+                  {t("theme")}
+                  <select
+                    aria-label={t("theme")}
+                    value={prefs.theme}
+                    onChange={(e) =>
+                      set("theme", e.target.value as Preferences["theme"])
+                    }
+                  >
+                    <option value="dark">{t("dark")}</option>
+                    <option value="light">{t("light")}</option>
+                  </select>
+                </label>
+                <label>
+                  {t("language")}
+                  <select
+                    aria-label={t("language")}
+                    value={prefs.language}
+                    onChange={(e) =>
+                      set("language", e.target.value as Language)
+                    }
+                  >
+                    {Object.entries({
+                      en: "English",
+                      de: "Deutsch",
+                      yo: "Yorùbá",
+                      pcm: "Naijá Pidgin",
+                    }).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  {t("sheetBackground")}
+                  <select
+                    aria-label={t("sheetBackground")}
+                    value={prefs.background}
+                    onChange={(e) =>
+                      set(
+                        "background",
+                        e.target.value as Preferences["background"],
+                      )
+                    }
+                  >
+                    {(["white", "dark", "custom"] as const).map((value) => (
+                      <option key={value} value={value}>
+                        {t(value)}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                {prefs.background === "custom" && (
+                  <label>
+                    {t("backgroundColor")}
+                    <input
+                      aria-label={t("backgroundColor")}
+                      type="color"
+                      value={prefs.color}
+                      onChange={(e) => set("color", e.target.value)}
+                    />
+                  </label>
+                )}
+              </>
+            ) : activeMenu === "help" ? (
+              <button
+                onClick={() => {
+                  document.getElementById("workbench-trigger-help")?.focus();
+                  help.current?.showModal();
+                }}
+              >
+                <CommandIcon kind="help" />
+                {t("help")}
+              </button>
+            ) : activeMenu === "ai" ? (
+              <button onClick={() => setBotSignal((value) => value + 1)}>
+                <CommandIcon kind="help" />
+                Adigun BOT
+              </button>
+            ) : (
+              activeMenu && (
+                <WorkspaceCommands
+                  tab={activeMenu}
+                  native={native}
+                  t={t}
+                  reveal={reveal}
+                />
+              )
+            )}
+          </WorkbenchMenus>
+          <div className="sidebar-toggles">
+            {(["left", "right"] as const).map((side) => (
+              <button
+                key={side}
+                type="button"
+                aria-label={`${t("panels")} ${t(side)}`}
+                title={`${t("panels")} ${t(side)}`}
+                aria-expanded={sidebars[side]}
+                aria-controls={`workspace-dock-${side}`}
+                onClick={() => toggleSide(side)}
+              >
+                <CommandIcon kind={`sidebar-${side}`} />
+              </button>
+            ))}
+          </div>
+        </div>
+        <div
+          ref={ribbonRef}
+          className="ribbon"
+          data-tab="home"
+          aria-label={t("home")}
+        >
+          <ProjectTools native={native} t={t} home />
+          <HomeRibbon
+            native={native}
+            t={t}
+            reveal={reveal}
+            themes={() => setActiveMenu("settings")}
+          />
+        </div>
+      </div>
       {native.error && (
         <p className="storage-error" role="alert">
           {t(native.error)}
@@ -305,139 +562,6 @@ function Workspace({ account }: { account: Account }) {
           {t("accountChecking")}
         </p>
       )}
-      <div
-        className="ribbon"
-        data-tab={tab}
-        aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
-      >
-        {tab === "home" ? (
-          <>
-            <ProjectTools native={native} t={t} home />
-            <HomeRibbon
-              native={native}
-              t={t}
-              reveal={reveal}
-              themes={() => setTab("settings")}
-            />
-          </>
-        ) : tab === "file" || tab === "project" ? (
-          <>
-            <ProjectTools native={native} t={t} />
-            <button
-              className="ribbon-example-button"
-              onClick={() => examplesDialog.current?.showModal()}
-            >
-              {t("demoProjects")}
-            </button>
-            <WorkspaceCommands
-              tab={tab}
-              native={native}
-              t={t}
-              reveal={reveal}
-            />
-          </>
-        ) : tab === "view" ? (
-          <>
-            <label>
-              <input
-                type="checkbox"
-                checked={prefs.compact}
-                onChange={(event) => set("compact", event.target.checked)}
-              />
-              {t("compactWorkspace")}
-            </label>
-            <div className="panel-toggles">
-              {panelIds.map((id) => (
-                <label key={id}>
-                  <input
-                    type="checkbox"
-                    checked={prefs.panels[id].visible}
-                    onChange={(e) => panel(id, { visible: e.target.checked })}
-                  />
-                  {t(id)}
-                </label>
-              ))}
-            </div>
-            <button
-              onClick={() =>
-                setPrefs((p) => ({ ...p, panels: defaults().panels }))
-              }
-            >
-              {t("reset")}
-            </button>
-          </>
-        ) : tab === "settings" ? (
-          <>
-            <button
-              aria-label={t("workspaceSearch")}
-              onClick={() => searchDialog.current?.showModal()}
-            >
-              {t("workspaceSearch")}
-            </button>
-            <label>
-              {t("theme")}
-              <select
-                aria-label={t("theme")}
-                value={prefs.theme}
-                onChange={(e) =>
-                  set("theme", e.target.value as Preferences["theme"])
-                }
-              >
-                <option value="dark">{t("dark")}</option>
-                <option value="light">{t("light")}</option>
-              </select>
-            </label>
-            <label>
-              {t("language")}
-              <select
-                aria-label={t("language")}
-                value={prefs.language}
-                onChange={(e) => set("language", e.target.value as Language)}
-              >
-                {Object.entries({
-                  en: "English",
-                  de: "Deutsch",
-                  yo: "Yorùbá",
-                  pcm: "Naijá Pidgin",
-                }).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              {t("sheetBackground")}
-              <select
-                aria-label={t("sheetBackground")}
-                value={prefs.background}
-                onChange={(e) =>
-                  set("background", e.target.value as Preferences["background"])
-                }
-              >
-                {(["white", "dark", "custom"] as const).map((value) => (
-                  <option key={value} value={value}>
-                    {t(value)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {prefs.background === "custom" && (
-              <label>
-                {t("backgroundColor")}
-                <input
-                  aria-label={t("backgroundColor")}
-                  type="color"
-                  value={prefs.color}
-                  onChange={(e) => set("color", e.target.value)}
-                />
-              </label>
-            )}
-          </>
-        ) : (
-          <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
-        )}
-      </div>
       {storageError && (
         <p className="storage-error" role="status">
           {t("storageError")}
@@ -485,6 +609,7 @@ function Workspace({ account }: { account: Account }) {
                   orthogonal={orthogonal}
                   toggleOrthogonal={toggleOrthogonal}
                   toggleSnap={toggleSnap}
+                  showGrid={showGrid}
                   coordinateReadout={coordinateReadout}
                 />
               ) : (
