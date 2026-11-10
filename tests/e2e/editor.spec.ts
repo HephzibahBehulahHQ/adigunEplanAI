@@ -399,6 +399,12 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   page,
 }) => {
   const fixture = nativeProject();
+  fixture.pages.push({
+    ...fixture.pages[0],
+    id: "sheet-2",
+    name: "Sheet 2",
+    order: 1,
+  });
   fixture.symbolInstances[0].position = { x: 100, y: 100 };
   fixture.symbolInstances[1].position = { x: 180, y: 100 };
   fixture.wirePaths[0].points = [
@@ -506,6 +512,20 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   });
   await ortho.click();
   await expect(ortho).toHaveAttribute("aria-pressed", "false");
+  const snap = page.getByRole("button", { name: "Snap to grid", exact: true });
+  await canvas.press("F9");
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  expect(
+    (await project(page)).pages.map(
+      ({ snapping }: { snapping: boolean }) => snapping,
+    ),
+  ).toEqual([false, true]);
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  await expect(snap).toHaveAttribute("aria-pressed", "true");
+  await snap.click();
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
 });
 
 test("Wire mode snaps nearby clicks to native pin coordinates", async ({

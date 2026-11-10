@@ -462,12 +462,17 @@ i {
   font-weight: 500;
 }
 .status-diagnostics,
-.status-ortho {
+.status-cad-toggle {
   padding: 0.22rem 0.45rem;
   border-color: var(--line);
   font-size: inherit;
 }
-.status-ortho[aria-pressed="true"] {
+.status-cad-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.status-cad-toggle[aria-pressed="true"] {
   color: var(--cyan);
   border-color: var(--cyan);
 }

@@ -844,7 +844,12 @@ export function NativeDrawing({
   t,
   orthogonal,
   toggleOrthogonal,
-}: Props & { orthogonal: boolean; toggleOrthogonal: () => void }) {
+  toggleSnap,
+}: Props & {
+  orthogonal: boolean;
+  toggleOrthogonal: () => void;
+  toggleSnap: () => void;
+}) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
   const { view, setView } = native;
@@ -950,6 +955,7 @@ export function NativeDrawing({
               setClipboard={setClipboard}
               orthogonal={orthogonal}
               toggleOrthogonal={toggleOrthogonal}
+              toggleSnap={toggleSnap}
             />
           ) : (
             <p className="canvas-empty">{t("noPages")}</p>

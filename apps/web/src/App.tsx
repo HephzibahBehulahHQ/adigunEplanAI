@@ -63,6 +63,20 @@ function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
   const [orthogonal, setOrthogonal] = useState(false);
   const toggleOrthogonal = () => setOrthogonal((enabled) => !enabled);
+  const activePage =
+    native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
+    native.project?.pages[0];
+  const toggleSnap = () => {
+    if (!activePage) return;
+    native.update((project) => ({
+      ...project,
+      pages: project.pages.map((page) =>
+        page.id === activePage.id
+          ? { ...page, snapping: !page.snapping }
+          : page,
+      ),
+    }));
+  };
   const connectivity = useMemo(
     () => (native.project ? analyze(native.project) : null),
     [native.project],
@@ -469,6 +483,7 @@ function Workspace({ account }: { account: Account }) {
                   t={t}
                   orthogonal={orthogonal}
                   toggleOrthogonal={toggleOrthogonal}
+                  toggleSnap={toggleSnap}
                 />
               ) : (
                 <div className="empty-workspace">
@@ -501,25 +516,35 @@ function Workspace({ account }: { account: Account }) {
         </span>
         {native.project && (
           <span className="engineering-status">
-            {native.project.name} ·{" "}
-            {native.project.pages.find((p) => p.id === native.selectedPageId)
-              ?.name ?? native.project.pages[0]?.name}
+            {native.project.name} · {activePage?.name}
             {" · "}
             {t("selectionCount")}: {native.selectedSymbolIds.length}
             {" · mm"}
           </span>
         )}
-        {native.project && native.view === "schematic" && (
-          <button
-            type="button"
-            className="status-ortho"
-            aria-pressed={orthogonal}
-            aria-keyshortcuts="F8"
-            title={`${t("orthogonalMove")} (F8)`}
-            onClick={toggleOrthogonal}
-          >
-            {t("orthogonalMove")}
-          </button>
+        {activePage && native.view === "schematic" && (
+          <div className="status-cad-tools">
+            <button
+              type="button"
+              className="status-cad-toggle"
+              aria-pressed={activePage.snapping}
+              aria-keyshortcuts="F9"
+              title={`${t("snapping")} (F9)`}
+              onClick={toggleSnap}
+            >
+              {t("snapping")}
+            </button>
+            <button
+              type="button"
+              className="status-cad-toggle"
+              aria-pressed={orthogonal}
+              aria-keyshortcuts="F8"
+              title={`${t("orthogonalMove")} (F8)`}
+              onClick={toggleOrthogonal}
+            >
+              {t("orthogonalMove")}
+            </button>
+          </div>
         )}
         {connectivity && (
           <button

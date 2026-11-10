@@ -47,6 +47,7 @@ type Props = {
   page: Project["pages"][number];
   orthogonal: boolean;
   toggleOrthogonal: () => void;
+  toggleSnap: () => void;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
@@ -68,6 +69,7 @@ export function SchematicEditor({
   setClipboard,
   orthogonal,
   toggleOrthogonal,
+  toggleSnap,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
@@ -564,6 +566,11 @@ export function SchematicEditor({
           if (!event.repeat) toggleOrthogonal();
           return;
         }
+        if (key === "f9") {
+          event.preventDefault();
+          if (!event.repeat) toggleSnap();
+          return;
+        }
         if (
           (event.ctrlKey || event.metaKey) &&
           ["z", "y", "c", "v", "d", "x"].includes(key)
@@ -725,23 +732,6 @@ export function SchematicEditor({
               }))
             }
           />
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={page.snapping}
-            onChange={(e) =>
-              edit((p) => ({
-                ...p,
-                pages: p.pages.map((item) =>
-                  item.id === page.id
-                    ? { ...item, snapping: e.target.checked }
-                    : item,
-                ),
-              }))
-            }
-          />
-          {t("snapping")}
         </label>
       </div>
       <div
