@@ -26,6 +26,7 @@ import {
   ensureLayer,
   mirror,
   move,
+  moveSymbolTo,
   place,
   paste,
   primitives,
@@ -862,14 +863,10 @@ export function SchematicEditor({
                   (s) => s.id === selectedInstance.id,
                 )!;
                 s.name = d.reference;
-                const x = Number(data.get("x")),
-                  y = Number(data.get("y"));
-                move(
-                  p,
-                  [s.id],
-                  { x: x - s.position.x, y: y - s.position.y },
-                  grid,
-                );
+                moveSymbolTo(p, s.id, {
+                  x: Number(data.get("x")),
+                  y: Number(data.get("y")),
+                });
                 for (const term of p.terminals.filter(
                   (term) => term.deviceId === d.id,
                 ))
@@ -891,20 +888,22 @@ export function SchematicEditor({
             <label>
               X (mm)
               <input
-                key={`x${selectedInstance.position.x}`}
+                key={`${selectedInstance.id}:x:${selectedInstance.position.x}`}
                 name="x"
                 type="number"
                 step="any"
+                required
                 defaultValue={selectedInstance.position.x}
               />
             </label>
             <label>
               Y (mm)
               <input
-                key={`y${selectedInstance.position.y}`}
+                key={`${selectedInstance.id}:y:${selectedInstance.position.y}`}
                 name="y"
                 type="number"
                 step="any"
+                required
                 defaultValue={selectedInstance.position.y}
               />
             </label>

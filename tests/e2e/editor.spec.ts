@@ -395,7 +395,7 @@ for (const language of ["en", "de", "yo", "pcm"])
     ).toBe(true);
   });
 
-test("drawing selection windows distinguish contained and crossing symbols", async ({
+test("drawing selection and exact coordinate edits preserve native geometry and history", async ({
   page,
 }) => {
   const fixture = nativeProject();
@@ -436,6 +436,25 @@ test("drawing selection windows distinguish contained and crossing symbols", asy
     ).toHaveCount(crossing ? 1 : 0);
   }
   expect(await project(page)).toEqual(before);
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("X (mm)", { exact: true }).fill("112.375");
+  await props.getByLabel("Y (mm)", { exact: true }).fill("103.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  const edited = await project(page);
+  expect(edited.symbolInstances[0].position).toEqual({
+    x: 112.375,
+    y: 103.125,
+  });
+  expect(edited.pages[0].snapping).toBe(true);
+  expect(edited.wirePaths[0].points[0]).toEqual(
+    edited.symbolInstances[0].position,
+  );
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
 });
 
 test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({

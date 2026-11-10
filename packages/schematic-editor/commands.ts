@@ -386,6 +386,22 @@ export function move(
   reroute(project, ids);
   return project;
 }
+
+export function moveSymbolTo(project: Project, id: string, position: Point) {
+  if (!Number.isFinite(position.x) || !Number.isFinite(position.y))
+    throw new Error("Invalid symbol position");
+  const ids = [id];
+  editable(project, ids);
+  const symbol = project.symbolInstances.find((item) => item.id === id);
+  if (!symbol) return project;
+  if (symbol.position.x === position.x && symbol.position.y === position.y)
+    return project;
+  symbol.position = position;
+  checkBounds(project, ids);
+  checkCollisions(project, ids);
+  reroute(project, ids);
+  return project;
+}
 export function rotate(project: Project, ids: string[]) {
   editable(project, ids);
   if (!ids.length) return project;
