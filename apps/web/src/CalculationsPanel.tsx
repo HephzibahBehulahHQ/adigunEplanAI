@@ -23,11 +23,11 @@ import "./calculations.css";
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
 const quickCalculations = [
-  ["load-current", "calcToolLoadCurrent"],
-  ["voltage-drop", "calcValueVoltageDrop"],
-  ["short-circuit", "calcToolShortCircuit"],
-  ["cable-sizing", "calcToolCableSizing"],
-  ["transformer-sizing", "calcToolTransformerSizing"],
+  ["apparent-load-current", "calcQuickLoad"],
+  ["voltage-drop", "calcQuickVoltageDrop"],
+  ["short-circuit", "calcQuickShortCircuit"],
+  ["cable-sizing", "calcQuickCableSizing"],
+  ["transformer-sizing", "calcQuickTransformer"],
 ] as const satisfies ReadonlyArray<readonly [string, MessageKey]>;
 const unitsFor = (id: string) =>
   Object.fromEntries(
@@ -257,7 +257,10 @@ function CalculationForm({ native, t }: Props) {
         <div className="calculation-inputs">
           {calculator.inputs.map((field) => (
             <div className="calculation-input" key={field.key}>
-              <label htmlFor={`calculation-input-${field.key}`}>
+              <label
+                htmlFor={`calculation-input-${field.key}`}
+                title={tr(field.labelKey)}
+              >
                 {tr(field.labelKey)}
               </label>
               <div className="calculation-quantity">
@@ -346,6 +349,28 @@ function CalculationForm({ native, t }: Props) {
             </div>
           ))}
         </div>
+        {result && (
+          <div
+            className="calculation-dock-summary"
+            role="status"
+            aria-live="polite"
+          >
+            <dl>
+              {result.values.map((item) => (
+                <div key={item.key}>
+                  <dt>{tr(item.labelKey)}</dt>
+                  <dd>
+                    <output data-calculation-value={item.key}>
+                      {Number(item.value.toPrecision(4))}
+                    </output>{" "}
+                    {readableUnit(item.unit)}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <code>{result.formula}</code>
+          </div>
+        )}
         <p className="calculation-hint">{tr("calcUnitConversionHint")}</p>
         <label>
           {tr("calcEvidence")}

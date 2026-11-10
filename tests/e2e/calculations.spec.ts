@@ -68,20 +68,20 @@ test("calculation inputs, unit conversion, native replay and full report exports
   ).toBe(true);
   await expect(
     tools.getByLabel("Calculation method", { exact: true }).locator("option"),
-  ).toHaveCount(25);
+  ).toHaveCount(26);
   const shortcuts = tools.getByRole("group", {
     name: "Engineering calculations",
     exact: true,
   });
   const load = shortcuts.getByRole("button", {
-    name: "Load current",
+    name: "Load",
     exact: true,
   });
   await load.click();
   await expect(load).toHaveAttribute("aria-pressed", "true");
   await expect(
     tools.getByLabel("Calculation method", { exact: true }),
-  ).toHaveValue("load-current");
+  ).toHaveValue("apparent-load-current");
   await tools
     .getByLabel("Calculation method", { exact: true })
     .selectOption("ohms-law");
@@ -97,11 +97,15 @@ test("calculation inputs, unit conversion, native replay and full report exports
     "12000",
   );
   await tools.getByRole("button", { name: "Calculate", exact: true }).click();
-  await expect(tools.locator('[data-calculation-value="current"]')).toHaveText(
-    "3",
-  );
   await expect(
-    tools.locator('[data-calculation-value="activePower"]'),
+    tools.locator(
+      '.calculation-dock-summary [data-calculation-value="current"]',
+    ),
+  ).toHaveText("3");
+  await expect(
+    tools.locator(
+      '.calculation-dock-summary [data-calculation-value="activePower"]',
+    ),
   ).toHaveText("36");
   await tools
     .getByLabel("Calculation name", { exact: true })
@@ -129,9 +133,11 @@ test("calculation inputs, unit conversion, native replay and full report exports
       exact: true,
     })
     .click();
-  await expect(tools.locator('[data-calculation-value="current"]')).toHaveText(
-    "3",
-  );
+  await expect(
+    tools.locator(
+      '.calculation-dock-summary [data-calculation-value="current"]',
+    ),
+  ).toHaveText("3");
   const jsonEvent = page.waitForEvent("download");
   await tools
     .getByRole("button", { name: "Download calculation JSON", exact: true })
@@ -169,9 +175,11 @@ test("calculation inputs, unit conversion, native replay and full report exports
   await tools
     .getByRole("button", { name: "Update saved calculation", exact: true })
     .click();
-  await expect(tools.locator('[data-calculation-value="current"]')).toHaveText(
-    "2",
-  );
+  await expect(
+    tools.locator(
+      '.calculation-dock-summary [data-calculation-value="current"]',
+    ),
+  ).toHaveText("2");
   const count = await page.evaluate(
     () =>
       JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!).projects[0]
@@ -237,7 +245,9 @@ test("calculation panel rejects missing engineering evidence and unsupported rec
     );
   await tools.getByRole("button", { name: "Calculate", exact: true }).click();
   await expect(
-    tools.locator('[data-calculation-value="earthResistance"]'),
+    tools.locator(
+      '.calculation-dock-summary [data-calculation-value="earthResistance"]',
+    ),
   ).toHaveText("4");
   await expect(
     tools.getByRole("region", { name: "Calculation results", exact: true }),
@@ -296,7 +306,9 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
       })
       .click();
     await expect(
-      tools.locator('[data-calculation-value="current"]'),
+      tools.locator(
+        '.calculation-dock-summary [data-calculation-value="current"]',
+      ),
     ).toHaveText("3");
     await tools.scrollIntoViewIfNeeded();
     expect(

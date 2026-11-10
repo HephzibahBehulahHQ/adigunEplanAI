@@ -94,8 +94,19 @@ for (const [name, devices, wires, selector] of cases) {
         "apparent-load-current",
       );
       await expect(
-        page.locator('[data-calculation-value="current"]'),
-      ).toContainText("18.186");
+        page.locator(
+          '.calculation-dock-summary [data-calculation-value="current"]',
+        ),
+      ).toHaveText("18.19");
+      await expect(
+        page.locator("#native-calculation-form .calculation-input"),
+      ).toHaveCount(3);
+      await expect(
+        page.locator("#native-calculation-form .calculation-input").last(),
+      ).toBeInViewport({ ratio: 0.8 });
+      await expect(
+        page.getByRole("button", { name: "Load", exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
       await expect(
         page.getByRole("region", { name: "Bill of materials" }),
       ).toContainText("750-8217");

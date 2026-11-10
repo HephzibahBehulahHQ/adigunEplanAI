@@ -90,19 +90,21 @@ export function useNativeProjects(ownerId: string | null = null) {
     setEditorCommand(null);
     setView("schematic");
   }
-  // Autosave success makes work durable; failed saves retain the in-memory project
-  // and install a native leaving guard. Cancelling that prompt does not clear it.
+  // Keep a browser-native reminder open for every active task. Autosave preserves
+  // local work, and pagehide clears only the active-project pointer so a new
+  // browser session starts on a blank canvas with saved projects available to reopen.
+  const hasOpenProject = state.library.activeProjectId !== null;
   const hasUnsavedChanges =
     !state.saved && state.library.activeProjectId !== null;
   useEffect(() => {
-    if (!hasUnsavedChanges) return;
+    if (!hasOpenProject) return;
     const warn = (event: BeforeUnloadEvent) => {
       event.preventDefault();
       event.returnValue = "";
     };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [hasUnsavedChanges]);
+  }, [hasOpenProject]);
   useEffect(() => {
     const leave = () => {
       try {

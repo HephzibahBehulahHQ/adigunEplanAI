@@ -12,7 +12,7 @@ native project status and account utilities, and organizes Home into the target 
 groups. Cut and equal distribution use native history, geometry and connectivity.
 Placement, symbol installation, manufacturer catalogue access, structural validation,
 E-Check, BOM, view synchronization and themes invoke implemented paths. Examples
-remain in File and the navigator. Autosave/recovery is preserved. Startup now ignores the last active project; pagehide clears only the session pointer. Failed autosave installs a native leaving guard, and explicit close/new confirms unsaved changes. Closing/new resets selection, history and the viewport. Tests reopen saved projects explicitly after asserting a blank boot.
+remain in File and the navigator. Autosave/recovery is preserved. Startup now ignores the last active project; pagehide clears only the session pointer. Any open project installs a native beforeunload reminder, even when local autosave succeeds; explicit close/new confirms unsaved changes. Closing/new resets selection, history and the viewport. Tests reopen saved projects explicitly after asserting a blank boot.
 
 Local validation: 346 unit/tooling checks, typecheck, lint, formatting, template,
 license/notices and build passed. Desktop visual inspection and native validation dialog

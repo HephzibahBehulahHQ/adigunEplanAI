@@ -1239,6 +1239,16 @@ button:disabled {
     min-height: 0;
     height: 180px;
   }
+  .application[data-compact="true"]
+    .engineering-layout:has(
+      > .dock-bottom .calculations-panel .calculation-dock-summary
+    ) {
+    grid-template-rows: minmax(0, 1fr) 210px;
+  }
+  .application[data-compact="true"]
+    .dock-bottom:has(.calculations-panel .calculation-dock-summary) {
+    height: 210px;
+  }
   .application[data-compact="true"] .workspace-heading,
   .application[data-compact="true"] .compact-editor-tools,
   .application[data-compact="true"] .schematic-editor > .editor-hint,

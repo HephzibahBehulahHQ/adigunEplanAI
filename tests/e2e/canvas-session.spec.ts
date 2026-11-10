@@ -18,6 +18,10 @@ test("refresh and a new tab start blank; saved projects reopen explicitly with c
   await expect(
     page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeEnabled();
+  page.once("dialog", async (dialog) => {
+    expect(dialog.type()).toBe("beforeunload");
+    await dialog.accept();
+  });
   await page.reload();
   await expect(page.locator(".empty-workspace")).toBeVisible();
   await expect(page.locator(".engineering-canvas")).toHaveCount(0);
@@ -46,6 +50,10 @@ test("refresh and a new tab start blank; saved projects reopen explicitly with c
   await expect(next.locator(".empty-workspace")).toBeVisible();
   await next.getByTestId("project-picker").selectOption(project.id);
   await expect(next.locator("[data-instance]")).toHaveCount(2);
+  next.once("dialog", async (dialog) => {
+    expect(dialog.type()).toBe("beforeunload");
+    await dialog.accept();
+  });
   await next.close();
 });
 
@@ -75,11 +83,15 @@ test("close and create-new reset the canvas while keeping saved projects", async
   await expect(
     page.getByTestId("project-picker").locator("option"),
   ).toHaveCount(2);
+  page.once("dialog", async (dialog) => {
+    expect(dialog.type()).toBe("beforeunload");
+    await dialog.accept();
+  });
   await page.reload();
   await expect(page.locator(".empty-workspace")).toBeVisible();
 });
 
-test("failed autosave guards leaving; cancellation preserves work and successful saving removes the guard", async ({
+test("active projects warn before leaving; cancellation preserves work and local autosave remains durable", async ({
   page,
 }) => {
   await page.goto("/");
@@ -129,5 +141,5 @@ test("failed autosave guards leaving; cancellation preserves work and successful
   );
   await page.getByRole("button", { name: "Save locally", exact: true }).click();
   await expect(page.locator(".project-save-state")).toHaveText("Saved locally");
-  expect(await prevented()).toBe(false);
+  expect(await prevented()).toBe(true);
 });

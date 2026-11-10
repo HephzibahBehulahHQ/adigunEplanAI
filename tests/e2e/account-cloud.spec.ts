@@ -395,6 +395,10 @@ test("explicit cloud conflicts, immutable history and failed-save review preserv
       exact: true,
     }),
   ).toBeVisible();
+  page.once("dialog", (d) => {
+    expect(d.type()).toBe("beforeunload");
+    d.accept();
+  });
   await page.reload();
   await expect(page.locator(".account-dot")).toHaveAttribute(
     "data-account-state",
