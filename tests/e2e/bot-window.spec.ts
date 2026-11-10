@@ -97,10 +97,22 @@ test("BOT moves, resizes, minimizes, maximizes, closes and restores without bloc
   ).toBeFocused();
   await reloadAndReopenProject(page);
   await expect(bot).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "AI tools menu", exact: true })
-    .click();
+  const aiTools = page.getByRole("button", {
+    name: "AI tools menu",
+    exact: true,
+  });
+  await aiTools.click();
   await expect(bot).toBeVisible();
+  await expect(
+    bot.getByLabel("Ask about this project", { exact: true }),
+  ).toBeFocused();
+  await expect(
+    page.getByRole("button", { name: "Open Adigun BOT", exact: true }),
+  ).toHaveCount(0);
+  await bot
+    .getByRole("button", { name: "Close Adigun BOT", exact: true })
+    .click();
+  await expect(aiTools).toBeFocused();
   expect(
     await page.evaluate(() =>
       localStorage.getItem("adiguneplanai.projects.v1"),

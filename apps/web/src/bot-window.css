@@ -10,8 +10,8 @@
   box-shadow: 0 4px 18px #0006;
   font-size: 0.72rem;
 }
-.engineering-layout:has(> .bot-window[data-docked="true"]) > .bot-launcher {
-  visibility: hidden;
+.bot-launcher[hidden] {
+  display: none;
 }
 .bot-window[data-docked="true"] {
   position: relative;

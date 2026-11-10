@@ -140,6 +140,19 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(width);
+    const help = menus.getByRole("button", { name: "Help menu", exact: true });
+    await help.click();
+    const guide = page.getByRole("dialog", {
+      name: "Workspace guide",
+      exact: true,
+    });
+    await expect(guide).toBeVisible();
+    const bounds = (await guide.boundingBox())!;
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width + 1);
+    await page.keyboard.press("Escape");
+    await expect(guide).toHaveCount(0);
+    await expect(help).toBeFocused();
   }
 });
 
