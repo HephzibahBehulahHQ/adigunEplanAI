@@ -22,4 +22,5 @@ jobs:
         run: npm exec --yes --package=wrangler@4.158.0 -- wrangler deploy --config apps/bot-worker/wrangler.toml --dry-run --outdir "$RUNNER_TEMP/bot-worker-bundle"
       - run: npm exec playwright -- install --with-deps chromium
       - run: npm run test:e2e
+      - run: npm run test:e2e:production
       - run: npm audit --omit=dev --audit-level=high

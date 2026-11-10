@@ -31,10 +31,7 @@ async function terminal(page: Page, x: number) {
   await page.mouse.click(point.x, point.y);
 }
 async function openLibrary(page: Page) {
-  await page
-    .locator(".navigator-tabs")
-    .getByRole("button", { name: "Component library", exact: true })
-    .click();
+  await page.locator(".component-library > summary").click();
   await page.locator(".custom-components > summary").click();
 }
 async function addComponent(page: Page) {

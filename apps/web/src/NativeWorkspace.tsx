@@ -1,42 +1,60 @@
-import { LazyPanelBoundary } from "./LazyPanelBoundary";
-import { mountCabinetDevice } from "../../../packages/electrical-model/cabinet.ts";
+import type { Project } from "../../../packages/electrical-model/project.ts";
 import {
   drawingIndex,
   projectBom,
   reportCsv,
 } from "../../../packages/electrical-model/project-reports.ts";
-import { useRef, useState, lazy, Suspense, type RefObject } from "react";
+import { LazyPanelBoundary } from "./LazyPanelBoundary";
+import { useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
+import { exampleCatalog } from "../../../packages/example-projects/catalog.ts";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
 import type { MessageKey } from "../../../packages/localization";
 import {
   maxProjectBytes,
   serializeProject,
-  type Project,
 } from "../../../packages/electrical-model/project.ts";
-import { projectStorageKey } from "../../../packages/project-storage/repository.ts";
 import type { NativeProjects } from "./useNativeProjects";
+const PanelPreview = lazy(() =>
+  import("./PanelEditor").then(({ PanelPreview }) => ({
+    default: PanelPreview,
+  })),
+);
+const PanelEditor = lazy(() => import("./PanelEditor"));
+const CalculationsPanel = lazy(() =>
+  import("./CalculationsPanel").then((module) => ({
+    default: module.CalculationsPanel,
+  })),
+);
+const ReportsPanel = lazy(() =>
+  import("./ReportsPanel").then((module) => ({ default: module.ReportsPanel })),
+);
+const AutomationEditor = lazy(() =>
+  import("./AutomationEditor").then((module) => ({
+    default: module.AutomationEditor,
+  })),
+);
 const BuildingEditor = lazy(() =>
   import("./BuildingEditor").then((module) => ({
     default: module.BuildingEditor,
   })),
 );
-const EnclosureView = lazy(() =>
-  import("./EnclosureView").then(({ EnclosureView }) => ({
-    default: EnclosureView,
+const ExampleLibrary = lazy(() =>
+  import("./ExampleLibrary").then((module) => ({
+    default: module.ExampleLibrary,
   })),
 );
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
-export function ProjectTools({
-  native,
-  t,
-  openNewProject,
-}: Props & { openNewProject: () => void }) {
+export function ProjectTools({ native, t }: Props) {
+  const dialog = useRef<HTMLDialogElement>(null);
   const file = useRef<HTMLInputElement>(null);
   return (
     <div className="native-tools">
-      <button disabled={native.corrupt} onClick={openNewProject}>
+      <button
+        disabled={native.corrupt}
+        onClick={() => dialog.current?.showModal()}
+      >
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -162,7 +180,7 @@ export function ProjectTools({
         <button
           onClick={() => {
             try {
-              const raw = localStorage.getItem(projectStorageKey) ?? "";
+              const raw = native.recoveryText();
               const url = URL.createObjectURL(
                 new Blob([raw], { type: "application/json" }),
               );
@@ -188,213 +206,285 @@ export function ProjectTools({
           {t("resetStorage")}
         </button>
       )}
+      <dialog ref={dialog} aria-label={t("newProject")}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            const name = String(
+              new FormData(event.currentTarget).get("name") ?? "",
+            ).trim();
+            if (!name) return;
+            native.create(name, `${t("sheet")} 1`, t("document"));
+            dialog.current?.close();
+          }}
+        >
+          <h2>{t("newProject")}</h2>
+          <label>
+            {t("projectName")}
+            <input
+              aria-label={t("projectName")}
+              name="name"
+              required
+              maxLength={160}
+              autoFocus
+            />
+          </label>
+          <div className="dialog-actions">
+            <button type="button" onClick={() => dialog.current?.close()}>
+              {t("cancel")}
+            </button>
+            <button>{t("create")}</button>
+          </div>
+        </form>
+      </dialog>
     </div>
   );
 }
-export function NewProjectDialog({
-  native,
-  t,
-  dialog,
-}: Props & { dialog: RefObject<HTMLDialogElement | null> }) {
-  return (
-    <dialog ref={dialog} aria-label={t("newProject")}>
-      <form
-        onSubmit={(event) => {
-          event.preventDefault();
-          const name = String(
-            new FormData(event.currentTarget).get("name") ?? "",
-          ).trim();
-          if (!name) return;
-          native.create(name, `${t("sheet")} 1`, t("document"));
-          dialog.current?.close();
-        }}
-      >
-        <h2>{t("newProject")}</h2>
-        <label>
-          {t("projectName")}
-          <input
-            aria-label={t("projectName")}
-            name="name"
-            required
-            maxLength={160}
-            autoFocus
-          />
-        </label>
-        <div className="dialog-actions">
-          <button type="button" onClick={() => dialog.current?.close()}>
-            {t("cancel")}
-          </button>
-          <button>{t("create")}</button>
-        </div>
-      </form>
-    </dialog>
-  );
-}
-export function ProjectNavigator({
-  native,
-  t,
-  searchRef,
-  showLibrary,
-  libraryOpened,
-  changeLibraryView,
-}: Props & {
-  searchRef: RefObject<HTMLInputElement | null>;
-  showLibrary: boolean;
-  libraryOpened: boolean;
-  changeLibraryView: (show: boolean) => void;
-}) {
+export function ProjectNavigator({ native, t }: Props) {
+  const [filter, setFilter] = useState("");
+  const [pane, setPane] = useState<
+    "project" | "library" | "examples" | "search"
+  >("project");
+  const filterInput = useRef<HTMLInputElement>(null);
   const project = native.project;
-  const [query, setQuery] = useState("");
-  const term = query.trim().toLowerCase();
-  const matches = (value: string) => value.toLowerCase().includes(term);
-  const devices = new Map(
-    term
-      ? project?.devices
-          .filter((device) => matches(device.reference) || matches(device.name))
-          .map((device) => [device.id, device] as const)
-      : [],
-  );
-  const pageDevices = new Map<string, Set<string>>();
-  if (devices.size) {
-    for (const symbol of project?.symbolInstances ?? []) {
-      const device = devices.get(symbol.deviceId);
-      if (!device) continue;
-      const references = pageDevices.get(symbol.pageId) ?? new Set<string>();
-      references.add(device.reference);
-      pageDevices.set(symbol.pageId, references);
-    }
-  }
-  const documents = project?.documents.flatMap((document) => {
-    const pages = project.pages
-      .filter((page) => page.documentId === document.id)
-      .filter(
-        (page) =>
-          matches(document.name) ||
-          matches(page.name) ||
-          pageDevices.has(page.id),
-      )
-      .sort((a, b) => a.order - b.order);
-    return matches(document.name) || pages.length ? [{ document, pages }] : [];
-  });
-  return native.projects.length ? (
+  const query = filter.normalize("NFKC").toLocaleLowerCase().trim();
+  const matches = (...values: string[]) =>
+    !query ||
+    values.some((value) =>
+      value.normalize("NFKC").toLocaleLowerCase().includes(query),
+    );
+  const devices =
+    project?.devices.filter((device) =>
+      matches(device.reference, device.name),
+    ) ?? [];
+  const activePage =
+    project?.pages.find((page) => page.id === native.selectedPageId) ??
+    project?.pages[0];
+  return (
     <>
-      <nav className="navigator-tabs" aria-label={t("project")}>
+      <nav className="navigator-tabs" role="tablist" aria-label={t("project")}>
         <button
           type="button"
-          aria-pressed={!showLibrary}
-          onClick={() => changeLibraryView(false)}
+          role="tab"
+          aria-selected={pane === "project"}
+          onClick={() => setPane("project")}
         >
-          {t("project")}
+          {t("navigatorTabProject")}
         </button>
         <button
           type="button"
-          aria-pressed={showLibrary}
-          onClick={() => changeLibraryView(true)}
+          role="tab"
+          aria-selected={pane === "library"}
+          onClick={() => setPane("library")}
         >
-          {t("componentLibrary")}
+          {t("navigatorTabLibrary")}
         </button>
-      </nav>
-      <label>
-        {t("chooseProject")}
-        <select
-          aria-label={t("chooseProject")}
-          value={project?.id ?? ""}
-          onChange={(event) => {
-            native.select(event.target.value);
-            setQuery("");
+        <button
+          type="button"
+          role="tab"
+          aria-selected={pane === "examples"}
+          onClick={() => setPane("examples")}
+        >
+          {t("navigatorTabExamples")} ({exampleCatalog.length})
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={pane === "search"}
+          onClick={() => {
+            setPane("search");
+            requestAnimationFrame(() => filterInput.current?.focus());
           }}
         >
-          {native.projects.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      {project && (
-        <label className="navigator-search">
-          {t("searchProject")}
-          <input
-            type="search"
-            ref={searchRef}
-            value={query}
-            maxLength={160}
-            onFocus={() => changeLibraryView(false)}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </label>
-      )}
-      <div className="navigator-tree" hidden={showLibrary}>
-        {term && !documents?.length && (
-          <p role="status">{t("noProjectSearchMatches")}</p>
-        )}
-        {documents?.map(({ document, pages }) => (
-          <details open key={document.id}>
-            <summary>
-              <NavigatorIcon folder />
-              {document.name}
-            </summary>
-            <div className="navigator-pages">
-              {pages.map((page) => (
-                <button
-                  key={page.id}
-                  aria-current={
-                    native.selectedPageId === page.id ? "page" : undefined
-                  }
-                  onClick={() => native.selectPage(page.id)}
-                >
-                  <NavigatorIcon />
-                  <span>{page.name}</span>
-                  {pageDevices.has(page.id) && (
-                    <small>
-                      {Array.from(pageDevices.get(page.id) ?? []).join(", ")}
-                    </small>
-                  )}
-                </button>
+          {t("navigatorTabSearch")}
+        </button>
+      </nav>
+      {pane === "library" ? (
+        <ComponentLibrary native={native} t={t} open />
+      ) : pane === "examples" ? (
+        <LazyPanelBoundary message={t("catalogLoadError")}>
+          <Suspense fallback={<p role="status">{t("catalogLoading")}</p>}>
+            <ExampleLibrary
+              native={native}
+              t={t}
+              opened={() => setPane("project")}
+            />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : !project ? (
+        <p className="empty-hint">{t("noProject")}</p>
+      ) : (
+        <div className="navigator-pane" role="tabpanel">
+          {pane === "project" && (
+            <label>
+              {t("chooseProject")}
+              <select
+                aria-label={t("chooseProject")}
+                value={project.id}
+                onChange={(event) => native.select(event.target.value)}
+              >
+                {native.projects.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <label className="navigator-filter">
+            {t("navigatorFilter")}
+            <input
+              ref={filterInput}
+              type="search"
+              aria-label={t("navigatorFilter")}
+              value={filter}
+              onChange={(event) => setFilter(event.target.value)}
+            />
+          </label>
+          <p className="navigator-root" title={project?.name}>
+            {project?.name}
+          </p>
+          {project?.documents.map((document) => {
+            const pages = project.pages
+              .filter(
+                (page) =>
+                  page.documentId === document.id &&
+                  (matches(document.name) || matches(page.name)),
+              )
+              .sort((a, b) => a.order - b.order);
+            if (!pages.length) return null;
+            return (
+              <details open key={document.id}>
+                <summary>
+                  {document.name} ({pages.length})
+                </summary>
+                <div className="navigator-pages">
+                  {pages.slice(0, 100).map((page) => (
+                    <button
+                      key={page.id}
+                      aria-current={
+                        page.id === activePage?.id ? "page" : undefined
+                      }
+                      onClick={() => {
+                        native.selectPage(page.id);
+                        native.setView("schematic");
+                      }}
+                    >
+                      {page.name}
+                    </button>
+                  ))}
+                </div>
+                {pages.length > 100 && <p>{t("navigatorLimit")}</p>}
+              </details>
+            );
+          })}
+          {!!devices.length && (
+            <details open={query ? true : undefined}>
+              <summary>
+                {t("botDevices")} ({devices.length})
+              </summary>
+              <div className="navigator-pages">
+                {devices.slice(0, 100).map((device) => (
+                  <button
+                    key={device.id}
+                    aria-pressed={native.selectedDeviceId === device.id}
+                    onClick={() => {
+                      native.selectDevice(device.id);
+                      if (
+                        project?.symbolInstances.some(
+                          (symbol) => symbol.deviceId === device.id,
+                        )
+                      )
+                        native.setView("schematic");
+                    }}
+                  >
+                    {device.reference} · {device.name}
+                  </button>
+                ))}
+              </div>
+              {devices.length > 100 && <p>{t("navigatorLimit")}</p>}
+            </details>
+          )}
+          {!!project?.buildings.length && (
+            <details open={query ? true : undefined}>
+              <summary>{t("navigatorBuildings")}</summary>
+              {project.buildings.map((building) => (
+                <details key={building.id} open={query ? true : undefined}>
+                  <summary>{building.name}</summary>
+                  {project.floors
+                    .filter((floor) => floor.buildingId === building.id)
+                    .map((floor) => (
+                      <details key={floor.id} open={query ? true : undefined}>
+                        <summary>
+                          {floor.name} · {floor.elevationMm} mm
+                        </summary>
+                        <ul>
+                          {project.rooms
+                            .filter(
+                              (room) =>
+                                room.floorId === floor.id &&
+                                matches(building.name, floor.name, room.name),
+                            )
+                            .map((room) => (
+                              <li key={room.id}>{room.name}</li>
+                            ))}
+                        </ul>
+                      </details>
+                    ))}
+                </details>
               ))}
-            </div>
-          </details>
-        ))}
-      </div>
-      {libraryOpened && (
-        <div hidden={!showLibrary}>
+              <button onClick={() => native.setView("building")}>
+                {t("openBuilding")}
+              </button>
+            </details>
+          )}
+          {!!project?.enclosures.length && (
+            <details open={query ? true : undefined}>
+              <summary>
+                {t("navigatorPanels")} ({project.enclosures.length})
+              </summary>
+              {project.enclosures
+                .filter((enclosure) => matches(enclosure.name))
+                .map((enclosure) => (
+                  <details key={enclosure.id}>
+                    <summary>{enclosure.name}</summary>
+                    <p>
+                      {enclosure.widthMm} × {enclosure.heightMm} ×{" "}
+                      {enclosure.depthMm} mm
+                    </p>
+                    <ul>
+                      {project.equipment3d
+                        .filter((item) => item.enclosureId === enclosure.id)
+                        .map((item) => (
+                          <li key={item.id}>
+                            {
+                              project.devices.find(
+                                (device) => device.id === item.deviceId,
+                              )?.reference
+                            }{" "}
+                            · {item.name}
+                          </li>
+                        ))}
+                    </ul>
+                  </details>
+                ))}
+              <button onClick={() => native.setView("panel")}>
+                {t("openPanel")}
+              </button>
+            </details>
+          )}
           <ComponentLibrary native={native} t={t} />
         </div>
       )}
     </>
-  ) : (
-    <p className="empty-hint">{t("noProject")}</p>
-  );
-}
-
-function NavigatorIcon({ folder = false }: { folder?: boolean }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className="navigator-icon"
-      viewBox="0 0 16 16"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.25"
-    >
-      <path
-        d={
-          folder
-            ? "M1.5 4h5l1.5 2h6.5v7H1.5z"
-            : "M4 2h5l3 3v9H4z M9 2v3h3 M6 8h4 M6 11h4"
-        }
-      />
-    </svg>
   );
 }
 export function NativeDataPanel({
   native,
   t,
   kind,
-  selectedDeviceId,
 }: Props & {
   kind: "bom" | "panel3d" | "calculations" | "reports";
-  selectedDeviceId: string | null;
 }) {
   const project = native.project;
   if (!project) return <p className="empty-hint">{t("noProject")}</p>;
@@ -432,27 +522,7 @@ export function NativeDataPanel({
     return (
       <LazyPanelBoundary message={t("enclosureLoadError")}>
         <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
-          <EnclosureView
-            key={project.id}
-            project={project}
-            selectedDeviceId={selectedDeviceId}
-            t={t}
-            addEnclosure={(enclosure) =>
-              native.update((draft) => ({
-                ...draft,
-                enclosures: [...draft.enclosures, enclosure],
-              }))
-            }
-            mount={(placement) =>
-              native.update((draft) => mountCabinetDevice(draft, placement))
-            }
-            unmount={(id) =>
-              native.update((draft) => ({
-                ...draft,
-                equipment3d: draft.equipment3d.filter((item) => item.id !== id),
-              }))
-            }
-          />
+          <PanelPreview native={native} t={t} />
         </Suspense>
       </LazyPanelBoundary>
     );
@@ -469,6 +539,11 @@ export function NativeDataPanel({
     };
     return (
       <div className="report-actions">
+        <LazyPanelBoundary message={t("reportExportError")}>
+          <Suspense fallback={<p>{t("reports")}…</p>}>
+            <ReportsPanel native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
         <button
           type="button"
           disabled={!project.pages.length}
@@ -515,7 +590,16 @@ export function NativeDataPanel({
       </div>
     );
   }
-  return <CalculationRecords key={project.id} project={project} t={t} />;
+  return (
+    <>
+      <CalculationRecords key={project.id} project={project} t={t} />
+      <LazyPanelBoundary message={t("reportExportError")}>
+        <Suspense fallback={<p>{t("calculations")}…</p>}>
+          <CalculationsPanel native={native} t={t} />
+        </Suspense>
+      </LazyPanelBoundary>
+    </>
+  );
 }
 
 function CalculationRecords({
@@ -573,40 +657,11 @@ function CalculationRecords({
     </div>
   );
 }
-export function ProjectProperties({
-  native,
-  t,
-  activeSheet,
-}: Props & { activeSheet: Project["pages"][number] | undefined }) {
+export function ProjectProperties({ native, t }: Props) {
   const p = native.project;
   if (!p) return <p className="empty-hint">{t("emptyPanel")}</p>;
-  const document = p.documents.find(({ id }) => id === activeSheet?.documentId);
   return (
     <>
-      {activeSheet && (
-        <dl className="sheet-properties">
-          <div>
-            <dt>{t("pageName")}</dt>
-            <dd>{activeSheet.name}</dd>
-          </div>
-          {document && (
-            <div>
-              <dt>{t("document")}</dt>
-              <dd>{document.name}</dd>
-            </div>
-          )}
-          <div>
-            <dt>{t("sheetSize")}</dt>
-            <dd>
-              {activeSheet.widthMm} × {activeSheet.heightMm} mm
-            </dd>
-          </div>
-          <div>
-            <dt>{t("grid")}</dt>
-            <dd>{activeSheet.gridMm}</dd>
-          </div>
-        </dl>
-      )}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -659,43 +714,62 @@ export function ProjectProperties({
     </>
   );
 }
-export function NativeDrawing({
-  native,
-  t,
-  ribbon,
-  buildingView,
-  setBuildingView,
-  onDeviceSelection,
-}: Props & {
-  ribbon: HTMLElement | null;
-  buildingView: boolean;
-  setBuildingView: (building: boolean) => void;
-  onDeviceSelection: (id: string | null) => void;
-}) {
+export function NativeDrawing({ native, t }: Props) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
+  const { view, setView } = native;
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
   if (!p) return null;
   const page = p.pages.find((item) => item.id === selected) ?? p.pages[0];
   return (
     <div className="native-drawing">
-      <div className="drawing-tab-bar">
-        <nav className="drawing-tabs" aria-label={t("workspaceView")}>
-          <button
-            aria-pressed={!buildingView}
-            onClick={() => setBuildingView(false)}
-          >
-            {t("schematicView")}
-          </button>
-          <button
-            aria-pressed={buildingView}
-            onClick={() => setBuildingView(true)}
-          >
-            {t("buildingDesign")}
-          </button>
-        </nav>
-        {!buildingView && (
+      <nav className="drawing-tabs" aria-label={t("workspaceView")}>
+        <button
+          aria-pressed={view === "schematic"}
+          onClick={() => setView("schematic")}
+        >
+          {t("schematicView")}
+        </button>
+        <button
+          aria-pressed={view === "building"}
+          onClick={() => setView("building")}
+        >
+          {t("buildingDesign")}
+        </button>
+        <button
+          aria-pressed={view === "automation"}
+          onClick={() => setView("automation")}
+        >
+          {t("automationDesign")}
+        </button>
+        <button
+          aria-pressed={view === "panel"}
+          onClick={() => setView("panel")}
+        >
+          {t("panelDesign")}
+        </button>
+      </nav>
+      {view === "building" ? (
+        <LazyPanelBoundary message={t("buildingLoadError")}>
+          <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
+            <BuildingEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : view === "panel" ? (
+        <LazyPanelBoundary message={t("reportExportError")}>
+          <Suspense fallback={<p role="status">{t("panelDesign")}…</p>}>
+            <PanelEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : view === "automation" ? (
+        <LazyPanelBoundary message={t("reportExportError")}>
+          <Suspense fallback={<p role="status">{t("automationDesign")}…</p>}>
+            <AutomationEditor key={p.id} native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+      ) : (
+        <>
           <nav className="drawing-tabs" aria-label={t("pageName")}>
             {p.pages.map((item) => (
               <button
@@ -714,16 +788,6 @@ export function NativeDrawing({
               {t("newPage")}
             </button>
           </nav>
-        )}
-      </div>
-      {buildingView ? (
-        <LazyPanelBoundary message={t("buildingLoadError")}>
-          <Suspense fallback={<p role="status">{t("buildingDesign")}…</p>}>
-            <BuildingEditor key={p.id} native={native} t={t} />
-          </Suspense>
-        </LazyPanelBoundary>
-      ) : (
-        <>
           {page ? (
             <SchematicEditor
               key={`${p.id}:${page.id}`}
@@ -732,11 +796,9 @@ export function NativeDrawing({
               t={t}
               clipboard={clipboard}
               setClipboard={setClipboard}
-              ribbon={ribbon}
-              onDeviceSelection={onDeviceSelection}
             />
           ) : (
-            <p>{t("noPages")}</p>
+            <p className="canvas-empty">{t("noPages")}</p>
           )}
         </>
       )}

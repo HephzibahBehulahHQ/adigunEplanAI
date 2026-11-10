@@ -135,3 +135,122 @@ test("cloud responses cannot cross account changes and errors do not expose serv
     { message: "unavailable" },
   );
 });
+
+test("pinned cloud clients never submit an earlier account's project through a new session", async () => {
+  let requests = 0;
+  const cloud = new CloudProjects({
+    projectRef: "fqcbfnktdvqojyezxeis",
+    publishableKey: "sb_publishable_test",
+    ownerId: userId,
+    session: async () => ({
+      userId: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      accessToken: "B",
+    }),
+    fetch: async () => {
+      requests++;
+      return response([]);
+    },
+  });
+  await assert.rejects(cloud.save(nativeProject(), null), {
+    code: "accountChanged",
+  });
+  assert.equal(requests, 0);
+});
+
+test("logout and sign-in to the same account invalidate the old request epoch", async () => {
+  let current = { ...session, epoch: 1 };
+  const cloud = client(
+    async () => {
+      current = { ...session, epoch: 3 };
+      return response([row(nativeProject())]);
+    },
+    async () => current,
+  );
+  await assert.rejects(cloud.load(nativeProject().id), {
+    code: "accountChanged",
+  });
+});
+
+test("cloud list and immutable history validate owner and revision before exposing records", async () => {
+  const project = nativeProject();
+  const calls = [];
+  const cloud = client(async (url) => {
+    const parsed = new URL(url);
+    calls.push(parsed);
+    if (parsed.pathname.endsWith("project_history"))
+      return response(
+        parsed.searchParams.has("revision")
+          ? [row(project, 2)]
+          : [
+              {
+                owner_id: userId,
+                native_project_id: project.id,
+                revision: 2,
+                updated_at: "2026-11-03T10:00:00Z",
+              },
+            ],
+      );
+    return response([
+      {
+        owner_id: userId,
+        native_project_id: project.id,
+        name: project.name,
+        revision: 2,
+        updated_at: "2026-11-03T10:00:00Z",
+      },
+    ]);
+  });
+  const listed = await cloud.list();
+  assert.equal(listed.items[0].name, project.name);
+  assert.equal(listed.hasMore, false);
+  assert.equal((await cloud.history(project.id)).items[0].revision, 2);
+  assert.deepEqual((await cloud.loadRevision(project.id, 2)).project, project);
+  assert.ok(
+    calls.every((url) => url.searchParams.get("owner_id") === `eq.${userId}`),
+  );
+  assert.equal(calls[2].searchParams.get("revision"), "eq.2");
+  const foreign = {
+    owner_id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+    native_project_id: project.id,
+    name: project.name,
+    revision: 2,
+    updated_at: "2026-11-03T10:00:00Z",
+  };
+  await assert.rejects(client(async () => response([foreign])).list(), {
+    code: "invalidResponse",
+  });
+  await assert.rejects(
+    client(async () => response([foreign])).history(project.id),
+    { code: "invalidResponse" },
+  );
+  await assert.rejects(
+    client(async () => response([row(project, 3)])).loadRevision(project.id, 2),
+    { code: "invalidResponse" },
+  );
+});
+
+test("cloud history and list reject duplicate revisions, malformed names and late JSON account changes", async () => {
+  const project = nativeProject();
+  const r = row(project);
+  await assert.rejects(
+    client(async () => response([r, r])).history(project.id),
+    { code: "invalidResponse" },
+  );
+  await assert.rejects(
+    client(async () => response([{ ...r, name: "" }])).list(),
+    { code: "invalidResponse" },
+  );
+  let current = { ...session, epoch: 1 };
+  const cloud = client(
+    async () => {
+      const result = response([]);
+      result.json = async () => {
+        current = { ...session, epoch: 2 };
+        return [r];
+      };
+      return result;
+    },
+    async () => current,
+  );
+  await assert.rejects(cloud.load(project.id), { code: "accountChanged" });
+});

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 const names = [
   "react",
   "react-dom",
@@ -6,6 +6,15 @@ const names = [
   "zod",
   "dxf-parser",
   "loglevel",
+  "@supabase/supabase-js",
+  "@supabase/auth-js",
+  "@supabase/functions-js",
+  "@supabase/postgrest-js",
+  "@supabase/realtime-js",
+  "@supabase/storage-js",
+  "@supabase/phoenix",
+  "iceberg-js",
+  "tslib",
 ];
 const text =
   "AdigunEplanAI third-party runtime notices\n\n" +
@@ -14,10 +23,16 @@ const text =
       const pkg = JSON.parse(
         readFileSync(`node_modules/${name}/package.json`, "utf8"),
       );
-      return `${name} ${pkg.version}\n${readFileSync(
-        `node_modules/${name}/${name === "loglevel" ? "LICENSE-MIT" : "LICENSE"}`,
-        "utf8",
-      )
+      const licensePath = [
+        "LICENSE",
+        "LICENSE.md",
+        "LICENSE.txt",
+        "LICENSE-MIT",
+      ]
+        .map((file) => `node_modules/${name}/${file}`)
+        .find((file) => existsSync(file));
+      if (!licensePath) throw new Error(`Missing runtime license for ${name}`);
+      return `${name} ${pkg.version}\n${readFileSync(licensePath, "utf8")
         .replace(/\r\n/g, "\n")
         .trim()}\n`;
     })

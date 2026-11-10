@@ -1,16 +1,22 @@
+import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
+import productConfig from "../../../product.config.json";
+import brands from "../../../packages/design-tokens/brands.json";
 import {
-  lazy,
-  Suspense,
   useEffect,
   useMemo,
   useRef,
   useState,
+  lazy,
+  Suspense,
   type CSSProperties,
 } from "react";
+import {
+  WorkspaceCommands,
+  ribbonTabs,
+  type RibbonTab,
+} from "./WorkspaceRibbon";
+import { BotWindow } from "./BotWindow";
 import { ConnectivityPanel } from "./ConnectivityPanel";
-import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
-import { flushSync } from "react-dom";
-import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import {
   dictionaries,
   type MessageKey,
@@ -28,11 +34,10 @@ import {
   type Preferences,
 } from "./preferences";
 import { useNativeProjects } from "./useNativeProjects";
-import { hostedBotKey } from "./botAccount";
-import { useBotFinding } from "./useBotFinding";
+import { useAccount, profileName, type Account } from "./useAccount";
+import { AccountPanel } from "./AccountPanel";
 import {
   ProjectTools,
-  NewProjectDialog,
   NativeDataPanel,
   ProjectNavigator,
   ProjectProperties,
@@ -40,126 +45,30 @@ import {
 } from "./NativeWorkspace";
 import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
+import "./account.css";
 
-const AdigunBot = lazy(() =>
-  import("./AdigunBot").then(({ AdigunBot }) => ({ default: AdigunBot })),
+const ExampleLibrary = lazy(() =>
+  import("./ExampleLibrary").then((module) => ({
+    default: module.ExampleLibrary,
+  })),
 );
 
-const headerIcons = {
-  account:
-    "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm0-10a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM5 18a7 7 0 0 1 14 0",
-  language:
-    "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-9-10h18M12 2c5 5 5 15 0 20-5-5-5-15 0-20Z",
-  settings:
-    "M10 3h4l1 3 3-1 2 4-2 2v2l2 2-2 4-3-1-1 3h-4l-1-3-3 1-2-4 2-2v-2L4 9l2-4 3 1 1-3Zm2 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z",
-  searchProject: "M10 17a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 6 6",
-  help: "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3m0 3h.01",
-} as const;
-
-const panelRibbon = {
-  panel3d: ["panel3d"],
-  documentation: ["bom", "reports"],
-  analysis: ["diagnostics", "calculations"],
-} as const satisfies Record<string, readonly PanelId[]>;
-const ribbonTabs = [
-  "file",
-  "home",
-  "view",
-  "componentLibrary",
-  "buildingWorkspace",
-  "panel3d",
-  "documentation",
-  "analysis",
-  "aiTools",
-  "settings",
-] as const;
-const ribbonIcons = {
-  library: "M3 5h4v14H3z M9 5h4v14H9z M15 6l4-1 4 13-4 1z",
-  building: "M3 21h18 M5 21V7l7-5 7 5v14 M9 21v-6h6v6 M9 10h1 M14 10h1",
-  schematic: "M2 12h4m12 0h4M6 12l2-4 3 8 2-8 3 8 2-4",
-  bot: "M12 6V2M9 15h6M2 10v5m20-5v5 M9 11h.01 M15 11h.01 M9 6h6a5 5 0 0 1 5 5v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5z",
-  panel3d: "M12 2l9 5v10l-9 5-9-5V7z M3 7l9 5 9-5 M12 12v10",
-  bom: "M3 4h18v16H3z M3 9h18 M3 14h18 M9 9v11",
-  reports: "M5 2h9l5 5v15H5z M14 2v6h5 M8 12h8 M8 16h8",
-  diagnostics: "M12 2l8 4v6c0 5-4 8-8 10-4-2-8-5-8-10V6z M8 12l3 3 5-6",
-  calculations: "M5 2h14v20H5z M8 6h8 M8 11h2 M14 11h2 M8 16h2 M14 16h2",
-} as const;
-
-function RibbonCommand({
-  icon,
-  label,
-  accessibleName,
-  disabled,
-  onClick,
-}: {
-  icon: keyof typeof ribbonIcons;
-  label: string;
-  accessibleName: string;
-  disabled?: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={accessibleName}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d={ribbonIcons[icon]} />
-      </svg>
-      {label}
-    </button>
-  );
-}
-
-function HeaderIcon({ name }: { name: keyof typeof headerIcons }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d={headerIcons[name]} />
-    </svg>
-  );
-}
-
 export function App() {
-  const native = useNativeProjects();
+  const account = useAccount();
+  return <Workspace key={account.user?.id ?? "guest"} account={account} />;
+}
+function Workspace({ account }: { account: Account }) {
+  const native = useNativeProjects(account.user?.id ?? null);
   const connectivity = useMemo(
     () => (native.project ? analyze(native.project) : null),
     [native.project],
   );
-  const errors =
-    connectivity?.findings.filter(({ severity }) => severity === "error")
-      .length ?? 0;
-  const warnings =
-    connectivity?.findings.filter(({ severity }) => severity === "warning")
-      .length ?? 0;
-  const [buildingView, setBuildingView] = useState(false);
-  const [showLibrary, setShowLibrary] = useState(false);
-  const [libraryOpened, setLibraryOpened] = useState(false);
-  function changeLibraryView(show: boolean) {
-    setShowLibrary(show);
-    if (show) setLibraryOpened(true);
-  }
-  const activeSheet =
-    native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
-    native.project?.pages[0];
-  const botFinding = useBotFinding(native.project);
+  const examplesDialog = useRef<HTMLDialogElement>(null);
+  const accountDialog = useRef<HTMLDialogElement>(null);
+  const searchDialog = useRef<HTMLDialogElement>(null);
+  const languageSelect = useRef<HTMLSelectElement>(null);
+  const [search, setSearch] = useState("");
+  const focusLanguage = useRef(false);
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
       return restorePreferences(localStorage.getItem(storageKey));
@@ -167,38 +76,20 @@ export function App() {
       return defaults();
     }
   });
-  const [tab, setTab] = useState<(typeof ribbonTabs)[number]>("home");
-  const [schematicRibbon, setSchematicRibbon] = useState<HTMLDivElement | null>(
-    null,
-  );
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
+  const [botSignal, setBotSignal] = useState(0);
+  const [tab, setTab] = useState<RibbonTab>("home");
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
-  const navigatorSearch = useRef<HTMLInputElement>(null);
-  const newProjectDialog = useRef<HTMLDialogElement>(null);
-  const openNewProject = () => newProjectDialog.current?.showModal();
-  const botToggle = useRef<HTMLButtonElement>(null);
-  const guestDialog = useRef<HTMLDialogElement>(null);
-  const [accountRequest, setAccountRequest] = useState(0);
-  const [signedIn, setSignedIn] = useState(false);
-  const [botOpen, setBotOpen] = useState(() => {
-    try {
-      return localStorage.getItem("adiguneplanai.bot.open.v1") === "true";
-    } catch {
-      return false;
-    }
-  });
-  useEffect(() => {
-    try {
-      localStorage.setItem("adiguneplanai.bot.open.v1", String(botOpen));
-    } catch {
-      /* Preferences are optional. */
-    }
-  }, [botOpen]);
   const [layoutOpen, setLayoutOpen] = useState<
     Partial<Record<PanelId, boolean>>
   >({});
   const t = (key: MessageKey) => dictionaries[prefs.language][key];
+  useEffect(() => {
+    if (tab === "settings" && focusLanguage.current) {
+      languageSelect.current?.focus();
+      focusLanguage.current = false;
+    }
+  }, [tab]);
   useEffect(() => {
     document.documentElement.lang = prefs.language;
     document.documentElement.dataset.theme = prefs.theme;
@@ -216,14 +107,28 @@ export function App() {
         [id]: { ...previous.panels[id], ...change },
       },
     }));
-  function revealPanel(id: PanelId) {
-    flushSync(() => panel(id, { visible: true, collapsed: false }));
-    document
-      .querySelector<HTMLElement>(`[data-panel="${id}"] .panel-heading button`)
-      ?.focus();
-  }
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
+  const reveal = (id: PanelId) => {
+    panel(id, { visible: true, collapsed: false });
+    requestAnimationFrame(() => {
+      const element = document.querySelector<HTMLElement>(
+        `[data-panel="${id}"]`,
+      );
+      element
+        ?.querySelector<HTMLButtonElement>(".panel-heading button")
+        ?.focus();
+      if (id === "project") {
+        const library =
+          element?.querySelector<HTMLDetailsElement>(".component-library");
+        if (library) {
+          library.open = true;
+          library.querySelector<HTMLElement>("summary")?.focus();
+          library.scrollIntoView({ block: "nearest" });
+        }
+      }
+    });
+  };
   const renderPanel = (id: PanelId) => {
     const state = prefs.panels[id];
     return (
@@ -252,33 +157,17 @@ export function App() {
         {!state.collapsed && (
           <div className="panel-body">
             {id === "project" ? (
-              <ProjectNavigator
-                native={native}
-                t={t}
-                searchRef={navigatorSearch}
-                showLibrary={showLibrary}
-                libraryOpened={libraryOpened}
-                changeLibraryView={changeLibraryView}
-              />
+              <ProjectNavigator native={native} t={t} />
             ) : id === "properties" ? (
               <>
                 <div id="native-object-properties" />
-                <ProjectProperties
-                  native={native}
-                  t={t}
-                  activeSheet={buildingView ? undefined : activeSheet}
-                />
+                <ProjectProperties native={native} t={t} />
               </>
             ) : id === "bom" ||
               id === "panel3d" ||
               id === "calculations" ||
               id === "reports" ? (
-              <NativeDataPanel
-                native={native}
-                t={t}
-                kind={id}
-                selectedDeviceId={selectedDeviceId}
-              />
+              <NativeDataPanel native={native} t={t} kind={id} />
             ) : id === "diagnostics" ? (
               <ConnectivityPanel native={native} t={t} result={connectivity} />
             ) : (
@@ -353,200 +242,178 @@ export function App() {
       (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
     );
   return (
-    <div className="application">
+    <div
+      className="application"
+      data-compact={prefs.compact}
+      inert={account.checking && !account.user}
+    >
       <a className="skip-link" href="#workspace">
         {t("skip")}
       </a>
       <header className="app-header">
-        <img className="corporate-logo" src={logo} alt="Hephzibah Behulah" />
+        <img
+          className="corporate-logo"
+          src={logo}
+          alt={productConfig.branding.corporateLogo.alt}
+        />
         <div className="wordmark">
-          <strong>AdigunEplanAI</strong>
+          <strong>{productConfig.product.name}</strong>
           <small>{t("division")}</small>
         </div>
         <span className="project-title">
           {native.project?.name ?? t("noProject")}
         </span>
-        <div className="header-utilities">
-          <span className="local-status">
-            <i />
-            {t(
-              native.project
-                ? native.saved
-                  ? "savedLocally"
-                  : "notSaved"
-                : "local",
-            )}
+        <div className="owner-toolbar" aria-label={t("accountToolbar")}>
+          <span
+            className="local-status"
+            title={t(native.saved ? "savedLocally" : "notSaved")}
+          >
+            {t(native.saved ? "savedLocally" : "notSaved")}
           </span>
           <button
-            className="header-icon account-icon"
-            type="button"
-            title={t(hostedBotKey && !signedIn ? "botHostedSignIn" : "account")}
-            aria-label={`${t("account")} · ${t(signedIn ? "accountSignedIn" : "accountGuest")}`}
-            onClick={() => {
-              if (hostedBotKey) {
-                setBotOpen(true);
-                setAccountRequest((current) => current + 1);
-              } else guestDialog.current?.showModal();
-            }}
+            className="owner-icon profile-button"
+            aria-label={t("account")}
+            title={
+              profileName(account.user) ||
+              account.user?.email ||
+              t("accountGuest")
+            }
+            onClick={() => accountDialog.current?.showModal()}
           >
-            <HeaderIcon name="account" />
+            <>
+              {account.avatarUrl ? (
+                <img
+                  src={account.avatarUrl}
+                  alt=""
+                  className="profile-avatar"
+                />
+              ) : (
+                <ToolbarIcon kind="profile" />
+              )}
+            </>
             <span
-              className="account-dot"
-              data-signed-in={signedIn}
-              aria-hidden="true"
+              className={`account-dot ${account.verified ? "verified" : ""}`}
+              data-account-state={
+                account.verified
+                  ? "verified"
+                  : account.checking
+                    ? "checking"
+                    : account.user
+                      ? "unverified"
+                      : "guest"
+              }
+              aria-label={t(
+                account.verified
+                  ? "accountSignedIn"
+                  : account.user
+                    ? "accountOffline"
+                    : "accountGuest",
+              )}
             />
           </button>
           <button
-            className="header-icon"
-            type="button"
-            title={t("language")}
-            aria-label={`${t("interface")} · ${t("language")}`}
+            className="owner-icon"
+            aria-label={t("languageOptions")}
+            title={t("languageOptions")}
             onClick={() => {
-              flushSync(() => setTab("settings"));
-              document.getElementById("interface-language")?.focus();
+              if (tab === "settings") languageSelect.current?.focus();
+              else {
+                focusLanguage.current = true;
+                setTab("settings");
+              }
             }}
           >
-            <HeaderIcon name="language" />
+            {prefs.language.toUpperCase()}
           </button>
           <button
-            className="header-icon"
-            type="button"
+            className="owner-icon"
+            aria-label={t("settings")}
             title={t("settings")}
-            aria-label={`${t("workspace")} · ${t("settings")}`}
+            aria-pressed={tab === "settings"}
             onClick={() => setTab("settings")}
           >
-            <HeaderIcon name="settings" />
+            <ToolbarIcon kind="settings" />
           </button>
           <button
-            className="header-icon"
-            type="button"
-            title={t("searchProject")}
-            aria-label={t("searchProject")}
-            disabled={!native.project}
-            onClick={() => {
-              flushSync(() =>
-                panel("project", { visible: true, collapsed: false }),
-              );
-              navigatorSearch.current?.focus();
-            }}
+            className="owner-icon"
+            aria-label={t("workspaceSearch")}
+            title={t("workspaceSearch")}
+            onClick={() => searchDialog.current?.showModal()}
           >
-            <HeaderIcon name="searchProject" />
+            <ToolbarIcon kind="search" />
           </button>
           <button
-            className="header-icon"
-            type="button"
+            className="owner-icon"
+            aria-label={t("help")}
             title={t("help")}
-            aria-label={`${t("workspace")} · ${t("help")}`}
             onClick={() => help.current?.showModal()}
           >
-            <HeaderIcon name="help" />
-          </button>
-          <button
-            type="button"
-            ref={botToggle}
-            aria-expanded={botOpen}
-            aria-controls={botOpen ? "adigun-bot" : undefined}
-            onClick={() => {
-              setAccountRequest(0);
-              setBotOpen((open) => !open);
-            }}
-          >
-            Adigun BOT
-            {botFinding.active && !botOpen && (
-              <span className="bot-badge" aria-hidden="true" />
-            )}
+            <ToolbarIcon kind="help" />
           </button>
         </div>
-        <span className="bot-announcement" role="status">
-          {botFinding.active && !botOpen ? t("botFindingPending") : ""}
-        </span>
       </header>
       <nav className="ribbon-tabs" aria-label={t("interface")}>
-        {ribbonTabs.map((key) => (
+        {ribbonTabs.map(([id, key]) => (
           <button
-            key={key}
-            aria-pressed={tab === key}
-            onClick={() => setTab(key)}
+            key={id}
+            aria-pressed={tab === id}
+            aria-label={
+              id === "home" || id === "view"
+                ? t(key)
+                : `${t(key)} ${t("ribbonMenu")}`
+            }
+            onClick={() =>
+              id === "help"
+                ? help.current?.showModal()
+                : id === "ai"
+                  ? setBotSignal((value) => value + 1)
+                  : setTab(id)
+            }
           >
             {t(key)}
           </button>
         ))}
-        <button onClick={() => help.current?.showModal()}>{t("help")}</button>
       </nav>
       {native.error && (
         <p className="storage-error" role="alert">
           {t(native.error)}
         </p>
       )}
-      <div className="ribbon" data-tab={tab} aria-label={t(tab)}>
-        {tab === "home" || tab === "file" ? (
+      {account.checking && (
+        <p className="storage-error" role="status">
+          {t("accountChecking")}
+        </p>
+      )}
+      <div
+        className="ribbon"
+        aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
+      >
+        {tab === "home" || tab === "file" || tab === "project" ? (
           <>
-            <ProjectTools
+            <ProjectTools native={native} t={t} />
+            <button
+              className="ribbon-example-button"
+              onClick={() => examplesDialog.current?.showModal()}
+            >
+              {t("demoProjects")}
+            </button>
+            <WorkspaceCommands
+              tab={tab}
               native={native}
               t={t}
-              openNewProject={openNewProject}
+              reveal={reveal}
             />
-            {tab === "home" && (
-              <div className="schematic-ribbon" ref={setSchematicRibbon} />
-            )}
           </>
-        ) : tab === "panel3d" ||
-          tab === "documentation" ||
-          tab === "analysis" ? (
-          <div className="native-tools" role="group" aria-label={t(tab)}>
-            {panelRibbon[tab].map((id) => (
-              <RibbonCommand
-                key={id}
-                icon={id}
-                label={t(id)}
-                accessibleName={`${t("show")} ${t(id)}`}
-                onClick={() => revealPanel(id)}
-              />
-            ))}
-          </div>
-        ) : tab === "componentLibrary" ||
-          tab === "buildingWorkspace" ||
-          tab === "aiTools" ? (
-          <div className="native-tools" role="group" aria-label={t(tab)}>
-            {tab === "componentLibrary" ? (
-              <RibbonCommand
-                icon="library"
-                label={t("componentLibrary")}
-                accessibleName={`${t("show")} ${t("componentLibrary")}`}
-                disabled={!native.project}
-                onClick={() => {
-                  changeLibraryView(true);
-                  revealPanel("project");
-                }}
-              />
-            ) : tab === "buildingWorkspace" ? (
-              <>
-                <RibbonCommand
-                  icon="building"
-                  label={t("buildingDesign")}
-                  accessibleName={`${t("show")} ${t("buildingDesign")}`}
-                  disabled={!native.project}
-                  onClick={() => setBuildingView(true)}
-                />
-                <RibbonCommand
-                  icon="schematic"
-                  label={t("schematicView")}
-                  accessibleName={`${t("show")} ${t("schematicView")}`}
-                  disabled={!native.project}
-                  onClick={() => setBuildingView(false)}
-                />
-              </>
-            ) : (
-              <RibbonCommand
-                icon="bot"
-                label="Adigun BOT"
-                accessibleName={`${t("show")} Adigun BOT`}
-                onClick={() => setBotOpen(true)}
-              />
-            )}
-          </div>
         ) : tab === "view" ? (
           <>
+            <label>
+              <input
+                type="checkbox"
+                checked={prefs.compact}
+                onChange={(event) => set("compact", event.target.checked)}
+              />
+              {t("compactWorkspace")}
+            </label>
             <div className="panel-toggles">
               {panelIds.map((id) => (
                 <label key={id}>
@@ -567,7 +434,7 @@ export function App() {
               {t("reset")}
             </button>
           </>
-        ) : (
+        ) : tab === "settings" ? (
           <>
             <label>
               {t("theme")}
@@ -585,8 +452,8 @@ export function App() {
             <label>
               {t("language")}
               <select
+                ref={languageSelect}
                 aria-label={t("language")}
-                id="interface-language"
                 value={prefs.language}
                 onChange={(e) => set("language", e.target.value as Language)}
               >
@@ -630,6 +497,8 @@ export function App() {
               </label>
             )}
           </>
+        ) : (
+          <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
         )}
       </div>
       {storageError && (
@@ -673,14 +542,7 @@ export function App() {
               }
             >
               {native.project ? (
-                <NativeDrawing
-                  native={native}
-                  t={t}
-                  ribbon={schematicRibbon}
-                  buildingView={buildingView}
-                  setBuildingView={setBuildingView}
-                  onDeviceSelection={setSelectedDeviceId}
-                />
+                <NativeDrawing native={native} t={t} />
               ) : (
                 <div className="empty-workspace">
                   <span className="drawing-mark" aria-hidden="true">
@@ -688,107 +550,80 @@ export function App() {
                   </span>
                   <h1>{t("noProject")}</h1>
                   <p>{t("emptyProject")}</p>
+                  <button onClick={() => examplesDialog.current?.showModal()}>
+                    {t("demoProjects")}
+                  </button>
                 </div>
               )}
             </div>
           </div>
         </main>
-        {has("right") && (
-          <div className="workspace-right">{region("right")}</div>
-        )}
-        {botOpen && (
-          <LazyPanelBoundary message={t("botLoadError")}>
-            <Suspense fallback={<p role="status">Adigun BOT…</p>}>
-              <AdigunBot
-                project={native.project}
-                accountRequest={accountRequest}
-                setSignedIn={setSignedIn}
-                suggestions={botFinding}
-                t={t}
-                close={() => {
-                  setBotOpen(false);
-                  setAccountRequest(0);
-                  botToggle.current?.focus();
-                }}
-                openDiagnostics={() =>
-                  panel("diagnostics", { visible: true, collapsed: false })
-                }
-                openBom={() =>
-                  panel("bom", { visible: true, collapsed: false })
-                }
-                openHelp={() => help.current?.showModal()}
-                openNewProject={openNewProject}
-                canCreateProject={!native.corrupt}
-              />
-            </Suspense>
-          </LazyPanelBoundary>
-        )}
+        {has("right") && region("right")}
         {has("bottom") && region("bottom")}
       </div>
-      <NewProjectDialog native={native} t={t} dialog={newProjectDialog} />
-      <dialog ref={guestDialog} aria-label={t("account")}>
-        <p>
-          {t("accountGuest")} · {t("local")}
-        </p>
-        <form method="dialog">
-          <button>{t("close")}</button>
-        </form>
-      </dialog>
+      <BotWindow
+        native={native}
+        ownerId={account.user?.id ?? null}
+        t={t}
+        openSignal={botSignal}
+      />
       <footer className="status-bar">
         <span>
           <i />
           {t("ready")}
         </span>
         {native.project && (
-          <div className="status-context">
-            <span>
-              {t("projectName")} <b>{native.project.name}</b>
-            </span>
-            {buildingView ? (
-              <span>{t("buildingDesign")}</span>
-            ) : (
-              activeSheet && (
-                <>
-                  <span>
-                    {t("pageName")} <b>{activeSheet.name}</b>
-                  </span>
-                  <span>
-                    {t("grid")} <b>{activeSheet.gridMm}</b>
-                  </span>
-                  <span>
-                    {t("sheetSize")}{" "}
-                    <b>
-                      {activeSheet.widthMm} × {activeSheet.heightMm} mm
-                    </b>
-                  </span>
-                </>
-              )
-            )}
-          </div>
+          <span className="engineering-status">
+            {native.project.name} ·{" "}
+            {native.project.pages.find((p) => p.id === native.selectedPageId)
+              ?.name ?? native.project.pages[0]?.name}
+            {" · "}
+            {t("selectionCount")}: {native.selectedSymbolIds.length}
+            {" · mm"}
+          </span>
         )}
-        {connectivity && (
-          <button
-            className="status-diagnostics"
-            type="button"
-            data-severity={errors ? "error" : warnings ? "warning" : "clear"}
-            onClick={() => revealPanel("diagnostics")}
-          >
-            {t("diagnostics")} · {t("errors")} {errors} · {t("warnings")}{" "}
-            {warnings}
-          </button>
-        )}
+        <span>
+          {native.project
+            ? t(native.saved ? "savedLocally" : "notSaved")
+            : t("local")}
+        </span>
         <span>
           © {new Date().getFullYear()}{" "}
           <a
-            href="https://hephzibahbehulah.com/"
+            href={productConfig.links.corporateWebsite}
             target="_blank"
             rel="noreferrer"
           >
             Hephzibah Behulah
           </a>{" "}
-          · HB Elektroniker · AdigunEplanAI
+          · {brands.elektroniker.name} · {productConfig.product.name}
         </span>
       </footer>
+      <dialog
+        ref={examplesDialog}
+        className="examples-dialog"
+        aria-label={t("demoProjects")}
+      >
+        <header>
+          <h2>{t("demoProjects")}</h2>
+          <button
+            aria-label={`${t("close")} ${t("demoProjects")}`}
+            onClick={() => examplesDialog.current?.close()}
+          >
+            ×
+          </button>
+        </header>
+        <Suspense fallback={<p role="status">{t("catalogLoading")}</p>}>
+          <ExampleLibrary
+            native={native}
+            t={t}
+            opened={() => {
+              set("compact", true);
+              examplesDialog.current?.close();
+            }}
+          />
+        </Suspense>
+      </dialog>
       <dialog ref={help} aria-labelledby="guide-title">
         <h2 id="guide-title">{t("guide")}</h2>
         <p>{t("guideText")}</p>
@@ -798,6 +633,112 @@ export function App() {
           <button>{t("close")}</button>
         </form>
       </dialog>
+      <AccountPanel
+        account={account}
+        native={native}
+        dialog={accountDialog}
+        t={t}
+      />
+      <dialog
+        ref={searchDialog}
+        className="account-dialog"
+        aria-label={t("workspaceSearch")}
+      >
+        <h2>{t("workspaceSearch")}</h2>
+        <p>{t("workspaceSearchScope")}</p>
+        <label>
+          {t("workspaceSearchQuery")}
+          <input
+            type="search"
+            value={search}
+            maxLength={160}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </label>
+        <ul className="workspace-search-results">
+          {native.projects
+            .flatMap((project) => [
+              {
+                key: project.id,
+                projectId: project.id,
+                pageId: null as string | null,
+                label: project.name,
+              },
+              ...project.pages.map((page) => ({
+                key: `${project.id}:${page.id}`,
+                projectId: project.id,
+                pageId: page.id,
+                label: `${page.name} · ${project.name}`,
+              })),
+            ])
+            .filter(
+              (result) =>
+                search.trim() &&
+                result.label
+                  .toLocaleLowerCase()
+                  .includes(search.trim().toLocaleLowerCase()),
+            )
+            .slice(0, 50)
+            .map((result) => (
+              <li key={result.key}>
+                <button
+                  onClick={() => {
+                    native.select(result.projectId);
+                    native.selectPage(result.pageId);
+                    searchDialog.current?.close();
+                  }}
+                >
+                  {result.label}
+                </button>
+              </li>
+            ))}
+        </ul>
+        <form method="dialog">
+          <button>{t("close")}</button>
+        </form>
+      </dialog>
     </div>
+  );
+}
+
+function ToolbarIcon({
+  kind,
+}: {
+  kind: "profile" | "settings" | "search" | "help";
+}) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="21"
+      height="21"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.7"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {kind === "profile" ? (
+        <>
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
+        </>
+      ) : kind === "search" ? (
+        <>
+          <circle cx="10" cy="10" r="6.5" />
+          <path d="m15 15 6 6" />
+        </>
+      ) : kind === "help" ? (
+        <>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 4h.01" />
+        </>
+      ) : (
+        <>
+          <circle cx="12" cy="12" r="3" />
+          <path d="m9 3-.5 3-2 1-3-.5L2 10l2.5 2L4 15l3 2 .5 3h5l1-3 3-1 2.5 1 2-4-2-2 .5-3-3-2-1-3Z" />
+        </>
+      )}
+    </svg>
   );
 }

@@ -1,13 +1,11 @@
 # Next tasks
 
-1. Continue M7: floor-first device creation now creates one native device, schematic symbol/pins/terminals, and matching floor placement from a user-selected native primitive or installed electrical definition. The user supplies its reference and description and chooses the schematic page, electrical layer, floor position, and optional room/mounting height. Reload preserves the shared device identity and schedule row. The full local gate passed 164 unit/tooling tests and all 97 Chromium scenarios; build currently reports the existing main-chunk size advisory at 524.83 kB. Next: electrical routes and circuit associations, then verified equipment/circuit schedules. Schema 15 existing-device placement, layer protection and room schedules; schema 14 plan scale and physical-size SVG export; and schema 13 room-based zones remain covered by their prior acceptance records. Broader zone geometry remains open.
-2. Add lighting, sockets, switches, distribution equipment/routes and circuit associations; produce verified equipment/circuit schedules.
-3. Expand supported architectural geometry/import fidelity with explicit unsupported-content reporting; retain current working SVG/DXF workflows.
-4. Complete M8–20 and BOT/menu/domain addenda using the criteria and release gates in MILESTONES.md. No 500-project completion or final production readiness is claimed.
-
-Current published source: 1dc3375c98439ef2d41fa73d4ff16c285c42144d, with both hosted CI runs green and exact local/remote synchronization. Equipment source e05a965 is live in Pages deployment 495391b7790fdc1dc8b1fc590418632e648153a5; live equipment workflow passed. The isolated Supabase schema and API exposure are configured; production redirect was already allowed. Frontend authentication/cloud saving remain open.
-
-Owner constraints: publish reviewed source to visible branches/draft PRs; deploy verified increments through the configured process; preserve work; no force-push/history rewriting; approval before accessing another project. Exclude secrets, dependencies, caches and build/test/log artifacts from source. Latest deployment authorization supersedes the earlier no-deployment instruction.
+1. Meet the user's strict `AdigunEplanTarget interface.png` acceptance target. Review the live main UI at the reference viewport and implement the real-data workbench composition (navigator, schematic, 3D panel, BOT, diagnostics, calculations, BOM and reports); keep cloud and connection indicators tied to verified state.
+2. Continue the 500-project library in individually engineering-validated batches. The current release has five original projects; an audit of the available local workspace, remote continuation branches and PR history did not recover the documented unpublished 233-example WIP. Do not count renamed or cosmetic variants.
+3. Complete and verify the hosted BOT gateway and authenticated, previewed, rollback-safe mutations with product-only credentials. The current local BOT is read-only and does not persist engineering actions.
+4. Finish account/storage acceptance, mandatory-confirmation security, manufacturer/standards rights, unsupported interchange, native-language review, and independent backup/restore checks.
+5. Resolve the M7 release integration conflicts without discarding main's newer account, example and product-template work; merge only after exact-head CI and target comparison pass.
+6. Only declare M18–M20 complete after the actual full-product release gates pass.
 
 ## Historical implementation evidence
 

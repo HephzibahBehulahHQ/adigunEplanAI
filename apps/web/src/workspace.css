@@ -151,6 +151,7 @@ i {
 }
 .ribbon-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.3rem;
   padding: 0.2rem 0.7rem 0;
   overflow-x: auto;
@@ -729,6 +730,9 @@ button:disabled {
 }
 
 .building-editor {
+  background: var(--panel);
+  color: var(--text);
+  width: 100%;
   padding: 1rem;
   overflow: auto;
   min-width: 0;
@@ -750,6 +754,16 @@ button:disabled {
   max-width: 100%;
   min-width: 0;
 }
+.circuit-route-tools .native-bom {
+  min-width: 44rem;
+}
+.circuit-route-tools .native-bom th,
+.circuit-route-tools .native-bom td {
+  overflow-wrap: normal;
+}
+.circuit-route-tools .native-bom td {
+  white-space: nowrap;
+}
 .building-plan {
   display: block;
   width: 100%;
@@ -757,6 +771,387 @@ button:disabled {
   background: var(--panel);
 }
 
+.single-line-preview {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-height: 36rem;
+  object-fit: contain;
+  object-position: left top;
+  background: white;
+  margin: 0.75rem 0;
+}
+.building-documentation {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.engineering-tools {
+  min-width: 0;
+  color: var(--text);
+}
+.engineering-tools label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+.engineering-tools button {
+  margin: 0.25rem;
+}
+.engineering-tools input,
+.engineering-tools select,
+.engineering-tools textarea {
+  min-width: 0;
+  max-width: 100%;
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.35rem;
+}
+.engineering-tools .native-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.engineering-tools table {
+  min-width: 32rem;
+}
+
+.automation-editor {
+  background: var(--panel);
+  color: var(--text);
+  width: 100%;
+  padding: 1rem;
+  min-width: 0;
+}
+
+.canvas-empty {
+  background: var(--panel);
+  color: var(--text);
+  padding: 1rem;
+  margin: 0;
+}
+
+/* Dense engineering shell, with one horizontally scrollable ribbon on narrow screens. */
+.ribbon-tabs {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  gap: 1px;
+  padding: 0 0.35rem;
+  flex-shrink: 0;
+}
+.ribbon-tabs button {
+  white-space: nowrap;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.74rem;
+}
+.ribbon-command-groups {
+  display: flex;
+  align-items: stretch;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+}
+.ribbon-command {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-color: transparent;
+  background: transparent;
+  max-width: 8rem;
+  min-height: 60px;
+  font-size: 0.7rem;
+}
+.ribbon-command svg {
+  width: 23px;
+  height: 23px;
+  color: var(--cyan);
+}
+.ribbon-command span {
+  text-align: center;
+}
+.navigator-pages button[aria-current="page"] {
+  border-color: var(--cyan);
+  background: var(--hover);
+}
+.engineering-status {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+@media (min-width: 1100px) {
+  .app-header {
+    flex-wrap: nowrap;
+    min-height: 60px;
+    padding: 0.35rem 0.7rem;
+    gap: 0.8rem;
+  }
+  .corporate-logo {
+    width: 155px;
+    height: 44px;
+  }
+  .wordmark {
+    flex-shrink: 0;
+    padding-left: 0.8rem;
+  }
+  .wordmark strong {
+    font-size: 1.25rem;
+  }
+  .project-title {
+    min-width: 0;
+    max-width: 38vw;
+    padding: 0.6rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .owner-toolbar {
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    gap: 6px;
+  }
+  .owner-toolbar .local-status {
+    flex: 0 1 auto;
+  }
+  .owner-toolbar .owner-icon {
+    width: 33px;
+    height: 33px;
+    flex-basis: 33px;
+  }
+  .ribbon {
+    min-height: 76px;
+    padding: 0.3rem 0.65rem;
+    gap: 0.7rem;
+  }
+  .ribbon .native-tools {
+    align-items: center;
+    max-width: 48%;
+  }
+  .engineering-layout.has-left.has-right {
+    grid-template-columns: minmax(210px, 19%) minmax(0, 1fr) minmax(250px, 26%);
+  }
+  .drawing-viewport {
+    padding: 5px;
+  }
+  .workspace-heading {
+    padding: 0.4rem 0.6rem;
+  }
+  .drawing-tabs {
+    padding: 0.2rem;
+  }
+  .drawing-tabs button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  .status-bar {
+    padding: 0.4rem 0.6rem;
+    gap: 0.6rem;
+  }
+}
+@media (max-width: 680px) {
+  .ribbon-command {
+    min-height: 44px;
+  }
+  .ribbon-command svg {
+    width: 20px;
+    height: 20px;
+  }
+  .ribbon-command-groups {
+    gap: 0;
+  }
+}
+.examples-dialog {
+  width: min(780px, calc(100vw - 2rem));
+  max-width: 780px;
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+}
+.examples-dialog > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.examples-dialog h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.example-library > p {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.example-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.example-grid article {
+  border: 1px solid var(--line);
+  padding: 1rem;
+  border-radius: 6px;
+  background: var(--surface);
+}
+.example-grid svg {
+  width: 40px;
+  height: 40px;
+  color: var(--cyan);
+}
+.example-grid h3 {
+  font-size: 0.95rem;
+}
+.example-grid p {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.ribbon-example-button {
+  font-size: 0.75rem;
+}
+@media (max-width: 600px) {
+  .example-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application .engineering-layout {
+    min-height: 0;
+    overflow: hidden;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .application .engineering-layout:has(> .dock-bottom) {
+    grid-template-rows: minmax(0, 1fr) 180px;
+  }
+  .application .workspace,
+  .workspace .drawing-viewport,
+  .workspace .drawing-sheet,
+  .drawing-sheet .native-drawing,
+  .native-drawing .schematic-editor {
+    min-height: 0;
+  }
+  .application .workspace {
+    height: 100%;
+  }
+  .workspace .drawing-viewport {
+    overflow: hidden;
+  }
+  .drawing-sheet .native-drawing {
+    flex: 1;
+  }
+  .schematic-editor .engineering-canvas {
+    flex: 1;
+    height: 0;
+    min-height: 0;
+  }
+  .application .panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .panel .panel-body {
+    min-height: 0;
+    overflow: auto;
+    flex: 1;
+  }
+  .app-header .owner-toolbar {
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+  .app-header .owner-toolbar .owner-icon {
+    width: 33px;
+    height: 33px;
+    flex-basis: 33px;
+  }
+  .app-header .owner-toolbar .local-status {
+    flex: 0 1 auto;
+  }
+}
+
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application[data-compact="true"]
+    .engineering-layout:has(> .dock-bottom .calculations-panel) {
+    grid-template-rows: minmax(0, 1fr) 180px;
+  }
+  .application[data-compact="true"] .dock-bottom:has(.calculations-panel) {
+    min-height: 0;
+    height: 180px;
+  }
+  .application[data-compact="true"] .workspace-heading,
+  .application[data-compact="true"] .compact-editor-tools,
+  .application[data-compact="true"] .schematic-editor > .editor-hint,
+  .application[data-compact="true"] .schematic-editor > .editor-options,
+  .application[data-compact="true"]
+    .native-drawing
+    > .drawing-tabs:first-child {
+    display: none;
+  }
+  .application[data-compact="true"] .drawing-sheet:before {
+    display: none;
+  }
+}
+@media (min-width: 1001px) and (min-height: 780px) {
+  .application[data-compact="true"]
+    [data-panel="calculations"]:has(.calculations-panel),
+  .application
+    [data-panel="calculations"]
+    > .panel-body:has(.calculations-panel) {
+    min-height: 0;
+    max-height: none;
+  }
+}
+.native-bom th:first-child {
+  white-space: nowrap;
+}
+.annotation-overflow {
+  margin: 0;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  background: var(--panel);
+  color: var(--gold);
+}
+.navigator-filter {
+  flex-direction: column;
+  align-items: stretch !important;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.navigator-tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 8px;
+  overflow-x: auto;
+}
+.navigator-tabs button {
+  flex: 1 0 auto;
+  padding: 5px 7px;
+  font-size: 0.65rem;
+  white-space: nowrap;
+}
+.navigator-tabs button[aria-selected="true"] {
+  border-color: var(--cyan);
+  background: var(--hover);
+}
+.navigator-pane {
+  min-width: 0;
+}
+.navigator-filter input {
+  width: 100%;
+}
+.navigator-root {
+  font-weight: 600;
+  color: var(--cyan);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.navigator-pages button[aria-pressed="true"] {
+  border-color: var(--cyan);
+  background: var(--hover);
+}
 .native-tools > button:has(svg) {
   display: grid;
   justify-items: center;

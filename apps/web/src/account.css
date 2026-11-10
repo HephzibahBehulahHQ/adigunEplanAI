@@ -1,0 +1,130 @@
+.owner-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+  max-width: 100%;
+}
+.owner-toolbar .owner-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  border: 1px solid #61788a;
+  border-radius: 7px;
+  background: #132c43;
+  color: #f5f1e8;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.owner-toolbar .local-status {
+  display: block;
+  flex: 1 1 96px;
+  min-width: 0;
+  max-width: 9rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.account-dot {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  width: 9px;
+  height: 9px;
+  border: 2px solid #132c43;
+  border-radius: 50%;
+  background: #b6bdc6;
+}
+.account-dot.verified {
+  background: #35d883;
+}
+.profile-avatar {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.account-avatar-preview {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.account-dialog {
+  width: min(42rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+}
+.account-dialog > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.account-dialog form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.6rem;
+  margin-block: 1rem;
+}
+.account-dialog label {
+  display: grid;
+  gap: 0.35rem;
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.account-dialog input {
+  width: 100%;
+  min-width: 0;
+}
+.account-dialog ul {
+  padding-left: 1.2rem;
+}
+.account-dialog li {
+  margin-block: 0.7rem;
+  overflow-wrap: anywhere;
+}
+.account-dialog li button {
+  margin: 0.25rem;
+}
+.account-dialog p {
+  overflow-wrap: anywhere;
+}
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.account-cloud {
+  border-top: 1px solid var(--line);
+  padding-block: 0.5rem;
+  margin-block: 1rem;
+}
+.cloud-conflict {
+  border: 1px solid var(--gold);
+  padding: 0.7rem;
+}
+.cloud-conflict button {
+  margin: 0.25rem;
+}
+.workspace-search-results button {
+  max-width: 100%;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 680px) {
+  .owner-toolbar {
+    width: 100%;
+  }
+  .owner-toolbar .local-status {
+    max-width: none;
+  }
+}

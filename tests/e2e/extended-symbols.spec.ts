@@ -51,10 +51,7 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
       .getByLabel("Project name", { exact: true })
       .fill(`Interface ${id}`);
     await dialog.getByRole("button", { name: "Create", exact: true }).click();
-    await page
-      .locator(".navigator-tabs")
-      .getByRole("button", { name: "Component library", exact: true })
-      .click();
+    await page.locator(".component-library > summary").click();
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })

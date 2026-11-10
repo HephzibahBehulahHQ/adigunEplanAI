@@ -195,6 +195,14 @@
   }
 }
 
+.active-editor-tool {
+  margin: 0;
+  padding: 4px 7px;
+  font-size: 0.65rem;
+  color: var(--cyan);
+  background: var(--panel);
+  flex-shrink: 0;
+}
 @media (min-width: 1350px) and (min-height: 780px) {
   .engineering-layout.has-left:has(> .dock-bottom) {
     grid-template-rows: minmax(0, 1fr) 166px;

@@ -2,10 +2,24 @@
 
 ## Contents
 
+- [Engineering ribbon and compact workspace](#engineering-ribbon-and-compact-workspace)
+- [Original example projects](#original-example-projects)
+- [Using the Adigun BOT floating window](#using-the-adigun-bot-floating-window)
+- [The live co-pilot](#the-live-co-pilot)
+
+- [Vertical risers and building documentation](#vertical-risers-and-building-documentation)
+- [Engineering calculations](#engineering-calculations)
+- [Panel design](#panel-design)
+- [PLC and automation](#plc-and-automation)
+- [Reports and real exports](#reports-and-real-exports)
+- [Accounts and cloud projects](#accounts-and-cloud-projects)
 - [Custom components](#custom-components)
 - [Component revisions and replacement](#component-revisions-and-replacement)
 - [Component files](#component-files)
 - [Mechanical symbols](#mechanical-symbols)
+- [Create equipment from a floor plan](#create-equipment-from-a-floor-plan)
+- [Distribution boards and circuit schedules](#distribution-boards-and-circuit-schedules)
+- [Cable, conduit and tray routes](#cable-conduit-and-tray-routes)
 - [Loading engineering symbols](#loading-engineering-symbols)
 
 ## Custom components
@@ -87,4 +101,148 @@ Export scaled plan SVG downloads the current visible floor plan with a millimetr
 
 Create the device in the schematic, then open Building design > Floor equipment. Choose its native symbol, a visible unlocked electrical layer and optionally a room. Position uses millimetres and the selected snap grid; rotation and annotation scale control the plan symbol. Mounting height is optional. Save, edit, remove, undo and redo preserve the shared device identity and schematic wiring.
 
-A device has one physical plan placement. Assigned room containment checks the anchor, not a certified physical footprint; annotation scale is not equipment size. Locked/hidden layers reject changes. Remove the plan placement before deleting its schematic device or assigned room. The room equipment schedule includes hidden placements and reports missing room, height and part values explicitly. Circuit assignment, route design and floor-first device creation remain unfinished.
+A device has one physical plan placement. Assigned room containment checks the anchor, not a certified physical footprint; annotation scale is not equipment size. Locked/hidden layers reject changes. Remove the plan placement before deleting its schematic device or assigned room. The room equipment schedule includes hidden placements and reports missing room, height and part values explicitly. Floor-first creation, circuit assignments and routes are described in the sections below. Broader building-design acceptance remains open.
+
+
+## Create equipment from a floor plan
+
+In Building design, select a floor and create a visible, unlocked electrical plan layer. Open Floor equipment → Create floor equipment. Choose a luminaire, socket, wall switch or generic distribution-board interface; enter a unique reference and description; select the linked schematic page, plan layer, optional room, coordinates and symbol scale. Mounting height is optional and remains unspecified when blank. Submit once to create the device, its real typed schematic terminals/pins, linked schematic symbol and floor placement as one undoable operation.
+
+The linked schematic symbol uses a free position on the selected drawing sheet. Existing wires and device identities are preserved. If all existing sheet layers are hidden or locked, creation is blocked; a page with no layers obtains its first layer. An assigned room must contain the equipment anchor. These are generic original symbols with no manufacturer identity or invented ratings. The distribution-board symbol declares independent L/N/PE supply-interface terminals; it does not invent internal connections or downstream protective devices. Designating a device as a distribution board is a separate explicit action.
+
+Use Selected equipment to edit an existing placement. Snap equipment to grid is off by default during edits so changing height, room or rotation preserves exact coordinates. Check it deliberately to quantize coordinates to the stated millimetre grid. New placements snap by default. Room schedules include hidden equipment and derive references from the shared native device.
+
+## Distribution boards and circuit schedules
+
+Open Circuits and cable routes. Select a placed native device and save its distribution-board name. Create a named circuit on an electrical layer, choose its board, explicitly enter supply voltage and phase count, and select its load devices. Each floor device can belong to one floor circuit. The board and all members must have placements on that floor. This increment does not represent multi-floor circuits or device subcircuits.
+
+For each selected device, enter active load in watts if known. A blank load remains unknown; zero means an explicitly known zero load. The schedule shows device count, voltage, phases, known subtotal, count of unspecified loads and a total only when every member has an explicit load. Values are user supplied. No demand factor, protective-device sizing, current calculation or code-compliance result is implied. The route-length column sums associated route records, including overlaps; it is not an installed cable quantity.
+
+Rename/edit the selected board or circuit with Save. Remove associated routes before deleting a circuit, and remove circuits/distribution-zone associations before deleting a board. Assigned floor placements and native devices cannot be removed while referenced. Hidden or locked circuit/device layers protect editing. These explicit associations do not create schematic wires or connect terminals.
+
+## Cable, conduit and tray routes
+
+Create a named Cable, Conduit or Cable tray route on an electrical plan layer. Enter at least two X,Y coordinate pairs, one pair per line, in native millimetres. Optionally assign an existing floor circuit. New routes snap to the chosen grid by default. Editing defaults to exact coordinates; enable Snap route points to grid explicitly when resnapping is intended. Empty/invalid points, zero-length segments, out-of-bounds coordinates and wrong-floor references are rejected without partial saves.
+
+The floor view renders the route and optional circuit label. Click it or focus it and press Enter/Space to select; use Save or Remove plan route to update it. Hidden layers omit geometry while retaining schedule entries. Locked layers block edits. Routes participate in the floor view bounds and physical-size SVG export, native JSON import/export, undo/redo and save/reload.
+
+Route lengths are sums of horizontal polyline segments in metres, excluding rises, drops, slack, bend allowances and installation allowances. Crossing routes do not create electrical connections. A conduit/tray route is not a count of cables inside it. Vertical risers, branch/junction engineering, route-capacity checks and physical conductor routing remain open.
+
+## Vertical risers and building documentation
+
+Building design supports emergency luminaires, original generic fire-loop devices, data interfaces and bonded PE equipment in addition to lighting, sockets, switches and boards. Each floor placement references an actual native schematic device. Vertical risers join two different floors in the same building, with an electrical layer and explicit height for each endpoint. Their floor markers and schedule retain the actual endpoint geometry; select a riser and open its elevation diagram to preview or download a dimensioned SVG. The diagram retains floor elevations, endpoint heights and the actual vertical distance. Locked/hidden layers prevent edits. Risers document physical routes and do not invent conductor connectivity.
+
+The circuit assignment diagram derives from native distribution boards and circuit membership. Download its SVG or the panel schedule CSV. The PE schedule contains actual native wires with PE endpoints; unconnected bonds are not fabricated. Unknown equipment loads remain unknown in circuit totals.
+
+## Engineering calculations
+
+Open the Calculations dock, choose one of the 25 categories and enter the required numeric values and units. Read the formula, assumptions, source references and any requested evidence. Compute displays the result and limited checks. Save creates a versioned native calculation record; reopening replays its exact method. Update replaces the selected record only after explicit action. CSV/JSON reports contain the inputs, units, method version, assumptions, evidence and results.
+
+Manufacturer ratings, soil data, protective-device curves, battery behavior and installation limits must come from appropriate supplied sources. Generic calculations and estimated checks are not certification. See [calculation methods and limits](engineering-calculations.md).
+
+## Panel design
+
+Choose Panel design and create an enclosure with explicit millimetre dimensions. Add plates, DIN rails, ducts, compartments or doors, then place existing native devices. Catalog dimensions are retained from the assigned source snapshot; manual and custom dimensions remain explicitly identified. Front and orbitable 3D views read the same records. Inspect bounds, collision, clearance, mounting, directional access, duct and heat diagnostics, including their assumptions.
+
+Six-face holes and entries retain their face and local geometry. Export SVG for the front layout or OBJ for generic 3D geometry. These outputs are not a STEP/manufacturer CAD conversion or machining certification.
+
+## PLC and automation
+
+Choose PLC and automation to create generic CPU, digital/analog I/O or communication modules. Each mapped address references a module channel and its actual terminals; address/channel/type constraints reject conflicting records. A signal assignment documents a relationship and does not insert a wire. The wiring schedule lists real native wire endpoints. Export the I/O CSV and add interlock, motor-control, sequence or safety notes linked to native devices. Notes do not execute a PLC or prove a safety function.
+
+## Reports and real exports
+
+Open Reports, select a drawing page or a native schedule, then download the offered format. SVG retains native drawing vectors and physical page size. DXF exports the supported native lines, circles, wires, layers and text in millimetres; [format scope](references/dxf-export.md) describes coordinate conversion and limits. Schedule CSV/JSON/PDF uses the selected drawing document’s output language independently of the interface. PNG is actually rasterized, with dimensions displayed before download. Print/save PDF opens a print document with physical millimetre page dimensions; choose Save as PDF in the browser print dialog. Review printer scaling and margins when using physical paper.
+
+CSV/JSON reports derive from devices, assigned parts, cables, terminals, actual connections, PLC mappings, drawing pages, revisions and saved calculations. Calculation reports replay the stored method and identify unavailable versions instead of inventing results. CSV output quotes cells and protects text cells from spreadsheet formula interpretation.
+
+## Accounts and cloud projects
+
+Use the profile icon to register or sign in. The green status dot means the current session was verified; local saving alone does not make it green. Profile name, password, reset and private avatar controls belong to the signed-in account. Language, settings, native search and help retain independent labelled controls.
+
+Guest and each authenticated account have separate local project stores. Switching accounts remounts the workspace, preventing stale responses from becoming another account's data. Cloud projects are saved only through explicit controls. Reopen the current cloud revision or an available history snapshot; a revision conflict asks for review rather than overwriting another saved version. If a response is lost, reload the cloud record before retrying because the server may already have accepted the write. Pending local recovery remains available to its owner.
+
+If an already verified account loses its connection, local editing can continue in that owner's workspace while cloud controls remain unavailable. Initial offline visitors remain guests. The application never embeds a privileged Supabase key. Production authenticated REST/storage acceptance is still tracked in [M7–M12 acceptance](MILESTONES_7_12_ACCEPTANCE.md).
+
+## Engineering ribbon and compact workspace
+
+The ribbon opens existing native workflows: File/Home/Project manage projects;
+Insert places original symbols; Edit uses native clipboard, transforms and undo;
+Electrical/Connections select wiring tools and native rule checks; Components
+opens the real catalog; Automation/PLC opens I/O documentation; Building Design
+opens the floor editor; Power Engineering opens the schematic, checks and
+calculators; 3D Panel opens the native cabinet editor; Documentation opens actual
+reports; Analysis and Tools expose checks, calculations and drawing view controls.
+AI Tools opens the local BOT. Settings and Help retain the existing controls.
+The active tool is always identified above the drawing; a ribbon placement tool
+is effective immediately when its request renders.
+
+View → Compact engineering workspace hides the duplicate canvas toolbars on a
+large desktop display. Ribbon commands remain available. Turn it off to expose
+all canvas controls, including sheet/grid/layer configuration. Examples open in
+compact mode. The preference does not change engineering data. Small screens
+retain the full controls and use scrolling panels.
+
+Selecting a schematic device highlights its mapped cabinet envelope. A cabinet
+face can be selected by clicking, or by focusing it and pressing Enter/Space;
+this selects the associated native device and opens its schematic page. Only
+explicit device-ID mappings synchronize. These selections never edit the project.
+
+Long annotations wrap by Unicode grapheme in native millimetres; explicit
+paragraphs and full text remain intact. Notes that extend beyond the sheet are
+reported in the editor and report panel. SVG retains full text and an overflow
+attribute. Review such notes before publishing a drawing.
+
+## Original example projects
+
+Home → Example projects opens four independently authored educational documents:
+a transformer station with secondary trip interfaces, a maintained-run motor
+starter, a two-room residential layout and a PLC cabinet with two mapped/wired
+I/O channels. Each opening creates new internal identities and preserves earlier
+projects. Save/export and reopen them through the normal project tools.
+
+The transformer is a single-phase equivalent, not a complete medium-voltage
+design. The motor uses a maintained run switch without a seal-in circuit;
+protection selection remains an engineering input. Residential loads are explicit
+educational assumptions (24 W lighting and 600 W socket allowances), and circuit
+assignment does not create physical wiring. The PLC example documents two I/O
+associations and channel wiring; it executes no PLC code. Unused/open interfaces
+remain visible in checks. All cabinet equipment uses manually dimensioned generic
+envelopes; no manufacturer CAD or certified design is implied. These four examples
+do not replace the unrecovered prior-session examples or satisfy the 500-project
+release gate.
+
+## Using the Adigun BOT floating window
+
+Open **Adigun BOT** from its launcher or AI Tools. It is a nonmodal window: the
+workspace remains usable. Drag the title bar to move it; the title remains within
+the viewport. Drag the corner to resize. The title and resize handle also accept
+arrow keys in 10 px steps. Header buttons minimize, maximize, restore and close.
+Escape closes and returns focus to the launcher. Closing/reloading preserves the
+last window state. On a phone the open window fits the viewport and retains its
+close control. Window preferences are local and separated by account; they do not
+sync between devices. If preference storage fails, the window remains usable and
+displays the failure.
+
+The current mode is **deterministic local tools**. Hosted AI is not configured.
+The BOT inspects actual project counts, native connection findings, the selected
+device and the device/BOM list. It does not claim simulation, energization,
+standards certification, generated engineering changes or a hosted AI response.
+Prompts select a bounded read-only tool; they cannot execute code or mutate data.
+No project context or chat is transmitted to a provider. Conversation is held in
+memory, bounded to twenty results and cleared when switching projects/accounts.
+Use Clear conversation to clear it immediately. Earlier results are marked as
+snapshots when the native project revision changes.
+
+## The live co-pilot
+
+The Live connection findings switch enables a subscription to committed native
+project changes and the existing connectivity rules. It offers at most one
+previously unseen finding per 25 seconds, after a two-second editing pause. It
+suppresses offers during pointer interaction and keyboard activity. A finding
+creates a launcher badge without opening the window or stealing focus. Inspect
+shows the actual rule evidence; Dismiss prevents immediate repetition. Resolved
+or previous-project findings are not presented as current. These local offers are
+read-only and never save or repair a project automatically. Hosted natural-language
+reasoning, mutation proposals and authenticated acceptance remain unimplemented;
+the original live-copilot milestone is not declared complete.

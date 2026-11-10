@@ -1,5 +1,15 @@
 # Pursued product goal
 
+**Product Name:** AdigunEplanAI
+
+**State:** Active — continue the full approved specification.
+
+On 2026-11-10 the owner reconfirmed [AdidunEplanAI Master PlanGoals](../../AdidunEplanAI%20Master%20PlanGoals). It matches MASTER_SPECIFICATION.md apart from its trailing newline. The active Codex goal includes this complete scope, the approved addenda, and the target-interface acceptance gate. Continue existing milestones; do not restart completed work.
+
+Canonical Global/Brand Template adoption is recorded in
+[product.config.json](../../product.config.json) and
+[the adoption record](../references/global-template-adoption.md).
+
 Implement the complete approved AdigunEplanAI specification in HephzibahBehulahHQ/adigunEplanAI, progressing through all milestones under standing user authorization. The owner reconfirmed docs/references/target-workspace.png on 2026-11-02 as the targeted visual and functional end state.
 
 Required target experience: branded professional ribbon; project/library/example navigator and properties; real central 2D electrical drawings; synchronized 3D cabinet workspace; integrated Adigun BOT; bottom diagnostics, calculations, BOM and reports; truthful project/save/connection status. All controls must perform tested native actions. The present shell is an intermediate milestone, not the final target. Apply canonical corporate assets and tokens even where reference artwork differs. Do not imitate sample pass counts, cloud status, account data or engineering results before they are real and verified.
@@ -29,3 +39,5 @@ Approved top-right menu extension (owner instruction): apply this requirement to
 Bind green only to an authenticated user session; show gray/red for guest or signed-out users. Current header ownership is apps/web/src/App.tsx with apps/web/src/workspace.css. No authentication session is currently exposed; native.saved is local-save state only. Integrate the real Supabase account state in Milestone 12 and retain functional language/settings/search/help behavior, without placeholder account actions. Before building, report the owning component and actual user-state source; this inspection was reported when the requirement was added. Acceptance requires non-overlap on desktop and mobile, identical button dimensions/spacing, profile tooltip, correct signed-in/guest dots, working controls, and delivery of the changed JSX/CSS for review. This extends the target-interface and account integration scope; all existing milestones and BOT addenda remain authoritative.
 
 Current owner publication boundaries: commit and publish all reviewed project-related work to a visible branch/draft PR, preserving existing work and excluding secrets, credentials, caches and unrelated files. Never force-push, rewrite history or deploy under this instruction. Before accessing or changing another project, obtain owner approval. The full production target remains part of the goal, but this publication instruction does not authorize deployment.
+
+Later standing owner authorization supersedes the earlier publication-only boundary above: continue the approved milestones, publish reviewed source through branches/PRs, merge after required checks, and deploy through the existing project configuration. The 2026-11-06 instruction explicitly requires continuing M7 through M20 without stopping after an increment. Preserve unrelated work, never force-push/rewrite history, never expose secrets, and never claim unavailable engineering, hosted services or final acceptance. Required tool confirmations and actual external-access gates remain binding.

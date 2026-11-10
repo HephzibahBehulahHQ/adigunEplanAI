@@ -1,8 +1,78 @@
 # Project status
 
-Current checkpoint: M7 is active on `codex/milestone-7-building` at `1f7ec74ea2ecc646b6eb13deb6f385a2ea7ca81f`. The floor-first device increment adds user-driven schematic and floor-plan device creation; the full local check (164 unit/tooling tests), all 97 Chromium scenarios, and hosted CI run 42619447459 passed. Final visual acceptance against `AdigunEplanTarget interface.png` remains open; the target's populated project, navigator, examples, account/cloud state, and full workbench composition must be implemented and verified without fabricated project data. See MILESTONES.md for verifiable criteria.
+## 2026-11-09 verified PV release and open acceptance
 
-The latest attempted Pages publication is not live: main is at `f1a4b659af3b4329d331cfacde36ad22fd1544a`, and Pages run `42598565374` failed runtime packaging (`Invalid runtime manifest size`); the public build-info remained on the prior source. M7's source is not yet integrated into main, and merging the open M7 release branch has conflicts in core workspace/localization files. No production deployment or final product acceptance is claimed. The configured production domain is https://adiguneplanai.hephzibahbehulah.com/; Cloudflare administrative configuration and Supabase integration remain unverified.
+Source `b43202a74aa7c19f48cd92f10cbff16cfe8d969e` (tree `19f012c195065095acf8b9d223fb748762055941`) passed hosted CI run 42623282605. Runtime deployment commit `7b94e649f2c4d2e6c15f768dd5ffd5d638e2804a` passed Pages run 42624237147 and exact-head CI run 42624237149. The package verified 107 runtime files and retained 105 earlier hashed assets. Live HTTPS provenance and hashes for the main bundle, example-library chunk and CSS matched. A production browser session opened the PV project with 9 devices, 8 wires, 2 pages and zero manufacturer-part claims. Local `npm run check` and all five example browser workflows passed.
+
+The shipped library now has five original validated projects; 495 individually validated projects remain for the 500-project acceptance gate. The documented unpublished 233-example expansion was not recovered from available local project files, remote branches or PR history. Rebuild in validated batches. The user's `AdigunEplanTarget interface.png` remains the strict visual acceptance target and is unmet; the target's dense project data, full workbench details, and verified account/cloud/BOT status remain open. Earlier failed Pages attempt `f1a4b659` was superseded by the successful main-source runtime publication at `32c93fb`.
+
+## Active template continuation — 2026-11-07
+
+Current goal and exact CI/deployment receipts: [PR #18](https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/18).
+
+Active product goal: **AdigunEplanAI — complete the approved master plan and
+interface under the canonical global and HB Elektroniker templates**. Owner
+authorization continues through commit, main integration and Actions deployment.
+The Codex task-bar goal API is not exposed; no task-bar controls are claimed.
+
+Continuation branch: `codex/product-goal-continuation`, based on verified main
+`542a22d7b4a27b1bb3c4d0e4a4906ad757c2f094`. The universal product adapter now
+feeds header/footer identity. CI enforces approved identity, destinations,
+reference repositories, tokens/logo, master/interface consistency and truthful
+capabilities. Eighteen focused template checks, TypeScript and full source CI passed. Exact
+integration and public-deployment receipts are maintained in PR #18; full-spec
+gates remain open.
+
+## Prior verified delivery — 2026-11-07
+
+Current delivery and exact CI/live-publication receipts:
+[PR #14](https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/14).
+Receipts are maintained there so a new status-only commit does not invalidate its
+own source identity. The owner explicitly authorized commit, push, merge to main
+and deployment in this session; no further routine confirmation is required.
+
+Implemented: functional engineering ribbon, searchable native hierarchy,
+transient native device selection synchronized between schematic and cabinet,
+compact drawing mode, multiline annotation preservation/overflow reporting,
+four original educational examples and a persistent nonmodal BOT window with
+read-only local project/selection/BOM tools and grounded live connection findings.
+Hosted AI and engineering mutation proposals are unavailable and labeled as such.
+
+Frozen source `8d0296035634595c51dcb8e67e082440db62abec` passed 306 unit/tooling,
+135 source browser and 18 production-build browser tests locally. A subsequent
+active-tool timing improvement passed five repeated built-app checks; final
+exact-head hosted evidence is recorded in PR #14. The production dependency audit
+found zero vulnerabilities. A clean remote clone restored that source and passed
+17 new domain tests using the already installed dependency set. This does not
+claim independent-machine disaster recovery.
+
+The managed workspace and native Git HTTPS push now work. Prior unpublished work
+was not present in this fresh workspace or its recorded remote branch and was
+not discarded. The four new examples do not establish recovery of that work or
+completion of the required 500-project library. Legitimate live authenticated
+account/storage verification, hosted AI configuration, remaining engineering and
+interchange requirements, human review and full M18–M20 acceptance remain open.
+Deployment of this tested development increment does not close those gates.
+
+## Current publication and recovery — 2026-11-06 08:32 UTC
+
+PR #11 source `17580877be2f4036137c8e832e213c580b870fab` is merged. Both exact-source CI runs passed 289 unit/tooling and 118 browser tests. Hosted staging run [42186682807](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42186682807) passed seven production-build browser workflows and published candidate `e2c5da75f304cbf347f9006324a457814f0aac26`; its exact remote head and distribution-only changes were verified. PR #12 passed its CI and merged as `c0bc73bca9f6722e6ad90341f125d325abf0f617`. [Pages 42187418138](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42187418138) and integrated-revision CI 42187419006 passed. [Live verification 42188098759](https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/42188098759) confirmed the exact source, all 24 runtime SHA-256 hashes and seven cabinet/report/riser browser workflows at the canonical HTTPS origin. This development release is deployed; full M7–M20 acceptance remains open.
+
+The execution workspace is unavailable. Local work-branch head `7b4ea96adbe32c8a26810716e722c1fdc141f970` was verified remotely, but subsequent M13/example/readiness WIP is synchronization pending and recovery is unverified. The last local checkpoint contains 233 authored/validated examples, including 183 unregistered additions; it does not establish 233 released examples. [Continuation and recovery](CONTINUATION_2026_11_06.md) records the known files, tests, failures and remaining 267 additions. Full milestone acceptance remains open.
+
+## Implemented scope and retained gates
+
+Current checkpoint: schema 17 continues M7–M12. M7 adds emergency lighting, fire-loop/data/PE devices, protected vertical risers, circuit-assignment diagrams and native PE schedules. M8 provides 25 versioned unit-aware calculation categories with explicit input evidence and limits. M9 provides shared native front/3D enclosure geometry, plates/rails/ducts/doors/compartments, sourced or explicitly manual equipment dimensions, six-face holes/entries, collision/clearance/mounting/access diagnostics, duct/heat estimates and SVG/OBJ export. M10 adds generic PLC modules, validated I/O/address/signal associations and control/safety documentation. M11 adds native drawing SVG/PNG/physical-size browser PDF plus derived CSV/JSON reports. M12 adds verified Supabase accounts, owner-scoped local workspaces, explicit cloud saves/history/conflicts and private avatars.
+
+PR #10 merged as `f475498133c4dc23980b95a61cbae816cff29e1f`. The example-driven face-occlusion defect was corrected by PR #11 before staging the new runtime. Current implementation and acceptance limits are recorded in [M7–M12 acceptance](../MILESTONES_7_12_ACCEPTANCE.md).
+
+The earlier PR #10 frozen-source verification passed all 278 unit/tooling tests, web/domain TypeScript, ESLint, formatting, 159 dependency-license entries, complete runtime notices and production build. All 116 Chromium scenarios passed. The production dependency audit reports zero vulnerabilities. Calculation reports replay the saved method; deletion of PLC/note-referenced devices is guarded. Account runtime splitting keeps the largest main chunk at 359.49 kB without increasing the warning threshold. Production-build workflow checks, hosted CI and deployment receipts are recorded separately.
+
+Supabase migration `20261106065156_adiguneplanai_revision_history_avatars` is applied in the authorized shared project. Read-only inspection confirms owner/nonanonymous RLS, immutable client history, restricted grants and a private 2 MiB image bucket. Both unauthenticated project/history REST requests returned 401. The rollback security fixture was NOT executed: the mandatory tool confirmation expired. A legitimate authenticated production REST/storage round trip remains unverified. No test emails or global Auth configuration changes were made.
+
+Reference repositories were audited 2026-11-06: hb-AI-policy `d42d4e04ac6ab77ebafa1d4fccb724a4dde8d02e`; hb-design-system `52f01f9986d97088413ca9785bc7a2d3f2967123`; hb-elektroniker `1daeed88df067a235b33516fb4cce111350ab80c`; corporate `HephzibahBehulahHQ.github.io` `bd116504412b37105166805018f64a6e7bbe3cde`. Their source files were read only; corporate assets match the product copies.
+
+M13 BOT and the M14–M17 original example library continue on separate files. No hosted AI availability or example count is claimed before validation. Licensed manufacturer/standards data, STEP integration, remaining specified geometry/export requirements, legitimate live account/security verification, native-language review and M18–M20 acceptance remain explicit gates. Owner instruction is to continue through the last milestone; development deployment does not establish final production acceptance.
 
 ## Historical checkpoints (superseded where noted above)
 
@@ -54,3 +124,13 @@ Schema 14 adds explicit per-floor drawing scales (1:1–1:10000, default 1:100 o
 ## Equipment placement checkpoint
 
 Schema 15 adds native-device floor placements, optional room assignment with anchor containment, snapped position, rotation, annotation scale and mounting height. Existing schematic identity and wiring remain unchanged. Layer locks/visibility protect mutations; room/device deletion protects references. The room equipment schedule derives native references and assigned parts, including hidden placements. Six new domain tests and all 11 building browser workflows pass; the complete local check, licensing, notices and build pass. Hosted CI and deployment for this increment remain pending publication. Floor-first device creation, routes and circuit schedules remain open.
+
+
+## 2026-11-10 — Interface integration in progress
+
+- Isolated worktree on `codex/interface-integration` reconciles development (`ecb34e0`) with main (`5b0c93d`); PR #22 was already merged into development. Original worktree and history remain untouched.
+- Preserve main’s account, navigator, examples, editor command bus and complete panel geometry engine. Integrate drawing title frame, project-backed calculation records and cabinet pan/zoom/fit/orientation controls. Default compact desktop layout reserves space for the drawing; expanded controls remain available through View.
+- Owner reaffirmed the exact supplied target menu order, sidebar/canvas/bottom-panel positions and real active behavior. The master-plan file matches the active specification; do not restart the roadmap.
+- Local check passed: 334 unit/tooling tests, types, lint, formatting, licenses, notices and build. Automated Chromium cannot launch inside the current sandbox; hosted browser CI is still required.
+- Visual parity is NOT accepted. Keep the integration PR draft; no merge, runtime publication or deployment until visual and CI gates pass. The target’s manufacturer cabinet appearance and full toolbar/BOT layout remain unfinished.
+- Local-only Playwright configuration, dependencies, build output and scratch logs are excluded from commits.

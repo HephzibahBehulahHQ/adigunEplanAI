@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "product": "AdigunEplanAI",
+  "division": "HB Elektroniker",
+  "mode": "deterministic-local-tools",
+  "hostedAI": false,
+  "endpoint": null,
+  "tools": [
+    "inspect-project",
+    "inspect-selection",
+    "check-connections",
+    "inspect-bom"
+  ],
+  "workspaceMutations": false,
+  "automaticProjectSaving": false,
+  "contextTransmission": "none",
+  "liveFindings": "native-connectivity-rules-only",
+  "minimumSuggestionIntervalMs": 25000
+}
