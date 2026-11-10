@@ -212,3 +212,42 @@ test("Home commands print native geometry, open the library and close without lo
     .selectOption(project.id);
   await expect(page.locator(".engineering-canvas")).toBeVisible();
 });
+
+test("many drawing sheets keep the add command visible on mobile", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 844 });
+  const project = nativeProject();
+  for (let index = 2; index <= 9; index++) {
+    project.pages.push({
+      ...project.pages[0],
+      id: `extra-page-${index}`,
+      name: `Sheet ${index}`,
+      order: index - 1,
+    });
+  }
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "many-sheets.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(project)),
+  });
+  await page
+    .locator('[data-panel="project"]')
+    .getByRole("button", { name: "Sheet 9", exact: true })
+    .click();
+  const tabs = page.locator(".drawing-pages");
+  await tabs.scrollIntoViewIfNeeded();
+  const active = tabs.getByRole("button", { name: "Sheet 9", exact: true });
+  await expect(active).toHaveAttribute("aria-pressed", "true");
+  await expect(active).toBeInViewport();
+  const add = tabs.getByRole("button", {
+    name: "New drawing page",
+    exact: true,
+  });
+  await expect(add).toBeInViewport();
+  await add.click();
+  await expect(
+    tabs.getByRole("button", { name: "Sheet 10", exact: true }),
+  ).toHaveCount(1);
+});

@@ -760,6 +760,33 @@ dialog form {
 .drawing-tabs button[aria-pressed="true"] {
   border-color: var(--cyan);
 }
+.drawing-tabs.drawing-pages {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 3px;
+  border-bottom: 1px solid var(--line);
+}
+.drawing-page-strip {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: 3px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.drawing-page-strip button {
+  flex: none;
+  max-width: min(15rem, 80vw);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.drawing-pages .drawing-page-add {
+  flex: none;
+  min-width: 2rem;
+  font-size: 0.9rem;
+}
 .native-sheet {
   width: 100%;
   flex: 1;

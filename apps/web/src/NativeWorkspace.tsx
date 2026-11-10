@@ -845,8 +845,19 @@ export function NativeDrawing({ native, t }: Props) {
   const { view, setView } = native;
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
+  const page = p?.pages.find((item) => item.id === selected) ?? p?.pages[0];
+  const pageTabs = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const strip = pageTabs.current;
+    const active = strip?.querySelector('[aria-pressed="true"]');
+    if (!strip || !active) return;
+    const bounds = strip.getBoundingClientRect();
+    const tab = active.getBoundingClientRect();
+    if (tab.left < bounds.left) strip.scrollLeft += tab.left - bounds.left;
+    else if (tab.right > bounds.right)
+      strip.scrollLeft += tab.right - bounds.right;
+  }, [page?.id, view]);
   if (!p) return null;
-  const page = p.pages.find((item) => item.id === selected) ?? p.pages[0];
   return (
     <div className="native-drawing">
       <nav className="drawing-tabs" aria-label={t("workspaceView")}>
@@ -895,22 +906,33 @@ export function NativeDrawing({ native, t }: Props) {
         </LazyPanelBoundary>
       ) : (
         <>
-          <nav className="drawing-tabs" aria-label={t("pageName")}>
-            {p.pages.map((item) => (
-              <button
-                key={item.id}
-                aria-pressed={item.id === page?.id}
-                onClick={() => setSelected(item.id)}
-              >
-                {item.name}
-              </button>
-            ))}
+          <nav
+            className="drawing-tabs drawing-pages"
+            aria-label={t("pageName")}
+          >
+            <div className="drawing-page-strip" ref={pageTabs}>
+              {p.pages.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  title={item.name}
+                  aria-pressed={item.id === page?.id}
+                  onClick={() => setSelected(item.id)}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
             <button
+              type="button"
+              className="drawing-page-add"
+              title={t("newPage")}
+              aria-label={t("newPage")}
               onClick={() =>
                 native.addPage(`${t("sheet")} ${p.pages.length + 1}`)
               }
             >
-              {t("newPage")}
+              <span aria-hidden="true">+</span>
             </button>
           </nav>
           {page ? (
