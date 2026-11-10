@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
+  type RefObject,
 } from "react";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import {
@@ -48,6 +49,7 @@ type Props = {
   orthogonal: boolean;
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
+  coordinateReadout: RefObject<HTMLSpanElement | null>;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
@@ -70,6 +72,7 @@ export function SchematicEditor({
   orthogonal,
   toggleOrthogonal,
   toggleSnap,
+  coordinateReadout,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
@@ -103,6 +106,12 @@ export function SchematicEditor({
   const [marquee, setMarquee] = useState<{ a: Point; b: Point } | null>(null);
   const svg = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
+  useEffect(() => {
+    const readout = coordinateReadout.current;
+    return () => {
+      if (readout) readout.textContent = "";
+    };
+  }, [coordinateReadout]);
   const layers = project.layers.filter((l) => l.pageId === page.id);
   const layerId = layers.some((l) => l.id === activeLayer)
     ? activeLayer
@@ -306,6 +315,17 @@ export function SchematicEditor({
     svg.current!.setPointerCapture(event.pointerId);
   }
   function pointerMove(event: ReactPointerEvent<SVGSVGElement>) {
+    const readout = coordinateReadout.current;
+    const matrix = readout && event.currentTarget.getScreenCTM();
+    if (readout && matrix) {
+      const { x, y } = new DOMPoint(
+        event.clientX,
+        event.clientY,
+      ).matrixTransform(matrix.inverse());
+      const coordinates = `X ${x.toFixed(2)} · Y ${y.toFixed(2)} mm`;
+      if (readout.textContent !== coordinates)
+        readout.textContent = coordinates;
+    }
     const current = drag.current;
     if (!current) {
       if (tool === "wire") setSnapPin(nearestWirePin(event));
@@ -1099,7 +1119,11 @@ export function SchematicEditor({
         tabIndex={0}
         onPointerDown={begin}
         onPointerMove={pointerMove}
-        onPointerLeave={() => setSnapPin(null)}
+        onPointerLeave={() => {
+          setSnapPin(null);
+          if (coordinateReadout.current)
+            coordinateReadout.current.textContent = "";
+        }}
         onPointerUp={pointerUp}
         onPointerCancel={() => {
           drag.current = null;

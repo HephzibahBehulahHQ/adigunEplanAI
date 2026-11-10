@@ -429,6 +429,16 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
     });
   });
   const before = await project(page);
+  const coordinates = page.locator(".status-coordinates");
+  await page.mouse.move(left.x, left.y);
+  await expect(coordinates).toHaveText(/^X \d+\.\d{2} · Y \d+\.\d{2} mm$/);
+  const [readX, readY] = (await coordinates.innerText())
+    .match(/\d+\.\d+/g)!
+    .map(Number);
+  expect(Math.abs(readX - 99)).toBeLessThan(1);
+  expect(Math.abs(readY - 85)).toBeLessThan(1);
+  await page.locator(".app-header").hover();
+  await expect(coordinates).toBeEmpty();
   for (const crossing of [false, true]) {
     const [start, end] = crossing ? [right, left] : [left, right];
     await page.mouse.move(start.x, start.y);

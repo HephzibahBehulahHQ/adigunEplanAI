@@ -62,6 +62,7 @@ export function App() {
 function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
   const [orthogonal, setOrthogonal] = useState(false);
+  const coordinateReadout = useRef<HTMLSpanElement>(null);
   const toggleOrthogonal = () => setOrthogonal((enabled) => !enabled);
   const activePage =
     native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
@@ -484,6 +485,7 @@ function Workspace({ account }: { account: Account }) {
                   orthogonal={orthogonal}
                   toggleOrthogonal={toggleOrthogonal}
                   toggleSnap={toggleSnap}
+                  coordinateReadout={coordinateReadout}
                 />
               ) : (
                 <div className="empty-workspace">
@@ -524,6 +526,7 @@ function Workspace({ account }: { account: Account }) {
         )}
         {activePage && native.view === "schematic" && (
           <div className="status-cad-tools">
+            <span className="status-coordinates" ref={coordinateReadout} />
             <button
               type="button"
               className="status-cad-toggle"

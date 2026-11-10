@@ -469,8 +469,15 @@ i {
 }
 .status-cad-tools {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 3px;
+}
+.status-coordinates {
+  min-inline-size: 22ch;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .status-cad-toggle[aria-pressed="true"] {
   color: var(--cyan);

@@ -10,7 +10,14 @@ import {
   schematicSvg,
   printDocument,
 } from "../../../packages/reporting/drawings.ts";
-import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+  type RefObject,
+} from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { exampleCatalog } from "../../../packages/example-projects/catalog.ts";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -845,10 +852,12 @@ export function NativeDrawing({
   orthogonal,
   toggleOrthogonal,
   toggleSnap,
+  coordinateReadout,
 }: Props & {
   orthogonal: boolean;
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
+  coordinateReadout: RefObject<HTMLSpanElement | null>;
 }) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
@@ -956,6 +965,7 @@ export function NativeDrawing({
               orthogonal={orthogonal}
               toggleOrthogonal={toggleOrthogonal}
               toggleSnap={toggleSnap}
+              coordinateReadout={coordinateReadout}
             />
           ) : (
             <p className="canvas-empty">{t("noPages")}</p>
