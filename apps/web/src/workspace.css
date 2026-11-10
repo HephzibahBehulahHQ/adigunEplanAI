@@ -1884,10 +1884,16 @@ button:disabled {
     container-type: size;
   }
   .application[data-compact="false"] .schematic-editor .engineering-canvas {
-    flex: 0 0 min(300px, 100cqh);
-    min-height: 0;
+    flex: 0 0 300px;
+    min-height: 300px;
   }
   .drawing-viewport :is(.building-plan, .panel-3d-stage, .panel-front-view) {
     max-height: 100cqh;
+  }
+}
+
+@media (min-width: 1001px) and (max-height: 780px) {
+  .application[data-compact="false"] .engineering-layout:has(> .dock-bottom) {
+    grid-template-rows: minmax(0, 1fr) 92px;
   }
 }
