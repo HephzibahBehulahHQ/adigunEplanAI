@@ -1,6 +1,7 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { nativeProject } from "../fixtures/native-project.mjs";
 const key = "adiguneplanai.projects.v1";
 async function create(page: Page) {
   await page.goto("/");
@@ -393,6 +394,49 @@ for (const language of ["en", "de", "yo", "pcm"])
       ),
     ).toBe(true);
   });
+
+test("drawing selection windows distinguish contained and crossing symbols", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wirePaths[0].points = [
+    { x: 100, y: 100 },
+    { x: 180, y: 100 },
+  ];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "selection.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const [left, right] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(99, 85), new DOMPoint(120, 115)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  const before = await project(page);
+  for (const crossing of [false, true]) {
+    const [start, end] = crossing ? [right, left] : [left, right];
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(end.x, end.y);
+    await expect(canvas.locator(".schematic-marquee")).toHaveAttribute(
+      "data-crossing",
+      String(crossing),
+    );
+    await page.mouse.up();
+    await expect(
+      canvas.locator('[data-instance][aria-pressed="true"]'),
+    ).toHaveCount(crossing ? 1 : 0);
+  }
+  expect(await project(page)).toEqual(before);
+});
 
 test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({
   page,

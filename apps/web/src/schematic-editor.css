@@ -7,6 +7,15 @@
   position: relative;
   z-index: 1;
 }
+.schematic-marquee {
+  fill: color-mix(in srgb, var(--royal-blue) 10%, transparent);
+  stroke: var(--royal-blue);
+}
+.schematic-marquee[data-crossing="true"] {
+  fill: color-mix(in srgb, var(--brand-cyan) 15%, transparent);
+  stroke: var(--cyan);
+  stroke-dasharray: 2 1;
+}
 .editor-toolbar {
   display: flex;
   flex-wrap: wrap;

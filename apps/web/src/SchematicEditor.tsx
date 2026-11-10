@@ -296,6 +296,7 @@ export function SchematicEditor({
     )
       edit((p) => move(p, current.ids, delta, grid));
     if (current.kind === "marquee") {
+      const crossing = current.last.x < current.start.x;
       const left = Math.min(current.start.x, current.last.x),
         right = Math.max(current.start.x, current.last.x),
         top = Math.min(current.start.y, current.last.y),
@@ -303,16 +304,18 @@ export function SchematicEditor({
       const found = project.symbolInstances
         .filter((s) => {
           const layer = project.layers.find((l) => l.id === s.layerId)!;
+          if (s.pageId !== page.id || !layer.visible || layer.locked)
+            return false;
           const b = bounds(project, s);
-          return (
-            s.pageId === page.id &&
-            layer.visible &&
-            !layer.locked &&
-            b.left >= left &&
-            b.right <= right &&
-            b.top >= top &&
-            b.bottom <= bottom
-          );
+          return crossing
+            ? b.left <= right &&
+                b.right >= left &&
+                b.top <= bottom &&
+                b.bottom >= top
+            : b.left >= left &&
+                b.right <= right &&
+                b.top >= top &&
+                b.bottom <= bottom;
         })
         .map((s) => s.id);
       setSelected([...new Set([...current.ids, ...found])]);
@@ -1306,13 +1309,14 @@ export function SchematicEditor({
         })}
         {marquee && (
           <rect
+            className="schematic-marquee"
+            data-crossing={marquee.b.x < marquee.a.x}
             x={Math.min(marquee.a.x, marquee.b.x)}
             y={Math.min(marquee.a.y, marquee.b.y)}
             width={Math.abs(marquee.a.x - marquee.b.x)}
             height={Math.abs(marquee.a.y - marquee.b.y)}
-            fill="#2563eb15"
-            stroke="#2563eb"
             strokeWidth={0.4}
+            pointerEvents="none"
           />
         )}
       </svg>
