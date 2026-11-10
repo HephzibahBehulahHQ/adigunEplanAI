@@ -708,6 +708,8 @@
   "riserVerticalLength": "Vertikale Länge (m)",
   "riserNeedsFloors": "Für eine Steigleitung zwei Geschosse mit bearbeitbaren elektrischen Ebenen anlegen.",
   "panelDesign": "Schaltschrankplanung",
+  "panelImportedGeometry": "Importierte Oberflächen",
+  "panelGenericGeometry": "Generische Hüllkörper",
   "panelScope": "Generische Quader nutzen dokumentierte Bauteilmaße oder ausdrücklich vom Benutzer eingegebene Maße. Sie sind keine Hersteller-CAD-Modelle.",
   "panelCoordinates": "Millimeter: X rechts, Y unten, Z von hinten nach vorn. Position ist die Minimalecke; Drehung vertauscht Breite und Höhe.",
   "panelEnclosure": "Gewähltes Gehäuse",

@@ -708,6 +708,8 @@
   "riserVerticalLength": "Gígùn inaro (m)",
   "riserNeedsFloors": "Fi ilẹ̀ méjì àti léyà iná tí a lè ṣàtúnṣe kún un fún ọ̀nà inaro.",
   "panelDesign": "Ìṣètò pánẹ́lì",
+  "panelImportedGeometry": "Àwọn ojú tí a gbé wọlé",
+  "panelGenericGeometry": "Àwọn àpótí ìwọ̀n gbogbogbò",
   "panelScope": "Àwọn àpótí àpẹẹrẹ lo ìwọ̀n paati tí a kọ sílẹ̀ tàbí ìwọ̀n tí olùlò fúnni. Wọn kì í ṣe CAD gidi ti olùpèsè.",
   "panelCoordinates": "Milimita: X sí ọ̀tún, Y sí ìsàlẹ̀, Z láti ẹ̀yìn sí iwájú. Ipò jẹ́ igun tó kéré jù; yíyí pààrọ̀ fífẹ̀ àti gíga.",
   "panelEnclosure": "Àpótí tí a yàn",

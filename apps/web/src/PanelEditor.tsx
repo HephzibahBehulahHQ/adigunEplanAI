@@ -1526,9 +1526,13 @@ function PanelViews({
         </div>
         {preview ? (
           <details className="panel-view-options">
-            <summary>{t("view")}</summary>
+            <summary>
+              {t("view")} ·{" "}
+              {t(hasMesh ? "panelImportedGeometry" : "panelGenericGeometry")}
+            </summary>
             {cameraAngles}
             <p className="panel-view-hint">{t("panelOrbit")}</p>
+            <p>{t(hasMesh ? "panelMeshScope" : "panelScope")}</p>
           </details>
         ) : (
           cameraAngles
@@ -1598,15 +1602,6 @@ export function PanelPreview({
         t={t}
         preview
       />
-      <p>
-        {t(
-          project.equipment3d.some(
-            (item) => item.enclosureId === enclosure.id && item.meshId,
-          )
-            ? "panelMeshScope"
-            : "panelScope",
-        )}
-      </p>
     </section>
   );
 }

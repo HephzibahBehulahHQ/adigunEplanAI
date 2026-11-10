@@ -708,6 +708,8 @@
   "riserVerticalLength": "Vertical length (m)",
   "riserNeedsFloors": "Add two floors and editable electrical layers to define a riser.",
   "panelDesign": "Panel design",
+  "panelImportedGeometry": "Imported surfaces",
+  "panelGenericGeometry": "Generic envelopes",
   "panelScope": "Generic boxes use documented component dimensions or explicitly user-supplied dimensions. They are not authentic manufacturer CAD.",
   "panelCoordinates": "Millimetres: X right, Y down, Z from back to front. Position is the minimum corner; rotation swaps width and height.",
   "panelEnclosure": "Selected enclosure",
