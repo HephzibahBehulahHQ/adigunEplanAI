@@ -813,13 +813,11 @@ export function NativeDrawing({
   toggleOrthogonal,
   toggleSnap,
   coordinateReadout,
-  showGrid,
 }: Props & {
   orthogonal: boolean;
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
   coordinateReadout: RefObject<HTMLSpanElement | null>;
-  showGrid: boolean;
 }) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
@@ -928,7 +926,6 @@ export function NativeDrawing({
               toggleOrthogonal={toggleOrthogonal}
               toggleSnap={toggleSnap}
               coordinateReadout={coordinateReadout}
-              showGrid={showGrid}
             />
           ) : (
             <p className="canvas-empty">{t("noPages")}</p>

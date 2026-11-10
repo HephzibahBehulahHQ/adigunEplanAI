@@ -6,7 +6,6 @@ import { SymbolArtwork } from "./SymbolArtwork";
 import { WireProperties } from "./WireProperties";
 import "./schematic-editor.css";
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -51,12 +50,11 @@ type Props = {
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
   coordinateReadout: RefObject<HTMLSpanElement | null>;
-  showGrid: boolean;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
-  kind: "pan" | "move" | "marquee" | "zoomWindow";
+  kind: "pan" | "move" | "marquee";
   anchor?: Point;
   orthogonal?: boolean;
   start: Point;
@@ -75,17 +73,16 @@ export function SchematicEditor({
   toggleOrthogonal,
   toggleSnap,
   coordinateReadout,
-  showGrid,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
-    "select" | "pan" | "wire" | "label" | "custom" | "zoomWindow" | Primitive
+    "select" | "pan" | "wire" | "label" | "custom" | Primitive
   >("select");
   // A ribbon tool is effective in the parent render, before deferred effects acknowledge it.
   const requestedTool = native.editorCommand?.action;
   const tool =
     requestedTool &&
-    (["select", "pan", "wire", "label", "zoomWindow"].includes(requestedTool) ||
+    (["select", "pan", "wire", "label"].includes(requestedTool) ||
       Object.hasOwn(primitives, requestedTool))
       ? (requestedTool as typeof activeTool)
       : activeTool;
@@ -100,40 +97,12 @@ export function SchematicEditor({
   const [spacePan, setSpacePan] = useState(false);
   const [labelPin, setLabelPin] = useState<string | null>(null);
   const [activeLayer, setActiveLayer] = useState<string | null>(null);
-  const [{ view }, setViewport] = useState({
-    view: { x: 0, y: 0, w: page.widthMm, h: page.heightMm },
-    history: [] as Box[],
+  const [view, setView] = useState<Box>({
+    x: 0,
+    y: 0,
+    w: page.widthMm,
+    h: page.heightMm,
   });
-  const changeView = useCallback(
-    (getNext: (current: Box) => Box, remember = true) => {
-      setViewport((state) => {
-        const next = getNext(state.view);
-        if (
-          next === state.view ||
-          (next.x === state.view.x &&
-            next.y === state.view.y &&
-            next.w === state.view.w &&
-            next.h === state.view.h)
-        )
-          return state;
-        return {
-          view: next,
-          history: remember
-            ? [...state.history.slice(-31), state.view]
-            : state.history,
-        };
-      });
-    },
-    [],
-  );
-  function zoomPrevious() {
-    setViewport((state) => {
-      const previous = state.history.at(-1);
-      return previous
-        ? { view: previous, history: state.history.slice(0, -1) }
-        : state;
-    });
-  }
   const [preview, setPreview] = useState<Point>({ x: 0, y: 0 });
   const [marquee, setMarquee] = useState<{ a: Point; b: Point } | null>(null);
   const svg = useRef<SVGSVGElement>(null);
@@ -178,11 +147,7 @@ export function SchematicEditor({
     );
   }, [project]);
   useEffect(
-    () =>
-      setViewport({
-        view: { x: 0, y: 0, w: page.widthMm, h: page.heightMm },
-        history: [],
-      }),
+    () => setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm }),
     [page.widthMm, page.heightMm],
   );
   function point(event: { clientX: number; clientY: number }): Point {
@@ -217,42 +182,7 @@ export function SchematicEditor({
     return pinId;
   }
   function fit() {
-    changeView(() => ({ x: 0, y: 0, w: page.widthMm, h: page.heightMm }));
-  }
-  function frameBox({ x, y, w: width, h: height }: Box) {
-    changeView((current) => {
-      const aspect = current.w / current.h;
-      const w = Math.max(20, width, height * aspect);
-      const h = w / aspect;
-      return { x: x + (width - w) / 2, y: y + (height - h) / 2, w, h };
-    });
-  }
-  function zoomExtents() {
-    const graphics = svg.current?.querySelectorAll<SVGGraphicsElement>(
-      "[data-instance], [data-wire], [data-annotation-id]",
-    );
-    if (!graphics?.length) {
-      fit();
-      return;
-    }
-    let left = Infinity,
-      top = Infinity,
-      right = -Infinity,
-      bottom = -Infinity;
-    for (const graphic of graphics) {
-      const { x, y, width, height } = graphic.getBBox();
-      left = Math.min(left, x);
-      top = Math.min(top, y);
-      right = Math.max(right, x + width);
-      bottom = Math.max(bottom, y + height);
-    }
-    const margin = Math.max(4, Math.max(right - left, bottom - top) * 0.05);
-    frameBox({
-      x: left - margin,
-      y: top - margin,
-      w: right - left + 2 * margin,
-      h: bottom - top + 2 * margin,
-    });
+    setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
   }
   function zoom(
     factor: number,
@@ -260,12 +190,12 @@ export function SchematicEditor({
   ) {
     const w = Math.min(page.widthMm * 4, Math.max(20, view.w / factor));
     const scale = w / view.w;
-    changeView(() => ({
+    setView({
       x: anchor.x - (anchor.x - view.x) * scale,
       y: anchor.y - (anchor.y - view.y) * scale,
       w,
       h: view.h * scale,
-    }));
+    });
   }
   function edit(action: (p: Project) => Project) {
     native.update(action);
@@ -299,7 +229,7 @@ export function SchematicEditor({
   }
   function begin(event: ReactPointerEvent<SVGSVGElement>) {
     if (event.button !== 0 && event.button !== 1) return;
-    svg.current?.focus({ preventScroll: true });
+    svg.current?.focus();
     const world = point(event);
     const matrix = svg.current!.getScreenCTM()!.inverse();
     if (tool === "pan" || spacePan || event.button === 1) {
@@ -339,9 +269,9 @@ export function SchematicEditor({
       });
       return;
     }
-    if (tool === "select" || tool === "zoomWindow") {
+    if (tool === "select") {
       drag.current = {
-        kind: tool === "zoomWindow" ? tool : "marquee",
+        kind: "marquee",
         start: world,
         last: world,
         view,
@@ -350,14 +280,14 @@ export function SchematicEditor({
       };
       setMarquee({ a: world, b: world });
       svg.current!.setPointerCapture(event.pointerId);
-      if (tool === "select") setSelectedWire(null);
+      setSelectedWire(null);
     }
   }
   function beginSymbol(event: ReactPointerEvent<SVGGElement>, id: string) {
     if (tool === "pan" || spacePan || event.button !== 0) return;
     if (tool !== "select") return;
     event.stopPropagation();
-    svg.current?.focus({ preventScroll: true });
+    svg.current?.focus();
     const symbol = project.symbolInstances.find((s) => s.id === id)!;
     const layer = project.layers.find((l) => l.id === symbol.layerId)!;
     if (layer.locked) return;
@@ -412,14 +342,11 @@ export function SchematicEditor({
       y: value.y - current.start.y,
     };
     if (current.kind === "pan")
-      changeView(
-        () => ({
-          ...current.view,
-          x: current.view.x - delta.x,
-          y: current.view.y - delta.y,
-        }),
-        false,
-      );
+      setView({
+        ...current.view,
+        x: current.view.x - delta.x,
+        y: current.view.y - delta.y,
+      });
     else if (current.kind === "move")
       setPreview(
         current.anchor && (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
@@ -441,26 +368,6 @@ export function SchematicEditor({
       (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
     )
       edit((p) => move(p, current.ids, delta, grid, current.orthogonal));
-    if (current.kind === "pan" && (delta.x || delta.y)) {
-      setViewport((state) => ({
-        ...state,
-        history: [...state.history.slice(-31), current.view],
-      }));
-    }
-    if (current.kind === "zoomWindow") {
-      const width = Math.abs(delta.x);
-      const height = Math.abs(delta.y);
-      // Ignore clicks and near-line drags in screen space.
-      if (width / current.matrix.a >= 4 && height / current.matrix.d >= 4) {
-        frameBox({
-          x: Math.min(current.start.x, current.last.x),
-          y: Math.min(current.start.y, current.last.y),
-          w: width,
-          h: height,
-        });
-        setTool("select");
-      }
-    }
     if (current.kind === "marquee") {
       const crossing = current.last.x < current.start.x;
       const left = Math.min(current.start.x, current.last.x),
@@ -563,13 +470,12 @@ export function SchematicEditor({
     if (!element) return;
     const handler = (event: WheelEvent) => {
       event.preventDefault();
-      if (drag.current) return;
       const matrix = element.getScreenCTM()?.inverse();
       if (!matrix) return;
       const anchor = new DOMPoint(event.clientX, event.clientY).matrixTransform(
         matrix,
       );
-      changeView((previous) => {
+      setView((previous) => {
         const w = Math.min(
           page.widthMm * 4,
           Math.max(20, previous.w / (event.deltaY < 0 ? 1.1 : 1 / 1.1)),
@@ -585,7 +491,7 @@ export function SchematicEditor({
     };
     element.addEventListener("wheel", handler, { passive: false });
     return () => element.removeEventListener("wheel", handler);
-  }, [page.widthMm, changeView]);
+  }, [page.widthMm]);
   // Requests are ephemeral UI commands. A request runs once, including after switching views.
   const handledCommand = useRef(0);
   useEffect(() => {
@@ -595,7 +501,7 @@ export function SchematicEditor({
     native.consumeEditorCommand(request.id);
     const action = request.action === "move" ? "select" : request.action;
     if (
-      ["select", "pan", "wire", "label", "zoomWindow"].includes(action) ||
+      ["select", "pan", "wire", "label"].includes(action) ||
       Object.hasOwn(primitives, action)
     ) {
       setTool(action as typeof tool);
@@ -607,9 +513,8 @@ export function SchematicEditor({
       setCustomDefinition(action.slice(7));
       setTool("custom");
       setFromPin(null);
-    } else if (action === "fit") fit();
-    else if (action === "zoomPrevious") zoomPrevious();
-    else if (action === "zoomExtents") zoomExtents();
+    } else if (action === "fit")
+      setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
     else if (action === "zoomIn") zoom(1.2);
     else if (action === "zoomOut") zoom(1 / 1.2);
     else if (action === "rotate" && selected.length)
@@ -636,7 +541,7 @@ export function SchematicEditor({
     else if (action === "paste") pasteClipboard();
     else if (action === "copy" && selected.length)
       setClipboard({ project: structuredClone(project), ids: [...selected] });
-    svg.current?.focus({ preventScroll: true });
+    svg.current?.focus();
   }, [native.editorCommand]);
   const sizes = {
     A4: [297, 210],
@@ -1216,12 +1121,6 @@ export function SchematicEditor({
         aria-label={page.name}
         tabIndex={0}
         onKeyDown={(event) => {
-          if (event.key === "Escape" && tool === "zoomWindow") {
-            drag.current = null;
-            setMarquee(null);
-            setTool("select");
-            return;
-          }
           if (event.target !== event.currentTarget || event.code !== "Space")
             return;
           event.preventDefault();
@@ -1242,8 +1141,6 @@ export function SchematicEditor({
         }}
         onPointerUp={pointerUp}
         onPointerCancel={() => {
-          const current = drag.current;
-          if (current?.kind === "pan") changeView(() => current.view, false);
           drag.current = null;
           setPreview({ x: 0, y: 0 });
           setMarquee(null);
@@ -1262,7 +1159,7 @@ export function SchematicEditor({
         <rect
           width={page.widthMm}
           height={page.heightMm}
-          fill={showGrid ? `url(#grid-${page.id})` : "transparent"}
+          fill={`url(#grid-${page.id})`}
         />
         <DrawingSheetFrame project={project} page={page} />
         {project.wirePaths
@@ -1303,7 +1200,7 @@ export function SchematicEditor({
                   e.stopPropagation();
                   setSelectedWire(wire.id);
                   setSelected([]);
-                  svg.current?.focus({ preventScroll: true });
+                  svg.current?.focus();
                 }}
                 data-wire={wire.id}
               >
@@ -1445,7 +1342,6 @@ export function SchematicEditor({
                   if (
                     tool === "pan" ||
                     tool === "wire" ||
-                    tool === "zoomWindow" ||
                     Object.hasOwn(primitives, tool)
                   )
                     return;
@@ -1520,8 +1416,7 @@ export function SchematicEditor({
         {marquee && (
           <rect
             className="schematic-marquee"
-            data-crossing={tool !== "zoomWindow" && marquee.b.x < marquee.a.x}
-            data-zoom-window={tool === "zoomWindow"}
+            data-crossing={marquee.b.x < marquee.a.x}
             x={Math.min(marquee.a.x, marquee.b.x)}
             y={Math.min(marquee.a.y, marquee.b.y)}
             width={Math.abs(marquee.a.x - marquee.b.x)}
