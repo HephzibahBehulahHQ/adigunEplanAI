@@ -538,6 +538,27 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   await expect(snap).toHaveAttribute("aria-pressed", "true");
   await snap.click();
   await expect(snap).toHaveAttribute("aria-pressed", "false");
+  const beforePan = await project(page);
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.focus();
+  for (const button of ["left", "middle"] as const) {
+    const startView = await canvas.getAttribute("viewBox");
+    const center = await canvas.evaluate((element) => {
+      const { x, y } = new DOMPoint(130, 105.125).matrixTransform(
+        (element as SVGSVGElement).getScreenCTM()!,
+      );
+      return { x, y };
+    });
+    if (button === "left") await page.keyboard.down("Space");
+    await page.mouse.move(center.x, center.y);
+    await page.mouse.down({ button });
+    await page.mouse.move(center.x + 20, center.y + 15);
+    await page.mouse.up({ button });
+    if (button === "left") await page.keyboard.up("Space");
+    await expect(canvas).not.toHaveAttribute("viewBox", startView!);
+    await expect(canvas).toHaveAttribute("data-tool", "select");
+  }
+  expect(await project(page)).toEqual(beforePan);
 });
 
 test("Wire mode snaps nearby clicks to native pin coordinates", async ({

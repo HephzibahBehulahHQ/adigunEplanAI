@@ -30,6 +30,14 @@
 .engineering-canvas [data-snap-pin="true"] circle:last-child {
   stroke: var(--cyan);
 }
+.engineering-canvas[data-space-pan="true"],
+.engineering-canvas[data-space-pan="true"]
+  :is([data-pin], [data-instance], [data-wire]) {
+  cursor: grab;
+}
+.engineering-canvas[data-space-pan="true"]:active {
+  cursor: grabbing;
+}
 .editor-toolbar {
   display: flex;
   flex-wrap: wrap;

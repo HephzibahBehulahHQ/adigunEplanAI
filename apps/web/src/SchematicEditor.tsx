@@ -94,6 +94,7 @@ export function SchematicEditor({
   const [selectedWire, setSelectedWire] = useState<string | null>(null);
   const [fromPin, setFromPin] = useState<string | null>(null);
   const [snapPin, setSnapPin] = useState<string | null>(null);
+  const [spacePan, setSpacePan] = useState(false);
   const [labelPin, setLabelPin] = useState<string | null>(null);
   const [activeLayer, setActiveLayer] = useState<string | null>(null);
   const [view, setView] = useState<Box>({
@@ -227,10 +228,11 @@ export function SchematicEditor({
     });
   }
   function begin(event: ReactPointerEvent<SVGSVGElement>) {
+    if (event.button !== 0 && event.button !== 1) return;
     svg.current?.focus();
     const world = point(event);
     const matrix = svg.current!.getScreenCTM()!.inverse();
-    if (tool === "pan" || event.button === 1) {
+    if (tool === "pan" || spacePan || event.button === 1) {
       event.preventDefault();
       drag.current = {
         kind: "pan",
@@ -282,7 +284,7 @@ export function SchematicEditor({
     }
   }
   function beginSymbol(event: ReactPointerEvent<SVGGElement>, id: string) {
-    if (tool === "pan") return;
+    if (tool === "pan" || spacePan || event.button !== 0) return;
     if (tool !== "select") return;
     event.stopPropagation();
     svg.current?.focus();
@@ -1113,10 +1115,23 @@ export function SchematicEditor({
         ref={svg}
         className="native-sheet engineering-canvas"
         data-tool={tool}
+        data-space-pan={spacePan}
         viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
         role="application"
         aria-label={page.name}
         tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget || event.code !== "Space")
+            return;
+          event.preventDefault();
+          setSpacePan(true);
+        }}
+        onKeyUp={(event) => {
+          if (event.code !== "Space" || !spacePan) return;
+          event.preventDefault();
+          setSpacePan(false);
+        }}
+        onBlur={() => setSpacePan(false)}
         onPointerDown={begin}
         onPointerMove={pointerMove}
         onPointerLeave={() => {
@@ -1163,6 +1178,7 @@ export function SchematicEditor({
               <g
                 key={path.id}
                 onPointerDown={(e) => {
+                  if (spacePan || e.button !== 0) return;
                   if (tool === "junction" || tool === "terminal") {
                     e.stopPropagation();
                     const position = point(e);
@@ -1322,6 +1338,7 @@ export function SchematicEditor({
                 tabIndex={0}
                 aria-label={`${device.reference}:${terminal.designation}${project.pins.filter((p) => p.symbolInstanceId === instance.id && p.terminalId === terminal.id).length > 1 ? `/${pin.definitionPinId}` : ""}`}
                 onPointerDown={(e) => {
+                  if (spacePan || e.button !== 0) return;
                   if (
                     tool === "pan" ||
                     tool === "wire" ||
