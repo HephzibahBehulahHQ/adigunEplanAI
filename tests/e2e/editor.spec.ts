@@ -190,7 +190,9 @@ test("wire properties and shielded cable cores persist as native engineering met
     .getByLabel("Declared maximum wire connections", { exact: true })
     .fill("1");
   await terminal.getByRole("button", { name: "Apply", exact: true }).click();
-  await expect(panel).toContainText("Errors: 1");
+  await expect(
+    panel.getByRole("button", { name: "Errors (1)", exact: true }),
+  ).toBeVisible();
   await panel
     .locator("summary")
     .filter({ hasText: /^Terminal strip$/ })
