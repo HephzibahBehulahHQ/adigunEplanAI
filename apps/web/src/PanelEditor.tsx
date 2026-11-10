@@ -1,4 +1,5 @@
 import { useRef, useState, type FormEvent, type PointerEvent } from "react";
+import { CommandIcon } from "./WorkspaceRibbon";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
 import type { Project } from "../../../packages/electrical-model/project.ts";
@@ -936,6 +937,62 @@ function PanelViews({
     w: projectedWidth / zoom,
     h: projectedHeight / zoom,
   };
+  const cameraTools = (
+    <div
+      className="panel-camera-tools"
+      role="group"
+      aria-label={t("workspaceView")}
+    >
+      <button
+        type="button"
+        aria-pressed={cameraTool === "orbit"}
+        aria-label={t("rotate")}
+        title={t("rotate")}
+        onClick={() => setCameraTool("orbit")}
+      >
+        {preview ? <CommandIcon kind="rotate" /> : t("rotate")}
+      </button>
+      <button
+        type="button"
+        aria-pressed={cameraTool === "pan"}
+        aria-label={t("panTool")}
+        title={t("panTool")}
+        onClick={() => setCameraTool("pan")}
+      >
+        {preview ? <CommandIcon kind="pan" /> : t("panTool")}
+      </button>
+      <button
+        type="button"
+        aria-label={t("zoomOut")}
+        title={t("zoomOut")}
+        disabled={zoom <= 0.5}
+        onClick={() => setZoom((v) => Math.max(0.5, v / 1.25))}
+      >
+        −
+      </button>
+      <output>{Math.round(zoom * 100)}%</output>
+      <button
+        type="button"
+        aria-label={t("zoomIn")}
+        title={t("zoomIn")}
+        disabled={zoom >= 4}
+        onClick={() => setZoom((v) => Math.min(4, v * 1.25))}
+      >
+        +
+      </button>
+      <button
+        type="button"
+        aria-label={t("fitPage")}
+        title={t("fitPage")}
+        onClick={() => {
+          setZoom(1);
+          setCameraPan({ x: 0, y: 0 });
+        }}
+      >
+        {preview ? <CommandIcon kind="fit" /> : t("fitPage")}
+      </button>
+    </div>
+  );
   return (
     <div className={`panel-views${preview ? " panel-preview-views" : ""}`}>
       {!preview && (
@@ -1073,52 +1130,7 @@ function PanelViews({
       )}
       <figure>
         <figcaption>{t("panel3dView")}</figcaption>
-        <div
-          className="panel-camera-tools"
-          role="group"
-          aria-label={t("workspaceView")}
-        >
-          <button
-            type="button"
-            aria-pressed={cameraTool === "orbit"}
-            onClick={() => setCameraTool("orbit")}
-          >
-            {t("rotate")}
-          </button>
-          <button
-            type="button"
-            aria-pressed={cameraTool === "pan"}
-            onClick={() => setCameraTool("pan")}
-          >
-            {t("panTool")}
-          </button>
-          <button
-            type="button"
-            aria-label={t("zoomOut")}
-            disabled={zoom <= 0.5}
-            onClick={() => setZoom((v) => Math.max(0.5, v / 1.25))}
-          >
-            −
-          </button>
-          <output>{Math.round(zoom * 100)}%</output>
-          <button
-            type="button"
-            aria-label={t("zoomIn")}
-            disabled={zoom >= 4}
-            onClick={() => setZoom((v) => Math.min(4, v * 1.25))}
-          >
-            +
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setZoom(1);
-              setCameraPan({ x: 0, y: 0 });
-            }}
-          >
-            {t("fitPage")}
-          </button>
-        </div>
+        {!preview && cameraTools}
         <div className="panel-3d-stage" data-mesh-scene={hasMesh}>
           {hasMesh && (
             <PanelMeshSurface
@@ -1129,6 +1141,7 @@ function PanelViews({
               errorLabel={t("meshRenderError")}
             />
           )}
+          {preview && cameraTools}
           <svg
             className="panel-3d-view"
             data-camera-tool={cameraTool}

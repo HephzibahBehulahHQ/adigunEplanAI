@@ -256,6 +256,34 @@
   border-color: var(--cyan);
   color: var(--cyan);
 }
+.panel-3d-stage > .panel-camera-tools {
+  position: absolute;
+  z-index: 3;
+  inset: 8px auto auto 8px;
+  display: grid;
+  gap: 2px;
+  padding: 3px;
+  max-height: calc(100% - 16px);
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: center;
+}
+.panel-3d-stage > .panel-camera-tools button {
+  display: grid;
+  place-items: center;
+  min-height: 24px;
+  padding: 2px 4px;
+  line-height: 1.2;
+}
+.panel-3d-stage > .panel-camera-tools button svg {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  background: transparent;
+}
 .panel-3d-view[data-camera-tool="pan"] {
   cursor: grab;
 }

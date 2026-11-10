@@ -91,6 +91,10 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   await expect(cube.locator("polygon")).not.toHaveCount(0);
   const cubeBounds = (await cube.boundingBox())!;
   const stageBounds = (await canvas.boundingBox())!;
+  const tools = preview.locator(".panel-3d-stage > .panel-camera-tools");
+  const toolBounds = (await tools.boundingBox())!;
+  expect(toolBounds.x - stageBounds.x).toBeCloseTo(8, 0);
+  expect(toolBounds.y - stageBounds.y).toBeCloseTo(8, 0);
   expect(cubeBounds.y - stageBounds.y).toBeCloseTo(8, 0);
   expect(
     stageBounds.x + stageBounds.width - cubeBounds.x - cubeBounds.width,
