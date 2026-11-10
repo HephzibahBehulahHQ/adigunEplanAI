@@ -46,7 +46,7 @@ test("schema16 migration preserves legacy engineering data and adds empty record
   assert.equal(result.migratedFrom, 16);
   assert.deepEqual(result.project, {
     ...old,
-    schemaVersion: 17,
+    schemaVersion: 18,
     planRisers: [],
     automationNotes: [],
     panelStructures: [],

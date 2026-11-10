@@ -471,7 +471,7 @@ test("schema 15 migration preserves legacy circuits and equipment without invent
   });
   const result = parseProject(JSON.stringify(legacy));
   assert.equal(result.migratedFrom, 15);
-  assert.equal(result.project.schemaVersion, 17);
+  assert.equal(result.project.schemaVersion, 18);
   assert.deepEqual(result.project.planRoutes, []);
   assert.deepEqual(result.project.circuits, legacy.circuits);
   assert.deepEqual(

@@ -44,6 +44,9 @@ import {
   featureVertices,
 } from "../../../packages/panel-engineering/features.ts";
 import "./panel-editor.css";
+import { PanelMeshTools } from "./PanelMeshTools";
+import { PanelMeshSurface, envelopeMesh } from "./PanelMeshSurface";
+import { meshHit } from "../../../packages/panel-engineering/mesh.ts";
 
 type Translate = (key: MessageKey) => string;
 type Change = (change: (project: Project) => Project) => boolean;
@@ -71,6 +74,7 @@ const sourceKeys: Record<
   manual: "panelManualSource",
   catalog: "panelCatalogSource",
   custom: "panelCustomSource",
+  mesh: "meshDimensions",
 };
 const diagnosticKeys: Record<PanelDiagnostic["code"], MessageKey> = {
   "out-of-bounds": "panelOutOfBounds",
@@ -561,6 +565,7 @@ function EquipmentForm({
           run((draft) => {
             const input = {
               name: String(data.get("name")),
+              meshId: item?.meshId,
               enclosureId: enclosure.id,
               positionMm: vector(data, "position"),
               sizeMm: vector(data, "size"),
@@ -635,6 +640,7 @@ function EquipmentForm({
         <select
           aria-label={t("panelGeometrySource")}
           value={dimensionSource}
+          disabled={!!item?.meshId}
           onChange={(event) =>
             setDimensionChoice(event.target.value as typeof dimensionSource)
           }
@@ -797,6 +803,7 @@ function PanelViews({
   const [cameraTool, setCameraTool] = useState<"orbit" | "pan">("orbit");
   const [cameraPan, setCameraPan] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+  const ignoreClick = useRef(false);
   const orbit = useRef<{
     pointer: number;
     tool: "orbit" | "pan";
@@ -910,6 +917,24 @@ function PanelViews({
       matrix.inverse(),
     );
     return { x: point.x, y: point.y };
+  };
+  const hasMesh = equipment.some((item) => item.meshId);
+  const meshObjects = objects
+    .filter((item) => !("kind" in item && item.kind === "compartment"))
+    .map((item) => ({
+      item,
+      mesh:
+        "meshId" in item
+          ? project.panelMeshes.find((mesh) => mesh.id === item.meshId)
+          : undefined,
+      color: "meshId" in item && item.meshId ? "#b5bec9" : color(item),
+      opacity: "kind" in item && item.kind === "door" ? 0.18 : 1,
+    }));
+  const cameraView = {
+    x: minX + (projectedWidth - projectedWidth / zoom) / 2 + cameraPan.x,
+    y: minY + (projectedHeight - projectedHeight / zoom) / 2 + cameraPan.y,
+    w: projectedWidth / zoom,
+    h: projectedHeight / zoom,
   };
   return (
     <div className={`panel-views${preview ? " panel-preview-views" : ""}`}>
@@ -1094,201 +1119,264 @@ function PanelViews({
             {t("fitPage")}
           </button>
         </div>
-        <svg
-          className="panel-3d-view"
-          data-camera-tool={cameraTool}
-          onLostPointerCapture={() => {
-            orbit.current = null;
-          }}
-          role="group"
-          aria-label={t("panel3dView")}
-          viewBox={`${minX + (projectedWidth - projectedWidth / zoom) / 2 + cameraPan.x} ${minY + (projectedHeight - projectedHeight / zoom) / 2 + cameraPan.y} ${projectedWidth / zoom} ${projectedHeight / zoom}`}
-          onPointerDown={(event) => {
-            if (!event.isPrimary || (event.button !== 0 && event.button !== 1))
-              return;
-            event.preventDefault();
-            event.currentTarget.setPointerCapture(event.pointerId);
-            orbit.current = {
-              x: event.clientX,
-              y: event.clientY,
-              yaw,
-              pitch,
-              pointer: event.pointerId,
-              tool: event.button === 1 || event.shiftKey ? "pan" : cameraTool,
-              pan: cameraPan,
-              moved: false,
-              unitsPerPixel:
+        <div className="panel-3d-stage" data-mesh-scene={hasMesh}>
+          {hasMesh && (
+            <PanelMeshSurface
+              objects={meshObjects}
+              yaw={yaw}
+              pitch={pitch}
+              view={cameraView}
+              errorLabel={t("meshRenderError")}
+            />
+          )}
+          <svg
+            className="panel-3d-view"
+            data-camera-tool={cameraTool}
+            onLostPointerCapture={() => {
+              orbit.current = null;
+            }}
+            role="group"
+            aria-label={t("panel3dView")}
+            viewBox={`${minX + (projectedWidth - projectedWidth / zoom) / 2 + cameraPan.x} ${minY + (projectedHeight - projectedHeight / zoom) / 2 + cameraPan.y} ${projectedWidth / zoom} ${projectedHeight / zoom}`}
+            onClick={(event) => {
+              if (ignoreClick.current) {
+                ignoreClick.current = false;
+                return;
+              }
+              if (!hasMesh) return;
+              const matrix = event.currentTarget.getScreenCTM();
+              if (!matrix) return;
+              const point = new DOMPoint(
+                event.clientX,
+                event.clientY,
+              ).matrixTransform(matrix.inverse());
+              let front = -Infinity,
+                id = "";
+              for (const object of meshObjects) {
+                const depth = meshHit(
+                  object.mesh ?? envelopeMesh(object.item),
+                  object.item,
+                  yaw,
+                  pitch,
+                  point,
+                );
+                if (depth !== null && depth > front) {
+                  front = depth;
+                  id = object.item.id;
+                }
+              }
+              if (id) select(id);
+            }}
+            onPointerDown={(event) => {
+              if (
+                !event.isPrimary ||
+                (event.button !== 0 && event.button !== 1)
+              )
+                return;
+              event.preventDefault();
+              event.currentTarget.setPointerCapture(event.pointerId);
+              orbit.current = {
+                x: event.clientX,
+                y: event.clientY,
+                yaw,
+                pitch,
+                pointer: event.pointerId,
+                tool: event.button === 1 || event.shiftKey ? "pan" : cameraTool,
+                pan: cameraPan,
+                moved: false,
+                unitsPerPixel:
+                  Math.max(
+                    projectedWidth / event.currentTarget.clientWidth,
+                    projectedHeight / event.currentTarget.clientHeight,
+                  ) / zoom,
+              };
+            }}
+            onPointerMove={(event) => {
+              if (!orbit.current || orbit.current.pointer !== event.pointerId)
+                return;
+              const dx = event.clientX - orbit.current.x,
+                dy = event.clientY - orbit.current.y;
+              orbit.current.moved ||= Math.hypot(dx, dy) > 3;
+              if (orbit.current.tool === "pan") {
+                setCameraPan({
+                  x: orbit.current.pan.x - dx * orbit.current.unitsPerPixel,
+                  y: orbit.current.pan.y - dy * orbit.current.unitsPerPixel,
+                });
+                return;
+              }
+              setYaw(
                 Math.max(
-                  projectedWidth / event.currentTarget.clientWidth,
-                  projectedHeight / event.currentTarget.clientHeight,
-                ) / zoom,
-            };
-          }}
-          onPointerMove={(event) => {
-            if (!orbit.current || orbit.current.pointer !== event.pointerId)
-              return;
-            const dx = event.clientX - orbit.current.x,
-              dy = event.clientY - orbit.current.y;
-            orbit.current.moved ||= Math.hypot(dx, dy) > 3;
-            if (orbit.current.tool === "pan") {
-              setCameraPan({
-                x: orbit.current.pan.x - dx * orbit.current.unitsPerPixel,
-                y: orbit.current.pan.y - dy * orbit.current.unitsPerPixel,
-              });
-              return;
-            }
-            setYaw(
-              Math.max(
-                -180,
-                Math.min(
-                  180,
-                  orbit.current.yaw + (event.clientX - orbit.current.x) * 0.5,
+                  -180,
+                  Math.min(
+                    180,
+                    orbit.current.yaw + (event.clientX - orbit.current.x) * 0.5,
+                  ),
                 ),
-              ),
-            );
-            setPitch(
-              Math.max(
-                -90,
-                Math.min(
-                  90,
-                  orbit.current.pitch + (event.clientY - orbit.current.y) * 0.5,
-                ),
-              ),
-            );
-          }}
-          onPointerUp={() => {
-            orbit.current = null;
-          }}
-          onPointerCancel={() => {
-            orbit.current = null;
-          }}
-        >
-          {faces.map((face, fragment) => {
-            const item = objects.find((object) => object.id === face.objectId)!;
-            return (
-              <g
-                key={`${item.id}:${face.side}:${fragment}`}
-                data-panel-object={item.id}
-                data-panel-side={face.side}
-                role={
-                  firstFace.get(item.id) === fragment ? "button" : undefined
-                }
-                tabIndex={firstFace.get(item.id) === fragment ? 0 : undefined}
-                aria-label={
-                  firstFace.get(item.id) === fragment ? label(item) : undefined
-                }
-                aria-pressed={
-                  firstFace.get(item.id) === fragment
-                    ? selectedId === item.id
-                    : undefined
-                }
-                aria-hidden={
-                  firstFace.get(item.id) === fragment ? undefined : true
-                }
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    select(item.id);
-                  }
-                }}
-                onClick={() => select(item.id)}
-              >
-                <title>{label(item)}</title>
-                <polygon
-                  points={face.points
-                    .map((point) => `${point.x},${point.y}`)
-                    .join(" ")}
-                  fill={color(item)}
-                  fillOpacity={
-                    "kind" in item && item.kind === "door"
-                      ? 0.18
-                      : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
-                  }
-                />
-                <path
-                  d={face.edges
-                    .map(([a, b]) => `M${a.x},${a.y}L${b.x},${b.y}`)
-                    .join(" ")}
-                  fill="none"
-                  stroke={selectedId === item.id ? "#22d3ee" : "#0b1220"}
-                  strokeWidth={selectedId === item.id ? 3 : 0.8}
-                  pointerEvents="none"
-                />
-              </g>
-            );
-          })}
-          {objects
-            .filter((item) => "kind" in item && item.kind === "compartment")
-            .map((item) => {
-              const points = boxVertices(volumeBounds(item)).map((point) =>
-                projectPoint3d(point, yaw, pitch),
               );
+              setPitch(
+                Math.max(
+                  -90,
+                  Math.min(
+                    90,
+                    orbit.current.pitch +
+                      (event.clientY - orbit.current.y) * 0.5,
+                  ),
+                ),
+              );
+            }}
+            onPointerUp={() => {
+              ignoreClick.current = orbit.current?.moved ?? false;
+              orbit.current = null;
+            }}
+            onPointerCancel={() => {
+              orbit.current = null;
+            }}
+          >
+            {faces.map((face, fragment) => {
+              const item = objects.find(
+                (object) => object.id === face.objectId,
+              )!;
               return (
                 <g
-                  key={item.id}
+                  key={`${item.id}:${face.side}:${fragment}`}
                   data-panel-object={item.id}
-                  onClick={() => select(item.id)}
+                  data-panel-side={face.side}
+                  role={
+                    firstFace.get(item.id) === fragment ? "button" : undefined
+                  }
+                  tabIndex={firstFace.get(item.id) === fragment ? 0 : undefined}
+                  aria-label={
+                    firstFace.get(item.id) === fragment
+                      ? label(item)
+                      : undefined
+                  }
+                  aria-pressed={
+                    firstFace.get(item.id) === fragment
+                      ? selectedId === item.id
+                      : undefined
+                  }
+                  aria-hidden={
+                    firstFace.get(item.id) === fragment ? undefined : true
+                  }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      select(item.id);
+                    }
+                  }}
+                  onClick={
+                    hasMesh
+                      ? undefined
+                      : () => {
+                          if (!ignoreClick.current) select(item.id);
+                        }
+                  }
                 >
-                  <title>{item.name}</title>
-                  {boxEdges.map(([a, b]) => (
-                    <line
-                      key={`${a}:${b}`}
-                      x1={points[a].x}
-                      y1={points[a].y}
-                      x2={points[b].x}
-                      y2={points[b].y}
-                      stroke={selectedId === item.id ? "#22d3ee" : "#d4af37"}
-                      strokeWidth="1"
-                      strokeDasharray="4 3"
-                    />
-                  ))}
+                  <title>{label(item)}</title>
+                  <polygon
+                    points={face.points
+                      .map((point) => `${point.x},${point.y}`)
+                      .join(" ")}
+                    fill={color(item)}
+                    fillOpacity={
+                      hasMesh
+                        ? 0
+                        : "kind" in item && item.kind === "door"
+                          ? 0.18
+                          : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
+                    }
+                  />
+                  <path
+                    d={face.edges
+                      .map(([a, b]) => `M${a.x},${a.y}L${b.x},${b.y}`)
+                      .join(" ")}
+                    fill="none"
+                    stroke={
+                      selectedId === item.id
+                        ? "#22d3ee"
+                        : hasMesh
+                          ? "none"
+                          : "#0b1220"
+                    }
+                    strokeWidth={selectedId === item.id ? 3 : 0.8}
+                    pointerEvents="none"
+                  />
                 </g>
               );
             })}
-          {(enclosure.features ?? []).map((feature) => (
-            <polyline
-              key={feature.id}
-              data-panel-feature={feature.id}
-              points={featureVertices(enclosure, feature)
-                .map((point) => projectPoint3d(point, yaw, pitch))
-                .map((point) => `${point.x},${point.y}`)
-                .join(" ")}
-              fill="none"
-              stroke="#10b981"
-              strokeWidth="1.5"
-              pointerEvents="none"
-            >
-              <title>{feature.name}</title>
-            </polyline>
-          ))}
-          {boxEdges.map(([a, b]) => (
-            <line
-              key={`${a}:${b}`}
-              x1={enclosureCorners[a].x}
-              y1={enclosureCorners[a].y}
-              x2={enclosureCorners[b].x}
-              y2={enclosureCorners[b].y}
-              stroke="currentColor"
-              strokeWidth="1"
-              strokeDasharray="5 3"
-              pointerEvents="none"
-            />
-          ))}
-          {accessZone &&
-            boxEdges.map(([a, b]) => (
-              <line
-                key={`access:${a}:${b}`}
-                x1={accessPoints[a].x}
-                y1={accessPoints[a].y}
-                x2={accessPoints[b].x}
-                y2={accessPoints[b].y}
-                stroke="#22d3ee"
+            {objects
+              .filter((item) => "kind" in item && item.kind === "compartment")
+              .map((item) => {
+                const points = boxVertices(volumeBounds(item)).map((point) =>
+                  projectPoint3d(point, yaw, pitch),
+                );
+                return (
+                  <g
+                    key={item.id}
+                    data-panel-object={item.id}
+                    onClick={() => select(item.id)}
+                  >
+                    <title>{item.name}</title>
+                    {boxEdges.map(([a, b]) => (
+                      <line
+                        key={`${a}:${b}`}
+                        x1={points[a].x}
+                        y1={points[a].y}
+                        x2={points[b].x}
+                        y2={points[b].y}
+                        stroke={selectedId === item.id ? "#22d3ee" : "#d4af37"}
+                        strokeWidth="1"
+                        strokeDasharray="4 3"
+                      />
+                    ))}
+                  </g>
+                );
+              })}
+            {(enclosure.features ?? []).map((feature) => (
+              <polyline
+                key={feature.id}
+                data-panel-feature={feature.id}
+                points={featureVertices(enclosure, feature)
+                  .map((point) => projectPoint3d(point, yaw, pitch))
+                  .map((point) => `${point.x},${point.y}`)
+                  .join(" ")}
+                fill="none"
+                stroke="#10b981"
                 strokeWidth="1.5"
-                strokeDasharray="2 3"
+                pointerEvents="none"
+              >
+                <title>{feature.name}</title>
+              </polyline>
+            ))}
+            {boxEdges.map(([a, b]) => (
+              <line
+                key={`${a}:${b}`}
+                x1={enclosureCorners[a].x}
+                y1={enclosureCorners[a].y}
+                x2={enclosureCorners[b].x}
+                y2={enclosureCorners[b].y}
+                stroke="currentColor"
+                strokeWidth="1"
+                strokeDasharray="5 3"
                 pointerEvents="none"
               />
             ))}
-        </svg>
+            {accessZone &&
+              boxEdges.map(([a, b]) => (
+                <line
+                  key={`access:${a}:${b}`}
+                  x1={accessPoints[a].x}
+                  y1={accessPoints[a].y}
+                  x2={accessPoints[b].x}
+                  y2={accessPoints[b].y}
+                  stroke="#22d3ee"
+                  strokeWidth="1.5"
+                  strokeDasharray="2 3"
+                  pointerEvents="none"
+                />
+              ))}
+          </svg>
+        </div>
         <div
           className="panel-view-presets"
           role="group"
@@ -1411,7 +1499,13 @@ export function PanelPreview({
         t={t}
         preview
       />
-      <p>{t("panelScope")}</p>
+      <p>
+        {t(
+          project.equipment3d.some((item) => item.meshId)
+            ? "panelMeshScope"
+            : "panelScope",
+        )}
+      </p>
     </section>
   );
 }
@@ -1492,7 +1586,13 @@ export default function PanelEditor({
   return (
     <section className="panel-editor" aria-label={t("panelDesign")}>
       <h2>{t("panelDesign")}</h2>
-      <p>{t("panelScope")}</p>
+      <p>
+        {t(
+          project.equipment3d.some((item) => item.meshId)
+            ? "panelMeshScope"
+            : "panelScope",
+        )}
+      </p>
       <p>{t("panelCoordinates")}</p>
       {error && <p role="alert">{t("panelInvalid")}</p>}
       <label>
@@ -1656,6 +1756,15 @@ export default function PanelEditor({
                 selected={(id) => selectObject(id, "equipment")}
                 t={t}
               />
+              {equipment && (
+                <PanelMeshTools
+                  key={`${project.id}:${equipment.id}`}
+                  project={project}
+                  placementId={equipment.id}
+                  run={run}
+                  t={t}
+                />
+              )}
             </details>
           </div>
           <p>{t("panelStructureScope")}</p>
@@ -1758,7 +1867,11 @@ export default function PanelEditor({
                 )
               }
             >
-              {t("panelDownloadObj")}
+              {t(
+                report.equipment.some((item) => item.meshId)
+                  ? "panelDownloadMeshObj"
+                  : "panelDownloadObj",
+              )}
             </button>
           </div>
           <div className="native-table-scroll">

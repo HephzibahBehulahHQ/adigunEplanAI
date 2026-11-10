@@ -144,3 +144,11 @@ Home now groups real editing, wiring, library, checking and document actions in 
 Validation: npm run check passed (334 unit/tooling tests, types, lint, formatting, dependency licenses, notices, build). Manual browser checks verified dock/float, library selection, close/reload/reopen, one-row desktop ribbon, and viewport bounds at 1672 and 375 pixels. Previous hosted CI passed 138 browser tests and failed two compact-layout assumptions; those regressions were updated to exercise the visible Insert command and scrollable calculation pane. Updated hosted CI is still required, including native Print/PDF and saved-project preservation coverage.
 
 Visual acceptance remains open: manufacturer-level cabinet geometry, remaining target ribbon actions and full header/inspector detail are not certified as matching. No merge or deployment is authorized by these partial results. Local-only playwright.local.config.ts, dependency/build caches and scratch logs remain excluded.
+
+## 2026-11-10 — native cabinet mesh import increment
+
+Added schema-18 STL surface assets with explicit units/axes, source/rights references and source SHA-256; real mesh rendering/picking, measured placement bounds, native history, reuse and OBJ faces. See `docs/PANEL_MESH_IMPORT.md`. This supplies a path for genuine licensed models; no manufacturer CAD library or exact target parity is claimed.
+
+Local checks passed 341 unit/tooling tests, types, lint, format, licenses/notices and production build. Manual browser import measured an original regression tetrahedron at 20 × 30 × 40 mm, rendered its actual surface, and retained it after reload. A dock SVG background that initially obscured the WebGL canvas was fixed and regression-covered. Hosted browser checks for this increment remain pending. Test-only native/STL scratch files and `playwright.local.config.ts` are excluded from publication. The engineering example was restored in the preview.
+
+Release remains gated on exact target visual acceptance and full CI. Manufacturer model sourcing, remaining target commands/header/inspector, hosted BOT and wider specification gates remain open; no merge/deployment occurred for this increment.

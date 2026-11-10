@@ -1,3 +1,4 @@
+import { validateMeshGeometry } from "../panel-engineering/mesh.ts";
 import { pointInPolygon } from "../engineering-core/polygon.ts";
 import { transform, type Point } from "../engineering-core/geometry.ts";
 import { z } from "zod";
@@ -318,6 +319,40 @@ export const schemas = {
       .strict()
       .optional(),
   }),
+  panelMeshes: entity.extend({
+    vertices: z
+      .array(
+        z.tuple([
+          finite.min(0).max(1e6),
+          finite.min(0).max(1e6),
+          finite.min(0).max(1e6),
+        ]),
+      )
+      .min(4)
+      .max(60000),
+    triangles: z
+      .array(
+        z.tuple([
+          z.number().int().min(0).max(59999),
+          z.number().int().min(0).max(59999),
+          z.number().int().min(0).max(59999),
+        ]),
+      )
+      .min(1)
+      .max(20000),
+    source: z
+      .object({
+        filename: z.string().min(1).max(255),
+        reference: z.string().min(1).max(2000),
+        license: z.string().min(1).max(1000),
+        sha256: z.string().regex(/^[a-f0-9]{64}$/),
+        encoding: z.enum(["ascii-stl", "binary-stl"]),
+        units: z.enum(["mm", "cm", "m", "in"]),
+        axes: z.enum(["panel", "z-up"]),
+        attributesIgnored: z.boolean(),
+      })
+      .strict(),
+  }),
   equipment3d: entity.extend({
     deviceId: id,
     enclosureId: id,
@@ -339,7 +374,8 @@ export const schemas = {
       .union([z.literal(0), z.literal(90), z.literal(180), z.literal(270)])
       .optional(),
     clearanceMm: finite.min(0).max(1e6).optional(),
-    dimensionSource: z.enum(["manual", "catalog", "custom"]).optional(),
+    dimensionSource: z.enum(["manual", "catalog", "custom", "mesh"]).optional(),
+    meshId: id.optional(),
     lossPowerW: finite.min(0).max(1e12).optional(),
     mountingStructureId: id.optional(),
     requiredMountingProfile: name.optional(),
@@ -574,7 +610,7 @@ export const schemas = {
 };
 export const projectSchema = z
   .object({
-    schemaVersion: z.literal(17),
+    schemaVersion: z.literal(18),
     id,
     name,
     createdAt: z.iso.datetime(),
@@ -588,7 +624,7 @@ export const projectSchema = z
   })
   .strict();
 export type ProjectHeader = {
-  schemaVersion: 17;
+  schemaVersion: 18;
   id: string;
   name: string;
   createdAt: string;
@@ -604,7 +640,7 @@ export function createProject(
   now = new Date().toISOString(),
 ): Project {
   const data = {
-    schemaVersion: 17,
+    schemaVersion: 18,
     id: projectId,
     name: projectName,
     createdAt: now,
@@ -659,6 +695,7 @@ const references: Partial<
     deviceId: "devices",
     enclosureId: "enclosures",
     mountingStructureId: "panelStructures",
+    meshId: "panelMeshes",
   },
   panelStructures: { enclosureId: "enclosures" },
   floors: { buildingId: "buildings" },
@@ -737,8 +774,39 @@ function validateReferences(project: Project): void {
       throw new Error(
         "Only mounting plates and rails can declare a support profile",
       );
+  const meshSizes = new Map(
+    project.panelMeshes.map((mesh) => [mesh.id, validateMeshGeometry(mesh)]),
+  );
+  if (
+    project.panelMeshes.reduce((sum, mesh) => sum + mesh.triangles.length, 0) >
+    100000
+  )
+    throw new Error("Project exceeds mesh triangle budget");
+  const meshTriangles = new Map(
+    project.panelMeshes.map((mesh) => [mesh.id, mesh.triangles.length]),
+  );
+  if (
+    project.equipment3d.reduce(
+      (sum, item) =>
+        sum + (item.meshId ? (meshTriangles.get(item.meshId) ?? 0) : 0),
+      0,
+    ) > 100000
+  )
+    throw new Error("Project exceeds placed mesh triangle budget");
   const mountedDevices = new Set<string>();
   for (const item of project.equipment3d) {
+    if (Boolean(item.meshId) !== (item.dimensionSource === "mesh"))
+      throw new Error("Mesh geometry requires mesh dimensions");
+    if (item.meshId) {
+      const size = meshSizes.get(item.meshId);
+      if (
+        !size ||
+        size.x !== item.sizeMm.x ||
+        size.y !== item.sizeMm.y ||
+        size.z !== item.sizeMm.z
+      )
+        throw new Error("Placement dimensions do not match its mesh");
+    }
     if (Boolean(item.accessDirection) !== Boolean(item.accessClearanceMm))
       throw new Error(
         "Service access requires both a direction and positive clearance",
@@ -1358,7 +1426,8 @@ export function parseProject(text: string): {
     | 14
     | 15
     | 16
-    | 17;
+    | 17
+    | 18;
 } {
   if (new TextEncoder().encode(text).length > maxProjectBytes)
     throw new Error("Project exceeds 5 MiB limit");
@@ -1366,8 +1435,8 @@ export function parseProject(text: string): {
   if (!raw || typeof raw !== "object")
     throw new Error("Project document must be an object");
   const version = (raw as { schemaVersion?: unknown }).schemaVersion;
-  if (version === 17)
-    return { project: validateProject(raw), migratedFrom: 17 };
+  if (version === 18)
+    return { project: validateProject(raw), migratedFrom: 18 };
   const oldFloors = (raw as { floors?: unknown }).floors;
   const floors = Array.isArray(oldFloors)
     ? oldFloors.map((floor) => ({ drawingScale: 100, ...floor }))
@@ -1387,10 +1456,12 @@ export function parseProject(text: string): {
     version === 13 ||
     version === 14 ||
     version === 15 ||
-    version === 16
+    version === 16 ||
+    version === 17
   )
     return {
       project: validateProject({
+        panelMeshes: [],
         panelStructures: [],
         automationNotes: [],
         planRisers: [],
@@ -1403,7 +1474,7 @@ export function parseProject(text: string): {
         planGeometry: [],
         ...raw,
         floors,
-        schemaVersion: 17,
+        schemaVersion: 18,
       }),
       migratedFrom: version,
     };
@@ -1413,7 +1484,7 @@ export function parseProject(text: string): {
       ...Object.fromEntries(collections.map((key) => [key, []])),
       ...old,
       floors,
-      schemaVersion: 17,
+      schemaVersion: 18,
     };
     const pages = (migrated.pages ?? []) as { id: string }[];
     const used = new Set<string>([String(old.id)]);

@@ -7,6 +7,7 @@ import {
   boxEdges,
 } from "./geometry.ts";
 import { featureOutline } from "./features.ts";
+import { meshWorldVertices } from "./mesh.ts";
 
 export function panelReport(project: Project, enclosureId: string) {
   const enclosure = project.enclosures.find((item) => item.id === enclosureId);
@@ -87,19 +88,36 @@ export function panelLayoutSvg(
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${enclosure.widthMm + padding * 2}mm" height="${enclosure.heightMm + padding * 2}mm" viewBox="${-padding} ${-padding} ${enclosure.widthMm + padding * 2} ${enclosure.heightMm + padding * 2}"><title>${xml(enclosure.name)}</title><desc>${xml(note)}</desc><rect x="0" y="0" width="${enclosure.widthMm}" height="${enclosure.heightMm}" fill="white" stroke="#0b1220" stroke-width="2"/>${shapes}${features}<text x="0" y="-20" font-size="14">${xml(enclosure.name)} — ${enclosure.widthMm} × ${enclosure.heightMm} × ${enclosure.depthMm} mm</text><text x="0" y="${enclosure.heightMm + 25}" font-size="10">${xml(note)}</text></svg>`;
 }
 
-/** Generic cuboids in millimetres, no enclosure shell or manufacturer B-rep. */
+/** Native imported triangles and explicitly generic envelopes in millimetres. */
 export function panelGeometryObj(
   project: Project,
   enclosureId: string,
 ): string {
   const { structures, equipment } = panelReport(project, enclosureId);
   const lines = [
-    "# AdigunEplanAI generic cuboids; millimetres; X right, Y down, Z back to front",
+    equipment.some((item) => item.meshId)
+      ? "# AdigunEplanAI imported meshes and generic envelopes; millimetres; X right, Y down, Z back to front"
+      : "# AdigunEplanAI generic cuboids; millimetres; X right, Y down, Z back to front",
     "# No manufacturer CAD, mounting details or enclosure shell are implied",
   ];
   let offset = 0;
   for (const item of [...structures, ...equipment]) {
     lines.push(`o ${item.id.replace(/[^A-Za-z0-9_-]/g, "_")}`);
+    const mesh =
+      "meshId" in item
+        ? project.panelMeshes.find((model) => model.id === item.meshId)
+        : undefined;
+    if (mesh) {
+      lines.push(
+        `# Imported mesh; source ${JSON.stringify(mesh.source.reference)}; rights ${JSON.stringify(mesh.source.license)}`,
+      );
+      for (const vertex of meshWorldVertices(mesh, item))
+        lines.push(`v ${vertex.x} ${vertex.y} ${vertex.z}`);
+      for (const face of mesh.triangles)
+        lines.push(`f ${face.map((index) => index + offset + 1).join(" ")}`);
+      offset += mesh.vertices.length;
+      continue;
+    }
     for (const vertex of boxVertices(volumeBounds(item)))
       lines.push(`v ${vertex.x} ${vertex.y} ${vertex.z}`);
     if ("kind" in item && item.kind === "compartment") {

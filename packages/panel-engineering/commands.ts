@@ -1,6 +1,7 @@
 import { validateProject, type Project } from "../electrical-model/project.ts";
 import { volumeBounds, type Vector3 } from "./geometry.ts";
 import { heatBalance, ductOccupancy } from "./estimates.ts";
+import { validateMeshGeometry } from "./mesh.ts";
 
 export type Enclosure = Project["enclosures"][number];
 export type Structure = Project["panelStructures"][number];
@@ -9,7 +10,14 @@ export type Placement = Project["equipment3d"][number];
 export function sourceDimensions(
   project: Project,
   deviceId: string,
-): { source: "catalog" | "custom"; sizeMm: Vector3 } | null {
+): { source: "catalog" | "custom" | "mesh"; sizeMm: Vector3 } | null {
+  const placement = project.equipment3d.find(
+    (item) => item.deviceId === deviceId,
+  );
+  const mesh = project.panelMeshes.find(
+    (item) => item.id === placement?.meshId,
+  );
+  if (mesh) return { source: "mesh", sizeMm: validateMeshGeometry(mesh) };
   const device = project.devices.find((item) => item.id === deviceId);
   const part = project.manufacturerParts.find(
     (item) => item.id === device?.partId,
