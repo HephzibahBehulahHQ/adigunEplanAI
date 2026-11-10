@@ -71,10 +71,13 @@ test("target header and one Home ribbon remain ordered and accessible at desktop
         "Switch View",
         "Themes",
       ]);
+      const screenshotPath = testInfo.outputPath("target-header-ribbon.png");
+      await page.screenshot({
+        path: screenshotPath,
+        clip: { x: 0, y: 0, width, height: 210 },
+      });
       await testInfo.attach("target-header-ribbon", {
-        body: await page.screenshot({
-          clip: { x: 0, y: 0, width, height: 210 },
-        }),
+        path: screenshotPath,
         contentType: "image/png",
       });
     }

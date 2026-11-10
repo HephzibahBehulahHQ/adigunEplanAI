@@ -32,6 +32,8 @@ async function prepare(page: Page) {
       );
   }, project);
   await page.goto("/");
+  await expect(page.locator(".empty-workspace")).toBeVisible();
+  await page.getByTestId("project-picker").selectOption(project.id);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();

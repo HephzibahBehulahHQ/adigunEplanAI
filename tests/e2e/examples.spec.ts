@@ -31,11 +31,13 @@ for (const [name, devices, wires, selector] of cases) {
     await expect(page.locator(selector)).toBeVisible();
     if (name === "Transformer station documentation") {
       await page.setViewportSize({ width: 1857, height: 1000 });
-      await page
-        .getByRole("button", { name: "Home menu", exact: true })
-        .click();
+      await page.getByRole("button", { name: "Home", exact: true }).click();
+      const screenshotPath = testInfo.outputPath(
+        "native-substation-workbench.png",
+      );
+      await page.screenshot({ path: screenshotPath });
       await testInfo.attach("native-substation-workbench", {
-        body: await page.screenshot(),
+        path: screenshotPath,
         contentType: "image/png",
       });
     }

@@ -1,5 +1,7 @@
 # Decisions
 
+- 2026-11-10: The owner again made the full target interface compulsory (latest attachment ends in 68ef8896-ed2c-4089-9f21-8f3ff9f48c86.png). Compare against docs/references/target-workspace.png: gold corporate header, ordered tabs and grouped ribbon, navigator/properties left, native drawing and cabinet centre, BOT right, diagnostics/calculations/BOM/reports below. A shell increment is not acceptance of full visual parity. Native controls and truthful data remain mandatory.
+
 - 2026-11-10: The owner reaffirmed the exact Eplan header/ribbon reference and explicitly made the repository template authoritative over the later guidance attachment. Keep native autosave/recovery. The owner's subsequent explicit refresh/close correction requires an empty active canvas on startup and a leaving guard for failed autosaves; saved project snapshots remain available only through explicit reopening. Use one header and one ribbon unit (tabs + grouped tools), with additional commands in their existing tabs or contextual dialogs.
 - The approved header reference supplies the gold corporate mark: original PNG SHA-256 `6d6d33bb7534d01cbff3133a3d63fc0893f1c51f36c8e66531bca95d02cb4ec4`, rendered only through corporate viewport `6 12 254 56`. All text, project status, account controls and commands beside it are native UI. One-logo policy and authority pins remain enforced. Show actual application version, guest/session identity and local save status; never copy the reference's fictional Professional/cloud-saved claims.
 

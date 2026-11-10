@@ -37,7 +37,9 @@ test("refresh and a new tab start blank; saved projects reopen explicitly with c
     page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeDisabled();
   await expect(
-    page.getByRole("button", { name: "Sheet 2", exact: true }),
+    page
+      .getByRole("navigation", { name: "Page name", exact: true })
+      .getByRole("button", { name: "Sheet 2", exact: true }),
   ).toBeVisible();
   const next = await context.newPage();
   await next.goto("/");
@@ -116,7 +118,9 @@ test("failed autosave guards leaving; cancellation preserves work and successful
     .getByRole("button", { name: "Close project", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "Sheet 2", exact: true }),
+    page
+      .getByRole("navigation", { name: "Page name", exact: true })
+      .getByRole("button", { name: "Sheet 2", exact: true }),
   ).toBeVisible();
   await page.evaluate(() =>
     (
