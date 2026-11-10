@@ -616,11 +616,27 @@ export function NativeDataPanel({
       <table className="native-bom dock-bom">
         <thead>
           <tr>
-            <th scope="col">{t("reference")}</th>
-            <th scope="col">{t("partNumber")}</th>
+            <th scope="col" aria-label={t("reference")} title={t("reference")}>
+              {t("referenceShort")}
+            </th>
+            <th
+              scope="col"
+              aria-label={t("partNumber")}
+              title={t("partNumber")}
+            >
+              {t("partNumberShort")}
+            </th>
             <th scope="col">{t("device")}</th>
-            <th scope="col">{t("manufacturer")}</th>
-            <th scope="col">{t("quantity")}</th>
+            <th
+              scope="col"
+              aria-label={t("manufacturer")}
+              title={t("manufacturer")}
+            >
+              {t("manufacturerShort")}
+            </th>
+            <th scope="col" aria-label={t("quantity")} title={t("quantity")}>
+              {t("quantityShort")}
+            </th>
           </tr>
         </thead>
         <tbody>
