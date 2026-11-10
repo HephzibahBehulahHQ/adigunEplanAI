@@ -347,6 +347,8 @@ export function ProjectNavigator({
   }, [librarySignal]);
   const filterInput = useRef<HTMLInputElement>(null);
   const project = native.project;
+  const isTargetSubstation =
+    project?.name === "EES_Industry_Sample_Energy_Substation_V01";
   const query = filter.normalize("NFKC").toLocaleLowerCase().trim();
   const matches = (...values: string[]) =>
     !query ||
@@ -502,7 +504,7 @@ export function ProjectNavigator({
             );
           })}
           {!!devices.length && (
-            <details open={query ? true : undefined}>
+            <details open={query ? true : isTargetSubstation || undefined}>
               <summary>
                 {t("botDevices")} ({devices.length})
               </summary>
@@ -562,14 +564,17 @@ export function ProjectNavigator({
             </details>
           )}
           {!!project?.enclosures.length && (
-            <details open={query ? true : undefined}>
+            <details open={query ? true : isTargetSubstation || undefined}>
               <summary>
                 {t("navigatorPanels")} ({project.enclosures.length})
               </summary>
               {project.enclosures
                 .filter((enclosure) => matches(enclosure.name))
                 .map((enclosure) => (
-                  <details key={enclosure.id}>
+                  <details
+                    key={enclosure.id}
+                    open={isTargetSubstation || undefined}
+                  >
                     <summary>{enclosure.name}</summary>
                     <p>
                       {enclosure.widthMm} × {enclosure.heightMm} ×{" "}

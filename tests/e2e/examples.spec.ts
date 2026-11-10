@@ -82,6 +82,16 @@ for (const [name, devices, wires, selector] of cases) {
       await page.setViewportSize({ width: 1880, height: 970 });
       await page.getByRole("button", { name: "Home", exact: true }).click();
       await expect(
+        page.getByRole("button", {
+          name: /PLC1 · WAGO PFC200 controller/,
+        }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", {
+          name: /DI1 · WAGO 750-1405/,
+        }),
+      ).toBeVisible();
+      await expect(
         page.getByRole("figure", { name: "Interactive panel 3D view" }),
       ).toBeVisible();
       const structureIds = await page.evaluate(() =>
