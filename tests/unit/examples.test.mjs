@@ -69,8 +69,27 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   const p = buildExample("target-substation");
   assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
   assert.equal(p.pages.length, 3);
-  assert.equal(p.devices.length, 21);
-  assert.equal(p.wires.length, 22);
+  assert.equal(p.devices.length, 22);
+  assert.equal(p.wires.length, 25);
+  const incomingIsolator = p.devices.find(
+    (device) => device.reference === "Q0",
+  );
+  assert.ok(incomingIsolator);
+  const incomingIsolatorInstance = p.symbolInstances.find(
+    (instance) => instance.deviceId === incomingIsolator.id,
+  );
+  const incomingIsolatorPins = p.pins.filter(
+    (pin) => pin.symbolInstanceId === incomingIsolatorInstance.id,
+  );
+  assert.equal(incomingIsolatorPins.length, 6);
+  assert.ok(
+    incomingIsolatorPins.every((pin) =>
+      p.wires.some(
+        (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
+      ),
+    ),
+    "each incoming isolator pole has a connected line-side and load-side pin",
+  );
   assert.ok(p.plcModules.some((module) => module.moduleKind === "cpu"));
   assert.deepEqual(
     p.manufacturerParts

@@ -272,8 +272,9 @@ export function buildExample(id: ExampleId): Project {
         22,
       );
       note("20 kV incoming supply", 22, 48);
-      note("Primary switching and protection", 80, 48);
-      note("T01 · 630 kVA · 20 / 0.4 kV design basis", 158, 48);
+      note("Q0 · incoming isolation", 60, 48);
+      note("Primary protection interfaces", 120, 48);
+      note("T01 · 630 kVA · 20 / 0.4 kV design basis", 188, 48);
       note("Secondary switching", 270, 48);
       note("0.4 kV outgoing interfaces", 337, 48);
       const phases = [
@@ -321,10 +322,77 @@ export function buildExample(id: ExampleId): Project {
           0,
           `Incoming ${phase.input} phase`,
         );
+      }
+      const incomingIsolatorDefinitionId = crypto.randomUUID();
+      p = createCustomSymbol(p, {
+        id: incomingIsolatorDefinitionId,
+        name: "Three-phase incoming isolation interface",
+        category: "custom",
+        glyph: "box",
+        widthMm: 32,
+        heightMm: 108,
+        pins: phases.flatMap((phase) => {
+          const offset = phase.y - 145;
+          return [
+            { id: `${phase.input}_in`, position: { x: -16, y: offset } },
+            { id: `${phase.input}_out`, position: { x: 16, y: offset } },
+          ];
+        }),
+        artwork: phases.flatMap((phase) => {
+          const offset = phase.y - 145;
+          return [
+            {
+              kind: "line" as const,
+              from: { x: -16, y: offset },
+              to: { x: -6, y: offset },
+            },
+            {
+              kind: "circle" as const,
+              center: { x: -6, y: offset },
+              radiusMm: 1,
+            },
+            {
+              kind: "line" as const,
+              from: { x: -6, y: offset },
+              to: { x: 5, y: offset - 6 },
+            },
+            {
+              kind: "circle" as const,
+              center: { x: 7, y: offset },
+              radiusMm: 1,
+            },
+            {
+              kind: "line" as const,
+              from: { x: 7, y: offset },
+              to: { x: 16, y: offset },
+            },
+          ];
+        }),
+      });
+      const incomingIsolatorInstanceId = place(
+        p,
+        pageId,
+        p.layers.find((layer) => layer.pageId === pageId)!.id,
+        "custom",
+        { x: 80, y: 145 },
+        0,
+        incomingIsolatorDefinitionId,
+      );
+      const incomingIsolatorInstance = p.symbolInstances.find(
+        (item) => item.id === incomingIsolatorInstanceId,
+      )!;
+      const incomingIsolator = p.devices.find(
+        (item) => item.id === incomingIsolatorInstance.deviceId,
+      )!;
+      incomingIsolator.reference = "Q0";
+      incomingIsolator.name =
+        "Three-phase incoming isolation interface; rating unspecified";
+      incomingIsolatorInstance.name = "Q0";
+      for (const phase of phases) {
         symbol(
           "fuse",
           phase.fuse,
-          95,
+          145,
           phase.y,
           0,
           `${phase.input} phase protection interface; rating unspecified`,
@@ -387,7 +455,9 @@ export function buildExample(id: ExampleId): Project {
           0,
           `Outgoing ${phase.input} phase interface`,
         );
-        wire(`X${phase.input.slice(-1)}`, "1", phase.fuse, "1", phase.color);
+        const phaseIndex = phase.input.slice(-1);
+        wire(`X${phaseIndex}`, "1", "Q0", `L${phaseIndex}_in`, phase.color);
+        wire("Q0", `L${phaseIndex}_out`, phase.fuse, "1", phase.color);
         wire(phase.fuse, "2", "T01", phase.primary, phase.color);
         wire("T01", phase.secondary, "Q1", phase.breakerIn, phase.color);
         wire("Q1", phase.breakerOut, phase.output, "1", phase.color);
@@ -396,6 +466,11 @@ export function buildExample(id: ExampleId): Project {
         "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
         20,
         235,
+      );
+      note(
+        "Q0 is an incoming isolation interface only; switchgear selection, ratings and operating sequence remain design inputs.",
+        20,
+        247,
       );
       pageId = page("02 · Secondary protection documentation");
     }
