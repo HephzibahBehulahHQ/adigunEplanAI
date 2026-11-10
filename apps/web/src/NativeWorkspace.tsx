@@ -1,9 +1,5 @@
 import type { Project } from "../../../packages/electrical-model/project.ts";
-import {
-  drawingIndex,
-  projectBom,
-  reportCsv,
-} from "../../../packages/electrical-model/project-reports.ts";
+import { projectBom } from "../../../packages/electrical-model/project-reports.ts";
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
 import { CommandIcon } from "./WorkspaceRibbon";
 import {
@@ -615,12 +611,6 @@ export function NativeDataPanel({
 }) {
   const project = native.project;
   if (!project) return <p className="empty-hint">{t("noProject")}</p>;
-  const bomHeaders = [
-    t("reference"),
-    t("device"),
-    t("partNumber"),
-    t("quantity"),
-  ];
   if (kind === "bom")
     return project.devices.length ? (
       <table className="native-bom dock-bom">
@@ -657,16 +647,6 @@ export function NativeDataPanel({
       </LazyPanelBoundary>
     );
   if (kind === "reports") {
-    const download = (filename: string, rows: (string | number)[][]) => {
-      const url = URL.createObjectURL(
-        new Blob([reportCsv(rows)], { type: "text/csv;charset=utf-8" }),
-      );
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-    };
     return (
       <div className="report-actions">
         <LazyPanelBoundary message={t("reportExportError")}>
@@ -674,42 +654,6 @@ export function NativeDataPanel({
             <ReportsPanel native={native} t={t} />
           </Suspense>
         </LazyPanelBoundary>
-        <button
-          type="button"
-          disabled={!project.pages.length}
-          onClick={() =>
-            download("drawing-index.csv", [
-              [
-                t("document"),
-                t("pageName"),
-                t("cabinetWidth"),
-                t("cabinetHeight"),
-              ],
-              ...drawingIndex(project),
-            ])
-          }
-        >
-          {t("reportDrawingIndexCsv")}
-        </button>
-        <button
-          type="button"
-          disabled={!project.devices.length}
-          onClick={() =>
-            download("bill-of-materials.csv", [
-              bomHeaders,
-              ...projectBom(project).map(
-                ({ reference, name, partNumber, quantity }) => [
-                  reference,
-                  name,
-                  partNumber,
-                  quantity,
-                ],
-              ),
-            ])
-          }
-        >
-          {t("reportBomCsv")}
-        </button>
         {project.reports.length > 0 && (
           <ul>
             {project.reports.map(({ id, name }) => (

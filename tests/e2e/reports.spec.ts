@@ -22,6 +22,16 @@ test("native SVG, actual PNG, CSV and print PDF agree with the stored project", 
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
+  const terminalDownload = page.waitForEvent("download");
+  await tools
+    .getByRole("button", { name: "Terminal schedule (CSV)", exact: true })
+    .click();
+  const terminalFile = await terminalDownload;
+  expect(terminalFile.suggestedFilename()).toBe("terminals.csv");
+  expect(await readFile((await terminalFile.path())!, "utf8")).toContain(
+    '"Xa"',
+  );
+  await expect(tools.getByLabel("Report type")).toHaveValue("drawing");
   const svgDownload = page.waitForEvent("download");
   await tools
     .getByRole("button", { name: "Download drawing SVG", exact: true })
@@ -58,6 +68,23 @@ test("native SVG, actual PNG, CSV and print PDF agree with the stored project", 
   expect(png.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
   expect(png.readUInt32BE(16)).toBe(2481);
   expect(png.readUInt32BE(20)).toBe(1754);
+  // Suppress the native print dialog while Playwright renders the same document.
+  await page.evaluate(() => {
+    const open = window.open.bind(window);
+    window.open = (...args) => {
+      const popup = open(...args);
+      if (popup) popup.print = () => {};
+      return popup;
+    };
+  });
+  const calculationPopup = page.waitForEvent("popup");
+  await tools
+    .getByRole("button", { name: "Calculation inputs (PDF)", exact: true })
+    .click();
+  const calculation = await calculationPopup;
+  await expect(calculation.locator("table")).toBeVisible();
+  await calculation.close();
+  await expect(tools.getByLabel("Report type")).toHaveValue("drawing");
   const popupEvent = page.waitForEvent("popup");
   await tools
     .getByRole("button", { name: "Print / save PDF", exact: true })
