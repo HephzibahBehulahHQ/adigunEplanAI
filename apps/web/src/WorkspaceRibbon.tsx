@@ -56,6 +56,10 @@ export function CommandIcon({ kind }: { kind: string }) {
     paste: "M8 3H4v19h16V3h-4M8 1h8v5H8Z",
     duplicate: "M3 3h12v12H3ZM9 15v6h12V9h-6",
     symbol: "M2 12h5M17 12h5M7 7h10v10H7Z",
+    saveAll: "M6 2h13l3 3v14H6ZM9 2v6h9V2M2 6v16h16M9 19v-7h10v7",
+    close: "M3 5h8l2 3h9v13H3ZM9 11l7 7M16 11l-7 7",
+    print: "M6 8V2h12v6M6 17H2V8h20v9h-4M6 13h12v9H6ZM18 11h1",
+    align: "M3 2v20M7 4h8v5H7ZM7 13h14v6H7Z",
   };
   return (
     <svg
@@ -151,9 +155,53 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
     <div className="ribbon-command-groups" aria-label={t("ribbonWorkspace")}>
       {tab === "home" && (
         <>
-          {wiring}
-          {dock("openDiagnostics", "diagnostics", "check")}
-          {dock("openReports", "reports", "report")}
+          <div className="ribbon-command-group">
+            {command(
+              "copy",
+              "copy",
+              () => native.requestEditorCommand("copy"),
+              selection,
+            )}
+            {tool("paste", "paste")}
+          </div>
+          <div className="ribbon-command-group">
+            {tool("selectTool", "select")}
+            {tool("panTool", "pan")}
+            {command(
+              "rotate",
+              "rotate",
+              () => native.requestEditorCommand("rotate"),
+              selection,
+            )}
+            {command(
+              "alignX",
+              "align",
+              () => native.requestEditorCommand("alignX"),
+              native.selectedSymbolIds.length < 2,
+            )}
+            {command(
+              "alignY",
+              "align",
+              () => native.requestEditorCommand("alignY"),
+              native.selectedSymbolIds.length < 2,
+            )}
+          </div>
+          <div className="ribbon-command-group">
+            {tool("wireTool", "wire")}
+            {tool("junction", "junction", "symbol")}
+            {tool("labelTool", "label")}
+            {tool("terminal", "terminal", "symbol")}
+          </div>
+          <div className="ribbon-command-group">
+            {dock("openLibrary", "project", "library")}
+            {dock("openDiagnostics", "diagnostics", "check")}
+            {dock("openBom", "bom", "report")}
+          </div>
+          <div className="ribbon-command-group">
+            {view("openPanel", "panel", "panel")}
+            {view("openSchematic", "schematic", "circuit")}
+            {dock("openReports", "reports", "report")}
+          </div>
         </>
       )}
       {tab === "insert" && (

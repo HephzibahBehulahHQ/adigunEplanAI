@@ -38,11 +38,15 @@ test("calculation inputs, unit conversion, native replay and full report exports
     exact: true,
   });
   await expect(tools).toBeVisible();
+  const calculationBody = page.locator(
+    '[data-panel="calculations"] > .panel-body',
+  );
   expect(
-    await page
-      .locator('[data-panel="calculations"] > .panel-body')
-      .evaluate((body) => body.clientHeight),
-  ).toBeGreaterThanOrEqual(300);
+    await calculationBody.evaluate((body) => body.clientHeight),
+  ).toBeGreaterThanOrEqual(120);
+  expect(
+    await calculationBody.evaluate((body) => getComputedStyle(body).overflowY),
+  ).toBe("auto");
   expect(
     await page.evaluate(
       () =>

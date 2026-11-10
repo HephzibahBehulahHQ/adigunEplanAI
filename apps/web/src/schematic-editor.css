@@ -203,3 +203,98 @@
   background: var(--panel);
   flex-shrink: 0;
 }
+@media (min-width: 1350px) and (min-height: 780px) {
+  .engineering-layout.has-left:has(> .dock-bottom) {
+    grid-template-rows: minmax(0, 1fr) 166px;
+  }
+  .engineering-layout.has-left:has(> .dock-bottom) > .dock-left {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+  .engineering-layout.has-left > .dock-bottom {
+    grid-column: 2 / -1;
+    flex-wrap: nowrap;
+  }
+  .engineering-layout.has-left > .dock-bottom > .panel {
+    flex: 1 1 0;
+  }
+}
+
+.schematic-ribbon {
+  flex: 1 0 auto;
+  border-inline-start: 1px solid var(--line);
+  padding-inline-start: 0.45rem;
+}
+.schematic-ribbon:empty {
+  display: none;
+}
+.schematic-ribbon .editor-toolbar {
+  background: transparent;
+  padding: 0.2rem;
+}
+.editor-toolbar button:has(.schematic-command-icon) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.schematic-command-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+}
+.schematic-ribbon .editor-toolbar button:has(.schematic-command-icon) {
+  border-color: transparent;
+}
+.schematic-ribbon
+  .editor-toolbar
+  button:has(.schematic-command-icon):is(:hover, [aria-pressed="true"]):not(
+    :disabled
+  ) {
+  border-color: var(--cyan);
+}
+.schematic-ribbon .editor-toolbar button:disabled {
+  opacity: 0.5;
+}
+.schematic-ribbon:not(:empty) {
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+}
+.schematic-ribbon .editor-toolbar {
+  padding-inline: 0.5rem;
+  align-content: center;
+}
+.schematic-ribbon .editor-toolbar + .editor-toolbar {
+  border-inline-start: 1px solid var(--line);
+}
+.schematic-ribbon .ribbon-drawing button:has(.schematic-command-icon) {
+  flex-direction: column;
+  justify-content: center;
+  min-width: 3rem;
+  min-height: 3.5rem;
+}
+.schematic-ribbon .ribbon-drawing .schematic-command-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+.schematic-ribbon .ribbon-library {
+  display: grid;
+}
+.schematic-ribbon .ribbon-library select {
+  max-width: 9rem;
+}
+.schematic-ribbon .ribbon-view {
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+}
+.schematic-ribbon .ribbon-view label {
+  grid-column: span 2;
+}
+.schematic-ribbon .ribbon-view input[type="number"] {
+  width: 3rem;
+}
+.schematic-ribbon .ribbon-selection {
+  display: grid;
+  grid-template-columns: repeat(5, max-content);
+  gap: 0.15rem;
+}

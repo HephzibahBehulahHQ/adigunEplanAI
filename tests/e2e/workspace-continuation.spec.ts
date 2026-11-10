@@ -29,6 +29,62 @@ function mappedProject() {
   }
   return project;
 }
+
+test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  const project = mappedProject();
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "camera.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(project)),
+  });
+  const preview = page.locator(".panel-preview");
+  const canvas = preview.locator(".panel-3d-view");
+  await expect(canvas).toBeVisible();
+  const original = await canvas.getAttribute("viewBox");
+  const polygons = await canvas
+    .locator("polygon")
+    .evaluateAll((elements) => elements.map((e) => e.getAttribute("points")));
+  const before = await page.evaluate(() =>
+    localStorage.getItem("adiguneplanai.projects.v1"),
+  );
+  const rotate = await preview.getByLabel("View yaw (°)").inputValue();
+  await preview.getByRole("button", { name: "Pan", exact: true }).click();
+  const box = (await canvas.boundingBox())!;
+  await page.mouse.move(box.x + box.width * 0.45, box.y + box.height * 0.4);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.65, box.y + box.height * 0.6, {
+    steps: 8,
+  });
+  await page.mouse.up();
+  await expect(canvas).not.toHaveAttribute("viewBox", original!);
+  await expect(preview.getByLabel("View yaw (°)")).toHaveValue(rotate);
+  expect(
+    await canvas
+      .locator("polygon")
+      .evaluateAll((elements) => elements.map((e) => e.getAttribute("points"))),
+  ).toEqual(polygons);
+  await preview.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await expect(preview.locator(".panel-camera-tools output")).toHaveText(
+    "125%",
+  );
+  await preview.getByRole("button", { name: "Fit page", exact: true }).click();
+  await expect(canvas).toHaveAttribute("viewBox", original!);
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.projects.v1"),
+    ),
+  ).toBe(before);
+  await expect(
+    preview.locator(".panel-orientation-cube polygon"),
+  ).not.toHaveCount(0);
+  await preview.getByRole("button", { name: "Front", exact: true }).click();
+  await expect(preview.getByLabel("View yaw (°)")).toHaveValue("0");
+  await expect(preview.getByLabel("View pitch (°)")).toHaveValue("0");
+});
 test("schematic and cabinet selection synchronize without changing saved engineering data", async ({
   page,
 }) => {

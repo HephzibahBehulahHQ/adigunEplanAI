@@ -1,0 +1,23 @@
+name = "adiguneplanai-bot"
+main = "index.mjs"
+compatibility_date = "2026-11-07"
+workers_dev = false
+preview_urls = false
+
+[ai]
+binding = "AI"
+
+[[rules]]
+type = "Text"
+globs = ["**/*.md"]
+fallthrough = true
+
+[[ratelimits]]
+name = "BOT_USER_LIMIT"
+namespace_id = "2967301587"
+simple = { limit = 6, period = 60 }
+
+[[ratelimits]]
+name = "BOT_ROUTE_LIMIT"
+namespace_id = "2967301588"
+simple = { limit = 30, period = 60 }

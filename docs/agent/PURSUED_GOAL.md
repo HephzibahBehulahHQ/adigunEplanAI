@@ -4,10 +4,7 @@
 
 **State:** Active — continue the full approved specification.
 
-The owner requested a Codex task-bar goal with pause/resume/clear controls. No
-callable tool in this session exposes that host interface. This repository goal
-is a durable continuation record; it does not create or control a Codex task-bar
-item, and no substitute application controls or scheduled automation are claimed.
+On 2026-11-10 the owner reconfirmed [AdidunEplanAI Master PlanGoals](../../AdidunEplanAI%20Master%20PlanGoals). It matches MASTER_SPECIFICATION.md apart from its trailing newline. The active Codex goal includes this complete scope, the approved addenda, and the target-interface acceptance gate. Continue existing milestones; do not restart completed work.
 
 Canonical Global/Brand Template adoption is recorded in
 [product.config.json](../../product.config.json) and

@@ -1,5 +1,6 @@
 export type BotWindow = {
   open: boolean;
+  docked: boolean;
   minimized: boolean;
   maximized: boolean;
   live: boolean;
@@ -37,7 +38,8 @@ export function restoreBotWindow(
   viewportHeight: number,
 ): BotWindow {
   const fallback: BotWindow = {
-    open: false,
+    open: viewportWidth > 1000,
+    docked: viewportWidth > 1000,
     minimized: false,
     maximized: false,
     live: true,
@@ -50,7 +52,13 @@ export function restoreBotWindow(
     const parsed: unknown = raw ? JSON.parse(raw) : null;
     if (parsed && typeof parsed === "object") {
       const value = parsed as Record<string, unknown>;
-      for (const key of ["open", "minimized", "maximized", "live"] as const)
+      for (const key of [
+        "open",
+        "docked",
+        "minimized",
+        "maximized",
+        "live",
+      ] as const)
         if (typeof value[key] === "boolean") fallback[key] = value[key];
       for (const key of ["x", "y", "width", "height"] as const)
         if (typeof value[key] === "number" && Number.isFinite(value[key]))

@@ -26,7 +26,7 @@ export type Preferences = {
 export const storageKey = "adiguneplanai.interface.v1";
 export function defaults(): Preferences {
   return {
-    compact: false,
+    compact: true,
     theme: "dark",
     language: "en",
     background: "white",

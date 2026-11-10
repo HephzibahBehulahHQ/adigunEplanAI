@@ -82,11 +82,13 @@ for (const [width, height] of [
 ]) {
   test(`window preferences restore and clamp safely at ${width} x ${height}`, () => {
     const initial = restoreBotWindow(null, width, height);
-    assert.equal(initial.open, false);
+    assert.equal(initial.open, width > 1000);
+    assert.equal(initial.docked, width > 1000);
     const restored = restoreBotWindow(
       JSON.stringify({
         ...initial,
         open: true,
+        docked: false,
         x: 100000,
         y: 100000,
         width: 10000,
@@ -97,6 +99,7 @@ for (const [width, height] of [
       height,
     );
     assert.equal(restored.open, true);
+    assert.equal(restored.docked, false);
     assert.equal(restored.live, false);
     assert.ok(restored.x >= 8 && restored.x + restored.width <= width - 8);
     assert.ok(restored.y >= 8 && restored.y <= height - 48);

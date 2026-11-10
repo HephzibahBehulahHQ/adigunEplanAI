@@ -119,7 +119,7 @@
 }
 @media (min-width: 1001px) and (min-height: 780px) {
   .engineering-layout:has(> .dock-bottom .calculations-panel) {
-    grid-template-rows: minmax(0, 1fr) 22.5rem;
+    grid-template-rows: minmax(0, 1fr) 180px;
   }
 }
 .calculations-panel [role="alert"] {

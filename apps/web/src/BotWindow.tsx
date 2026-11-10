@@ -98,8 +98,9 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
     setWindowState((value) => ({ ...value, open: true, minimized: false }));
   }, [openSignal]);
   useEffect(() => {
-    if (windowState.open && !windowState.minimized) composer.current?.focus();
-  }, [windowState.open, windowState.minimized]);
+    if (windowState.open && !windowState.minimized && !windowState.docked)
+      composer.current?.focus();
+  }, [windowState.open, windowState.minimized, windowState.docked]);
   useEffect(() => {
     setMessages([]);
     setSuggestion(null);
@@ -168,7 +169,7 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
     setWindowState((value) => ({ ...value, open: true, minimized: false }));
   const close = () => {
     setWindowState((value) => ({ ...value, open: false }));
-    launcher.current?.focus();
+    requestAnimationFrame(() => launcher.current?.focus());
   };
   function run(tool: LocalTool | null, text: string) {
     const result =
@@ -190,6 +191,7 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
     if (
       event.button !== 0 ||
       windowState.maximized ||
+      windowState.docked ||
       (kind === "move" && (event.target as HTMLElement).closest("button"))
     )
       return;
@@ -248,13 +250,22 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
         <aside
           className={`bot-window ${windowState.minimized ? "bot-minimized" : ""}`}
           aria-label="Adigun BOT"
+          data-docked={
+            windowState.docked &&
+            !windowState.minimized &&
+            !windowState.maximized
+          }
           style={
-            {
-              left: rect.x,
-              top: rect.y,
-              width: rect.width,
-              height: windowState.minimized ? 48 : rect.height,
-            } as CSSProperties
+            windowState.docked &&
+            !windowState.minimized &&
+            !windowState.maximized
+              ? undefined
+              : ({
+                  left: rect.x,
+                  top: rect.y,
+                  width: rect.width,
+                  height: windowState.minimized ? 48 : rect.height,
+                } as CSSProperties)
           }
           onKeyDown={(event) => {
             if (event.key === "Escape") {
@@ -287,7 +298,11 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
                   ArrowUp: [0, -10],
                   ArrowDown: [0, 10],
                 }[event.key];
-                if (direction && !windowState.maximized) {
+                if (
+                  direction &&
+                  !windowState.maximized &&
+                  !windowState.docked
+                ) {
                   event.preventDefault();
                   setWindowState((value) =>
                     clampWindow(
@@ -308,6 +323,20 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
             </div>
             <div className="bot-window-controls">
               <button
+                aria-label={t(windowState.docked ? "botFloat" : "botDock")}
+                title={t(windowState.docked ? "botFloat" : "botDock")}
+                onClick={() =>
+                  setWindowState((value) => ({
+                    ...value,
+                    docked: !value.docked,
+                    minimized: false,
+                    maximized: false,
+                  }))
+                }
+              >
+                {windowState.docked ? "↗" : "▥"}
+              </button>
+              <button
                 aria-label={t(
                   windowState.minimized ? "botRestore" : "botMinimize",
                 )}
@@ -316,6 +345,7 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
                   setWindowState((value) => ({
                     ...value,
                     minimized: !value.minimized,
+                    docked: false,
                   }))
                 }
               >
@@ -330,6 +360,7 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
                   setWindowState((value) => ({
                     ...value,
                     maximized: !value.maximized,
+                    docked: false,
                     minimized: false,
                   }))
                 }
@@ -471,7 +502,7 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
                   {t("botPreferenceError")}
                 </p>
               )}
-              {!windowState.maximized && (
+              {!windowState.maximized && !windowState.docked && (
                 <div
                   className="bot-resize"
                   role="button"

@@ -124,3 +124,31 @@ Schema 14 adds explicit per-floor drawing scales (1:1–1:10000, default 1:100 o
 ## Equipment placement checkpoint
 
 Schema 15 adds native-device floor placements, optional room assignment with anchor containment, snapped position, rotation, annotation scale and mounting height. Existing schematic identity and wiring remain unchanged. Layer locks/visibility protect mutations; room/device deletion protects references. The room equipment schedule derives native references and assigned parts, including hidden placements. Six new domain tests and all 11 building browser workflows pass; the complete local check, licensing, notices and build pass. Hosted CI and deployment for this increment remain pending publication. Floor-first device creation, routes and circuit schedules remain open.
+
+
+## 2026-11-10 — Interface integration in progress
+
+- Isolated worktree on `codex/interface-integration` reconciles development (`ecb34e0`) with main (`5b0c93d`); PR #22 was already merged into development. Original worktree and history remain untouched.
+- Preserve main’s account, navigator, examples, editor command bus and complete panel geometry engine. Integrate drawing title frame, project-backed calculation records and cabinet pan/zoom/fit/orientation controls. Default compact desktop layout reserves space for the drawing; expanded controls remain available through View.
+- Owner reaffirmed the exact supplied target menu order, sidebar/canvas/bottom-panel positions and real active behavior. The master-plan file matches the active specification; do not restart the roadmap.
+- Local check passed: 334 unit/tooling tests, types, lint, formatting, licenses, notices and build. Automated Chromium cannot launch inside the current sandbox; hosted browser CI is still required.
+- Visual parity is NOT accepted. Keep the integration PR draft; no merge, runtime publication or deployment until visual and CI gates pass. The target’s manufacturer cabinet appearance and full toolbar/BOT layout remain unfinished.
+- Local-only Playwright configuration, dependencies, build output and scratch logs are excluded from commits.
+
+## 2026-11-10 — target sidebar and grouped ribbon
+
+Desktop BOT defaults to the fourth docked column; Float/Dock, minimize, maximize and existing read-only native tools remain usable. Mobile starts with the launcher. Saved owner preferences remain scoped and are not overwritten. The bottom diagnostic/calculation/BOM/report row begins after the left navigator, matching the supplied target structure.
+
+Home now groups real editing, wiring, library, checking and document actions in one scrollable row. Added native schematic Print/PDF, Save all, and Close project without deleting saved projects; the navigator reopens a closed project. Library commands activate the actual Library tab. Alignment commands reuse the native transaction/history path. Four language dictionaries include the new labels.
+
+Validation: npm run check passed (334 unit/tooling tests, types, lint, formatting, dependency licenses, notices, build). Manual browser checks verified dock/float, library selection, close/reload/reopen, one-row desktop ribbon, and viewport bounds at 1672 and 375 pixels. Previous hosted CI passed 138 browser tests and failed two compact-layout assumptions; those regressions were updated to exercise the visible Insert command and scrollable calculation pane. Updated hosted CI is still required, including native Print/PDF and saved-project preservation coverage.
+
+Visual acceptance remains open: manufacturer-level cabinet geometry, remaining target ribbon actions and full header/inspector detail are not certified as matching. No merge or deployment is authorized by these partial results. Local-only playwright.local.config.ts, dependency/build caches and scratch logs remain excluded.
+
+## 2026-11-10 — native cabinet mesh import increment
+
+Added schema-18 STL surface assets with explicit units/axes, source/rights references and source SHA-256; real mesh rendering/picking, measured placement bounds, native history, reuse and OBJ faces. See `docs/PANEL_MESH_IMPORT.md`. This supplies a path for genuine licensed models; no manufacturer CAD library or exact target parity is claimed.
+
+Local checks passed 341 unit/tooling tests, types, lint, format, licenses/notices and production build. Manual browser import measured an original regression tetrahedron at 20 × 30 × 40 mm, rendered its actual surface, and retained it after reload. A dock SVG background that initially obscured the WebGL canvas was fixed and regression-covered. Hosted browser checks for this increment remain pending. Test-only native/STL scratch files and `playwright.local.config.ts` are excluded from publication. The engineering example was restored in the preview.
+
+Release remains gated on exact target visual acceptance and full CI. Manufacturer model sourcing, remaining target commands/header/inspector, hosted BOT and wider specification gates remain open; no merge/deployment occurred for this increment.

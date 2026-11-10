@@ -1,7 +1,9 @@
+import { analyze } from "../../../packages/connectivity-engine/analyze.ts";
 import productConfig from "../../../product.config.json";
 import brands from "../../../packages/design-tokens/brands.json";
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   lazy,
@@ -57,6 +59,10 @@ export function App() {
 }
 function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
+  const connectivity = useMemo(
+    () => (native.project ? analyze(native.project) : null),
+    [native.project],
+  );
   const examplesDialog = useRef<HTMLDialogElement>(null);
   const accountDialog = useRef<HTMLDialogElement>(null);
   const searchDialog = useRef<HTMLDialogElement>(null);
@@ -71,6 +77,7 @@ function Workspace({ account }: { account: Account }) {
     }
   });
   const [botSignal, setBotSignal] = useState(0);
+  const [librarySignal, setLibrarySignal] = useState(0);
   const [tab, setTab] = useState<RibbonTab>("home");
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
@@ -105,6 +112,7 @@ function Workspace({ account }: { account: Account }) {
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const reveal = (id: PanelId) => {
     panel(id, { visible: true, collapsed: false });
+    if (id === "project") setLibrarySignal((value) => value + 1);
     requestAnimationFrame(() => {
       const element = document.querySelector<HTMLElement>(
         `[data-panel="${id}"]`,
@@ -112,15 +120,6 @@ function Workspace({ account }: { account: Account }) {
       element
         ?.querySelector<HTMLButtonElement>(".panel-heading button")
         ?.focus();
-      if (id === "project") {
-        const library =
-          element?.querySelector<HTMLDetailsElement>(".component-library");
-        if (library) {
-          library.open = true;
-          library.querySelector<HTMLElement>("summary")?.focus();
-          library.scrollIntoView({ block: "nearest" });
-        }
-      }
     });
   };
   const renderPanel = (id: PanelId) => {
@@ -151,7 +150,11 @@ function Workspace({ account }: { account: Account }) {
         {!state.collapsed && (
           <div className="panel-body">
             {id === "project" ? (
-              <ProjectNavigator native={native} t={t} />
+              <ProjectNavigator
+                native={native}
+                t={t}
+                librarySignal={librarySignal}
+              />
             ) : id === "properties" ? (
               <>
                 <div id="native-object-properties" />
@@ -163,7 +166,7 @@ function Workspace({ account }: { account: Account }) {
               id === "reports" ? (
               <NativeDataPanel native={native} t={t} kind={id} />
             ) : id === "diagnostics" ? (
-              <ConnectivityPanel native={native} t={t} />
+              <ConnectivityPanel native={native} t={t} result={connectivity} />
             ) : (
               <p className="empty-hint">
                 {t(
@@ -380,6 +383,7 @@ function Workspace({ account }: { account: Account }) {
       )}
       <div
         className="ribbon"
+        data-tab={tab}
         aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
       >
         {tab === "home" || tab === "file" || tab === "project" ? (
@@ -553,14 +557,14 @@ function Workspace({ account }: { account: Account }) {
           </div>
         </main>
         {has("right") && region("right")}
+        <BotWindow
+          native={native}
+          ownerId={account.user?.id ?? null}
+          t={t}
+          openSignal={botSignal}
+        />
         {has("bottom") && region("bottom")}
       </div>
-      <BotWindow
-        native={native}
-        ownerId={account.user?.id ?? null}
-        t={t}
-        openSignal={botSignal}
-      />
       <footer className="status-bar">
         <span>
           <i />

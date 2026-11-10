@@ -1,5 +1,16 @@
+import type { Project } from "../../../packages/electrical-model/project.ts";
+import {
+  drawingIndex,
+  projectBom,
+  reportCsv,
+} from "../../../packages/electrical-model/project-reports.ts";
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
-import { useRef, useState, lazy, Suspense } from "react";
+import { CommandIcon } from "./WorkspaceRibbon";
+import {
+  schematicSvg,
+  printDocument,
+} from "../../../packages/reporting/drawings.ts";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { exampleCatalog } from "../../../packages/example-projects/catalog.ts";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -10,7 +21,9 @@ import {
 } from "../../../packages/electrical-model/project.ts";
 import type { NativeProjects } from "./useNativeProjects";
 const PanelPreview = lazy(() =>
-  import("./PanelEditor").then((module) => ({ default: module.PanelPreview })),
+  import("./PanelEditor").then(({ PanelPreview }) => ({
+    default: PanelPreview,
+  })),
 );
 const PanelEditor = lazy(() => import("./PanelEditor"));
 const CalculationsPanel = lazy(() =>
@@ -41,6 +54,7 @@ type Props = { native: NativeProjects; t: (key: MessageKey) => string };
 export function ProjectTools({ native, t }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const file = useRef<HTMLInputElement>(null);
+  const [printError, setPrintError] = useState(false);
   return (
     <div className="native-tools">
       <button
@@ -110,6 +124,49 @@ export function ProjectTools({ native, t }: Props) {
               <path d="M3 3h15l3 3v15H3z M7 3v6h10V3 M7 21v-7h10v7" />
             </svg>
             {t("save")}
+          </button>
+          <button onClick={() => native.save()} title={t("saveAll")}>
+            <CommandIcon kind="saveAll" />
+            {t("saveAll")}
+          </button>
+          <button
+            disabled={!native.saved}
+            onClick={() => native.close()}
+            title={t("closeProject")}
+          >
+            <CommandIcon kind="close" />
+            {t("closeProject")}
+          </button>
+          <button
+            disabled={!native.project.pages.length}
+            onClick={() => {
+              const project = native.project;
+              const page =
+                project?.pages.find((p) => p.id === native.selectedPageId) ??
+                project?.pages[0];
+              if (!project || !page) return;
+              const popup = window.open("", "_blank");
+              setPrintError(!popup);
+              if (!popup) return;
+              popup.document.open();
+              popup.document.write(
+                printDocument(
+                  `${project.name} · ${page.name}`,
+                  schematicSvg(project, page.id),
+                  page,
+                ),
+              );
+              popup.document.close();
+              void popup.document.fonts.ready.then(() => {
+                if (!popup.closed) {
+                  popup.focus();
+                  popup.print();
+                }
+              });
+            }}
+          >
+            <CommandIcon kind="print" />
+            {t("print")}
           </button>
           <button
             onClick={() => {
@@ -189,6 +246,7 @@ export function ProjectTools({ native, t }: Props) {
           {t("downloadRecovery")}
         </button>
       )}
+      {printError && <p role="alert">{t("reportExportError")}</p>}
       {native.corrupt && (
         <button
           onClick={() => {
@@ -232,11 +290,18 @@ export function ProjectTools({ native, t }: Props) {
     </div>
   );
 }
-export function ProjectNavigator({ native, t }: Props) {
+export function ProjectNavigator({
+  native,
+  t,
+  librarySignal = 0,
+}: Props & { librarySignal?: number }) {
   const [filter, setFilter] = useState("");
   const [pane, setPane] = useState<
     "project" | "library" | "examples" | "search"
   >("project");
+  useEffect(() => {
+    if (librarySignal) setPane("library");
+  }, [librarySignal]);
   const filterInput = useRef<HTMLInputElement>(null);
   const project = native.project;
   const query = filter.normalize("NFKC").toLocaleLowerCase().trim();
@@ -304,7 +369,28 @@ export function ProjectNavigator({ native, t }: Props) {
           </Suspense>
         </LazyPanelBoundary>
       ) : !project ? (
-        <p className="empty-hint">{t("noProject")}</p>
+        <>
+          <p className="empty-hint">{t("noProject")}</p>
+          {!!native.projects.length && (
+            <label>
+              {t("chooseProject")}
+              <select
+                aria-label={t("chooseProject")}
+                value=""
+                onChange={(event) => native.select(event.target.value)}
+              >
+                <option value="" disabled>
+                  {t("chooseProject")}
+                </option>
+                {native.projects.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+        </>
       ) : (
         <div className="navigator-pane" role="tabpanel">
           {pane === "project" && (
@@ -475,47 +561,34 @@ export function NativeDataPanel({
   native,
   t,
   kind,
-}: Props & { kind: "bom" | "panel3d" | "calculations" | "reports" }) {
+}: Props & {
+  kind: "bom" | "panel3d" | "calculations" | "reports";
+}) {
   const project = native.project;
   if (!project) return <p className="empty-hint">{t("noProject")}</p>;
-  if (kind === "calculations")
-    return (
-      <LazyPanelBoundary message={t("reportExportError")}>
-        <Suspense fallback={<p role="status">{t("calculations")}…</p>}>
-          <CalculationsPanel native={native} t={t} />
-        </Suspense>
-      </LazyPanelBoundary>
-    );
-  if (kind === "reports")
-    return (
-      <LazyPanelBoundary message={t("reportExportError")}>
-        <Suspense fallback={<p role="status">{t("reports")}…</p>}>
-          <ReportsPanel native={native} t={t} />
-        </Suspense>
-      </LazyPanelBoundary>
-    );
+  const bomHeaders = [
+    t("reference"),
+    t("device"),
+    t("partNumber"),
+    t("quantity"),
+  ];
   if (kind === "bom")
     return project.devices.length ? (
       <table className="native-bom">
         <thead>
           <tr>
-            <th>{t("reference")}</th>
-            <th>{t("device")}</th>
-            <th>{t("partNumber")}</th>
-            <th>{t("quantity")}</th>
+            {bomHeaders.map((label, index) => (
+              <th key={index}>{label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {project.devices.map((device) => (
+          {projectBom(project).map((device) => (
             <tr key={device.id}>
               <td>{device.reference}</td>
               <td>{device.name}</td>
-              <td>
-                {project.manufacturerParts.find(
-                  (part) => part.id === device.partId,
-                )?.partNumber ?? "—"}
-              </td>
-              <td>1</td>
+              <td>{device.partNumber || "—"}</td>
+              <td>{device.quantity}</td>
             </tr>
           ))}
         </tbody>
@@ -523,12 +596,143 @@ export function NativeDataPanel({
     ) : (
       <p className="empty-hint">{t("noRecords")}</p>
     );
+  if (kind === "panel3d")
+    return (
+      <LazyPanelBoundary message={t("enclosureLoadError")}>
+        <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
+          <PanelPreview native={native} t={t} />
+        </Suspense>
+      </LazyPanelBoundary>
+    );
+  if (kind === "reports") {
+    const download = (filename: string, rows: (string | number)[][]) => {
+      const url = URL.createObjectURL(
+        new Blob([reportCsv(rows)], { type: "text/csv;charset=utf-8" }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+    return (
+      <div className="report-actions">
+        <LazyPanelBoundary message={t("reportExportError")}>
+          <Suspense fallback={<p>{t("reports")}…</p>}>
+            <ReportsPanel native={native} t={t} />
+          </Suspense>
+        </LazyPanelBoundary>
+        <button
+          type="button"
+          disabled={!project.pages.length}
+          onClick={() =>
+            download("drawing-index.csv", [
+              [
+                t("document"),
+                t("pageName"),
+                t("cabinetWidth"),
+                t("cabinetHeight"),
+              ],
+              ...drawingIndex(project),
+            ])
+          }
+        >
+          {t("reportDrawingIndexCsv")}
+        </button>
+        <button
+          type="button"
+          disabled={!project.devices.length}
+          onClick={() =>
+            download("bill-of-materials.csv", [
+              bomHeaders,
+              ...projectBom(project).map(
+                ({ reference, name, partNumber, quantity }) => [
+                  reference,
+                  name,
+                  partNumber,
+                  quantity,
+                ],
+              ),
+            ])
+          }
+        >
+          {t("reportBomCsv")}
+        </button>
+        {project.reports.length > 0 && (
+          <ul>
+            {project.reports.map(({ id, name }) => (
+              <li key={id}>{name}</li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
   return (
-    <LazyPanelBoundary message={t("reportExportError")}>
-      <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
-        <PanelPreview native={native} t={t} />
-      </Suspense>
-    </LazyPanelBoundary>
+    <>
+      <CalculationRecords key={project.id} project={project} t={t} />
+      <LazyPanelBoundary message={t("reportExportError")}>
+        <Suspense fallback={<p>{t("calculations")}…</p>}>
+          <CalculationsPanel native={native} t={t} />
+        </Suspense>
+      </LazyPanelBoundary>
+    </>
+  );
+}
+
+function CalculationRecords({
+  project,
+  t,
+}: Pick<Props, "t"> & { project: Project }) {
+  const [recordId, setRecordId] = useState("");
+  const records = project.calculations;
+  const record = records.find(({ id }) => id === recordId) ?? records[0];
+  if (!record) return <p className="empty-hint">{t("noRecords")}</p>;
+  return (
+    <div className="calculation-record">
+      <select
+        aria-label={t("calculations")}
+        value={record.id}
+        onChange={(event) => setRecordId(event.target.value)}
+      >
+        {records.map(({ id, name }) => (
+          <option key={id} value={id}>
+            {name}
+          </option>
+        ))}
+      </select>
+      <div className="calculation-details">
+        <section>
+          <h3>{t("calculationInputs")}</h3>
+          <dl>
+            {Object.entries(record.inputs).map(([input, value]) => (
+              <div key={input}>
+                <dt>{input}</dt>
+                <dd>
+                  {value}{" "}
+                  {Object.hasOwn(record.units, input) && record.units[input]}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+        <section>
+          <h3>{t("calculationMethod")}</h3>
+          <p>{record.kind}</p>
+          <p>{record.methodReference}</p>
+          {record.assumptions.length > 0 && (
+            <details>
+              <summary>{t("calculationAssumptions")}</summary>
+              <ul>
+                {record.assumptions.map((assumption, index) => (
+                  <li key={index}>{assumption}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </section>
+      </div>
+    </div>
   );
 }
 export function ProjectProperties({ native, t }: Props) {
