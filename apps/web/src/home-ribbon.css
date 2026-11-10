@@ -1,13 +1,13 @@
 /* Target header + one ribbon unit. No duplicate desktop editing rows. */
 .ribbon-tabs {
-  height: 39px;
-  min-height: 39px;
+  height: 32px;
+  min-height: 32px;
   align-items: stretch;
   background: var(--navy);
 }
 .ribbon-tabs button {
   flex: 1 0 auto;
-  padding: 7px 11px;
+  padding: 5px 9px;
   font-size: 13px;
   border-radius: 5px 5px 0 0;
 }

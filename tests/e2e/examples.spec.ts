@@ -81,6 +81,13 @@ for (const [name, devices, wires, selector] of cases) {
     if (name.startsWith("Industry energy substation")) {
       await page.setViewportSize({ width: 1880, height: 970 });
       await page.getByRole("button", { name: "Home", exact: true }).click();
+      const appHeader = await page.locator(".workbench-header").boundingBox();
+      const ribbonTabs = await page.locator(".ribbon-tabs").boundingBox();
+      expect(appHeader).not.toBeNull();
+      expect(ribbonTabs).not.toBeNull();
+      expect(appHeader!.height).toBeLessThanOrEqual(42);
+      expect(ribbonTabs!.height).toBeLessThanOrEqual(33);
+      expect(ribbonTabs!.y).toBe(appHeader!.y + appHeader!.height);
       await expect(
         page.getByRole("button", {
           name: /PLC1 · WAGO PFC200 controller/,

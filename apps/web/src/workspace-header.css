@@ -3,7 +3,7 @@
   grid-template-columns: 210px minmax(280px, 1fr) minmax(260px, 520px) auto;
   align-items: center;
   gap: 14px;
-  min-height: 52px;
+  min-height: 40px;
   padding: 2px 12px 2px 6px;
   background: linear-gradient(112deg, #040d15, #071b2b 58%, #101e30);
   border-bottom: 1px solid #306076;
@@ -11,7 +11,7 @@
 }
 .corporate-mark {
   width: 210px;
-  height: 46px;
+  height: 36px;
   overflow: hidden;
 }
 .corporate-mark svg {
@@ -30,7 +30,7 @@
   gap: 12px;
 }
 .product-heading strong {
-  font-size: 23px;
+  font-size: 20px;
   letter-spacing: -0.6px;
   line-height: 1.1;
 }
