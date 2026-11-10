@@ -45,6 +45,12 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   const preview = page.locator(".panel-preview");
   const canvas = preview.locator(".panel-3d-view");
   await expect(canvas).toBeVisible();
+  const viewOptions = preview.locator(".panel-view-options > summary");
+  const closedHeight = (await canvas.boundingBox())!.height;
+  await viewOptions.click();
+  await expect(preview.getByLabel("View yaw (°)")).toBeVisible();
+  expect((await canvas.boundingBox())!.height).toBeLessThan(closedHeight);
+  await viewOptions.click();
   const original = await canvas.getAttribute("viewBox");
   const frontFrame = canvas.locator(".panel-frame-front line");
   const rearFrame = canvas.locator(".panel-frame-rear line");

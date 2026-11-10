@@ -1015,6 +1015,30 @@ function PanelViews({
       </button>
     </div>
   );
+  const cameraAngles = (
+    <div className="panel-fields">
+      <label>
+        {t("panelYaw")}
+        <input
+          type="range"
+          min="-180"
+          max="180"
+          value={yaw}
+          onChange={(event) => setYaw(Number(event.target.value))}
+        />
+      </label>
+      <label>
+        {t("panelPitch")}
+        <input
+          type="range"
+          min="-90"
+          max="90"
+          value={pitch}
+          onChange={(event) => setPitch(Number(event.target.value))}
+        />
+      </label>
+    </div>
+  );
   return (
     <div className={`panel-views${preview ? " panel-preview-views" : ""}`}>
       {!preview && (
@@ -1500,30 +1524,17 @@ function PanelViews({
             </button>
           ))}
         </div>
-        <div className="panel-fields">
-          <label>
-            {t("panelYaw")}
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              value={yaw}
-              onChange={(event) => setYaw(Number(event.target.value))}
-            />
-          </label>
-          <label>
-            {t("panelPitch")}
-            <input
-              type="range"
-              min="-90"
-              max="90"
-              value={pitch}
-              onChange={(event) => setPitch(Number(event.target.value))}
-            />
-          </label>
-        </div>
+        {preview ? (
+          <details className="panel-view-options">
+            <summary>{t("view")}</summary>
+            {cameraAngles}
+            <p className="panel-view-hint">{t("panelOrbit")}</p>
+          </details>
+        ) : (
+          cameraAngles
+        )}
       </figure>
-      <p className="panel-view-hint">{t("panelOrbit")}</p>
+      {!preview && <p className="panel-view-hint">{t("panelOrbit")}</p>}
     </div>
   );
 }
@@ -1578,7 +1589,9 @@ export function PanelPreview({
       />
       <p>
         {t(
-          project.equipment3d.some((item) => item.meshId)
+          project.equipment3d.some(
+            (item) => item.enclosureId === enclosure.id && item.meshId,
+          )
             ? "panelMeshScope"
             : "panelScope",
         )}

@@ -495,6 +495,7 @@ test("face features, non-solid compartments, closed doors and the read-only dock
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
+  await preview.locator(".panel-view-options > summary").click();
   await preview.getByLabel("View yaw (°)", { exact: true }).focus();
   await preview.getByLabel("View yaw (°)", { exact: true }).press("ArrowRight");
   expect(

@@ -403,9 +403,13 @@
     gap: 5px;
   }
   .dock-right .panel-preview > label {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 0;
     flex: none;
+  }
+  .dock-right .panel-preview > label select {
+    min-width: 0;
   }
   .dock-right .panel-preview-views {
     margin-top: 0;
@@ -444,4 +448,10 @@
     width: 100%;
     min-width: 0;
   }
+}
+.panel .panel-view-options {
+  padding-top: 0;
+}
+.panel-view-options summary {
+  font-size: 0.72rem;
 }
