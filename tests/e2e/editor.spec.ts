@@ -478,6 +478,43 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   });
 });
 
+test("Wire mode snaps nearby clicks to native pin coordinates", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wires = [];
+  fixture.wirePaths = [];
+  fixture.nets = [];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "pin-snap.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await page.getByRole("button", { name: "Wire · Home", exact: true }).click();
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  for (const pin of fixture.pins) {
+    const target = canvas.locator(`[data-pin="${pin.id}"]`);
+    const bounds = (await target.locator(".pin-aperture").boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2 + 7;
+    await page.mouse.move(x, y);
+    await expect(target).toHaveAttribute("data-snap-pin", "true");
+    await page.mouse.click(x, y);
+  }
+  const result = await project(page);
+  expect(result.wires).toHaveLength(1);
+  expect(result.wires[0]).toMatchObject({
+    fromPinId: "pin-a",
+    toPinId: "pin-b",
+  });
+  expect(result.wirePaths[0].points[0]).toEqual({ x: 100, y: 100 });
+  expect(result.wirePaths[0].points.at(-1)).toEqual({ x: 180, y: 100 });
+});
+
 test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({
   page,
 }) => {

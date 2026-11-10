@@ -83,6 +83,7 @@ export function SchematicEditor({
   const setSelected = native.selectSymbols;
   const [selectedWire, setSelectedWire] = useState<string | null>(null);
   const [fromPin, setFromPin] = useState<string | null>(null);
+  const [snapPin, setSnapPin] = useState<string | null>(null);
   const [labelPin, setLabelPin] = useState<string | null>(null);
   const [activeLayer, setActiveLayer] = useState<string | null>(null);
   const [view, setView] = useState<Box>({
@@ -139,6 +140,29 @@ export function SchematicEditor({
       matrix,
     );
     return { x: p.x, y: p.y };
+  }
+  function nearestWirePin({
+    clientX,
+    clientY,
+  }: ReactPointerEvent): string | null {
+    let pinId: string | null = null;
+    let distance = 8;
+    for (const element of document.elementsFromPoint(clientX, clientY)) {
+      const pin = element.closest<SVGGElement>('[data-wire-target="true"]');
+      if (!pin || !svg.current?.contains(pin)) continue;
+      const aperture = pin
+        .querySelector(".pin-aperture")!
+        .getBoundingClientRect();
+      const next = Math.hypot(
+        clientX - (aperture.x + aperture.width / 2),
+        clientY - (aperture.y + aperture.height / 2),
+      );
+      if (next < distance) {
+        distance = next;
+        pinId = pin.dataset.pin ?? null;
+      }
+    }
+    return pinId;
   }
   function fit() {
     setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
@@ -201,6 +225,12 @@ export function SchematicEditor({
         ids: [],
       };
       svg.current!.setPointerCapture(event.pointerId);
+      return;
+    }
+    if (tool === "wire") {
+      if (event.button !== 0) return;
+      const target = nearestWirePin(event);
+      if (target) activatePin(target);
       return;
     }
     if (Object.hasOwn(primitives, tool) || tool === "custom") {
@@ -269,7 +299,10 @@ export function SchematicEditor({
   }
   function pointerMove(event: ReactPointerEvent<SVGSVGElement>) {
     const current = drag.current;
-    if (!current) return;
+    if (!current) {
+      if (tool === "wire") setSnapPin(nearestWirePin(event));
+      return;
+    }
     const value = new DOMPoint(event.clientX, event.clientY).matrixTransform(
       current.matrix,
     );
@@ -1065,6 +1098,7 @@ export function SchematicEditor({
         tabIndex={0}
         onPointerDown={begin}
         onPointerMove={pointerMove}
+        onPointerLeave={() => setSnapPin(null)}
         onPointerUp={pointerUp}
         onPointerCancel={() => {
           drag.current = null;
@@ -1253,11 +1287,22 @@ export function SchematicEditor({
               <g
                 key={pin.id}
                 data-pin={pin.id}
+                data-wire-target={
+                  tool === "wire" &&
+                  !project.layers.find((layer) => layer.id === instance.layerId)
+                    ?.locked
+                }
+                data-snap-pin={tool === "wire" && snapPin === pin.id}
                 role="button"
                 tabIndex={0}
                 aria-label={`${device.reference}:${terminal.designation}${project.pins.filter((p) => p.symbolInstanceId === instance.id && p.terminalId === terminal.id).length > 1 ? `/${pin.definitionPinId}` : ""}`}
                 onPointerDown={(e) => {
-                  if (tool === "pan" || Object.hasOwn(primitives, tool)) return;
+                  if (
+                    tool === "pan" ||
+                    tool === "wire" ||
+                    Object.hasOwn(primitives, tool)
+                  )
+                    return;
                   if (tool === "select") {
                     beginSymbol(e, instance.id);
                     return;
@@ -1274,11 +1319,22 @@ export function SchematicEditor({
                 }}
               >
                 <circle
+                  className="pin-aperture"
                   cx={position.x}
                   cy={position.y}
                   r={2.4}
                   fill="transparent"
                 />
+                {tool === "wire" && snapPin === pin.id && (
+                  <circle
+                    className="pin-snap-ring"
+                    cx={position.x}
+                    cy={position.y}
+                    r={2.4}
+                    vectorEffect="non-scaling-stroke"
+                    pointerEvents="none"
+                  />
+                )}
                 <circle
                   cx={position.x}
                   cy={position.y}

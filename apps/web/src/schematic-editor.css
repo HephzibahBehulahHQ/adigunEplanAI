@@ -16,6 +16,20 @@
   stroke: var(--cyan);
   stroke-dasharray: 2 1;
 }
+.engineering-canvas [data-wire-target="true"] .pin-aperture {
+  stroke: transparent;
+  stroke-width: 16px;
+  vector-effect: non-scaling-stroke;
+}
+.engineering-canvas .pin-snap-ring {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 1.5px;
+  stroke-dasharray: 2 2;
+}
+.engineering-canvas [data-snap-pin="true"] circle:last-child {
+  stroke: var(--cyan);
+}
 .editor-toolbar {
   display: flex;
   flex-wrap: wrap;
