@@ -18,7 +18,7 @@ test("catalog warnings distinguish reviewed facts from missing manufacturer info
     assert.ok(catalogMissingData(part).includes("catalogTerminalMarkings"));
     assert.equal(
       catalogMissingData(part).includes("catalogDimensions"),
-      part.id !== "phoenix-3044076",
+      !part.dimensionsMm,
     );
   }
   assert.match(phoenix.ratings.sectionRangeBasis, /ferrule ranges differ/);

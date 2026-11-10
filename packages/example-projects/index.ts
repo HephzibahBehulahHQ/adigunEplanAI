@@ -6,6 +6,7 @@ import {
 import { synchronizeConnectivity } from "../connectivity-engine/analyze.ts";
 import { installSymbol } from "../component-library/symbols.ts";
 import { createCustomSymbol } from "../component-library/custom-symbols.ts";
+import { assignCatalogPart } from "../component-library/catalog.ts";
 import {
   place,
   connect,
@@ -190,14 +191,25 @@ export function buildExample(id: ExampleId): Project {
         .slice(row * 4, row * 4 + 4)
         .entries()) {
         const device = p.devices.find((item) => item.reference === reference)!;
+        const dimensions = p.manufacturerParts.find(
+          (part) => part.id === device.partId,
+        )?.catalogSnapshot?.dimensionsMm;
         p.equipment3d.push({
           id: crypto.randomUUID(),
-          name: `${reference} · manually dimensioned generic envelope`,
+          name: dimensions
+            ? `${reference} · manufacturer catalogue dimensions`
+            : `${reference} · manually dimensioned generic envelope`,
           deviceId: device.id,
           enclosureId,
-          dimensionSource: "manual",
+          dimensionSource: dimensions ? "catalog" : "manual",
           positionMm: { x: 50 + column * 125, y: 85 + row * 205, z: 10 },
-          sizeMm: { x: 80, y: 90, z: 65 },
+          sizeMm: dimensions
+            ? {
+                x: dimensions.width,
+                y: dimensions.height,
+                z: dimensions.depth,
+              }
+            : { x: 80, y: 90, z: 65 },
           mountingStructureId: railId,
           clearanceMm: 5,
         });
@@ -576,17 +588,7 @@ export function buildExample(id: ExampleId): Project {
       const inputDevice = p.devices.find(
         (device) => device.reference === "DI1",
       )!;
-      const inputPartId = crypto.randomUUID();
-      p.manufacturerParts.push({
-        id: inputPartId,
-        name: "16-channel digital input, 24 VDC",
-        manufacturer: "WAGO",
-        partNumber: "750-1405",
-        sourceUrl:
-          "https://www.wago.com/us/controllers-bus-couplers-i-o/16-channel-digital-input/p/750-1405",
-        ratings: { channels: 16, voltage: "24 VDC" },
-      });
-      inputDevice.partId = inputPartId;
+      p = assignCatalogPart(p, inputDevice.id, "wago-750-1405");
       const outputModule = createPlcModule(p, {
         kind: "digital-output",
         channelCount: 8,
@@ -598,21 +600,7 @@ export function buildExample(id: ExampleId): Project {
       const outputDevice = p.devices.find(
         (device) => device.reference === "DO1",
       )!;
-      const outputPartId = crypto.randomUUID();
-      p.manufacturerParts.push({
-        id: outputPartId,
-        name: "8-channel digital output, 24 VDC, 0.5 A",
-        manufacturer: "WAGO",
-        partNumber: "750-530",
-        sourceUrl:
-          "https://www.wago.com/us/controllers-bus-couplers-i-o/8-channel-digital-output/p/750-530",
-        ratings: {
-          channels: 8,
-          voltage: "24 VDC",
-          current: "0.5 A per channel",
-        },
-      });
-      outputDevice.partId = outputPartId;
+      p = assignCatalogPart(p, outputDevice.id, "wago-750-530");
       const plcInstances = new Map(
         ["DI1", "PLC1", "DO1"].map((reference) => [
           reference,

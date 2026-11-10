@@ -122,11 +122,20 @@ export const schemas = {
           description: z.string().trim().min(1).max(2000),
           mapping: z
             .object({
-              glyph: z.enum(["terminal", "contact"]),
+              glyph: z.enum(["terminal", "contact", "component"]),
               electricalNodes: z.number().int().min(1).max(256),
               connections: z.number().int().min(1).max(1000),
+              symbolId: name.optional(),
             })
-            .strict(),
+            .strict()
+            .superRefine((mapping, ctx) => {
+              if ((mapping.glyph === "component") !== Boolean(mapping.symbolId))
+                ctx.addIssue({
+                  code: "custom",
+                  message: "Component mapping requires an exact symbol ID",
+                  path: ["symbolId"],
+                });
+            }),
           dimensionsMm: z
             .object({
               width: positive.max(100000),

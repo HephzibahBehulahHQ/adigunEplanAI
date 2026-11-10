@@ -16,11 +16,18 @@ export type CatalogPart = {
   mounting?: string;
   sourceRevision?: string;
   ratings: Record<string, string | number>;
-  mapping: {
-    glyph: "terminal" | "contact";
-    electricalNodes: number;
-    connections: number;
-  };
+  mapping:
+    | {
+        glyph: "terminal" | "contact";
+        electricalNodes: number;
+        connections: number;
+      }
+    | {
+        glyph: "component";
+        symbolId: string;
+        electricalNodes: number;
+        connections: number;
+      };
 };
 
 // Factual specifications only; no manufacturer artwork or copied datasheet is bundled.
@@ -110,6 +117,57 @@ export const catalog: readonly CatalogPart[] = [
     ratings: { contactArrangement: "1 NO", connectionMethod: "screw clamp" },
     mapping: { glyph: "contact", electricalNodes: 2, connections: 2 },
   },
+  {
+    id: "wago-750-1405",
+    name: "16-channel digital input; 24 VDC; 3 ms",
+    category: "automation",
+    manufacturer: "WAGO",
+    partNumber: "750-1405",
+    sourceUrl:
+      "https://wago.partcommunity.com/3d-cad-models/750-1405-16-channel-digital-input-module-dc-24-v-positive-switching-wago?info=wago%2Fpg15%2Fserie750%2F0750-1405_0999-0962.prj",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    dimensionsMm: { width: 12, height: 64, depth: 100 },
+    mounting: "DIN-35 rail",
+    ratings: {
+      channels: 16,
+      fieldVoltageV: 24,
+      inputFilterMs: 3,
+      inputCharacteristic: "high-side switching",
+    },
+    mapping: {
+      glyph: "component",
+      symbolId: "library-digital-input-sixteen",
+      electricalNodes: 18,
+      connections: 18,
+    },
+  },
+  {
+    id: "wago-750-530",
+    name: "8-channel digital output; 24 VDC; 0.5 A per channel",
+    category: "automation",
+    manufacturer: "WAGO",
+    partNumber: "750-530",
+    sourceUrl:
+      "https://wago.partcommunity.com/3d-cad-models/?info=wago%2Fpg15%2Fserie750%2F0750-0530_0999-0962.prj",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    dimensionsMm: { width: 12, height: 64, depth: 100 },
+    mounting: "DIN-35 rail",
+    ratings: {
+      channels: 8,
+      fieldVoltageV: 24,
+      outputCurrentPerChannelA: 0.5,
+    },
+    mapping: {
+      glyph: "component",
+      symbolId: "library-digital-output-eight",
+      electricalNodes: 10,
+      connections: 10,
+    },
+  },
 ];
 
 export function catalogMissingData(part: CatalogPart) {
@@ -150,7 +208,9 @@ export function compatibleCatalogDevice(
       );
       const layer = project.layers.find((l) => l.id === instance.layerId);
       return (
-        definition?.glyph === part.mapping.glyph &&
+        (part.mapping.glyph === "component"
+          ? definition?.id === part.mapping.symbolId
+          : definition?.glyph === part.mapping.glyph) &&
         !!layer &&
         !layer.locked &&
         layer.visible

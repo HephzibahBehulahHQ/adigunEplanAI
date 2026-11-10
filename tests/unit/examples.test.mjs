@@ -52,7 +52,20 @@ for (const example of examples) {
       );
       assert.ok(panelGeometryObj(p, enclosure.id).includes("\nv "));
     }
-    assert.ok(p.equipment3d.every((item) => item.dimensionSource === "manual"));
+    if (example.id === "target-substation") {
+      for (const reference of ["DI1", "DO1"]) {
+        const device = p.devices.find((item) => item.reference === reference);
+        const placement = p.equipment3d.find(
+          (item) => item.deviceId === device.id,
+        );
+        assert.equal(placement.dimensionSource, "catalog");
+        assert.deepEqual(placement.sizeMm, { x: 12, y: 64, z: 100 });
+      }
+    } else {
+      assert.ok(
+        p.equipment3d.every((item) => item.dimensionSource === "manual"),
+      );
+    }
     if (example.id !== "target-substation")
       assert.equal(p.manufacturerParts.length, 0);
     const second = buildExample(example.id);

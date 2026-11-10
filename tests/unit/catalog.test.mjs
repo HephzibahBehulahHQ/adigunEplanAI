@@ -482,14 +482,21 @@ test("catalog searches factual manufacturer records without fabricating matches"
 
 test("every manufacturer record maps a native terminal without fabricating missing ratings", () => {
   for (const part of catalog) {
-    const p = nativeProject();
+    const p =
+      part.mapping.glyph === "component"
+        ? installSymbol(
+            nativeProject(),
+            part.mapping.symbolId.replace(/^library-/, ""),
+          )
+        : nativeProject();
     const id = place(
       p,
       "page",
       "layer",
-      part.mapping.glyph,
+      part.mapping.glyph === "component" ? "custom" : part.mapping.glyph,
       { x: 200, y: 150 },
       5,
+      part.mapping.glyph === "component" ? part.mapping.symbolId : undefined,
     );
     const device = p.symbolInstances.find((s) => s.id === id).deviceId;
     const assigned = assignCatalogPart(p, device, part.id);
