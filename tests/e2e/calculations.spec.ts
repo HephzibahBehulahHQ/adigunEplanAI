@@ -42,6 +42,15 @@ test("calculation inputs, unit conversion, native replay and full report exports
   const calculationBody = page.locator(
     '[data-panel="calculations"] > .panel-body',
   );
+  const calculateButton = tools.getByRole("button", {
+    name: "Calculate",
+    exact: true,
+  });
+  const actionBounds = (await calculateButton.boundingBox())!;
+  const dockBounds = (await calculationBody.boundingBox())!;
+  expect(actionBounds.y + actionBounds.height).toBeLessThanOrEqual(
+    dockBounds.y + dockBounds.height,
+  );
   expect(
     await calculationBody.evaluate((body) => body.clientHeight),
   ).toBeGreaterThanOrEqual(120);

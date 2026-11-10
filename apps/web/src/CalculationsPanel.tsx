@@ -205,10 +205,7 @@ function CalculationForm({ native, t }: Props) {
           </button>
         ))}
       </div>
-      <h2>{tr("calcTools")}</h2>
-      <p>{tr("calcScope")}</p>
-      <label>
-        {tr("calcTool")}
+      <div className="calculation-command-row">
         <select
           aria-label={tr("calcTool")}
           value={toolId}
@@ -220,8 +217,12 @@ function CalculationForm({ native, t }: Props) {
             </option>
           ))}
         </select>
-      </label>
+        <button type="submit" form="native-calculation-form">
+          {tr("calcRun")}
+        </button>
+      </div>
       <form
+        id="native-calculation-form"
         onSubmit={(event) => {
           event.preventDefault();
           run();
@@ -337,6 +338,7 @@ function CalculationForm({ native, t }: Props) {
         </label>
         <details className="calculation-method" open>
           <summary>{tr("calcMethodAndAssumptions")}</summary>
+          <p>{tr("calcScope")}</p>
           <p>
             <code>{calculator.formula}</code>
           </p>
@@ -346,7 +348,6 @@ function CalculationForm({ native, t }: Props) {
             ))}
           </ul>
         </details>
-        <button type="submit">{tr("calcRun")}</button>
       </form>
       {issues.length > 0 && (
         <div role="alert" id="calculation-errors">

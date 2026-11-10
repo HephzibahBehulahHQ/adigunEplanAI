@@ -715,12 +715,14 @@ export function NativeDataPanel({
   }
   return (
     <>
-      <CalculationRecords key={project.id} project={project} t={t} />
       <LazyPanelBoundary message={t("reportExportError")}>
         <Suspense fallback={<p>{t("calculations")}…</p>}>
           <CalculationsPanel native={native} t={t} />
         </Suspense>
       </LazyPanelBoundary>
+      {project.calculations.length > 0 && (
+        <CalculationRecords key={project.id} project={project} t={t} />
+      )}
     </>
   );
 }
