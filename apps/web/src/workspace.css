@@ -1878,11 +1878,16 @@ button:disabled {
 }
 
 @media (min-width: 1001px) {
-  .application[data-compact="false"] .workspace .drawing-viewport {
+  .application[data-compact="false"] .workspace .drawing-viewport,
+  .workspace .drawing-viewport:has(.building-editor, .panel-editor) {
     overflow: auto;
+    container-type: size;
   }
   .application[data-compact="false"] .schematic-editor .engineering-canvas {
-    flex: 1 0 300px;
-    min-height: 300px;
+    flex: 0 0 min(300px, 100cqh);
+    min-height: 0;
+  }
+  .drawing-viewport :is(.building-plan, .panel-3d-stage, .panel-front-view) {
+    max-height: 100cqh;
   }
 }
