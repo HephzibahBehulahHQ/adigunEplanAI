@@ -645,7 +645,7 @@ export function NativeDataPanel({
     return (
       <LazyPanelBoundary message={t("enclosureLoadError")}>
         <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
-          <PanelPreview native={native} t={t} />
+          <PanelPreview key={project.id} native={native} t={t} />
         </Suspense>
       </LazyPanelBoundary>
     );

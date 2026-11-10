@@ -1548,15 +1548,26 @@ export function PanelPreview({
   t: Translate;
 }) {
   const [selectedId, setSelectedId] = useState("");
+  const [previousDeviceId, setPreviousDeviceId] = useState<string | null>(null);
   const project = native.project;
-  const mapped = project?.equipment3d.find(
-    (item) => item.deviceId === native.selectedDeviceId,
-  );
+  const matches =
+    project?.equipment3d.filter(
+      (item) => item.deviceId === native.selectedDeviceId,
+    ) ?? [];
+  if (native.selectedDeviceId !== previousDeviceId) {
+    setPreviousDeviceId(native.selectedDeviceId);
+    if (
+      matches.length &&
+      !matches.some((item) => item.enclosureId === selectedId)
+    ) {
+      setSelectedId(matches[0].enclosureId);
+    }
+  }
   const enclosure =
-    project?.enclosures.find((item) => item.id === mapped?.enclosureId) ??
     project?.enclosures.find((item) => item.id === selectedId) ??
     project?.enclosures[0];
   if (!project || !enclosure) return <p>{t("noRecords")}</p>;
+  const mapped = matches.find((item) => item.enclosureId === enclosure.id);
   return (
     <section className="panel-preview" aria-label={t("panel3d")}>
       <label>

@@ -328,6 +328,17 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
     "aria-pressed",
     "true",
   );
+  const enclosurePicker = preview.getByLabel("Selected enclosure", {
+    exact: true,
+  });
+  await enclosurePicker.selectOption("cabinet");
+  await expect(enclosurePicker).toHaveValue("cabinet");
+  await expect(page.locator('[data-instance="symbol-c"]')).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await enclosurePicker.selectOption("cabinet-2");
+  await expect(remote).toHaveAttribute("aria-pressed", "true");
   await page
     .locator('[data-panel="project"]')
     .getByRole("button", { name: "Sheet 1", exact: true })
