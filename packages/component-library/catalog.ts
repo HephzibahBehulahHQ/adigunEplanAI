@@ -144,6 +144,27 @@ export const catalog: readonly CatalogPart[] = [
     },
   },
   {
+    id: "wago-750-8217-625-000",
+    name: "PFC200 G2 controller; 2 Ethernet; RS-232/485; 4G; extended temperature",
+    category: "automation",
+    manufacturer: "WAGO",
+    partNumber: "750-8217/625-000",
+    sourceUrl:
+      "https://wago.partcommunity.com/3d-cad-models/?info=wago%2Fpg15%2Fserie750%2F0750-8217_0625_0999-0962.prj",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    dimensionsMm: { width: 102.5, height: 100, depth: 64.7 },
+    mounting: "DIN-35 rail",
+    ratings: {},
+    mapping: {
+      glyph: "component",
+      symbolId: "library-modular-controller-interface",
+      electricalNodes: 2,
+      connections: 2,
+    },
+  },
+  {
     id: "wago-750-530",
     name: "8-channel digital output; 24 VDC; 0.5 A per channel",
     category: "automation",

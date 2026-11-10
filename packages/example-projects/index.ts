@@ -427,8 +427,41 @@ export function buildExample(id: ExampleId): Project {
           { id: "X3", position: { x: 32, y: 24 }, kind: "power" },
         ],
         artwork: [
-          { kind: "circle", center: { x: -8, y: 0 }, radiusMm: 15 },
-          { kind: "circle", center: { x: 8, y: 0 }, radiusMm: 15 },
+          ...phases.flatMap((phase, index) => {
+            const offset = (index - 1) * 24;
+            return [
+              {
+                kind: "line" as const,
+                from: { x: -32, y: offset },
+                to: { x: -17, y: offset },
+              },
+              {
+                kind: "circle" as const,
+                center: { x: -9, y: offset },
+                radiusMm: 7.5,
+              },
+              {
+                kind: "circle" as const,
+                center: { x: 9, y: offset },
+                radiusMm: 7.5,
+              },
+              {
+                kind: "line" as const,
+                from: { x: 17, y: offset },
+                to: { x: 32, y: offset },
+              },
+            ];
+          }),
+          {
+            kind: "line",
+            from: { x: -1.5, y: -34 },
+            to: { x: -1.5, y: 34 },
+          },
+          {
+            kind: "line",
+            from: { x: 1.5, y: -34 },
+            to: { x: 1.5, y: 34 },
+          },
         ],
       });
       const transformerInstanceId = place(
@@ -575,18 +608,10 @@ export function buildExample(id: ExampleId): Project {
         name: "WAGO PFC200 controller · generic modular bus interface",
       });
       p = cpuModule;
-      const cpu = p.devices.find((device) => device.reference === "PLC1")!;
-      const cpuPartId = crypto.randomUUID();
-      p.manufacturerParts.push({
-        id: cpuPartId,
-        name: "PFC200 Controller, 2 ETH RS, 4G",
-        manufacturer: "WAGO",
-        partNumber: "750-8217",
-        sourceUrl:
-          "https://www.wago.com/us/controllers-bus-couplers-i-o/controller-pfc200/p/750-8217",
-        ratings: {},
-      });
-      cpu.partId = cpuPartId;
+      const cpuDevice = p.devices.find(
+        (device) => device.reference === "PLC1",
+      )!;
+      p = assignCatalogPart(p, cpuDevice.id, "wago-750-8217-625-000");
       const inputModule = createPlcModule(p, {
         kind: "digital-input",
         channelCount: 16,
@@ -625,7 +650,7 @@ export function buildExample(id: ExampleId): Project {
       plcInstances.get("PLC1")!.position = { x: 220, y: 142 };
       plcInstances.get("DO1")!.position = { x: 340, y: 142 };
       const cpuInstance = p.symbolInstances.find(
-        (symbol) => symbol.deviceId === cpu.id,
+        (symbol) => symbol.deviceId === cpuDevice.id,
       )!;
       cpuInstance.position = plcInstances.get("PLC1")!.position;
       symbol(
@@ -713,7 +738,7 @@ export function buildExample(id: ExampleId): Project {
       );
       cabinet(
         ["P1", "F4", "Y1", "X5", "X6", "X7", "X8", "DI1", "PLC1", "DO1"],
-        "UTST_Cabinet_01 · manually dimensioned placement envelopes",
+        "UTST_Cabinet_01 · catalogue-backed PLC and I/O module dimensions",
       );
     }
   } else if (id === "photovoltaic") {

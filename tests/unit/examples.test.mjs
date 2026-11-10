@@ -61,6 +61,16 @@ for (const example of examples) {
         assert.equal(placement.dimensionSource, "catalog");
         assert.deepEqual(placement.sizeMm, { x: 12, y: 64, z: 100 });
       }
+      const controller = p.devices.find((item) => item.reference === "PLC1");
+      const controllerPlacement = p.equipment3d.find(
+        (item) => item.deviceId === controller.id,
+      );
+      assert.equal(controllerPlacement.dimensionSource, "catalog");
+      assert.deepEqual(controllerPlacement.sizeMm, {
+        x: 102.5,
+        y: 100,
+        z: 64.7,
+      });
     } else {
       assert.ok(
         p.equipment3d.every((item) => item.dimensionSource === "manual"),
@@ -102,6 +112,31 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       ),
     ),
     "each incoming isolator pole has a connected line-side and load-side pin",
+  );
+  const transformer = p.devices.find((device) => device.reference === "T01");
+  const transformerInstance = p.symbolInstances.find(
+    (instance) => instance.deviceId === transformer.id,
+  );
+  const transformerDefinition = p.symbolDefinitions.find(
+    (definition) => definition.id === transformerInstance.definitionId,
+  );
+  const transformerPins = p.pins.filter(
+    (pin) => pin.symbolInstanceId === transformerInstance.id,
+  );
+  assert.equal(
+    transformerDefinition.artwork.filter((shape) => shape.kind === "circle")
+      .length,
+    6,
+    "the three-phase transformer depicts all six winding coils",
+  );
+  assert.equal(transformerPins.length, 6);
+  assert.ok(
+    transformerPins.every((pin) =>
+      p.wires.some(
+        (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
+      ),
+    ),
+    "each primary and secondary phase pin is connected",
   );
   assert.deepEqual(
     p.plcModules
@@ -154,7 +189,7 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     [
       { manufacturer: "WAGO", partNumber: "750-1405" },
       { manufacturer: "WAGO", partNumber: "750-530" },
-      { manufacturer: "WAGO", partNumber: "750-8217" },
+      { manufacturer: "WAGO", partNumber: "750-8217/625-000" },
       { manufacturer: "Siemens", partNumber: "P1J122728" },
     ],
   );
