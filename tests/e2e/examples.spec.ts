@@ -2,6 +2,12 @@ import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const cases = [
+  [
+    "Industry energy substation · 20 kV / 630 kVA",
+    21,
+    22,
+    ".engineering-canvas",
+  ],
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],
   ["Photovoltaic string and inverter interfaces", 9, 8, ".engineering-canvas"],
   ["Motor starter documentation", 7, 11, ".engineering-canvas"],
@@ -72,6 +78,33 @@ for (const [name, devices, wires, selector] of cases) {
         contentType: "image/png",
       });
     }
+    if (name.startsWith("Industry energy substation")) {
+      await page.setViewportSize({ width: 1880, height: 970 });
+      await page.getByRole("button", { name: "Home", exact: true }).click();
+      await expect(
+        page.getByRole("figure", { name: "Interactive panel 3D view" }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("region", { name: "Calculations", exact: true }),
+      ).toContainText("20 kV transformer primary load estimate");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("750-8217");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("P1J122728");
+      const screenshotPath = testInfo.outputPath(
+        "target-substation-workbench.png",
+      );
+      await page.screenshot({ path: screenshotPath });
+      await testInfo.attach("target-substation-workbench", {
+        path: screenshotPath,
+        contentType: "image/png",
+      });
+    }
     const first = await page.evaluate(
       () =>
         JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
@@ -110,9 +143,9 @@ test("project navigator tabs expose the real library, examples and search", asyn
 }) => {
   await page.goto("/");
   const tabs = page.getByRole("tablist", { name: "Project navigator" });
-  await expect(tabs.getByRole("tab", { name: "Examples (5)" })).toBeVisible();
-  await tabs.getByRole("tab", { name: "Examples (5)" }).click();
-  await expect(page.getByRole("article")).toHaveCount(5);
+  await expect(tabs.getByRole("tab", { name: "Examples (6)" })).toBeVisible();
+  await tabs.getByRole("tab", { name: "Examples (6)" }).click();
+  await expect(page.getByRole("article")).toHaveCount(6);
   await page
     .getByRole("article")
     .filter({ hasText: "Photovoltaic string and inverter interfaces" })

@@ -5,6 +5,7 @@ import {
 } from "../electrical-model/project.ts";
 import { synchronizeConnectivity } from "../connectivity-engine/analyze.ts";
 import { installSymbol } from "../component-library/symbols.ts";
+import { createCustomSymbol } from "../component-library/custom-symbols.ts";
 import {
   place,
   connect,
@@ -26,12 +27,17 @@ import {
   savePlanCircuit,
 } from "../building-design/circuits.ts";
 import { createPlcModule, savePlcAddress } from "../automation/plc.ts";
+import {
+  calculate,
+  calculationToRecord,
+} from "../engineering-core/calculations.ts";
 import { exampleCatalog } from "./catalog.ts";
 import type { ExampleId } from "./catalog.ts";
 
 export const examples = exampleCatalog;
 export type { ExampleId } from "./catalog.ts";
 const names: Record<ExampleId, string> = {
+  "target-substation": "EES_Industry_Sample_Energy_Substation_V01",
   substation: "EES_Original_Energy_Substation_V01",
   photovoltaic: "Photovoltaic_string_and_inverter_interfaces",
   motor: "Maintained_run_motor_starter",
@@ -198,66 +204,201 @@ export function buildExample(id: ExampleId): Project {
       }
     }
   }
-  if (id === "substation") {
-    note(
-      "ORIGINAL TRANSFORMER STATION · single-phase equivalent documentation",
-      20,
-      22,
-    );
-    note("Primary interfaces", 30, 51);
-    note("Transformer", 165, 51);
-    note("Secondary interfaces", 300, 51);
-    note("P1 · Incoming", 23, 78);
-    note("P2 · Incoming", 23, 168);
-    note("S1 · Outgoing", 352, 78);
-    note("S2 · Outgoing", 352, 168);
-    symbol("terminal", "X1", 35, 95, 0, "Incoming primary interface P1");
-    symbol("terminal", "X2", 35, 185, 0, "Incoming primary interface P2");
-    symbol(
-      "fuse",
-      "F1",
-      95,
-      95,
-      0,
-      "Primary protection interface; rating unspecified",
-    );
-    symbol(
-      "fuse",
-      "F2",
-      95,
-      185,
-      0,
-      "Primary protection interface; rating unspecified",
-    );
-    symbol(
-      "transformer-two-winding",
-      "T1",
-      190,
-      140,
-      0,
-      "Two-winding transformer; single-phase equivalent",
-    );
-    symbol("contact", "Q1", 285, 95, 0, "Secondary isolation interface");
-    symbol("terminal", "X3", 365, 95, 0, "Outgoing secondary S1");
-    symbol("terminal", "X4", 365, 185, 0, "Outgoing secondary S2");
-    wire("X1", "1", "F1", "1");
-    wire("F1", "2", "T1", "P1");
-    wire("X2", "1", "F2", "1", "#2563eb");
-    wire("F2", "2", "T1", "P2", "#2563eb");
-    wire("T1", "S1", "Q1", "1");
-    wire("Q1", "2", "X3", "1");
-    wire("T1", "S2", "X4", "1", "#2563eb");
-    note(
-      "No transformer ratio, fault current, protection setting or medium-voltage rating is specified.",
-      20,
-      225,
-    );
-    note(
-      "Separate winding terminals do not imply galvanic continuity or a solved network.",
-      20,
-      237,
-    );
-    pageId = page("02 · Secondary protection documentation");
+  if (id === "substation" || id === "target-substation") {
+    if (id === "substation") {
+      note(
+        "ORIGINAL TRANSFORMER STATION · single-phase equivalent documentation",
+        20,
+        22,
+      );
+      note("Primary interfaces", 30, 51);
+      note("Transformer", 165, 51);
+      note("Secondary interfaces", 300, 51);
+      note("P1 · Incoming", 23, 78);
+      note("P2 · Incoming", 23, 168);
+      note("S1 · Outgoing", 352, 78);
+      note("S2 · Outgoing", 352, 168);
+      symbol("terminal", "X1", 35, 95, 0, "Incoming primary interface P1");
+      symbol("terminal", "X2", 35, 185, 0, "Incoming primary interface P2");
+      symbol(
+        "fuse",
+        "F1",
+        95,
+        95,
+        0,
+        "Primary protection interface; rating unspecified",
+      );
+      symbol(
+        "fuse",
+        "F2",
+        95,
+        185,
+        0,
+        "Primary protection interface; rating unspecified",
+      );
+      symbol(
+        "transformer-two-winding",
+        "T1",
+        190,
+        140,
+        0,
+        "Two-winding transformer; single-phase equivalent",
+      );
+      symbol("contact", "Q1", 285, 95, 0, "Secondary isolation interface");
+      symbol("terminal", "X3", 365, 95, 0, "Outgoing secondary S1");
+      symbol("terminal", "X4", 365, 185, 0, "Outgoing secondary S2");
+      wire("X1", "1", "F1", "1");
+      wire("F1", "2", "T1", "P1");
+      wire("X2", "1", "F2", "1", "#2563eb");
+      wire("F2", "2", "T1", "P2", "#2563eb");
+      wire("T1", "S1", "Q1", "1");
+      wire("Q1", "2", "X3", "1");
+      wire("T1", "S2", "X4", "1", "#2563eb");
+      note(
+        "No transformer ratio, fault current, protection setting or medium-voltage rating is specified.",
+        20,
+        225,
+      );
+      note(
+        "Separate winding terminals do not imply galvanic continuity or a solved network.",
+        20,
+        237,
+      );
+      pageId = page("02 · Secondary protection documentation");
+    } else {
+      note(
+        "INDUSTRY ENERGY SUBSTATION · three-phase interface drawing",
+        20,
+        22,
+      );
+      note("20 kV incoming supply", 22, 48);
+      note("Primary switching and protection", 80, 48);
+      note("T01 · 630 kVA · 20 / 0.4 kV design basis", 158, 48);
+      note("Secondary switching", 270, 48);
+      note("0.4 kV outgoing interfaces", 337, 48);
+      const phases = [
+        {
+          input: "L1",
+          fuse: "F1",
+          primary: "H1",
+          secondary: "X1",
+          breakerIn: "L1_in",
+          breakerOut: "L1_out",
+          output: "X11",
+          y: 100,
+          color: "#d02030",
+        },
+        {
+          input: "L2",
+          fuse: "F2",
+          primary: "H2",
+          secondary: "X2",
+          breakerIn: "L2_in",
+          breakerOut: "L2_out",
+          output: "X12",
+          y: 145,
+          color: "#d4a017",
+        },
+        {
+          input: "L3",
+          fuse: "F3",
+          primary: "H3",
+          secondary: "X3",
+          breakerIn: "L3_in",
+          breakerOut: "L3_out",
+          output: "X13",
+          y: 190,
+          color: "#2563eb",
+        },
+      ] as const;
+      for (const phase of phases) {
+        note(phase.input, 22, phase.y - 10);
+        symbol(
+          "terminal",
+          `X${phase.input.slice(-1)}`,
+          35,
+          phase.y,
+          0,
+          `Incoming ${phase.input} phase`,
+        );
+        symbol(
+          "fuse",
+          phase.fuse,
+          95,
+          phase.y,
+          0,
+          `${phase.input} phase protection interface; rating unspecified`,
+        );
+      }
+      const transformerDefinitionId = crypto.randomUUID();
+      p = createCustomSymbol(p, {
+        id: transformerDefinitionId,
+        name: "Three-phase transformer interface",
+        category: "custom",
+        glyph: "box",
+        widthMm: 64,
+        heightMm: 76,
+        pins: [
+          { id: "H1", position: { x: -32, y: -24 }, kind: "power" },
+          { id: "H2", position: { x: -32, y: 0 }, kind: "power" },
+          { id: "H3", position: { x: -32, y: 24 }, kind: "power" },
+          { id: "X1", position: { x: 32, y: -24 }, kind: "power" },
+          { id: "X2", position: { x: 32, y: 0 }, kind: "power" },
+          { id: "X3", position: { x: 32, y: 24 }, kind: "power" },
+        ],
+        artwork: [
+          { kind: "circle", center: { x: -8, y: 0 }, radiusMm: 15 },
+          { kind: "circle", center: { x: 8, y: 0 }, radiusMm: 15 },
+        ],
+      });
+      const transformerInstanceId = place(
+        p,
+        pageId,
+        p.layers.find((layer) => layer.pageId === pageId)!.id,
+        "custom",
+        { x: 190, y: 145 },
+        0,
+        transformerDefinitionId,
+      );
+      const transformerInstance = p.symbolInstances.find(
+        (item) => item.id === transformerInstanceId,
+      )!;
+      const transformerDevice = p.devices.find(
+        (item) => item.id === transformerInstance.deviceId,
+      )!;
+      transformerDevice.reference = "T01";
+      transformerDevice.name =
+        "Three-phase transformer · scenario design basis 630 kVA, 20 / 0.4 kV";
+      transformerInstance.name = "T01";
+      symbol(
+        "isolator-three-pole-pe",
+        "Q1",
+        300,
+        145,
+        0,
+        "Three-pole secondary isolation interface; device rating unspecified",
+      );
+      for (const phase of phases) {
+        symbol(
+          "terminal",
+          phase.output,
+          380,
+          phase.y,
+          0,
+          `Outgoing ${phase.input} phase interface`,
+        );
+        wire(`X${phase.input.slice(-1)}`, "1", phase.fuse, "1", phase.color);
+        wire(phase.fuse, "2", "T01", phase.primary, phase.color);
+        wire("T01", phase.secondary, "Q1", phase.breakerIn, phase.color);
+        wire("Q1", phase.breakerOut, phase.output, "1", phase.color);
+      }
+      note(
+        "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
+        20,
+        235,
+      );
+      pageId = page("02 · Secondary protection documentation");
+    }
     note(
       "PROTECTION AND METERING · interfaces for engineering completion",
       20,
@@ -271,7 +412,8 @@ export function buildExample(id: ExampleId): Project {
     note("I−", 66, 188);
     note("Auxiliary common", 340, 175);
     symbol("terminal", "X5", 35, 75, 0, "Auxiliary supply positive");
-    symbol("fuse", "F3", 95, 75);
+    const auxiliaryFuseReference = id === "target-substation" ? "F4" : "F3";
+    symbol("fuse", auxiliaryFuseReference, 95, 75);
     symbol("protection-relay-trip", "P1", 190, 105);
     symbol(
       "coil",
@@ -284,8 +426,8 @@ export function buildExample(id: ExampleId): Project {
     symbol("terminal", "X6", 365, 155, 0, "Auxiliary supply common");
     symbol("terminal", "X7", 80, 145, 0, "Measurement I+ interface");
     symbol("terminal", "X8", 80, 190, 0, "Measurement I- interface");
-    wire("X5", "1", "F3", "1");
-    wire("F3", "2", "P1", "supply");
+    wire("X5", "1", auxiliaryFuseReference, "1");
+    wire(auxiliaryFuseReference, "2", "P1", "supply");
     wire("X5", "1", "P1", "trip_common");
     wire("P1", "trip_NO", "Y1", "A1");
     wire("Y1", "A2", "X6", "1", "#2563eb");
@@ -297,7 +439,93 @@ export function buildExample(id: ExampleId): Project {
       20,
       230,
     );
-    cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
+    if (id === "substation")
+      cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
+    if (id === "target-substation") {
+      const relay = p.devices.find((device) => device.reference === "P1")!;
+      const relayPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: relayPartId,
+        name: "SIPROTEC 5 7SJ82 standard variant",
+        manufacturer: "Siemens",
+        partNumber: "P1J122728",
+        sourceUrl:
+          "https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728",
+        ratings: {},
+      });
+      relay.partId = relayPartId;
+
+      pageId = page("03 · Control and communications");
+      note(
+        "CONTROL SYSTEM · generic interface symbol; verify terminal assignments against the selected device documentation",
+        20,
+        22,
+      );
+      note(
+        "Three-phase design basis: 20 kV line-to-line, 630 kVA transformer, 0.95 power factor",
+        20,
+        42,
+      );
+      note(
+        "The 18.19 A primary current is calculated from the stated three-phase design basis. This example is not a protection-coordination or compliance assessment.",
+        20,
+        54,
+      );
+      const cpuModule = createPlcModule(p, {
+        kind: "cpu",
+        pageId,
+        reference: "PLC1",
+        name: "WAGO PFC200 controller · generic interface symbol",
+      });
+      p = cpuModule;
+      const cpu = p.devices.find((device) => device.reference === "PLC1")!;
+      const cpuPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: cpuPartId,
+        name: "PFC200 Controller, 2 ETH RS, 4G",
+        manufacturer: "WAGO",
+        partNumber: "750-8217",
+        sourceUrl:
+          "https://www.wago.com/us/products/automation-technology/plcs/pfc-200-controllers",
+        ratings: {},
+      });
+      cpu.partId = cpuPartId;
+      const cpuInstance = p.symbolInstances.find(
+        (symbol) => symbol.deviceId === cpu.id,
+      )!;
+      cpuInstance.position = { x: 220, y: 142 };
+      symbol(
+        "terminal",
+        "X24",
+        80,
+        114,
+        0,
+        "External 24 VDC control supply input; field supply design input",
+      );
+      symbol("terminal", "X0", 80, 170, 0, "External control return input");
+      wire("X24", "1", "PLC1", "supply");
+      wire("X0", "1", "PLC1", "common", "#2563eb");
+
+      const loadResult = calculate(
+        "three-phase-power",
+        { voltage: 20, current: 18.19, powerFactor: 0.95 },
+        { voltage: "kV", current: "A", powerFactor: "1" },
+        [
+          "Scenario basis from the supplied target interface: 20 kV, 630 kVA, cosφ 0.95. Current is rounded to 18.19 A; the calculation is an estimate, not a protection setting.",
+        ],
+      );
+      p.calculations.push(
+        calculationToRecord(
+          loadResult,
+          "target-substation-load",
+          "20 kV transformer primary load estimate",
+        ),
+      );
+      cabinet(
+        ["P1", "F4", "Y1", "X5", "X6", "X7", "X8", "PLC1"],
+        "UTST_Cabinet_01 · manually dimensioned placement envelopes",
+      );
+    }
   } else if (id === "photovoltaic") {
     note(
       "ORIGINAL EDUCATIONAL PV SYSTEM · single-phase conversion topology only",

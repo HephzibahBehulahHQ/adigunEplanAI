@@ -53,7 +53,8 @@ for (const example of examples) {
       assert.ok(panelGeometryObj(p, enclosure.id).includes("\nv "));
     }
     assert.ok(p.equipment3d.every((item) => item.dimensionSource === "manual"));
-    assert.equal(p.manufacturerParts.length, 0);
+    if (example.id !== "target-substation")
+      assert.equal(p.manufacturerParts.length, 0);
     const second = buildExample(example.id);
     assert.notEqual(second.id, p.id);
     assert.ok(
@@ -63,6 +64,32 @@ for (const example of examples) {
     );
   });
 }
+
+test("target substation opens with sourced BOM parts, PLC interface, and saved three-phase load estimate", () => {
+  const p = buildExample("target-substation");
+  assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
+  assert.equal(p.pages.length, 3);
+  assert.equal(p.devices.length, 21);
+  assert.equal(p.wires.length, 22);
+  assert.ok(p.plcModules.some((module) => module.moduleKind === "cpu"));
+  assert.deepEqual(
+    p.manufacturerParts
+      .map(({ manufacturer, partNumber }) => ({ manufacturer, partNumber }))
+      .sort((a, b) => a.partNumber.localeCompare(b.partNumber)),
+    [
+      { manufacturer: "WAGO", partNumber: "750-8217" },
+      { manufacturer: "Siemens", partNumber: "P1J122728" },
+    ],
+  );
+  assert.ok(
+    p.manufacturerParts.every((part) => part.sourceUrl?.startsWith("https://")),
+  );
+  assert.equal(p.calculations.length, 1);
+  assert.equal(p.calculations[0].kind, "three-phase-power");
+  assert.equal(p.calculations[0].inputs.voltage, 20);
+  assert.equal(p.calculations[0].inputs.current, 18.19);
+  assert.deepEqual(parseProject(serializeProject(p)).project, p);
+});
 
 test("substation documents separate transformer winding nets and secondary trip interface", () => {
   const p = buildExample("substation");
