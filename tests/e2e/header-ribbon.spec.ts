@@ -5,7 +5,7 @@ test("target header and one Home ribbon remain ordered and accessible at desktop
   page,
 }, testInfo) => {
   await page.goto("/");
-  for (const width of [1857, 1280, 390]) {
+  for (const width of [1857, 1672, 1280, 390]) {
     await page.setViewportSize({ width, height: 1000 });
     await expect(page.locator(".workbench-header")).toContainText(
       "AdigunEplanAI",
@@ -38,6 +38,12 @@ test("target header and one Home ribbon remain ordered and accessible at desktop
       expect(layout.actions[i].x).toBeGreaterThanOrEqual(
         layout.actions[i - 1].right + 4,
       );
+    if (width >= 1672) {
+      const ribbon = page.locator('.ribbon[data-tab="home"]');
+      expect(
+        await ribbon.evaluate((element) => element.scrollWidth),
+      ).toBeLessThanOrEqual(width);
+    }
     if (width === 1857) {
       const ribbon = page.locator('.ribbon[data-tab="home"]');
       await expect(ribbon.locator("button[data-command]")).toHaveText([

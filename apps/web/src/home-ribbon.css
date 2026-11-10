@@ -79,7 +79,7 @@
 }
 .home-command-groups {
   display: flex;
-  flex: 1 0 1310px;
+  flex: 1 0 1250px;
   align-items: stretch;
   gap: 0;
 }
@@ -87,7 +87,7 @@
   display: flex;
   flex: 1 0 auto;
   border-left: 1px solid var(--line);
-  padding: 0 6px;
+  padding: 0 4px;
   min-width: 0;
 }
 .home-group.home-library {
