@@ -249,6 +249,8 @@
   "overload-relay-nc": "Three-phase thermal overload with NC auxiliary",
   "digital-input-four": "Four-channel digital input interface",
   "digital-output-four": "Four-channel digital output interface",
+  "digital-input-sixteen": "16-channel digital input interface",
+  "digital-output-eight": "8-channel digital output interface",
   "analog-input-two": "Two-channel differential analog input interface",
   "analog-output-two": "Two-channel differential analog output interface",
   "busbar-four-taps": "Common-potential busbar with four taps",

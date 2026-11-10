@@ -249,6 +249,8 @@
   "overload-relay-nc": "Dreiphasiges thermisches Überlastrelais mit Öffner",
   "digital-input-four": "Vierkanal-Digitaleingangsschnittstelle",
   "digital-output-four": "Vierkanal-Digitalausgangsschnittstelle",
+  "digital-input-sixteen": "Digitaleingangsschnittstelle mit 16 Kanälen",
+  "digital-output-eight": "Digitalausgangsschnittstelle mit 8 Kanälen",
   "analog-input-two": "Zweikanal-Differenz-Analogeingangsschnittstelle",
   "analog-output-two": "Zweikanal-Differenz-Analogausgangsschnittstelle",
   "busbar-four-taps": "Sammelschiene mit vier potentialgleichen Abgriffen",

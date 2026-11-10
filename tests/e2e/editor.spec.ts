@@ -1084,7 +1084,11 @@ for (const [id, query, channel] of [
       .filter({ hasText: /^Engineering symbols$/ })
       .click();
     await page.getByLabel("Search symbols", { exact: true }).fill(query);
-    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .locator("li")
+      .filter({ has: page.locator(`[data-library-preview="${id}"]`) })
+      .getByRole("button")
+      .click();
     await page
       .getByRole("combobox", { name: "Custom symbols", exact: true })
       .selectOption(`library-${id}`);
