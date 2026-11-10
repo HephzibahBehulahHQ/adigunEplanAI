@@ -874,6 +874,40 @@ button:disabled {
 .ribbon-command span {
   text-align: center;
 }
+.ribbon-command-group {
+  display: flex;
+  flex: none;
+  border-left: 1px solid var(--line);
+  padding-left: 4px;
+}
+.ribbon[data-tab="home"] {
+  gap: 4px;
+}
+.ribbon[data-tab="home"] .native-tools {
+  max-width: none;
+  padding: 0;
+  gap: 2px;
+  border: 0;
+}
+.ribbon[data-tab="home"] .native-tools > button:has(svg),
+.ribbon[data-tab="home"] .ribbon-command {
+  width: 56px;
+  min-width: 56px;
+  max-width: 56px;
+  font-size: 0.65rem;
+  white-space: normal;
+  padding: 3px;
+}
+.ribbon[data-tab="home"] .ribbon-command-groups {
+  flex: none;
+  flex-wrap: nowrap;
+}
+.ribbon[data-tab="home"] .ribbon-example-button {
+  order: 3;
+  flex: none;
+  max-width: 80px;
+  white-space: normal;
+}
 .navigator-pages button[aria-current="page"] {
   border-color: var(--cyan);
   background: var(--hover);

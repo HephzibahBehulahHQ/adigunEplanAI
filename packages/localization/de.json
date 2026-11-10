@@ -1159,5 +1159,8 @@
   "navigatorBuildings": "Gebäude und Etagen",
   "navigatorPanels": "Schaltschrankaufbauten",
   "navigatorLimit": "Die ersten 100 Treffer werden angezeigt. Für weitere Treffer den Filter eingrenzen.",
-  "activeEditorTool": "Aktives Werkzeug"
+  "activeEditorTool": "Aktives Werkzeug",
+  "saveAll": "Alle speichern",
+  "closeProject": "Projekt schließen",
+  "print": "Drucken"
 }

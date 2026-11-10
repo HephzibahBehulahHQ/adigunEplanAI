@@ -134,3 +134,13 @@ Schema 15 adds native-device floor placements, optional room assignment with anc
 - Local check passed: 334 unit/tooling tests, types, lint, formatting, licenses, notices and build. Automated Chromium cannot launch inside the current sandbox; hosted browser CI is still required.
 - Visual parity is NOT accepted. Keep the integration PR draft; no merge, runtime publication or deployment until visual and CI gates pass. The target’s manufacturer cabinet appearance and full toolbar/BOT layout remain unfinished.
 - Local-only Playwright configuration, dependencies, build output and scratch logs are excluded from commits.
+
+## 2026-11-10 — target sidebar and grouped ribbon
+
+Desktop BOT defaults to the fourth docked column; Float/Dock, minimize, maximize and existing read-only native tools remain usable. Mobile starts with the launcher. Saved owner preferences remain scoped and are not overwritten. The bottom diagnostic/calculation/BOM/report row begins after the left navigator, matching the supplied target structure.
+
+Home now groups real editing, wiring, library, checking and document actions in one scrollable row. Added native schematic Print/PDF, Save all, and Close project without deleting saved projects; the navigator reopens a closed project. Library commands activate the actual Library tab. Alignment commands reuse the native transaction/history path. Four language dictionaries include the new labels.
+
+Validation: npm run check passed (334 unit/tooling tests, types, lint, formatting, dependency licenses, notices, build). Manual browser checks verified dock/float, library selection, close/reload/reopen, one-row desktop ribbon, and viewport bounds at 1672 and 375 pixels. Previous hosted CI passed 138 browser tests and failed two compact-layout assumptions; those regressions were updated to exercise the visible Insert command and scrollable calculation pane. Updated hosted CI is still required, including native Print/PDF and saved-project preservation coverage.
+
+Visual acceptance remains open: manufacturer-level cabinet geometry, remaining target ribbon actions and full header/inspector detail are not certified as matching. No merge or deployment is authorized by these partial results. Local-only playwright.local.config.ts, dependency/build caches and scratch logs remain excluded.

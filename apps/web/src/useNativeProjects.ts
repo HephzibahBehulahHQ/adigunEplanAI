@@ -274,6 +274,16 @@ export function useNativeProjects(ownerId: string | null = null) {
     save() {
       persist(state.library);
     },
+    close() {
+      // Keep every project and its history; closing only clears the active workspace.
+      if (!active.current || !state.saved || state.corrupt) return false;
+      persist({ ...state.library, activeProjectId: null });
+      setSelection({ projectId: null, symbols: [], deviceId: null });
+      setSelectedPageId(null);
+      setEditorCommand(null);
+      setView("schematic");
+      return true;
+    },
     importText(text: string, confirmReplace: () => boolean) {
       if (!active.current) return false;
       try {

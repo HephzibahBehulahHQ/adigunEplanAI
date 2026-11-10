@@ -5,7 +5,12 @@ import {
   reportCsv,
 } from "../../../packages/electrical-model/project-reports.ts";
 import { LazyPanelBoundary } from "./LazyPanelBoundary";
-import { useRef, useState, lazy, Suspense } from "react";
+import { CommandIcon } from "./WorkspaceRibbon";
+import {
+  schematicSvg,
+  printDocument,
+} from "../../../packages/reporting/drawings.ts";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { exampleCatalog } from "../../../packages/example-projects/catalog.ts";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -49,6 +54,7 @@ type Props = { native: NativeProjects; t: (key: MessageKey) => string };
 export function ProjectTools({ native, t }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const file = useRef<HTMLInputElement>(null);
+  const [printError, setPrintError] = useState(false);
   return (
     <div className="native-tools">
       <button
@@ -118,6 +124,49 @@ export function ProjectTools({ native, t }: Props) {
               <path d="M3 3h15l3 3v15H3z M7 3v6h10V3 M7 21v-7h10v7" />
             </svg>
             {t("save")}
+          </button>
+          <button onClick={() => native.save()} title={t("saveAll")}>
+            <CommandIcon kind="saveAll" />
+            {t("saveAll")}
+          </button>
+          <button
+            disabled={!native.saved}
+            onClick={() => native.close()}
+            title={t("closeProject")}
+          >
+            <CommandIcon kind="close" />
+            {t("closeProject")}
+          </button>
+          <button
+            disabled={!native.project.pages.length}
+            onClick={() => {
+              const project = native.project;
+              const page =
+                project?.pages.find((p) => p.id === native.selectedPageId) ??
+                project?.pages[0];
+              if (!project || !page) return;
+              const popup = window.open("", "_blank");
+              setPrintError(!popup);
+              if (!popup) return;
+              popup.document.open();
+              popup.document.write(
+                printDocument(
+                  `${project.name} · ${page.name}`,
+                  schematicSvg(project, page.id),
+                  page,
+                ),
+              );
+              popup.document.close();
+              void popup.document.fonts.ready.then(() => {
+                if (!popup.closed) {
+                  popup.focus();
+                  popup.print();
+                }
+              });
+            }}
+          >
+            <CommandIcon kind="print" />
+            {t("print")}
           </button>
           <button
             onClick={() => {
@@ -197,6 +246,7 @@ export function ProjectTools({ native, t }: Props) {
           {t("downloadRecovery")}
         </button>
       )}
+      {printError && <p role="alert">{t("reportExportError")}</p>}
       {native.corrupt && (
         <button
           onClick={() => {
@@ -240,11 +290,18 @@ export function ProjectTools({ native, t }: Props) {
     </div>
   );
 }
-export function ProjectNavigator({ native, t }: Props) {
+export function ProjectNavigator({
+  native,
+  t,
+  librarySignal = 0,
+}: Props & { librarySignal?: number }) {
   const [filter, setFilter] = useState("");
   const [pane, setPane] = useState<
     "project" | "library" | "examples" | "search"
   >("project");
+  useEffect(() => {
+    if (librarySignal) setPane("library");
+  }, [librarySignal]);
   const filterInput = useRef<HTMLInputElement>(null);
   const project = native.project;
   const query = filter.normalize("NFKC").toLocaleLowerCase().trim();
@@ -312,7 +369,28 @@ export function ProjectNavigator({ native, t }: Props) {
           </Suspense>
         </LazyPanelBoundary>
       ) : !project ? (
-        <p className="empty-hint">{t("noProject")}</p>
+        <>
+          <p className="empty-hint">{t("noProject")}</p>
+          {!!native.projects.length && (
+            <label>
+              {t("chooseProject")}
+              <select
+                aria-label={t("chooseProject")}
+                value=""
+                onChange={(event) => native.select(event.target.value)}
+              >
+                <option value="" disabled>
+                  {t("chooseProject")}
+                </option>
+                {native.projects.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+        </>
       ) : (
         <div className="navigator-pane" role="tabpanel">
           {pane === "project" && (

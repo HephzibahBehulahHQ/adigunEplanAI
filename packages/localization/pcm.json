@@ -1159,5 +1159,8 @@
   "navigatorBuildings": "Buildings and floors",
   "navigatorPanels": "Cabinet layouts",
   "navigatorLimit": "Na first 100 matches we show. Narrow the filter to find more.",
-  "activeEditorTool": "Tool wey dey active"
+  "activeEditorTool": "Tool wey dey active",
+  "saveAll": "Save all",
+  "closeProject": "Close project",
+  "print": "Print"
 }

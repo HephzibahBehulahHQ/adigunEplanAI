@@ -1,5 +1,12 @@
 import { test, expect } from "@playwright/test";
 const key = "adiguneplanai.bot.window.v1.guest";
+test.beforeEach(async ({ page }) => {
+  // Exercise the optional floating mode independently of the default desktop dock.
+  await page.addInitScript((key) => {
+    if (!localStorage.getItem(key))
+      localStorage.setItem(key, JSON.stringify({ open: false, docked: false }));
+  }, key);
+});
 async function loadExample(
   page: import("@playwright/test").Page,
   name = "Transformer station documentation",
@@ -192,6 +199,7 @@ for (const language of ["en", "de", "yo", "pcm"]) {
           key,
           JSON.stringify({
             open: true,
+            docked: false,
             x: 1500,
             y: 1200,
             width: 900,

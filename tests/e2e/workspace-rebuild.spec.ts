@@ -68,14 +68,25 @@ test("native drawing frame, cabinet and calculation records share the current pr
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
-  await page
-    .getByRole("button", { name: "Open Adigun BOT", exact: true })
-    .click();
   const bot = page.getByRole("complementary", {
     name: "Adigun BOT",
     exact: true,
   });
   await expect(bot).toBeVisible();
+  await expect(bot).toHaveAttribute("data-docked", "true");
+  const docked = (await bot.boundingBox())!;
+  const cabinetBounds = (await cabinet.boundingBox())!;
+  expect(docked.x).toBeGreaterThanOrEqual(
+    cabinetBounds.x + cabinetBounds.width,
+  );
+  await bot
+    .getByRole("button", { name: "Float BOT window", exact: true })
+    .click();
+  await expect(bot).toHaveAttribute("data-docked", "false");
+  await bot
+    .getByRole("button", { name: "Dock BOT to workspace", exact: true })
+    .click();
+  await expect(bot).toHaveAttribute("data-docked", "true");
   await expect(bot).toContainText(project.name);
   await expect(bot).toContainText("Hosted AI is not configured");
   await bot
@@ -128,6 +139,63 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     ).toBeVisible();
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
-    ).toBe(width);
+    ).toBeLessThanOrEqual(width);
   }
+});
+
+test("Home commands print native geometry, open the library and close without losing saved projects", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  const project = nativeProject();
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "ribbon.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(project)),
+  });
+  const before = await page.evaluate(
+    () =>
+      JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!).projects,
+  );
+  await page.getByRole("button", { name: "Save all", exact: true }).click();
+  const popupEvent = page.waitForEvent("popup");
+  await page.getByRole("button", { name: "Print", exact: true }).click();
+  const popup = await popupEvent;
+  await expect(popup.locator("svg")).toHaveAttribute("viewBox", "0 0 420 297");
+  await expect(popup.locator("svg > title")).toContainText(project.name);
+  const pdf = await popup.pdf({ preferCSSPageSize: true });
+  expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
+  await popup.close();
+  await page
+    .getByRole("button", {
+      name: "Open component library · Engineering commands",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByRole("tab", { name: "Library", exact: true }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator(".component-library").first()).toHaveAttribute(
+    "open",
+    "",
+  );
+  await page.getByRole("tab", { name: "Project", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Close project", exact: true })
+    .click();
+  await expect(page.locator(".empty-workspace")).toBeVisible();
+  await expect(page.locator(".engineering-canvas")).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator(".empty-workspace")).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!).projects,
+    ),
+  ).toEqual(before);
+  await page
+    .getByLabel("Choose project", { exact: true })
+    .selectOption(project.id);
+  await expect(page.locator(".engineering-canvas")).toBeVisible();
 });

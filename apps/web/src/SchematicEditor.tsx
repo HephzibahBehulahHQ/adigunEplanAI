@@ -437,6 +437,11 @@ export function SchematicEditor({
       edit((p) => rotate(p, selected));
     else if (action === "mirror" && selected.length)
       edit((p) => mirror(p, selected));
+    else if (
+      (action === "alignX" || action === "alignY") &&
+      selected.length > 1
+    )
+      edit((p) => align(p, selected, action === "alignX" ? "x" : "y"));
     else if (action === "delete") deleteSelected();
     else if (action === "duplicate") duplicateSelected();
     else if (action === "paste") pasteClipboard();

@@ -465,7 +465,14 @@ test("desktop engineering workspace stays within the viewport", async ({
 }) => {
   await page.setViewportSize({ width: 1672, height: 941 });
   await create(page);
-  await place(page, "resistor", 80, 80);
+  await page.getByRole("button", { name: "Insert menu", exact: true }).click();
+  await page
+    .getByRole("button", {
+      name: "Resistor · Engineering commands",
+      exact: true,
+    })
+    .click();
+  await clickWorld(page, 80, 80);
   await expect(
     page.getByRole("form", { name: "Properties", exact: true }),
   ).toBeVisible();
