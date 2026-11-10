@@ -1,3 +1,4 @@
+import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 const cases = [
@@ -93,12 +94,10 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
         .selectOption("terminal");
       await click(240, 100);
       await page.getByRole("button", { name: "Wire", exact: true }).click();
-      await page
-        .getByRole("button", { name: `U1:${endpoint}`, exact: true })
-        .click();
-      await page.getByRole("button", { name: "X1:1", exact: true }).click();
+      const fromPinId = await clickWirePin(page, `U1:${endpoint}`);
+      const toPinId = await clickWirePin(page, "X1:1");
       data = await project();
-      expect(data.wires).toHaveLength(1);
+      expect(data.wires).toMatchObject([{ fromPinId, toPinId }]);
       expect(data.nets).toHaveLength(nodes);
     } else {
       expect(data.devices[0].reference).toBe("ME1");

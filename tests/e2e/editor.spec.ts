@@ -1,3 +1,4 @@
+import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
@@ -421,15 +422,17 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   });
   const canvas = page.locator(".engineering-canvas");
   await canvas.scrollIntoViewIfNeeded();
-  const [left, right] = await canvas.evaluate((element) => {
-    const matrix = (element as SVGSVGElement).getScreenCTM()!;
-    return [new DOMPoint(99, 85), new DOMPoint(120, 115)].map((point) => {
-      const { x, y } = point.matrixTransform(matrix);
-      return { x, y };
+  const marqueePoints = () =>
+    canvas.evaluate((element) => {
+      const matrix = (element as SVGSVGElement).getScreenCTM()!;
+      return [new DOMPoint(99, 85), new DOMPoint(120, 115)].map((point) => {
+        const { x, y } = point.matrixTransform(matrix);
+        return { x, y };
+      });
     });
-  });
   const before = await project(page);
   const coordinates = page.locator(".status-coordinates");
+  const [left] = await marqueePoints();
   await page.mouse.move(left.x, left.y);
   await expect(coordinates).toHaveText(/^X \d+\.\d{2} · Y \d+\.\d{2} mm$/);
   const [readX, readY] = (await coordinates.innerText())
@@ -439,8 +442,12 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   expect(Math.abs(readY - 85)).toBeLessThan(1);
   await page.locator(".app-header").hover();
   await expect(coordinates).toBeEmpty();
+  await canvas.scrollIntoViewIfNeeded();
+  const [marqueeLeft, marqueeRight] = await marqueePoints();
   for (const crossing of [false, true]) {
-    const [start, end] = crossing ? [right, left] : [left, right];
+    const [start, end] = crossing
+      ? [marqueeRight, marqueeLeft]
+      : [marqueeLeft, marqueeRight];
     await page.mouse.move(start.x, start.y);
     await page.mouse.down();
     await page.mouse.move(end.x, end.y);
@@ -1085,12 +1092,10 @@ for (const [id, query, channel] of [
     expect((await project(page)).terminals).toHaveLength(6);
     await place(page, "resistor", 150, 80);
     await page.getByRole("button", { name: "Wire", exact: true }).click();
-    await page
-      .getByRole("button", { name: `U1:${channel}`, exact: true })
-      .click();
-    await page.getByRole("button", { name: "R1:1", exact: true }).click();
+    const fromPinId = await clickWirePin(page, `U1:${channel}`);
+    const toPinId = await clickWirePin(page, "R1:1");
     const data = await project(page);
-    expect(data.wires).toHaveLength(1);
+    expect(data.wires).toMatchObject([{ fromPinId, toPinId }]);
     expect(data.nets).toHaveLength(7);
     await reloadAndReopenProject(page);
     expect((await project(page)).wires).toEqual(data.wires);
