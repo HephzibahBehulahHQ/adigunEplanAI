@@ -4,8 +4,8 @@ import { readFile } from "node:fs/promises";
 const cases = [
   [
     "Industry energy substation · 20 kV / 630 kVA",
-    21,
     22,
+    25,
     ".engineering-canvas",
   ],
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],

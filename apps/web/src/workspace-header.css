@@ -1,17 +1,17 @@
 .app-header.workbench-header {
   display: grid;
-  grid-template-columns: 254px minmax(280px, 1fr) minmax(260px, 520px) auto;
+  grid-template-columns: 210px minmax(280px, 1fr) minmax(260px, 520px) auto;
   align-items: center;
   gap: 14px;
-  min-height: 66px;
-  padding: 4px 12px 4px 6px;
+  min-height: 52px;
+  padding: 2px 12px 2px 6px;
   background: linear-gradient(112deg, #040d15, #071b2b 58%, #101e30);
   border-bottom: 1px solid #306076;
   color: #edf3fa;
 }
 .corporate-mark {
-  width: 254px;
-  height: 56px;
+  width: 210px;
+  height: 46px;
   overflow: hidden;
 }
 .corporate-mark svg {
@@ -30,18 +30,18 @@
   gap: 12px;
 }
 .product-heading strong {
-  font-size: 27px;
+  font-size: 23px;
   letter-spacing: -0.6px;
   line-height: 1.1;
 }
 .product-version {
-  font-size: 12px;
+  font-size: 10px;
   white-space: nowrap;
 }
 .product-heading small {
   display: block;
-  font-size: 11px;
-  margin-top: 3px;
+  font-size: 10px;
+  margin-top: 1px;
   line-height: 1.2;
 }
 .project-save-chip {
@@ -49,7 +49,7 @@
   align-items: center;
   gap: 18px;
   min-width: 0;
-  padding: 10px 12px;
+  padding: 5px 10px;
   border: 1px solid #21445b;
   border-radius: 7px;
   background: #051725;
@@ -102,7 +102,7 @@
   place-items: center;
   flex: 0 0 46px;
   width: 46px;
-  height: 36px;
+  height: 32px;
   padding: 6px;
   border: 0;
   border-radius: 4px;
@@ -131,7 +131,7 @@
   color: inherit;
   width: 245px;
   min-width: 0;
-  height: 54px;
+  height: 42px;
 }
 .profile-picture {
   position: relative;

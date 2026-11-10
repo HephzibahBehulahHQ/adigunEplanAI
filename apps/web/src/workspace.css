@@ -969,7 +969,7 @@ button:disabled {
 }
 .ribbon-tabs button {
   white-space: nowrap;
-  padding: 0.55rem 0.7rem;
+  padding: 0.35rem 0.7rem;
   font-size: 0.74rem;
 }
 .ribbon-command-groups {
@@ -1083,7 +1083,7 @@ button:disabled {
     flex-basis: 33px;
   }
   .ribbon {
-    min-height: 76px;
+    min-height: 70px;
     padding: 0.3rem 0.65rem;
     gap: 0.7rem;
   }
@@ -1243,11 +1243,11 @@ button:disabled {
     .engineering-layout:has(
       > .dock-bottom .calculations-panel .calculation-dock-summary
     ) {
-    grid-template-rows: minmax(0, 1fr) 210px;
+    grid-template-rows: minmax(0, 1fr) 195px;
   }
   .application[data-compact="true"]
     .dock-bottom:has(.calculations-panel .calculation-dock-summary) {
-    height: 210px;
+    height: 195px;
   }
   .application[data-compact="true"] .workspace-heading,
   .application[data-compact="true"] .compact-editor-tools,
