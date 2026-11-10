@@ -87,9 +87,14 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
       localStorage.getItem("adiguneplanai.projects.v1"),
     ),
   ).toBe(before);
-  await expect(
-    preview.locator(".panel-orientation-cube polygon"),
-  ).not.toHaveCount(0);
+  const cube = preview.locator(".panel-3d-stage > .panel-orientation-cube");
+  await expect(cube.locator("polygon")).not.toHaveCount(0);
+  const cubeBounds = (await cube.boundingBox())!;
+  const stageBounds = (await canvas.boundingBox())!;
+  expect(cubeBounds.y - stageBounds.y).toBeCloseTo(8, 0);
+  expect(
+    stageBounds.x + stageBounds.width - cubeBounds.x - cubeBounds.width,
+  ).toBeCloseTo(8, 0);
   await preview.getByRole("button", { name: "Front", exact: true }).click();
   await expect(preview.getByLabel("View yaw (°)")).toHaveValue("0");
   await expect(preview.getByLabel("View pitch (°)")).toHaveValue("0");

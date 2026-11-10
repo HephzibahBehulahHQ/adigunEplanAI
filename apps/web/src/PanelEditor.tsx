@@ -1398,6 +1398,25 @@ function PanelViews({
                 />
               ))}
           </svg>
+          <svg
+            className="panel-orientation-cube"
+            viewBox="-32 -32 64 64"
+            aria-hidden="true"
+          >
+            {orientationFaces.map((face) => (
+              <g key={face.side}>
+                <polygon
+                  points={face.points.map((v) => v.x + "," + v.y).join(" ")}
+                />
+                <text
+                  x={face.points.reduce((s, v) => s + v.x, 0) / 4}
+                  y={face.points.reduce((s, v) => s + v.y, 0) / 4}
+                >
+                  {["−X", "+X", "−Y", "+Y", "−Z", "+Z"][face.side]}
+                </text>
+              </g>
+            ))}
+          </svg>
         </div>
         <div
           className="panel-view-presets"
@@ -1426,25 +1445,6 @@ function PanelViews({
             </button>
           ))}
         </div>
-        <svg
-          className="panel-orientation-cube"
-          viewBox="-32 -32 64 64"
-          aria-hidden="true"
-        >
-          {orientationFaces.map((face) => (
-            <g key={face.side}>
-              <polygon
-                points={face.points.map((v) => v.x + "," + v.y).join(" ")}
-              />
-              <text
-                x={face.points.reduce((s, v) => s + v.x, 0) / 4}
-                y={face.points.reduce((s, v) => s + v.y, 0) / 4}
-              >
-                {["−X", "+X", "−Y", "+Y", "−Z", "+Z"][face.side]}
-              </text>
-            </g>
-          ))}
-        </svg>
         <div className="panel-fields">
           <label>
             {t("panelYaw")}

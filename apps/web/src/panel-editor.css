@@ -265,10 +265,10 @@
 .panel-views figure {
   position: relative;
 }
-.panel-views svg.panel-orientation-cube {
+.panel-3d-stage > .panel-orientation-cube {
   position: absolute;
-  right: 12px;
-  top: 90px;
+  z-index: 2;
+  inset: 8px 8px auto auto;
   width: 48px;
   height: 48px;
   pointer-events: none;
