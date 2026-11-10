@@ -61,11 +61,11 @@
   "branding": {
     "logoPolicy": "single-corporate-logo",
     "corporateLogo": {
-      "asset": "apps/web/src/assets/hephzibah-behulah-official.jpg",
+      "asset": "apps/web/src/assets/approved-header-reference.png",
       "status": "verified",
-      "source": "user-supplied official logo image",
+      "source": "Owner-supplied target header, 2026-11-10; only corporate region [6,12,254,56] rendered",
       "alt": "Hephzibah Behulah",
-      "sha256": "409c401be5189b80593797cbaf00a3a42a91ab8c0645e3648ff91205b47d4c95"
+      "sha256": "6d6d33bb7534d01cbff3133a3d63fc0893f1c51f36c8e66531bca95d02cb4ec4"
     },
     "header": {
       "productWordmark": true,

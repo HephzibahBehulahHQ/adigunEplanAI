@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
@@ -31,6 +32,8 @@ async function prepare(page: Page) {
       );
   }, project);
   await page.goto("/");
+  await expect(page.locator(".empty-workspace")).toBeVisible();
+  await page.getByTestId("project-picker").selectOption(project.id);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -100,7 +103,7 @@ test("emergency, fire, data and earthing equipment create native interfaces and 
       (t) => t.deviceId === data.id && t.kind === "signal",
     ),
   ).toHaveLength(9);
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect(await stored(page)).toEqual(saved);
 });
 
@@ -144,9 +147,13 @@ test("riser forms preserve exact coordinates, calculate only vertical geometry a
   expect(project.planRisers[0].position).toEqual({ x: 1012.5, y: 986.25 });
   expect(project.wires).toEqual(initial.wires);
   expect(project.cables).toEqual([]);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(row.locator("td").first()).toHaveText("Shaft R1");
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await expect(row.locator("td").first()).toHaveText("Shaft R1 renamed");
   await page
     .getByRole("combobox", { name: "Floor name", exact: true })
@@ -168,7 +175,7 @@ test("riser forms preserve exact coordinates, calculate only vertical geometry a
     page.getByRole("button", { name: "Remove riser", exact: true }),
   ).toBeDisabled();
   project = await stored(page);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -180,4 +187,18 @@ test("riser forms preserve exact coordinates, calculate only vertical geometry a
     form.getByRole("button", { name: "Save riser", exact: true }),
   ).toBeDisabled();
   expect(await stored(page)).toEqual(project);
+});
+
+// Retain coverage of the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem(key) || "{}"),
+        compact: false,
+      }),
+    );
+  });
 });

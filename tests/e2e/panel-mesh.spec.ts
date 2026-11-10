@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
@@ -164,9 +165,13 @@ for (const encoding of ["ascii", "binary"] as const) {
     );
     await expect(front).toHaveAttribute("x", "15");
     await expect(front).toHaveAttribute("width", "30");
-    await page.getByRole("button", { name: "Undo", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Undo · Header", exact: true })
+      .click();
     await expect(front).toHaveAttribute("width", "20");
-    await page.getByRole("button", { name: "Redo", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Redo · Header", exact: true })
+      .click();
     const download = page.waitForEvent("download");
     await panel
       .getByRole("button", { name: "Download panel geometry OBJ", exact: true })
@@ -179,7 +184,7 @@ for (const encoding of ["ascii", "binary"] as const) {
     expect(
       obj.split("\n").filter((line) => line.startsWith("f ")),
     ).toHaveLength(10);
-    await page.reload();
+    await reloadAndReopenProject(page);
     await page
       .getByRole("button", { name: "Panel design", exact: true })
       .click();
@@ -200,7 +205,9 @@ for (const encoding of ["ascii", "binary"] as const) {
       .getByRole("button", { name: "Use selected model", exact: true })
       .click();
     await expect(canvas).toHaveAttribute("data-triangles", "8");
-    await page.getByRole("button", { name: "Undo", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Undo · Header", exact: true })
+      .click();
     await expect(canvas).toHaveAttribute("data-triangles", "16");
     await page.setViewportSize({ width: 390, height: 844 });
     expect(
@@ -216,3 +223,17 @@ for (const encoding of ["ascii", "binary"] as const) {
     expect(errors).toEqual([]);
   });
 }
+
+// Retain coverage of the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem(key) || "{}"),
+        compact: false,
+      }),
+    );
+  });
+});

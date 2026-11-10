@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
@@ -90,9 +91,13 @@ test("floor-first devices, board/circuit schedules and geometric routes survive 
   expect(project.symbolInstances).toHaveLength(4);
   expect(project.wires).toHaveLength(0);
   expect(project.manufacturerParts).toHaveLength(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(3);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(4);
   await page
     .getByLabel("Selected equipment", { exact: true })
@@ -189,9 +194,13 @@ test("floor-first devices, board/circuit schedules and geometric routes survive 
   await expect(
     page.getByRole("button", { name: "Remove circuit", exact: true }),
   ).toBeDisabled();
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-route-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-route-id]")).toHaveCount(1);
   await circuit.getByLabel("Active load (W): X1", { exact: true }).fill("1000");
   await circuit
@@ -215,7 +224,7 @@ test("floor-first devices, board/circuit schedules and geometric routes survive 
   expect(JSON.parse(await readFile((await download.path())!, "utf8"))).toEqual(
     project,
   );
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -307,7 +316,7 @@ test("floor equipment and routes reject invalid changes and respect locked/hidde
   await expect(page.locator("[data-plan-route-id]")).toHaveCount(0);
   await expect(page.locator("[data-route-schedule-id]")).toHaveCount(1);
   await expect(page.locator("[data-equipment-schedule-id]")).toHaveCount(1);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -325,6 +334,22 @@ test("floor equipment and routes reject invalid changes and respect locked/hidde
     .getByRole("button", { name: "Remove plan route", exact: true })
     .click();
   await expect(page.locator("[data-plan-route-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-route-id]")).toHaveCount(1);
+});
+
+// Retain coverage of the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem(key) || "{}"),
+        compact: false,
+      }),
+    );
+  });
 });

@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
@@ -247,9 +248,13 @@ test("native panel editing synchronizes front and 3D geometry, undo, diagnostics
   await expect(frontObject.locator("rect")).toHaveAttribute("x", "50");
   await panel.getByRole("button", { name: "Move right", exact: true }).click();
   await expect(frontObject.locator("rect")).toHaveAttribute("x", "55");
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(frontObject.locator("rect")).toHaveAttribute("x", "50");
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await panel
     .getByRole("button", { name: "Rotate selected object 90°", exact: true })
     .click();
@@ -296,7 +301,9 @@ test("native panel editing synchronizes front and 3D geometry, undo, diagnostics
   await expect(
     panel.getByText("Outside enclosure bounds: Xa", { exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   const svgEvent = page.waitForEvent("download");
   await panel
     .getByRole("button", { name: "Download panel layout SVG", exact: true })
@@ -312,7 +319,7 @@ test("native panel editing synchronizes front and 3D geometry, undo, diagnostics
   expect(obj.split("\n").filter((line) => line.startsWith("v "))).toHaveLength(
     16,
   );
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page.getByRole("button", { name: "Panel design", exact: true }).click();
   await expect(frontObject.locator("rect")).toHaveAttribute("x", "55");
   await expect(frontObject.locator("rect")).toHaveAttribute("width", "80");
@@ -495,7 +502,7 @@ test("face features, non-solid compartments, closed doors and the read-only dock
       localStorage.getItem("adiguneplanai.projects.v1"),
     ),
   ).toBe(before);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page.getByRole("button", { name: "Panel design", exact: true }).click();
   await expect(
     panel.locator(".panel-3d-view [data-panel-feature]"),
@@ -507,4 +514,18 @@ test("face features, non-solid compartments, closed doors and the read-only dock
     ),
   ).toBeVisible();
   expect(errors).toEqual([]);
+});
+
+// Retain coverage of the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem(key) || "{}"),
+        compact: false,
+      }),
+    );
+  });
 });

@@ -11,9 +11,11 @@ import type { MessageKey } from "../../../packages/localization";
 export function EngineeringSymbols({
   native,
   t,
+  onPlace,
 }: {
   native: NativeProjects;
   t: (key: MessageKey) => string;
+  onPlace?: (definitionId: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
@@ -97,7 +99,10 @@ export function EngineeringSymbols({
             </svg>
             <button
               disabled={!native.project}
-              onClick={() => native.update((p) => installSymbol(p, symbol.id))}
+              onClick={() => {
+                native.update((p) => installSymbol(p, symbol.id));
+                onPlace?.("library-" + symbol.id);
+              }}
             >
               {t("addSymbol")}: {t(symbol.id as MessageKey)}
             </button>

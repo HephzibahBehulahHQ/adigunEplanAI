@@ -1,5 +1,27 @@
 # Project status
 
+## 2026-11-10 header/ribbon increment
+
+Previous release: source PR #23 merged as `2260ffdc3bdbebf13286d074d1d628ee41bb16db`;
+runtime PR #24 merged as `a5fdd4e294fd07e865a4e2211c5d4b198ec84c51`. Pages run
+42776303785 and live verification 42776479457 passed: all 27 runtime hashes and
+21 canonical-domain workflows matched the source manifest.
+
+The current increment replaces the header with the owner-approved corporate mark,
+native project status and account utilities, and organizes Home into the target command
+groups. Cut and equal distribution use native history, geometry and connectivity.
+Placement, symbol installation, manufacturer catalogue access, structural validation,
+E-Check, BOM, view synchronization and themes invoke implemented paths. Examples
+remain in File and the navigator. Autosave/recovery is preserved. Startup now ignores the last active project; pagehide clears only the session pointer. Failed autosave installs a native leaving guard, and explicit close/new confirms unsaved changes. Closing/new resets selection, history and the viewport. Tests reopen saved projects explicitly after asserting a blank boot.
+
+Local validation: 346 unit/tooling checks, typecheck, lint, formatting, template,
+license/notices and build passed. Desktop visual inspection and native validation dialog
+were checked. The first hosted browser run found legacy control selectors, an ambiguous import label and German profile-badge overflow; these have been corrected. Hosted full browser and production checks remain release gates for this
+increment; CI and deployment receipts will be recorded in its PR. The local IAB clamps
+small viewport overrides, so genuine 390px coverage must come from hosted Chromium.
+Full workbench visual parity and the master-plan engineering/account/BOT/example gates
+remain open. No manufacturer geometry or cloud-save verification is implied by the shell.
+
 ## 2026-11-09 verified PV release and open acceptance
 
 Source `b43202a74aa7c19f48cd92f10cbff16cfe8d969e` (tree `19f012c195065095acf8b9d223fb748762055941`) passed hosted CI run 42623282605. Runtime deployment commit `7b94e649f2c4d2e6c15f768dd5ffd5d638e2804a` passed Pages run 42624237147 and exact-head CI run 42624237149. The package verified 107 runtime files and retained 105 earlier hashed assets. Live HTTPS provenance and hashes for the main bundle, example-library chunk and CSS matched. A production browser session opened the PV project with 9 devices, 8 wires, 2 pages and zero manufacturer-part claims. Local `npm run check` and all five example browser workflows passed.

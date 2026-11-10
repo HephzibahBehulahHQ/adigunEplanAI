@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 const key = "adiguneplanai.projects.v1";
@@ -49,7 +50,7 @@ test("custom native sheet dimensions display their actual size category", async 
     library.projects[0].pages[0].heightMm = 350;
     localStorage.setItem(storageKey, JSON.stringify(library));
   }, key);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page.locator(".editor-options summary").click();
   await expect(
     page.getByRole("combobox", { name: "Sheet size", exact: true }),
@@ -89,9 +90,11 @@ test("manual route edits persist and reset through native undo history", async (
     .getByRole("button", { name: "Restore automatic route", exact: true })
     .click();
   expect((await project(page)).wirePaths[0].routingMode).toBe("auto");
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).wirePaths[0].points).toEqual(manual);
-  await page.reload();
+  await reloadAndReopenProject(page);
   data = await project(page);
   expect(data.wirePaths[0].points).toEqual(manual);
   expect(data.wires).toHaveLength(1);
@@ -162,7 +165,7 @@ test("wire properties and shielded cable cores persist as native engineering met
     conductorIds: [data.conductors[0].id],
     shieldBondTerminalIds: [data.terminals[0].id],
   });
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect((await project(page)).cables).toEqual(data.cables);
   const panel = page.getByRole("region", { name: "Connectivity", exact: true });
   await panel
@@ -204,7 +207,9 @@ test("wire properties and shielded cable cores persist as native engineering met
     data.terminals[0].id,
     data.terminals[3].id,
   ]);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).terminalStrips).toHaveLength(0);
 });
 test("symbols create native terminals, connect through real pins and reroute after editing", async ({
@@ -247,8 +252,10 @@ test("symbols create native terminals, connect through real pins and reroute aft
       .rotation,
   ).toBe(90);
   expect(data.wires).toHaveLength(1);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
-  await page.reload();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
   data = await project(page);
   expect(
     data.symbolInstances.find((s: { name: string }) => s.name === "R1")
@@ -290,7 +297,9 @@ test("numbering preview can be cancelled, applied and undone", async ({
     .click();
   await dialog.getByRole("button", { name: "Apply", exact: true }).click();
   expect((await project(page)).devices[0].reference).toBe("R1");
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).devices[0].reference).toBe("R9");
 });
 test("property editing, labels, layer locks, sheet sizes and zoom change real state", async ({
@@ -339,9 +348,13 @@ test("native clipboard survives deletion and undo restores the original graph", 
   await expect(page.locator("[data-instance]")).toHaveCount(0);
   await page.getByRole("button", { name: "Paste", exact: true }).click();
   await expect(page.locator("[data-instance]")).toHaveCount(1);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-instance]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-instance]")).toHaveCount(1);
 });
 for (const language of ["en", "de", "yo", "pcm"])
@@ -534,10 +547,14 @@ test("component catalog searches and maps a sourced part to a real terminal", as
     exact: true,
   });
   await expect(bom).toContainText("3004362");
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).devices[0].partId).toBeUndefined();
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
-  await page.reload();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
   assigned = await project(page);
   expect(assigned.devices[0].partId).toBe(assigned.manufacturerParts[0].id);
   await expect(bom).toContainText("3004362");
@@ -579,10 +596,14 @@ test("engineering symbol search imports distinct transformer pins for native pla
   const data = await project(page);
   expect(data.terminals).toHaveLength(4);
   expect(data.nets).toHaveLength(4);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).symbolInstances).toHaveLength(0);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
-  await page.reload();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
   await expect(
     page.getByRole("button", { name: "U1:S1", exact: true }),
   ).toBeVisible();
@@ -646,7 +667,7 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   expect(data.wires).toHaveLength(2);
   expect(data.nets).toHaveLength(1);
   expect(data.terminals).toHaveLength(3);
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect((await project(page)).nets).toEqual(data.nets);
 });
 
@@ -681,7 +702,7 @@ test("connector poles retain separate electrical nodes while each pole passes th
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   data = await project(page);
   expect(data.nets).toHaveLength(2);
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect((await project(page)).nets).toEqual(data.nets);
 });
 
@@ -738,7 +759,7 @@ for (const [id, query, terminals, pins] of [
         ).pinIds,
       ).toHaveLength(2);
     }
-    await page.reload();
+    await reloadAndReopenProject(page);
     expect((await project(page)).nets).toEqual(data.nets);
   });
 
@@ -775,7 +796,7 @@ for (const [id, query, endpoint, count] of [
     data = await project(page);
     expect(data.wires).toHaveLength(1);
     expect(data.nets).toHaveLength(count);
-    await page.reload();
+    await reloadAndReopenProject(page);
     expect((await project(page)).wires).toEqual(data.wires);
   });
 
@@ -825,7 +846,7 @@ for (const [id, query, endpoint, count] of [
         (net: { terminalIds: string[] }) => net.terminalIds.length === 1,
       ),
     ).toHaveLength(count - 1);
-    await page.reload();
+    await reloadAndReopenProject(page);
     expect((await project(page)).wires).toEqual(data.wires);
     expect((await project(page)).nets).toEqual(data.nets);
   });
@@ -861,7 +882,7 @@ for (const [id, query, channel] of [
     const data = await project(page);
     expect(data.wires).toHaveLength(1);
     expect(data.nets).toHaveLength(7);
-    await page.reload();
+    await reloadAndReopenProject(page);
     expect((await project(page)).wires).toEqual(data.wires);
   });
 
@@ -897,10 +918,14 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   await page.getByRole("button", { name: "U1:OUT", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   expect((await project(page)).wires).toHaveLength(1);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).wires).toHaveLength(0);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
-  await page.reload();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
   await expect(
     page.getByRole("button", { name: "U1:IN", exact: true }),
   ).toBeVisible();
@@ -923,7 +948,9 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   await editForm.getByRole("button", { name: "Apply", exact: true }).click();
   expect((await project(page)).wires[0]).toEqual(old);
   expect((await project(page)).wirePaths[0].points[0].x).toBe(92);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect(
     (await project(page)).symbolDefinitions.find(
       (d: { id: string }) => d.id === definition.id,
@@ -970,7 +997,7 @@ test("cross-page net labels persist memberships and navigate to the real drawing
   await expect(
     page.getByRole("application", { name: "Sheet 2", exact: true }),
   ).toBeVisible();
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect(
     (await project(page)).nets.find(
       (item: { id: string }) => item.id === net.id,
@@ -1094,7 +1121,7 @@ test("catalog filters, favorites and recent assignments persist without changing
     })
     .check();
   expect(await project(page)).toEqual(before);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await library.locator(":scope > summary").click();
   await expect(
     library.getByRole("checkbox", {
@@ -1119,7 +1146,7 @@ test("catalog filters, favorites and recent assignments persist without changing
       .getByRole("button", { name: "Assign part", exact: true })
       .click();
   }
-  await page.reload();
+  await reloadAndReopenProject(page);
   await library.locator(":scope > summary").click();
   await library
     .getByLabel("Catalog view", { exact: true })
@@ -1161,7 +1188,7 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
   await page.evaluate(() =>
     localStorage.setItem("adiguneplanai.catalog-preferences.v1", "{broken"),
   );
-  await page.reload();
+  await reloadAndReopenProject(page);
   const library = page.locator(".component-library");
   await library.locator(":scope > summary").click();
   await expect(library.getByRole("alert")).toContainText(
@@ -1188,7 +1215,7 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
       exact: true,
     })
     .check();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await library.locator(":scope > summary").click();
   await expect(
     library.getByRole("checkbox", {
@@ -1226,7 +1253,7 @@ test("catalog preference quota failure retains session favorites and reports uns
     .selectOption("favorites");
   await expect(library.getByRole("article")).toHaveCount(1);
   expect(await project(page)).toEqual(before);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await library.locator(":scope > summary").click();
   await expect(
     library.getByRole("checkbox", {
@@ -1234,4 +1261,13 @@ test("catalog preference quota failure retains session favorites and reports uns
       exact: true,
     }),
   ).not.toBeChecked();
+});
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
 });

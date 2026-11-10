@@ -558,6 +558,30 @@ export function align(project: Project, ids: string[], axis: "x" | "y") {
   return project;
 }
 
+/** Equally space selected symbol centres, preserving the two end positions. */
+export function distribute(project: Project, ids: string[], axis: "x" | "y") {
+  const next = structuredClone(project);
+  editable(next, ids);
+  const symbols = next.symbolInstances
+    .filter((s) => ids.includes(s.id))
+    .sort(
+      (a, b) => a.position[axis] - b.position[axis] || a.id.localeCompare(b.id),
+    );
+  if (symbols.length < 3) return next;
+  if (new Set(symbols.map((s) => s.pageId)).size !== 1)
+    throw new Error("Select symbols on one page");
+  const start = symbols[0].position[axis];
+  const step =
+    (symbols[symbols.length - 1].position[axis] - start) / (symbols.length - 1);
+  symbols.forEach((symbol, index) => {
+    symbol.position = { ...symbol.position, [axis]: start + step * index };
+  });
+  checkBounds(next, ids);
+  checkCollisions(next, ids);
+  reroute(next, ids);
+  return next;
+}
+
 export function removeWire(project: Project, wireId: string): Project {
   const path = project.wirePaths.find((p) => p.wireId === wireId);
   const layer = project.layers.find((l) => l.id === path?.layerId);

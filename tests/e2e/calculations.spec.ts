@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { createProject } from "../../packages/electrical-model/project.ts";
@@ -95,7 +96,7 @@ test("calculation inputs, unit conversion, native replay and full report exports
   expect(stored.methodReference).toBe(
     "adiguneplanai:calculation:ohms-law:1.0.0",
   );
-  await page.reload();
+  await reloadAndReopenProject(page);
   await tools
     .getByRole("button", {
       name: "Open calculation: Reference resistor",
@@ -250,6 +251,8 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
       { language, project },
     );
     await page.goto("/");
+    await expect(page.locator(".empty-workspace")).toBeVisible();
+    await page.getByTestId("project-picker").selectOption(project.id);
     const tools = page.locator(".calculations-panel");
     await expect(
       tools.getByRole("heading", { name: t.calcTools, exact: true }),

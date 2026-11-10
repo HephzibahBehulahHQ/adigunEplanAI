@@ -9,7 +9,8 @@ import {
 } from "../../../packages/electrical-model/project.ts";
 import { ProjectHistory } from "../../../packages/electrical-model/history.ts";
 import {
-  loadLibrary,
+  loadWorkspaceLibrary,
+  clearActiveProject,
   saveLibrary,
   accountStorage,
   projectStorageKey,
@@ -48,7 +49,7 @@ export function useNativeProjects(ownerId: string | null = null) {
   }, []);
   const [state, setState] = useState<State>(() => {
     try {
-      const library = loadLibrary(storage.current);
+      const library = loadWorkspaceLibrary(storage.current);
       return {
         library: {
           ...library,
@@ -82,6 +83,60 @@ export function useNativeProjects(ownerId: string | null = null) {
     deviceId: string | null;
   }>({ projectId: null, symbols: [], deviceId: null });
   const [selectedPageId, setSelectedPageId] = useState<string | null>(null);
+  function resetWorkspaceUI() {
+    histories.current.clear();
+    setSelection({ projectId: null, symbols: [], deviceId: null });
+    setSelectedPageId(null);
+    setEditorCommand(null);
+    setView("schematic");
+  }
+  // Autosave success makes work durable; failed saves retain the in-memory project
+  // and install a native leaving guard. Cancelling that prompt does not clear it.
+  const hasUnsavedChanges =
+    !state.saved && state.library.activeProjectId !== null;
+  useEffect(() => {
+    if (!hasUnsavedChanges) return;
+    const warn = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [hasUnsavedChanges]);
+  useEffect(() => {
+    const leave = () => {
+      try {
+        clearActiveProject(storage.current);
+      } catch {
+        /* Preserve corrupt or unwritable data. */
+      }
+    };
+    const returnFromCache = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      resetWorkspaceUI();
+      try {
+        setState({
+          library: loadWorkspaceLibrary(storage.current),
+          error: null,
+          corrupt: false,
+          saved: true,
+        });
+      } catch {
+        setState((previous) => ({
+          ...previous,
+          library: { ...previous.library, activeProjectId: null },
+          error: "corruptStorage",
+          corrupt: true,
+        }));
+      }
+    };
+    window.addEventListener("pagehide", leave);
+    window.addEventListener("pageshow", returnFromCache);
+    return () => {
+      window.removeEventListener("pagehide", leave);
+      window.removeEventListener("pageshow", returnFromCache);
+    };
+  }, []);
   const project =
     state.library.projects.find(
       (p) => p.id === state.library.activeProjectId,
@@ -186,6 +241,7 @@ export function useNativeProjects(ownerId: string | null = null) {
     projects: state.library.projects,
     error: state.error,
     saved: state.saved,
+    hasUnsavedChanges,
     corrupt: state.corrupt,
     canUndo: history?.canUndo ?? false,
     canRedo: history?.canRedo ?? false,
@@ -210,6 +266,7 @@ export function useNativeProjects(ownerId: string | null = null) {
           gridMm: 5,
           snapping: true,
         });
+        resetWorkspaceUI();
         persist({
           projects: [...state.library.projects, validateProject(p)],
           activeProjectId: p.id,
@@ -274,15 +331,25 @@ export function useNativeProjects(ownerId: string | null = null) {
     save() {
       persist(state.library);
     },
-    close() {
-      // Keep every project and its history; closing only clears the active workspace.
-      if (!active.current || !state.saved || state.corrupt) return false;
-      persist({ ...state.library, activeProjectId: null });
-      setSelection({ projectId: null, symbols: [], deviceId: null });
-      setSelectedPageId(null);
-      setEditorCommand(null);
-      setView("schematic");
-      return true;
+    close(discardUnsaved = false) {
+      // Keep saved projects; closing resets the active editor and its transient history.
+      if (
+        !active.current ||
+        state.corrupt ||
+        (hasUnsavedChanges && !discardUnsaved)
+      )
+        return false;
+      try {
+        const library = hasUnsavedChanges
+          ? loadWorkspaceLibrary(storage.current)
+          : state.library;
+        persist({ ...library, activeProjectId: null });
+        resetWorkspaceUI();
+        return true;
+      } catch {
+        setState((previous) => ({ ...previous, error: "saveError" }));
+        return false;
+      }
     },
     importText(text: string, confirmReplace: () => boolean) {
       if (!active.current) return false;

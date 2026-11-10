@@ -215,3 +215,12 @@ test("failed building download allows return to the unchanged schematic project"
   await expect(page.locator(".engineering-canvas")).toBeVisible();
   expect(await project(page)).toEqual(before);
 });
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
+});

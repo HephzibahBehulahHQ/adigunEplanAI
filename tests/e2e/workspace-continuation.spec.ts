@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
 
@@ -120,7 +121,7 @@ test("schematic and cabinet selection synchronize without changing saved enginee
       localStorage.getItem("adiguneplanai.projects.v1"),
     ),
   ).toBe(stored);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await expect(page.locator('[data-instance="symbol-b"]')).toHaveAttribute(
     "aria-pressed",
     "false",
@@ -317,6 +318,7 @@ test("compact target workspace gives the drawing space and keeps native insert, 
 }) => {
   await page.setViewportSize({ width: 1672, height: 941 });
   await page.goto("/");
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Example projects", exact: true })
     .first()
@@ -384,7 +386,7 @@ test("compact target workspace gives the drawing space and keeps native insert, 
     })
     .uncheck();
   await expect(page.locator(".compact-editor-tools").first()).toBeVisible();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await expect(page.locator(".application")).toHaveAttribute(
     "data-compact",
     "false",

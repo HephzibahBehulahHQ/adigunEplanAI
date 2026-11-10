@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 const storageKey = "adiguneplanai.projects.v1";
@@ -111,9 +112,13 @@ test("custom component revisions preserve native wiring and require explicit par
   expect(data.manufacturerParts[1].custom.componentId).toBe(
     first.custom.componentId,
   );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await project(page)).manufacturerParts).toHaveLength(1);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   const secondCard = page.getByRole("article", {
     name: "User terminal fixture v2",
     exact: true,
@@ -129,7 +134,7 @@ test("custom component revisions preserve native wiring and require explicit par
   expect(data.wires).toEqual(before.wires);
   expect(data.pins).toEqual(before.pins);
   expect(data.terminals).toEqual(before.terminals);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await openLibrary(page);
   await expect(secondCard).toBeVisible();
   expect((await project(page)).manufacturerParts).toEqual(
@@ -196,7 +201,16 @@ test("custom component file round trips across projects and invalid imports pres
     );
     expect(await project(page)).toEqual(imported);
   }
-  await page.reload();
+  await reloadAndReopenProject(page);
   await openLibrary(page);
   expect((await project(page)).manufacturerParts[0]).toEqual(exported.part);
+});
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
 });

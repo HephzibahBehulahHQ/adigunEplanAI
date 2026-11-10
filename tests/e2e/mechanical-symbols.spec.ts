@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
 async function create(page: Page) {
@@ -98,7 +99,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   await expect(
     page.getByRole("region", { name: "Bill of materials", exact: true }),
   ).toContainText("USER-GLAND");
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect((await project(page)).devices).toEqual(data.devices);
   expect((await project(page)).pins).toHaveLength(0);
   expect((await project(page)).terminals).toHaveLength(0);
@@ -154,4 +155,13 @@ test("custom mechanical drawings create without pins and reject reclassification
     "Existing work has been preserved",
   );
   expect(await project(page)).toEqual(data);
+});
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
 });

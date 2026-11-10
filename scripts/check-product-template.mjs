@@ -28,7 +28,7 @@ const authorityPins = {
   corporate: "bd116504412b37105166805018f64a6e7bbe3cde",
 };
 const logoHash =
-  "409c401be5189b80593797cbaf00a3a42a91ab8c0645e3648ff91205b47d4c95";
+  "6d6d33bb7534d01cbff3133a3d63fc0893f1c51f36c8e66531bca95d02cb4ec4";
 const targetHash =
   "c99e97fccec545612872ddc5466df9109bc9af63f0d64b9e27420c6321d961c9";
 export function productTemplateIssues(bundle) {
@@ -91,7 +91,7 @@ export function productTemplateIssues(bundle) {
     c.branding?.header?.additionalBrandLogos ===
       false, "One-logo header policy changed");
   require(c.branding?.corporateLogo?.asset ===
-    "apps/web/src/assets/hephzibah-behulah-official.jpg" &&
+    "apps/web/src/assets/approved-header-reference.png" &&
     c.branding?.corporateLogo?.alt === corporate.name &&
     c.branding?.corporateLogo?.sha256 === logoHash &&
     logo === logoHash, "Official corporate logo changed");
@@ -143,7 +143,7 @@ export function loadProductTemplate() {
     corporate: json("packages/design-tokens/corporate.json"),
     brands: json("packages/design-tokens/brands.json"),
     css: read("packages/design-tokens/tokens.css"),
-    logo: hash("apps/web/src/assets/hephzibah-behulah-official.jpg"),
+    logo: hash("apps/web/src/assets/approved-header-reference.png"),
     target: hash("docs/references/target-workspace.png"),
     ownerTarget: hash("AdigunEplanTarget interface.png"),
     master: read("docs/MASTER_SPECIFICATION.md"),

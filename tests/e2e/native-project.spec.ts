@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const key = "adiguneplanai.projects.v1";
@@ -34,15 +35,19 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
     .fill("Renamed project");
   await properties.getByRole("button", { name: "Rename", exact: true }).click();
   await expect(page.locator(".project-title")).toHaveText("Renamed project");
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator(".project-title")).toHaveText("Native project");
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await properties
     .getByLabel("Document Document language", { exact: true })
     .selectOption("de");
   await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page.getByLabel("Language", { exact: true }).selectOption("yo");
-  await page.reload();
+  await reloadAndReopenProject(page);
   const data = await page.evaluate(
     (k) => JSON.parse(localStorage.getItem(k)!),
     key,
