@@ -427,7 +427,7 @@ export function buildExample(id: ExampleId): Project {
           { id: "X3", position: { x: 32, y: 24 }, kind: "power" },
         ],
         artwork: [
-          ...phases.flatMap((phase, index) => {
+          ...phases.flatMap((_, index) => {
             const offset = (index - 1) * 24;
             return [
               {
