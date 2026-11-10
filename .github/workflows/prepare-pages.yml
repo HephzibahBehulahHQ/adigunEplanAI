@@ -1,0 +1,143 @@
+name: Stage reviewed Pages release
+on:
+  push:
+    branches:
+      - codex/prepare-pages-2260ffdc
+    paths:
+      - .github/workflows/prepare-pages.yml
+permissions:
+  contents: read
+concurrency:
+  group: prepare-pages-2260ffdc
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      digest: ${{ steps.artifact.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 2260ffdc3bdbebf13286d074d1d628ee41bb16db
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+      - name: Verify source identity
+        run: |
+          test "$(git rev-parse HEAD)" = "2260ffdc3bdbebf13286d074d1d628ee41bb16db"
+          test "$(git rev-parse HEAD^{tree})" = "bc539a5bfd6fd6674d9bdcc252cedb8ae1698d29"
+      - run: npm ci
+      - run: npm run build
+      - run: npm exec playwright -- install --with-deps chromium
+      - name: Test built distribution
+        run: |
+          cat > playwright.pages.config.ts <<'CONFIG'
+          import { defineConfig } from "@playwright/test";
+          export default defineConfig({
+            testDir: "./tests/e2e",
+            fullyParallel: true,
+            workers: 2,
+            use: { baseURL: "http://127.0.0.1:4173", headless: true },
+            webServer: {
+              command: "node node_modules/vite/bin/vite.js preview apps/web --host 127.0.0.1 --port 4173 --strictPort",
+              url: "http://127.0.0.1:4173",
+              reuseExistingServer: false,
+            },
+          });
+          CONFIG
+          npm exec playwright -- test --config=playwright.pages.config.ts tests/e2e/panel-engineering.spec.ts tests/e2e/panel-mesh.spec.ts tests/e2e/workspace-continuation.spec.ts tests/e2e/bot-window.spec.ts tests/e2e/reports.spec.ts
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        id: artifact
+        with:
+          name: verified-pages-dist
+          path: apps/web/dist/
+          if-no-files-found: error
+          retention-days: 1
+  candidate:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 2260ffdc3bdbebf13286d074d1d628ee41bb16db
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: verified-pages-dist
+          path: ${{ runner.temp }}/pages-dist
+      - name: Preserve configuration and publish a new candidate branch
+        env:
+          ARTIFACT_DIGEST: ${{ needs.build.outputs.digest }}
+        run: |
+          node <<'STAGE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          const crypto = require("node:crypto");
+          const cp = require("node:child_process");
+          const source = "2260ffdc3bdbebf13286d074d1d628ee41bb16db";
+          const tree = "bc539a5bfd6fd6674d9bdcc252cedb8ae1698d29";
+          const git = (...args) => cp.execFileSync("git", args, { encoding: "utf8" }).trim();
+          if (git("rev-parse", "HEAD") !== source || git("rev-parse", "HEAD^{tree}") !== tree) throw new Error("Source identity mismatch");
+          const main = () => git("ls-remote", "origin", "refs/heads/main").split(/\s/)[0];
+          if (main() !== source) throw new Error("Main advanced; rebuild from a reviewed source");
+          const preservedPaths = ["CNAME", "_config.yml", "README.md"];
+          const preserved = preservedPaths.map(p => [p, fs.readFileSync(p)]);
+          const allowed = p => p === "index.html" || p === "THIRD_PARTY_NOTICES.txt" || /^assets\/[^\\]+$/.test(p);
+          const files = [];
+          function walk(dir, prefix = "") {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              const relative = prefix + entry.name;
+              if (entry.isSymbolicLink()) throw new Error("Symbolic links are not release artifacts");
+              if (entry.isDirectory()) walk(path.join(dir, entry.name), relative + "/");
+              else if (entry.isFile() && allowed(relative)) files.push(relative);
+              else throw new Error("Unexpected build output: " + relative);
+            }
+          }
+          const artifact = process.env.RUNNER_TEMP + "/pages-dist";
+          walk(artifact);
+          if (!files.includes("index.html") || !files.includes("THIRD_PARTY_NOTICES.txt")) throw new Error("Incomplete build artifact");
+          const html = fs.readFileSync(path.join(artifact, "index.html"), "utf8");
+          const linked = [...html.matchAll(/(?:src|href)=["'](\/assets\/[^"'?#]+)(?:[?#][^"']*)?["']/g)].map(m => m[1].slice(1));
+          if (!linked.length || linked.some(p => !files.includes(p))) throw new Error("Missing linked assets");
+          const hashes = {};
+          for (const relative of files.sort()) {
+            const data = fs.readFileSync(path.join(artifact, relative));
+            hashes[relative] = crypto.createHash("sha256").update(data).digest("hex");
+            fs.mkdirSync(path.dirname(relative), { recursive: true });
+            fs.writeFileSync(relative, data);
+          }
+          const info = {
+            sourceCommit: source,
+            sourceTree: tree,
+            version: JSON.parse(fs.readFileSync("package.json", "utf8")).version,
+            stage: "development",
+            milestone: "Native workspace and cabinet surface models",
+            workflowRun: "https://github.com/" + process.env.GITHUB_REPOSITORY + "/actions/runs/" + process.env.GITHUB_RUN_ID,
+            artifactDigest: process.env.ARTIFACT_DIGEST,
+            assets: hashes
+          };
+          if (!/^[a-f0-9]{64}$/.test(info.artifactDigest || "")) throw new Error("Missing artifact digest");
+          fs.writeFileSync("build-info.json", JSON.stringify(info) + "\n");
+          fs.writeFileSync(".nojekyll", "");
+          for (const [p, data] of preserved) if (!data.equals(fs.readFileSync(p))) throw new Error("Preserved file changed: " + p);
+          git("add", "--", ...files, "build-info.json", ".nojekyll");
+          const changed = git("diff", "--cached", "--name-only").split("\n").filter(Boolean);
+          if (!changed.length || changed.some(p => !allowed(p) && p !== "build-info.json" && p !== ".nojekyll")) throw new Error("Unexpected staged path");
+          if (git("diff", "--cached", "--name-only", "--diff-filter=D")) throw new Error("Release must preserve existing files");
+          const branch = "codex/pages-release-2260ffdc-" + process.env.GITHUB_RUN_ID;
+          if (git("ls-remote", "--heads", "origin", "refs/heads/" + branch)) throw new Error("Candidate branch already exists");
+          if (main() !== source) throw new Error("Main advanced during staging");
+          git("config", "user.name", "github-actions[bot]");
+          git("config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com");
+          git("commit", "-m", "Deploy verified workspace and cabinet source " + source.slice(0, 12));
+          if (git("rev-parse", "HEAD^") !== source) throw new Error("Candidate parent mismatch");
+          git("push", "origin", "HEAD:refs/heads/" + branch);
+          const summary = "PAGES_CANDIDATE_BRANCH=" + branch + "\nPAGES_CANDIDATE_SHA=" + git("rev-parse", "HEAD") + "\nPAGES_SOURCE=" + source + "\nPAGES_FILES=" + changed.length;
+          console.log(summary);
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, "## Reviewed source release candidate\n\n" + summary.replace(/\n/g, "  \n") + "\n");
+          STAGE
