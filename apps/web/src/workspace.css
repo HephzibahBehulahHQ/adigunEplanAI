@@ -545,6 +545,42 @@ i {
 .report-actions button {
   text-align: start;
 }
+.report-shortcuts {
+  display: grid;
+  gap: 1px;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.report-shortcuts li {
+  min-width: 0;
+}
+.engineering-tools .report-shortcuts button {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 20px;
+  margin: 0;
+  padding: 1px 4px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.report-shortcuts button:hover:not(:disabled),
+.report-shortcuts button:focus-visible {
+  background: var(--hover);
+  border-color: var(--line);
+}
+.report-shortcuts button svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: var(--cyan);
+}
 dialog {
   background: var(--panel);
   color: var(--text);
