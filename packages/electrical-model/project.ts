@@ -144,6 +144,7 @@ export const schemas = {
             })
             .strict()
             .optional(),
+          dimensionsSourceUrl: sourceUrl.optional(),
           mountedDepthsMm: z
             .array(
               z.object({ rail: name, depth: positive.max(100000) }).strict(),
@@ -830,10 +831,10 @@ function validateReferences(project: Project): void {
       if (
         !structure ||
         structure.enclosureId !== item.enclosureId ||
-        !["plate", "din-rail"].includes(structure.kind)
+        !["plate", "din-rail", "door"].includes(structure.kind)
       )
         throw new Error(
-          "3D mounting structure must be a plate or rail in the same enclosure",
+          "3D mounting structure must be a plate, rail, or door in the same enclosure",
         );
     }
     if (
@@ -1542,3 +1543,4 @@ export function parseProject(text: string): {
   }
   throw new Error(`Unsupported project schema version: ${String(version)}`);
 }
+
