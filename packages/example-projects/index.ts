@@ -168,6 +168,16 @@ export function buildExample(id: ExampleId): Project {
       positionMm: { x: 15, y: 15, z: 0 },
       sizeMm: { x: 570, y: 770, z: 2 },
     });
+    const flushMounted = deviceReferences.filter((reference) => {
+      const device = p.devices.find((item) => item.reference === reference)!;
+      return p.manufacturerParts
+        .find((part) => part.id === device.partId)
+        ?.catalogSnapshot?.mounting?.toLowerCase()
+        .includes("flush");
+    });
+    const railMounted = deviceReferences.filter(
+      (reference) => !flushMounted.includes(reference),
+    );
     for (let row = 0; row < 3; row++) {
       const railId = crypto.randomUUID();
       p.panelStructures.push({
@@ -187,7 +197,7 @@ export function buildExample(id: ExampleId): Project {
         positionMm: { x: 35, y: 225 + row * 205, z: 2 },
         sizeMm: { x: 530, y: 40, z: 40 },
       });
-      for (const [column, reference] of deviceReferences
+      for (const [column, reference] of railMounted
         .slice(row * 4, row * 4 + 4)
         .entries()) {
         const device = p.devices.find((item) => item.reference === reference)!;
@@ -211,6 +221,46 @@ export function buildExample(id: ExampleId): Project {
               }
             : { x: 80, y: 90, z: 65 },
           mountingStructureId: railId,
+          clearanceMm: 5,
+        });
+      }
+    }
+    if (flushMounted.length) {
+      const doorId = crypto.randomUUID();
+      p.panelStructures.push({
+        id: doorId,
+        name: "Enclosure door · flush-mounted devices",
+        enclosureId,
+        kind: "door",
+        positionMm: { x: 0, y: 0, z: 248 },
+        sizeMm: { x: 600, y: 800, z: 2 },
+      });
+      for (const [column, reference] of flushMounted.entries()) {
+        const device = p.devices.find((item) => item.reference === reference)!;
+        const dimensions = p.manufacturerParts.find(
+          (part) => part.id === device.partId,
+        )?.catalogSnapshot?.dimensionsMm;
+        if (!dimensions)
+          throw new Error(
+            `Flush-mounted device ${reference} has no sourced dimensions`,
+          );
+        p.equipment3d.push({
+          id: crypto.randomUUID(),
+          name: `${reference} · catalogue-dimensioned flush mounting`,
+          deviceId: device.id,
+          enclosureId,
+          dimensionSource: "catalog",
+          positionMm: {
+            x: 50 + column * (dimensions.width + 25),
+            y: 100,
+            z: 248 - dimensions.depth,
+          },
+          sizeMm: {
+            x: dimensions.width,
+            y: dimensions.height,
+            z: dimensions.depth,
+          },
+          mountingStructureId: doorId,
           clearanceMm: 5,
         });
       }
@@ -427,41 +477,8 @@ export function buildExample(id: ExampleId): Project {
           { id: "X3", position: { x: 32, y: 24 }, kind: "power" },
         ],
         artwork: [
-          ...phases.flatMap((_, index) => {
-            const offset = (index - 1) * 24;
-            return [
-              {
-                kind: "line" as const,
-                from: { x: -32, y: offset },
-                to: { x: -17, y: offset },
-              },
-              {
-                kind: "circle" as const,
-                center: { x: -9, y: offset },
-                radiusMm: 7.5,
-              },
-              {
-                kind: "circle" as const,
-                center: { x: 9, y: offset },
-                radiusMm: 7.5,
-              },
-              {
-                kind: "line" as const,
-                from: { x: 17, y: offset },
-                to: { x: 32, y: offset },
-              },
-            ];
-          }),
-          {
-            kind: "line",
-            from: { x: -1.5, y: -34 },
-            to: { x: -1.5, y: 34 },
-          },
-          {
-            kind: "line",
-            from: { x: 1.5, y: -34 },
-            to: { x: 1.5, y: 34 },
-          },
+          { kind: "circle", center: { x: -8, y: 0 }, radiusMm: 15 },
+          { kind: "circle", center: { x: 8, y: 0 }, radiusMm: 15 },
         ],
       });
       const transformerInstanceId = place(
@@ -564,7 +581,7 @@ export function buildExample(id: ExampleId): Project {
     wire("X7", "1", "P1", "I_plus");
     wire("X8", "1", "P1", "I_minus");
     note(
-      "P1 is a limited schematic interface: the selected variant has four current and four voltage measurement inputs, but terminal-level wiring, transformer ratios and trip-actuator selection remain design inputs.",
+      "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
       20,
       230,
     );
@@ -572,7 +589,44 @@ export function buildExample(id: ExampleId): Project {
       cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
     if (id === "target-substation") {
       const relay = p.devices.find((device) => device.reference === "P1")!;
-      p = assignCatalogPart(p, relay.id, "siemens-p1j122728");
+      const relayPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: relayPartId,
+        name: "SIPROTEC 5 7SJ82 standard variant",
+        manufacturer: "Siemens",
+        partNumber: "P1J122728",
+        sourceUrl:
+          "https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728",
+        ratings: {
+          binaryInputs: 11,
+          binaryOutputs: 9,
+          currentInputs: 4,
+          voltageInputs: 4,
+          auxiliarySupplyMinV: 24,
+          auxiliarySupplyMaxV: 48,
+          auxiliarySupplyType: "DC",
+        },
+        catalogSnapshot: {
+          catalogId: "siemens-p1j122728",
+          reviewedOn: "2026-11-10",
+          category: "protection",
+          description:
+            "SIPROTEC 7SJ82 overcurrent protection; standard variant",
+          mapping: {
+            glyph: "component",
+            symbolId: "library-protection-relay-trip",
+            electricalNodes: 7,
+            connections: 7,
+          },
+          dimensionsMm: { width: 150, height: 266, depth: 163 },
+          dimensionsSourceUrl:
+            "https://cache.industry.siemens.com/dl/files/321/109742321/att_1163588/v1/SIP5_Operating_V09.70_Manual_C003-M_enUS.pdf",
+          sourceRevision:
+            "SIPROTEC 5 Operation Manual C53000-G5040-C003-M, Edition 12.2023, Fig 3-13",
+          mounting: "Flush mounting; 1/3 × 19 in housing width",
+        },
+      });
+      relay.partId = relayPartId;
 
       pageId = page("03 · Control and communications");
       note(
@@ -592,16 +646,24 @@ export function buildExample(id: ExampleId): Project {
       );
       const cpuModule = createPlcModule(p, {
         kind: "cpu",
-        symbolId: "modular-controller-interface",
+        symbolId: "plc-cpu-modular",
         pageId,
         reference: "PLC1",
         name: "WAGO PFC200 controller · generic modular bus interface",
       });
       p = cpuModule;
-      const cpuDevice = p.devices.find(
-        (device) => device.reference === "PLC1",
-      )!;
-      p = assignCatalogPart(p, cpuDevice.id, "wago-750-8217-625-000");
+      const cpu = p.devices.find((device) => device.reference === "PLC1")!;
+      const cpuPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: cpuPartId,
+        name: "PFC200 Controller, 2 ETH RS, 4G",
+        manufacturer: "WAGO",
+        partNumber: "750-8217",
+        sourceUrl:
+          "https://www.wago.com/us/controllers-bus-couplers-i-o/controller-pfc200/p/750-8217",
+        ratings: {},
+      });
+      cpu.partId = cpuPartId;
       const inputModule = createPlcModule(p, {
         kind: "digital-input",
         channelCount: 16,
@@ -640,7 +702,7 @@ export function buildExample(id: ExampleId): Project {
       plcInstances.get("PLC1")!.position = { x: 220, y: 142 };
       plcInstances.get("DO1")!.position = { x: 340, y: 142 };
       const cpuInstance = p.symbolInstances.find(
-        (symbol) => symbol.deviceId === cpuDevice.id,
+        (symbol) => symbol.deviceId === cpu.id,
       )!;
       cpuInstance.position = plcInstances.get("PLC1")!.position;
       symbol(
@@ -728,7 +790,7 @@ export function buildExample(id: ExampleId): Project {
       );
       cabinet(
         ["P1", "F4", "Y1", "X5", "X6", "X7", "X8", "DI1", "PLC1", "DO1"],
-        "UTST_Cabinet_01 · catalogue-backed PLC and I/O module dimensions",
+        "UTST_Cabinet_01 · manually dimensioned placement envelopes",
       );
     }
   } else if (id === "photovoltaic") {
@@ -1001,3 +1063,4 @@ export function buildExample(id: ExampleId): Project {
   }
   return synchronizeConnectivity(validateProject(p));
 }
+
