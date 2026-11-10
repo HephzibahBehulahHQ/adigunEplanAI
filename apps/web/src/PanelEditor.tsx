@@ -1430,6 +1430,29 @@ function PanelViews({
               </g>
             ))}
           </svg>
+          <svg
+            className="panel-axis-triad"
+            viewBox="-34 -34 68 68"
+            aria-hidden="true"
+          >
+            {[
+              { label: "X", direction: { x: 1, y: 0, z: 0 } },
+              { label: "Y", direction: { x: 0, y: 1, z: 0 } },
+              { label: "Z", direction: { x: 0, y: 0, z: 1 } },
+            ].map(({ label, direction }) => {
+              const { x, y } = projectPoint3d(direction, yaw, pitch);
+              if (Math.hypot(x, y) < 0.1) return null;
+              return (
+                <g key={label} data-axis={label}>
+                  <line x1="0" y1="0" x2={x * 20} y2={y * 20} />
+                  <text x={x * 27} y={y * 27}>
+                    {label}
+                  </text>
+                </g>
+              );
+            })}
+            <circle r="2" />
+          </svg>
         </div>
         <div
           className="panel-view-presets"

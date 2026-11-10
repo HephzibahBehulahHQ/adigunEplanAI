@@ -215,7 +215,7 @@
 .panel-preview .panel-views {
   grid-template-columns: minmax(0, 1fr);
 }
-.panel-preview .panel-views svg {
+.panel-preview .panel-3d-stage {
   height: 230px;
 }
 .panel-preview p {
@@ -263,7 +263,7 @@
   display: grid;
   gap: 2px;
   padding: 3px;
-  max-height: calc(100% - 16px);
+  max-height: calc(100% - 64px);
   overflow-y: auto;
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -311,6 +311,37 @@
   font-size: 7px;
   text-anchor: middle;
   dominant-baseline: middle;
+}
+.panel-3d-stage > .panel-axis-triad {
+  position: absolute;
+  z-index: 2;
+  inset: auto auto 8px 8px;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
+  color: var(--navy);
+  fill: currentColor;
+}
+.panel-axis-triad [data-axis="X"] {
+  color: var(--royal-blue);
+}
+.panel-axis-triad [data-axis="Y"] {
+  color: color-mix(in srgb, var(--gold) 55%, var(--navy));
+}
+.panel-axis-triad [data-axis="Z"] {
+  color: color-mix(in srgb, var(--brand-cyan) 55%, var(--navy));
+}
+.panel-axis-triad line {
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.panel-axis-triad text {
+  fill: currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
 }
 @media (min-width: 1001px) and (min-height: 780px) {
   .dock-right [data-panel="panel3d"] > .panel-body {

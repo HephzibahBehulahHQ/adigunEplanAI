@@ -99,7 +99,14 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   expect(
     stageBounds.x + stageBounds.width - cubeBounds.x - cubeBounds.width,
   ).toBeCloseTo(8, 0);
+  const triad = preview.locator(".panel-axis-triad");
+  await expect(triad.locator("text")).toHaveText(["X", "Y", "Z"]);
+  const triadBounds = (await triad.boundingBox())!;
+  expect(triadBounds.y).toBeGreaterThanOrEqual(
+    toolBounds.y + toolBounds.height,
+  );
   await preview.getByRole("button", { name: "Front", exact: true }).click();
+  await expect(triad.locator("text")).toHaveText(["X", "Y"]);
   await expect(preview.getByLabel("View yaw (°)")).toHaveValue("0");
   await expect(preview.getByLabel("View pitch (°)")).toHaveValue("0");
 });
