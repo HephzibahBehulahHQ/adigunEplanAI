@@ -1137,6 +1137,28 @@ function PanelViews({
             }}
             role="group"
             aria-label={t("panel3dView")}
+            tabIndex={cameraTool === "pan" ? 0 : undefined}
+            aria-keyshortcuts={
+              cameraTool === "pan"
+                ? "ArrowUp ArrowDown ArrowLeft ArrowRight"
+                : undefined
+            }
+            onKeyDown={(event) => {
+              if (cameraTool !== "pan" || event.target !== event.currentTarget)
+                return;
+              const movement = {
+                ArrowLeft: [-projectedWidth, 0],
+                ArrowRight: [projectedWidth, 0],
+                ArrowUp: [0, -projectedHeight],
+                ArrowDown: [0, projectedHeight],
+              }[event.key];
+              if (!movement) return;
+              event.preventDefault();
+              setCameraPan(({ x, y }) => ({
+                x: x + movement[0] / zoom / 20,
+                y: y + movement[1] / zoom / 20,
+              }));
+            }}
             viewBox={`${minX + (projectedWidth - projectedWidth / zoom) / 2 + cameraPan.x} ${minY + (projectedHeight - projectedHeight / zoom) / 2 + cameraPan.y} ${projectedWidth / zoom} ${projectedHeight / zoom}`}
             onClick={(event) => {
               if (ignoreClick.current) {

@@ -62,6 +62,14 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   });
   await page.mouse.up();
   await expect(canvas).not.toHaveAttribute("viewBox", original!);
+  const pointerView = await canvas.getAttribute("viewBox");
+  await canvas.press("ArrowRight");
+  await expect(canvas).not.toHaveAttribute("viewBox", pointerView!);
+  await canvas.press("ArrowLeft");
+  const restoredX = Number(
+    (await canvas.getAttribute("viewBox"))!.split(" ")[0],
+  );
+  expect(restoredX).toBeCloseTo(Number(pointerView!.split(" ")[0]), 8);
   await expect(preview.getByLabel("View yaw (°)")).toHaveValue(rotate);
   expect(
     await canvas
