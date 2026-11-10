@@ -61,6 +61,8 @@ export function App() {
 }
 function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
+  const [orthogonal, setOrthogonal] = useState(false);
+  const toggleOrthogonal = () => setOrthogonal((enabled) => !enabled);
   const connectivity = useMemo(
     () => (native.project ? analyze(native.project) : null),
     [native.project],
@@ -462,7 +464,12 @@ function Workspace({ account }: { account: Account }) {
               }
             >
               {native.project ? (
-                <NativeDrawing native={native} t={t} />
+                <NativeDrawing
+                  native={native}
+                  t={t}
+                  orthogonal={orthogonal}
+                  toggleOrthogonal={toggleOrthogonal}
+                />
               ) : (
                 <div className="empty-workspace">
                   <span className="drawing-mark" aria-hidden="true">
@@ -501,6 +508,18 @@ function Workspace({ account }: { account: Account }) {
             {t("selectionCount")}: {native.selectedSymbolIds.length}
             {" · mm"}
           </span>
+        )}
+        {native.project && native.view === "schematic" && (
+          <button
+            type="button"
+            className="status-ortho"
+            aria-pressed={orthogonal}
+            aria-keyshortcuts="F8"
+            title={`${t("orthogonalMove")} (F8)`}
+            onClick={toggleOrthogonal}
+          >
+            {t("orthogonalMove")}
+          </button>
         )}
         {connectivity && (
           <button

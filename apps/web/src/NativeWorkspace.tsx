@@ -839,7 +839,12 @@ export function ProjectProperties({ native, t }: Props) {
     </>
   );
 }
-export function NativeDrawing({ native, t }: Props) {
+export function NativeDrawing({
+  native,
+  t,
+  orthogonal,
+  toggleOrthogonal,
+}: Props & { orthogonal: boolean; toggleOrthogonal: () => void }) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
   const { view, setView } = native;
@@ -943,6 +948,8 @@ export function NativeDrawing({ native, t }: Props) {
               t={t}
               clipboard={clipboard}
               setClipboard={setClipboard}
+              orthogonal={orthogonal}
+              toggleOrthogonal={toggleOrthogonal}
             />
           ) : (
             <p className="canvas-empty">{t("noPages")}</p>

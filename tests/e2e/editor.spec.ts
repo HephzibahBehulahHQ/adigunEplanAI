@@ -476,6 +476,36 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
     x: 110,
     y: 105,
   });
+  await props.getByLabel("Y (mm)", { exact: true }).fill("105.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.press("F8");
+  const ortho = page.getByRole("button", {
+    name: "Orthogonal move",
+    exact: true,
+  });
+  await expect(ortho).toHaveAttribute("aria-pressed", "true");
+  const [anchor, diagonal] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(110, 105.125), new DOMPoint(128, 114)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  await page.mouse.move(anchor.x, anchor.y);
+  await page.mouse.down();
+  await page.mouse.move(diagonal.x, diagonal.y);
+  await expect(symbol).toHaveAttribute(
+    "transform",
+    /^translate\(130 105\.125\)/,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 130,
+    y: 105.125,
+  });
+  await ortho.click();
+  await expect(ortho).toHaveAttribute("aria-pressed", "false");
 });
 
 test("Wire mode snaps nearby clicks to native pin coordinates", async ({

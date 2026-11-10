@@ -92,6 +92,7 @@
   "group": "Group",
   "ungroup": "Ungroup",
   "grid": "Grid (mm)",
+  "orthogonalMove": "Orthogonal move",
   "snapping": "Snap to grid",
   "fitPage": "Fit page",
   "layers": "Layers",

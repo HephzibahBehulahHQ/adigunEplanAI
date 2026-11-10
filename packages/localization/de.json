@@ -92,6 +92,7 @@
   "group": "Gruppieren",
   "ungroup": "Gruppierung aufheben",
   "grid": "Raster (mm)",
+  "orthogonalMove": "Orthogonales Verschieben",
   "snapping": "Am Raster fangen",
   "fitPage": "Seite einpassen",
   "layers": "Ebenen",

@@ -370,11 +370,12 @@ export function move(
   ids: string[],
   delta: Point,
   grid: number,
+  orthogonal = false,
 ) {
   editable(project, ids);
   const first = project.symbolInstances.find((s) => s.id === ids[0]);
   if (!first) return project;
-  const shift = movementDelta(first.position, delta, grid);
+  const shift = movementDelta(first.position, delta, grid, orthogonal);
   for (const s of project.symbolInstances)
     if (ids.includes(s.id))
       s.position = { x: s.position.x + shift.x, y: s.position.y + shift.y };
@@ -388,10 +389,18 @@ export function movementDelta(
   anchor: Point,
   delta: Point,
   grid: number,
+  orthogonal = false,
 ): Point {
+  const horizontal = Math.abs(delta.x) >= Math.abs(delta.y);
   return {
-    x: quantize(anchor.x + delta.x, grid) - anchor.x,
-    y: quantize(anchor.y + delta.y, grid) - anchor.y,
+    x:
+      orthogonal && !horizontal
+        ? 0
+        : quantize(anchor.x + delta.x, grid) - anchor.x,
+    y:
+      orthogonal && horizontal
+        ? 0
+        : quantize(anchor.y + delta.y, grid) - anchor.y,
   };
 }
 

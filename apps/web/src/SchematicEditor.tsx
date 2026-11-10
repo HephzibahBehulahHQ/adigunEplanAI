@@ -45,12 +45,15 @@ type Props = {
   setClipboard: (value: NativeClipboard | null) => void;
   native: NativeProjects;
   page: Project["pages"][number];
+  orthogonal: boolean;
+  toggleOrthogonal: () => void;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
   kind: "pan" | "move" | "marquee";
   anchor?: Point;
+  orthogonal?: boolean;
   start: Point;
   view: Box;
   matrix: DOMMatrix;
@@ -63,6 +66,8 @@ export function SchematicEditor({
   t,
   clipboard,
   setClipboard,
+  orthogonal,
+  toggleOrthogonal,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
@@ -287,6 +292,7 @@ export function SchematicEditor({
     const world = point(event);
     drag.current = {
       kind: "move",
+      orthogonal,
       anchor: project.symbolInstances.find((item) => item.id === ids[0])
         ?.position,
       start: world,
@@ -320,7 +326,7 @@ export function SchematicEditor({
     else if (current.kind === "move")
       setPreview(
         current.anchor && (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
-          ? movementDelta(current.anchor, delta, grid)
+          ? movementDelta(current.anchor, delta, grid, current.orthogonal)
           : { x: 0, y: 0 },
       );
     else setMarquee({ a: current.start, b: current.last });
@@ -337,7 +343,7 @@ export function SchematicEditor({
       current.kind === "move" &&
       (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
     )
-      edit((p) => move(p, current.ids, delta, grid));
+      edit((p) => move(p, current.ids, delta, grid, current.orthogonal));
     if (current.kind === "marquee") {
       const crossing = current.last.x < current.start.x;
       const left = Math.min(current.start.x, current.last.x),
@@ -553,6 +559,11 @@ export function SchematicEditor({
         if ((event.target as HTMLElement).closest("input,select,textarea"))
           return;
         const key = event.key.toLowerCase();
+        if (key === "f8") {
+          event.preventDefault();
+          if (!event.repeat) toggleOrthogonal();
+          return;
+        }
         if (
           (event.ctrlKey || event.metaKey) &&
           ["z", "y", "c", "v", "d", "x"].includes(key)
