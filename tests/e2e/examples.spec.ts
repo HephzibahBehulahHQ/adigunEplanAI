@@ -185,4 +185,3 @@ test("project navigator tabs expose the real library, examples and search", asyn
   await tabs.getByRole("tab", { name: "Library" }).click();
   await expect(page.locator(".component-library[open]")).toBeVisible();
 });
-
