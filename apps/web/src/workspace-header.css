@@ -57,6 +57,11 @@
 }
 .project-save-chip .project-name {
   display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  max-width: none;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -72,6 +77,9 @@
   margin-left: auto;
   font-size: 10px;
   white-space: nowrap;
+}
+.dirty-marker {
+  margin-left: -14px;
 }
 .project-save-state i {
   width: 7px;
@@ -155,6 +163,9 @@
   font-size: 12px;
 }
 .profile-caption small {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   font-size: 9px;
   background: #006cbb;
   color: white;

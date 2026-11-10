@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 const key = "adiguneplanai.bot.window.v1.guest";
 test.beforeEach(async ({ page }) => {
@@ -64,7 +65,7 @@ test("BOT moves, resizes, minimizes, maximizes, closes and restores without bloc
   await size.press("ArrowRight");
   const sized = (await bot.boundingBox())!;
   expect(sized.width).toBe(box.width + 10);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await expect(bot).toBeVisible();
   expect((await bot.boundingBox())!.x).toBe(sized.x);
   expect((await bot.boundingBox())!.width).toBe(sized.width);
@@ -94,7 +95,7 @@ test("BOT moves, resizes, minimizes, maximizes, closes and restores without bloc
   await expect(
     page.getByRole("button", { name: "Open Adigun BOT", exact: true }),
   ).toBeFocused();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await expect(bot).toHaveCount(0);
   await page
     .getByRole("button", { name: "AI tools menu", exact: true })

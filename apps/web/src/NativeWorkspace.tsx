@@ -79,11 +79,7 @@ export function ProjectTools({
         </svg>
         {t("newProject")}
       </button>
-      <button
-        data-command="open"
-        aria-label={t("importProject")}
-        onClick={() => file.current?.click()}
-      >
+      <button data-command="open" onClick={() => file.current?.click()}>
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -151,8 +147,14 @@ export function ProjectTools({
           <button
             data-command="close"
             aria-label={t("closeProject")}
-            disabled={!native.project || !native.saved}
-            onClick={() => native.close()}
+            disabled={!native.project}
+            onClick={() => {
+              if (
+                !native.hasUnsavedChanges ||
+                window.confirm(t("unsavedCloseConfirmation"))
+              )
+                native.close(true);
+            }}
             title={t("closeProject")}
           >
             <CommandIcon kind="close" />
@@ -297,6 +299,11 @@ export function ProjectTools({
               new FormData(event.currentTarget).get("name") ?? "",
             ).trim();
             if (!name) return;
+            if (
+              native.hasUnsavedChanges &&
+              !window.confirm(t("unsavedCloseConfirmation"))
+            )
+              return;
             native.create(name, `${t("sheet")} 1`, t("document"));
             dialog.current?.close();
           }}
@@ -408,6 +415,7 @@ export function ProjectNavigator({
             <label>
               {t("chooseProject")}
               <select
+                data-testid="project-picker"
                 aria-label={t("chooseProject")}
                 value=""
                 onChange={(event) => native.select(event.target.value)}
@@ -430,6 +438,7 @@ export function ProjectNavigator({
             <label>
               {t("chooseProject")}
               <select
+                data-testid="project-picker"
                 aria-label={t("chooseProject")}
                 value={project.id}
                 onChange={(event) => native.select(event.target.value)}

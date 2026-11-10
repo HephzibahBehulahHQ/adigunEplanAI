@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const cases = [
@@ -10,7 +11,7 @@ const cases = [
 for (const [name, devices, wires, selector] of cases) {
   test(`${name} opens a new native copy, reloads and exports without replacing earlier work`, async ({
     page,
-  }) => {
+  }, testInfo) => {
     await page.goto("/");
     async function open() {
       await page
@@ -28,6 +29,16 @@ for (const [name, devices, wires, selector] of cases) {
     }
     await open();
     await expect(page.locator(selector)).toBeVisible();
+    if (name === "Transformer station documentation") {
+      await page.setViewportSize({ width: 1857, height: 1000 });
+      await page
+        .getByRole("button", { name: "Home menu", exact: true })
+        .click();
+      await testInfo.attach("native-substation-workbench", {
+        body: await page.screenshot(),
+        contentType: "image/png",
+      });
+    }
     const first = await page.evaluate(
       () =>
         JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
@@ -43,7 +54,7 @@ for (const [name, devices, wires, selector] of cases) {
     expect(library.projects).toHaveLength(2);
     expect(library.projects[0]).toEqual(first);
     expect(library.projects[1].id).not.toBe(first.id);
-    await page.reload();
+    await reloadAndReopenProject(page);
     expect(
       await page.evaluate(() =>
         localStorage.getItem("adiguneplanai.projects.v1"),

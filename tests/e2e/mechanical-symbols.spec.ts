@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
 async function create(page: Page) {
@@ -98,7 +99,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   await expect(
     page.getByRole("region", { name: "Bill of materials", exact: true }),
   ).toContainText("USER-GLAND");
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect((await project(page)).devices).toEqual(data.devices);
   expect((await project(page)).pins).toHaveLength(0);
   expect((await project(page)).terminals).toHaveLength(0);

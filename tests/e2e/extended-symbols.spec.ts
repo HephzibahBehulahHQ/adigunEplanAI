@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 const cases = [
   ["plc-cpu-serial", "PLC CPU", "I0", 8, 8],
@@ -103,7 +104,7 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
       expect(data.devices[0].reference).toBe("ME1");
       expect(data.wires).toHaveLength(0);
     }
-    await page.reload();
+    await reloadAndReopenProject(page);
     expect((await project()).pins).toEqual(data.pins);
     expect((await project()).nets).toEqual(data.nets);
     expect((await project()).wires).toEqual(data.wires);

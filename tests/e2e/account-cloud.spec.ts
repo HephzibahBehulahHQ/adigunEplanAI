@@ -263,7 +263,7 @@ test("guest, A and B keep local projects and undo histories isolated; stale clou
     .getByRole("button", { name: "New drawing page", exact: true })
     .click();
   await expect(
-    page.getByRole("button", { name: "Undo", exact: true }),
+    page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeEnabled();
   expect(
     mock.calls.filter(
@@ -286,9 +286,13 @@ test("guest, A and B keep local projects and undo histories isolated; stale clou
     .click();
   await expect.poll(() => Boolean(mock.control.held)).toBe(true);
   await signOut(page);
+  await expect(page.locator(".empty-workspace")).toBeVisible();
+  await page
+    .getByTestId("project-picker")
+    .selectOption({ label: "Guest project" });
   await expect(page.locator(".project-title")).toHaveText("Guest project");
   await expect(
-    page.getByRole("button", { name: "Undo", exact: true }),
+    page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeDisabled();
   await signIn(page, b);
   await expect(

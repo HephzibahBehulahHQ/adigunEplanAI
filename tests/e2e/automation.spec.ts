@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 
@@ -74,11 +75,15 @@ test("PLC I/O documentation creates native interfaces and survives edits, undo a
   await mapping
     .getByRole("button", { name: "Save I/O address", exact: true })
     .click();
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(
     view.getByRole("table", { name: "PLC I/O list", exact: true }),
   ).toContainText("%IX0.0");
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   const note = view.getByRole("form", {
     name: "Control and safety documentation",
     exact: true,
@@ -106,7 +111,7 @@ test("PLC I/O documentation creates native interfaces and survives edits, undo a
   const csv = await readFile((await (await downloadEvent).path())!, "utf8");
   expect(csv).toContain('"PLC1",0,"%IX0.1"'.replace(",0,", ',"0",'));
   const saved = await read();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "PLC and automation", exact: true })
     .click();
@@ -119,4 +124,18 @@ test("PLC I/O documentation creates native interfaces and survives edits, undo a
     ),
   ).toBe(true);
   expect(errors).toEqual([]);
+});
+
+// Retain coverage of the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem(key) || "{}"),
+        compact: false,
+      }),
+    );
+  });
 });

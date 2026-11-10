@@ -1,3 +1,4 @@
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { dxfFixture } from "../fixtures/dxf-plan.mjs";
 import { test, expect } from "@playwright/test";
 
@@ -34,9 +35,13 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     "points",
     "-1000,0 3000,0 3000,3000 -1000,3000",
   );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-room-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-room-id]")).toHaveCount(1);
   await floor.getByLabel("Floor name", { exact: true }).fill("Upper");
   await floor.getByLabel("Elevation (mm)", { exact: true }).fill("3000");
@@ -45,7 +50,7 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     .getByRole("combobox", { name: "Floor name", exact: true })
     .selectOption({ label: "Upper" });
   await expect(page.locator("[data-room-id]")).toHaveCount(0);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -89,7 +94,7 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     "points",
     "0,0 4000,0 4000,2000 2000,2000 2000,4000 0,4000",
   );
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -101,7 +106,9 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     .getByRole("button", { name: "Remove room: Office", exact: true })
     .click();
   await expect(page.locator("[data-room-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-room-id]")).toHaveCount(1);
 });
 
@@ -179,11 +186,15 @@ test("graphical room drawing snaps vertices and commits only on Finish", async (
     "points",
     "1100,1100 3100,1100 3100,2100 1100,2100",
   );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   expect((await read()).rooms).toHaveLength(0);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   const after = await read();
-  await page.reload();
+  await reloadAndReopenProject(page);
   expect((await read()).rooms).toEqual(after.rooms);
 });
 
@@ -239,7 +250,7 @@ test("native walls obey architectural layer visibility and locking and survive r
     .getByRole("checkbox", { name: "Visible: Architecture", exact: true })
     .uncheck();
   await expect(page.locator("[data-wall-id]")).toHaveCount(0);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -258,7 +269,9 @@ test("native walls obey architectural layer visibility and locking and survive r
     .getByRole("button", { name: "Remove wall: North wall", exact: true })
     .click();
   await expect(page.locator("[data-wall-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-wall-id]")).toHaveCount(1);
   await page.getByText("Edit wall: North wall", { exact: true }).click();
   const opening = page.getByRole("form", {
@@ -317,7 +330,7 @@ test("native walls obey architectural layer visibility and locking and survive r
   await expect(
     edit.getByRole("button", { name: "Edit wall", exact: true }),
   ).toBeDisabled();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -331,7 +344,9 @@ test("native walls obey architectural layer visibility and locking and survive r
     .getByRole("button", { name: "Remove opening: D1", exact: true })
     .click();
   await expect(page.locator("[data-opening-id] path")).toHaveCount(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-opening-id] path")).toHaveCount(1);
 });
 
@@ -386,9 +401,13 @@ test("SVG architectural import previews scale and unsupported objects without ex
     "d",
     "M 0 0 L 4000 0 L 4000 3000 L 0 3000 Z",
   );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
   await page.locator(".wall-tools > summary").click();
   await page
@@ -443,7 +462,7 @@ test("SVG architectural import previews scale and unsupported objects without ex
       ),
     ).toBe(before);
   }
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -519,7 +538,7 @@ test("SVG nested transforms preserve order and invalid transform subtrees are re
   await page
     .getByRole("checkbox", { name: "Visible: Scaled", exact: true })
     .check();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -607,7 +626,7 @@ test("SVG physical units map viewport dimensions and reject unresolved percentag
       localStorage.getItem("adiguneplanai.projects.v1"),
     ),
   ).toBe(before);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -697,9 +716,11 @@ test("DXF worker import preserves declared units and locked layers with preview 
     .getByRole("button", { name: "Remove imported geometry: A1", exact: true })
     .click();
   await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(1);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-geometry-id]")).toHaveCount(2);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -845,15 +866,19 @@ test("plan zones edit room membership, highlight plans and preserve protected ro
   await expect(page.getByRole("alert")).toContainText(
     "The project is invalid. Existing work has been preserved.",
   );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(
     zone.getByRole("checkbox", { name: "Office", exact: true }),
   ).toBeChecked();
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await expect(
     zone.getByRole("checkbox", { name: "Hall", exact: true }),
   ).toBeChecked();
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -867,7 +892,9 @@ test("plan zones edit room membership, highlight plans and preserve protected ro
   ).toBeChecked();
   await page.getByRole("button", { name: "Remove zone", exact: true }).click();
   await expect(page.locator("polygon[data-zone-id]")).toHaveCount(0);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await page.getByLabel("Selected zone", { exact: true }).selectOption(id);
   await expect(page.locator("polygon[data-zone-id]")).toHaveCount(1);
 });
@@ -943,7 +970,9 @@ test("floor drawing scale exports physical SVG dimensions while preserving model
   });
   expect(parsed.description).toContain("Scale 1:50");
   expect(await page.evaluate(() => JSON.stringify(localStorage))).toBe(before);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.getByLabel("Scaled plan size", { exact: true })).toHaveText(
     "1:100 · 44.00 × 34.00 mm",
   );
@@ -951,8 +980,10 @@ test("floor drawing scale exports physical SVG dimensions while preserving model
     "points",
     points!,
   );
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
-  await page.reload();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -1069,12 +1100,16 @@ test("floor equipment shares schematic identity, protects layers and persists a 
     "transform",
     "translate(1500 500) rotate(90) scale(20)",
   );
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-equipment-id] > g")).toHaveAttribute(
     "transform",
     "translate(1000 500) rotate(0) scale(20)",
   );
-  await page.getByRole("button", { name: "Redo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
   await page
     .getByRole("checkbox", { name: "Locked: Lighting", exact: true })
     .check();
@@ -1092,7 +1127,7 @@ test("floor equipment shares schematic identity, protects layers and persists a 
     .uncheck();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(0);
   await expect(schedule.locator("tbody tr")).toHaveCount(1);
-  await page.reload();
+  await reloadAndReopenProject(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -1116,7 +1151,9 @@ test("floor equipment shares schematic identity, protects layers and persists a 
     .click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(0);
   expect((await read()).devices).toEqual(original.devices);
-  await page.getByRole("button", { name: "Undo", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
 });
 

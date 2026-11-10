@@ -1217,5 +1217,6 @@
   "ribbonPlacementHint": "Yan àmì, lẹ́yìn náà tẹ àwòrán láti gbé e sí. Escape padà sí yíyan.",
   "nativeValidationPassed": "Ètò ìwé àti àwọn ìtọ́kasí rẹ̀ pé. Lo E-Check fún ìsopọ̀; èyí kì í ṣe ìjẹ́rìí iṣẹ́ ẹ̀rọ.",
   "nativeValidationFailed": "Àyẹ̀wò ìwé kùnà. Ṣàyẹ̀wò ìṣòro kí o tó gbé jáde.",
-  "ribbonSyncHint": "Yan ohun èlò tó wà nínú kọ́bọdù láti fi hàn ní ojú ìwò méjèèjì. Fi èyí tí kò sí kún un ní 3D Panel."
+  "ribbonSyncHint": "Yan ohun èlò tó wà nínú kọ́bọdù láti fi hàn ní ojú ìwò méjèèjì. Fi èyí tí kò sí kún un ní 3D Panel.",
+  "unsavedCloseConfirmation": "Àwọn àyípadà kan kò tíì fi pamọ́. Ṣé o dájú pé o fẹ́ ti iṣẹ́ yìí?"
 }

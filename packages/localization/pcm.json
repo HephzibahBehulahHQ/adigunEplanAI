@@ -1217,5 +1217,6 @@
   "ribbonPlacementHint": "Choose a symbol, then click the drawing to place am. Escape go return to selection.",
   "nativeValidationPassed": "Document structure and references pass. Use E-Check for connections; this no be engineering certification.",
   "nativeValidationFailed": "Document validation fail. Check diagnostics before export.",
-  "ribbonSyncHint": "Select device wey get cabinet placement to highlight am for both views. Add missing placement for 3D Panel."
+  "ribbonSyncHint": "Select device wey get cabinet placement to highlight am for both views. Add missing placement for 3D Panel.",
+  "unsavedCloseConfirmation": "You get changes wey never save. You sure say you wan close this project?"
 }

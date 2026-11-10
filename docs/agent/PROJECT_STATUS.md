@@ -12,11 +12,11 @@ native project status and account utilities, and organizes Home into the target 
 groups. Cut and equal distribution use native history, geometry and connectivity.
 Placement, symbol installation, manufacturer catalogue access, structural validation,
 E-Check, BOM, view synchronization and themes invoke implemented paths. Examples
-remain in File and the navigator. Autosave/recovery is preserved.
+remain in File and the navigator. Autosave/recovery is preserved. Startup now ignores the last active project; pagehide clears only the session pointer. Failed autosave installs a native leaving guard, and explicit close/new confirms unsaved changes. Closing/new resets selection, history and the viewport. Tests reopen saved projects explicitly after asserting a blank boot.
 
-Local validation: 344 unit/tooling checks, typecheck, lint, formatting, template,
+Local validation: 346 unit/tooling checks, typecheck, lint, formatting, template,
 license/notices and build passed. Desktop visual inspection and native validation dialog
-were checked. Hosted full browser and production checks remain release gates for this
+were checked. The first hosted browser run found legacy control selectors, an ambiguous import label and German profile-badge overflow; these have been corrected. Hosted full browser and production checks remain release gates for this
 increment; CI and deployment receipts will be recorded in its PR. The local IAB clamps
 small viewport overrides, so genuine 390px coverage must come from hosted Chromium.
 Full workbench visual parity and the master-plan engineering/account/BOT/example gates

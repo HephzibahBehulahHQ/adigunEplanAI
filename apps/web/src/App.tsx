@@ -236,6 +236,7 @@ function Workspace({ account }: { account: Account }) {
   return (
     <div
       className="application"
+      data-project-id={native.project?.id ?? ""}
       data-compact={prefs.compact}
       inert={account.checking && !account.user}
     >

@@ -1217,5 +1217,6 @@
   "ribbonPlacementHint": "Natives Symbol wählen, dann zum Platzieren in die Zeichnung klicken. Escape kehrt zur Auswahl zurück.",
   "nativeValidationPassed": "Native Dokumentstruktur und Referenzen sind gültig. E-Check zeigt Verbindungsbefunde; dies ist keine technische Zertifizierung.",
   "nativeValidationFailed": "Dokumentvalidierung fehlgeschlagen. Vor dem Export die Diagnose prüfen.",
-  "ribbonSyncHint": "Ein Gerät mit Schaltschrankplatzierung auswählen, um dasselbe native Gerät in beiden Ansichten hervorzuheben. Fehlende Platzierungen im 3D-Schaltschrankbereich zuweisen."
+  "ribbonSyncHint": "Ein Gerät mit Schaltschrankplatzierung auswählen, um dasselbe native Gerät in beiden Ansichten hervorzuheben. Fehlende Platzierungen im 3D-Schaltschrankbereich zuweisen.",
+  "unsavedCloseConfirmation": "Es gibt ungespeicherte Änderungen. Möchten Sie dieses Projekt wirklich schließen?"
 }

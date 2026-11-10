@@ -1217,5 +1217,6 @@
   "ribbonPlacementHint": "Choose a native symbol, then click the drawing to place it. Escape returns to selection.",
   "nativeValidationPassed": "Native document structure and references are valid. Use E-Check for connectivity findings; this is not engineering certification.",
   "nativeValidationFailed": "Document validation failed. Review diagnostics before exporting.",
-  "ribbonSyncHint": "Select a device with a cabinet placement to highlight the same native device in both views. Assign missing placements in the 3D Panel workspace."
+  "ribbonSyncHint": "Select a device with a cabinet placement to highlight the same native device in both views. Assign missing placements in the 3D Panel workspace.",
+  "unsavedCloseConfirmation": "You have unsaved changes. Are you sure you want to close this project?"
 }

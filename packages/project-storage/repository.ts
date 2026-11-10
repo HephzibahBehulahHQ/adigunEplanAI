@@ -41,6 +41,16 @@ export type ProjectLibrary = {
   projects: Project[];
   activeProjectId: string | null;
 };
+/** Saved projects are a library; the active canvas is never restored at startup. */
+export function loadWorkspaceLibrary(storage: StorageAdapter): ProjectLibrary {
+  return { ...loadLibrary(storage), activeProjectId: null };
+}
+/** Only clear the session pointer. Never discard the latest saved project snapshots. */
+export function clearActiveProject(storage: StorageAdapter): void {
+  const library = loadLibrary(storage);
+  if (library.activeProjectId !== null)
+    saveLibrary(storage, { ...library, activeProjectId: null });
+}
 export function loadLibrary(storage: StorageAdapter): ProjectLibrary {
   const raw = storage.getItem(projectStorageKey);
   if (raw === null) return { projects: [], activeProjectId: null };

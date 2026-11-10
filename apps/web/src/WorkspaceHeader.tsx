@@ -48,8 +48,12 @@ export function WorkspaceHeader({
           title={native.project?.name}
         >
           {native.project?.name ?? t("noProject")}
-          {native.project && !native.saved ? " *" : ""}
         </span>
+        {native.project && !native.saved && (
+          <span className="dirty-marker" aria-hidden="true">
+            *
+          </span>
+        )}
         <span
           className="project-save-state"
           role="status"
