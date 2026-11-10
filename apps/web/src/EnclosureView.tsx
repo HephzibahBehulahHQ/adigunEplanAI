@@ -170,27 +170,16 @@ export function EnclosureView({
       key: enclosure.id,
       label: enclosure.name,
       selected: false,
-      kind: "frame" as const,
       points: corners(
         { x: 0, y: 0, z: 0 },
         { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
       ),
     },
-    ...project.panelStructures
-      .filter((item) => item.enclosureId === enclosure.id)
-      .map((item) => ({
-        key: item.id,
-        label: item.name,
-        selected: false,
-        kind: item.kind,
-        points: corners(item.positionMm, item.sizeMm),
-      })),
     ...project.equipment3d
       .filter((item) => item.enclosureId === enclosure.id)
       .map((item) => ({
         key: item.id,
         selected: item.deviceId === selectedDeviceId,
-        kind: "equipment" as const,
         label:
           project.devices.find((device) => device.id === item.deviceId)
             ?.reference ?? item.name,
@@ -212,7 +201,7 @@ export function EnclosureView({
   const margin = Math.max(right - left, bottom - top) * 0.07;
   const width = (right - left + 2 * margin) / magnification;
   const height = (bottom - top + 2 * margin) / magnification;
-  const [frame, ...components] = boxes;
+  const [frame, ...equipment] = boxes;
   const cameraFacingFaces = faces.filter(
     ({ normal }) => cameraDepth(normal) > 1e-10,
   );
@@ -230,15 +219,14 @@ export function EnclosureView({
       ),
     }))
     .sort((a, b) => Number(a.facing) - Number(b.facing));
-  const visibleFaces = components
-    .flatMap(({ key, label, points, selected, kind }) =>
+  const visibleFaces = equipment
+    .flatMap(({ key, label, points, selected }) =>
       cameraFacingFaces.map(({ indices, tone }) => {
         const vertices = indices.map((index) => points[index]);
         return {
           key: `${key}:${tone}`,
           label,
           selected,
-          kind,
           tone,
           depth:
             vertices.reduce((sum, point) => sum + point.depth, 0) /
@@ -321,19 +309,17 @@ export function EnclosureView({
               />
             ))}
           </g>
-          {visibleFaces.map(
-            ({ key, label, tone, coordinates, selected, kind }) => (
-              <polygon
-                key={key}
-                className={`enclosure-face enclosure-face-${tone} enclosure-object-${kind}`}
-                data-highlighted={selected || undefined}
-                points={coordinates}
-                vectorEffect="non-scaling-stroke"
-              >
-                <title>{label}</title>
-              </polygon>
-            ),
-          )}
+          {visibleFaces.map(({ key, label, tone, coordinates, selected }) => (
+            <polygon
+              key={key}
+              className={`enclosure-face enclosure-face-${tone}`}
+              data-highlighted={selected || undefined}
+              points={coordinates}
+              vectorEffect="non-scaling-stroke"
+            >
+              <title>{label}</title>
+            </polygon>
+          ))}
         </svg>
         <svg
           className="cabinet-axes"

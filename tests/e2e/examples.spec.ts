@@ -84,15 +84,19 @@ for (const [name, devices, wires, selector] of cases) {
       await expect(
         page.getByRole("figure", { name: "Interactive panel 3D view" }),
       ).toBeVisible();
-      await expect(
-        page.locator(".cabinet-model .enclosure-object-plate"),
-      ).not.toHaveCount(0);
-      await expect(
-        page.locator(".cabinet-model .enclosure-object-din-rail"),
-      ).not.toHaveCount(0);
-      await expect(
-        page.locator(".cabinet-model .enclosure-object-duct"),
-      ).not.toHaveCount(0);
+      const structureIds = await page.evaluate(() =>
+        JSON.parse(
+          localStorage.getItem("adiguneplanai.projects.v1")!,
+        ).projects[0].panelStructures.map((structure: { id: string }) =>
+          String(structure.id),
+        ),
+      );
+      expect(structureIds.length).toBeGreaterThan(0);
+      for (const id of structureIds) {
+        await expect(
+          page.locator(`.panel-3d-view [data-panel-object="${id}"]`).first(),
+        ).toBeVisible();
+      }
       await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
