@@ -507,18 +507,18 @@ export function buildExample(id: ExampleId): Project {
       wire("X0", "1", "PLC1", "common", "#2563eb");
 
       const loadResult = calculate(
-        "three-phase-power",
-        { voltage: 20, current: 18.19, powerFactor: 0.95 },
-        { voltage: "kV", current: "A", powerFactor: "1" },
+        "apparent-load-current",
+        { phases: 3, voltage: 20, apparentPower: 630 },
+        { phases: "1", voltage: "kV", apparentPower: "kVA" },
         [
-          "Scenario basis from the supplied target interface: 20 kV, 630 kVA, cosφ 0.95. Current is rounded to 18.19 A; the calculation is an estimate, not a protection setting.",
+          "Scenario basis from the supplied target interface: balanced three-phase, 20 kV line-to-line, 630 kVA. cosφ 0.95 is documented project context but is not used in this apparent-power current equation. This estimate is not a protection setting.",
         ],
       );
       p.calculations.push(
         calculationToRecord(
           loadResult,
           "target-substation-load",
-          "20 kV transformer primary load estimate",
+          "20 kV transformer primary current estimate",
         ),
       );
       cabinet(

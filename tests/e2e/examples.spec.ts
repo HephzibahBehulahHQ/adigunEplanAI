@@ -89,7 +89,13 @@ for (const [name, devices, wires, selector] of cases) {
       ).toBeVisible();
       await expect(
         page.getByRole("region", { name: "Calculations", exact: true }),
-      ).toContainText("20 kV transformer primary load estimate");
+      ).toContainText("20 kV transformer primary current estimate");
+      await expect(page.locator(".calculation-command-row select")).toHaveValue(
+        "apparent-load-current",
+      );
+      await expect(
+        page.locator('[data-calculation-value="current"]'),
+      ).toContainText("18.186");
       await expect(
         page.getByRole("region", { name: "Bill of materials" }),
       ).toContainText("750-8217");

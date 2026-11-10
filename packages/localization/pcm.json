@@ -863,6 +863,7 @@
   "calcToolVoltageDrop": "Steady-state voltage drop",
   "calcToolCableResistance": "Conductor resistance",
   "calcToolLoadCurrent": "Load current",
+  "calcToolApparentLoadCurrent": "Load current from apparent power",
   "calcToolCircuitLoading": "Circuit loading check",
   "calcToolTransformerSizing": "Transformer rating estimate",
   "calcToolMotorFullLoad": "Motor full-load current estimate",

@@ -863,6 +863,7 @@
   "calcToolVoltageDrop": "Ìṣubú foliteji ní iṣẹ́ ìdúróṣinṣin",
   "calcToolCableResistance": "Resistansi olùdarí",
   "calcToolLoadCurrent": "Ìṣàn ẹrù",
+  "calcToolApparentLoadCurrent": "Ìṣàn ẹrù láti agbára àpapọ̀",
   "calcToolCircuitLoading": "Àyẹ̀wò ẹrù sáákìtì",
   "calcToolTransformerSizing": "Ìdíyelé agbára tíránsífọ́mà",
   "calcToolMotorFullLoad": "Ìdíyelé ìṣàn mọ́tò ní ẹrù kíkún",

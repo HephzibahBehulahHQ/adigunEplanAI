@@ -863,6 +863,7 @@
   "calcToolVoltageDrop": "Spannungsfall im stationären Betrieb",
   "calcToolCableResistance": "Leiterwiderstand",
   "calcToolLoadCurrent": "Laststrom",
+  "calcToolApparentLoadCurrent": "Laststrom aus Scheinleistung",
   "calcToolCircuitLoading": "Stromkreisbelastung prüfen",
   "calcToolTransformerSizing": "Transformatorleistung schätzen",
   "calcToolMotorFullLoad": "Motorbemessungsstrom schätzen",

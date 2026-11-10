@@ -65,7 +65,7 @@ for (const example of examples) {
   });
 }
 
-test("target substation opens with sourced BOM parts, PLC interface, and saved three-phase load estimate", () => {
+test("target substation opens with sourced BOM parts, PLC interface, and saved apparent-power current estimate", () => {
   const p = buildExample("target-substation");
   assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
   assert.equal(p.pages.length, 3);
@@ -85,9 +85,10 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved t
     p.manufacturerParts.every((part) => part.sourceUrl?.startsWith("https://")),
   );
   assert.equal(p.calculations.length, 1);
-  assert.equal(p.calculations[0].kind, "three-phase-power");
+  assert.equal(p.calculations[0].kind, "apparent-load-current");
+  assert.equal(p.calculations[0].inputs.phases, 3);
   assert.equal(p.calculations[0].inputs.voltage, 20);
-  assert.equal(p.calculations[0].inputs.current, 18.19);
+  assert.equal(p.calculations[0].inputs.apparentPower, 630);
   assert.deepEqual(parseProject(serializeProject(p)).project, p);
 });
 

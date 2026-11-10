@@ -56,18 +56,43 @@ export function CalculationsPanel({ native, t }: Props) {
   return <CalculationForm key={native.project.id} native={native} t={t} />;
 }
 function CalculationForm({ native, t }: Props) {
-  const [toolId, setToolId] = useState("ohms-law");
-  const [inputs, setInputs] = useState<Record<string, string>>({});
-  const [units, setUnits] = useState<Record<string, Unit>>(
-    unitsFor("ohms-law"),
+  const project = native.project!;
+  const [initialCalculation] = useState(() => {
+    const item =
+      project.calculations.find(
+        (record) => record.id === "target-substation-load",
+      ) ?? project.calculations[0];
+    if (!item) return null;
+    try {
+      return { item, result: calculateRecord(item) };
+    } catch {
+      return null;
+    }
+  });
+  const [toolId, setToolId] = useState(
+    initialCalculation?.item.kind ?? "ohms-law",
   );
-  const [evidence, setEvidence] = useState("");
-  const [name, setName] = useState("");
-  const [recordId, setRecordId] = useState("");
-  const [result, setResult] = useState<CalculationResult | null>(null);
+  const [inputs, setInputs] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      Object.entries(initialCalculation?.item.inputs ?? {}).map(
+        ([key, value]) => [key, String(value)],
+      ),
+    ),
+  );
+  const [units, setUnits] = useState<Record<string, Unit>>(
+    (initialCalculation?.item.units as Record<string, Unit> | undefined) ??
+      unitsFor("ohms-law"),
+  );
+  const [evidence, setEvidence] = useState(
+    initialCalculation?.result.evidence.join("\n") ?? "",
+  );
+  const [name, setName] = useState(initialCalculation?.item.name ?? "");
+  const [recordId, setRecordId] = useState(initialCalculation?.item.id ?? "");
+  const [result, setResult] = useState<CalculationResult | null>(
+    initialCalculation?.result ?? null,
+  );
   const [issues, setIssues] = useState<CalculationIssue[]>([]);
   const [saved, setSaved] = useState(false);
-  const project = native.project!;
   const calculator = calculatorById(toolId);
   const tr = (key: string) => t(key as MessageKey);
   const title = name.trim() || tr(calculator.titleKey);
