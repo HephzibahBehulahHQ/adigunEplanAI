@@ -65,6 +65,12 @@ function Workspace({ account }: { account: Account }) {
     () => (native.project ? analyze(native.project) : null),
     [native.project],
   );
+  const errorCount =
+    connectivity?.findings.filter(({ severity }) => severity === "error")
+      .length ?? 0;
+  const warningCount =
+    connectivity?.findings.filter(({ severity }) => severity === "warning")
+      .length ?? 0;
   const examplesDialog = useRef<HTMLDialogElement>(null);
   const accountDialog = useRef<HTMLDialogElement>(null);
   const searchDialog = useRef<HTMLDialogElement>(null);
@@ -504,11 +510,19 @@ function Workspace({ account }: { account: Account }) {
             {" · mm"}
           </span>
         )}
-        <span>
-          {native.project
-            ? t(native.saved ? "savedLocally" : "notSaved")
-            : t("local")}
-        </span>
+        {connectivity && (
+          <button
+            type="button"
+            className="status-diagnostics"
+            data-severity={
+              errorCount ? "error" : warningCount ? "warning" : "clear"
+            }
+            onClick={() => reveal("diagnostics")}
+          >
+            {t("diagnostics")} · {t("errors")} {errorCount} · {t("warnings")}{" "}
+            {warningCount}
+          </button>
+        )}
         <span>
           © {new Date().getFullYear()}{" "}
           <a

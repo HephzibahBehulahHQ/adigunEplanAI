@@ -53,6 +53,16 @@ for (const [name, devices, wires, selector] of cases) {
         diagnostics.getByText("No findings in this category.", { exact: true }),
       ).toBeVisible();
       await filters.getByRole("button", { name: /^All \(/ }).click();
+      const footer = page.locator(".status-bar");
+      await expect(
+        footer.getByText("Saved locally", { exact: true }),
+      ).toHaveCount(0);
+      await footer
+        .getByRole("button", { name: /Diagnostics.*Errors 0.*Warnings [1-9]/ })
+        .click();
+      await expect(
+        diagnostics.locator(".panel-heading button").first(),
+      ).toBeFocused();
       const screenshotPath = testInfo.outputPath(
         "native-substation-workbench.png",
       );
