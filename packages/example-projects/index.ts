@@ -204,16 +204,20 @@ export function buildExample(id: ExampleId): Project {
       20,
       22,
     );
-    note("Primary interfaces", 30, 42);
-    note("Transformer", 165, 42);
-    note("Secondary interfaces", 300, 42);
-    symbol("terminal", "X1", 35, 85, 0, "Incoming primary interface P1");
-    symbol("terminal", "X2", 35, 125, 0, "Incoming primary interface P2");
+    note("Primary interfaces", 30, 51);
+    note("Transformer", 165, 51);
+    note("Secondary interfaces", 300, 51);
+    note("P1 · Incoming", 23, 78);
+    note("P2 · Incoming", 23, 168);
+    note("S1 · Outgoing", 352, 78);
+    note("S2 · Outgoing", 352, 168);
+    symbol("terminal", "X1", 35, 95, 0, "Incoming primary interface P1");
+    symbol("terminal", "X2", 35, 185, 0, "Incoming primary interface P2");
     symbol(
       "fuse",
       "F1",
       95,
-      85,
+      95,
       0,
       "Primary protection interface; rating unspecified",
     );
@@ -221,7 +225,7 @@ export function buildExample(id: ExampleId): Project {
       "fuse",
       "F2",
       95,
-      125,
+      185,
       0,
       "Primary protection interface; rating unspecified",
     );
@@ -229,13 +233,13 @@ export function buildExample(id: ExampleId): Project {
       "transformer-two-winding",
       "T1",
       190,
-      105,
+      140,
       0,
       "Two-winding transformer; single-phase equivalent",
     );
-    symbol("contact", "Q1", 285, 85, 0, "Secondary isolation interface");
-    symbol("terminal", "X3", 365, 85, 0, "Outgoing secondary S1");
-    symbol("terminal", "X4", 365, 125, 0, "Outgoing secondary S2");
+    symbol("contact", "Q1", 285, 95, 0, "Secondary isolation interface");
+    symbol("terminal", "X3", 365, 95, 0, "Outgoing secondary S1");
+    symbol("terminal", "X4", 365, 185, 0, "Outgoing secondary S2");
     wire("X1", "1", "F1", "1");
     wire("F1", "2", "T1", "P1");
     wire("X2", "1", "F2", "1", "#2563eb");
@@ -246,12 +250,12 @@ export function buildExample(id: ExampleId): Project {
     note(
       "No transformer ratio, fault current, protection setting or medium-voltage rating is specified.",
       20,
-      175,
+      225,
     );
     note(
       "Separate winding terminals do not imply galvanic continuity or a solved network.",
       20,
-      185,
+      237,
     );
     pageId = page("02 · Secondary protection documentation");
     note(
