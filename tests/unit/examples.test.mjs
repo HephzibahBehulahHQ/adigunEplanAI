@@ -82,8 +82,8 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   const p = buildExample("target-substation");
   assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
   assert.equal(p.pages.length, 3);
-  assert.equal(p.devices.length, 26);
-  assert.equal(p.wires.length, 31);
+  assert.equal(p.devices.length, 27);
+  assert.equal(p.wires.length, 32);
   const incomingIsolator = p.devices.find(
     (device) => device.reference === "Q0",
   );
@@ -112,6 +112,40 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       { moduleKind: "digital-input", channelCount: 16 },
       { moduleKind: "digital-output", channelCount: 8 },
     ],
+  );
+  const cpu = p.devices.find((item) => item.reference === "PLC1");
+  const cpuInstance = p.symbolInstances.find(
+    (item) => item.deviceId === cpu.id,
+  );
+  const cpuPins = p.pins.filter(
+    (item) => item.symbolInstanceId === cpuInstance.id,
+  );
+  assert.deepEqual(
+    cpuPins.map((item) => item.definitionPinId).sort(),
+    ["common", "supply"],
+    "modular controller symbol does not invent integrated I/O or bus pinouts",
+  );
+  assert.ok(
+    cpuPins.every((pin) =>
+      p.wires.some(
+        (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
+      ),
+    ),
+    "controller power interfaces are connected",
+  );
+  assert.ok(
+    analyze(p)
+      .findings.filter((finding) => finding.code === "OPEN_TERMINAL")
+      .every((finding) => {
+        const terminal = p.terminals.find(
+          (item) => item.id === finding.entityIds[0],
+        );
+        return (
+          p.devices.find((device) => device.id === terminal.deviceId)
+            .reference === "P1"
+        );
+      }),
+    "only the unused relay contact remains explicitly open; controller and I/O bus pins are connected",
   );
   assert.deepEqual(
     p.manufacturerParts
@@ -226,3 +260,4 @@ test("PLC example maps two addresses to genuine wired channels and mounted devic
   assert.equal(plcWiringSchedule(p).length, 2);
   assert.equal(p.equipment3d.length, 7);
 });
+

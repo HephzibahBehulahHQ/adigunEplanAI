@@ -41,6 +41,7 @@ export function createPlcModule(
     reference: string;
     name: string;
     channelCount?: number;
+    symbolId?: string;
   },
 ): Project {
   const page = project.pages.find((item) => item.id === input.pageId);
@@ -51,8 +52,9 @@ export function createPlcModule(
     "digital-output": { 8: "digital-output-eight" },
   };
   const expandedSymbol = expandedSymbols[input.kind]?.[channelCount ?? 0];
-  const spec =
-    defaultSpec && channelCount === defaultSpec.channels
+  const spec = input.symbolId
+    ? { symbol: input.symbolId, channels: channelCount! }
+    : defaultSpec && channelCount === defaultSpec.channels
       ? defaultSpec
       : expandedSymbol
         ? { symbol: expandedSymbol, channels: channelCount! }
@@ -263,3 +265,4 @@ export function plcWiringSchedule(project: Project) {
     };
   });
 }
+

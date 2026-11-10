@@ -474,6 +474,15 @@ export function buildExample(id: ExampleId): Project {
         wire("T01", phase.secondary, "Q1", phase.breakerIn, phase.color);
         wire("Q1", phase.breakerOut, phase.output, "1", phase.color);
       }
+      symbol(
+        "ground",
+        "PE1",
+        300,
+        220,
+        0,
+        "Protective earth system interface; earthing arrangement unspecified",
+      );
+      wire("Q1", "PE_out", "PE1", "PE", "#16803d");
       note(
         "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
         20,
@@ -544,7 +553,7 @@ export function buildExample(id: ExampleId): Project {
 
       pageId = page("03 · Control and communications");
       note(
-        "CONTROL SYSTEM · generic interface symbol; verify terminal assignments against the selected device documentation",
+        "CONTROL SYSTEM · the internal modular I/O bus is not drawn; field-terminal pinout and PLC execution are not represented",
         20,
         22,
       );
@@ -560,9 +569,10 @@ export function buildExample(id: ExampleId): Project {
       );
       const cpuModule = createPlcModule(p, {
         kind: "cpu",
+        symbolId: "plc-cpu-modular",
         pageId,
         reference: "PLC1",
-        name: "WAGO PFC200 controller · generic interface symbol",
+        name: "WAGO PFC200 controller · generic modular bus interface",
       });
       p = cpuModule;
       const cpu = p.devices.find((device) => device.reference === "PLC1")!;
@@ -976,3 +986,4 @@ export function buildExample(id: ExampleId): Project {
   }
   return synchronizeConnectivity(validateProject(p));
 }
+

@@ -4,8 +4,8 @@ import { readFile } from "node:fs/promises";
 const cases = [
   [
     "Industry energy substation · 20 kV / 630 kVA",
-    26,
-    31,
+    27,
+    32,
     ".engineering-canvas",
   ],
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],
@@ -195,3 +195,4 @@ test("project navigator tabs expose the real library, examples and search", asyn
   await tabs.getByRole("tab", { name: "Library" }).click();
   await expect(page.locator(".component-library[open]")).toBeVisible();
 });
+
