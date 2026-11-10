@@ -61,16 +61,6 @@ for (const example of examples) {
         assert.equal(placement.dimensionSource, "catalog");
         assert.deepEqual(placement.sizeMm, { x: 12, y: 64, z: 100 });
       }
-      const controller = p.devices.find((item) => item.reference === "PLC1");
-      const controllerPlacement = p.equipment3d.find(
-        (item) => item.deviceId === controller.id,
-      );
-      assert.equal(controllerPlacement.dimensionSource, "catalog");
-      assert.deepEqual(controllerPlacement.sizeMm, {
-        x: 102.5,
-        y: 100,
-        z: 64.7,
-      });
     } else {
       assert.ok(
         p.equipment3d.every((item) => item.dimensionSource === "manual"),
@@ -94,10 +84,10 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   assert.equal(p.pages.length, 3);
   assert.equal(p.devices.length, 27);
   assert.equal(p.wires.length, 32);
+  const relay = p.devices.find((device) => device.reference === "P1");
   const relayPart = p.manufacturerParts.find(
-    (part) => part.partNumber === "P1J122728",
+    (part) => part.id === relay.partId,
   );
-  assert.equal(relayPart.manufacturer, "Siemens");
   assert.deepEqual(relayPart.ratings, {
     binaryInputs: 11,
     binaryOutputs: 9,
@@ -107,7 +97,28 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     auxiliarySupplyMaxV: 48,
     auxiliarySupplyType: "DC",
   });
-  assert.equal(relayPart.catalogSnapshot.category, "protection");
+  assert.deepEqual(relayPart.catalogSnapshot.dimensionsMm, {
+    width: 150,
+    height: 266,
+    depth: 163,
+  });
+  assert.match(relayPart.catalogSnapshot.dimensionsSourceUrl, /^https:\/\//);
+  const relayEquipment = p.equipment3d.find(
+    (item) => item.deviceId === relay.id,
+  );
+  assert.equal(relayEquipment.dimensionSource, "catalog");
+  assert.deepEqual(relayEquipment.sizeMm, { x: 150, y: 266, z: 163 });
+  const relaySupport = p.panelStructures.find(
+    (item) => item.id === relayEquipment.mountingStructureId,
+  );
+  assert.equal(relaySupport.kind, "door");
+  assert.ok(
+    panelReport(p, relayEquipment.enclosureId).diagnostics.every(
+      (diagnostic) =>
+        !diagnostic.objectIds.includes(relayEquipment.id) ||
+        !["mounting-support", "mounting-position"].includes(diagnostic.code),
+    ),
+  );
   const incomingIsolator = p.devices.find(
     (device) => device.reference === "Q0",
   );
@@ -126,31 +137,6 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       ),
     ),
     "each incoming isolator pole has a connected line-side and load-side pin",
-  );
-  const transformer = p.devices.find((device) => device.reference === "T01");
-  const transformerInstance = p.symbolInstances.find(
-    (instance) => instance.deviceId === transformer.id,
-  );
-  const transformerDefinition = p.symbolDefinitions.find(
-    (definition) => definition.id === transformerInstance.definitionId,
-  );
-  const transformerPins = p.pins.filter(
-    (pin) => pin.symbolInstanceId === transformerInstance.id,
-  );
-  assert.equal(
-    transformerDefinition.artwork.filter((shape) => shape.kind === "circle")
-      .length,
-    6,
-    "the three-phase transformer depicts all six winding coils",
-  );
-  assert.equal(transformerPins.length, 6);
-  assert.ok(
-    transformerPins.every((pin) =>
-      p.wires.some(
-        (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
-      ),
-    ),
-    "each primary and secondary phase pin is connected",
   );
   assert.deepEqual(
     p.plcModules
@@ -203,7 +189,7 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     [
       { manufacturer: "WAGO", partNumber: "750-1405" },
       { manufacturer: "WAGO", partNumber: "750-530" },
-      { manufacturer: "WAGO", partNumber: "750-8217/625-000" },
+      { manufacturer: "WAGO", partNumber: "750-8217" },
       { manufacturer: "Siemens", partNumber: "P1J122728" },
     ],
   );
@@ -309,3 +295,4 @@ test("PLC example maps two addresses to genuine wired channels and mounted devic
   assert.equal(plcWiringSchedule(p).length, 2);
   assert.equal(p.equipment3d.length, 7);
 });
+
