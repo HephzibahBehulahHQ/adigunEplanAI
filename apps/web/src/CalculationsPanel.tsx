@@ -22,6 +22,13 @@ import { downloadFile } from "./download";
 import "./calculations.css";
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
+const quickCalculations = [
+  ["load-current", "calcToolLoadCurrent"],
+  ["voltage-drop", "calcValueVoltageDrop"],
+  ["short-circuit", "calcToolShortCircuit"],
+  ["cable-sizing", "calcToolCableSizing"],
+  ["transformer-sizing", "calcToolTransformerSizing"],
+] as const satisfies ReadonlyArray<readonly [string, MessageKey]>;
 const unitsFor = (id: string) =>
   Object.fromEntries(
     calculatorById(id).inputs.map((field) => [field.key, field.units[0]]),
@@ -180,6 +187,24 @@ function CalculationForm({ native, t }: Props) {
       className="engineering-tools calculations-panel"
       aria-label={tr("calcTools")}
     >
+      <div
+        className="calculation-shortcuts"
+        role="group"
+        aria-label={tr("calcTools")}
+      >
+        {quickCalculations.map(([id, key]) => (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={toolId === id}
+            onClick={() => {
+              if (toolId !== id) choose(id);
+            }}
+          >
+            {t(key)}
+          </button>
+        ))}
+      </div>
       <h2>{tr("calcTools")}</h2>
       <p>{tr("calcScope")}</p>
       <label>

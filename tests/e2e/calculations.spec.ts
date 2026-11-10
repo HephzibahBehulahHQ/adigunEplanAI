@@ -60,6 +60,23 @@ test("calculation inputs, unit conversion, native replay and full report exports
   await expect(
     tools.getByLabel("Calculation method", { exact: true }).locator("option"),
   ).toHaveCount(25);
+  const shortcuts = tools.getByRole("group", {
+    name: "Engineering calculations",
+    exact: true,
+  });
+  const load = shortcuts.getByRole("button", {
+    name: "Load current",
+    exact: true,
+  });
+  await load.click();
+  await expect(load).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    tools.getByLabel("Calculation method", { exact: true }),
+  ).toHaveValue("load-current");
+  await tools
+    .getByLabel("Calculation method", { exact: true })
+    .selectOption("ohms-law");
+  await expect(load).toHaveAttribute("aria-pressed", "false");
   await tools.getByRole("button", { name: "Calculate", exact: true }).click();
   await expect(tools.getByRole("alert")).toContainText("Enter a value.");
   await tools.locator("#calculation-input-voltage").fill("12");

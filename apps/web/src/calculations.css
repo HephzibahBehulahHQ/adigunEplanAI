@@ -20,6 +20,30 @@
 .calculations-panel h3 {
   margin: 0.6rem 0;
 }
+.calculation-shortcuts {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  gap: 3px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+.calculation-shortcuts button {
+  flex: none;
+  white-space: nowrap;
+  padding: 0.25rem 0.4rem;
+  border-color: transparent;
+  border-radius: 3px 3px 0 0;
+  background: transparent;
+}
+.calculation-shortcuts button[aria-pressed="true"] {
+  border-color: var(--line);
+  background: var(--raised);
+  box-shadow: inset 0 -2px var(--cyan);
+}
 .calculations-panel h4 {
   margin-bottom: 0.35rem;
 }
