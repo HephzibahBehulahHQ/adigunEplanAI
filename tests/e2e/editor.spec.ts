@@ -1,6 +1,8 @@
+import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { nativeProject } from "../fixtures/native-project.mjs";
 const key = "adiguneplanai.projects.v1";
 async function create(page: Page) {
   await page.goto("/");
@@ -189,7 +191,9 @@ test("wire properties and shielded cable cores persist as native engineering met
     .getByLabel("Declared maximum wire connections", { exact: true })
     .fill("1");
   await terminal.getByRole("button", { name: "Apply", exact: true }).click();
-  await expect(panel).toContainText("Errors: 1");
+  await expect(
+    panel.getByRole("button", { name: "Errors (1)", exact: true }),
+  ).toBeVisible();
   await panel
     .locator("summary")
     .filter({ hasText: /^Terminal strip$/ })
@@ -394,6 +398,213 @@ for (const language of ["en", "de", "yo", "pcm"])
     ).toBe(true);
   });
 
+test("drawing selection and exact coordinate edits preserve native geometry and history", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.pages.push({
+    ...fixture.pages[0],
+    id: "sheet-2",
+    name: "Sheet 2",
+    order: 1,
+  });
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wirePaths[0].points = [
+    { x: 100, y: 100 },
+    { x: 180, y: 100 },
+  ];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "selection.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const marqueePoints = () =>
+    canvas.evaluate((element) => {
+      const matrix = (element as SVGSVGElement).getScreenCTM()!;
+      return [new DOMPoint(99, 85), new DOMPoint(120, 115)].map((point) => {
+        const { x, y } = point.matrixTransform(matrix);
+        return { x, y };
+      });
+    });
+  const before = await project(page);
+  const coordinates = page.locator(".status-coordinates");
+  const [left] = await marqueePoints();
+  await page.mouse.move(left.x, left.y);
+  await expect(coordinates).toHaveText(/^X \d+\.\d{2} · Y \d+\.\d{2} mm$/);
+  const [readX, readY] = (await coordinates.innerText())
+    .match(/\d+\.\d+/g)!
+    .map(Number);
+  expect(Math.abs(readX - 99)).toBeLessThan(1);
+  expect(Math.abs(readY - 85)).toBeLessThan(1);
+  await page.locator(".app-header").hover();
+  await expect(coordinates).toBeEmpty();
+  await canvas.scrollIntoViewIfNeeded();
+  const [marqueeLeft, marqueeRight] = await marqueePoints();
+  for (const crossing of [false, true]) {
+    const [start, end] = crossing
+      ? [marqueeRight, marqueeLeft]
+      : [marqueeLeft, marqueeRight];
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(end.x, end.y);
+    await expect(canvas.locator(".schematic-marquee")).toHaveAttribute(
+      "data-crossing",
+      String(crossing),
+    );
+    await page.mouse.up();
+    await expect(
+      canvas.locator('[data-instance][aria-pressed="true"]'),
+    ).toHaveCount(crossing ? 1 : 0);
+  }
+  expect(await project(page)).toEqual(before);
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("X (mm)", { exact: true }).fill("112.375");
+  await props.getByLabel("Y (mm)", { exact: true }).fill("103.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  const edited = await project(page);
+  expect(edited.symbolInstances[0].position).toEqual({
+    x: 112.375,
+    y: 103.125,
+  });
+  expect(edited.pages[0].snapping).toBe(true);
+  expect(edited.wirePaths[0].points[0]).toEqual(
+    edited.symbolInstances[0].position,
+  );
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await canvas.scrollIntoViewIfNeeded();
+  const [from, to] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(100, 100), new DOMPoint(112.4, 106.4)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  const symbol = canvas.locator('[data-instance="symbol-a"] > g[transform]');
+  await page.mouse.move(from.x, from.y);
+  await page.mouse.down();
+  await page.mouse.move(to.x, to.y);
+  await expect(symbol).toHaveAttribute("transform", /^translate\(110 105\)/);
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 110,
+    y: 105,
+  });
+  await props.getByLabel("Y (mm)", { exact: true }).fill("105.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.press("F8");
+  const ortho = page.getByRole("button", {
+    name: "Orthogonal move",
+    exact: true,
+  });
+  await expect(ortho).toHaveAttribute("aria-pressed", "true");
+  const [anchor, diagonal] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(110, 105.125), new DOMPoint(128, 114)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  await page.mouse.move(anchor.x, anchor.y);
+  await page.mouse.down();
+  await page.mouse.move(diagonal.x, diagonal.y);
+  await expect(symbol).toHaveAttribute(
+    "transform",
+    /^translate\(130 105\.125\)/,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 130,
+    y: 105.125,
+  });
+  await ortho.click();
+  await expect(ortho).toHaveAttribute("aria-pressed", "false");
+  const snap = page.getByRole("button", { name: "Snap to grid", exact: true });
+  await canvas.press("F9");
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  expect(
+    (await project(page)).pages.map(
+      ({ snapping }: { snapping: boolean }) => snapping,
+    ),
+  ).toEqual([false, true]);
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  await expect(snap).toHaveAttribute("aria-pressed", "true");
+  await snap.click();
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  const beforePan = await project(page);
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.focus();
+  for (const button of ["left", "middle"] as const) {
+    const startView = await canvas.getAttribute("viewBox");
+    const center = await canvas.evaluate((element) => {
+      const { x, y } = new DOMPoint(130, 105.125).matrixTransform(
+        (element as SVGSVGElement).getScreenCTM()!,
+      );
+      return { x, y };
+    });
+    if (button === "left") await page.keyboard.down("Space");
+    await page.mouse.move(center.x, center.y);
+    await page.mouse.down({ button });
+    await page.mouse.move(center.x + 20, center.y + 15);
+    await page.mouse.up({ button });
+    if (button === "left") await page.keyboard.up("Space");
+    await expect(canvas).not.toHaveAttribute("viewBox", startView!);
+    await expect(canvas).toHaveAttribute("data-tool", "select");
+  }
+  expect(await project(page)).toEqual(beforePan);
+});
+
+test("Wire mode snaps nearby clicks to native pin coordinates", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wires = [];
+  fixture.wirePaths = [];
+  fixture.nets = [];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "pin-snap.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await page.getByRole("button", { name: "Wire · Home", exact: true }).click();
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  for (const pin of fixture.pins) {
+    const target = canvas.locator(`[data-pin="${pin.id}"]`);
+    const bounds = (await target.locator(".pin-aperture").boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2 + 7;
+    await page.mouse.move(x, y);
+    await expect(target).toHaveAttribute("data-snap-pin", "true");
+    await page.mouse.click(x, y);
+  }
+  const result = await project(page);
+  expect(result.wires).toHaveLength(1);
+  expect(result.wires[0]).toMatchObject({
+    fromPinId: "pin-a",
+    toPinId: "pin-b",
+  });
+  expect(result.wirePaths[0].points[0]).toEqual({ x: 100, y: 100 });
+  expect(result.wirePaths[0].points.at(-1)).toEqual({ x: 180, y: 100 });
+});
+
 test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({
   page,
 }) => {
@@ -547,6 +758,12 @@ test("component catalog searches and maps a sourced part to a real terminal", as
     exact: true,
   });
   await expect(bom).toContainText("3004362");
+  await expect(
+    bom.getByRole("columnheader", { name: "Manufacturer" }),
+  ).toBeVisible();
+  await expect(
+    bom.getByRole("row").filter({ hasText: "3004362" }),
+  ).toContainText("Phoenix Contact");
   await page
     .getByRole("button", { name: "Undo · Header", exact: true })
     .click();
@@ -875,12 +1092,10 @@ for (const [id, query, channel] of [
     expect((await project(page)).terminals).toHaveLength(6);
     await place(page, "resistor", 150, 80);
     await page.getByRole("button", { name: "Wire", exact: true }).click();
-    await page
-      .getByRole("button", { name: `U1:${channel}`, exact: true })
-      .click();
-    await page.getByRole("button", { name: "R1:1", exact: true }).click();
+    const fromPinId = await clickWirePin(page, `U1:${channel}`);
+    const toPinId = await clickWirePin(page, "R1:1");
     const data = await project(page);
-    expect(data.wires).toHaveLength(1);
+    expect(data.wires).toMatchObject([{ fromPinId, toPinId }]);
     expect(data.nets).toHaveLength(7);
     await reloadAndReopenProject(page);
     expect((await project(page)).wires).toEqual(data.wires);

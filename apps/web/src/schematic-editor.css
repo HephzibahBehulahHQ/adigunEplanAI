@@ -7,6 +7,37 @@
   position: relative;
   z-index: 1;
 }
+.schematic-marquee {
+  fill: color-mix(in srgb, var(--royal-blue) 10%, transparent);
+  stroke: var(--royal-blue);
+}
+.schematic-marquee[data-crossing="true"] {
+  fill: color-mix(in srgb, var(--brand-cyan) 15%, transparent);
+  stroke: var(--cyan);
+  stroke-dasharray: 2 1;
+}
+.engineering-canvas [data-wire-target="true"] .pin-aperture {
+  stroke: transparent;
+  stroke-width: 16px;
+  vector-effect: non-scaling-stroke;
+}
+.engineering-canvas .pin-snap-ring {
+  fill: none;
+  stroke: var(--cyan);
+  stroke-width: 1.5px;
+  stroke-dasharray: 2 2;
+}
+.engineering-canvas [data-snap-pin="true"] circle:last-child {
+  stroke: var(--cyan);
+}
+.engineering-canvas[data-space-pan="true"],
+.engineering-canvas[data-space-pan="true"]
+  :is([data-pin], [data-instance], [data-wire]) {
+  cursor: grab;
+}
+.engineering-canvas[data-space-pan="true"]:active {
+  cursor: grabbing;
+}
 .editor-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -120,6 +151,20 @@
 }
 .native-bom th {
   color: var(--muted);
+}
+.dock-bom thead th {
+  position: sticky;
+  top: 0;
+  background: var(--raised);
+}
+.dock-bom :is(th, td) {
+  padding: 0.25rem 0.3rem;
+}
+.dock-bom tbody th {
+  color: var(--text);
+}
+.dock-bom :is(th, td):last-child {
+  text-align: end;
 }
 .ribbon .native-tools {
   padding: 0;

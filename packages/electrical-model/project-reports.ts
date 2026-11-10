@@ -4,15 +4,17 @@ export function projectBom(project: Project) {
   const parts = new Map(
     project.manufacturerParts.map((part) => [part.id, part]),
   );
-  return project.devices.map((device) => ({
-    id: device.id,
-    reference: device.reference,
-    name: device.name,
-    partNumber: device.partId
-      ? (parts.get(device.partId)?.partNumber ?? "")
-      : "",
-    quantity: 1,
-  }));
+  return project.devices.map((device) => {
+    const part = device.partId ? parts.get(device.partId) : undefined;
+    return {
+      id: device.id,
+      reference: device.reference,
+      name: device.name,
+      partNumber: part?.partNumber ?? "",
+      manufacturer: part?.manufacturer ?? "",
+      quantity: 1,
+    };
+  });
 }
 
 export function drawingIndex(project: Project) {

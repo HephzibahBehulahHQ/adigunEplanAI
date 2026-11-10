@@ -42,6 +42,15 @@ test("calculation inputs, unit conversion, native replay and full report exports
   const calculationBody = page.locator(
     '[data-panel="calculations"] > .panel-body',
   );
+  const calculateButton = tools.getByRole("button", {
+    name: "Calculate",
+    exact: true,
+  });
+  const actionBounds = (await calculateButton.boundingBox())!;
+  const dockBounds = (await calculationBody.boundingBox())!;
+  expect(actionBounds.y + actionBounds.height).toBeLessThanOrEqual(
+    dockBounds.y + dockBounds.height,
+  );
   expect(
     await calculationBody.evaluate((body) => body.clientHeight),
   ).toBeGreaterThanOrEqual(120);
@@ -60,6 +69,23 @@ test("calculation inputs, unit conversion, native replay and full report exports
   await expect(
     tools.getByLabel("Calculation method", { exact: true }).locator("option"),
   ).toHaveCount(25);
+  const shortcuts = tools.getByRole("group", {
+    name: "Engineering calculations",
+    exact: true,
+  });
+  const load = shortcuts.getByRole("button", {
+    name: "Load current",
+    exact: true,
+  });
+  await load.click();
+  await expect(load).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    tools.getByLabel("Calculation method", { exact: true }),
+  ).toHaveValue("load-current");
+  await tools
+    .getByLabel("Calculation method", { exact: true })
+    .selectOption("ohms-law");
+  await expect(load).toHaveAttribute("aria-pressed", "false");
   await tools.getByRole("button", { name: "Calculate", exact: true }).click();
   await expect(tools.getByRole("alert")).toContainText("Enter a value.");
   await tools.locator("#calculation-input-voltage").fill("12");
@@ -253,9 +279,15 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     await page.goto("/");
     await expect(page.locator(".empty-workspace")).toBeVisible();
     await page.getByTestId("project-picker").selectOption(project.id);
-    const tools = page.locator(".calculations-panel");
+    const tools = page.getByRole("region", {
+      name: t.calcTools,
+      exact: true,
+    });
     await expect(
-      tools.getByRole("heading", { name: t.calcTools, exact: true }),
+      tools.getByRole("combobox", {
+        name: t.calcTool,
+        exact: true,
+      }),
     ).toBeVisible();
     await tools
       .getByRole("button", {
@@ -274,15 +306,20 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     ).toBe(true);
     expect(
       await tools.evaluate((panel) =>
-        Array.from(
-          panel.querySelectorAll("input,select,textarea,button"),
-        ).every((element) => {
-          const rect = element.getBoundingClientRect();
-          return (
-            rect.width > 0 && rect.left >= 0 && rect.right <= innerWidth + 1
-          );
-        }),
+        Array.from(panel.querySelectorAll("input,select,textarea,button"))
+          .filter((element) => !element.closest(".calculation-shortcuts"))
+          .every((element) => {
+            const rect = element.getBoundingClientRect();
+            return (
+              rect.width > 0 && rect.left >= 0 && rect.right <= innerWidth + 1
+            );
+          }),
       ),
     ).toBe(true);
+    const shortcuts = tools.locator(".calculation-shortcuts");
+    const lastShortcut = shortcuts.getByRole("button").last();
+    await lastShortcut.focus();
+    await expect(lastShortcut).toBeFocused();
+    await expect(lastShortcut).toBeInViewport();
   });
 }

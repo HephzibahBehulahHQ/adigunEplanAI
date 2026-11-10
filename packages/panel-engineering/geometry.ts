@@ -364,6 +364,15 @@ export const boxEdges = [
   [3, 7],
 ] as const;
 
+export const boxFaces = [
+  { indices: [0, 3, 7, 4], normal: { x: -1, y: 0, z: 0 } },
+  { indices: [1, 5, 6, 2], normal: { x: 1, y: 0, z: 0 } },
+  { indices: [0, 4, 5, 1], normal: { x: 0, y: -1, z: 0 } },
+  { indices: [3, 2, 6, 7], normal: { x: 0, y: 1, z: 0 } },
+  { indices: [0, 1, 2, 3], normal: { x: 0, y: 0, z: -1 } },
+  { indices: [4, 7, 6, 5], normal: { x: 0, y: 0, z: 1 } },
+];
+
 export function projectPoint3d(
   point: Vector3,
   yawDeg: number,
@@ -408,15 +417,7 @@ export function projectedFaces(
   const vertices = boxVertices(volumeBounds(volume)).map((point) =>
     projectPoint3d(point, yawDeg, pitchDeg),
   );
-  const faces = [
-    { indices: [0, 3, 7, 4], normal: { x: -1, y: 0, z: 0 } },
-    { indices: [1, 5, 6, 2], normal: { x: 1, y: 0, z: 0 } },
-    { indices: [0, 4, 5, 1], normal: { x: 0, y: -1, z: 0 } },
-    { indices: [3, 2, 6, 7], normal: { x: 0, y: 1, z: 0 } },
-    { indices: [0, 1, 2, 3], normal: { x: 0, y: 0, z: -1 } },
-    { indices: [4, 7, 6, 5], normal: { x: 0, y: 0, z: 1 } },
-  ];
-  return faces.flatMap((face, side) => {
+  return boxFaces.flatMap((face, side) => {
     if (projectPoint3d(face.normal, yawDeg, pitchDeg).z <= 1e-10) return [];
     const points = face.indices.map((index) => vertices[index]);
     return [

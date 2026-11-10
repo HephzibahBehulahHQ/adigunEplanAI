@@ -61,14 +61,36 @@ export function App() {
 }
 function Workspace({ account }: { account: Account }) {
   const native = useNativeProjects(account.user?.id ?? null);
+  const [orthogonal, setOrthogonal] = useState(false);
+  const coordinateReadout = useRef<HTMLSpanElement>(null);
+  const toggleOrthogonal = () => setOrthogonal((enabled) => !enabled);
+  const activePage =
+    native.project?.pages.find(({ id }) => id === native.selectedPageId) ??
+    native.project?.pages[0];
+  const toggleSnap = () => {
+    if (!activePage) return;
+    native.update((project) => ({
+      ...project,
+      pages: project.pages.map((page) =>
+        page.id === activePage.id
+          ? { ...page, snapping: !page.snapping }
+          : page,
+      ),
+    }));
+  };
   const connectivity = useMemo(
     () => (native.project ? analyze(native.project) : null),
     [native.project],
   );
+  const errorCount =
+    connectivity?.findings.filter(({ severity }) => severity === "error")
+      .length ?? 0;
+  const warningCount =
+    connectivity?.findings.filter(({ severity }) => severity === "warning")
+      .length ?? 0;
   const examplesDialog = useRef<HTMLDialogElement>(null);
   const accountDialog = useRef<HTMLDialogElement>(null);
   const searchDialog = useRef<HTMLDialogElement>(null);
-  const languageSelect = useRef<HTMLSelectElement>(null);
   const [search, setSearch] = useState("");
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
@@ -352,12 +374,6 @@ function Workspace({ account }: { account: Account }) {
             >
               {t("workspaceSearch")}
             </button>
-            <button
-              aria-label={t("languageOptions")}
-              onClick={() => languageSelect.current?.focus()}
-            >
-              {t("languageOptions")}
-            </button>
             <label>
               {t("theme")}
               <select
@@ -374,7 +390,6 @@ function Workspace({ account }: { account: Account }) {
             <label>
               {t("language")}
               <select
-                ref={languageSelect}
                 aria-label={t("language")}
                 value={prefs.language}
                 onChange={(e) => set("language", e.target.value as Language)}
@@ -464,7 +479,14 @@ function Workspace({ account }: { account: Account }) {
               }
             >
               {native.project ? (
-                <NativeDrawing native={native} t={t} />
+                <NativeDrawing
+                  native={native}
+                  t={t}
+                  orthogonal={orthogonal}
+                  toggleOrthogonal={toggleOrthogonal}
+                  toggleSnap={toggleSnap}
+                  coordinateReadout={coordinateReadout}
+                />
               ) : (
                 <div className="empty-workspace">
                   <span className="drawing-mark" aria-hidden="true">
@@ -496,19 +518,50 @@ function Workspace({ account }: { account: Account }) {
         </span>
         {native.project && (
           <span className="engineering-status">
-            {native.project.name} ·{" "}
-            {native.project.pages.find((p) => p.id === native.selectedPageId)
-              ?.name ?? native.project.pages[0]?.name}
+            {native.project.name} · {activePage?.name}
             {" · "}
             {t("selectionCount")}: {native.selectedSymbolIds.length}
             {" · mm"}
           </span>
         )}
-        <span>
-          {native.project
-            ? t(native.saved ? "savedLocally" : "notSaved")
-            : t("local")}
-        </span>
+        {activePage && native.view === "schematic" && (
+          <div className="status-cad-tools">
+            <span className="status-coordinates" ref={coordinateReadout} />
+            <button
+              type="button"
+              className="status-cad-toggle"
+              aria-pressed={activePage.snapping}
+              aria-keyshortcuts="F9"
+              title={`${t("snapping")} (F9)`}
+              onClick={toggleSnap}
+            >
+              {t("snapping")}
+            </button>
+            <button
+              type="button"
+              className="status-cad-toggle"
+              aria-pressed={orthogonal}
+              aria-keyshortcuts="F8"
+              title={`${t("orthogonalMove")} (F8)`}
+              onClick={toggleOrthogonal}
+            >
+              {t("orthogonalMove")}
+            </button>
+          </div>
+        )}
+        {connectivity && (
+          <button
+            type="button"
+            className="status-diagnostics"
+            data-severity={
+              errorCount ? "error" : warningCount ? "warning" : "clear"
+            }
+            onClick={() => reveal("diagnostics")}
+          >
+            {t("diagnostics")} · {t("errors")} {errorCount} · {t("warnings")}{" "}
+            {warningCount}
+          </button>
+        )}
         <span>
           © {new Date().getFullYear()}{" "}
           <a

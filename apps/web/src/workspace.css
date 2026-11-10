@@ -461,10 +461,27 @@ i {
   color: var(--text);
   font-weight: 500;
 }
-.status-diagnostics {
+.status-diagnostics,
+.status-cad-toggle {
   padding: 0.22rem 0.45rem;
   border-color: var(--line);
   font-size: inherit;
+}
+.status-cad-tools {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.status-coordinates {
+  min-inline-size: 22ch;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.status-cad-toggle[aria-pressed="true"] {
+  color: var(--cyan);
+  border-color: var(--cyan);
 }
 .status-diagnostics[data-severity="clear"] {
   color: var(--cyan);
@@ -475,6 +492,51 @@ i {
 .status-diagnostics[data-severity="error"] {
   font-weight: bold;
   border-color: currentColor;
+}
+.diagnostic-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  border-bottom: 1px solid var(--line);
+}
+.diagnostic-filters button {
+  padding: 0.22rem 0.4rem;
+  border-color: transparent;
+  background: transparent;
+  border-radius: 3px 3px 0 0;
+}
+.diagnostic-filters button[aria-pressed="true"] {
+  border-color: var(--line);
+  background: var(--raised);
+  box-shadow: inset 0 -2px var(--cyan);
+}
+.diagnostic-findings {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.diagnostic-findings button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.3rem 0.4rem;
+  text-align: start;
+}
+.diagnostic-findings button::before {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.diagnostic-findings [data-severity="warning"] button::before {
+  background: var(--gold);
+}
+.diagnostic-findings [data-severity="error"] button::before {
+  background: var(--text);
+  border-radius: 1px;
 }
 .report-actions {
   display: grid;
@@ -714,6 +776,33 @@ dialog form {
 }
 .drawing-tabs button[aria-pressed="true"] {
   border-color: var(--cyan);
+}
+.drawing-tabs.drawing-pages {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 3px;
+  border-bottom: 1px solid var(--line);
+}
+.drawing-page-strip {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  gap: 3px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.drawing-page-strip button {
+  flex: none;
+  max-width: min(15rem, 80vw);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.drawing-pages .drawing-page-add {
+  flex: none;
+  min-width: 2rem;
+  font-size: 0.9rem;
 }
 .native-sheet {
   width: 100%;

@@ -6,6 +6,7 @@ import {
   type CSSProperties,
   type PointerEvent,
 } from "react";
+import { CommandIcon } from "./WorkspaceRibbon";
 import type { MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 import {
@@ -61,6 +62,8 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
     finding: ConnectivityFinding;
   } | null>(null);
   const launcher = useRef<HTMLButtonElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
+  const focusFromMenu = useRef(false);
   const composer = useRef<HTMLInputElement>(null);
   const transcript = useRef<HTMLDivElement>(null);
   const sequence = useRef(0);
@@ -95,12 +98,22 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
   }, []);
   useEffect(() => {
     if (!openSignal) return;
+    if (document.activeElement instanceof HTMLElement) {
+      returnFocus.current = document.activeElement;
+    }
+    focusFromMenu.current = true;
     setWindowState((value) => ({ ...value, open: true, minimized: false }));
   }, [openSignal]);
   useEffect(() => {
-    if (windowState.open && !windowState.minimized && !windowState.docked)
+    if (
+      windowState.open &&
+      !windowState.minimized &&
+      (focusFromMenu.current || !windowState.docked)
+    ) {
       composer.current?.focus();
-  }, [windowState.open, windowState.minimized, windowState.docked]);
+      focusFromMenu.current = false;
+    }
+  }, [openSignal, windowState.open, windowState.minimized, windowState.docked]);
   useEffect(() => {
     setMessages([]);
     setSuggestion(null);
@@ -165,11 +178,16 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
   const visibleMessages = messages.filter(
     (message) => message.projectId === (project?.id ?? null),
   );
-  const open = () =>
+  const open = () => {
+    returnFocus.current = launcher.current;
     setWindowState((value) => ({ ...value, open: true, minimized: false }));
+  };
   const close = () => {
     setWindowState((value) => ({ ...value, open: false }));
-    requestAnimationFrame(() => launcher.current?.focus());
+    requestAnimationFrame(() => {
+      const target = returnFocus.current;
+      (target?.isConnected ? target : launcher.current)?.focus();
+    });
   };
   function run(tool: LocalTool | null, text: string) {
     const result =
@@ -238,6 +256,7 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
       <button
         ref={launcher}
         className="bot-launcher"
+        hidden={windowState.open}
         aria-label={t("botOpen")}
         title={t("botOpen")}
         onClick={open}
@@ -425,27 +444,29 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
                   </button>
                 </section>
               )}
-              <div
+              <section
                 className="bot-quick-actions"
-                aria-label={t("ribbonWorkspace")}
+                aria-label={t("botQuickActions")}
               >
+                <h3>{t("botQuickActions")}</h3>
                 {(
                   [
-                    ["connections", "assistantValidate"],
-                    ["summary", "assistantSummary"],
-                    ["selection", "botSelection"],
-                    ["bom", "assistantReport"],
+                    ["connections", "assistantValidate", "check"],
+                    ["summary", "assistantSummary", "report"],
+                    ["selection", "botSelection", "select"],
+                    ["bom", "assistantReport", "catalog"],
                   ] as const
-                ).map(([tool, key]) => (
+                ).map(([tool, key, icon]) => (
                   <button
                     key={tool}
                     disabled={!project}
                     onClick={() => run(tool, t(key))}
                   >
-                    {t(key)}
+                    <CommandIcon kind={icon} />
+                    <span>{t(key)}</span>
                   </button>
                 ))}
-              </div>
+              </section>
               <div
                 ref={transcript}
                 className="bot-transcript"

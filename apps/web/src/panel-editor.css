@@ -108,6 +108,18 @@
 .panel-3d-view:active {
   cursor: grabbing;
 }
+.panel-frame-front,
+.panel-frame-rear {
+  stroke: var(--navy);
+  pointer-events: none;
+}
+.panel-frame-front {
+  stroke-width: 1.15;
+}
+.panel-frame-rear {
+  opacity: 0.35;
+  stroke-dasharray: 3 3;
+}
 .panel-3d-stage {
   position: relative;
   height: 340px;
@@ -215,7 +227,7 @@
 .panel-preview .panel-views {
   grid-template-columns: minmax(0, 1fr);
 }
-.panel-preview .panel-views svg {
+.panel-preview .panel-3d-stage {
   height: 230px;
 }
 .panel-preview p {
@@ -256,6 +268,34 @@
   border-color: var(--cyan);
   color: var(--cyan);
 }
+.panel-3d-stage > .panel-camera-tools {
+  position: absolute;
+  z-index: 3;
+  inset: 8px auto auto 8px;
+  display: grid;
+  gap: 2px;
+  padding: 3px;
+  max-height: calc(100% - 64px);
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  text-align: center;
+}
+.panel-3d-stage > .panel-camera-tools button {
+  display: grid;
+  place-items: center;
+  min-height: 24px;
+  padding: 2px 4px;
+  line-height: 1.2;
+}
+.panel-3d-stage > .panel-camera-tools button svg {
+  width: 16px;
+  height: 16px;
+  border: 0;
+  background: transparent;
+}
 .panel-3d-view[data-camera-tool="pan"] {
   cursor: grab;
 }
@@ -265,10 +305,10 @@
 .panel-views figure {
   position: relative;
 }
-.panel-views svg.panel-orientation-cube {
+.panel-3d-stage > .panel-orientation-cube {
   position: absolute;
-  right: 12px;
-  top: 90px;
+  z-index: 2;
+  inset: 8px 8px auto auto;
   width: 48px;
   height: 48px;
   pointer-events: none;
@@ -283,6 +323,37 @@
   font-size: 7px;
   text-anchor: middle;
   dominant-baseline: middle;
+}
+.panel-3d-stage > .panel-axis-triad {
+  position: absolute;
+  z-index: 2;
+  inset: auto auto 8px 8px;
+  width: 48px;
+  height: 48px;
+  pointer-events: none;
+  color: var(--navy);
+  fill: currentColor;
+}
+.panel-axis-triad [data-axis="X"] {
+  color: var(--royal-blue);
+}
+.panel-axis-triad [data-axis="Y"] {
+  color: color-mix(in srgb, var(--gold) 55%, var(--navy));
+}
+.panel-axis-triad [data-axis="Z"] {
+  color: color-mix(in srgb, var(--brand-cyan) 55%, var(--navy));
+}
+.panel-axis-triad line {
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+.panel-axis-triad text {
+  fill: currentColor;
+  font-size: 11px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
 }
 @media (min-width: 1001px) and (min-height: 780px) {
   .dock-right [data-panel="panel3d"] > .panel-body {
@@ -332,9 +403,13 @@
     gap: 5px;
   }
   .dock-right .panel-preview > label {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    margin: 0;
     flex: none;
+  }
+  .dock-right .panel-preview > label select {
+    min-width: 0;
   }
   .dock-right .panel-preview-views {
     margin-top: 0;
@@ -373,4 +448,10 @@
     width: 100%;
     min-width: 0;
   }
+}
+.panel .panel-view-options {
+  padding-top: 0;
+}
+.panel-view-options summary {
+  font-size: 0.72rem;
 }

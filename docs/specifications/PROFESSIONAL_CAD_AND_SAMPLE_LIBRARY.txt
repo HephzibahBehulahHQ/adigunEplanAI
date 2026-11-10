@@ -1,0 +1,132 @@
+# Codex Prompt: Project Sample Library (100k+) + Standard CAD Canvas — AdigunEplanAI
+
+> **Standard:** NO dummy · NO placeholder · every sample tested, trusted, reliable, editable. Canvas must meet **standard CAD standard** (AEC/aerospace-grade — comparable to German engineering CAD tools). Full authorization to build, merge, deploy, publish.
+
+---
+
+## 1. Project Sample Library — 100,000+ Samples, Categorized
+
+### 1.1 Structure — every sample carries full metadata
+Each sample record must include:
+- **Category** (top-level: Electrical · Building · Automation · Power · PLC · Panel · Instrumentation · Renewable · Industrial · Commercial · Residential · Infrastructure · Transportation · Aerospace · Marine · Data Center · Telecom · Fire & Safety · HVAC · Solar/Wind …)
+- **Type** (e.g. schematic, single-line diagram, panel layout, wiring diagram, P&ID, motor control, substation, PLC ladder, HMI screen, BOM package, PCB-style layout, hybrid)
+- **Group** (sub-cluster within the type — e.g. "Motor Control", "Distribution Boards", "Substation Protection")
+- **Level** — **1 = Beginner → 5 = Expert/Complex** — displayed clearly in the list
+- **Tags** (searchable: voltage class, standard, country/regulatory, communication protocol, simulation-ready, etc.)
+- **Difficulty score**, **Estimated build time**, **Required components list**
+- **Preview thumbnail** (rendered from the actual circuit — no static placeholders)
+- **Editable flag = true** for every sample (no read-only lockouts)
+
+### 1.2 Generation — 100k+ real, tested samples
+- Do **not** hand-write 100k. Build a **generator** that assembles circuits from the real component registry (Section 3) using **parameterized templates** per category/type/group/level, then runs each through the solver to **validate** it before admission.
+- Each admitted sample must:
+  - Have **valid electrical topology** (no floating nets, no shorts across sources, correct source/ground).
+  - **Solve cleanly** in the simulator (converges, no NaN, no zero-division, no singular matrix).
+  - **Be editable** — every component, wire, and property must open and modify normally.
+  - **Pass the trust gate**: a validation runner that stamps `tested=true`, `trusted=true`, `reliable=true`, with a stored checksum of its netlist.
+- Store samples as compact **JSON netlists** (components + wires + params + metadata) — not screenshots.
+- Version the library; new samples must pass the same gate. Rejected samples are never admitted.
+
+### 1.3 Browsing UX
+- Category tree in the left panel (Category → Type → Group → Level).
+- Search + filters (level, type, tags, difficulty, component count).
+- **Virtualized list** — 100k entries render smoothly (windowed rendering, no scroll lag).
+- Clicking a sample → **opens editable copy** in canvas (the original sample stays immutable; the user edits a duplicate). Marks project `isDirty` only after edits.
+
+### 1.4 Acceptance for samples
+- [ ] Every sample belongs to Category + Type + Group + Level (1–5).
+- [ ] Every sample opens editable — components, wires, and props all modifiable.
+- [ ] Every sample passes the solver validation gate (no failures, no NaN, converges).
+- [ ] Library browsing handles 100k+ entries with smooth scrolling.
+- [ ] No dummy or placeholder samples anywhere.
+
+---
+
+## 2. Standard CAD Canvas — Aerospace/AEC-Grade
+
+The canvas must meet **standard professional CAD** expectations — comparable to German engineering CAD tools (aerospace/AEC). No toy canvas.
+
+### 2.1 Required CAD features
+- **Infinite workspace** with mm-based coordinate system (not arbitrary pixels); configurable grid (metric/imperial), snap modes (grid, endpoint, midpoint, center, intersection, perpendicular, tangent, quadrant, nearest).
+- **Precision input** — type exact X/Y, length, angle; **polar/relative/absolute** entry; dimension readout while dragging.
+- **Object snaps + tracking** with visual glyphs (endpoint, midpoint, center, intersection, perpendicular, tangent, nearest, node, quadrant).
+- **Ortho mode** (F8), **Polar tracking** (F10), **Object snap tracking** (F11).
+- **Selection**: click, window (left-to-right = contained, right-to-left = crossing), lasso, add/remove with Shift/Ctrl; **selection filters** by layer, type, property.
+- **Transform**: move, copy, mirror, rotate (with reference angle), scale, stretch, array (rectangular + polar), align, offset.
+- **Geometry tools**: line, polyline, spline, rectangle, circle, arc, ellipse, polygon, hatch, text, dimension.
+- **Layers**: create/rename/color/linetype/lineweight/freeze/lock/plot. Layer manager panel.
+- **Blocks / symbols**: insert, explode, edit block, attribute definitions, dynamic blocks (component symbols are blocks).
+- **Annotations**: linear/aligned/angular/radius/diameter dimensions, leaders, balloons, text styles, multiline text, tables.
+- **Undo/redo** for every operation (deep history, Ctrl+Z/Ctrl+Y, per-action granularity).
+- **Copy/paste/cut**, **duplicate**, **paste-special**, **clipboard across tabs**.
+- **Groups** and **named selections**.
+- **Measure** tool (distance, area, angle).
+- **Snap to component pins** — wire endpoints snap precisely to pin coordinates.
+- **Zoom**: wheel zoom to cursor, extents, window, previous, pan (space/middle-drag), mini-map optional.
+- **View modes**: 2D schematic + **2D/3D sync** (ribbon), wireframe/shaded for 3D views.
+- **Coordinate display** in status bar (X, Y, Z), active snap mode, layer, units.
+- **Command palette** — type a command name to execute (CAD convention).
+- **Shortcut map** — standard CAD keys (L=line, C=circle, M=move, CO=copy, TR=trim, EX=extend, F8=ortho, etc.).
+- **Status bar** with toggles: SNAP · GRID · ORTHO · POLAR · OSNAP · OTRACK · DYN · LWT · MODEL/PAPER.
+- **Crosshair cursor** with pickbox size, aperture indicator, tooltips.
+- **Rulers** on top/left with tick marks and current cursor position indicator.
+- **Sheet/Layout mode** (model space + paper space) for documentation output.
+- **Plot/Export**: PDF, DXF, SVG, PNG.
+- **Multi-sheet projects** (drawing tabs at bottom, like real CAD).
+- **Performance**: 60fps on 10k+ entities; use spatial indexing (quadtree/rtree) for hit-testing and rendering culling.
+- **Undo stack** survives toolbar use, must not corrupt on complex ops.
+- **Autosave** to local draft (separate from `isDirty` project persistence — this draft must NOT auto-restore unless user chooses to recover).
+
+### 2.2 Integration with circuit features
+- Every component placed on canvas = a CAD **block** with pins as snap points.
+- Wires = **polylines** with CAD-grade editing (add vertex, remove vertex, extend, trim, fillet).
+- Properties panel shows **both CAD properties** (layer, color, linetype, coordinates) **and** electrical properties (V, I, R/C/L, pins).
+- Component geometry edits (move/resize/rotate) update electrical model inputs live.
+- Layer separation: schematic layers (components, wires, labels, dimensions, annotations, grid) — user-togglable.
+
+### 2.3 Acceptance for canvas
+- [ ] Precision input via keyboard (absolute/relative/polar) works.
+- [ ] Full object snap set functional with visible glyphs.
+- [ ] Layer manager works: add, rename, color, freeze, lock, plot.
+- [ ] Blocks/symbols insertable and editable; **explode** works.
+- [ ] Dimensions (linear, aligned, angular, radius, diameter) placeable and editable.
+- [ ] Undo/redo deep and reliable across all operations.
+- [ ] Copy/paste/cut/mirror/array/offset all functional.
+- [ ] Command palette + standard shortcut keys active.
+- [ ] Rulers, crosshair, status bar toggles all present and working.
+- [ ] DXF/PDF/SVG export produces valid files.
+- [ ] 60fps with 10k+ entities; no hit-test lag.
+- [ ] Canvas is visually clean — no overlapping chrome, no clipped UI — matching the target PNG.
+- [ ] Electrical features integrated (pins, wires, properties live-bound).
+
+---
+
+## 3. Dependency — Real Component Registry
+
+Both the sample generator (Section 1) and the canvas (Section 2) depend on the **real component registry** already mandated. It must exist and be complete before sample generation is admitted:
+- Every component: real SVG symbol · real electrical model · real pins · editable params · move/resize/rotate.
+- Minimum set per earlier spec: sources, resistive, reactive, switches, amplifiers, diodes, transistors, logic, ICs, meters.
+
+---
+
+## 4. Execution Order
+
+1. **Land the CAD canvas foundation** — coordinate system, grid, snap, selection, transforms, undo, layers, blocks. This is the biggest lift; ship it incrementally.
+2. **Wire the electrical integration** — pins, wires, properties two-way binding, simulation hooks.
+3. **Build the sample generator** with category/type/group/level template maps.
+4. **Generate + validate** the 100k+ sample library through the solver gate.
+5. **Ship the browser UX** — category tree, virtualized list, search, filters, thumbnail rendering.
+6. **Smoke test** — open a Level-1 sample, a Level-5 sample, edit both, save, reopen; verify identical on reload.
+7. **Deploy + publish** — report live URL.
+
+---
+
+## 5. Non-Negotiable
+
+- **No dummy · no placeholder · no errors.**
+- **Every sample: categorized, typed, grouped, leveled, tested, trusted, reliable, editable.**
+- **Canvas: standard CAD grade (aerospace/AEC quality), no toy behavior.**
+- **Zero overlapping UI · zero console errors · pixel-match to target PNG.**
+- If a cleaner implementation than a suggestion above delivers the same result — **use it**.
+
+**Ship. Report the live URL + validation report (sample count by level, CAD feature checklist pass rate) when green.**

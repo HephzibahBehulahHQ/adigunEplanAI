@@ -370,17 +370,50 @@ export function move(
   ids: string[],
   delta: Point,
   grid: number,
+  orthogonal = false,
 ) {
   editable(project, ids);
   const first = project.symbolInstances.find((s) => s.id === ids[0]);
   if (!first) return project;
-  const shift = {
-    x: quantize(first.position.x + delta.x, grid) - first.position.x,
-    y: quantize(first.position.y + delta.y, grid) - first.position.y,
-  };
+  const shift = movementDelta(first.position, delta, grid, orthogonal);
   for (const s of project.symbolInstances)
     if (ids.includes(s.id))
       s.position = { x: s.position.x + shift.x, y: s.position.y + shift.y };
+  checkBounds(project, ids);
+  checkCollisions(project, ids);
+  reroute(project, ids);
+  return project;
+}
+
+export function movementDelta(
+  anchor: Point,
+  delta: Point,
+  grid: number,
+  orthogonal = false,
+): Point {
+  const horizontal = Math.abs(delta.x) >= Math.abs(delta.y);
+  return {
+    x:
+      orthogonal && !horizontal
+        ? 0
+        : quantize(anchor.x + delta.x, grid) - anchor.x,
+    y:
+      orthogonal && horizontal
+        ? 0
+        : quantize(anchor.y + delta.y, grid) - anchor.y,
+  };
+}
+
+export function moveSymbolTo(project: Project, id: string, position: Point) {
+  if (!Number.isFinite(position.x) || !Number.isFinite(position.y))
+    throw new Error("Invalid symbol position");
+  const ids = [id];
+  editable(project, ids);
+  const symbol = project.symbolInstances.find((item) => item.id === id);
+  if (!symbol) return project;
+  if (symbol.position.x === position.x && symbol.position.y === position.y)
+    return project;
+  symbol.position = position;
   checkBounds(project, ids);
   checkCollisions(project, ids);
   reroute(project, ids);

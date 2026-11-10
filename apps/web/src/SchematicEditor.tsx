@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
+  type RefObject,
 } from "react";
 import type { Project } from "../../../packages/electrical-model/project.ts";
 import {
@@ -26,6 +27,8 @@ import {
   ensureLayer,
   mirror,
   move,
+  movementDelta,
+  moveSymbolTo,
   place,
   paste,
   primitives,
@@ -43,11 +46,17 @@ type Props = {
   setClipboard: (value: NativeClipboard | null) => void;
   native: NativeProjects;
   page: Project["pages"][number];
+  orthogonal: boolean;
+  toggleOrthogonal: () => void;
+  toggleSnap: () => void;
+  coordinateReadout: RefObject<HTMLSpanElement | null>;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
 type Drag = {
   kind: "pan" | "move" | "marquee";
+  anchor?: Point;
+  orthogonal?: boolean;
   start: Point;
   view: Box;
   matrix: DOMMatrix;
@@ -60,6 +69,10 @@ export function SchematicEditor({
   t,
   clipboard,
   setClipboard,
+  orthogonal,
+  toggleOrthogonal,
+  toggleSnap,
+  coordinateReadout,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
@@ -80,6 +93,8 @@ export function SchematicEditor({
   const setSelected = native.selectSymbols;
   const [selectedWire, setSelectedWire] = useState<string | null>(null);
   const [fromPin, setFromPin] = useState<string | null>(null);
+  const [snapPin, setSnapPin] = useState<string | null>(null);
+  const [spacePan, setSpacePan] = useState(false);
   const [labelPin, setLabelPin] = useState<string | null>(null);
   const [activeLayer, setActiveLayer] = useState<string | null>(null);
   const [view, setView] = useState<Box>({
@@ -92,6 +107,12 @@ export function SchematicEditor({
   const [marquee, setMarquee] = useState<{ a: Point; b: Point } | null>(null);
   const svg = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
+  useEffect(() => {
+    const readout = coordinateReadout.current;
+    return () => {
+      if (readout) readout.textContent = "";
+    };
+  }, [coordinateReadout]);
   const layers = project.layers.filter((l) => l.pageId === page.id);
   const layerId = layers.some((l) => l.id === activeLayer)
     ? activeLayer
@@ -136,6 +157,29 @@ export function SchematicEditor({
       matrix,
     );
     return { x: p.x, y: p.y };
+  }
+  function nearestWirePin({
+    clientX,
+    clientY,
+  }: ReactPointerEvent): string | null {
+    let pinId: string | null = null;
+    let distance = 8;
+    for (const element of document.elementsFromPoint(clientX, clientY)) {
+      const pin = element.closest<SVGGElement>('[data-wire-target="true"]');
+      if (!pin || !svg.current?.contains(pin)) continue;
+      const aperture = pin
+        .querySelector(".pin-aperture")!
+        .getBoundingClientRect();
+      const next = Math.hypot(
+        clientX - (aperture.x + aperture.width / 2),
+        clientY - (aperture.y + aperture.height / 2),
+      );
+      if (next < distance) {
+        distance = next;
+        pinId = pin.dataset.pin ?? null;
+      }
+    }
+    return pinId;
   }
   function fit() {
     setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
@@ -184,10 +228,11 @@ export function SchematicEditor({
     });
   }
   function begin(event: ReactPointerEvent<SVGSVGElement>) {
+    if (event.button !== 0 && event.button !== 1) return;
     svg.current?.focus();
     const world = point(event);
     const matrix = svg.current!.getScreenCTM()!.inverse();
-    if (tool === "pan" || event.button === 1) {
+    if (tool === "pan" || spacePan || event.button === 1) {
       event.preventDefault();
       drag.current = {
         kind: "pan",
@@ -198,6 +243,12 @@ export function SchematicEditor({
         ids: [],
       };
       svg.current!.setPointerCapture(event.pointerId);
+      return;
+    }
+    if (tool === "wire") {
+      if (event.button !== 0) return;
+      const target = nearestWirePin(event);
+      if (target) activatePin(target);
       return;
     }
     if (Object.hasOwn(primitives, tool) || tool === "custom") {
@@ -233,7 +284,7 @@ export function SchematicEditor({
     }
   }
   function beginSymbol(event: ReactPointerEvent<SVGGElement>, id: string) {
-    if (tool === "pan") return;
+    if (tool === "pan" || spacePan || event.button !== 0) return;
     if (tool !== "select") return;
     event.stopPropagation();
     svg.current?.focus();
@@ -254,6 +305,9 @@ export function SchematicEditor({
     const world = point(event);
     drag.current = {
       kind: "move",
+      orthogonal,
+      anchor: project.symbolInstances.find((item) => item.id === ids[0])
+        ?.position,
       start: world,
       last: world,
       view,
@@ -263,8 +317,22 @@ export function SchematicEditor({
     svg.current!.setPointerCapture(event.pointerId);
   }
   function pointerMove(event: ReactPointerEvent<SVGSVGElement>) {
+    const readout = coordinateReadout.current;
+    const matrix = readout && event.currentTarget.getScreenCTM();
+    if (readout && matrix) {
+      const { x, y } = new DOMPoint(
+        event.clientX,
+        event.clientY,
+      ).matrixTransform(matrix.inverse());
+      const coordinates = `X ${x.toFixed(2)} · Y ${y.toFixed(2)} mm`;
+      if (readout.textContent !== coordinates)
+        readout.textContent = coordinates;
+    }
     const current = drag.current;
-    if (!current) return;
+    if (!current) {
+      if (tool === "wire") setSnapPin(nearestWirePin(event));
+      return;
+    }
     const value = new DOMPoint(event.clientX, event.clientY).matrixTransform(
       current.matrix,
     );
@@ -279,7 +347,12 @@ export function SchematicEditor({
         x: current.view.x - delta.x,
         y: current.view.y - delta.y,
       });
-    else if (current.kind === "move") setPreview(delta);
+    else if (current.kind === "move")
+      setPreview(
+        current.anchor && (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
+          ? movementDelta(current.anchor, delta, grid, current.orthogonal)
+          : { x: 0, y: 0 },
+      );
     else setMarquee({ a: current.start, b: current.last });
   }
   function pointerUp() {
@@ -294,8 +367,9 @@ export function SchematicEditor({
       current.kind === "move" &&
       (Math.abs(delta.x) > 0.1 || Math.abs(delta.y) > 0.1)
     )
-      edit((p) => move(p, current.ids, delta, grid));
+      edit((p) => move(p, current.ids, delta, grid, current.orthogonal));
     if (current.kind === "marquee") {
+      const crossing = current.last.x < current.start.x;
       const left = Math.min(current.start.x, current.last.x),
         right = Math.max(current.start.x, current.last.x),
         top = Math.min(current.start.y, current.last.y),
@@ -303,16 +377,18 @@ export function SchematicEditor({
       const found = project.symbolInstances
         .filter((s) => {
           const layer = project.layers.find((l) => l.id === s.layerId)!;
+          if (s.pageId !== page.id || !layer.visible || layer.locked)
+            return false;
           const b = bounds(project, s);
-          return (
-            s.pageId === page.id &&
-            layer.visible &&
-            !layer.locked &&
-            b.left >= left &&
-            b.right <= right &&
-            b.top >= top &&
-            b.bottom <= bottom
-          );
+          return crossing
+            ? b.left <= right &&
+                b.right >= left &&
+                b.top <= bottom &&
+                b.bottom >= top
+            : b.left >= left &&
+                b.right <= right &&
+                b.top >= top &&
+                b.bottom <= bottom;
         })
         .map((s) => s.id);
       setSelected([...new Set([...current.ids, ...found])]);
@@ -507,6 +583,16 @@ export function SchematicEditor({
         if ((event.target as HTMLElement).closest("input,select,textarea"))
           return;
         const key = event.key.toLowerCase();
+        if (key === "f8") {
+          event.preventDefault();
+          if (!event.repeat) toggleOrthogonal();
+          return;
+        }
+        if (key === "f9") {
+          event.preventDefault();
+          if (!event.repeat) toggleSnap();
+          return;
+        }
         if (
           (event.ctrlKey || event.metaKey) &&
           ["z", "y", "c", "v", "d", "x"].includes(key)
@@ -668,23 +754,6 @@ export function SchematicEditor({
               }))
             }
           />
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            checked={page.snapping}
-            onChange={(e) =>
-              edit((p) => ({
-                ...p,
-                pages: p.pages.map((item) =>
-                  item.id === page.id
-                    ? { ...item, snapping: e.target.checked }
-                    : item,
-                ),
-              }))
-            }
-          />
-          {t("snapping")}
         </label>
       </div>
       <div
@@ -859,14 +928,10 @@ export function SchematicEditor({
                   (s) => s.id === selectedInstance.id,
                 )!;
                 s.name = d.reference;
-                const x = Number(data.get("x")),
-                  y = Number(data.get("y"));
-                move(
-                  p,
-                  [s.id],
-                  { x: x - s.position.x, y: y - s.position.y },
-                  grid,
-                );
+                moveSymbolTo(p, s.id, {
+                  x: Number(data.get("x")),
+                  y: Number(data.get("y")),
+                });
                 for (const term of p.terminals.filter(
                   (term) => term.deviceId === d.id,
                 ))
@@ -888,20 +953,22 @@ export function SchematicEditor({
             <label>
               X (mm)
               <input
-                key={`x${selectedInstance.position.x}`}
+                key={`${selectedInstance.id}:x:${selectedInstance.position.x}`}
                 name="x"
                 type="number"
                 step="any"
+                required
                 defaultValue={selectedInstance.position.x}
               />
             </label>
             <label>
               Y (mm)
               <input
-                key={`y${selectedInstance.position.y}`}
+                key={`${selectedInstance.id}:y:${selectedInstance.position.y}`}
                 name="y"
                 type="number"
                 step="any"
+                required
                 defaultValue={selectedInstance.position.y}
               />
             </label>
@@ -1048,12 +1115,30 @@ export function SchematicEditor({
         ref={svg}
         className="native-sheet engineering-canvas"
         data-tool={tool}
+        data-space-pan={spacePan}
         viewBox={`${view.x} ${view.y} ${view.w} ${view.h}`}
         role="application"
         aria-label={page.name}
         tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget || event.code !== "Space")
+            return;
+          event.preventDefault();
+          setSpacePan(true);
+        }}
+        onKeyUp={(event) => {
+          if (event.code !== "Space" || !spacePan) return;
+          event.preventDefault();
+          setSpacePan(false);
+        }}
+        onBlur={() => setSpacePan(false)}
         onPointerDown={begin}
         onPointerMove={pointerMove}
+        onPointerLeave={() => {
+          setSnapPin(null);
+          if (coordinateReadout.current)
+            coordinateReadout.current.textContent = "";
+        }}
         onPointerUp={pointerUp}
         onPointerCancel={() => {
           drag.current = null;
@@ -1093,6 +1178,7 @@ export function SchematicEditor({
               <g
                 key={path.id}
                 onPointerDown={(e) => {
+                  if (spacePan || e.button !== 0) return;
                   if (tool === "junction" || tool === "terminal") {
                     e.stopPropagation();
                     const position = point(e);
@@ -1242,11 +1328,23 @@ export function SchematicEditor({
               <g
                 key={pin.id}
                 data-pin={pin.id}
+                data-wire-target={
+                  tool === "wire" &&
+                  !project.layers.find((layer) => layer.id === instance.layerId)
+                    ?.locked
+                }
+                data-snap-pin={tool === "wire" && snapPin === pin.id}
                 role="button"
                 tabIndex={0}
                 aria-label={`${device.reference}:${terminal.designation}${project.pins.filter((p) => p.symbolInstanceId === instance.id && p.terminalId === terminal.id).length > 1 ? `/${pin.definitionPinId}` : ""}`}
                 onPointerDown={(e) => {
-                  if (tool === "pan" || Object.hasOwn(primitives, tool)) return;
+                  if (spacePan || e.button !== 0) return;
+                  if (
+                    tool === "pan" ||
+                    tool === "wire" ||
+                    Object.hasOwn(primitives, tool)
+                  )
+                    return;
                   if (tool === "select") {
                     beginSymbol(e, instance.id);
                     return;
@@ -1263,11 +1361,22 @@ export function SchematicEditor({
                 }}
               >
                 <circle
+                  className="pin-aperture"
                   cx={position.x}
                   cy={position.y}
                   r={2.4}
                   fill="transparent"
                 />
+                {tool === "wire" && snapPin === pin.id && (
+                  <circle
+                    className="pin-snap-ring"
+                    cx={position.x}
+                    cy={position.y}
+                    r={2.4}
+                    vectorEffect="non-scaling-stroke"
+                    pointerEvents="none"
+                  />
+                )}
                 <circle
                   cx={position.x}
                   cy={position.y}
@@ -1306,13 +1415,14 @@ export function SchematicEditor({
         })}
         {marquee && (
           <rect
+            className="schematic-marquee"
+            data-crossing={marquee.b.x < marquee.a.x}
             x={Math.min(marquee.a.x, marquee.b.x)}
             y={Math.min(marquee.a.y, marquee.b.y)}
             width={Math.abs(marquee.a.x - marquee.b.x)}
             height={Math.abs(marquee.a.y - marquee.b.y)}
-            fill="#2563eb15"
-            stroke="#2563eb"
             strokeWidth={0.4}
+            pointerEvents="none"
           />
         )}
       </svg>

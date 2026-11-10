@@ -14,6 +14,13 @@ import {
 import type { MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 
+const findingFilters = [
+  ["all", "all"],
+  ["error", "errors"],
+  ["warning", "warnings"],
+  ["info", "diagnosticInfo"],
+] as const satisfies ReadonlyArray<readonly [string, MessageKey]>;
+
 export function ConnectivityPanel({
   native,
   t,
@@ -28,7 +35,15 @@ export function ConnectivityPanel({
   const [scope, setScope] = useState<NumberingScope>("wires");
   const [preview, setPreview] = useState<NumberChange[]>([]);
   const [error, setError] = useState(false);
+  const [filter, setFilter] =
+    useState<(typeof findingFilters)[number][0]>("all");
   if (!project || !result) return <p>{t("noDiagnostics")}</p>;
+  const bySeverity = {
+    all: result.findings,
+    error: result.findings.filter(({ severity }) => severity === "error"),
+    warning: result.findings.filter(({ severity }) => severity === "warning"),
+    info: result.findings.filter(({ severity }) => severity === "info"),
+  };
   const jump = (ids: string[]) => {
     const pin = project.pins.find(
       (p) => ids.includes(p.id) || ids.includes(p.terminalId),
@@ -45,22 +60,36 @@ export function ConnectivityPanel({
   };
   return (
     <section className="connectivity-panel" aria-label={t("connectivity")}>
-      <p>{t("connectivityScope")}</p>
-      <p>
-        {t("errors")}:{" "}
-        {result.findings.filter((f) => f.severity === "error").length} ·{" "}
-        {t("warnings")}:{" "}
-        {result.findings.filter((f) => f.severity === "warning").length}
-      </p>
-      <ul>
-        {result.findings.map((finding, index) => (
-          <li key={index}>
-            <button onClick={() => jump(finding.entityIds)}>
-              {t(("rule" + finding.code) as `rule${RuleCode}`)}
-            </button>
-          </li>
+      <div
+        className="diagnostic-filters"
+        role="group"
+        aria-label={t("diagnostics")}
+      >
+        {findingFilters.map(([id, key]) => (
+          <button
+            type="button"
+            key={id}
+            aria-pressed={filter === id}
+            onClick={() => setFilter(id)}
+          >
+            {t(key)} ({bySeverity[id].length})
+          </button>
         ))}
-      </ul>
+      </div>
+      {bySeverity[filter].length > 0 ? (
+        <ul className="diagnostic-findings">
+          {bySeverity[filter].map((finding, index) => (
+            <li key={index} data-severity={finding.severity}>
+              <button type="button" onClick={() => jump(finding.entityIds)}>
+                {t(("rule" + finding.code) as `rule${RuleCode}`)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="empty-hint">{t("diagnosticEmpty")}</p>
+      )}
+      <p>{t("connectivityScope")}</p>
       <details>
         <summary>
           {t("netlist")} ({result.nets.length})

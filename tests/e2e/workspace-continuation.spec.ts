@@ -45,7 +45,17 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   const preview = page.locator(".panel-preview");
   const canvas = preview.locator(".panel-3d-view");
   await expect(canvas).toBeVisible();
+  const viewOptions = preview.locator(".panel-view-options > summary");
+  const closedHeight = (await canvas.boundingBox())!.height;
+  await viewOptions.click();
+  await expect(preview.getByLabel("View yaw (°)")).toBeVisible();
+  expect((await canvas.boundingBox())!.height).toBeLessThan(closedHeight);
+  await viewOptions.click();
   const original = await canvas.getAttribute("viewBox");
+  const frontFrame = canvas.locator(".panel-frame-front line");
+  const rearFrame = canvas.locator(".panel-frame-rear line");
+  await expect(frontFrame).toHaveCount(9);
+  await expect(rearFrame).toHaveCount(3);
   const polygons = await canvas
     .locator("polygon")
     .evaluateAll((elements) => elements.map((e) => e.getAttribute("points")));
@@ -62,6 +72,14 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   });
   await page.mouse.up();
   await expect(canvas).not.toHaveAttribute("viewBox", original!);
+  const pointerView = await canvas.getAttribute("viewBox");
+  await canvas.press("ArrowRight");
+  await expect(canvas).not.toHaveAttribute("viewBox", pointerView!);
+  await canvas.press("ArrowLeft");
+  const restoredX = Number(
+    (await canvas.getAttribute("viewBox"))!.split(" ")[0],
+  );
+  expect(restoredX).toBeCloseTo(Number(pointerView!.split(" ")[0]), 8);
   await expect(preview.getByLabel("View yaw (°)")).toHaveValue(rotate);
   expect(
     await canvas
@@ -79,12 +97,30 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
       localStorage.getItem("adiguneplanai.projects.v1"),
     ),
   ).toBe(before);
-  await expect(
-    preview.locator(".panel-orientation-cube polygon"),
-  ).not.toHaveCount(0);
+  const cube = preview.locator(".panel-3d-stage > .panel-orientation-cube");
+  await expect(cube.locator("polygon")).not.toHaveCount(0);
+  const cubeBounds = (await cube.boundingBox())!;
+  const stageBounds = (await canvas.boundingBox())!;
+  const tools = preview.locator(".panel-3d-stage > .panel-camera-tools");
+  const toolBounds = (await tools.boundingBox())!;
+  expect(toolBounds.x - stageBounds.x).toBeCloseTo(8, 0);
+  expect(toolBounds.y - stageBounds.y).toBeCloseTo(8, 0);
+  expect(cubeBounds.y - stageBounds.y).toBeCloseTo(8, 0);
+  expect(
+    stageBounds.x + stageBounds.width - cubeBounds.x - cubeBounds.width,
+  ).toBeCloseTo(8, 0);
+  const triad = preview.locator(".panel-axis-triad");
+  await expect(triad.locator("text")).toHaveText(["X", "Y", "Z"]);
+  const triadBounds = (await triad.boundingBox())!;
+  expect(triadBounds.y).toBeGreaterThanOrEqual(
+    toolBounds.y + toolBounds.height,
+  );
   await preview.getByRole("button", { name: "Front", exact: true }).click();
+  await expect(triad.locator("text")).toHaveText(["X", "Y"]);
   await expect(preview.getByLabel("View yaw (°)")).toHaveValue("0");
   await expect(preview.getByLabel("View pitch (°)")).toHaveValue("0");
+  await expect(frontFrame).toHaveCount(4);
+  await expect(rearFrame).toHaveCount(8);
 });
 test("schematic and cabinet selection synchronize without changing saved engineering data", async ({
   page,
@@ -292,6 +328,17 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
     "aria-pressed",
     "true",
   );
+  const enclosurePicker = preview.getByLabel("Selected enclosure", {
+    exact: true,
+  });
+  await enclosurePicker.selectOption("cabinet");
+  await expect(enclosurePicker).toHaveValue("cabinet");
+  await expect(page.locator('[data-instance="symbol-c"]')).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  await enclosurePicker.selectOption("cabinet-2");
+  await expect(remote).toHaveAttribute("aria-pressed", "true");
   await page
     .locator('[data-panel="project"]')
     .getByRole("button", { name: "Sheet 1", exact: true })

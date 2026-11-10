@@ -22,6 +22,13 @@ import { downloadFile } from "./download";
 import "./calculations.css";
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
+const quickCalculations = [
+  ["load-current", "calcToolLoadCurrent"],
+  ["voltage-drop", "calcValueVoltageDrop"],
+  ["short-circuit", "calcToolShortCircuit"],
+  ["cable-sizing", "calcToolCableSizing"],
+  ["transformer-sizing", "calcToolTransformerSizing"],
+] as const satisfies ReadonlyArray<readonly [string, MessageKey]>;
 const unitsFor = (id: string) =>
   Object.fromEntries(
     calculatorById(id).inputs.map((field) => [field.key, field.units[0]]),
@@ -180,10 +187,25 @@ function CalculationForm({ native, t }: Props) {
       className="engineering-tools calculations-panel"
       aria-label={tr("calcTools")}
     >
-      <h2>{tr("calcTools")}</h2>
-      <p>{tr("calcScope")}</p>
-      <label>
-        {tr("calcTool")}
+      <div
+        className="calculation-shortcuts"
+        role="group"
+        aria-label={tr("calcTools")}
+      >
+        {quickCalculations.map(([id, key]) => (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={toolId === id}
+            onClick={() => {
+              if (toolId !== id) choose(id);
+            }}
+          >
+            {t(key)}
+          </button>
+        ))}
+      </div>
+      <div className="calculation-command-row">
         <select
           aria-label={tr("calcTool")}
           value={toolId}
@@ -195,8 +217,12 @@ function CalculationForm({ native, t }: Props) {
             </option>
           ))}
         </select>
-      </label>
+        <button type="submit" form="native-calculation-form">
+          {tr("calcRun")}
+        </button>
+      </div>
       <form
+        id="native-calculation-form"
         onSubmit={(event) => {
           event.preventDefault();
           run();
@@ -312,6 +338,7 @@ function CalculationForm({ native, t }: Props) {
         </label>
         <details className="calculation-method" open>
           <summary>{tr("calcMethodAndAssumptions")}</summary>
+          <p>{tr("calcScope")}</p>
           <p>
             <code>{calculator.formula}</code>
           </p>
@@ -321,7 +348,6 @@ function CalculationForm({ native, t }: Props) {
             ))}
           </ul>
         </details>
-        <button type="submit">{tr("calcRun")}</button>
       </form>
       {issues.length > 0 && (
         <div role="alert" id="calculation-errors">

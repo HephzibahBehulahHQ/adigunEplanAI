@@ -10,7 +10,14 @@ import {
   schematicSvg,
   printDocument,
 } from "../../../packages/reporting/drawings.ts";
-import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+  type RefObject,
+} from "react";
 import { ComponentLibrary } from "./ComponentLibrary";
 import { exampleCatalog } from "../../../packages/example-projects/catalog.ts";
 import { SchematicEditor, type NativeClipboard } from "./SchematicEditor";
@@ -616,20 +623,23 @@ export function NativeDataPanel({
   ];
   if (kind === "bom")
     return project.devices.length ? (
-      <table className="native-bom">
+      <table className="native-bom dock-bom">
         <thead>
           <tr>
-            {bomHeaders.map((label, index) => (
-              <th key={index}>{label}</th>
-            ))}
+            <th scope="col">{t("reference")}</th>
+            <th scope="col">{t("partNumber")}</th>
+            <th scope="col">{t("device")}</th>
+            <th scope="col">{t("manufacturer")}</th>
+            <th scope="col">{t("quantity")}</th>
           </tr>
         </thead>
         <tbody>
           {projectBom(project).map((device) => (
             <tr key={device.id}>
-              <td>{device.reference}</td>
-              <td>{device.name}</td>
+              <th scope="row">{device.reference}</th>
               <td>{device.partNumber || "—"}</td>
+              <td>{device.name}</td>
+              <td>{device.manufacturer || "—"}</td>
               <td>{device.quantity}</td>
             </tr>
           ))}
@@ -642,7 +652,7 @@ export function NativeDataPanel({
     return (
       <LazyPanelBoundary message={t("enclosureLoadError")}>
         <Suspense fallback={<p role="status">{t("panel3d")}…</p>}>
-          <PanelPreview native={native} t={t} />
+          <PanelPreview key={project.id} native={native} t={t} />
         </Suspense>
       </LazyPanelBoundary>
     );
@@ -712,12 +722,14 @@ export function NativeDataPanel({
   }
   return (
     <>
-      <CalculationRecords key={project.id} project={project} t={t} />
       <LazyPanelBoundary message={t("reportExportError")}>
         <Suspense fallback={<p>{t("calculations")}…</p>}>
           <CalculationsPanel native={native} t={t} />
         </Suspense>
       </LazyPanelBoundary>
+      {project.calculations.length > 0 && (
+        <CalculationRecords key={project.id} project={project} t={t} />
+      )}
     </>
   );
 }
@@ -834,14 +846,37 @@ export function ProjectProperties({ native, t }: Props) {
     </>
   );
 }
-export function NativeDrawing({ native, t }: Props) {
+export function NativeDrawing({
+  native,
+  t,
+  orthogonal,
+  toggleOrthogonal,
+  toggleSnap,
+  coordinateReadout,
+}: Props & {
+  orthogonal: boolean;
+  toggleOrthogonal: () => void;
+  toggleSnap: () => void;
+  coordinateReadout: RefObject<HTMLSpanElement | null>;
+}) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
   const { view, setView } = native;
   const [clipboard, setClipboard] = useState<NativeClipboard | null>(null);
   const p = native.project;
+  const page = p?.pages.find((item) => item.id === selected) ?? p?.pages[0];
+  const pageTabs = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const strip = pageTabs.current;
+    const active = strip?.querySelector('[aria-pressed="true"]');
+    if (!strip || !active) return;
+    const bounds = strip.getBoundingClientRect();
+    const tab = active.getBoundingClientRect();
+    if (tab.left < bounds.left) strip.scrollLeft += tab.left - bounds.left;
+    else if (tab.right > bounds.right)
+      strip.scrollLeft += tab.right - bounds.right;
+  }, [page?.id, view]);
   if (!p) return null;
-  const page = p.pages.find((item) => item.id === selected) ?? p.pages[0];
   return (
     <div className="native-drawing">
       <nav className="drawing-tabs" aria-label={t("workspaceView")}>
@@ -890,22 +925,33 @@ export function NativeDrawing({ native, t }: Props) {
         </LazyPanelBoundary>
       ) : (
         <>
-          <nav className="drawing-tabs" aria-label={t("pageName")}>
-            {p.pages.map((item) => (
-              <button
-                key={item.id}
-                aria-pressed={item.id === page?.id}
-                onClick={() => setSelected(item.id)}
-              >
-                {item.name}
-              </button>
-            ))}
+          <nav
+            className="drawing-tabs drawing-pages"
+            aria-label={t("pageName")}
+          >
+            <div className="drawing-page-strip" ref={pageTabs}>
+              {p.pages.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  title={item.name}
+                  aria-pressed={item.id === page?.id}
+                  onClick={() => setSelected(item.id)}
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
             <button
+              type="button"
+              className="drawing-page-add"
+              title={t("newPage")}
+              aria-label={t("newPage")}
               onClick={() =>
                 native.addPage(`${t("sheet")} ${p.pages.length + 1}`)
               }
             >
-              {t("newPage")}
+              <span aria-hidden="true">+</span>
             </button>
           </nav>
           {page ? (
@@ -916,6 +962,10 @@ export function NativeDrawing({ native, t }: Props) {
               t={t}
               clipboard={clipboard}
               setClipboard={setClipboard}
+              orthogonal={orthogonal}
+              toggleOrthogonal={toggleOrthogonal}
+              toggleSnap={toggleSnap}
+              coordinateReadout={coordinateReadout}
             />
           ) : (
             <p className="canvas-empty">{t("noPages")}</p>

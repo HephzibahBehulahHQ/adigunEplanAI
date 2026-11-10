@@ -655,10 +655,9 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   await expect(
     page.getByRole("button", { name: "Help", exact: true }),
   ).toHaveCount(1);
-  await page
-    .getByRole("button", { name: "Language options", exact: true })
-    .click();
-  await expect(page.getByLabel("Language", { exact: true })).toBeFocused();
+  await expect(
+    page.getByRole("combobox", { name: "Language", exact: true }),
+  ).toHaveCount(1);
   await page.setViewportSize({ width: 390, height: 844 });
   const boxes = await page
     .locator(".owner-toolbar > button")

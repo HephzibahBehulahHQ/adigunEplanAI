@@ -1,4 +1,5 @@
 import { useRef, useState, type FormEvent, type PointerEvent } from "react";
+import { CommandIcon } from "./WorkspaceRibbon";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
 import type { Project } from "../../../packages/electrical-model/project.ts";
@@ -17,6 +18,7 @@ import {
 } from "../../../packages/panel-engineering/commands.ts";
 import {
   boxEdges,
+  boxFaces,
   boxVertices,
   projectedFaces,
   projectPoint3d,
@@ -855,6 +857,27 @@ function PanelViews({
     min: { x: 0, y: 0, z: 0 },
     max: { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
   }).map((point) => projectPoint3d(point, yaw, pitch));
+  const facingEnclosure = boxFaces.filter(
+    ({ normal }) => projectPoint3d(normal, yaw, pitch).z > 1e-10,
+  );
+  const frameEdges = boxEdges.map(([a, b]) => {
+    const foreground = facingEnclosure.some(
+      ({ indices }) => indices.includes(a) && indices.includes(b),
+    );
+    return {
+      foreground,
+      line: (
+        <line
+          key={`${a}:${b}`}
+          x1={enclosureCorners[a].x}
+          y1={enclosureCorners[a].y}
+          x2={enclosureCorners[b].x}
+          y2={enclosureCorners[b].y}
+          vectorEffect="non-scaling-stroke"
+        />
+      ),
+    };
+  });
   const faces = orderProjectedFaces(
     objects
       .filter((item) => !("kind" in item && item.kind === "compartment"))
@@ -936,6 +959,86 @@ function PanelViews({
     w: projectedWidth / zoom,
     h: projectedHeight / zoom,
   };
+  const cameraTools = (
+    <div
+      className="panel-camera-tools"
+      role="group"
+      aria-label={t("workspaceView")}
+    >
+      <button
+        type="button"
+        aria-pressed={cameraTool === "orbit"}
+        aria-label={t("rotate")}
+        title={t("rotate")}
+        onClick={() => setCameraTool("orbit")}
+      >
+        {preview ? <CommandIcon kind="rotate" /> : t("rotate")}
+      </button>
+      <button
+        type="button"
+        aria-pressed={cameraTool === "pan"}
+        aria-label={t("panTool")}
+        title={t("panTool")}
+        onClick={() => setCameraTool("pan")}
+      >
+        {preview ? <CommandIcon kind="pan" /> : t("panTool")}
+      </button>
+      <button
+        type="button"
+        aria-label={t("zoomOut")}
+        title={t("zoomOut")}
+        disabled={zoom <= 0.5}
+        onClick={() => setZoom((v) => Math.max(0.5, v / 1.25))}
+      >
+        −
+      </button>
+      <output>{Math.round(zoom * 100)}%</output>
+      <button
+        type="button"
+        aria-label={t("zoomIn")}
+        title={t("zoomIn")}
+        disabled={zoom >= 4}
+        onClick={() => setZoom((v) => Math.min(4, v * 1.25))}
+      >
+        +
+      </button>
+      <button
+        type="button"
+        aria-label={t("fitPage")}
+        title={t("fitPage")}
+        onClick={() => {
+          setZoom(1);
+          setCameraPan({ x: 0, y: 0 });
+        }}
+      >
+        {preview ? <CommandIcon kind="fit" /> : t("fitPage")}
+      </button>
+    </div>
+  );
+  const cameraAngles = (
+    <div className="panel-fields">
+      <label>
+        {t("panelYaw")}
+        <input
+          type="range"
+          min="-180"
+          max="180"
+          value={yaw}
+          onChange={(event) => setYaw(Number(event.target.value))}
+        />
+      </label>
+      <label>
+        {t("panelPitch")}
+        <input
+          type="range"
+          min="-90"
+          max="90"
+          value={pitch}
+          onChange={(event) => setPitch(Number(event.target.value))}
+        />
+      </label>
+    </div>
+  );
   return (
     <div className={`panel-views${preview ? " panel-preview-views" : ""}`}>
       {!preview && (
@@ -1073,52 +1176,7 @@ function PanelViews({
       )}
       <figure>
         <figcaption>{t("panel3dView")}</figcaption>
-        <div
-          className="panel-camera-tools"
-          role="group"
-          aria-label={t("workspaceView")}
-        >
-          <button
-            type="button"
-            aria-pressed={cameraTool === "orbit"}
-            onClick={() => setCameraTool("orbit")}
-          >
-            {t("rotate")}
-          </button>
-          <button
-            type="button"
-            aria-pressed={cameraTool === "pan"}
-            onClick={() => setCameraTool("pan")}
-          >
-            {t("panTool")}
-          </button>
-          <button
-            type="button"
-            aria-label={t("zoomOut")}
-            disabled={zoom <= 0.5}
-            onClick={() => setZoom((v) => Math.max(0.5, v / 1.25))}
-          >
-            −
-          </button>
-          <output>{Math.round(zoom * 100)}%</output>
-          <button
-            type="button"
-            aria-label={t("zoomIn")}
-            disabled={zoom >= 4}
-            onClick={() => setZoom((v) => Math.min(4, v * 1.25))}
-          >
-            +
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setZoom(1);
-              setCameraPan({ x: 0, y: 0 });
-            }}
-          >
-            {t("fitPage")}
-          </button>
-        </div>
+        {!preview && cameraTools}
         <div className="panel-3d-stage" data-mesh-scene={hasMesh}>
           {hasMesh && (
             <PanelMeshSurface
@@ -1129,6 +1187,7 @@ function PanelViews({
               errorLabel={t("meshRenderError")}
             />
           )}
+          {preview && cameraTools}
           <svg
             className="panel-3d-view"
             data-camera-tool={cameraTool}
@@ -1137,6 +1196,28 @@ function PanelViews({
             }}
             role="group"
             aria-label={t("panel3dView")}
+            tabIndex={cameraTool === "pan" ? 0 : undefined}
+            aria-keyshortcuts={
+              cameraTool === "pan"
+                ? "ArrowUp ArrowDown ArrowLeft ArrowRight"
+                : undefined
+            }
+            onKeyDown={(event) => {
+              if (cameraTool !== "pan" || event.target !== event.currentTarget)
+                return;
+              const movement = {
+                ArrowLeft: [-projectedWidth, 0],
+                ArrowRight: [projectedWidth, 0],
+                ArrowUp: [0, -projectedHeight],
+                ArrowDown: [0, projectedHeight],
+              }[event.key];
+              if (!movement) return;
+              event.preventDefault();
+              setCameraPan(({ x, y }) => ({
+                x: x + movement[0] / zoom / 20,
+                y: y + movement[1] / zoom / 20,
+              }));
+            }}
             viewBox={`${minX + (projectedWidth - projectedWidth / zoom) / 2 + cameraPan.x} ${minY + (projectedHeight - projectedHeight / zoom) / 2 + cameraPan.y} ${projectedWidth / zoom} ${projectedHeight / zoom}`}
             onClick={(event) => {
               if (ignoreClick.current) {
@@ -1232,6 +1313,11 @@ function PanelViews({
               orbit.current = null;
             }}
           >
+            <g className="panel-frame-rear" aria-hidden="true">
+              {frameEdges
+                .filter(({ foreground }) => !foreground)
+                .map(({ line }) => line)}
+            </g>
             {faces.map((face, fragment) => {
               const item = objects.find(
                 (object) => object.id === face.objectId,
@@ -1348,19 +1434,11 @@ function PanelViews({
                 <title>{feature.name}</title>
               </polyline>
             ))}
-            {boxEdges.map(([a, b]) => (
-              <line
-                key={`${a}:${b}`}
-                x1={enclosureCorners[a].x}
-                y1={enclosureCorners[a].y}
-                x2={enclosureCorners[b].x}
-                y2={enclosureCorners[b].y}
-                stroke="currentColor"
-                strokeWidth="1"
-                strokeDasharray="5 3"
-                pointerEvents="none"
-              />
-            ))}
+            <g className="panel-frame-front" aria-hidden="true">
+              {frameEdges
+                .filter(({ foreground }) => foreground)
+                .map(({ line }) => line)}
+            </g>
             {accessZone &&
               boxEdges.map(([a, b]) => (
                 <line
@@ -1375,6 +1453,48 @@ function PanelViews({
                   pointerEvents="none"
                 />
               ))}
+          </svg>
+          <svg
+            className="panel-orientation-cube"
+            viewBox="-32 -32 64 64"
+            aria-hidden="true"
+          >
+            {orientationFaces.map((face) => (
+              <g key={face.side}>
+                <polygon
+                  points={face.points.map((v) => v.x + "," + v.y).join(" ")}
+                />
+                <text
+                  x={face.points.reduce((s, v) => s + v.x, 0) / 4}
+                  y={face.points.reduce((s, v) => s + v.y, 0) / 4}
+                >
+                  {["−X", "+X", "−Y", "+Y", "−Z", "+Z"][face.side]}
+                </text>
+              </g>
+            ))}
+          </svg>
+          <svg
+            className="panel-axis-triad"
+            viewBox="-34 -34 68 68"
+            aria-hidden="true"
+          >
+            {[
+              { label: "X", direction: { x: 1, y: 0, z: 0 } },
+              { label: "Y", direction: { x: 0, y: 1, z: 0 } },
+              { label: "Z", direction: { x: 0, y: 0, z: 1 } },
+            ].map(({ label, direction }) => {
+              const { x, y } = projectPoint3d(direction, yaw, pitch);
+              if (Math.hypot(x, y) < 0.1) return null;
+              return (
+                <g key={label} data-axis={label}>
+                  <line x1="0" y1="0" x2={x * 20} y2={y * 20} />
+                  <text x={x * 27} y={y * 27}>
+                    {label}
+                  </text>
+                </g>
+              );
+            })}
+            <circle r="2" />
           </svg>
         </div>
         <div
@@ -1404,49 +1524,21 @@ function PanelViews({
             </button>
           ))}
         </div>
-        <svg
-          className="panel-orientation-cube"
-          viewBox="-32 -32 64 64"
-          aria-hidden="true"
-        >
-          {orientationFaces.map((face) => (
-            <g key={face.side}>
-              <polygon
-                points={face.points.map((v) => v.x + "," + v.y).join(" ")}
-              />
-              <text
-                x={face.points.reduce((s, v) => s + v.x, 0) / 4}
-                y={face.points.reduce((s, v) => s + v.y, 0) / 4}
-              >
-                {["−X", "+X", "−Y", "+Y", "−Z", "+Z"][face.side]}
-              </text>
-            </g>
-          ))}
-        </svg>
-        <div className="panel-fields">
-          <label>
-            {t("panelYaw")}
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              value={yaw}
-              onChange={(event) => setYaw(Number(event.target.value))}
-            />
-          </label>
-          <label>
-            {t("panelPitch")}
-            <input
-              type="range"
-              min="-90"
-              max="90"
-              value={pitch}
-              onChange={(event) => setPitch(Number(event.target.value))}
-            />
-          </label>
-        </div>
+        {preview ? (
+          <details className="panel-view-options">
+            <summary>
+              {t("view")} ·{" "}
+              {t(hasMesh ? "panelImportedGeometry" : "panelGenericGeometry")}
+            </summary>
+            {cameraAngles}
+            <p className="panel-view-hint">{t("panelOrbit")}</p>
+            <p>{t(hasMesh ? "panelMeshScope" : "panelScope")}</p>
+          </details>
+        ) : (
+          cameraAngles
+        )}
       </figure>
-      <p className="panel-view-hint">{t("panelOrbit")}</p>
+      {!preview && <p className="panel-view-hint">{t("panelOrbit")}</p>}
     </div>
   );
 }
@@ -1460,15 +1552,26 @@ export function PanelPreview({
   t: Translate;
 }) {
   const [selectedId, setSelectedId] = useState("");
+  const [previousDeviceId, setPreviousDeviceId] = useState<string | null>(null);
   const project = native.project;
-  const mapped = project?.equipment3d.find(
-    (item) => item.deviceId === native.selectedDeviceId,
-  );
+  const matches =
+    project?.equipment3d.filter(
+      (item) => item.deviceId === native.selectedDeviceId,
+    ) ?? [];
+  if (native.selectedDeviceId !== previousDeviceId) {
+    setPreviousDeviceId(native.selectedDeviceId);
+    if (
+      matches.length &&
+      !matches.some((item) => item.enclosureId === selectedId)
+    ) {
+      setSelectedId(matches[0].enclosureId);
+    }
+  }
   const enclosure =
-    project?.enclosures.find((item) => item.id === mapped?.enclosureId) ??
     project?.enclosures.find((item) => item.id === selectedId) ??
     project?.enclosures[0];
   if (!project || !enclosure) return <p>{t("noRecords")}</p>;
+  const mapped = matches.find((item) => item.enclosureId === enclosure.id);
   return (
     <section className="panel-preview" aria-label={t("panel3d")}>
       <label>
@@ -1499,13 +1602,6 @@ export function PanelPreview({
         t={t}
         preview
       />
-      <p>
-        {t(
-          project.equipment3d.some((item) => item.meshId)
-            ? "panelMeshScope"
-            : "panelScope",
-        )}
-      </p>
     </section>
   );
 }
