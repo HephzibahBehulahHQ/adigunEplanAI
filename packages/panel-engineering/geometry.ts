@@ -246,7 +246,7 @@ export function panelDiagnostics(
     }
     if (!item.mountingStructureId) continue;
     const support = structures.find((s) => s.id === item.mountingStructureId);
-    if (!support || !["plate", "din-rail"].includes(support.kind)) {
+    if (!support || !["plate", "din-rail", "door"].includes(support.kind)) {
       diagnostics.push({
         code: "mounting-support",
         severity: "error",
@@ -257,7 +257,10 @@ export function panelDiagnostics(
     const box = volumeBounds(item);
     const mount = volumeBounds(support);
     const contact =
-      Math.abs(box.min.z - mount.max.z) <= tolerance(box.min.z, mount.max.z);
+      support.kind === "door"
+        ? Math.abs(box.max.z - mount.min.z) <= tolerance(box.max.z, mount.min.z)
+        : Math.abs(box.min.z - mount.max.z) <=
+          tolerance(box.min.z, mount.max.z);
     const xyOverlap =
       box.min.x < mount.max.x &&
       box.max.x > mount.min.x &&
@@ -278,7 +281,7 @@ export function panelDiagnostics(
       );
     };
     const supported =
-      support.kind === "plate"
+      support.kind === "plate" || support.kind === "door"
         ? within("x") && within("y")
         : within(longAxis) && xyOverlap;
     if (!contact || !supported)
@@ -430,3 +433,4 @@ export function projectedFaces(
     ];
   });
 }
+
