@@ -263,6 +263,13 @@ export function buildExample(id: ExampleId): Project {
       20,
       22,
     );
+    note("Auxiliary supply", 23, 54);
+    note("Protection relay", 165, 54);
+    note("Trip actuator", 292, 96);
+    note("Measurement interfaces", 23, 123);
+    note("I+", 66, 143);
+    note("I−", 66, 188);
+    note("Auxiliary common", 340, 175);
     symbol("terminal", "X5", 35, 75, 0, "Auxiliary supply positive");
     symbol("fuse", "F3", 95, 75);
     symbol("protection-relay-trip", "P1", 190, 105);
