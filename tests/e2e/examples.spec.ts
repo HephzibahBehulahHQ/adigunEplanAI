@@ -85,7 +85,7 @@ for (const [name, devices, wires, selector] of cases) {
       const ribbonTabs = await page.locator(".ribbon-tabs").boundingBox();
       expect(appHeader).not.toBeNull();
       expect(ribbonTabs).not.toBeNull();
-      expect(appHeader!.height).toBeLessThanOrEqual(42);
+      expect(appHeader!.height).toBeLessThanOrEqual(35);
       expect(ribbonTabs!.height).toBeLessThanOrEqual(33);
       expect(ribbonTabs!.y).toBe(appHeader!.y + appHeader!.height);
       await expect(

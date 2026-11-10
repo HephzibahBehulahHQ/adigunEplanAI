@@ -3,15 +3,15 @@
   grid-template-columns: 210px minmax(280px, 1fr) minmax(260px, 520px) auto;
   align-items: center;
   gap: 14px;
-  min-height: 40px;
-  padding: 2px 12px 2px 6px;
+  min-height: 32px;
+  padding: 1px 12px 1px 6px;
   background: linear-gradient(112deg, #040d15, #071b2b 58%, #101e30);
   border-bottom: 1px solid #306076;
   color: #edf3fa;
 }
 .corporate-mark {
   width: 210px;
-  height: 36px;
+  height: 30px;
   overflow: hidden;
 }
 .corporate-mark svg {
@@ -30,7 +30,7 @@
   gap: 12px;
 }
 .product-heading strong {
-  font-size: 20px;
+  font-size: 18px;
   letter-spacing: -0.6px;
   line-height: 1.1;
 }
@@ -102,8 +102,8 @@
   place-items: center;
   flex: 0 0 46px;
   width: 46px;
-  height: 36px;
-  padding: 6px;
+  height: 28px;
+  padding: 4px;
   border: 0;
   border-radius: 4px;
   background: transparent;
@@ -113,8 +113,8 @@
   background: #163750;
 }
 .header-actions svg {
-  width: 23px;
-  height: 23px;
+  width: 20px;
+  height: 20px;
 }
 .header-actions .cloud-action {
   color: #22d3ee;
@@ -123,7 +123,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 2px 8px 2px 10px;
+  padding: 1px 8px 1px 10px;
   border: 0;
   border-left: 1px solid #294357;
   border-radius: 0;
@@ -131,22 +131,22 @@
   color: inherit;
   width: 245px;
   min-width: 0;
-  height: 36px;
+  height: 28px;
 }
 .profile-picture {
   position: relative;
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   flex: none;
   border: 2px solid #f0f2f3;
   border-radius: 50%;
   background: #21354d;
 }
 .profile-picture .profile-avatar {
-  width: 28px;
-  height: 28px;
+  width: 20px;
+  height: 20px;
 }
 .profile-caption {
   display: flex;
@@ -185,13 +185,13 @@
   }
   .corporate-mark {
     width: 210px;
-    height: 47px;
+    height: 30px;
   }
   .product-heading {
     padding-left: 12px;
   }
   .product-heading strong {
-    font-size: 23px;
+    font-size: 18px;
   }
   .product-heading small {
     font-size: 9px;
