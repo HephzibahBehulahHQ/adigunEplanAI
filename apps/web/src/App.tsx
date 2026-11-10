@@ -74,7 +74,6 @@ function Workspace({ account }: { account: Account }) {
   const examplesDialog = useRef<HTMLDialogElement>(null);
   const accountDialog = useRef<HTMLDialogElement>(null);
   const searchDialog = useRef<HTMLDialogElement>(null);
-  const languageSelect = useRef<HTMLSelectElement>(null);
   const [search, setSearch] = useState("");
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
@@ -358,12 +357,6 @@ function Workspace({ account }: { account: Account }) {
             >
               {t("workspaceSearch")}
             </button>
-            <button
-              aria-label={t("languageOptions")}
-              onClick={() => languageSelect.current?.focus()}
-            >
-              {t("languageOptions")}
-            </button>
             <label>
               {t("theme")}
               <select
@@ -380,7 +373,6 @@ function Workspace({ account }: { account: Account }) {
             <label>
               {t("language")}
               <select
-                ref={languageSelect}
                 aria-label={t("language")}
                 value={prefs.language}
                 onChange={(e) => set("language", e.target.value as Language)}
