@@ -3,8 +3,8 @@
   grid-template-columns: 210px minmax(280px, 1fr) minmax(260px, 520px) auto;
   align-items: center;
   gap: 14px;
-  min-height: 32px;
-  padding: 1px 12px 1px 6px;
+  min-height: 37px;
+  padding: 0 12px 0 6px;
   background: linear-gradient(112deg, #040d15, #071b2b 58%, #101e30);
   border-bottom: 1px solid #306076;
   color: #edf3fa;
@@ -102,7 +102,7 @@
   place-items: center;
   flex: 0 0 46px;
   width: 46px;
-  height: 28px;
+  height: 36px;
   padding: 4px;
   border: 0;
   border-radius: 4px;
@@ -131,7 +131,7 @@
   color: inherit;
   width: 245px;
   min-width: 0;
-  height: 28px;
+  height: 36px;
 }
 .profile-picture {
   position: relative;
