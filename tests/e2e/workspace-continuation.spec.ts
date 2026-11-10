@@ -317,6 +317,7 @@ test("compact target workspace gives the drawing space and keeps native insert, 
 }) => {
   await page.setViewportSize({ width: 1672, height: 941 });
   await page.goto("/");
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Example projects", exact: true })
     .first()

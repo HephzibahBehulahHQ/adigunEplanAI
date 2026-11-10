@@ -14,6 +14,9 @@ for (const [name, devices, wires, selector] of cases) {
     await page.goto("/");
     async function open() {
       await page
+        .getByRole("button", { name: "File menu", exact: true })
+        .click();
+      await page
         .getByRole("button", { name: "Example projects", exact: true })
         .first()
         .click();

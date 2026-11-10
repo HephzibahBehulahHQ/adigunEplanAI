@@ -20,6 +20,7 @@ import {
 } from "../../../packages/schematic-editor/geometry.ts";
 import {
   align,
+  distribute,
   connect,
   insertJunction,
   ensureLayer,
@@ -422,12 +423,19 @@ export function SchematicEditor({
     if (!request || handledCommand.current === request.id) return;
     handledCommand.current = request.id;
     native.consumeEditorCommand(request.id);
-    const action = request.action;
+    const action = request.action === "move" ? "select" : request.action;
     if (
       ["select", "pan", "wire", "label"].includes(action) ||
       Object.hasOwn(primitives, action)
     ) {
       setTool(action as typeof tool);
+      setFromPin(null);
+    } else if (
+      action.startsWith("custom:") &&
+      project.symbolDefinitions.some((d) => d.id === action.slice(7))
+    ) {
+      setCustomDefinition(action.slice(7));
+      setTool("custom");
       setFromPin(null);
     } else if (action === "fit")
       setView({ x: 0, y: 0, w: page.widthMm, h: page.heightMm });
@@ -442,7 +450,17 @@ export function SchematicEditor({
       selected.length > 1
     )
       edit((p) => align(p, selected, action === "alignX" ? "x" : "y"));
-    else if (action === "delete") deleteSelected();
+    else if (
+      (action === "distributeX" || action === "distributeY") &&
+      selected.length > 2
+    )
+      edit((p) =>
+        distribute(p, selected, action === "distributeX" ? "x" : "y"),
+      );
+    else if (action === "cut" && selected.length) {
+      setClipboard({ project: structuredClone(project), ids: [...selected] });
+      deleteSelected();
+    } else if (action === "delete") deleteSelected();
     else if (action === "duplicate") duplicateSelected();
     else if (action === "paste") pasteClipboard();
     else if (action === "copy" && selected.length)

@@ -169,17 +169,17 @@ test("Home commands print native geometry, open the library and close without lo
   await popup.close();
   await page
     .getByRole("button", {
-      name: "Open component library · Engineering commands",
+      name: "Device Catalog · Home",
       exact: true,
     })
     .click();
   await expect(
-    page.getByRole("tab", { name: "Library", exact: true }),
-  ).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator(".component-library").first()).toHaveAttribute(
-    "open",
-    "",
-  );
+    page.getByRole("dialog", { name: "Device Catalog", exact: true }),
+  ).toBeVisible();
+  await page
+    .getByRole("dialog", { name: "Device Catalog", exact: true })
+    .getByRole("button", { name: "Close", exact: true })
+    .click();
   await page.getByRole("tab", { name: "Project", exact: true }).click();
   await page
     .getByRole("button", { name: "Close project", exact: true })

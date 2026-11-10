@@ -200,3 +200,12 @@ test("custom component file round trips across projects and invalid imports pres
   await openLibrary(page);
   expect((await project(page)).manufacturerParts[0]).toEqual(exported.part);
 });
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
+});

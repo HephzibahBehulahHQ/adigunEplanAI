@@ -1,5 +1,8 @@
 # Decisions
 
+- 2026-11-10: The owner reaffirmed the exact Eplan header/ribbon reference and explicitly made the repository template authoritative over the later guidance attachment. Keep native autosave/recovery; do not delete saved projects or import the Simulator's storage behavior into this product. Use one header and one ribbon unit (tabs + grouped tools), with additional commands in their existing tabs or contextual dialogs.
+- The approved header reference supplies the gold corporate mark: original PNG SHA-256 `6d6d33bb7534d01cbff3133a3d63fc0893f1c51f36c8e66531bca95d02cb4ec4`, rendered only through corporate viewport `6 12 254 56`. All text, project status, account controls and commands beside it are native UI. One-logo policy and authority pins remain enforced. Show actual application version, guest/session identity and local save status; never copy the reference's fictional Professional/cloud-saved claims.
+
 - Use hb-AI-policy for governance, hb-design-system for visual standards, and hb-elektroniker for engineering guidance, as directed by the owner.
 - Keep implementation in HephzibahBehulahHQ/adigunEplanAI.
 - Preserve the supplied interface screenshot as visual guidance; exact behavior and acceptance must come from the product specification.

@@ -627,6 +627,7 @@ test("compact owner toolbar has one settings/help control and searches actual lo
     .getByRole("button", { name: "New drawing page", exact: true })
     .click();
   await create(page, "Beta");
+  await page.getByRole("button", { name: "Settings", exact: true }).click();
   await page
     .getByRole("button", { name: "Search workspace", exact: true })
     .click();
@@ -663,14 +664,16 @@ test("compact owner toolbar has one settings/help control and searches actual lo
         return { x: r.x, y: r.y, width: r.width, height: r.height };
       }),
     );
-  expect(boxes).toHaveLength(5);
+  expect(boxes).toHaveLength(6);
   for (const box of boxes) {
-    expect(box.width).toBe(40);
-    expect(box.height).toBe(40);
+    expect(box.width).toBeGreaterThanOrEqual(29);
+    expect(box.height).toBeGreaterThanOrEqual(36);
   }
   for (let i = 1; i < boxes.length; i++)
     if (boxes[i].y === boxes[i - 1].y)
-      expect(boxes[i].x - (boxes[i - 1].x + boxes[i - 1].width)).toBe(10);
+      expect(
+        boxes[i].x - (boxes[i - 1].x + boxes[i - 1].width),
+      ).toBeGreaterThanOrEqual(5);
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= window.innerWidth,

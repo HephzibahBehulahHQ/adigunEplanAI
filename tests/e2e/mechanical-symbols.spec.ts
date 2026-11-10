@@ -155,3 +155,12 @@ test("custom mechanical drawings create without pins and reject reclassification
   );
   expect(await project(page)).toEqual(data);
 });
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
+});

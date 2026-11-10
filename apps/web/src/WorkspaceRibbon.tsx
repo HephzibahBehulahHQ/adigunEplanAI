@@ -35,6 +35,18 @@ type Props = {
 /** Original line icons; commands delegate to the same native editor actions. */
 export function CommandIcon({ kind }: { kind: string }) {
   const paths: Record<string, string> = {
+    cut: "M4 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM4 14a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM7 8l14 12M7 16 21 4",
+    distribute: "M2 3v18M22 3v18M6 8h3v8H6ZM15 8h3v8h-3ZM2 5h20",
+    junction: "M12 2v20M2 12h20M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z",
+    terminal: "M2 12h5M17 12h5M7 5h10v14H7ZM9 12h6M12 9v6",
+    catalog: "M4 2h16v20H4ZM7 6h3v4H7ZM14 6h3v4h-3ZM7 14h3v4H7ZM14 14h3v4h-3",
+    sync: "M4 7h14l-4-4M20 17H6l4 4M2 12V7h4M22 12v5h-4M9 9h6v6H9Z",
+    theme: "M12 2 3 7v10l9 5 9-5V7ZM12 6v12M7 9l10 6M7 15l10-6",
+    cloud:
+      "M6 18a5 5 0 0 1-1-10 7 7 0 0 1 13-1 5 5 0 0 1 1 10M12 12v10M8 18l4 4 4-4",
+    bell: "M5 17h14l-2-3V9a5 5 0 0 0-10 0v5ZM10 21h4M12 2v2",
+    help: "M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9 9a3 3 0 0 1 6 0c0 2-3 2-3 4M12 17h.01",
+    profile: "M16 8a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM4 22v-3a8 8 0 0 1 16 0v3",
     select: "M5 3v17l5-5 4 7 3-2-4-6 7-1Z",
     pan: "M12 2v20M2 12h20M8 6l4-4 4 4M8 18l4 4 4-4M6 8l-4 4 4 4M18 8l4 4-4 4",
     wire: "M3 4h7v16h11M3 2v4M19 18v4",
@@ -153,57 +165,6 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
   );
   return (
     <div className="ribbon-command-groups" aria-label={t("ribbonWorkspace")}>
-      {tab === "home" && (
-        <>
-          <div className="ribbon-command-group">
-            {command(
-              "copy",
-              "copy",
-              () => native.requestEditorCommand("copy"),
-              selection,
-            )}
-            {tool("paste", "paste")}
-          </div>
-          <div className="ribbon-command-group">
-            {tool("selectTool", "select")}
-            {tool("panTool", "pan")}
-            {command(
-              "rotate",
-              "rotate",
-              () => native.requestEditorCommand("rotate"),
-              selection,
-            )}
-            {command(
-              "alignX",
-              "align",
-              () => native.requestEditorCommand("alignX"),
-              native.selectedSymbolIds.length < 2,
-            )}
-            {command(
-              "alignY",
-              "align",
-              () => native.requestEditorCommand("alignY"),
-              native.selectedSymbolIds.length < 2,
-            )}
-          </div>
-          <div className="ribbon-command-group">
-            {tool("wireTool", "wire")}
-            {tool("junction", "junction", "symbol")}
-            {tool("labelTool", "label")}
-            {tool("terminal", "terminal", "symbol")}
-          </div>
-          <div className="ribbon-command-group">
-            {dock("openLibrary", "project", "library")}
-            {dock("openDiagnostics", "diagnostics", "check")}
-            {dock("openBom", "bom", "report")}
-          </div>
-          <div className="ribbon-command-group">
-            {view("openPanel", "panel", "panel")}
-            {view("openSchematic", "schematic", "circuit")}
-            {dock("openReports", "reports", "report")}
-          </div>
-        </>
-      )}
       {tab === "insert" && (
         <>
           {(

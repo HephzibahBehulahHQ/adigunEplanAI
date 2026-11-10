@@ -41,6 +41,13 @@ contract and enforcement alongside implementation and actual acceptance evidence
 
 ## Active goal and release
 
+Owner-approved header amendment, 2026-11-10: the gold corporate artwork in the supplied
+header image replaces the earlier blue artwork for this product. The unchanged source
+image is pinned in `product.config.json`; only its corporate mark is rendered by
+`WorkspaceHeader`. Its hash is enforced alongside the original full-workbench reference.
+The current native version/session/save state overrides illustrative reference values.
+The original master plan, brand tokens and authority pins are unchanged.
+
 The active goal remains the entire approved product specification in
 `docs/agent/PURSUED_GOAL.md`. The requested Codex task-bar controls are outside the
 callable platform API; a repository record does not implement those host controls.

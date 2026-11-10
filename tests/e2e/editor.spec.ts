@@ -1235,3 +1235,12 @@ test("catalog preference quota failure retains session favorites and reports uns
     }),
   ).not.toBeChecked();
 });
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
+});

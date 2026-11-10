@@ -51,13 +51,18 @@ const ExampleLibrary = lazy(() =>
 );
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
-export function ProjectTools({ native, t }: Props) {
+export function ProjectTools({
+  native,
+  t,
+  home = false,
+}: Props & { home?: boolean }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const file = useRef<HTMLInputElement>(null);
   const [printError, setPrintError] = useState(false);
   return (
-    <div className="native-tools">
+    <div className="native-tools" data-home={home || undefined}>
       <button
+        data-command="new"
         disabled={native.corrupt}
         onClick={() => dialog.current?.showModal()}
       >
@@ -74,7 +79,11 @@ export function ProjectTools({ native, t }: Props) {
         </svg>
         {t("newProject")}
       </button>
-      <button onClick={() => file.current?.click()}>
+      <button
+        data-command="open"
+        aria-label={t("importProject")}
+        onClick={() => file.current?.click()}
+      >
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -86,7 +95,7 @@ export function ProjectTools({ native, t }: Props) {
         >
           <path d="M2 6h8l2 2h10l-3 12H2z M2 10h18" />
         </svg>
-        {t("importProject")}
+        {t(home ? "ribbonOpen" : "importProject")}
       </button>
       <input
         hidden
@@ -109,9 +118,14 @@ export function ProjectTools({ native, t }: Props) {
           e.target.value = "";
         }}
       />
-      {native.project && (
+      {(native.project || home) && (
         <>
-          <button onClick={() => native.save()}>
+          <button
+            data-command="save"
+            aria-label={t("save")}
+            disabled={!native.project}
+            onClick={() => native.save()}
+          >
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"
@@ -123,22 +137,30 @@ export function ProjectTools({ native, t }: Props) {
             >
               <path d="M3 3h15l3 3v15H3z M7 3v6h10V3 M7 21v-7h10v7" />
             </svg>
-            {t("save")}
+            {t(home ? "ribbonSave" : "save")}
           </button>
-          <button onClick={() => native.save()} title={t("saveAll")}>
+          <button
+            data-command="saveAll"
+            disabled={!native.project}
+            onClick={() => native.save()}
+            title={t("saveAll")}
+          >
             <CommandIcon kind="saveAll" />
             {t("saveAll")}
           </button>
           <button
-            disabled={!native.saved}
+            data-command="close"
+            aria-label={t("closeProject")}
+            disabled={!native.project || !native.saved}
             onClick={() => native.close()}
             title={t("closeProject")}
           >
             <CommandIcon kind="close" />
-            {t("closeProject")}
+            {t(home ? "close" : "closeProject")}
           </button>
           <button
-            disabled={!native.project.pages.length}
+            data-command="print"
+            disabled={!native.project?.pages.length}
             onClick={() => {
               const project = native.project;
               const page =
@@ -169,6 +191,9 @@ export function ProjectTools({ native, t }: Props) {
             {t("print")}
           </button>
           <button
+            data-command="export"
+            aria-label={t("exportProject")}
+            disabled={!native.project}
             onClick={() => {
               if (!native.project) return;
               const blob = new Blob([serializeProject(native.project)], {
@@ -193,9 +218,13 @@ export function ProjectTools({ native, t }: Props) {
             >
               <path d="M13 3H5v18h14v-8 M12 12l9-9 M15 3h6v6" />
             </svg>
-            {t("exportProject")}
+            {t(home ? "ribbonExport" : "exportProject")}
           </button>
-          <button disabled={!native.canUndo} onClick={() => native.undo()}>
+          <button
+            hidden={home}
+            disabled={!native.canUndo}
+            onClick={() => native.undo()}
+          >
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"
@@ -209,7 +238,11 @@ export function ProjectTools({ native, t }: Props) {
             </svg>
             {t("undo")}
           </button>
-          <button disabled={!native.canRedo} onClick={() => native.redo()}>
+          <button
+            hidden={home}
+            disabled={!native.canRedo}
+            onClick={() => native.redo()}
+          >
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"

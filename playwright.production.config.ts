@@ -3,6 +3,8 @@ import base from "./playwright.config";
 
 export default defineConfig(base, {
   testMatch: [
+    "**/header-ribbon.spec.ts",
+    "**/workspace-rebuild.spec.ts",
     "**/workspace-continuation.spec.ts",
     "**/bot-window.spec.ts",
     "**/examples.spec.ts",

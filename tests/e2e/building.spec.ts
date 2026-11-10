@@ -1119,3 +1119,12 @@ test("floor equipment shares schematic identity, protects layers and persists a 
   await page.getByRole("button", { name: "Undo", exact: true }).click();
   await expect(page.locator("[data-plan-equipment-id]")).toHaveCount(1);
 });
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
+});

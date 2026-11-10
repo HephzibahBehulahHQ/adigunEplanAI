@@ -34,7 +34,9 @@ import {
   type Preferences,
 } from "./preferences";
 import { useNativeProjects } from "./useNativeProjects";
-import { useAccount, profileName, type Account } from "./useAccount";
+import { useAccount, type Account } from "./useAccount";
+import { WorkspaceHeader } from "./WorkspaceHeader";
+import { HomeRibbon } from "./HomeRibbon";
 import { AccountPanel } from "./AccountPanel";
 import {
   ProjectTools,
@@ -43,9 +45,9 @@ import {
   ProjectProperties,
   NativeDrawing,
 } from "./NativeWorkspace";
-import logo from "./assets/hephzibah-behulah-official.jpg";
 import "./workspace.css";
 import "./account.css";
+import "./home-ribbon.css";
 
 const ExampleLibrary = lazy(() =>
   import("./ExampleLibrary").then((module) => ({
@@ -68,7 +70,6 @@ function Workspace({ account }: { account: Account }) {
   const searchDialog = useRef<HTMLDialogElement>(null);
   const languageSelect = useRef<HTMLSelectElement>(null);
   const [search, setSearch] = useState("");
-  const focusLanguage = useRef(false);
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
       return restorePreferences(localStorage.getItem(storageKey));
@@ -85,12 +86,6 @@ function Workspace({ account }: { account: Account }) {
     Partial<Record<PanelId, boolean>>
   >({});
   const t = (key: MessageKey) => dictionaries[prefs.language][key];
-  useEffect(() => {
-    if (tab === "settings" && focusLanguage.current) {
-      languageSelect.current?.focus();
-      focusLanguage.current = false;
-    }
-  }, [tab]);
   useEffect(() => {
     document.documentElement.lang = prefs.language;
     document.documentElement.dataset.theme = prefs.theme;
@@ -247,115 +242,21 @@ function Workspace({ account }: { account: Account }) {
       <a className="skip-link" href="#workspace">
         {t("skip")}
       </a>
-      <header className="app-header">
-        <img
-          className="corporate-logo"
-          src={logo}
-          alt={productConfig.branding.corporateLogo.alt}
-        />
-        <div className="wordmark">
-          <strong>{productConfig.product.name}</strong>
-          <small>{t("division")}</small>
-        </div>
-        <span className="project-title">
-          {native.project?.name ?? t("noProject")}
-        </span>
-        <div className="owner-toolbar" aria-label={t("accountToolbar")}>
-          <span
-            className="local-status"
-            title={t(native.saved ? "savedLocally" : "notSaved")}
-          >
-            {t(native.saved ? "savedLocally" : "notSaved")}
-          </span>
-          <button
-            className="owner-icon profile-button"
-            aria-label={t("account")}
-            title={
-              profileName(account.user) ||
-              account.user?.email ||
-              t("accountGuest")
-            }
-            onClick={() => accountDialog.current?.showModal()}
-          >
-            <>
-              {account.avatarUrl ? (
-                <img
-                  src={account.avatarUrl}
-                  alt=""
-                  className="profile-avatar"
-                />
-              ) : (
-                <ToolbarIcon kind="profile" />
-              )}
-            </>
-            <span
-              className={`account-dot ${account.verified ? "verified" : ""}`}
-              data-account-state={
-                account.verified
-                  ? "verified"
-                  : account.checking
-                    ? "checking"
-                    : account.user
-                      ? "unverified"
-                      : "guest"
-              }
-              aria-label={t(
-                account.verified
-                  ? "accountSignedIn"
-                  : account.user
-                    ? "accountOffline"
-                    : "accountGuest",
-              )}
-            />
-          </button>
-          <button
-            className="owner-icon"
-            aria-label={t("languageOptions")}
-            title={t("languageOptions")}
-            onClick={() => {
-              if (tab === "settings") languageSelect.current?.focus();
-              else {
-                focusLanguage.current = true;
-                setTab("settings");
-              }
-            }}
-          >
-            {prefs.language.toUpperCase()}
-          </button>
-          <button
-            className="owner-icon"
-            aria-label={t("settings")}
-            title={t("settings")}
-            aria-pressed={tab === "settings"}
-            onClick={() => setTab("settings")}
-          >
-            <ToolbarIcon kind="settings" />
-          </button>
-          <button
-            className="owner-icon"
-            aria-label={t("workspaceSearch")}
-            title={t("workspaceSearch")}
-            onClick={() => searchDialog.current?.showModal()}
-          >
-            <ToolbarIcon kind="search" />
-          </button>
-          <button
-            className="owner-icon"
-            aria-label={t("help")}
-            title={t("help")}
-            onClick={() => help.current?.showModal()}
-          >
-            <ToolbarIcon kind="help" />
-          </button>
-        </div>
-      </header>
+      <WorkspaceHeader
+        native={native}
+        account={account}
+        t={t}
+        openAccount={() => accountDialog.current?.showModal()}
+        openDiagnostics={() => reveal("diagnostics")}
+        openHelp={() => help.current?.showModal()}
+      />
       <nav className="ribbon-tabs" aria-label={t("interface")}>
         {ribbonTabs.map(([id, key]) => (
           <button
             key={id}
             aria-pressed={tab === id}
             aria-label={
-              id === "home" || id === "view"
+              id === "home" || id === "view" || id === "settings"
                 ? t(key)
                 : `${t(key)} ${t("ribbonMenu")}`
             }
@@ -386,7 +287,17 @@ function Workspace({ account }: { account: Account }) {
         data-tab={tab}
         aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
       >
-        {tab === "home" || tab === "file" || tab === "project" ? (
+        {tab === "home" ? (
+          <>
+            <ProjectTools native={native} t={t} home />
+            <HomeRibbon
+              native={native}
+              t={t}
+              reveal={reveal}
+              themes={() => setTab("settings")}
+            />
+          </>
+        ) : tab === "file" || tab === "project" ? (
           <>
             <ProjectTools native={native} t={t} />
             <button
@@ -434,6 +345,18 @@ function Workspace({ account }: { account: Account }) {
           </>
         ) : tab === "settings" ? (
           <>
+            <button
+              aria-label={t("workspaceSearch")}
+              onClick={() => searchDialog.current?.showModal()}
+            >
+              {t("workspaceSearch")}
+            </button>
+            <button
+              aria-label={t("languageOptions")}
+              onClick={() => languageSelect.current?.focus()}
+            >
+              {t("languageOptions")}
+            </button>
             <label>
               {t("theme")}
               <select
@@ -696,47 +619,5 @@ function Workspace({ account }: { account: Account }) {
         </form>
       </dialog>
     </div>
-  );
-}
-
-function ToolbarIcon({
-  kind,
-}: {
-  kind: "profile" | "settings" | "search" | "help";
-}) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      width="21"
-      height="21"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      {kind === "profile" ? (
-        <>
-          <circle cx="12" cy="8" r="3.5" />
-          <path d="M4 21v-2a8 8 0 0 1 16 0v2" />
-        </>
-      ) : kind === "search" ? (
-        <>
-          <circle cx="10" cy="10" r="6.5" />
-          <path d="m15 15 6 6" />
-        </>
-      ) : kind === "help" ? (
-        <>
-          <circle cx="12" cy="12" r="9" />
-          <path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 4h.01" />
-        </>
-      ) : (
-        <>
-          <circle cx="12" cy="12" r="3" />
-          <path d="m9 3-.5 3-2 1-3-.5L2 10l2.5 2L4 15l3 2 .5 3h5l1-3 3-1 2.5 1 2-4-2-2 .5-3-3-2-1-3Z" />
-        </>
-      )}
-    </svg>
   );
 }
