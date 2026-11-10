@@ -156,9 +156,10 @@
   position: sticky;
   top: 0;
   background: var(--raised);
+  white-space: nowrap;
 }
 .dock-bom :is(th, td) {
-  padding: 0.25rem 0.3rem;
+  padding: 0.2rem 0.25rem;
 }
 .dock-bom tbody th {
   color: var(--text);
