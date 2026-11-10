@@ -236,6 +236,14 @@
   dominant-baseline: middle;
 }
 @media (min-width: 1001px) and (min-height: 780px) {
+  .dock-right [data-panel="panel3d"] > .panel-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .dock-right [data-panel="panel3d"] > .panel-body > details,
+  .dock-right .panel-preview > p {
+    flex: none;
+  }
   .dock-right .panel-preview {
     display: flex;
     flex-direction: column;
@@ -265,10 +273,42 @@
 
 @media (min-width: 1001px) and (min-height: 780px) {
   .dock-right .panel-preview-views {
-    min-height: 360px;
+    min-height: 0;
   }
   .dock-right .panel-preview-views figure {
-    min-height: 320px;
+    min-height: 0;
+  }
+  .dock-right .panel-preview {
+    padding: 4px;
+    gap: 5px;
+  }
+  .dock-right .panel-preview > label {
+    display: flex;
+    flex-wrap: wrap;
+    flex: none;
+  }
+  .dock-right .panel-preview-views {
+    margin-top: 0;
+    gap: 3px;
+  }
+  .dock-right .panel-preview-views figure {
+    padding: 4px;
+    border: 0;
+    border-radius: 0;
+  }
+  .dock-right .panel-preview-views figcaption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .dock-right .panel-preview p {
+    margin: 3px 0;
+    font-size: 0.65rem;
+  }
+  .dock-right .panel-preview-views .panel-view-hint {
+    margin: 0;
   }
   .dock-right .panel-preview-views figure > :not(.panel-3d-view) {
     flex-shrink: 0;
