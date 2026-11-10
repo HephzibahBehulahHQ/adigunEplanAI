@@ -35,7 +35,7 @@ export const extendedSymbols = [
     ],
   },
   {
-    id: "plc-cpu-modular",
+    id: "modular-controller-interface",
     name: "Modular PLC controller interface",
     category: "automation",
     width: 64,
