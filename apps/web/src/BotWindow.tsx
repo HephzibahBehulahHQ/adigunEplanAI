@@ -6,6 +6,7 @@ import {
   type CSSProperties,
   type PointerEvent,
 } from "react";
+import { CommandIcon } from "./WorkspaceRibbon";
 import type { MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 import {
@@ -425,27 +426,29 @@ export function BotWindow({ native, ownerId, t, openSignal }: Props) {
                   </button>
                 </section>
               )}
-              <div
+              <section
                 className="bot-quick-actions"
-                aria-label={t("ribbonWorkspace")}
+                aria-label={t("botQuickActions")}
               >
+                <h3>{t("botQuickActions")}</h3>
                 {(
                   [
-                    ["connections", "assistantValidate"],
-                    ["summary", "assistantSummary"],
-                    ["selection", "botSelection"],
-                    ["bom", "assistantReport"],
+                    ["connections", "assistantValidate", "check"],
+                    ["summary", "assistantSummary", "report"],
+                    ["selection", "botSelection", "select"],
+                    ["bom", "assistantReport", "catalog"],
                   ] as const
-                ).map(([tool, key]) => (
+                ).map(([tool, key, icon]) => (
                   <button
                     key={tool}
                     disabled={!project}
                     onClick={() => run(tool, t(key))}
                   >
-                    {t(key)}
+                    <CommandIcon kind={icon} />
+                    <span>{t(key)}</span>
                   </button>
                 ))}
-              </div>
+              </section>
               <div
                 ref={transcript}
                 className="bot-transcript"
