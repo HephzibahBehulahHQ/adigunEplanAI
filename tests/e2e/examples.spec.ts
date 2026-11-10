@@ -4,8 +4,8 @@ import { readFile } from "node:fs/promises";
 const cases = [
   [
     "Industry energy substation · 20 kV / 630 kVA",
-    22,
-    25,
+    26,
+    31,
     ".engineering-canvas",
   ],
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],
@@ -123,6 +123,12 @@ for (const [name, devices, wires, selector] of cases) {
       await expect(
         page.getByRole("region", { name: "Bill of materials" }),
       ).toContainText("750-8217");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("750-1405");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("750-530");
       await expect(
         page.getByRole("region", { name: "Bill of materials" }),
       ).toContainText("P1J122728");

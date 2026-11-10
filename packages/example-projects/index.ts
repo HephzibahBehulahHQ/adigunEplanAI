@@ -561,25 +561,142 @@ export function buildExample(id: ExampleId): Project {
         manufacturer: "WAGO",
         partNumber: "750-8217",
         sourceUrl:
-          "https://www.wago.com/us/products/automation-technology/plcs/pfc-200-controllers",
+          "https://www.wago.com/us/controllers-bus-couplers-i-o/controller-pfc200/p/750-8217",
         ratings: {},
       });
       cpu.partId = cpuPartId;
+      const inputModule = createPlcModule(p, {
+        kind: "digital-input",
+        channelCount: 16,
+        pageId,
+        reference: "DI1",
+        name: "WAGO 750-1405 · 16-channel digital input",
+      });
+      p = inputModule;
+      const inputDevice = p.devices.find(
+        (device) => device.reference === "DI1",
+      )!;
+      const inputPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: inputPartId,
+        name: "16-channel digital input, 24 VDC",
+        manufacturer: "WAGO",
+        partNumber: "750-1405",
+        sourceUrl:
+          "https://www.wago.com/us/controllers-bus-couplers-i-o/16-channel-digital-input/p/750-1405",
+        ratings: { channels: 16, voltage: "24 VDC" },
+      });
+      inputDevice.partId = inputPartId;
+      const outputModule = createPlcModule(p, {
+        kind: "digital-output",
+        channelCount: 8,
+        pageId,
+        reference: "DO1",
+        name: "WAGO 750-530 · 8-channel digital output",
+      });
+      p = outputModule;
+      const outputDevice = p.devices.find(
+        (device) => device.reference === "DO1",
+      )!;
+      const outputPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: outputPartId,
+        name: "8-channel digital output, 24 VDC, 0.5 A",
+        manufacturer: "WAGO",
+        partNumber: "750-530",
+        sourceUrl:
+          "https://www.wago.com/us/controllers-bus-couplers-i-o/8-channel-digital-output/p/750-530",
+        ratings: {
+          channels: 8,
+          voltage: "24 VDC",
+          current: "0.5 A per channel",
+        },
+      });
+      outputDevice.partId = outputPartId;
+      const plcInstances = new Map(
+        ["DI1", "PLC1", "DO1"].map((reference) => [
+          reference,
+          p.symbolInstances.find(
+            (item) =>
+              item.deviceId ===
+              p.devices.find((device) => device.reference === reference)!.id,
+          )!,
+        ]),
+      );
+      plcInstances.get("DI1")!.position = { x: 100, y: 142 };
+      plcInstances.get("PLC1")!.position = { x: 220, y: 142 };
+      plcInstances.get("DO1")!.position = { x: 340, y: 142 };
       const cpuInstance = p.symbolInstances.find(
         (symbol) => symbol.deviceId === cpu.id,
       )!;
-      cpuInstance.position = { x: 220, y: 142 };
+      cpuInstance.position = plcInstances.get("PLC1")!.position;
       symbol(
         "terminal",
         "X24",
-        80,
-        114,
+        35,
+        70,
         0,
         "External 24 VDC control supply input; field supply design input",
       );
-      symbol("terminal", "X0", 80, 170, 0, "External control return input");
-      wire("X24", "1", "PLC1", "supply");
-      wire("X0", "1", "PLC1", "common", "#2563eb");
+      symbol("terminal", "X0", 35, 230, 0, "External control return input");
+      for (const reference of ["DI1", "PLC1", "DO1"]) {
+        wire("X24", "1", reference, "supply");
+        wire("X0", "1", reference, "common", "#2563eb");
+      }
+      symbol(
+        "terminal",
+        "X101",
+        35,
+        120,
+        0,
+        "External 24 VDC digital input channel 0",
+      );
+      symbol(
+        "terminal",
+        "X201",
+        385,
+        120,
+        0,
+        "External digital output channel 0; load not specified",
+      );
+      wire("X101", "1", "DI1", "IN0", "#2563eb");
+      wire("DO1", "OUT0", "X201", "1", "#d02030");
+      const diModule = p.plcModules.find(
+        (module) => module.deviceId === inputDevice.id,
+      )!;
+      const diChannel = p.terminals.find(
+        (item) =>
+          item.deviceId === inputDevice.id && item.designation === "IN0",
+      )!;
+      p = savePlcAddress(p, {
+        id: crypto.randomUUID(),
+        name: "External status input",
+        moduleId: diModule.id,
+        channel: 0,
+        address: "%IX0.0",
+        dataType: "BOOL",
+        terminalIds: [diChannel.id],
+        signalDeviceId: p.devices.find((device) => device.reference === "X101")!
+          .id,
+      });
+      const doModule = p.plcModules.find(
+        (module) => module.deviceId === outputDevice.id,
+      )!;
+      const doChannel = p.terminals.find(
+        (item) =>
+          item.deviceId === outputDevice.id && item.designation === "OUT0",
+      )!;
+      p = savePlcAddress(p, {
+        id: crypto.randomUUID(),
+        name: "External status output",
+        moduleId: doModule.id,
+        channel: 0,
+        address: "%QX0.0",
+        dataType: "BOOL",
+        terminalIds: [doChannel.id],
+        signalDeviceId: p.devices.find((device) => device.reference === "X201")!
+          .id,
+      });
 
       const loadResult = calculate(
         "apparent-load-current",
@@ -597,7 +714,7 @@ export function buildExample(id: ExampleId): Project {
         ),
       );
       cabinet(
-        ["P1", "F4", "Y1", "X5", "X6", "X7", "X8", "PLC1"],
+        ["P1", "F4", "Y1", "X5", "X6", "X7", "X8", "DI1", "PLC1", "DO1"],
         "UTST_Cabinet_01 · manually dimensioned placement envelopes",
       );
     }

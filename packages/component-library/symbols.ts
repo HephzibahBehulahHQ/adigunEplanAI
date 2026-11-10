@@ -627,6 +627,70 @@ export const engineeringSymbols = [
     ],
   },
   {
+    id: "digital-input-sixteen",
+    name: "Sixteen-channel digital input interface",
+    category: "automation",
+    width: 72,
+    height: 136,
+    pins: [
+      pin("supply", -36, -60, "control"),
+      pin("common", -36, 60, "control"),
+      ...Array.from({ length: 16 }, (_, index) =>
+        pin(`IN${index}`, -36, -48 + index * 6.4, "signal"),
+      ),
+    ],
+    artwork: [
+      line(-28, -64, 28, -64),
+      line(28, -64, 28, 64),
+      line(28, 64, -28, 64),
+      line(-28, 64, -28, -64),
+      line(-36, -60, -28, -60),
+      line(-36, 60, -28, 60),
+      ...Array.from({ length: 16 }, (_, index) => {
+        const y = -48 + index * 6.4;
+        return [
+          line(-36, y, -28, y),
+          line(-24, y - 1.5, -24, y + 1.5),
+          line(-24, y + 1.5, -20, y),
+          line(-20, y, -24, y - 1.5),
+          line(-20, y, -4, y),
+        ];
+      }).flat(),
+    ],
+  },
+  {
+    id: "digital-output-eight",
+    name: "Eight-channel digital output interface",
+    category: "automation",
+    width: 72,
+    height: 100,
+    pins: [
+      pin("supply", -36, -42, "control"),
+      pin("common", -36, 42, "control"),
+      ...Array.from({ length: 8 }, (_, index) =>
+        pin(`OUT${index}`, 36, -28 + index * 8, "signal"),
+      ),
+    ],
+    artwork: [
+      line(-28, -46, 28, -46),
+      line(28, -46, 28, 46),
+      line(28, 46, -28, 46),
+      line(-28, 46, -28, -46),
+      line(-36, -42, -28, -42),
+      line(-36, 42, -28, 42),
+      ...Array.from({ length: 8 }, (_, index) => {
+        const y = -28 + index * 8;
+        return [
+          line(4, y, 14, y),
+          line(14, y - 2, 14, y + 2),
+          line(14, y + 2, 19, y),
+          line(19, y, 14, y - 2),
+          line(19, y, 28, y),
+        ];
+      }).flat(),
+    ],
+  },
+  {
     id: "analog-input-two",
     name: "Two-channel differential analog input interface",
     category: "automation",

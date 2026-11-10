@@ -69,8 +69,8 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   const p = buildExample("target-substation");
   assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
   assert.equal(p.pages.length, 3);
-  assert.equal(p.devices.length, 22);
-  assert.equal(p.wires.length, 25);
+  assert.equal(p.devices.length, 26);
+  assert.equal(p.wires.length, 31);
   const incomingIsolator = p.devices.find(
     (device) => device.reference === "Q0",
   );
@@ -90,12 +90,23 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     ),
     "each incoming isolator pole has a connected line-side and load-side pin",
   );
-  assert.ok(p.plcModules.some((module) => module.moduleKind === "cpu"));
+  assert.deepEqual(
+    p.plcModules
+      .map(({ moduleKind, channelCount }) => ({ moduleKind, channelCount }))
+      .sort((a, b) => a.moduleKind.localeCompare(b.moduleKind)),
+    [
+      { moduleKind: "cpu", channelCount: 2 },
+      { moduleKind: "digital-input", channelCount: 16 },
+      { moduleKind: "digital-output", channelCount: 8 },
+    ],
+  );
   assert.deepEqual(
     p.manufacturerParts
       .map(({ manufacturer, partNumber }) => ({ manufacturer, partNumber }))
       .sort((a, b) => a.partNumber.localeCompare(b.partNumber)),
     [
+      { manufacturer: "WAGO", partNumber: "750-1405" },
+      { manufacturer: "WAGO", partNumber: "750-530" },
       { manufacturer: "WAGO", partNumber: "750-8217" },
       { manufacturer: "Siemens", partNumber: "P1J122728" },
     ],
