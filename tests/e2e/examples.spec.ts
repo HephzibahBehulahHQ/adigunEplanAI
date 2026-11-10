@@ -85,6 +85,15 @@ for (const [name, devices, wires, selector] of cases) {
         page.getByRole("figure", { name: "Interactive panel 3D view" }),
       ).toBeVisible();
       await expect(
+        page.locator(".cabinet-model .enclosure-object-plate"),
+      ).not.toHaveCount(0);
+      await expect(
+        page.locator(".cabinet-model .enclosure-object-din-rail"),
+      ).not.toHaveCount(0);
+      await expect(
+        page.locator(".cabinet-model .enclosure-object-duct"),
+      ).not.toHaveCount(0);
+      await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
       await expect(
@@ -176,3 +185,4 @@ test("project navigator tabs expose the real library, examples and search", asyn
   await tabs.getByRole("tab", { name: "Library" }).click();
   await expect(page.locator(".component-library[open]")).toBeVisible();
 });
+

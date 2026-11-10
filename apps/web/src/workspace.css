@@ -1488,6 +1488,22 @@ button:disabled {
 .enclosure-face-top {
   fill: color-mix(in srgb, var(--navy) 13%, var(--ivory));
 }
+.enclosure-face.enclosure-object-plate {
+  fill: color-mix(in srgb, #a8b4bf 48%, var(--ivory));
+}
+.enclosure-face.enclosure-object-din-rail {
+  fill: color-mix(in srgb, #74869a 55%, var(--ivory));
+}
+.enclosure-face.enclosure-object-duct {
+  fill: color-mix(in srgb, #d5dce4 35%, var(--ivory));
+}
+.enclosure-face.enclosure-object-door,
+.enclosure-face.enclosure-object-compartment {
+  fill: color-mix(in srgb, var(--brand-cyan) 18%, var(--ivory));
+}
+.enclosure-face.enclosure-object-equipment {
+  fill: color-mix(in srgb, var(--royal-blue) 25%, var(--ivory));
+}
 .enclosure-face[data-highlighted] {
   stroke: color-mix(in srgb, var(--brand-cyan) 55%, var(--navy));
   stroke-width: 2;
@@ -1746,3 +1762,4 @@ button:disabled {
     cursor: default;
   }
 }
+
