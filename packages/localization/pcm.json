@@ -152,6 +152,8 @@
   "ruleROUTE_GEOMETRY": "Check wire route",
   "errors": "Errors",
   "warnings": "Warnings",
+  "diagnosticInfo": "Info",
+  "diagnosticEmpty": "No finding for this group.",
   "manualRoute": "Apply manual route",
   "automaticRoute": "Restore automatic route",
   "routePoints": "Route points for mm (x, y each line; include both pin ends)",

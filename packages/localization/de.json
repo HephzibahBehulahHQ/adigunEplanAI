@@ -152,6 +152,8 @@
   "ruleROUTE_GEOMETRY": "Drahtverlauf prüfen",
   "errors": "Fehler",
   "warnings": "Warnungen",
+  "diagnosticInfo": "Info",
+  "diagnosticEmpty": "Keine Befunde in dieser Kategorie.",
   "manualRoute": "Manuellen Verlauf anwenden",
   "automaticRoute": "Automatischen Verlauf wiederherstellen",
   "routePoints": "Verlaufspunkte in mm (x, y pro Zeile; beide Pin-Endpunkte einschließen)",

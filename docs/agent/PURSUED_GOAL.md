@@ -20,6 +20,8 @@ Target image SHA256: c99e97fccec545612872ddc5466df9109bc9af63f0d64b9e27420c6321d
 
 Owner reconfirmation: the latest attachment, codex-clipboard-4bebfa81-84fb-4508-9f7b-4edcfcfec8e5.png, is byte-identical to the saved target (SHA256 verified). Keep this visual target throughout the remaining milestones.
 
+On 2026-11-10 the owner reaffirmed the same workstation composition in a screenshot of the image viewer. Match the application area and use editable native CAD projects with working engineering controls, including complex projects. Corporate template standards govern branding and design. The screenshot provides visual guidance for project content and status displays, which must come from the actual project and session.
+
 Production domain requirement (owner instruction): configure Cloudflare and Supabase around https://adiguneplanai.hephzibahbehulah.com/. The supplied https://hephzibahbehulahhq.github.io/adigunEplanAI/ address is the migration source. Use the custom domain for production links and authentication redirects. This instruction authorizes configuration work within the existing project scope; it is not evidence that DNS, hosting or Supabase authentication is already configured. Track implementation and verification in docs/deployment/production-domain.md.
 
 Approved goal extension: implement Adigun BOT as a live, proactive canvas co-pilot, following the complete owner-supplied addendum in [ADIGUN_BOT_LIVE_COPILOT.txt](../specifications/ADIGUN_BOT_LIVE_COPILOT.txt). Preserve the existing full product scope and milestone progression. This extends Milestone 13 and its integration/production acceptance; it is not a claim that BOT is currently implemented.

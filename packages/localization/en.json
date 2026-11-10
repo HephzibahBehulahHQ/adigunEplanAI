@@ -152,6 +152,8 @@
   "ruleROUTE_GEOMETRY": "Wire route needs review",
   "errors": "Errors",
   "warnings": "Warnings",
+  "diagnosticInfo": "Info",
+  "diagnosticEmpty": "No findings in this category.",
   "manualRoute": "Apply manual route",
   "automaticRoute": "Restore automatic route",
   "routePoints": "Route points in mm (x, y per line; include both pin endpoints)",

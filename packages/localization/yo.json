@@ -152,6 +152,8 @@
   "ruleROUTE_GEOMETRY": "Ṣàyẹ̀wò ọ̀nà okun",
   "errors": "Àṣìṣe",
   "warnings": "Ìkìlọ̀",
+  "diagnosticInfo": "Àlàyé",
+  "diagnosticEmpty": "Kò sí àbájáde àyẹ̀wò nínú ẹ̀ka yìí.",
   "manualRoute": "Lo ọ̀nà ọwọ́",
   "automaticRoute": "Dá ọ̀nà aládàáṣe padà",
   "routePoints": "Àwọn ojú ọ̀nà ní mm (x, y ní ìlà kọ̀ọ̀kan; fi ebute méjèèjì sí i)",

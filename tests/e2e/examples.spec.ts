@@ -32,6 +32,27 @@ for (const [name, devices, wires, selector] of cases) {
     if (name === "Transformer station documentation") {
       await page.setViewportSize({ width: 1857, height: 1000 });
       await page.getByRole("button", { name: "Home", exact: true }).click();
+      const diagnostics = page.getByRole("region", {
+        name: "Diagnostics",
+        exact: true,
+      });
+      const filters = diagnostics.getByRole("group", {
+        name: "Diagnostics",
+        exact: true,
+      });
+      await filters.getByRole("button", { name: /^Warnings \([1-9]/ }).click();
+      await expect(
+        diagnostics
+          .getByRole("button", { name: "Open terminal", exact: true })
+          .first(),
+      ).toBeVisible();
+      await filters
+        .getByRole("button", { name: "Errors (0)", exact: true })
+        .click();
+      await expect(
+        diagnostics.getByText("No findings in this category.", { exact: true }),
+      ).toBeVisible();
+      await filters.getByRole("button", { name: /^All \(/ }).click();
       const screenshotPath = testInfo.outputPath(
         "native-substation-workbench.png",
       );
