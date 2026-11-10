@@ -547,6 +547,12 @@ test("component catalog searches and maps a sourced part to a real terminal", as
     exact: true,
   });
   await expect(bom).toContainText("3004362");
+  await expect(
+    bom.getByRole("columnheader", { name: "Manufacturer" }),
+  ).toBeVisible();
+  await expect(
+    bom.getByRole("row").filter({ hasText: "3004362" }),
+  ).toContainText("Phoenix Contact");
   await page
     .getByRole("button", { name: "Undo · Header", exact: true })
     .click();

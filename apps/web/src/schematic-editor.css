@@ -121,6 +121,20 @@
 .native-bom th {
   color: var(--muted);
 }
+.dock-bom thead th {
+  position: sticky;
+  top: 0;
+  background: var(--raised);
+}
+.dock-bom :is(th, td) {
+  padding: 0.25rem 0.3rem;
+}
+.dock-bom tbody th {
+  color: var(--text);
+}
+.dock-bom :is(th, td):last-child {
+  text-align: end;
+}
 .ribbon .native-tools {
   padding: 0;
   border: 0;

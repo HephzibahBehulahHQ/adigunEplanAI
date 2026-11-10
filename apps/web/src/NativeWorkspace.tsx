@@ -616,20 +616,23 @@ export function NativeDataPanel({
   ];
   if (kind === "bom")
     return project.devices.length ? (
-      <table className="native-bom">
+      <table className="native-bom dock-bom">
         <thead>
           <tr>
-            {bomHeaders.map((label, index) => (
-              <th key={index}>{label}</th>
-            ))}
+            <th scope="col">{t("reference")}</th>
+            <th scope="col">{t("partNumber")}</th>
+            <th scope="col">{t("device")}</th>
+            <th scope="col">{t("manufacturer")}</th>
+            <th scope="col">{t("quantity")}</th>
           </tr>
         </thead>
         <tbody>
           {projectBom(project).map((device) => (
             <tr key={device.id}>
-              <td>{device.reference}</td>
-              <td>{device.name}</td>
+              <th scope="row">{device.reference}</th>
               <td>{device.partNumber || "—"}</td>
+              <td>{device.name}</td>
+              <td>{device.manufacturer || "—"}</td>
               <td>{device.quantity}</td>
             </tr>
           ))}
