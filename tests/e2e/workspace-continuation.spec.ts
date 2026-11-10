@@ -46,6 +46,10 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   const canvas = preview.locator(".panel-3d-view");
   await expect(canvas).toBeVisible();
   const original = await canvas.getAttribute("viewBox");
+  const frontFrame = canvas.locator(".panel-frame-front line");
+  const rearFrame = canvas.locator(".panel-frame-rear line");
+  await expect(frontFrame).toHaveCount(9);
+  await expect(rearFrame).toHaveCount(3);
   const polygons = await canvas
     .locator("polygon")
     .evaluateAll((elements) => elements.map((e) => e.getAttribute("points")));
@@ -109,6 +113,8 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
   await expect(triad.locator("text")).toHaveText(["X", "Y"]);
   await expect(preview.getByLabel("View yaw (°)")).toHaveValue("0");
   await expect(preview.getByLabel("View pitch (°)")).toHaveValue("0");
+  await expect(frontFrame).toHaveCount(4);
+  await expect(rearFrame).toHaveCount(8);
 });
 test("schematic and cabinet selection synchronize without changing saved engineering data", async ({
   page,

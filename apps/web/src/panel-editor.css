@@ -108,6 +108,18 @@
 .panel-3d-view:active {
   cursor: grabbing;
 }
+.panel-frame-front,
+.panel-frame-rear {
+  stroke: var(--navy);
+  pointer-events: none;
+}
+.panel-frame-front {
+  stroke-width: 1.15;
+}
+.panel-frame-rear {
+  opacity: 0.35;
+  stroke-dasharray: 3 3;
+}
 .panel-3d-stage {
   position: relative;
   height: 340px;

@@ -18,6 +18,7 @@ import {
 } from "../../../packages/panel-engineering/commands.ts";
 import {
   boxEdges,
+  boxFaces,
   boxVertices,
   projectedFaces,
   projectPoint3d,
@@ -856,6 +857,27 @@ function PanelViews({
     min: { x: 0, y: 0, z: 0 },
     max: { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
   }).map((point) => projectPoint3d(point, yaw, pitch));
+  const facingEnclosure = boxFaces.filter(
+    ({ normal }) => projectPoint3d(normal, yaw, pitch).z > 1e-10,
+  );
+  const frameEdges = boxEdges.map(([a, b]) => {
+    const foreground = facingEnclosure.some(
+      ({ indices }) => indices.includes(a) && indices.includes(b),
+    );
+    return {
+      foreground,
+      line: (
+        <line
+          key={`${a}:${b}`}
+          x1={enclosureCorners[a].x}
+          y1={enclosureCorners[a].y}
+          x2={enclosureCorners[b].x}
+          y2={enclosureCorners[b].y}
+          vectorEffect="non-scaling-stroke"
+        />
+      ),
+    };
+  });
   const faces = orderProjectedFaces(
     objects
       .filter((item) => !("kind" in item && item.kind === "compartment"))
@@ -1267,6 +1289,11 @@ function PanelViews({
               orbit.current = null;
             }}
           >
+            <g className="panel-frame-rear" aria-hidden="true">
+              {frameEdges
+                .filter(({ foreground }) => !foreground)
+                .map(({ line }) => line)}
+            </g>
             {faces.map((face, fragment) => {
               const item = objects.find(
                 (object) => object.id === face.objectId,
@@ -1383,19 +1410,11 @@ function PanelViews({
                 <title>{feature.name}</title>
               </polyline>
             ))}
-            {boxEdges.map(([a, b]) => (
-              <line
-                key={`${a}:${b}`}
-                x1={enclosureCorners[a].x}
-                y1={enclosureCorners[a].y}
-                x2={enclosureCorners[b].x}
-                y2={enclosureCorners[b].y}
-                stroke="currentColor"
-                strokeWidth="1"
-                strokeDasharray="5 3"
-                pointerEvents="none"
-              />
-            ))}
+            <g className="panel-frame-front" aria-hidden="true">
+              {frameEdges
+                .filter(({ foreground }) => foreground)
+                .map(({ line }) => line)}
+            </g>
             {accessZone &&
               boxEdges.map(([a, b]) => (
                 <line
