@@ -50,6 +50,7 @@ type Props = {
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
   coordinateReadout: RefObject<HTMLSpanElement | null>;
+  showGrid: boolean;
   t: (key: MessageKey) => string;
 };
 type Box = { x: number; y: number; w: number; h: number };
@@ -73,6 +74,7 @@ export function SchematicEditor({
   toggleOrthogonal,
   toggleSnap,
   coordinateReadout,
+  showGrid,
 }: Props) {
   const project = native.project!;
   const [activeTool, setTool] = useState<
@@ -229,7 +231,7 @@ export function SchematicEditor({
   }
   function begin(event: ReactPointerEvent<SVGSVGElement>) {
     if (event.button !== 0 && event.button !== 1) return;
-    svg.current?.focus();
+    svg.current?.focus({ preventScroll: true });
     const world = point(event);
     const matrix = svg.current!.getScreenCTM()!.inverse();
     if (tool === "pan" || spacePan || event.button === 1) {
@@ -287,7 +289,7 @@ export function SchematicEditor({
     if (tool === "pan" || spacePan || event.button !== 0) return;
     if (tool !== "select") return;
     event.stopPropagation();
-    svg.current?.focus();
+    svg.current?.focus({ preventScroll: true });
     const symbol = project.symbolInstances.find((s) => s.id === id)!;
     const layer = project.layers.find((l) => l.id === symbol.layerId)!;
     if (layer.locked) return;
@@ -541,7 +543,7 @@ export function SchematicEditor({
     else if (action === "paste") pasteClipboard();
     else if (action === "copy" && selected.length)
       setClipboard({ project: structuredClone(project), ids: [...selected] });
-    svg.current?.focus();
+    svg.current?.focus({ preventScroll: true });
   }, [native.editorCommand]);
   const sizes = {
     A4: [297, 210],
@@ -1159,7 +1161,7 @@ export function SchematicEditor({
         <rect
           width={page.widthMm}
           height={page.heightMm}
-          fill={`url(#grid-${page.id})`}
+          fill={showGrid ? `url(#grid-${page.id})` : "transparent"}
         />
         <DrawingSheetFrame project={project} page={page} />
         {project.wirePaths
@@ -1200,7 +1202,7 @@ export function SchematicEditor({
                   e.stopPropagation();
                   setSelectedWire(wire.id);
                   setSelected([]);
-                  svg.current?.focus();
+                  svg.current?.focus({ preventScroll: true });
                 }}
                 data-wire={wire.id}
               >

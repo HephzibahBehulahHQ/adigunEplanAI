@@ -582,7 +582,7 @@ export function BuildingEditor({
                 )
               )
                 return;
-              e.currentTarget.focus();
+              e.currentTarget.focus({ preventScroll: true });
               setDrawing({
                 ...activeDrawing,
                 points: [...activeDrawing.points, next],

@@ -1,14 +1,16 @@
 /* Target header + one ribbon unit. No duplicate desktop editing rows. */
 .ribbon-tabs {
-  height: 39px;
   min-height: 39px;
+  height: auto;
+  flex-wrap: wrap;
+  overflow: clip;
   align-items: stretch;
   background: var(--navy);
 }
 .ribbon-tabs button {
   flex: 1 0 auto;
-  padding: 7px 11px;
-  font-size: 13px;
+  padding: 6px clamp(3px, 0.48vw, 9px);
+  font-size: clamp(11px, 0.75vw, 13px);
   border-radius: 5px 5px 0 0;
 }
 .ribbon[data-tab="home"] {
@@ -19,8 +21,7 @@
   align-items: stretch;
   flex-wrap: nowrap;
   gap: 0;
-  overflow-x: auto;
-  scrollbar-width: thin;
+  overflow: clip;
   background: linear-gradient(var(--raised), var(--navy));
   border-bottom: 1px solid var(--line);
 }
@@ -158,5 +159,38 @@
     .native-drawing
     > .drawing-tabs:first-child {
     display: none;
+  }
+}
+
+@media (max-width: 1650px) {
+  .ribbon[data-tab="home"] {
+    height: auto;
+    min-height: 0;
+    flex-wrap: wrap;
+    row-gap: 3px;
+  }
+  .ribbon[data-tab="home"] .home-command-groups {
+    display: contents;
+  }
+  .ribbon[data-tab="home"] .native-tools[data-home] {
+    flex: 1 0 min(340px, 100%);
+    min-width: 0;
+  }
+  .ribbon[data-tab="home"] .native-tools[data-home] > button:not([hidden]),
+  .ribbon[data-tab="home"] .home-command-groups .ribbon-command {
+    min-width: 35px;
+    height: 54px;
+    gap: 3px;
+    padding: 4px 3px;
+    overflow-wrap: anywhere;
+  }
+  .ribbon[data-tab="home"] .native-tools[data-home] > button svg,
+  .ribbon[data-tab="home"] .home-command-groups .ribbon-command svg {
+    width: 19px;
+    height: 19px;
+  }
+  .ribbon[data-tab="home"] .home-clipboard .ribbon-command {
+    height: 26px;
+    gap: 4px;
   }
 }
