@@ -11,6 +11,10 @@
   fill: color-mix(in srgb, var(--royal-blue) 10%, transparent);
   stroke: var(--royal-blue);
 }
+.engineering-canvas[data-tool="zoomWindow"] {
+  cursor: crosshair;
+}
+.schematic-marquee[data-zoom-window="true"],
 .schematic-marquee[data-crossing="true"] {
   fill: color-mix(in srgb, var(--brand-cyan) 15%, transparent);
   stroke: var(--cyan);

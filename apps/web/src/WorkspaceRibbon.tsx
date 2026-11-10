@@ -245,6 +245,9 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
           {tool("fitPage", "fit", "fit")}
           {tool("zoomIn", "zoomIn", "fit")}
           {tool("zoomOut", "zoomOut", "fit")}
+          {tool("zoomExtents", "zoomExtents", "fit")}
+          {tool("zoomWindow", "zoomWindow", "fit")}
+          {tool("zoomPrevious", "zoomPrevious", "undo")}
           {analysis}
         </>
       )}

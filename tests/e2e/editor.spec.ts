@@ -342,6 +342,113 @@ test("property editing, labels, layer locks, sheet sizes and zoom change real st
   await page.getByRole("button", { name: "Fit page", exact: true }).click();
   await expect(canvas).toHaveAttribute("viewBox", "0 0 210 297");
 });
+test("zoom extents, window and previous navigate the drawing without changing the project", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "zoom-reference.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(nativeProject())),
+  });
+  const canvas = page.locator(".engineering-canvas");
+  const command = async (name: string) => {
+    await page.getByRole("button", { name: "Tools menu", exact: true }).click();
+    await page
+      .locator("#workbench-menu-tools")
+      .getByRole("button", {
+        name: `${name} · Engineering commands`,
+        exact: true,
+      })
+      .click();
+  };
+  const initial = (await canvas.getAttribute("viewBox"))!;
+  const saved = await project(page);
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.hover();
+  await page.mouse.wheel(0, -100);
+  await expect(canvas).not.toHaveAttribute("viewBox", initial);
+  const zoomed = (await canvas.getAttribute("viewBox"))!;
+  await command("Zoom window");
+  await expect(canvas).toHaveAttribute("data-tool", "zoomWindow");
+  await canvas.scrollIntoViewIfNeeded();
+  const [from, to] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(145, 120), new DOMPoint(65, 60)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  await page.mouse.move(from.x, from.y);
+  await page.mouse.down();
+  await page.mouse.move(to.x, to.y);
+  await expect(canvas.locator(".schematic-marquee")).toHaveAttribute(
+    "data-zoom-window",
+    "true",
+  );
+  await page.mouse.up();
+  await expect(canvas).toHaveAttribute("data-tool", "select");
+  const [x, y, w, h] = (await canvas.getAttribute("viewBox"))!
+    .split(" ")
+    .map(Number);
+  expect(x + w / 2).toBeCloseTo(105, 0);
+  expect(y + h / 2).toBeCloseTo(90, 0);
+  expect(w / h).toBeCloseTo(420 / 297);
+  expect(w).toBeLessThan(100);
+  await command("Zoom previous");
+  await expect(canvas).toHaveAttribute("viewBox", zoomed);
+  await command("Zoom previous");
+  await expect(canvas).toHaveAttribute("viewBox", initial);
+  await command("Zoom window");
+  await canvas.press("Escape");
+  await expect(canvas).toHaveAttribute("data-tool", "select");
+  await expect(canvas).toHaveAttribute("viewBox", initial);
+  await command("Zoom extents");
+  await expect(canvas).not.toHaveAttribute("viewBox", initial);
+  expect(
+    await canvas.evaluate((element) => {
+      const svg = element as SVGSVGElement;
+      const view = svg.viewBox.baseVal;
+      const graphics = [
+        ...svg.querySelectorAll<SVGGraphicsElement>(
+          "[data-instance], [data-wire], [data-annotation-id]",
+        ),
+      ];
+      return (
+        view.width < 100 &&
+        graphics.length >= 3 &&
+        graphics.every((graphic) => {
+          const { x, y, width, height } = graphic.getBBox();
+          return (
+            x >= view.x &&
+            y >= view.y &&
+            x + width <= view.x + view.width &&
+            y + height <= view.y + view.height
+          );
+        })
+      );
+    }),
+  ).toBe(true);
+  await command("Zoom previous");
+  await expect(canvas).toHaveAttribute("viewBox", initial);
+  await canvas.scrollIntoViewIfNeeded();
+  const area = (await canvas.boundingBox())!;
+  const centerX = area.x + area.width / 2;
+  const centerY = area.y + area.height / 2;
+  await page.mouse.move(centerX, centerY);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(centerX + 35, centerY + 20);
+  await expect(canvas).not.toHaveAttribute("viewBox", initial);
+  const panned = (await canvas.getAttribute("viewBox"))!;
+  await page.mouse.wheel(0, -100);
+  await page.mouse.up({ button: "middle" });
+  await expect(canvas).toHaveAttribute("viewBox", panned);
+  await command("Zoom previous");
+  await expect(canvas).toHaveAttribute("viewBox", initial);
+  expect(await project(page)).toEqual(saved);
+});
+
 test("native clipboard survives deletion and undo restores the original graph", async ({
   page,
 }) => {
