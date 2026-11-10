@@ -260,4 +260,3 @@ test("PLC example maps two addresses to genuine wired channels and mounted devic
   assert.equal(plcWiringSchedule(p).length, 2);
   assert.equal(p.equipment3d.length, 7);
 });
-

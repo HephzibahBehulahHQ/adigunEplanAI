@@ -265,4 +265,3 @@ export function plcWiringSchedule(project: Project) {
     };
   });
 }
-
