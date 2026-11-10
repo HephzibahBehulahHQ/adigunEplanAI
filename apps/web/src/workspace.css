@@ -1243,11 +1243,11 @@ button:disabled {
     .engineering-layout:has(
       > .dock-bottom .calculations-panel .calculation-dock-summary
     ) {
-    grid-template-rows: minmax(0, 1fr) 195px;
+    grid-template-rows: minmax(0, 1fr) 210px;
   }
   .application[data-compact="true"]
     .dock-bottom:has(.calculations-panel .calculation-dock-summary) {
-    height: 195px;
+    height: 210px;
   }
   .application[data-compact="true"] .workspace-heading,
   .application[data-compact="true"] .compact-editor-tools,
