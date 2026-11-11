@@ -970,7 +970,7 @@ button:disabled {
 .ribbon-tabs button {
   white-space: nowrap;
   padding: 0.35rem 0.7rem;
-  font-size: 0.74rem;
+  font-size: 0.7rem;
 }
 .ribbon-command-groups {
   display: flex;
@@ -989,7 +989,7 @@ button:disabled {
   background: transparent;
   max-width: 8rem;
   min-height: 60px;
-  font-size: 0.7rem;
+  font-size: 0.66rem;
 }
 .ribbon-command svg {
   width: 23px;

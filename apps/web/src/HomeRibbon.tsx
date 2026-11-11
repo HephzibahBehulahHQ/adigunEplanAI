@@ -41,6 +41,17 @@ export function HomeRibbon({
   const [valid, setValid] = useState(false);
   const [active, setActive] = useState("select");
   const selection = native.selectedSymbolIds.length;
+  const iconOnlyCommands = new Set<MessageKey>([
+    "undo",
+    "cut",
+    "copy",
+    "paste",
+    "rotate",
+    "ribbonAlign",
+    "ribbonDistribute",
+    "junction",
+    "ribbonNetLabel",
+  ]);
   const open = (value: Dialog) => {
     setContent(value);
     dialog.current?.showModal();
@@ -59,6 +70,7 @@ export function HomeRibbon({
     <button
       className="ribbon-command"
       data-command={label}
+      data-icon-only={iconOnlyCommands.has(label) || undefined}
       aria-label={`${t(label)} · ${t("home")}`}
       title={t(label)}
       disabled={disabled}

@@ -88,6 +88,19 @@ export function CommandIcon({ kind }: { kind: string }) {
   );
 }
 export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
+  const iconOnlyCommands = new Set<MessageKey>([
+    "undo",
+    "redo",
+    "copy",
+    "paste",
+    "rotate",
+    "mirror",
+    "duplicate",
+    "delete",
+    "fitPage",
+    "zoomIn",
+    "zoomOut",
+  ]);
   const command = (
     key: MessageKey,
     icon: string,
@@ -98,6 +111,8 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
       key={key}
       className="ribbon-command"
       aria-label={`${t(key)} · ${t("ribbonWorkspace")}`}
+      title={t(key)}
+      data-icon-only={iconOnlyCommands.has(key) || undefined}
       disabled={disabled}
       onClick={action}
     >
