@@ -102,10 +102,6 @@ test("BOT moves, resizes, minimizes, maximizes, closes and restores without bloc
     exact: true,
   });
   await aiTools.click();
-  await page
-    .locator("#workbench-menu-ai")
-    .getByRole("button", { name: "Adigun BOT", exact: true })
-    .click();
   await expect(bot).toBeVisible();
   await expect(
     bot.getByLabel("Ask about this project", { exact: true }),

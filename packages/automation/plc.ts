@@ -35,10 +35,30 @@ function editable(project: Project, deviceId: string) {
 
 export function createPlcModule(
   project: Project,
-  input: { kind: PlcKind; pageId: string; reference: string; name: string },
+  input: {
+    kind: PlcKind;
+    pageId: string;
+    reference: string;
+    name: string;
+    channelCount?: number;
+    symbolId?: string;
+  },
 ): Project {
   const page = project.pages.find((item) => item.id === input.pageId);
-  const spec = plcSymbol[input.kind];
+  const defaultSpec = plcSymbol[input.kind];
+  const channelCount = input.channelCount ?? defaultSpec?.channels;
+  const expandedSymbols: Partial<Record<PlcKind, Record<number, string>>> = {
+    "digital-input": { 16: "digital-input-sixteen" },
+    "digital-output": { 8: "digital-output-eight" },
+  };
+  const expandedSymbol = expandedSymbols[input.kind]?.[channelCount ?? 0];
+  const spec = input.symbolId
+    ? { symbol: input.symbolId, channels: channelCount! }
+    : defaultSpec && channelCount === defaultSpec.channels
+      ? defaultSpec
+      : expandedSymbol
+        ? { symbol: expandedSymbol, channels: channelCount! }
+        : undefined;
   if (
     !page ||
     !spec ||

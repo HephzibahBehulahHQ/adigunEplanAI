@@ -2,6 +2,12 @@ import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const cases = [
+  [
+    "Industry energy substation · 20 kV / 630 kVA",
+    34,
+    45,
+    ".engineering-canvas",
+  ],
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],
   ["Photovoltaic string and inverter interfaces", 9, 8, ".engineering-canvas"],
   ["Motor starter documentation", 7, 11, ".engineering-canvas"],
@@ -72,6 +78,169 @@ for (const [name, devices, wires, selector] of cases) {
         contentType: "image/png",
       });
     }
+    if (name.startsWith("Industry energy substation")) {
+      await page.setViewportSize({ width: 1880, height: 970 });
+      await page.getByRole("button", { name: "Home", exact: true }).click();
+      const overview = page.locator(".engineering-canvas");
+      await expect(overview).toContainText("P1");
+      await expect(overview).toContainText("X30");
+      await expect(overview).toContainText("X31");
+      for (const reference of [
+        "CT1",
+        "CT2",
+        "CT3",
+        "X30",
+        "X31",
+        "X32",
+        "X33",
+        "X34",
+        "X35",
+      ])
+        await expect(overview).toContainText(reference);
+      await expect(
+        page.getByText(/Drawing notes extend beyond the sheet/),
+      ).toHaveCount(0);
+      const appHeader = await page.locator(".workbench-header").boundingBox();
+      const ribbonTabs = await page.locator(".ribbon-tabs").boundingBox();
+      expect(appHeader).not.toBeNull();
+      expect(ribbonTabs).not.toBeNull();
+      expect(appHeader!.height).toBeLessThanOrEqual(38);
+      expect(ribbonTabs!.height).toBeLessThanOrEqual(33);
+      expect(ribbonTabs!.y).toBe(appHeader!.y + appHeader!.height);
+      await expect(
+        page.getByRole("button", {
+          name: /PLC1 · WAGO PFC200 controller/,
+        }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("button", {
+          name: /DI1 · WAGO 750-1405/,
+        }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("figure", { name: "Interactive panel 3D view" }),
+      ).toBeVisible();
+      const structureIds = await page.evaluate(() =>
+        JSON.parse(
+          localStorage.getItem("adiguneplanai.projects.v1")!,
+        ).projects[0].panelStructures.map((structure: { id: string }) =>
+          String(structure.id),
+        ),
+      );
+      expect(structureIds.length).toBeGreaterThan(0);
+      for (const id of structureIds) {
+        await expect(
+          page.locator(`.panel-3d-view [data-panel-object="${id}"]`).first(),
+        ).toBeVisible();
+      }
+      const modeledDeviceIds = await page.evaluate(() => {
+        const project = JSON.parse(
+          localStorage.getItem("adiguneplanai.projects.v1")!,
+        ).projects[0];
+        return Object.fromEntries(
+          ["PLC1", "DI1", "DO1", "X5", "P1"].map((reference) => {
+            const device = project.devices.find(
+              (item: { reference: string }) => item.reference === reference,
+            );
+            return [
+              reference,
+              project.equipment3d.find(
+                (placement: { deviceId: string }) =>
+                  placement.deviceId === device?.id,
+              )?.id,
+            ];
+          }),
+        ) as Record<string, string>;
+      });
+      for (const [reference, color] of [
+        ["PLC1", "#ded6c9"],
+        ["DI1", "#ded6c9"],
+        ["DO1", "#ded6c9"],
+        ["X5", "#8c9291"],
+      ]) {
+        const placementId = modeledDeviceIds[reference];
+        expect(placementId, `${reference} cabinet placement`).toBeTruthy();
+        await expect(
+          page
+            .locator(`.panel-3d-view [data-panel-object="${placementId}"]`)
+            .first()
+            .locator("polygon"),
+        ).toHaveAttribute("fill", color);
+      }
+      await expect(
+        page
+          .locator(
+            `.panel-3d-view [data-panel-object="${modeledDeviceIds.P1}"] polygon`,
+          )
+          .first(),
+      ).toHaveAttribute("fill", "#94a3b8");
+      await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.DI1}"] [data-panel-detail="plc-channel"]`,
+        ),
+      ).toHaveCount(16);
+      await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.DO1}"] [data-panel-detail="plc-channel"]`,
+        ),
+      ).toHaveCount(8);
+      await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.P1}"] [data-panel-detail="catalog-indicator"]`,
+        ),
+      ).toHaveCount(16);
+      await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.P1}"] [data-panel-detail="catalog-display"]`,
+        ),
+      ).toHaveCount(1);
+      await expect(
+        page.locator('.panel-3d-view [data-panel-detail="cable-duct-slot"]'),
+      ).toHaveCount(111);
+      await expect(
+        page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
+      ).toBeVisible();
+      await expect(
+        page.getByRole("region", { name: "Calculations", exact: true }),
+      ).toContainText("20 kV transformer primary current estimate");
+      await expect(page.locator(".calculation-command-row select")).toHaveValue(
+        "apparent-load-current",
+      );
+      await expect(
+        page.locator(
+          '.calculation-dock-summary [data-calculation-value="current"]',
+        ),
+      ).toHaveText("18.19");
+      await expect(
+        page.locator("#native-calculation-form .calculation-input"),
+      ).toHaveCount(3);
+      await expect(
+        page.locator("#native-calculation-form .calculation-input").last(),
+      ).toBeInViewport({ ratio: 0.8 });
+      await expect(
+        page.getByRole("button", { name: "Load", exact: true }),
+      ).toHaveAttribute("aria-pressed", "true");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("750-8217");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("750-1405");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("750-530");
+      await expect(
+        page.getByRole("region", { name: "Bill of materials" }),
+      ).toContainText("P1J122728");
+      const screenshotPath = testInfo.outputPath(
+        "target-substation-workbench.png",
+      );
+      await page.screenshot({ path: screenshotPath });
+      await testInfo.attach("target-substation-workbench", {
+        path: screenshotPath,
+        contentType: "image/png",
+      });
+    }
     const first = await page.evaluate(
       () =>
         JSON.parse(localStorage.getItem("adiguneplanai.projects.v1")!)
@@ -110,9 +279,9 @@ test("project navigator tabs expose the real library, examples and search", asyn
 }) => {
   await page.goto("/");
   const tabs = page.getByRole("tablist", { name: "Project navigator" });
-  await expect(tabs.getByRole("tab", { name: "Examples (5)" })).toBeVisible();
-  await tabs.getByRole("tab", { name: "Examples (5)" }).click();
-  await expect(page.getByRole("article")).toHaveCount(5);
+  await expect(tabs.getByRole("tab", { name: "Examples (6)" })).toBeVisible();
+  await tabs.getByRole("tab", { name: "Examples (6)" }).click();
+  await expect(page.getByRole("article")).toHaveCount(6);
   await page
     .getByRole("article")
     .filter({ hasText: "Photovoltaic string and inverter interfaces" })

@@ -347,6 +347,8 @@ export function ProjectNavigator({
   }, [librarySignal]);
   const filterInput = useRef<HTMLInputElement>(null);
   const project = native.project;
+  const isTargetSubstation =
+    project?.name === "EES_Industry_Sample_Energy_Substation_V01";
   const query = filter.normalize("NFKC").toLocaleLowerCase().trim();
   const matches = (...values: string[]) =>
     !query ||
@@ -502,7 +504,7 @@ export function ProjectNavigator({
             );
           })}
           {!!devices.length && (
-            <details open={query ? true : undefined}>
+            <details open={query ? true : isTargetSubstation || undefined}>
               <summary>
                 {t("botDevices")} ({devices.length})
               </summary>
@@ -562,14 +564,17 @@ export function ProjectNavigator({
             </details>
           )}
           {!!project?.enclosures.length && (
-            <details open={query ? true : undefined}>
+            <details open={query ? true : isTargetSubstation || undefined}>
               <summary>
                 {t("navigatorPanels")} ({project.enclosures.length})
               </summary>
               {project.enclosures
                 .filter((enclosure) => matches(enclosure.name))
                 .map((enclosure) => (
-                  <details key={enclosure.id}>
+                  <details
+                    key={enclosure.id}
+                    open={isTargetSubstation || undefined}
+                  >
                     <summary>{enclosure.name}</summary>
                     <p>
                       {enclosure.widthMm} × {enclosure.heightMm} ×{" "}
@@ -813,13 +818,11 @@ export function NativeDrawing({
   toggleOrthogonal,
   toggleSnap,
   coordinateReadout,
-  showGrid,
 }: Props & {
   orthogonal: boolean;
   toggleOrthogonal: () => void;
   toggleSnap: () => void;
   coordinateReadout: RefObject<HTMLSpanElement | null>;
-  showGrid: boolean;
 }) {
   const selected = native.selectedPageId;
   const setSelected = native.selectPage;
@@ -928,7 +931,6 @@ export function NativeDrawing({
               toggleOrthogonal={toggleOrthogonal}
               toggleSnap={toggleSnap}
               coordinateReadout={coordinateReadout}
-              showGrid={showGrid}
             />
           ) : (
             <p className="canvas-empty">{t("noPages")}</p>

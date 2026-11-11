@@ -122,11 +122,20 @@ export const schemas = {
           description: z.string().trim().min(1).max(2000),
           mapping: z
             .object({
-              glyph: z.enum(["terminal", "contact"]),
+              glyph: z.enum(["terminal", "contact", "component"]),
               electricalNodes: z.number().int().min(1).max(256),
               connections: z.number().int().min(1).max(1000),
+              symbolId: name.optional(),
             })
-            .strict(),
+            .strict()
+            .superRefine((mapping, ctx) => {
+              if ((mapping.glyph === "component") !== Boolean(mapping.symbolId))
+                ctx.addIssue({
+                  code: "custom",
+                  message: "Component mapping requires an exact symbol ID",
+                  path: ["symbolId"],
+                });
+            }),
           dimensionsMm: z
             .object({
               width: positive.max(100000),
@@ -135,6 +144,7 @@ export const schemas = {
             })
             .strict()
             .optional(),
+          dimensionsSourceUrl: sourceUrl.optional(),
           mountedDepthsMm: z
             .array(
               z.object({ rail: name, depth: positive.max(100000) }).strict(),
@@ -144,6 +154,13 @@ export const schemas = {
             .optional(),
           terminalMarkings: z.array(name).min(1).max(256).optional(),
           mounting: z.string().trim().min(1).max(2000).optional(),
+          frontPanel: z
+            .object({
+              statusIndicators: z.number().int().min(0).max(256).optional(),
+              display: z.enum(["large", "standard"]).optional(),
+            })
+            .strict()
+            .optional(),
           sourceRevision: name.optional(),
         })
         .strict()
@@ -821,10 +838,10 @@ function validateReferences(project: Project): void {
       if (
         !structure ||
         structure.enclosureId !== item.enclosureId ||
-        !["plate", "din-rail"].includes(structure.kind)
+        !["plate", "din-rail", "door"].includes(structure.kind)
       )
         throw new Error(
-          "3D mounting structure must be a plate or rail in the same enclosure",
+          "3D mounting structure must be a plate, rail, or door in the same enclosure",
         );
     }
     if (

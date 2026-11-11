@@ -110,6 +110,25 @@ test("explicit mounting support permits contact and checks rail span and depth",
   );
 });
 
+test("flush-mounted equipment attaches to the inside face of a cabinet door", () => {
+  const door = {
+    ...box("door", { x: 0, y: 0, z: 198 }, { x: 600, y: 800, z: 2 }),
+    kind: "door",
+  };
+  const relay = {
+    ...box("relay", { x: 225, y: 100, z: 35 }, { x: 150, y: 266, z: 163 }),
+    mountingStructureId: "door",
+    clearanceMm: 5,
+  };
+  assert.deepEqual(panelDiagnostics(enclosure, [relay], [door]), []);
+  relay.positionMm = { x: 451, y: 100, z: 35 };
+  assert.ok(
+    panelDiagnostics(enclosure, [relay], [door]).some(
+      (diagnostic) => diagnostic.code === "mounting-position",
+    ),
+  );
+});
+
 test("projected utilization clips outside boxes and counts overlap only once", () => {
   const small = { widthMm: 100, heightMm: 100, depthMm: 100 };
   const items = [

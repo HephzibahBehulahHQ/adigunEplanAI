@@ -15,12 +15,23 @@ export type CatalogPart = {
   terminalMarkings?: readonly string[];
   mounting?: string;
   sourceRevision?: string;
+  /** Display-only swatch based on manufacturer-described product finish. */
+  appearance?: { finish: string; displayHex: string };
+  /** Manufacturer-documented front-panel feature counts; layout is illustrative. */
+  frontPanel?: { statusIndicators?: number; display?: "large" | "standard" };
   ratings: Record<string, string | number>;
-  mapping: {
-    glyph: "terminal" | "contact";
-    electricalNodes: number;
-    connections: number;
-  };
+  mapping:
+    | {
+        glyph: "terminal" | "contact";
+        electricalNodes: number;
+        connections: number;
+      }
+    | {
+        glyph: "component";
+        symbolId: string;
+        electricalNodes: number;
+        connections: number;
+      };
 };
 
 // Factual specifications only; no manufacturer artwork or copied datasheet is bundled.
@@ -59,6 +70,7 @@ export const catalog: readonly CatalogPart[] = [
     reviewedOn: "2026-11-03",
     verification: "source-reviewed-facts",
     licensing: "factual-metadata-only",
+    appearance: { finish: "gray (RAL 7042)", displayHex: "#8c9291" },
     dimensionsMm: { width: 5.2, height: 47.7, depth: 46.9 },
     mounting: "NS 35/7.5; NS 35/15",
     mountedDepthsMm: [
@@ -110,6 +122,110 @@ export const catalog: readonly CatalogPart[] = [
     ratings: { contactArrangement: "1 NO", connectionMethod: "screw clamp" },
     mapping: { glyph: "contact", electricalNodes: 2, connections: 2 },
   },
+  {
+    id: "wago-750-1405",
+    name: "16-channel digital input; 24 VDC; 3 ms",
+    category: "automation",
+    manufacturer: "WAGO",
+    partNumber: "750-1405",
+    sourceUrl:
+      "https://wago.partcommunity.com/3d-cad-models/750-1405-16-channel-digital-input-module-dc-24-v-positive-switching-wago?info=wago%2Fpg15%2Fserie750%2F0750-1405_0999-0962.prj",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    appearance: { finish: "light gray", displayHex: "#ded6c9" },
+    dimensionsMm: { width: 12, height: 64, depth: 100 },
+    mounting: "DIN-35 rail",
+    ratings: {
+      channels: 16,
+      fieldVoltageV: 24,
+      inputFilterMs: 3,
+      inputCharacteristic: "high-side switching",
+    },
+    mapping: {
+      glyph: "component",
+      symbolId: "library-digital-input-sixteen",
+      electricalNodes: 18,
+      connections: 18,
+    },
+  },
+  {
+    id: "wago-750-8217-625-000",
+    name: "PFC200 G2 controller; 2 Ethernet; RS-232/485; 4G; extended temperature",
+    category: "automation",
+    manufacturer: "WAGO",
+    partNumber: "750-8217/625-000",
+    sourceUrl:
+      "https://wago.partcommunity.com/3d-cad-models/?info=wago%2Fpg15%2Fserie750%2F0750-8217_0625_0999-0962.prj",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    appearance: { finish: "light gray", displayHex: "#ded6c9" },
+    dimensionsMm: { width: 102.5, height: 100, depth: 64.7 },
+    mounting: "DIN-35 rail",
+    ratings: {},
+    mapping: {
+      glyph: "component",
+      symbolId: "library-modular-controller-interface",
+      electricalNodes: 2,
+      connections: 2,
+    },
+  },
+  {
+    id: "wago-750-530",
+    name: "8-channel digital output; 24 VDC; 0.5 A per channel",
+    category: "automation",
+    manufacturer: "WAGO",
+    partNumber: "750-530",
+    sourceUrl:
+      "https://wago.partcommunity.com/3d-cad-models/?info=wago%2Fpg15%2Fserie750%2F0750-0530_0999-0962.prj",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    appearance: { finish: "light gray", displayHex: "#ded6c9" },
+    dimensionsMm: { width: 12, height: 64, depth: 100 },
+    mounting: "DIN-35 rail",
+    ratings: {
+      channels: 8,
+      fieldVoltageV: 24,
+      outputCurrentPerChannelA: 0.5,
+    },
+    mapping: {
+      glyph: "component",
+      symbolId: "library-digital-output-eight",
+      electricalNodes: 10,
+      connections: 10,
+    },
+  },
+  {
+    id: "siemens-p1j122728",
+    name: "SIPROTEC 7SJ82 overcurrent protection; standard variant",
+    category: "protection",
+    manufacturer: "Siemens",
+    partNumber: "P1J122728",
+    sourceUrl:
+      "https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728",
+    reviewedOn: "2026-11-10",
+    verification: "source-reviewed-facts",
+    licensing: "factual-metadata-only",
+    mounting: "Flush mounting; 1/3 × 19 in housing width",
+    frontPanel: { statusIndicators: 16, display: "large" },
+    ratings: {
+      binaryInputs: 11,
+      binaryOutputs: 9,
+      currentInputs: 4,
+      voltageInputs: 4,
+      auxiliarySupplyMinV: 24,
+      auxiliarySupplyMaxV: 48,
+      auxiliarySupplyType: "DC",
+    },
+    mapping: {
+      glyph: "component",
+      symbolId: "library-protection-relay-three-phase-trip",
+      electricalNodes: 13,
+      connections: 13,
+    },
+  },
 ];
 
 export function catalogMissingData(part: CatalogPart) {
@@ -150,7 +266,9 @@ export function compatibleCatalogDevice(
       );
       const layer = project.layers.find((l) => l.id === instance.layerId);
       return (
-        definition?.glyph === part.mapping.glyph &&
+        (part.mapping.glyph === "component"
+          ? definition?.id === part.mapping.symbolId
+          : definition?.glyph === part.mapping.glyph) &&
         !!layer &&
         !layer.locked &&
         layer.visible
@@ -225,6 +343,9 @@ export function assignCatalogPart(
       ? { terminalMarkings: [...part.terminalMarkings] }
       : {}),
     ...(part.mounting ? { mounting: part.mounting } : {}),
+    ...(part.frontPanel
+      ? { frontPanel: structuredClone(part.frontPanel) }
+      : {}),
     ...(part.sourceRevision ? { sourceRevision: part.sourceRevision } : {}),
   };
   let nativePart = next.manufacturerParts.find(

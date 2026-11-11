@@ -462,6 +462,22 @@ export const calculatorRegistry: readonly Calculator[] = [
     ["calcAssumptionElectricalInput", "calcAssumptionBalanced"],
   ),
   define(
+    "apparent-load-current",
+    "I = S / (b × U); b = 1 (1φ), √3 (3φ)",
+    [phases(), voltage(), positive("apparentPower", ["VA", "kVA", "MVA"])],
+    (q) => ({
+      values: [
+        out(
+          "current",
+          q.apparentPower.div(q.voltage.scale(phaseFactor(q))),
+          "A",
+        ),
+      ],
+    }),
+    ["power"],
+    ["calcAssumptionElectricalInput", "calcAssumptionBalanced"],
+  ),
+  define(
     "circuit-loading",
     "I_allow = I_rating × k_allow; loading = I / I_allow",
     [

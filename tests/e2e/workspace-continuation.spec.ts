@@ -217,7 +217,6 @@ test("ribbon commands edit native data once, support undo and survive view switc
     .getByRole("button", { name: "Undo · Engineering commands", exact: true })
     .click();
   await expect.poll(rotation).toBe(0);
-  await page.getByRole("button", { name: "Edit menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Redo · Engineering commands", exact: true })
     .click();
@@ -419,7 +418,6 @@ test("compact target workspace gives the drawing space and keeps native insert, 
     })
     .click();
   await expect(canvas).not.toHaveAttribute("viewBox", "0 0 420 297");
-  await page.getByRole("button", { name: "Tools menu", exact: true }).click();
   await page
     .getByRole("button", {
       name: "Fit page · Engineering commands",

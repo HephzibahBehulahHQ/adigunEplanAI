@@ -225,12 +225,33 @@ export function analyze(
   const netByTerminal = new Map(
     nets.flatMap((net) => net.terminalIds.map((id) => [id, net.id] as const)),
   );
+  const unassignedPlcIoChannels = new Set(
+    project.terminals.flatMap((terminal) => {
+      if (terminal.required || terminal.kind !== "signal") return [];
+      const module = project.plcModules.find(
+        (item) =>
+          item.deviceId === terminal.deviceId &&
+          (item.moduleKind === "digital-input" ||
+            item.moduleKind === "digital-output"),
+      );
+      if (!module) return [];
+      const channel = /^(?:IN|OUT)(\d+)$/.exec(terminal.designation)?.[1];
+      if (channel === undefined) return [];
+      return project.plcAddresses.some(
+        (address) =>
+          address.moduleId === module.id && address.channel === Number(channel),
+      )
+        ? []
+        : [terminal.id];
+    }),
+  );
   for (const terminal of project.terminals) {
     const count = wireByTerminal.get(terminal.id)?.size ?? 0;
     const net = nets.find((net) => net.id === netByTerminal.get(terminal.id))!;
     if (
       !count &&
       net.terminalIds.length === 1 &&
+      !unassignedPlcIoChannels.has(terminal.id) &&
       (pinsByTerminal.has(terminal.id) || terminal.required)
     )
       add("OPEN_TERMINAL", terminal.required ? "error" : "warning", [

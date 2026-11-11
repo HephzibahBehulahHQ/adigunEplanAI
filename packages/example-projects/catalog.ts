@@ -1,5 +1,11 @@
 export const exampleCatalog = [
   {
+    id: "target-substation",
+    nameKey: "exampleTargetSubstation",
+    view: "schematic",
+    category: "power",
+  },
+  {
     id: "substation",
     nameKey: "exampleSubstation",
     view: "schematic",

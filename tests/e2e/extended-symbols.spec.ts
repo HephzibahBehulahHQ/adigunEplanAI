@@ -2,6 +2,7 @@ import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
 const cases = [
+  ["modular-controller-interface", "Modular controller", "supply", 2, 2],
   ["plc-cpu-serial", "PLC CPU", "I0", 8, 8],
   ["remote-io-four", "remote I/O", "CH0", 8, 8],
   ["communication-dual-serial", "Dual-port serial communication", "P2_A", 6, 6],

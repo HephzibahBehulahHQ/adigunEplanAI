@@ -140,6 +140,14 @@ const fixtures = [
     0,
   ],
   [
+    "apparent-load-current",
+    { phases: 3, voltage: 20, apparentPower: 630 },
+    { phases: "1", voltage: "kV", apparentPower: "kVA" },
+    { current: 18.186533479473212 },
+    "apparentPower",
+    0,
+  ],
+  [
     "circuit-loading",
     { current: 18, ratedCurrent: 20, allowedLoading: 0.8 },
     { current: "A", ratedCurrent: "A", allowedLoading: "1" },
@@ -381,12 +389,12 @@ function run(id, changes = {}, unitChanges = {}) {
     evidence,
   );
 }
-test("the 25 specification categories each have an independent reference fixture", () => {
+test("the 26 specification categories each have an independent reference fixture", () => {
   assert.deepEqual(
     calculatorRegistry.map((item) => item.id).sort(),
     fixtures.map((item) => item[0]).sort(),
   );
-  assert.equal(new Set(calculatorRegistry.map((item) => item.id)).size, 25);
+  assert.equal(new Set(calculatorRegistry.map((item) => item.id)).size, 26);
 });
 for (const [
   id,
@@ -786,8 +794,8 @@ test("native project serialization keeps auditable inputs and exact method repla
     ),
   );
   const restored = parseProject(serializeProject(project)).project;
-  assert.equal(restored.calculations.length, 25);
-  for (let index = 0; index < 25; index++)
+  assert.equal(restored.calculations.length, fixtures.length);
+  for (let index = 0; index < fixtures.length; index++)
     assert.deepEqual(
       calculateRecord(restored.calculations[index]),
       calculateRecord(project.calculations[index]),

@@ -18,6 +18,7 @@ import {
   validateProject,
 } from "../../packages/electrical-model/project.ts";
 import { connect } from "../../packages/schematic-editor/commands.ts";
+import { analyze } from "../../packages/connectivity-engine/analyze.ts";
 
 function fixture(kind = "digital-input") {
   return createPlcModule(nativeProject(), {
@@ -79,6 +80,84 @@ test("six generic PLC interfaces create real native devices, terminals and modul
     /Duplicate device/,
   );
   assert.equal(JSON.stringify(original), before);
+});
+test("expanded PLC symbols match 16-channel input and 8-channel output modules", () => {
+  for (const [kind, channelCount, pinPrefix] of [
+    ["digital-input", 16, "IN"],
+    ["digital-output", 8, "OUT"],
+  ]) {
+    const p = createPlcModule(nativeProject(), {
+      kind,
+      channelCount,
+      pageId: "page",
+      reference: "IO1",
+      name: `WAGO ${channelCount}-channel ${kind}`,
+    });
+    const module = p.plcModules[0];
+    const instance = p.symbolInstances.find(
+      (item) => item.deviceId === module.deviceId,
+    );
+    const channelPins = p.pins.filter(
+      (pin) =>
+        pin.symbolInstanceId === instance.id &&
+        pin.definitionPinId.startsWith(pinPrefix),
+    );
+    assert.equal(module.channelCount, channelCount);
+    assert.equal(channelPins.length, channelCount);
+    assert.equal(
+      parseProject(serializeProject(p)).project.plcModules[0].channelCount,
+      channelCount,
+    );
+  }
+  assert.throws(
+    () =>
+      createPlcModule(nativeProject(), {
+        kind: "digital-input",
+        channelCount: 12,
+        pageId: "page",
+        reference: "IO1",
+        name: "Unsupported PLC module",
+      }),
+    /supported PLC kind/,
+  );
+});
+test("unused PLC digital channels are spare interfaces; mapped open channels remain findings", () => {
+  const p = createPlcModule(nativeProject(), {
+    kind: "digital-input",
+    channelCount: 16,
+    pageId: "page",
+    reference: "DI1",
+    name: "WAGO 16-channel input",
+  });
+  const module = p.plcModules[0];
+  const spare = p.terminals.find(
+    (terminal) =>
+      terminal.deviceId === module.deviceId && terminal.designation === "IN15",
+  );
+  assert.ok(spare);
+  assert.ok(
+    !analyze(p).findings.some(
+      (finding) =>
+        finding.code === "OPEN_TERMINAL" &&
+        finding.entityIds.includes(spare.id),
+    ),
+  );
+  const mapped = savePlcAddress(p, {
+    id: "mapped-input",
+    name: "Remote status input",
+    moduleId: module.id,
+    channel: 15,
+    address: "%IX1.15",
+    dataType: "BOOL",
+    terminalIds: [spare.id],
+  });
+  assert.ok(
+    analyze(mapped).findings.some(
+      (finding) =>
+        finding.code === "OPEN_TERMINAL" &&
+        finding.entityIds.includes(spare.id),
+    ),
+  );
 });
 test("PLC I/O rejects duplicate addresses/channels, wrong terminal ownership and incompatible data types", () => {
   const p = fixture();

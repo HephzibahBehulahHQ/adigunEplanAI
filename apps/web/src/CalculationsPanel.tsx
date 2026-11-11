@@ -23,11 +23,11 @@ import "./calculations.css";
 
 type Props = { native: NativeProjects; t: (key: MessageKey) => string };
 const quickCalculations = [
-  ["load-current", "calcToolLoadCurrent"],
-  ["voltage-drop", "calcValueVoltageDrop"],
-  ["short-circuit", "calcToolShortCircuit"],
-  ["cable-sizing", "calcToolCableSizing"],
-  ["transformer-sizing", "calcToolTransformerSizing"],
+  ["apparent-load-current", "calcQuickLoad"],
+  ["voltage-drop", "calcQuickVoltageDrop"],
+  ["short-circuit", "calcQuickShortCircuit"],
+  ["cable-sizing", "calcQuickCableSizing"],
+  ["transformer-sizing", "calcQuickTransformer"],
 ] as const satisfies ReadonlyArray<readonly [string, MessageKey]>;
 const unitsFor = (id: string) =>
   Object.fromEntries(
@@ -56,18 +56,43 @@ export function CalculationsPanel({ native, t }: Props) {
   return <CalculationForm key={native.project.id} native={native} t={t} />;
 }
 function CalculationForm({ native, t }: Props) {
-  const [toolId, setToolId] = useState("ohms-law");
-  const [inputs, setInputs] = useState<Record<string, string>>({});
-  const [units, setUnits] = useState<Record<string, Unit>>(
-    unitsFor("ohms-law"),
+  const project = native.project!;
+  const [initialCalculation] = useState(() => {
+    const item =
+      project.calculations.find(
+        (record) => record.id === "target-substation-load",
+      ) ?? project.calculations[0];
+    if (!item) return null;
+    try {
+      return { item, result: calculateRecord(item) };
+    } catch {
+      return null;
+    }
+  });
+  const [toolId, setToolId] = useState(
+    initialCalculation?.item.kind ?? "ohms-law",
   );
-  const [evidence, setEvidence] = useState("");
-  const [name, setName] = useState("");
-  const [recordId, setRecordId] = useState("");
-  const [result, setResult] = useState<CalculationResult | null>(null);
+  const [inputs, setInputs] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      Object.entries(initialCalculation?.item.inputs ?? {}).map(
+        ([key, value]) => [key, String(value)],
+      ),
+    ),
+  );
+  const [units, setUnits] = useState<Record<string, Unit>>(
+    (initialCalculation?.item.units as Record<string, Unit> | undefined) ??
+      unitsFor("ohms-law"),
+  );
+  const [evidence, setEvidence] = useState(
+    initialCalculation?.result.evidence.join("\n") ?? "",
+  );
+  const [name, setName] = useState(initialCalculation?.item.name ?? "");
+  const [recordId, setRecordId] = useState(initialCalculation?.item.id ?? "");
+  const [result, setResult] = useState<CalculationResult | null>(
+    initialCalculation?.result ?? null,
+  );
   const [issues, setIssues] = useState<CalculationIssue[]>([]);
   const [saved, setSaved] = useState(false);
-  const project = native.project!;
   const calculator = calculatorById(toolId);
   const tr = (key: string) => t(key as MessageKey);
   const title = name.trim() || tr(calculator.titleKey);
@@ -232,7 +257,10 @@ function CalculationForm({ native, t }: Props) {
         <div className="calculation-inputs">
           {calculator.inputs.map((field) => (
             <div className="calculation-input" key={field.key}>
-              <label htmlFor={`calculation-input-${field.key}`}>
+              <label
+                htmlFor={`calculation-input-${field.key}`}
+                title={tr(field.labelKey)}
+              >
                 {tr(field.labelKey)}
               </label>
               <div className="calculation-quantity">
@@ -321,6 +349,28 @@ function CalculationForm({ native, t }: Props) {
             </div>
           ))}
         </div>
+        {result && (
+          <div
+            className="calculation-dock-summary"
+            role="status"
+            aria-live="polite"
+          >
+            <dl>
+              {result.values.map((item) => (
+                <div key={item.key}>
+                  <dt>{tr(item.labelKey)}</dt>
+                  <dd>
+                    <output data-calculation-value={item.key}>
+                      {Number(item.value.toPrecision(4))}
+                    </output>{" "}
+                    {readableUnit(item.unit)}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <code>{result.formula}</code>
+          </div>
+        )}
         <p className="calculation-hint">{tr("calcUnitConversionHint")}</p>
         <label>
           {tr("calcEvidence")}

@@ -21,7 +21,6 @@ export const ribbonTabs = [
   ["analysis", "menuAnalysis"],
   ["ai", "menuAiTools"],
   ["tools", "menuTools"],
-  ["options", "menuOptions"],
   ["settings", "settings"],
   ["help", "help"],
 ] as const satisfies readonly (readonly [string, MessageKey])[];
@@ -36,8 +35,6 @@ type Props = {
 /** Original line icons; commands delegate to the same native editor actions. */
 export function CommandIcon({ kind }: { kind: string }) {
   const paths: Record<string, string> = {
-    "sidebar-left": "M3 4h18v16H3ZM9 4v16m-2-8-2-2m2 2-2 2",
-    "sidebar-right": "M3 4h18v16H3ZM15 4v16m2-8 2-2m-2 2 2 2",
     cut: "M4 4a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM4 14a3 3 0 1 1 0 6 3 3 0 0 1 0-6ZM7 8l14 12M7 16 21 4",
     distribute: "M2 3v18M22 3v18M6 8h3v8H6ZM15 8h3v8h-3ZM2 5h20",
     junction: "M12 2v20M2 12h20M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z",
@@ -71,10 +68,6 @@ export function CommandIcon({ kind }: { kind: string }) {
     paste: "M8 3H4v19h16V3h-4M8 1h8v5H8Z",
     duplicate: "M3 3h12v12H3ZM9 15v6h12V9h-6",
     symbol: "M2 12h5M17 12h5M7 7h10v10H7Z",
-    new: "M5 2h9l5 5v15H5ZM14 2v6h5M9 15h6m-3-3v6",
-    open: "M2 6h8l2 2h10l-3 12H2ZM2 10h18",
-    save: "M3 2h15l3 3v17H3ZM7 2v7h10V2M7 22v-8h10v8",
-    export: "M13 3H5v18h14v-8M12 12l9-9M15 3h6v6",
     saveAll: "M6 2h13l3 3v14H6ZM9 2v6h9V2M2 6v16h16M9 19v-7h10v7",
     close: "M3 5h8l2 3h9v13H3ZM9 11l7 7M16 11l-7 7",
     print: "M6 8V2h12v6M6 17H2V8h20v9h-4M6 13h12v9H6ZM18 11h1",
@@ -95,6 +88,19 @@ export function CommandIcon({ kind }: { kind: string }) {
   );
 }
 export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
+  const iconOnlyCommands = new Set<MessageKey>([
+    "undo",
+    "redo",
+    "copy",
+    "paste",
+    "rotate",
+    "mirror",
+    "duplicate",
+    "delete",
+    "fitPage",
+    "zoomIn",
+    "zoomOut",
+  ]);
   const command = (
     key: MessageKey,
     icon: string,
@@ -105,6 +111,8 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
       key={key}
       className="ribbon-command"
       aria-label={`${t(key)} · ${t("ribbonWorkspace")}`}
+      title={t(key)}
+      data-icon-only={iconOnlyCommands.has(key) || undefined}
       disabled={disabled}
       onClick={action}
     >
@@ -245,9 +253,6 @@ export function WorkspaceCommands({ tab, native, t, reveal }: Props) {
           {tool("fitPage", "fit", "fit")}
           {tool("zoomIn", "zoomIn", "fit")}
           {tool("zoomOut", "zoomOut", "fit")}
-          {tool("zoomExtents", "zoomExtents", "fit")}
-          {tool("zoomWindow", "zoomWindow", "fit")}
-          {tool("zoomPrevious", "zoomPrevious", "undo")}
           {analysis}
         </>
       )}

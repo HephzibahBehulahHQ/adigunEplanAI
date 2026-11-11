@@ -47,8 +47,7 @@ a {
   color: var(--link);
 }
 .application {
-  height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
@@ -236,8 +235,7 @@ i {
   gap: 5px;
   padding: 5px;
   flex: 1;
-  min-height: 0;
-  overflow: auto;
+  min-height: 640px;
 }
 .engineering-layout.has-left {
   grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
@@ -971,13 +969,13 @@ button:disabled {
 }
 .ribbon-tabs button {
   white-space: nowrap;
-  padding: 0.55rem 0.7rem;
-  font-size: 0.74rem;
+  padding: 0.32rem 0.62rem;
+  font-size: 0.67rem;
 }
 .ribbon-command-groups {
   display: flex;
   align-items: stretch;
-  gap: 0.2rem;
+  gap: 0.12rem;
   flex-wrap: wrap;
 }
 .ribbon-command {
@@ -985,21 +983,22 @@ button:disabled {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.6rem;
+  gap: 0.24rem;
+  padding: 0.3rem 0.42rem;
   border-color: transparent;
   background: transparent;
-  max-width: 8rem;
-  min-height: 60px;
-  font-size: 0.7rem;
+  max-width: 7rem;
+  min-height: 54px;
+  font-size: 0.61rem;
 }
 .ribbon-command svg {
-  width: 23px;
-  height: 23px;
+  width: 21px;
+  height: 21px;
   color: var(--cyan);
 }
 .ribbon-command span {
   text-align: center;
+  line-height: 1.15;
 }
 .ribbon-command-group {
   display: flex;
@@ -1085,7 +1084,7 @@ button:disabled {
     flex-basis: 33px;
   }
   .ribbon {
-    min-height: 76px;
+    min-height: 70px;
     padding: 0.3rem 0.65rem;
     gap: 0.7rem;
   }
@@ -1178,7 +1177,7 @@ button:disabled {
   }
 }
 
-@media (min-width: 1001px) {
+@media (min-width: 1001px) and (min-height: 780px) {
   .application .engineering-layout {
     min-height: 0;
     overflow: hidden;
@@ -1240,6 +1239,16 @@ button:disabled {
   .application[data-compact="true"] .dock-bottom:has(.calculations-panel) {
     min-height: 0;
     height: 180px;
+  }
+  .application[data-compact="true"]
+    .engineering-layout:has(
+      > .dock-bottom .calculations-panel .calculation-dock-summary
+    ) {
+    grid-template-rows: minmax(0, 1fr) 210px;
+  }
+  .application[data-compact="true"]
+    .dock-bottom:has(.calculations-panel .calculation-dock-summary) {
+    height: 210px;
   }
   .application[data-compact="true"] .workspace-heading,
   .application[data-compact="true"] .compact-editor-tools,
@@ -1736,164 +1745,5 @@ button:disabled {
   }
   .bot-heading {
     cursor: default;
-  }
-}
-
-.workbench-shell,
-.application > .status-bar {
-  flex: none;
-  min-width: 0;
-}
-.workbench-menu-row {
-  display: flex;
-  align-items: stretch;
-  min-width: 0;
-  background: var(--navy);
-}
-.workbench-menu-row .ribbon-tabs {
-  flex: 1;
-  height: auto;
-  flex-wrap: wrap;
-  overflow: clip;
-  min-width: 0;
-}
-.workbench-menu-row [aria-expanded="true"][data-menu-trigger] {
-  background: var(--hover);
-  box-shadow: inset 0 -2px var(--cyan);
-}
-.sidebar-toggles {
-  display: flex;
-  align-items: center;
-  flex: none;
-  gap: 3px;
-  padding: 0 4px;
-  border-left: 1px solid var(--line);
-}
-.sidebar-toggles button {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  padding: 3px;
-  color: var(--ivory);
-}
-.sidebar-toggles button[aria-expanded="false"] {
-  color: var(--muted);
-}
-.sidebar-toggles svg {
-  width: 17px;
-  height: 17px;
-}
-.workbench-menu {
-  position: fixed;
-  z-index: 40;
-  width: min(280px, calc(100vw - 8px));
-  overflow: auto;
-  overscroll-behavior: contain;
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 0 0 5px 5px;
-  background: var(--panel);
-  color: var(--text);
-  box-shadow: 0 8px 24px #0008;
-}
-.workbench-menu button,
-.workbench-menu label {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-  width: 100%;
-  min-height: 30px;
-  padding: 4px 8px;
-  text-align: start;
-  white-space: normal;
-}
-.workbench-menu button {
-  border: 1px solid transparent;
-  border-radius: 3px;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-}
-.workbench-menu button:not(:disabled):hover,
-.workbench-menu button:focus-visible,
-.workbench-menu label:focus-within {
-  border-color: var(--line);
-  background: var(--hover);
-}
-.workbench-menu button:disabled {
-  opacity: 0.48;
-}
-.workbench-menu button svg {
-  flex: none;
-  width: 16px;
-  height: 16px;
-  color: var(--cyan);
-}
-.workbench-menu input[type="checkbox"] {
-  margin: 0;
-  accent-color: var(--cyan);
-}
-.workbench-menu .panel-toggles {
-  display: grid;
-  gap: 0;
-  margin: 0;
-}
-.workbench-menu label:has(select) {
-  justify-content: space-between;
-}
-.workbench-menu select {
-  min-width: 0;
-  max-width: 55%;
-}
-.workbench-menu hr {
-  border: 0;
-  border-top: 1px solid var(--line);
-  margin: 3px 4px;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .sidebar-toggles button {
-    transition:
-      color 180ms ease,
-      background-color 180ms ease;
-  }
-  .engineering-layout > :is(.dock-left, .dock-right) {
-    animation: sidebar-reveal 180ms ease-out;
-  }
-  @keyframes sidebar-reveal {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-}
-
-@media (max-width: 780px) {
-  .engineering-layout > :is(.workspace, .dock) {
-    flex-shrink: 0;
-  }
-}
-
-@media (min-width: 1001px) {
-  .application[data-compact="false"] .workspace .drawing-viewport,
-  .workspace .drawing-viewport:has(.building-editor, .panel-editor) {
-    overflow: auto;
-    container-type: size;
-  }
-  .application[data-compact="false"] .schematic-editor .engineering-canvas {
-    flex: 0 0 300px;
-    min-height: 300px;
-  }
-  .drawing-viewport :is(.building-plan, .panel-3d-stage, .panel-front-view) {
-    max-height: 100cqh;
-  }
-}
-
-@media (min-width: 1001px) and (max-height: 780px) {
-  .application[data-compact="false"] .engineering-layout:has(> .dock-bottom) {
-    grid-template-rows: minmax(0, 1fr) 92px;
   }
 }

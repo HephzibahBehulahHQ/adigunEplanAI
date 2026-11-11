@@ -5,6 +5,8 @@ import {
 } from "../electrical-model/project.ts";
 import { synchronizeConnectivity } from "../connectivity-engine/analyze.ts";
 import { installSymbol } from "../component-library/symbols.ts";
+import { createCustomSymbol } from "../component-library/custom-symbols.ts";
+import { assignCatalogPart } from "../component-library/catalog.ts";
 import {
   place,
   connect,
@@ -26,12 +28,17 @@ import {
   savePlanCircuit,
 } from "../building-design/circuits.ts";
 import { createPlcModule, savePlcAddress } from "../automation/plc.ts";
+import {
+  calculate,
+  calculationToRecord,
+} from "../engineering-core/calculations.ts";
 import { exampleCatalog } from "./catalog.ts";
 import type { ExampleId } from "./catalog.ts";
 
 export const examples = exampleCatalog;
 export type { ExampleId } from "./catalog.ts";
 const names: Record<ExampleId, string> = {
+  "target-substation": "EES_Industry_Sample_Energy_Substation_V01",
   substation: "EES_Original_Energy_Substation_V01",
   photovoltaic: "Photovoltaic_string_and_inverter_interfaces",
   motor: "Maintained_run_motor_starter",
@@ -161,6 +168,21 @@ export function buildExample(id: ExampleId): Project {
       positionMm: { x: 15, y: 15, z: 0 },
       sizeMm: { x: 570, y: 770, z: 2 },
     });
+    const flushMounted = deviceReferences.filter((reference) => {
+      const device = p.devices.find((item) => item.reference === reference)!;
+      return p.manufacturerParts
+        .find((part) => part.id === device.partId)
+        ?.catalogSnapshot?.mounting?.toLowerCase()
+        .includes("flush");
+    });
+    const railMounted = deviceReferences.filter(
+      (reference) => !flushMounted.includes(reference),
+    );
+    const targetRows = [
+      ["F4", "Y1"],
+      ["X5", "X6", "X30", "X31", "X32", "X33", "X34", "X35"],
+      ["DI1", "PLC1", "DO1"],
+    ].map((row) => row.filter((reference) => railMounted.includes(reference)));
     for (let row = 0; row < 3; row++) {
       const railId = crypto.randomUUID();
       p.panelStructures.push({
@@ -180,124 +202,771 @@ export function buildExample(id: ExampleId): Project {
         positionMm: { x: 35, y: 225 + row * 205, z: 2 },
         sizeMm: { x: 530, y: 40, z: 40 },
       });
-      for (const [column, reference] of deviceReferences
-        .slice(row * 4, row * 4 + 4)
-        .entries()) {
+      const rowReferences =
+        id === "target-substation"
+          ? targetRows[row]
+          : railMounted.slice(row * 4, row * 4 + 4);
+      const rowWidths = rowReferences.map((reference) => {
         const device = p.devices.find((item) => item.reference === reference)!;
+        const dimensions = p.manufacturerParts.find(
+          (part) => part.id === device.partId,
+        )?.catalogSnapshot?.dimensionsMm;
+        return dimensions?.width ?? 80;
+      });
+      const gap = Math.max(
+        12,
+        Math.min(
+          60,
+          (530 - rowWidths.reduce((sum, width) => sum + width, 0)) /
+            (rowReferences.length + 1),
+        ),
+      );
+      let x = 35 + gap;
+      for (const reference of rowReferences) {
+        const device = p.devices.find((item) => item.reference === reference)!;
+        const dimensions = p.manufacturerParts.find(
+          (part) => part.id === device.partId,
+        )?.catalogSnapshot?.dimensionsMm;
+        const sizeMm = dimensions
+          ? {
+              x: dimensions.width,
+              y: dimensions.height,
+              z: dimensions.depth,
+            }
+          : { x: 80, y: 90, z: 65 };
         p.equipment3d.push({
           id: crypto.randomUUID(),
-          name: `${reference} · manually dimensioned generic envelope`,
+          name: dimensions
+            ? `${reference} · manufacturer catalogue dimensions`
+            : `${reference} · manually dimensioned generic envelope`,
           deviceId: device.id,
           enclosureId,
-          dimensionSource: "manual",
-          positionMm: { x: 50 + column * 125, y: 85 + row * 205, z: 10 },
-          sizeMm: { x: 80, y: 90, z: 65 },
+          dimensionSource: dimensions ? "catalog" : "manual",
+          positionMm: { x, y: 85 + row * 205, z: 10 },
+          sizeMm,
           mountingStructureId: railId,
+          clearanceMm: 5,
+        });
+        x += sizeMm.x + gap;
+      }
+    }
+    if (flushMounted.length) {
+      const doorId = crypto.randomUUID();
+      p.panelStructures.push({
+        id: doorId,
+        name: "Enclosure door · flush-mounted devices",
+        enclosureId,
+        kind: "door",
+        positionMm: { x: 0, y: 0, z: 248 },
+        sizeMm: { x: 600, y: 800, z: 2 },
+      });
+      for (const [column, reference] of flushMounted.entries()) {
+        const device = p.devices.find((item) => item.reference === reference)!;
+        const dimensions = p.manufacturerParts.find(
+          (part) => part.id === device.partId,
+        )?.catalogSnapshot?.dimensionsMm;
+        if (!dimensions)
+          throw new Error(
+            `Flush-mounted device ${reference} has no sourced dimensions`,
+          );
+        p.equipment3d.push({
+          id: crypto.randomUUID(),
+          name: `${reference} · catalogue-dimensioned flush mounting`,
+          deviceId: device.id,
+          enclosureId,
+          dimensionSource: "catalog",
+          positionMm: {
+            x: 50 + column * (dimensions.width + 25),
+            y: 100,
+            z: 248 - dimensions.depth,
+          },
+          sizeMm: {
+            x: dimensions.width,
+            y: dimensions.height,
+            z: dimensions.depth,
+          },
+          mountingStructureId: doorId,
           clearanceMm: 5,
         });
       }
     }
   }
-  if (id === "substation") {
-    note(
-      "ORIGINAL TRANSFORMER STATION · single-phase equivalent documentation",
-      20,
-      22,
-    );
-    note("Primary interfaces", 30, 51);
-    note("Transformer", 165, 51);
-    note("Secondary interfaces", 300, 51);
-    note("P1 · Incoming", 23, 78);
-    note("P2 · Incoming", 23, 168);
-    note("S1 · Outgoing", 352, 78);
-    note("S2 · Outgoing", 352, 168);
-    symbol("terminal", "X1", 35, 95, 0, "Incoming primary interface P1");
-    symbol("terminal", "X2", 35, 185, 0, "Incoming primary interface P2");
+  if (id === "substation" || id === "target-substation") {
+    if (id === "substation") {
+      note(
+        "ORIGINAL TRANSFORMER STATION · single-phase equivalent documentation",
+        20,
+        22,
+      );
+      note("Primary interfaces", 30, 51);
+      note("Transformer", 165, 51);
+      note("Secondary interfaces", 300, 51);
+      note("P1 · Incoming", 23, 78);
+      note("P2 · Incoming", 23, 168);
+      note("S1 · Outgoing", 352, 78);
+      note("S2 · Outgoing", 352, 168);
+      symbol("terminal", "X1", 35, 95, 0, "Incoming primary interface P1");
+      symbol("terminal", "X2", 35, 185, 0, "Incoming primary interface P2");
+      symbol(
+        "fuse",
+        "F1",
+        95,
+        95,
+        0,
+        "Primary protection interface; rating unspecified",
+      );
+      symbol(
+        "fuse",
+        "F2",
+        95,
+        185,
+        0,
+        "Primary protection interface; rating unspecified",
+      );
+      symbol(
+        "transformer-two-winding",
+        "T1",
+        190,
+        140,
+        0,
+        "Two-winding transformer; single-phase equivalent",
+      );
+      symbol("contact", "Q1", 285, 95, 0, "Secondary isolation interface");
+      symbol("terminal", "X3", 365, 95, 0, "Outgoing secondary S1");
+      symbol("terminal", "X4", 365, 185, 0, "Outgoing secondary S2");
+      wire("X1", "1", "F1", "1");
+      wire("F1", "2", "T1", "P1");
+      wire("X2", "1", "F2", "1", "#2563eb");
+      wire("F2", "2", "T1", "P2", "#2563eb");
+      wire("T1", "S1", "Q1", "1");
+      wire("Q1", "2", "X3", "1");
+      wire("T1", "S2", "X4", "1", "#2563eb");
+      note(
+        "No transformer ratio, fault current, protection setting or medium-voltage rating is specified.",
+        20,
+        225,
+      );
+      note(
+        "Separate winding terminals do not imply galvanic continuity or a solved network.",
+        20,
+        237,
+      );
+      pageId = page("02 · Secondary protection documentation");
+    } else {
+      note(
+        "INDUSTRY ENERGY SUBSTATION · three-phase interface drawing",
+        20,
+        22,
+      );
+      note("20 kV incoming supply", 22, 48);
+      note("Q0 · incoming isolation", 60, 48);
+      note("Primary protection interfaces", 120, 48);
+      note("T01 · 630 kVA · 20 / 0.4 kV design basis", 180, 48);
+      note("CT measurement interfaces", 238, 48);
+      note("Secondary switching", 292, 48);
+      note("0.4 kV outgoing interfaces", 348, 48);
+      const phases = [
+        {
+          input: "L1",
+          fuse: "F1",
+          primary: "H1",
+          secondary: "X1",
+          breakerIn: "L1_in",
+          breakerOut: "L1_out",
+          output: "X11",
+          y: 75,
+          color: "#d02030",
+        },
+        {
+          input: "L2",
+          fuse: "F2",
+          primary: "H2",
+          secondary: "X2",
+          breakerIn: "L2_in",
+          breakerOut: "L2_out",
+          output: "X12",
+          y: 115,
+          color: "#d4a017",
+        },
+        {
+          input: "L3",
+          fuse: "F3",
+          primary: "H3",
+          secondary: "X3",
+          breakerIn: "L3_in",
+          breakerOut: "L3_out",
+          output: "X13",
+          y: 155,
+          color: "#2563eb",
+        },
+      ] as const;
+      for (const phase of phases) {
+        note(phase.input, 22, phase.y - 10);
+        symbol(
+          "terminal",
+          `X${phase.input.slice(-1)}`,
+          35,
+          phase.y,
+          0,
+          `Incoming ${phase.input} phase`,
+        );
+      }
+      const incomingIsolatorDefinitionId = crypto.randomUUID();
+      p = createCustomSymbol(p, {
+        id: incomingIsolatorDefinitionId,
+        name: "Three-phase incoming isolation interface",
+        category: "custom",
+        glyph: "box",
+        widthMm: 32,
+        heightMm: 92,
+        pins: phases.flatMap((phase) => {
+          const offset = phase.y - 115;
+          return [
+            { id: `${phase.input}_in`, position: { x: -16, y: offset } },
+            { id: `${phase.input}_out`, position: { x: 16, y: offset } },
+          ];
+        }),
+        artwork: phases.flatMap((phase) => {
+          const offset = phase.y - 115;
+          return [
+            {
+              kind: "line" as const,
+              from: { x: -16, y: offset },
+              to: { x: -6, y: offset },
+            },
+            {
+              kind: "circle" as const,
+              center: { x: -6, y: offset },
+              radiusMm: 1,
+            },
+            {
+              kind: "line" as const,
+              from: { x: -6, y: offset },
+              to: { x: 5, y: offset - 6 },
+            },
+            {
+              kind: "circle" as const,
+              center: { x: 7, y: offset },
+              radiusMm: 1,
+            },
+            {
+              kind: "line" as const,
+              from: { x: 7, y: offset },
+              to: { x: 16, y: offset },
+            },
+          ];
+        }),
+      });
+      const incomingIsolatorInstanceId = place(
+        p,
+        pageId,
+        p.layers.find((layer) => layer.pageId === pageId)!.id,
+        "custom",
+        { x: 80, y: 115 },
+        0,
+        incomingIsolatorDefinitionId,
+      );
+      const incomingIsolatorInstance = p.symbolInstances.find(
+        (item) => item.id === incomingIsolatorInstanceId,
+      )!;
+      const incomingIsolator = p.devices.find(
+        (item) => item.id === incomingIsolatorInstance.deviceId,
+      )!;
+      incomingIsolator.reference = "Q0";
+      incomingIsolator.name =
+        "Three-phase incoming isolation interface; rating unspecified";
+      incomingIsolatorInstance.name = "Q0";
+      for (const phase of phases) {
+        symbol(
+          "fuse",
+          phase.fuse,
+          145,
+          phase.y,
+          0,
+          `${phase.input} phase protection interface; rating unspecified`,
+        );
+      }
+      const transformerDefinitionId = crypto.randomUUID();
+      p = createCustomSymbol(p, {
+        id: transformerDefinitionId,
+        name: "Three-phase transformer interface",
+        category: "custom",
+        glyph: "box",
+        widthMm: 64,
+        heightMm: 100,
+        pins: [
+          { id: "H1", position: { x: -32, y: -40 }, kind: "power" },
+          { id: "H2", position: { x: -32, y: 0 }, kind: "power" },
+          { id: "H3", position: { x: -32, y: 40 }, kind: "power" },
+          { id: "X1", position: { x: 32, y: -40 }, kind: "power" },
+          { id: "X2", position: { x: 32, y: 0 }, kind: "power" },
+          { id: "X3", position: { x: 32, y: 40 }, kind: "power" },
+        ],
+        artwork: [
+          ...phases.flatMap((_, index) => {
+            const offset = (index - 1) * 40;
+            return [
+              {
+                kind: "line" as const,
+                from: { x: -32, y: offset },
+                to: { x: -17, y: offset },
+              },
+              {
+                kind: "circle" as const,
+                center: { x: -9, y: offset },
+                radiusMm: 7.5,
+              },
+              {
+                kind: "circle" as const,
+                center: { x: 9, y: offset },
+                radiusMm: 7.5,
+              },
+              {
+                kind: "line" as const,
+                from: { x: 17, y: offset },
+                to: { x: 32, y: offset },
+              },
+            ];
+          }),
+          {
+            kind: "line",
+            from: { x: -1.5, y: -34 },
+            to: { x: -1.5, y: 34 },
+          },
+          {
+            kind: "line",
+            from: { x: 1.5, y: -34 },
+            to: { x: 1.5, y: 34 },
+          },
+        ],
+      });
+      const transformerInstanceId = place(
+        p,
+        pageId,
+        p.layers.find((layer) => layer.pageId === pageId)!.id,
+        "custom",
+        { x: 190, y: 115 },
+        0,
+        transformerDefinitionId,
+      );
+      const transformerInstance = p.symbolInstances.find(
+        (item) => item.id === transformerInstanceId,
+      )!;
+      const transformerDevice = p.devices.find(
+        (item) => item.id === transformerInstance.deviceId,
+      )!;
+      transformerDevice.reference = "T01";
+      transformerDevice.name =
+        "Three-phase transformer · scenario design basis 630 kVA, 20 / 0.4 kV";
+      transformerInstance.name = "T01";
+      for (const [index, phase] of phases.entries()) {
+        symbol(
+          "current-transformer",
+          `CT${index + 1}`,
+          244,
+          phase.y,
+          0,
+          `${phase.input} current-transformer interface; ratio, class, burden and polarity remain design inputs`,
+        );
+      }
+      symbol(
+        "isolator-three-pole-pe",
+        "Q1",
+        300,
+        115,
+        0,
+        "Three-pole secondary isolation interface; device rating unspecified",
+      );
+      for (const phase of phases) {
+        symbol(
+          "terminal",
+          phase.output,
+          380,
+          phase.y,
+          0,
+          `Outgoing ${phase.input} phase interface`,
+        );
+        const phaseIndex = phase.input.slice(-1);
+        wire(`X${phaseIndex}`, "1", "Q0", `L${phaseIndex}_in`, phase.color);
+        wire("Q0", `L${phaseIndex}_out`, phase.fuse, "1", phase.color);
+        wire(phase.fuse, "2", "T01", phase.primary, phase.color);
+        wire("T01", phase.secondary, `CT${phaseIndex}`, "P1", phase.color);
+        wire(`CT${phaseIndex}`, "P2", "Q1", phase.breakerIn, phase.color);
+        wire("Q1", phase.breakerOut, phase.output, "1", phase.color);
+      }
+      symbol(
+        "ground",
+        "PE1",
+        300,
+        180,
+        0,
+        "Protective earth system interface; earthing arrangement unspecified",
+      );
+      wire("Q1", "PE_out", "PE1", "PE", "#16803d");
+      if (id !== "target-substation") {
+        note(
+          "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
+          20,
+          175,
+        );
+        note(
+          "Q0 is an incoming isolation interface only; switchgear selection, ratings and operating sequence remain design inputs.",
+          20,
+          188,
+        );
+      }
+    }
+    const targetSubstation = id === "target-substation";
+    const protectionY = targetSubstation ? 175 : 75;
+    if (!targetSubstation) {
+      note("Auxiliary supply", 23, 54);
+      note("Protection relay", 184, 54);
+      note("Trip actuator", 292, 96);
+      note(
+        "PROTECTION AND METERING · interfaces for engineering completion",
+        20,
+        22,
+      );
+    }
+    if (!targetSubstation) note("Measurement interfaces", 23, 123);
+    if (!targetSubstation) note("Auxiliary common", 340, 175);
+    symbol("terminal", "X5", 35, protectionY, 0, "Auxiliary supply positive");
+    const auxiliaryFuseReference = id === "target-substation" ? "F4" : "F3";
+    symbol("fuse", auxiliaryFuseReference, 95, protectionY);
     symbol(
-      "fuse",
-      "F1",
-      95,
-      95,
-      0,
-      "Primary protection interface; rating unspecified",
+      targetSubstation
+        ? "protection-relay-three-phase-trip"
+        : "protection-relay-trip",
+      "P1",
+      targetSubstation ? 210 : 190,
+      targetSubstation ? 217 : protectionY + 10,
     );
-    symbol(
-      "fuse",
-      "F2",
-      95,
-      185,
-      0,
-      "Primary protection interface; rating unspecified",
-    );
-    symbol(
-      "transformer-two-winding",
-      "T1",
-      190,
-      140,
-      0,
-      "Two-winding transformer; single-phase equivalent",
-    );
-    symbol("contact", "Q1", 285, 95, 0, "Secondary isolation interface");
-    symbol("terminal", "X3", 365, 95, 0, "Outgoing secondary S1");
-    symbol("terminal", "X4", 365, 185, 0, "Outgoing secondary S2");
-    wire("X1", "1", "F1", "1");
-    wire("F1", "2", "T1", "P1");
-    wire("X2", "1", "F2", "1", "#2563eb");
-    wire("F2", "2", "T1", "P2", "#2563eb");
-    wire("T1", "S1", "Q1", "1");
-    wire("Q1", "2", "X3", "1");
-    wire("T1", "S2", "X4", "1", "#2563eb");
-    note(
-      "No transformer ratio, fault current, protection setting or medium-voltage rating is specified.",
-      20,
-      225,
-    );
-    note(
-      "Separate winding terminals do not imply galvanic continuity or a solved network.",
-      20,
-      237,
-    );
-    pageId = page("02 · Secondary protection documentation");
-    note(
-      "PROTECTION AND METERING · interfaces for engineering completion",
-      20,
-      22,
-    );
-    note("Auxiliary supply", 23, 54);
-    note("Protection relay", 165, 54);
-    note("Trip actuator", 292, 96);
-    note("Measurement interfaces", 23, 123);
-    note("I+", 66, 143);
-    note("I−", 66, 188);
-    note("Auxiliary common", 340, 175);
-    symbol("terminal", "X5", 35, 75, 0, "Auxiliary supply positive");
-    symbol("fuse", "F3", 95, 75);
-    symbol("protection-relay-trip", "P1", 190, 105);
     symbol(
       "coil",
       "Y1",
-      310,
-      119,
+      targetSubstation ? 320 : 310,
+      protectionY,
       0,
       "Trip actuator interface; no certified safety function",
     );
-    symbol("terminal", "X6", 365, 155, 0, "Auxiliary supply common");
-    symbol("terminal", "X7", 80, 145, 0, "Measurement I+ interface");
-    symbol("terminal", "X8", 80, 190, 0, "Measurement I- interface");
-    wire("X5", "1", "F3", "1");
-    wire("F3", "2", "P1", "supply");
+    symbol(
+      "terminal",
+      "X6",
+      365,
+      targetSubstation ? 270 : 155,
+      0,
+      "Auxiliary supply common",
+    );
+    symbol(
+      "terminal",
+      targetSubstation ? "X30" : "X7",
+      80,
+      targetSubstation ? 228 : 145,
+      0,
+      targetSubstation
+        ? "CT phase A secondary positive test/disconnect interface"
+        : "Measurement I+ interface",
+    );
+    symbol(
+      "terminal",
+      targetSubstation ? "X31" : "X8",
+      80,
+      targetSubstation ? 236 : 190,
+      0,
+      targetSubstation
+        ? "CT phase A secondary negative test/disconnect interface"
+        : "Measurement I- interface",
+    );
+    wire("X5", "1", auxiliaryFuseReference, "1");
+    wire(auxiliaryFuseReference, "2", "P1", "supply");
     wire("X5", "1", "P1", "trip_common");
     wire("P1", "trip_NO", "Y1", "A1");
     wire("Y1", "A2", "X6", "1", "#2563eb");
     wire("P1", "common", "X6", "1", "#2563eb");
-    wire("X7", "1", "P1", "I_plus");
-    wire("X8", "1", "P1", "I_minus");
-    note(
-      "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
-      20,
-      230,
-    );
-    cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
+    if (targetSubstation) {
+      for (let phase = 0; phase < 3; phase++) {
+        const currentTransformer = `CT${phase + 1}`;
+        const positiveTerminal = `X${30 + phase * 2}`;
+        const negativeTerminal = `X${31 + phase * 2}`;
+        const y = 187 + phase * 16;
+        if (phase > 0) {
+          symbol(
+            "terminal",
+            positiveTerminal,
+            110,
+            y,
+            0,
+            `Current transformer ${phase + 1} secondary positive test/disconnect interface`,
+          );
+          symbol(
+            "terminal",
+            negativeTerminal,
+            110,
+            y + 8,
+            0,
+            `Current transformer ${phase + 1} secondary negative test/disconnect interface`,
+          );
+        }
+        wire(currentTransformer, "S1", positiveTerminal, "1");
+        wire(currentTransformer, "S2", negativeTerminal, "1", "#2563eb");
+        const phaseKey = ["A", "B", "C"][phase];
+        wire(positiveTerminal, "1", "P1", `I_${phaseKey}_plus`);
+        wire(negativeTerminal, "1", "P1", `I_${phaseKey}_minus`, "#2563eb");
+      }
+    } else {
+      wire("X7", "1", "P1", "I_plus");
+      wire("X8", "1", "P1", "I_minus");
+    }
+    if (!targetSubstation)
+      note(
+        "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
+        20,
+        230,
+      );
+    if (id === "substation")
+      cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
+    if (id === "target-substation") {
+      const relay = p.devices.find((device) => device.reference === "P1")!;
+      const relayPartId = crypto.randomUUID();
+      p.manufacturerParts.push({
+        id: relayPartId,
+        name: "SIPROTEC 5 7SJ82 standard variant",
+        manufacturer: "Siemens",
+        partNumber: "P1J122728",
+        sourceUrl:
+          "https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728",
+        ratings: {
+          binaryInputs: 11,
+          binaryOutputs: 9,
+          currentInputs: 4,
+          voltageInputs: 4,
+          auxiliarySupplyMinV: 24,
+          auxiliarySupplyMaxV: 48,
+          auxiliarySupplyType: "DC",
+        },
+        catalogSnapshot: {
+          catalogId: "siemens-p1j122728",
+          reviewedOn: "2026-11-10",
+          category: "protection",
+          description:
+            "SIPROTEC 7SJ82 overcurrent protection; standard variant",
+          mapping: {
+            glyph: "component",
+            symbolId: "library-protection-relay-three-phase-trip",
+            electricalNodes: 13,
+            connections: 13,
+          },
+          dimensionsMm: { width: 150, height: 266, depth: 163 },
+          dimensionsSourceUrl:
+            "https://cache.industry.siemens.com/dl/files/321/109742321/att_1163588/v1/SIP5_Operating_V09.70_Manual_C003-M_enUS.pdf",
+          sourceRevision:
+            "SIPROTEC 5 Operation Manual C53000-G5040-C003-M, Edition 12.2023, Fig 3-13",
+          mounting: "Flush mounting; 1/3 × 19 in housing width",
+          frontPanel: { statusIndicators: 16, display: "large" },
+        },
+      });
+      relay.partId = relayPartId;
+      for (const reference of [
+        "X5",
+        "X6",
+        "X30",
+        "X31",
+        "X32",
+        "X33",
+        "X34",
+        "X35",
+      ]) {
+        const terminal = p.devices.find(
+          (device) => device.reference === reference,
+        )!;
+        p = assignCatalogPart(p, terminal.id, "phoenix-3044076");
+      }
+
+      pageId = page("02 · Control and communications");
+      note(
+        "THREE CT channels mapped A/B/C · 4th relay input and physical pinout unassigned",
+        20,
+        100,
+      );
+      note(
+        "CONTROL SYSTEM · the internal modular I/O bus is not drawn; field-terminal pinout and PLC execution are not represented",
+        20,
+        22,
+      );
+      note(
+        "Three-phase design basis: 20 kV line-to-line, 630 kVA transformer, 0.95 power factor",
+        20,
+        42,
+      );
+      note(
+        "The 18.19 A primary current is calculated from the stated three-phase design basis. This example is not a protection-coordination or compliance assessment.",
+        20,
+        54,
+      );
+      note(
+        "The 20 / 0.4 kV ratio and 630 kVA are design inputs; vector group, earthing, fault level, settings, CT ratios/classes and cable data remain unspecified.",
+        20,
+        70,
+      );
+      note(
+        "Q0 is an isolation interface only. Protection relay logical channels are shown; physical terminal assignments and operating sequence are not represented.",
+        20,
+        84,
+      );
+      const cpuModule = createPlcModule(p, {
+        kind: "cpu",
+        symbolId: "modular-controller-interface",
+        pageId,
+        reference: "PLC1",
+        name: "WAGO PFC200 controller · generic modular bus interface",
+      });
+      p = cpuModule;
+      const cpu = p.devices.find((device) => device.reference === "PLC1")!;
+      p = assignCatalogPart(p, cpu.id, "wago-750-8217-625-000");
+      const inputModule = createPlcModule(p, {
+        kind: "digital-input",
+        channelCount: 16,
+        pageId,
+        reference: "DI1",
+        name: "WAGO 750-1405 · 16-channel digital input",
+      });
+      p = inputModule;
+      const inputDevice = p.devices.find(
+        (device) => device.reference === "DI1",
+      )!;
+      p = assignCatalogPart(p, inputDevice.id, "wago-750-1405");
+      const outputModule = createPlcModule(p, {
+        kind: "digital-output",
+        channelCount: 8,
+        pageId,
+        reference: "DO1",
+        name: "WAGO 750-530 · 8-channel digital output",
+      });
+      p = outputModule;
+      const outputDevice = p.devices.find(
+        (device) => device.reference === "DO1",
+      )!;
+      p = assignCatalogPart(p, outputDevice.id, "wago-750-530");
+      const plcInstances = new Map(
+        ["DI1", "PLC1", "DO1"].map((reference) => [
+          reference,
+          p.symbolInstances.find(
+            (item) =>
+              item.deviceId ===
+              p.devices.find((device) => device.reference === reference)!.id,
+          )!,
+        ]),
+      );
+      plcInstances.get("DI1")!.position = { x: 100, y: 142 };
+      plcInstances.get("PLC1")!.position = { x: 220, y: 142 };
+      plcInstances.get("DO1")!.position = { x: 340, y: 142 };
+      const cpuInstance = p.symbolInstances.find(
+        (symbol) => symbol.deviceId === cpu.id,
+      )!;
+      cpuInstance.position = plcInstances.get("PLC1")!.position;
+      symbol(
+        "terminal",
+        "X24",
+        35,
+        70,
+        0,
+        "External 24 VDC control supply input; field supply design input",
+      );
+      symbol("terminal", "X0", 35, 230, 0, "External control return input");
+      for (const reference of ["DI1", "PLC1", "DO1"]) {
+        wire("X24", "1", reference, "supply");
+        wire("X0", "1", reference, "common", "#2563eb");
+      }
+      symbol(
+        "terminal",
+        "X101",
+        35,
+        120,
+        0,
+        "External 24 VDC digital input channel 0",
+      );
+      symbol(
+        "terminal",
+        "X201",
+        385,
+        120,
+        0,
+        "External digital output channel 0; load not specified",
+      );
+      wire("X101", "1", "DI1", "IN0", "#2563eb");
+      wire("DO1", "OUT0", "X201", "1", "#d02030");
+      const diModule = p.plcModules.find(
+        (module) => module.deviceId === inputDevice.id,
+      )!;
+      const diChannel = p.terminals.find(
+        (item) =>
+          item.deviceId === inputDevice.id && item.designation === "IN0",
+      )!;
+      p = savePlcAddress(p, {
+        id: crypto.randomUUID(),
+        name: "External status input",
+        moduleId: diModule.id,
+        channel: 0,
+        address: "%IX0.0",
+        dataType: "BOOL",
+        terminalIds: [diChannel.id],
+        signalDeviceId: p.devices.find((device) => device.reference === "X101")!
+          .id,
+      });
+      const doModule = p.plcModules.find(
+        (module) => module.deviceId === outputDevice.id,
+      )!;
+      const doChannel = p.terminals.find(
+        (item) =>
+          item.deviceId === outputDevice.id && item.designation === "OUT0",
+      )!;
+      p = savePlcAddress(p, {
+        id: crypto.randomUUID(),
+        name: "External status output",
+        moduleId: doModule.id,
+        channel: 0,
+        address: "%QX0.0",
+        dataType: "BOOL",
+        terminalIds: [doChannel.id],
+        signalDeviceId: p.devices.find((device) => device.reference === "X201")!
+          .id,
+      });
+
+      const loadResult = calculate(
+        "apparent-load-current",
+        { phases: 3, voltage: 20, apparentPower: 630 },
+        { phases: "1", voltage: "kV", apparentPower: "kVA" },
+        [
+          "Scenario basis from the supplied target interface: balanced three-phase, 20 kV line-to-line, 630 kVA. cosφ 0.95 is documented project context but is not used in this apparent-power current equation. This estimate is not a protection setting.",
+        ],
+      );
+      p.calculations.push(
+        calculationToRecord(
+          loadResult,
+          "target-substation-load",
+          "20 kV transformer primary current estimate",
+        ),
+      );
+      cabinet(
+        [
+          "P1",
+          "F4",
+          "Y1",
+          "X5",
+          "X6",
+          "X30",
+          "X31",
+          "X32",
+          "X33",
+          "X34",
+          "X35",
+          "DI1",
+          "PLC1",
+          "DO1",
+        ],
+        "UTST_Cabinet_01 · manually dimensioned placement envelopes",
+      );
+    }
   } else if (id === "photovoltaic") {
     note(
       "ORIGINAL EDUCATIONAL PV SYSTEM · single-phase conversion topology only",

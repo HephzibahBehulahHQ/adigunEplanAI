@@ -54,10 +54,11 @@ test("every engineering symbol installs and places its declared electrical nodes
           pin.terminalGroup ? `group:${pin.terminalGroup}` : `pin:${pin.id}`,
         ),
       ).size,
+      symbol.name,
     );
     assert.deepEqual(parseProject(serializeProject(p)).project.wires, p.wires);
   }
-  assert.equal(searchSymbols("transformer", "power").length, 1);
+  assert.equal(searchSymbols("transformer", "power").length, 2);
   assert.equal(searchSymbols("transformer", "motors").length, 0);
   assert.equal(searchSymbols("breaker", "protection")[0].pins.length, 2);
   assert.equal(searchSymbols("sensor", "automation")[0].pins.length, 3);
@@ -474,7 +475,12 @@ test("catalog searches factual manufacturer records without fabricating matches"
   );
   assert.equal(searchCatalog("phoenix 3004362").length, 1);
   assert.equal(searchCatalog("ＵＫ ５ Ｎ").length, 1);
-  assert.equal(searchCatalog("", "protection").length, 0);
+  assert.equal(searchCatalog("", "protection").length, 1);
+  assert.equal(
+    searchCatalog("P1J122728", "protection", "Siemens")[0].ratings
+      .currentInputs,
+    4,
+  );
   assert.equal(searchCatalog("", "connections", "Unknown").length, 0);
   assert.equal(catalog[0].ratings.nominalCurrentA, 32);
   assert.match(catalog[0].sourceUrl, /^https:\/\/www\.phoenixcontact\.com\//);
@@ -482,14 +488,21 @@ test("catalog searches factual manufacturer records without fabricating matches"
 
 test("every manufacturer record maps a native terminal without fabricating missing ratings", () => {
   for (const part of catalog) {
-    const p = nativeProject();
+    const p =
+      part.mapping.glyph === "component"
+        ? installSymbol(
+            nativeProject(),
+            part.mapping.symbolId.replace(/^library-/, ""),
+          )
+        : nativeProject();
     const id = place(
       p,
       "page",
       "layer",
-      part.mapping.glyph,
+      part.mapping.glyph === "component" ? "custom" : part.mapping.glyph,
       { x: 200, y: 150 },
       5,
+      part.mapping.glyph === "component" ? part.mapping.symbolId : undefined,
     );
     const device = p.symbolInstances.find((s) => s.id === id).deviceId;
     const assigned = assignCatalogPart(p, device, part.id);
@@ -548,9 +561,28 @@ test("non-terminal part mapping rejects a different glyph even with the same ter
 });
 
 for (const [symbolId, kinds] of [
+  ["current-transformer", ["power", "power", "signal", "signal"]],
   ["rcbo-two-pole", ["power", "power", "neutral", "neutral"]],
   ["motor-protection-three-pole", Array(6).fill("power")],
   ["surge-protector-l-pe", ["power", "pe"]],
+  [
+    "protection-relay-three-phase-trip",
+    [
+      "control",
+      "control",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "control",
+      "control",
+      "control",
+    ],
+  ],
   [
     "protection-relay-trip",
     ["control", "control", "signal", "signal", "control", "control", "control"],

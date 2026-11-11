@@ -35,6 +35,26 @@ export const extendedSymbols = [
     ],
   },
   {
+    id: "modular-controller-interface",
+    name: "Modular PLC controller interface",
+    category: "automation",
+    width: 64,
+    height: 72,
+    pins: [
+      pin("supply", -32, -28, "control"),
+      pin("common", -32, 28, "control"),
+    ],
+    artwork: [
+      ...rect(-24, -32, 24, 32),
+      ...rect(-10, -12, 10, 8),
+      line(-32, -28, -24, -28),
+      line(-32, 28, -24, 28),
+      circle(0, 22, 6),
+      line(0, 22, 0, 18),
+      line(0, 22, 4, 24),
+    ],
+  },
+  {
     id: "remote-io-four",
     name: "Four-channel remote I/O interface",
     category: "automation",

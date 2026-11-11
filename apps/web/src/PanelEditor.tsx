@@ -3,6 +3,7 @@ import { CommandIcon } from "./WorkspaceRibbon";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
 import type { Project } from "../../../packages/electrical-model/project.ts";
+import { catalog } from "../../../packages/component-library/catalog.ts";
 import {
   createPanelDevice,
   saveEnclosure,
@@ -87,6 +88,18 @@ const diagnosticKeys: Record<PanelDiagnostic["code"], MessageKey> = {
   "mounting-profile": "panelProfileMismatch",
   "access-obstructed": "panelAccessObstructed",
 };
+
+function projectedFacePoint(points: Vector3[], u: number, v: number) {
+  const mix = (
+    a: Pick<Vector3, "x" | "y">,
+    b: Pick<Vector3, "x" | "y">,
+    amount: number,
+  ) => ({
+    x: a.x * (1 - amount) + b.x * amount,
+    y: a.y * (1 - amount) + b.y * amount,
+  });
+  return mix(mix(points[0], points[3], u), mix(points[1], points[2], u), v);
+}
 const number = (data: FormData, name: string) => Number(data.get(name));
 const optionalNumber = (data: FormData, name: string) =>
   String(data.get(name) ?? "").trim() === "" ? undefined : number(data, name);
@@ -925,14 +938,22 @@ function PanelViews({
       ? (project.devices.find((d) => d.id === item.deviceId)?.reference ??
         item.name)
       : item.name;
-  const color = (item: Structure | Placement) =>
-    "kind" in item
-      ? item.kind === "plate"
+  const color = (item: Structure | Placement) => {
+    if ("kind" in item)
+      return item.kind === "plate"
         ? "#cbd5e1"
         : item.kind === "duct"
           ? "#94a3b8"
-          : "#d4af37"
-      : "#2563eb";
+          : "#d4af37";
+    const device = project.devices.find((entry) => entry.id === item.deviceId);
+    const partId = project.manufacturerParts.find(
+      (entry) => entry.id === device?.partId,
+    )?.catalogSnapshot?.catalogId;
+    return (
+      catalog.find((part) => part.id === partId)?.appearance?.displayHex ??
+      "#94a3b8"
+    );
+  };
   const location = (event: PointerEvent<SVGElement>) => {
     const matrix = frontRef.current?.getScreenCTM();
     if (!matrix) return { x: 0, y: 0 };
@@ -1322,6 +1343,104 @@ function PanelViews({
               const item = objects.find(
                 (object) => object.id === face.objectId,
               )!;
+              const plcModule =
+                "deviceId" in item
+                  ? project.plcModules.find(
+                      (module) => module.deviceId === item.deviceId,
+                    )
+                  : undefined;
+              const catalogFrontPanel =
+                "deviceId" in item
+                  ? project.manufacturerParts.find(
+                      (part) =>
+                        part.id ===
+                        project.devices.find(
+                          (device) => device.id === item.deviceId,
+                        )?.partId,
+                    )?.catalogSnapshot?.frontPanel
+                  : undefined;
+              const hasFrontDetails =
+                !hasMesh &&
+                face.side === 5 &&
+                Boolean(catalogFrontPanel || plcModule);
+              const cableDuctSlots =
+                !hasMesh &&
+                face.side === 5 &&
+                "kind" in item &&
+                item.kind === "duct"
+                  ? Array.from(
+                      { length: Math.floor(item.sizeMm.x / 14) },
+                      (_, index) => {
+                        const count = Math.floor(item.sizeMm.x / 14);
+                        const center = (index + 1) / (count + 1);
+                        const halfWidth = Math.min(0.01, 2.5 / item.sizeMm.x);
+                        return [
+                          projectedFacePoint(
+                            face.points,
+                            center - halfWidth,
+                            0.22,
+                          ),
+                          projectedFacePoint(
+                            face.points,
+                            center + halfWidth,
+                            0.22,
+                          ),
+                          projectedFacePoint(
+                            face.points,
+                            center + halfWidth,
+                            0.78,
+                          ),
+                          projectedFacePoint(
+                            face.points,
+                            center - halfWidth,
+                            0.78,
+                          ),
+                        ];
+                      },
+                    )
+                  : [];
+              const channelMarkers =
+                hasFrontDetails && plcModule
+                  ? Array.from(
+                      { length: plcModule.channelCount },
+                      (_, index) => {
+                        const point = projectedFacePoint(
+                          face.points,
+                          0.5,
+                          1 - (index + 0.5) / plcModule.channelCount,
+                        );
+                        return { index, ...point };
+                      },
+                    )
+                  : [];
+              const indicatorCount =
+                hasFrontDetails && catalogFrontPanel?.statusIndicators
+                  ? catalogFrontPanel.statusIndicators
+                  : 0;
+              const statusIndicators = Array.from(
+                { length: indicatorCount },
+                (_, index) => {
+                  const columns = indicatorCount >= 16 ? 4 : 2;
+                  const rows = Math.ceil(indicatorCount / columns);
+                  const column = index % columns;
+                  const row = Math.floor(index / columns);
+                  const point = projectedFacePoint(
+                    face.points,
+                    0.27 + (0.46 * column) / Math.max(1, columns - 1),
+                    0.3 + (0.42 * row) / Math.max(1, rows - 1),
+                  );
+                  return { index, ...point };
+                },
+              );
+              const displayCorners =
+                hasFrontDetails && catalogFrontPanel?.display === "large"
+                  ? [
+                      projectedFacePoint(face.points, 0.3, 0.67),
+                      projectedFacePoint(face.points, 0.7, 0.67),
+                      projectedFacePoint(face.points, 0.7, 0.9),
+                      projectedFacePoint(face.points, 0.3, 0.9),
+                    ]
+                  : undefined;
               return (
                 <g
                   key={`${item.id}:${face.side}:${fragment}`}
@@ -1372,6 +1491,86 @@ function PanelViews({
                           : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
                     }
                   />
+                  {cableDuctSlots.map((slot, index) => (
+                    <polygon
+                      key={index}
+                      data-panel-detail="cable-duct-slot"
+                      points={slot
+                        .map((point) => `${point.x},${point.y}`)
+                        .join(" ")}
+                      fill="#526273"
+                      stroke="#263547"
+                      strokeWidth="0.45"
+                      pointerEvents="none"
+                    >
+                      <title>
+                        Generic slotted cable-duct opening; slot pitch and
+                        profile are illustrative
+                      </title>
+                    </polygon>
+                  ))}
+                  {displayCorners && (
+                    <polygon
+                      data-panel-detail="catalog-display"
+                      points={displayCorners
+                        .map((point) => `${point.x},${point.y}`)
+                        .join(" ")}
+                      fill="#263a4b"
+                      stroke="#8797a5"
+                      strokeWidth="1"
+                      pointerEvents="none"
+                    >
+                      <title>
+                        Large display presence documented; exact bezel and front
+                        position are illustrative
+                      </title>
+                    </polygon>
+                  )}
+                  {statusIndicators.map((indicator) => (
+                    <circle
+                      key={indicator.index}
+                      data-panel-detail="catalog-indicator"
+                      data-indicator-index={indicator.index}
+                      cx={indicator.x}
+                      cy={indicator.y}
+                      r={Math.max(
+                        0.8,
+                        Math.min(item.sizeMm.x, item.sizeMm.y) * 0.012,
+                      )}
+                      fill="#263a4b"
+                      stroke="#96a6b4"
+                      strokeWidth="0.7"
+                      pointerEvents="none"
+                    >
+                      <title>
+                        {`Status indicator ${indicator.index + 1}; location and state are illustrative/not modeled`}
+                      </title>
+                    </circle>
+                  ))}
+                  {channelMarkers.map((marker) => (
+                    <g
+                      key={marker.index}
+                      data-panel-detail="plc-channel"
+                      data-channel-index={marker.index}
+                      aria-hidden="true"
+                    >
+                      <title>
+                        {`${plcModule!.moduleKind === "digital-input" ? "IN" : "OUT"}${marker.index} · channel position only; manufacturer terminal layout and live state are not modeled`}
+                      </title>
+                      <circle
+                        cx={marker.x}
+                        cy={marker.y}
+                        r={Math.max(
+                          0.65,
+                          Math.min(item.sizeMm.x, item.sizeMm.y) * 0.035,
+                        )}
+                        fill="#172b3b"
+                        stroke="#8fa3b5"
+                        strokeWidth="0.45"
+                        pointerEvents="none"
+                      />
+                    </g>
+                  ))}
                   <path
                     d={face.edges
                       .map(([a, b]) => `M${a.x},${a.y}L${b.x},${b.y}`)
