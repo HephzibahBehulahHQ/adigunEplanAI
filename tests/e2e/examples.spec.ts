@@ -81,6 +81,13 @@ for (const [name, devices, wires, selector] of cases) {
     if (name.startsWith("Industry energy substation")) {
       await page.setViewportSize({ width: 1880, height: 970 });
       await page.getByRole("button", { name: "Home", exact: true }).click();
+      const overview = page.locator(".engineering-canvas");
+      await expect(overview).toContainText("P1");
+      await expect(overview).toContainText("X7");
+      await expect(overview).toContainText("X8");
+      await expect(
+        page.getByText(/Drawing notes extend beyond the sheet/),
+      ).toHaveCount(0);
       const appHeader = await page.locator(".workbench-header").boundingBox();
       const ribbonTabs = await page.locator(".ribbon-tabs").boundingBox();
       expect(appHeader).not.toBeNull();

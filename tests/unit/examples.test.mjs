@@ -81,9 +81,23 @@ for (const example of examples) {
 test("target substation opens with sourced BOM parts, PLC interface, and saved apparent-power current estimate", () => {
   const p = buildExample("target-substation");
   assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
-  assert.equal(p.pages.length, 3);
+  assert.equal(p.pages.length, 2);
   assert.equal(p.devices.length, 27);
   assert.equal(p.wires.length, 32);
+  const overviewReferences = new Set(
+    p.symbolInstances
+      .filter((instance) => instance.pageId === p.pages[0].id)
+      .map(
+        (instance) =>
+          p.devices.find((device) => device.id === instance.deviceId).reference,
+      ),
+  );
+  for (const reference of ["T01", "Q1", "P1", "X7", "X8"])
+    assert.ok(
+      overviewReferences.has(reference),
+      `${reference} is on the overview sheet`,
+    );
+  assert.equal(p.pages[1].name, "02 · Control and communications");
   const relay = p.devices.find((device) => device.reference === "P1");
   const relayPart = p.manufacturerParts.find(
     (part) => part.id === relay.partId,

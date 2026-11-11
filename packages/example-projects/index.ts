@@ -373,7 +373,7 @@ export function buildExample(id: ExampleId): Project {
           breakerIn: "L1_in",
           breakerOut: "L1_out",
           output: "X11",
-          y: 100,
+          y: 75,
           color: "#d02030",
         },
         {
@@ -384,7 +384,7 @@ export function buildExample(id: ExampleId): Project {
           breakerIn: "L2_in",
           breakerOut: "L2_out",
           output: "X12",
-          y: 145,
+          y: 115,
           color: "#d4a017",
         },
         {
@@ -395,7 +395,7 @@ export function buildExample(id: ExampleId): Project {
           breakerIn: "L3_in",
           breakerOut: "L3_out",
           output: "X13",
-          y: 190,
+          y: 155,
           color: "#2563eb",
         },
       ] as const;
@@ -417,16 +417,16 @@ export function buildExample(id: ExampleId): Project {
         category: "custom",
         glyph: "box",
         widthMm: 32,
-        heightMm: 108,
+        heightMm: 92,
         pins: phases.flatMap((phase) => {
-          const offset = phase.y - 145;
+          const offset = phase.y - 115;
           return [
             { id: `${phase.input}_in`, position: { x: -16, y: offset } },
             { id: `${phase.input}_out`, position: { x: 16, y: offset } },
           ];
         }),
         artwork: phases.flatMap((phase) => {
-          const offset = phase.y - 145;
+          const offset = phase.y - 115;
           return [
             {
               kind: "line" as const,
@@ -461,7 +461,7 @@ export function buildExample(id: ExampleId): Project {
         pageId,
         p.layers.find((layer) => layer.pageId === pageId)!.id,
         "custom",
-        { x: 80, y: 145 },
+        { x: 80, y: 115 },
         0,
         incomingIsolatorDefinitionId,
       );
@@ -492,18 +492,18 @@ export function buildExample(id: ExampleId): Project {
         category: "custom",
         glyph: "box",
         widthMm: 64,
-        heightMm: 76,
+        heightMm: 100,
         pins: [
-          { id: "H1", position: { x: -32, y: -24 }, kind: "power" },
+          { id: "H1", position: { x: -32, y: -40 }, kind: "power" },
           { id: "H2", position: { x: -32, y: 0 }, kind: "power" },
-          { id: "H3", position: { x: -32, y: 24 }, kind: "power" },
-          { id: "X1", position: { x: 32, y: -24 }, kind: "power" },
+          { id: "H3", position: { x: -32, y: 40 }, kind: "power" },
+          { id: "X1", position: { x: 32, y: -40 }, kind: "power" },
           { id: "X2", position: { x: 32, y: 0 }, kind: "power" },
-          { id: "X3", position: { x: 32, y: 24 }, kind: "power" },
+          { id: "X3", position: { x: 32, y: 40 }, kind: "power" },
         ],
         artwork: [
           ...phases.flatMap((_, index) => {
-            const offset = (index - 1) * 24;
+            const offset = (index - 1) * 40;
             return [
               {
                 kind: "line" as const,
@@ -544,7 +544,7 @@ export function buildExample(id: ExampleId): Project {
         pageId,
         p.layers.find((layer) => layer.pageId === pageId)!.id,
         "custom",
-        { x: 190, y: 145 },
+        { x: 190, y: 115 },
         0,
         transformerDefinitionId,
       );
@@ -562,7 +562,7 @@ export function buildExample(id: ExampleId): Project {
         "isolator-three-pole-pe",
         "Q1",
         300,
-        145,
+        115,
         0,
         "Three-pole secondary isolation interface; device rating unspecified",
       );
@@ -586,7 +586,7 @@ export function buildExample(id: ExampleId): Project {
         "ground",
         "PE1",
         300,
-        220,
+        180,
         0,
         "Protective earth system interface; earthing arrangement unspecified",
       );
@@ -594,42 +594,64 @@ export function buildExample(id: ExampleId): Project {
       note(
         "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
         20,
-        235,
+        175,
       );
       note(
         "Q0 is an incoming isolation interface only; switchgear selection, ratings and operating sequence remain design inputs.",
         20,
-        247,
+        188,
       );
-      pageId = page("02 · Secondary protection documentation");
     }
+    const targetSubstation = id === "target-substation";
+    const protectionY = targetSubstation ? 225 : 75;
     note(
       "PROTECTION AND METERING · interfaces for engineering completion",
       20,
-      22,
+      targetSubstation ? 195 : 22,
     );
-    note("Auxiliary supply", 23, 54);
-    note("Protection relay", 165, 54);
-    note("Trip actuator", 292, 96);
-    note("Measurement interfaces", 23, 123);
-    note("I+", 66, 143);
-    note("I−", 66, 188);
-    note("Auxiliary common", 340, 175);
-    symbol("terminal", "X5", 35, 75, 0, "Auxiliary supply positive");
+    note("Auxiliary supply", 23, targetSubstation ? 210 : 54);
+    note("Protection relay", 165, targetSubstation ? 210 : 54);
+    note("Trip actuator", 292, targetSubstation ? 210 : 96);
+    note("Measurement interfaces", 23, targetSubstation ? 246 : 123);
+    note("I+", 66, targetSubstation ? 246 : 143);
+    note("I−", 66, targetSubstation ? 267 : 188);
+    note("Auxiliary common", 340, targetSubstation ? 257 : 175);
+    symbol("terminal", "X5", 35, protectionY, 0, "Auxiliary supply positive");
     const auxiliaryFuseReference = id === "target-substation" ? "F4" : "F3";
-    symbol("fuse", auxiliaryFuseReference, 95, 75);
-    symbol("protection-relay-trip", "P1", 190, 105);
+    symbol("fuse", auxiliaryFuseReference, 95, protectionY);
+    symbol("protection-relay-trip", "P1", 190, protectionY + 10);
     symbol(
       "coil",
       "Y1",
       310,
-      119,
+      protectionY,
       0,
       "Trip actuator interface; no certified safety function",
     );
-    symbol("terminal", "X6", 365, 155, 0, "Auxiliary supply common");
-    symbol("terminal", "X7", 80, 145, 0, "Measurement I+ interface");
-    symbol("terminal", "X8", 80, 190, 0, "Measurement I- interface");
+    symbol(
+      "terminal",
+      "X6",
+      365,
+      targetSubstation ? 270 : 155,
+      0,
+      "Auxiliary supply common",
+    );
+    symbol(
+      "terminal",
+      "X7",
+      80,
+      targetSubstation ? 246 : 145,
+      0,
+      "Measurement I+ interface",
+    );
+    symbol(
+      "terminal",
+      "X8",
+      80,
+      targetSubstation ? 267 : 190,
+      0,
+      "Measurement I- interface",
+    );
     wire("X5", "1", auxiliaryFuseReference, "1");
     wire(auxiliaryFuseReference, "2", "P1", "supply");
     wire("X5", "1", "P1", "trip_common");
@@ -638,11 +660,12 @@ export function buildExample(id: ExampleId): Project {
     wire("P1", "common", "X6", "1", "#2563eb");
     wire("X7", "1", "P1", "I_plus");
     wire("X8", "1", "P1", "I_minus");
-    note(
-      "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
-      20,
-      230,
-    );
+    if (!targetSubstation)
+      note(
+        "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
+        20,
+        230,
+      );
     if (id === "substation")
       cabinet(["P1", "F3", "Y1", "X5", "X6", "X7", "X8"]);
     if (id === "target-substation") {
@@ -692,7 +715,7 @@ export function buildExample(id: ExampleId): Project {
         p = assignCatalogPart(p, terminal.id, "phoenix-3044076");
       }
 
-      pageId = page("03 · Control and communications");
+      pageId = page("02 · Control and communications");
       note(
         "CONTROL SYSTEM · the internal modular I/O bus is not drawn; field-terminal pinout and PLC execution are not represented",
         20,
