@@ -257,4 +257,3 @@ test("mounting profile comparison uses explicit labels without inferring manufac
     "mounting-profile",
   );
 });
-
