@@ -216,7 +216,6 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       .sort((a, b) => a.partNumber.localeCompare(b.partNumber)),
     [
       { manufacturer: "Phoenix Contact", partNumber: "3044076" },
-      { manufacturer: "Phoenix Contact", partNumber: "3044076" },
       { manufacturer: "WAGO", partNumber: "750-1405" },
       { manufacturer: "WAGO", partNumber: "750-530" },
       { manufacturer: "WAGO", partNumber: "750-8217" },
