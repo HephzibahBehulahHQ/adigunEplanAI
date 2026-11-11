@@ -126,7 +126,7 @@ for (const [name, devices, wires, selector] of cases) {
           localStorage.getItem("adiguneplanai.projects.v1")!,
         ).projects[0];
         return Object.fromEntries(
-          ["PLC1", "DI1", "DO1", "X5"].map((reference) => {
+          ["PLC1", "DI1", "DO1", "X5", "P1"].map((reference) => {
             const device = project.devices.find(
               (item: { reference: string }) => item.reference === reference,
             );
@@ -154,7 +154,17 @@ for (const [name, devices, wires, selector] of cases) {
             .first()
             .locator("polygon"),
         ).toHaveAttribute("fill", color);
+        await expect(
+          page.locator(
+            `.cabinet-model polygon[data-panel-object="${placementId}"][data-tone="front"]`,
+          ),
+        ).toHaveAttribute("fill", color);
       }
+      await expect(
+        page.locator(
+          `.cabinet-model polygon[data-panel-object="${modeledDeviceIds.P1}"][data-tone="front"]`,
+        ),
+      ).toHaveAttribute("fill", "#94a3b8");
       await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();

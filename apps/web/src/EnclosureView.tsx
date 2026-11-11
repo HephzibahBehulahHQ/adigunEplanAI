@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import type { Project } from "../../../packages/electrical-model/project.ts";
+import { catalog } from "../../../packages/component-library/catalog.ts";
 import type { MessageKey } from "../../../packages/localization";
 import { CabinetMount } from "./CabinetMount";
 
@@ -17,6 +18,7 @@ const dimensionFields = [
   ["heightMm", "cabinetHeight"],
   ["depthMm", "cabinetDepth"],
 ] as const;
+const genericEnvelopeColor = "#94a3b8";
 const edges = [
   [0, 1],
   [0, 2],
@@ -170,6 +172,8 @@ export function EnclosureView({
       key: enclosure.id,
       label: enclosure.name,
       selected: false,
+      appearanceColor: genericEnvelopeColor,
+      appearanceFinish: "enclosure",
       points: corners(
         { x: 0, y: 0, z: 0 },
         { x: enclosure.widthMm, y: enclosure.heightMm, z: enclosure.depthMm },
@@ -177,14 +181,26 @@ export function EnclosureView({
     },
     ...project.equipment3d
       .filter((item) => item.enclosureId === enclosure.id)
-      .map((item) => ({
-        key: item.id,
-        selected: item.deviceId === selectedDeviceId,
-        label:
-          project.devices.find((device) => device.id === item.deviceId)
-            ?.reference ?? item.name,
-        points: corners(item.positionMm, item.sizeMm),
-      })),
+      .map((item) => {
+        const device = project.devices.find(
+          (candidate) => candidate.id === item.deviceId,
+        );
+        const part = project.manufacturerParts.find(
+          (candidate) => candidate.id === device?.partId,
+        );
+        const catalogAppearance = catalog.find(
+          (candidate) => candidate.id === part?.catalogSnapshot?.catalogId,
+        )?.appearance;
+        return {
+          key: item.id,
+          selected: item.deviceId === selectedDeviceId,
+          label: device?.reference ?? item.name,
+          appearanceColor:
+            catalogAppearance?.displayHex ?? genericEnvelopeColor,
+          appearanceFinish: catalogAppearance?.finish ?? "generic neutral",
+          points: corners(item.positionMm, item.sizeMm),
+        };
+      }),
   ];
   let left = Infinity,
     right = -Infinity,
@@ -220,20 +236,23 @@ export function EnclosureView({
     }))
     .sort((a, b) => Number(a.facing) - Number(b.facing));
   const visibleFaces = equipment
-    .flatMap(({ key, label, points, selected }) =>
-      cameraFacingFaces.map(({ indices, tone }) => {
-        const vertices = indices.map((index) => points[index]);
-        return {
-          key: `${key}:${tone}`,
-          label,
-          selected,
-          tone,
-          depth:
-            vertices.reduce((sum, point) => sum + point.depth, 0) /
-            vertices.length,
-          coordinates: vertices.map(({ x, y }) => `${x},${y}`).join(" "),
-        };
-      }),
+    .flatMap(
+      ({ key, label, points, selected, appearanceColor, appearanceFinish }) =>
+        cameraFacingFaces.map(({ indices, tone }) => {
+          const vertices = indices.map((index) => points[index]);
+          return {
+            key: `${key}:${tone}`,
+            label,
+            selected,
+            tone,
+            appearanceColor,
+            appearanceFinish,
+            depth:
+              vertices.reduce((sum, point) => sum + point.depth, 0) /
+              vertices.length,
+            coordinates: vertices.map(({ x, y }) => `${x},${y}`).join(" "),
+          };
+        }),
     )
     .sort((a, b) => a.depth - b.depth);
   return (
@@ -309,17 +328,36 @@ export function EnclosureView({
               />
             ))}
           </g>
-          {visibleFaces.map(({ key, label, tone, coordinates, selected }) => (
-            <polygon
-              key={key}
-              className={`enclosure-face enclosure-face-${tone}`}
-              data-highlighted={selected || undefined}
-              points={coordinates}
-              vectorEffect="non-scaling-stroke"
-            >
-              <title>{label}</title>
-            </polygon>
-          ))}
+          {visibleFaces.map(
+            ({
+              key,
+              label,
+              tone,
+              coordinates,
+              selected,
+              appearanceColor,
+              appearanceFinish,
+            }) => (
+              <polygon
+                key={key}
+                className={`enclosure-face enclosure-face-${tone}`}
+                data-panel-object={key.slice(0, key.lastIndexOf(":"))}
+                data-tone={tone}
+                data-highlighted={selected || undefined}
+                points={coordinates}
+                fill={
+                  tone === "front"
+                    ? appearanceColor
+                    : tone === "side"
+                      ? `color-mix(in srgb, ${appearanceColor} 76%, #0b1220)`
+                      : `color-mix(in srgb, ${appearanceColor} 76%, white)`
+                }
+                vectorEffect="non-scaling-stroke"
+              >
+                <title>{`${label} · ${appearanceFinish} finish · simplified envelope`}</title>
+              </polygon>
+            ),
+          )}
         </svg>
         <svg
           className="cabinet-axes"
