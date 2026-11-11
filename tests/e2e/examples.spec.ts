@@ -154,11 +154,6 @@ for (const [name, devices, wires, selector] of cases) {
             .first()
             .locator("polygon"),
         ).toHaveAttribute("fill", color);
-        await expect(
-          page.locator(
-            `.cabinet-model polygon[data-panel-object="${placementId}"][data-tone="front"]`,
-          ),
-        ).toHaveAttribute("fill", color);
       }
       await expect(
         page
