@@ -1140,4 +1140,3 @@ export function buildExample(id: ExampleId): Project {
   }
   return synchronizeConnectivity(validateProject(p));
 }
-

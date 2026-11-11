@@ -2024,4 +2024,3 @@ export default function PanelEditor({
     </section>
   );
 }
-

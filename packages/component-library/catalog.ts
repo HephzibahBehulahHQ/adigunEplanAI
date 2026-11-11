@@ -368,4 +368,3 @@ export function assignCatalogPart(
     terminals[0].capacity = part.mapping.connections;
   return validateProject(next);
 }
-

@@ -73,4 +73,3 @@ test("target cabinet display swatches follow catalog-described component finishe
     "do not invent an appearance color when the reviewed source omits one",
   );
 });
-
