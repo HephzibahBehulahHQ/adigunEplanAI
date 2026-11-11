@@ -618,16 +618,16 @@ export function buildExample(id: ExampleId): Project {
     }
     const targetSubstation = id === "target-substation";
     const protectionY = targetSubstation ? 175 : 75;
-    note(
-      targetSubstation
-        ? "THREE CT channels mapped A/B/C · 4th relay input and physical pinout unassigned"
-        : "PROTECTION AND METERING · interfaces for engineering completion",
-      20,
-      targetSubstation ? 157 : 22,
-    );
-    note("Auxiliary supply", 23, targetSubstation ? 170 : 54);
-    note("Protection relay", 184, targetSubstation ? 170 : 54);
-    note("Trip actuator", 292, targetSubstation ? 170 : 96);
+    if (!targetSubstation) {
+      note("Auxiliary supply", 23, 54);
+      note("Protection relay", 184, 54);
+      note("Trip actuator", 292, 96);
+      note(
+        "PROTECTION AND METERING · interfaces for engineering completion",
+        20,
+        22,
+      );
+    }
     if (!targetSubstation) note("Measurement interfaces", 23, 123);
     if (!targetSubstation) note("Auxiliary common", 340, 175);
     symbol("terminal", "X5", 35, protectionY, 0, "Auxiliary supply positive");
@@ -783,6 +783,11 @@ export function buildExample(id: ExampleId): Project {
       }
 
       pageId = page("02 · Control and communications");
+      note(
+        "THREE CT channels mapped A/B/C · 4th relay input and physical pinout unassigned",
+        20,
+        100,
+      );
       note(
         "CONTROL SYSTEM · the internal modular I/O bus is not drawn; field-terminal pinout and PLC execution are not represented",
         20,
