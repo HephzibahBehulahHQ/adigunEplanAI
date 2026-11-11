@@ -183,6 +183,9 @@ for (const [name, devices, wires, selector] of cases) {
         ),
       ).toHaveCount(1);
       await expect(
+        page.locator('.panel-3d-view [data-panel-detail="cable-duct-slot"]'),
+      ).toHaveCount(111);
+      await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
       await expect(

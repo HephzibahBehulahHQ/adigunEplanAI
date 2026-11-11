@@ -1363,6 +1363,42 @@ function PanelViews({
                 !hasMesh &&
                 face.side === 5 &&
                 Boolean(catalogFrontPanel || plcModule);
+              const cableDuctSlots =
+                !hasMesh &&
+                face.side === 5 &&
+                "kind" in item &&
+                item.kind === "duct"
+                  ? Array.from(
+                      { length: Math.floor(item.sizeMm.x / 14) },
+                      (_, index) => {
+                        const count = Math.floor(item.sizeMm.x / 14);
+                        const center = (index + 1) / (count + 1);
+                        const halfWidth = Math.min(0.01, 2.5 / item.sizeMm.x);
+                        return [
+                          projectedFacePoint(
+                            face.points,
+                            center - halfWidth,
+                            0.22,
+                          ),
+                          projectedFacePoint(
+                            face.points,
+                            center + halfWidth,
+                            0.22,
+                          ),
+                          projectedFacePoint(
+                            face.points,
+                            center + halfWidth,
+                            0.78,
+                          ),
+                          projectedFacePoint(
+                            face.points,
+                            center - halfWidth,
+                            0.78,
+                          ),
+                        ];
+                      },
+                    )
+                  : [];
               const channelMarkers =
                 hasFrontDetails && plcModule
                   ? Array.from(
@@ -1455,6 +1491,24 @@ function PanelViews({
                           : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
                     }
                   />
+                  {cableDuctSlots.map((slot, index) => (
+                    <polygon
+                      key={index}
+                      data-panel-detail="cable-duct-slot"
+                      points={slot
+                        .map((point) => `${point.x},${point.y}`)
+                        .join(" ")}
+                      fill="#526273"
+                      stroke="#263547"
+                      strokeWidth="0.45"
+                      pointerEvents="none"
+                    >
+                      <title>
+                        Generic slotted cable-duct opening; slot pitch and
+                        profile are illustrative
+                      </title>
+                    </polygon>
+                  ))}
                   {displayCorners && (
                     <polygon
                       data-panel-detail="catalog-display"
