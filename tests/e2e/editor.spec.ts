@@ -16,6 +16,23 @@ async function create(page: Page) {
     page.getByRole("application", { name: "Sheet 1", exact: true }),
   ).toBeVisible();
 }
+test("secondary home ribbon actions remain named when shown as icons", async ({
+  page,
+}) => {
+  await create(page);
+  const ribbon = page.locator('.ribbon[data-tab="home"]');
+  const undo = ribbon.locator('[data-command="undo"]');
+  await expect(undo).toHaveAttribute("data-icon-only", "true");
+  await expect(undo).toHaveAttribute("title", "Undo");
+  await expect(undo).toHaveAccessibleName("Undo · Home");
+  await expect(undo.locator("span")).toBeHidden();
+
+  const placement = ribbon.locator('[data-command="ribbonPlace"]');
+  await expect(placement).not.toHaveAttribute("data-icon-only", "true");
+  await expect(placement).toHaveAccessibleName("Place Component · Home");
+  await expect(placement.locator("span")).toBeVisible();
+});
+
 async function clickWorld(page: Page, x: number, y: number) {
   await page.locator(".engineering-canvas").scrollIntoViewIfNeeded();
   const screen = await page.locator(".engineering-canvas").evaluate(
