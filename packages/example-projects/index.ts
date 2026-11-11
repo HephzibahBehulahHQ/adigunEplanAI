@@ -178,6 +178,11 @@ export function buildExample(id: ExampleId): Project {
     const railMounted = deviceReferences.filter(
       (reference) => !flushMounted.includes(reference),
     );
+    const targetRows = [
+      ["F4", "Y1"],
+      ["X5", "X6", "X7", "X8"],
+      ["DI1", "PLC1", "DO1"],
+    ].map((row) => row.filter((reference) => railMounted.includes(reference)));
     for (let row = 0; row < 3; row++) {
       const railId = crypto.randomUUID();
       p.panelStructures.push({
@@ -197,13 +202,38 @@ export function buildExample(id: ExampleId): Project {
         positionMm: { x: 35, y: 225 + row * 205, z: 2 },
         sizeMm: { x: 530, y: 40, z: 40 },
       });
-      for (const [column, reference] of railMounted
-        .slice(row * 4, row * 4 + 4)
-        .entries()) {
+      const rowReferences =
+        id === "target-substation"
+          ? targetRows[row]
+          : railMounted.slice(row * 4, row * 4 + 4);
+      const rowWidths = rowReferences.map((reference) => {
         const device = p.devices.find((item) => item.reference === reference)!;
         const dimensions = p.manufacturerParts.find(
           (part) => part.id === device.partId,
         )?.catalogSnapshot?.dimensionsMm;
+        return dimensions?.width ?? 80;
+      });
+      const gap = Math.max(
+        12,
+        Math.min(
+          60,
+          (530 - rowWidths.reduce((sum, width) => sum + width, 0)) /
+            (rowReferences.length + 1),
+        ),
+      );
+      let x = 35 + gap;
+      for (const reference of rowReferences) {
+        const device = p.devices.find((item) => item.reference === reference)!;
+        const dimensions = p.manufacturerParts.find(
+          (part) => part.id === device.partId,
+        )?.catalogSnapshot?.dimensionsMm;
+        const sizeMm = dimensions
+          ? {
+              x: dimensions.width,
+              y: dimensions.height,
+              z: dimensions.depth,
+            }
+          : { x: 80, y: 90, z: 65 };
         p.equipment3d.push({
           id: crypto.randomUUID(),
           name: dimensions
@@ -212,17 +242,12 @@ export function buildExample(id: ExampleId): Project {
           deviceId: device.id,
           enclosureId,
           dimensionSource: dimensions ? "catalog" : "manual",
-          positionMm: { x: 50 + column * 125, y: 85 + row * 205, z: 10 },
-          sizeMm: dimensions
-            ? {
-                x: dimensions.width,
-                y: dimensions.height,
-                z: dimensions.depth,
-              }
-            : { x: 80, y: 90, z: 65 },
+          positionMm: { x, y: 85 + row * 205, z: 10 },
+          sizeMm,
           mountingStructureId: railId,
           clearanceMm: 5,
         });
+        x += sizeMm.x + gap;
       }
     }
     if (flushMounted.length) {
