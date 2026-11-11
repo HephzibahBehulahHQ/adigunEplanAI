@@ -477,8 +477,41 @@ export function buildExample(id: ExampleId): Project {
           { id: "X3", position: { x: 32, y: 24 }, kind: "power" },
         ],
         artwork: [
-          { kind: "circle", center: { x: -8, y: 0 }, radiusMm: 15 },
-          { kind: "circle", center: { x: 8, y: 0 }, radiusMm: 15 },
+          ...phases.flatMap((_, index) => {
+            const offset = (index - 1) * 24;
+            return [
+              {
+                kind: "line" as const,
+                from: { x: -32, y: offset },
+                to: { x: -17, y: offset },
+              },
+              {
+                kind: "circle" as const,
+                center: { x: -9, y: offset },
+                radiusMm: 7.5,
+              },
+              {
+                kind: "circle" as const,
+                center: { x: 9, y: offset },
+                radiusMm: 7.5,
+              },
+              {
+                kind: "line" as const,
+                from: { x: 17, y: offset },
+                to: { x: 32, y: offset },
+              },
+            ];
+          }),
+          {
+            kind: "line",
+            from: { x: -1.5, y: -34 },
+            to: { x: -1.5, y: 34 },
+          },
+          {
+            kind: "line",
+            from: { x: 1.5, y: -34 },
+            to: { x: 1.5, y: 34 },
+          },
         ],
       });
       const transformerInstanceId = place(
