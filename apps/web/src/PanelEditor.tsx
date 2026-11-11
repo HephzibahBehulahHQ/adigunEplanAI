@@ -3,6 +3,7 @@ import { CommandIcon } from "./WorkspaceRibbon";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
 import type { Project } from "../../../packages/electrical-model/project.ts";
+import { catalog } from "../../../packages/component-library/catalog.ts";
 import {
   createPanelDevice,
   saveEnclosure,
@@ -925,14 +926,22 @@ function PanelViews({
       ? (project.devices.find((d) => d.id === item.deviceId)?.reference ??
         item.name)
       : item.name;
-  const color = (item: Structure | Placement) =>
-    "kind" in item
-      ? item.kind === "plate"
+  const color = (item: Structure | Placement) => {
+    if ("kind" in item)
+      return item.kind === "plate"
         ? "#cbd5e1"
         : item.kind === "duct"
           ? "#94a3b8"
-          : "#d4af37"
-      : "#2563eb";
+          : "#d4af37";
+    const device = project.devices.find((entry) => entry.id === item.deviceId);
+    const partId = project.manufacturerParts.find(
+      (entry) => entry.id === device?.partId,
+    )?.catalogSnapshot?.catalogId;
+    return (
+      catalog.find((part) => part.id === partId)?.appearance?.displayHex ??
+      "#94a3b8"
+    );
+  };
   const location = (event: PointerEvent<SVGElement>) => {
     const matrix = frontRef.current?.getScreenCTM();
     if (!matrix) return { x: 0, y: 0 };
@@ -2015,3 +2024,4 @@ export default function PanelEditor({
     </section>
   );
 }
+

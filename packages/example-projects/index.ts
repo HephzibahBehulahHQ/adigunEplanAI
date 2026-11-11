@@ -740,17 +740,7 @@ export function buildExample(id: ExampleId): Project {
       });
       p = cpuModule;
       const cpu = p.devices.find((device) => device.reference === "PLC1")!;
-      const cpuPartId = crypto.randomUUID();
-      p.manufacturerParts.push({
-        id: cpuPartId,
-        name: "PFC200 Controller, 2 ETH RS, 4G",
-        manufacturer: "WAGO",
-        partNumber: "750-8217",
-        sourceUrl:
-          "https://www.wago.com/us/controllers-bus-couplers-i-o/controller-pfc200/p/750-8217",
-        ratings: {},
-      });
-      cpu.partId = cpuPartId;
+      p = assignCatalogPart(p, cpu.id, "wago-750-8217-625-000");
       const inputModule = createPlcModule(p, {
         kind: "digital-input",
         channelCount: 16,
@@ -1150,3 +1140,4 @@ export function buildExample(id: ExampleId): Project {
   }
   return synchronizeConnectivity(validateProject(p));
 }
+

@@ -55,3 +55,22 @@ test("UT 2.5 dimensions preserve body and rail-mounted envelopes separately", ()
     undefined,
   );
 });
+
+test("target cabinet display swatches follow catalog-described component finishes", () => {
+  assert.deepEqual(catalog.find((p) => p.id === "phoenix-3044076").appearance, {
+    finish: "gray (RAL 7042)",
+    displayHex: "#8c9291",
+  });
+  for (const id of ["wago-750-8217-625-000", "wago-750-1405", "wago-750-530"]) {
+    assert.deepEqual(catalog.find((p) => p.id === id).appearance, {
+      finish: "light gray",
+      displayHex: "#ded6c9",
+    });
+  }
+  assert.equal(
+    catalog.find((p) => p.id === "siemens-p1j122728").appearance,
+    undefined,
+    "do not invent an appearance color when the reviewed source omits one",
+  );
+});
+

@@ -121,6 +121,40 @@ for (const [name, devices, wires, selector] of cases) {
           page.locator(`.panel-3d-view [data-panel-object="${id}"]`).first(),
         ).toBeVisible();
       }
+      const modeledDeviceIds = await page.evaluate(() => {
+        const project = JSON.parse(
+          localStorage.getItem("adiguneplanai.projects.v1")!,
+        ).projects[0];
+        return Object.fromEntries(
+          ["PLC1", "DI1", "DO1", "X5"].map((reference) => {
+            const device = project.devices.find(
+              (item: { reference: string }) => item.reference === reference,
+            );
+            return [
+              reference,
+              project.equipment3d.find(
+                (placement: { deviceId: string }) =>
+                  placement.deviceId === device?.id,
+              )?.id,
+            ];
+          }),
+        ) as Record<string, string>;
+      });
+      for (const [reference, color] of [
+        ["PLC1", "#ded6c9"],
+        ["DI1", "#ded6c9"],
+        ["DO1", "#ded6c9"],
+        ["X5", "#8c9291"],
+      ]) {
+        const placementId = modeledDeviceIds[reference];
+        expect(placementId, `${reference} cabinet placement`).toBeTruthy();
+        await expect(
+          page
+            .locator(`.panel-3d-view [data-panel-object="${placementId}"]`)
+            .first()
+            .locator("polygon"),
+        ).toHaveAttribute("fill", color);
+      }
       await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
@@ -219,3 +253,4 @@ test("project navigator tabs expose the real library, examples and search", asyn
   await tabs.getByRole("tab", { name: "Library" }).click();
   await expect(page.locator(".component-library[open]")).toBeVisible();
 });
+

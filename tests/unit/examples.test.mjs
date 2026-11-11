@@ -122,6 +122,24 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   );
   assert.equal(relayEquipment.dimensionSource, "catalog");
   assert.deepEqual(relayEquipment.sizeMm, { x: 150, y: 266, z: 163 });
+  const controller = p.devices.find((device) => device.reference === "PLC1");
+  const controllerPart = p.manufacturerParts.find(
+    (part) => part.id === controller.partId,
+  );
+  assert.equal(controllerPart.partNumber, "750-8217/625-000");
+  assert.equal(
+    controllerPart.catalogSnapshot.catalogId,
+    "wago-750-8217-625-000",
+  );
+  const controllerEquipment = p.equipment3d.find(
+    (item) => item.deviceId === controller.id,
+  );
+  assert.equal(controllerEquipment.dimensionSource, "catalog");
+  assert.deepEqual(controllerEquipment.sizeMm, {
+    x: 102.5,
+    y: 100,
+    z: 64.7,
+  });
   const relaySupport = p.panelStructures.find(
     (item) => item.id === relayEquipment.mountingStructureId,
   );
@@ -232,7 +250,7 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       { manufacturer: "Phoenix Contact", partNumber: "3044076" },
       { manufacturer: "WAGO", partNumber: "750-1405" },
       { manufacturer: "WAGO", partNumber: "750-530" },
-      { manufacturer: "WAGO", partNumber: "750-8217" },
+      { manufacturer: "WAGO", partNumber: "750-8217/625-000" },
       { manufacturer: "Siemens", partNumber: "P1J122728" },
     ],
   );
@@ -338,3 +356,4 @@ test("PLC example maps two addresses to genuine wired channels and mounted devic
   assert.equal(plcWiringSchedule(p).length, 2);
   assert.equal(p.equipment3d.length, 7);
 });
+

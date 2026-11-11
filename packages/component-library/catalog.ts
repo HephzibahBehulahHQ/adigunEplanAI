@@ -15,6 +15,8 @@ export type CatalogPart = {
   terminalMarkings?: readonly string[];
   mounting?: string;
   sourceRevision?: string;
+  /** Display-only swatch based on manufacturer-described product finish. */
+  appearance?: { finish: string; displayHex: string };
   ratings: Record<string, string | number>;
   mapping:
     | {
@@ -66,6 +68,7 @@ export const catalog: readonly CatalogPart[] = [
     reviewedOn: "2026-11-03",
     verification: "source-reviewed-facts",
     licensing: "factual-metadata-only",
+    appearance: { finish: "gray (RAL 7042)", displayHex: "#8c9291" },
     dimensionsMm: { width: 5.2, height: 47.7, depth: 46.9 },
     mounting: "NS 35/7.5; NS 35/15",
     mountedDepthsMm: [
@@ -128,6 +131,7 @@ export const catalog: readonly CatalogPart[] = [
     reviewedOn: "2026-11-10",
     verification: "source-reviewed-facts",
     licensing: "factual-metadata-only",
+    appearance: { finish: "light gray", displayHex: "#ded6c9" },
     dimensionsMm: { width: 12, height: 64, depth: 100 },
     mounting: "DIN-35 rail",
     ratings: {
@@ -154,6 +158,7 @@ export const catalog: readonly CatalogPart[] = [
     reviewedOn: "2026-11-10",
     verification: "source-reviewed-facts",
     licensing: "factual-metadata-only",
+    appearance: { finish: "light gray", displayHex: "#ded6c9" },
     dimensionsMm: { width: 102.5, height: 100, depth: 64.7 },
     mounting: "DIN-35 rail",
     ratings: {},
@@ -175,6 +180,7 @@ export const catalog: readonly CatalogPart[] = [
     reviewedOn: "2026-11-10",
     verification: "source-reviewed-facts",
     licensing: "factual-metadata-only",
+    appearance: { finish: "light gray", displayHex: "#ded6c9" },
     dimensionsMm: { width: 12, height: 64, depth: 100 },
     mounting: "DIN-35 rail",
     ratings: {
@@ -362,3 +368,4 @@ export function assignCatalogPart(
     terminals[0].capacity = part.mapping.connections;
   return validateProject(next);
 }
+
