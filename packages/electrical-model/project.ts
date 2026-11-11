@@ -1543,4 +1543,3 @@ export function parseProject(text: string): {
   }
   throw new Error(`Unsupported project schema version: ${String(version)}`);
 }
-
