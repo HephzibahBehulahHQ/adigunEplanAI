@@ -112,6 +112,18 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     (item) => item.id === relayEquipment.mountingStructureId,
   );
   assert.equal(relaySupport.kind, "door");
+  for (const reference of ["X5", "X6", "X7", "X8"]) {
+    const terminal = p.devices.find((device) => device.reference === reference);
+    const part = p.manufacturerParts.find(
+      (record) => record.id === terminal.partId,
+    );
+    assert.equal(part.catalogSnapshot.catalogId, "phoenix-3044076");
+    const placement = p.equipment3d.find(
+      (item) => item.deviceId === terminal.id,
+    );
+    assert.equal(placement.dimensionSource, "catalog");
+    assert.deepEqual(placement.sizeMm, { x: 5.2, y: 47.7, z: 46.9 });
+  }
   assert.ok(
     panelReport(p, relayEquipment.enclosureId).diagnostics.every(
       (diagnostic) =>
@@ -187,6 +199,7 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       .map(({ manufacturer, partNumber }) => ({ manufacturer, partNumber }))
       .sort((a, b) => a.partNumber.localeCompare(b.partNumber)),
     [
+      { manufacturer: "Phoenix Contact", partNumber: "3044076" },
       { manufacturer: "WAGO", partNumber: "750-1405" },
       { manufacturer: "WAGO", partNumber: "750-530" },
       { manufacturer: "WAGO", partNumber: "750-8217" },
