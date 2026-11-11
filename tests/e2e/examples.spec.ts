@@ -163,6 +163,16 @@ for (const [name, devices, wires, selector] of cases) {
           .first(),
       ).toHaveAttribute("fill", "#94a3b8");
       await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.DI1}"] [data-panel-detail="plc-channel"]`,
+        ),
+      ).toHaveCount(16);
+      await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.DO1}"] [data-panel-detail="plc-channel"]`,
+        ),
+      ).toHaveCount(8);
+      await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
       await expect(

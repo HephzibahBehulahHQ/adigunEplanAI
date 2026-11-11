@@ -1331,6 +1331,34 @@ function PanelViews({
               const item = objects.find(
                 (object) => object.id === face.objectId,
               )!;
+              const plcModule =
+                "deviceId" in item
+                  ? project.plcModules.find(
+                      (module) => module.deviceId === item.deviceId,
+                    )
+                  : undefined;
+              const channelMarkers =
+                !hasMesh && plcModule && face.side === 5
+                  ? Array.from(
+                      { length: plcModule.channelCount },
+                      (_, index) => {
+                        const t = 1 - (index + 0.5) / plcModule.channelCount;
+                        const left = {
+                          x: face.points[0].x * (1 - t) + face.points[1].x * t,
+                          y: face.points[0].y * (1 - t) + face.points[1].y * t,
+                        };
+                        const right = {
+                          x: face.points[3].x * (1 - t) + face.points[2].x * t,
+                          y: face.points[3].y * (1 - t) + face.points[2].y * t,
+                        };
+                        return {
+                          index,
+                          x: (left.x + right.x) / 2,
+                          y: (left.y + right.y) / 2,
+                        };
+                      },
+                    )
+                  : [];
               return (
                 <g
                   key={`${item.id}:${face.side}:${fragment}`}
@@ -1381,6 +1409,30 @@ function PanelViews({
                           : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
                     }
                   />
+                  {channelMarkers.map((marker) => (
+                    <g
+                      key={marker.index}
+                      data-panel-detail="plc-channel"
+                      data-channel-index={marker.index}
+                      aria-hidden="true"
+                    >
+                      <title>
+                        {`${plcModule!.moduleKind === "digital-input" ? "IN" : "OUT"}${marker.index} · channel position only; manufacturer terminal layout and live state are not modeled`}
+                      </title>
+                      <circle
+                        cx={marker.x}
+                        cy={marker.y}
+                        r={Math.max(
+                          0.65,
+                          Math.min(item.sizeMm.x, item.sizeMm.y) * 0.035,
+                        )}
+                        fill="#172b3b"
+                        stroke="#8fa3b5"
+                        strokeWidth="0.45"
+                        pointerEvents="none"
+                      />
+                    </g>
+                  ))}
                   <path
                     d={face.edges
                       .map(([a, b]) => `M${a.x},${a.y}L${b.x},${b.y}`)
