@@ -161,9 +161,11 @@ for (const [name, devices, wires, selector] of cases) {
         ).toHaveAttribute("fill", color);
       }
       await expect(
-        page.locator(
-          `.cabinet-model polygon[data-panel-object="${modeledDeviceIds.P1}"][data-tone="front"]`,
-        ),
+        page
+          .locator(
+            `.panel-3d-view [data-panel-object="${modeledDeviceIds.P1}"] polygon`,
+          )
+          .first(),
       ).toHaveAttribute("fill", "#94a3b8");
       await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
