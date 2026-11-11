@@ -274,6 +274,7 @@
   "motor-protection-three-pole": "Dreipolige Motorschutzschalter-Schnittstelle",
   "surge-protector-l-pe": "L/PE-Überspannungsschutz-Schnittstelle",
   "protection-relay-trip": "Schutzrelais mit Mess- und Auslöseschnittstelle",
+  "protection-relay-three-phase-trip": "Dreiphasen-Schutzrelais mit Strom- und Auslöseschnittstellen",
   "compareParts": "Bauteile vergleichen",
   "selectForComparison": "Für Vergleich auswählen",
   "comparisonHint": "Zwei bis vier Bauteile auswählen. Fehlende Werte werden nicht abgeleitet.",

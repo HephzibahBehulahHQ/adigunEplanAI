@@ -82,8 +82,8 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   const p = buildExample("target-substation");
   assert.equal(p.name, "EES_Industry_Sample_Energy_Substation_V01");
   assert.equal(p.pages.length, 2);
-  assert.equal(p.devices.length, 27);
-  assert.equal(p.wires.length, 32);
+  assert.equal(p.devices.length, 34);
+  assert.equal(p.wires.length, 45);
   const overviewReferences = new Set(
     p.symbolInstances
       .filter((instance) => instance.pageId === p.pages[0].id)
@@ -92,12 +92,94 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
           p.devices.find((device) => device.id === instance.deviceId).reference,
       ),
   );
-  for (const reference of ["T01", "Q1", "P1", "X7", "X8"])
+  for (const reference of [
+    "T01",
+    "Q1",
+    "P1",
+    "X30",
+    "X31",
+    "X32",
+    "X33",
+    "X34",
+    "X35",
+    "CT1",
+    "CT2",
+    "CT3",
+  ])
     assert.ok(
       overviewReferences.has(reference),
       `${reference} is on the overview sheet`,
     );
   assert.equal(p.pages[1].name, "02 · Control and communications");
+  for (const [index, phase] of ["A", "B", "C"].entries()) {
+    const currentTransformer = p.devices.find(
+      (device) => device.reference === `CT${index + 1}`,
+    );
+    const instance = p.symbolInstances.find(
+      (symbol) => symbol.deviceId === currentTransformer.id,
+    );
+    const symbolDefinition = p.symbolDefinitions.find(
+      (definition) => definition.id === instance.definitionId,
+    );
+    assert.match(
+      currentTransformer.name,
+      /ratio, class, burden and polarity remain design inputs/,
+    );
+    assert.deepEqual(
+      symbolDefinition.pins.map((pin) => pin.id),
+      ["P1", "P2", "S1", "S2"],
+    );
+    const currentTransformerPins = p.pins.filter(
+      (pin) => pin.symbolInstanceId === instance.id,
+    );
+    assert.equal(currentTransformerPins.length, 4);
+    assert.ok(
+      currentTransformerPins.every((pin) =>
+        p.wires.some(
+          (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
+        ),
+      ),
+      `${currentTransformer.reference} primary and secondary pins are wired`,
+    );
+    const relay = p.devices.find((device) => device.reference === "P1");
+    const relayInstance = p.symbolInstances.find(
+      (symbol) => symbol.deviceId === relay.id,
+    );
+    const measurementPins = p.pins.filter(
+      (pin) =>
+        pin.symbolInstanceId === relayInstance.id &&
+        pin.definitionPinId.startsWith(`I_${phase}_`),
+    );
+    assert.equal(measurementPins.length, 2);
+    assert.ok(
+      measurementPins.every((pin) =>
+        p.wires.some(
+          (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
+        ),
+      ),
+      `${phase}-phase current measurement inputs are wired`,
+    );
+  }
+  const relayInstance = p.symbolInstances.find(
+    (symbol) =>
+      symbol.deviceId ===
+      p.devices.find((device) => device.reference === "P1").id,
+  );
+  const fourthCurrentInput = p.pins.filter(
+    (pin) =>
+      pin.symbolInstanceId === relayInstance.id &&
+      pin.definitionPinId.startsWith("I_4_"),
+  );
+  assert.equal(fourthCurrentInput.length, 2);
+  assert.ok(
+    fourthCurrentInput.every(
+      (pin) =>
+        !p.wires.some(
+          (wire) => wire.fromPinId === pin.id || wire.toPinId === pin.id,
+        ),
+    ),
+    "the fourth relay current input remains explicitly unused",
+  );
   const relay = p.devices.find((device) => device.reference === "P1");
   const relayPart = p.manufacturerParts.find(
     (part) => part.id === relay.partId,
@@ -149,7 +231,16 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
   );
   assert.equal(relaySupport.kind, "door");
   const terminalPlacements = [];
-  for (const reference of ["X5", "X6", "X7", "X8"]) {
+  for (const reference of [
+    "X5",
+    "X6",
+    "X30",
+    "X31",
+    "X32",
+    "X33",
+    "X34",
+    "X35",
+  ]) {
     const terminal = p.devices.find((device) => device.reference === reference);
     const part = p.manufacturerParts.find(
       (record) => record.id === terminal.partId,

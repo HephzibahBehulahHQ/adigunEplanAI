@@ -274,6 +274,7 @@
   "motor-protection-three-pole": "Three-pole motor-protection switch interface",
   "surge-protector-l-pe": "L/PE surge protective device interface",
   "protection-relay-trip": "Protection relay with measurement and trip interface",
+  "protection-relay-three-phase-trip": "Three-phase protection relay with current and trip interfaces",
   "compareParts": "Compare components",
   "selectForComparison": "Select for comparison",
   "comparisonHint": "Select two to four components. Missing values are not inferred.",

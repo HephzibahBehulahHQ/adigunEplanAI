@@ -274,6 +274,7 @@
   "motor-protection-three-pole": "Ìsopọ̀ ààbò mọ́tò onípó mẹ́ta",
   "surge-protector-l-pe": "Ìsopọ̀ ààbò ìgbésókè foliteji L/PE",
   "protection-relay-trip": "Relay ààbò pẹ̀lú ìsopọ̀ ìwọ̀n àti gígé",
+  "protection-relay-three-phase-trip": "Relay ààbò ìpele mẹ́ta pẹ̀lú ìsopọ̀ ìwọ̀n àti gígé",
   "compareParts": "Ṣe àfiwé àwọn èròjà",
   "selectForComparison": "Yàn fún àfiwé",
   "comparisonHint": "Yan èròjà méjì sí mẹ́rin. A kò ṣe àfojúsùn àwọn iye tí kò sí.",

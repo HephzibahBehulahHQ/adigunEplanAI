@@ -4,8 +4,8 @@ import { readFile } from "node:fs/promises";
 const cases = [
   [
     "Industry energy substation · 20 kV / 630 kVA",
-    27,
-    32,
+    34,
+    45,
     ".engineering-canvas",
   ],
   ["Transformer station documentation", 15, 15, ".engineering-canvas"],
@@ -83,8 +83,20 @@ for (const [name, devices, wires, selector] of cases) {
       await page.getByRole("button", { name: "Home", exact: true }).click();
       const overview = page.locator(".engineering-canvas");
       await expect(overview).toContainText("P1");
-      await expect(overview).toContainText("X7");
-      await expect(overview).toContainText("X8");
+      await expect(overview).toContainText("X30");
+      await expect(overview).toContainText("X31");
+      for (const reference of [
+        "CT1",
+        "CT2",
+        "CT3",
+        "X30",
+        "X31",
+        "X32",
+        "X33",
+        "X34",
+        "X35",
+      ])
+        await expect(overview).toContainText(reference);
       await expect(
         page.getByText(/Drawing notes extend beyond the sheet/),
       ).toHaveCount(0);

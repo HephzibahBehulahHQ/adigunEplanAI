@@ -221,9 +221,9 @@ export const catalog: readonly CatalogPart[] = [
     },
     mapping: {
       glyph: "component",
-      symbolId: "library-protection-relay-trip",
-      electricalNodes: 7,
-      connections: 7,
+      symbolId: "library-protection-relay-three-phase-trip",
+      electricalNodes: 13,
+      connections: 13,
     },
   },
 ];

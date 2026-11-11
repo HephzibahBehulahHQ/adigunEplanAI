@@ -54,10 +54,11 @@ test("every engineering symbol installs and places its declared electrical nodes
           pin.terminalGroup ? `group:${pin.terminalGroup}` : `pin:${pin.id}`,
         ),
       ).size,
+      symbol.name,
     );
     assert.deepEqual(parseProject(serializeProject(p)).project.wires, p.wires);
   }
-  assert.equal(searchSymbols("transformer", "power").length, 1);
+  assert.equal(searchSymbols("transformer", "power").length, 2);
   assert.equal(searchSymbols("transformer", "motors").length, 0);
   assert.equal(searchSymbols("breaker", "protection")[0].pins.length, 2);
   assert.equal(searchSymbols("sensor", "automation")[0].pins.length, 3);
@@ -560,9 +561,28 @@ test("non-terminal part mapping rejects a different glyph even with the same ter
 });
 
 for (const [symbolId, kinds] of [
+  ["current-transformer", ["power", "power", "signal", "signal"]],
   ["rcbo-two-pole", ["power", "power", "neutral", "neutral"]],
   ["motor-protection-three-pole", Array(6).fill("power")],
   ["surge-protector-l-pe", ["power", "pe"]],
+  [
+    "protection-relay-three-phase-trip",
+    [
+      "control",
+      "control",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "signal",
+      "control",
+      "control",
+      "control",
+    ],
+  ],
   [
     "protection-relay-trip",
     ["control", "control", "signal", "signal", "control", "control", "control"],

@@ -180,7 +180,7 @@ export function buildExample(id: ExampleId): Project {
     );
     const targetRows = [
       ["F4", "Y1"],
-      ["X5", "X6", "X7", "X8"],
+      ["X5", "X6", "X30", "X31", "X32", "X33", "X34", "X35"],
       ["DI1", "PLC1", "DO1"],
     ].map((row) => row.filter((reference) => railMounted.includes(reference)));
     for (let row = 0; row < 3; row++) {
@@ -361,9 +361,10 @@ export function buildExample(id: ExampleId): Project {
       note("20 kV incoming supply", 22, 48);
       note("Q0 · incoming isolation", 60, 48);
       note("Primary protection interfaces", 120, 48);
-      note("T01 · 630 kVA · 20 / 0.4 kV design basis", 188, 48);
-      note("Secondary switching", 270, 48);
-      note("0.4 kV outgoing interfaces", 337, 48);
+      note("T01 · 630 kVA · 20 / 0.4 kV design basis", 180, 48);
+      note("CT measurement interfaces", 238, 48);
+      note("Secondary switching", 292, 48);
+      note("0.4 kV outgoing interfaces", 348, 48);
       const phases = [
         {
           input: "L1",
@@ -558,6 +559,16 @@ export function buildExample(id: ExampleId): Project {
       transformerDevice.name =
         "Three-phase transformer · scenario design basis 630 kVA, 20 / 0.4 kV";
       transformerInstance.name = "T01";
+      for (const [index, phase] of phases.entries()) {
+        symbol(
+          "current-transformer",
+          `CT${index + 1}`,
+          244,
+          phase.y,
+          0,
+          `${phase.input} current-transformer interface; ratio, class, burden and polarity remain design inputs`,
+        );
+      }
       symbol(
         "isolator-three-pole-pe",
         "Q1",
@@ -579,7 +590,8 @@ export function buildExample(id: ExampleId): Project {
         wire(`X${phaseIndex}`, "1", "Q0", `L${phaseIndex}_in`, phase.color);
         wire("Q0", `L${phaseIndex}_out`, phase.fuse, "1", phase.color);
         wire(phase.fuse, "2", "T01", phase.primary, phase.color);
-        wire("T01", phase.secondary, "Q1", phase.breakerIn, phase.color);
+        wire("T01", phase.secondary, `CT${phaseIndex}`, "P1", phase.color);
+        wire(`CT${phaseIndex}`, "P2", "Q1", phase.breakerIn, phase.color);
         wire("Q1", phase.breakerOut, phase.output, "1", phase.color);
       }
       symbol(
@@ -591,39 +603,48 @@ export function buildExample(id: ExampleId): Project {
         "Protective earth system interface; earthing arrangement unspecified",
       );
       wire("Q1", "PE_out", "PE1", "PE", "#16803d");
-      note(
-        "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
-        20,
-        175,
-      );
-      note(
-        "Q0 is an incoming isolation interface only; switchgear selection, ratings and operating sequence remain design inputs.",
-        20,
-        188,
-      );
+      if (id !== "target-substation") {
+        note(
+          "The 20 / 0.4 kV ratio and 630 kVA rating are scenario design inputs. Transformer vector group, earthing, protection settings, fault level and cable sizing are not specified.",
+          20,
+          175,
+        );
+        note(
+          "Q0 is an incoming isolation interface only; switchgear selection, ratings and operating sequence remain design inputs.",
+          20,
+          188,
+        );
+      }
     }
     const targetSubstation = id === "target-substation";
-    const protectionY = targetSubstation ? 225 : 75;
+    const protectionY = targetSubstation ? 175 : 75;
     note(
-      "PROTECTION AND METERING · interfaces for engineering completion",
+      targetSubstation
+        ? "THREE CT channels mapped A/B/C · 4th relay input and physical pinout unassigned"
+        : "PROTECTION AND METERING · interfaces for engineering completion",
       20,
-      targetSubstation ? 195 : 22,
+      targetSubstation ? 157 : 22,
     );
-    note("Auxiliary supply", 23, targetSubstation ? 210 : 54);
-    note("Protection relay", 165, targetSubstation ? 210 : 54);
-    note("Trip actuator", 292, targetSubstation ? 210 : 96);
-    note("Measurement interfaces", 23, targetSubstation ? 246 : 123);
-    note("I+", 66, targetSubstation ? 246 : 143);
-    note("I−", 66, targetSubstation ? 267 : 188);
-    note("Auxiliary common", 340, targetSubstation ? 257 : 175);
+    note("Auxiliary supply", 23, targetSubstation ? 170 : 54);
+    note("Protection relay", 184, targetSubstation ? 170 : 54);
+    note("Trip actuator", 292, targetSubstation ? 170 : 96);
+    if (!targetSubstation) note("Measurement interfaces", 23, 123);
+    if (!targetSubstation) note("Auxiliary common", 340, 175);
     symbol("terminal", "X5", 35, protectionY, 0, "Auxiliary supply positive");
     const auxiliaryFuseReference = id === "target-substation" ? "F4" : "F3";
     symbol("fuse", auxiliaryFuseReference, 95, protectionY);
-    symbol("protection-relay-trip", "P1", 190, protectionY + 10);
+    symbol(
+      targetSubstation
+        ? "protection-relay-three-phase-trip"
+        : "protection-relay-trip",
+      "P1",
+      targetSubstation ? 210 : 190,
+      targetSubstation ? 217 : protectionY + 10,
+    );
     symbol(
       "coil",
       "Y1",
-      310,
+      targetSubstation ? 320 : 310,
       protectionY,
       0,
       "Trip actuator interface; no certified safety function",
@@ -638,19 +659,23 @@ export function buildExample(id: ExampleId): Project {
     );
     symbol(
       "terminal",
-      "X7",
+      targetSubstation ? "X30" : "X7",
       80,
-      targetSubstation ? 246 : 145,
+      targetSubstation ? 228 : 145,
       0,
-      "Measurement I+ interface",
+      targetSubstation
+        ? "CT phase A secondary positive test/disconnect interface"
+        : "Measurement I+ interface",
     );
     symbol(
       "terminal",
-      "X8",
+      targetSubstation ? "X31" : "X8",
       80,
-      targetSubstation ? 267 : 190,
+      targetSubstation ? 236 : 190,
       0,
-      "Measurement I- interface",
+      targetSubstation
+        ? "CT phase A secondary negative test/disconnect interface"
+        : "Measurement I- interface",
     );
     wire("X5", "1", auxiliaryFuseReference, "1");
     wire(auxiliaryFuseReference, "2", "P1", "supply");
@@ -658,8 +683,40 @@ export function buildExample(id: ExampleId): Project {
     wire("P1", "trip_NO", "Y1", "A1");
     wire("Y1", "A2", "X6", "1", "#2563eb");
     wire("P1", "common", "X6", "1", "#2563eb");
-    wire("X7", "1", "P1", "I_plus");
-    wire("X8", "1", "P1", "I_minus");
+    if (targetSubstation) {
+      for (let phase = 0; phase < 3; phase++) {
+        const currentTransformer = `CT${phase + 1}`;
+        const positiveTerminal = `X${30 + phase * 2}`;
+        const negativeTerminal = `X${31 + phase * 2}`;
+        const y = 187 + phase * 16;
+        if (phase > 0) {
+          symbol(
+            "terminal",
+            positiveTerminal,
+            110,
+            y,
+            0,
+            `Current transformer ${phase + 1} secondary positive test/disconnect interface`,
+          );
+          symbol(
+            "terminal",
+            negativeTerminal,
+            110,
+            y + 8,
+            0,
+            `Current transformer ${phase + 1} secondary negative test/disconnect interface`,
+          );
+        }
+        wire(currentTransformer, "S1", positiveTerminal, "1");
+        wire(currentTransformer, "S2", negativeTerminal, "1", "#2563eb");
+        const phaseKey = ["A", "B", "C"][phase];
+        wire(positiveTerminal, "1", "P1", `I_${phaseKey}_plus`);
+        wire(negativeTerminal, "1", "P1", `I_${phaseKey}_minus`, "#2563eb");
+      }
+    } else {
+      wire("X7", "1", "P1", "I_plus");
+      wire("X8", "1", "P1", "I_minus");
+    }
     if (!targetSubstation)
       note(
         "External measurement, auxiliary supply and trip actuator selection remain design inputs.",
@@ -695,9 +752,9 @@ export function buildExample(id: ExampleId): Project {
             "SIPROTEC 7SJ82 overcurrent protection; standard variant",
           mapping: {
             glyph: "component",
-            symbolId: "library-protection-relay-trip",
-            electricalNodes: 7,
-            connections: 7,
+            symbolId: "library-protection-relay-three-phase-trip",
+            electricalNodes: 13,
+            connections: 13,
           },
           dimensionsMm: { width: 150, height: 266, depth: 163 },
           dimensionsSourceUrl:
@@ -709,7 +766,16 @@ export function buildExample(id: ExampleId): Project {
         },
       });
       relay.partId = relayPartId;
-      for (const reference of ["X5", "X6", "X7", "X8"]) {
+      for (const reference of [
+        "X5",
+        "X6",
+        "X30",
+        "X31",
+        "X32",
+        "X33",
+        "X34",
+        "X35",
+      ]) {
         const terminal = p.devices.find(
           (device) => device.reference === reference,
         )!;
@@ -731,6 +797,16 @@ export function buildExample(id: ExampleId): Project {
         "The 18.19 A primary current is calculated from the stated three-phase design basis. This example is not a protection-coordination or compliance assessment.",
         20,
         54,
+      );
+      note(
+        "The 20 / 0.4 kV ratio and 630 kVA are design inputs; vector group, earthing, fault level, settings, CT ratios/classes and cable data remain unspecified.",
+        20,
+        70,
+      );
+      note(
+        "Q0 is an isolation interface only. Protection relay logical channels are shown; physical terminal assignments and operating sequence are not represented.",
+        20,
+        84,
       );
       const cpuModule = createPlcModule(p, {
         kind: "cpu",
@@ -867,7 +943,22 @@ export function buildExample(id: ExampleId): Project {
         ),
       );
       cabinet(
-        ["P1", "F4", "Y1", "X5", "X6", "X7", "X8", "DI1", "PLC1", "DO1"],
+        [
+          "P1",
+          "F4",
+          "Y1",
+          "X5",
+          "X6",
+          "X30",
+          "X31",
+          "X32",
+          "X33",
+          "X34",
+          "X35",
+          "DI1",
+          "PLC1",
+          "DO1",
+        ],
         "UTST_Cabinet_01 · manually dimensioned placement envelopes",
       );
     }
