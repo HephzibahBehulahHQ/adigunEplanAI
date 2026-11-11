@@ -646,7 +646,7 @@ export function buildExample(id: ExampleId): Project {
       );
       const cpuModule = createPlcModule(p, {
         kind: "cpu",
-        symbolId: "plc-cpu-modular",
+        symbolId: "modular-controller-interface",
         pageId,
         reference: "PLC1",
         name: "WAGO PFC200 controller · generic modular bus interface",
