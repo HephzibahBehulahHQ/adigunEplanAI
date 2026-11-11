@@ -176,7 +176,7 @@ test("native import rejects unsupported numeric ranges, invalid support and duct
         positionMm: { x: 0, y: 0, z: 2 },
         sizeMm: { x: 50, y: 50, z: 20 },
       }),
-    /plate or rail/,
+    /plate, rail, or door/,
   );
   changed = savePanelFeature(p, p.enclosures[0].id, feature);
   changed.enclosures[0].features.push(
