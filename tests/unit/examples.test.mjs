@@ -1,3 +1,4 @@
+98ms
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -135,8 +136,9 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     1,
   );
   assert.ok(
-    terminalPlacements.every((item, index, all) =>
-      index === 0 || item.positionMm.x > all[index - 1].positionMm.x,
+    terminalPlacements.every(
+      (item, index, all) =>
+        index === 0 || item.positionMm.x > all[index - 1].positionMm.x,
     ),
   );
   assert.ok(
@@ -324,3 +326,4 @@ test("PLC example maps two addresses to genuine wired channels and mounted devic
   assert.equal(plcWiringSchedule(p).length, 2);
   assert.equal(p.equipment3d.length, 7);
 });
+
