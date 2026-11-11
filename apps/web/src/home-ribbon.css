@@ -175,9 +175,7 @@
   span {
   display: none;
 }
-.ribbon[data-tab="home"]
-  .home-clipboard
-  .ribbon-command[data-icon-only] {
+.ribbon[data-tab="home"] .home-clipboard .ribbon-command[data-icon-only] {
   width: auto;
   min-width: 0;
   max-width: none;
