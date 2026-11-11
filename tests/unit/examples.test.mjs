@@ -116,6 +116,10 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     height: 266,
     depth: 163,
   });
+  assert.deepEqual(relayPart.catalogSnapshot.frontPanel, {
+    statusIndicators: 16,
+    display: "large",
+  });
   assert.match(relayPart.catalogSnapshot.dimensionsSourceUrl, /^https:\/\//);
   const relayEquipment = p.equipment3d.find(
     (item) => item.deviceId === relay.id,

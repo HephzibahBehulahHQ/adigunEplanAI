@@ -88,6 +88,18 @@ const diagnosticKeys: Record<PanelDiagnostic["code"], MessageKey> = {
   "mounting-profile": "panelProfileMismatch",
   "access-obstructed": "panelAccessObstructed",
 };
+
+function projectedFacePoint(points: Vector3[], u: number, v: number) {
+  const mix = (
+    a: Pick<Vector3, "x" | "y">,
+    b: Pick<Vector3, "x" | "y">,
+    amount: number,
+  ) => ({
+    x: a.x * (1 - amount) + b.x * amount,
+    y: a.y * (1 - amount) + b.y * amount,
+  });
+  return mix(mix(points[0], points[3], u), mix(points[1], points[2], u), v);
+}
 const number = (data: FormData, name: string) => Number(data.get(name));
 const optionalNumber = (data: FormData, name: string) =>
   String(data.get(name) ?? "").trim() === "" ? undefined : number(data, name);
@@ -1337,28 +1349,62 @@ function PanelViews({
                       (module) => module.deviceId === item.deviceId,
                     )
                   : undefined;
+              const catalogFrontPanel =
+                "deviceId" in item
+                  ? project.manufacturerParts.find(
+                      (part) =>
+                        part.id ===
+                        project.devices.find(
+                          (device) => device.id === item.deviceId,
+                        )?.partId,
+                    )?.catalogSnapshot?.frontPanel
+                  : undefined;
+              const hasFrontDetails =
+                !hasMesh &&
+                face.side === 5 &&
+                Boolean(catalogFrontPanel || plcModule);
               const channelMarkers =
-                !hasMesh && plcModule && face.side === 5
+                hasFrontDetails && plcModule
                   ? Array.from(
                       { length: plcModule.channelCount },
                       (_, index) => {
-                        const t = 1 - (index + 0.5) / plcModule.channelCount;
-                        const left = {
-                          x: face.points[0].x * (1 - t) + face.points[1].x * t,
-                          y: face.points[0].y * (1 - t) + face.points[1].y * t,
-                        };
-                        const right = {
-                          x: face.points[3].x * (1 - t) + face.points[2].x * t,
-                          y: face.points[3].y * (1 - t) + face.points[2].y * t,
-                        };
-                        return {
-                          index,
-                          x: (left.x + right.x) / 2,
-                          y: (left.y + right.y) / 2,
-                        };
+                        const point = projectedFacePoint(
+                          face.points,
+                          0.5,
+                          1 - (index + 0.5) / plcModule.channelCount,
+                        );
+                        return { index, ...point };
                       },
                     )
                   : [];
+              const indicatorCount =
+                hasFrontDetails && catalogFrontPanel?.statusIndicators
+                  ? catalogFrontPanel.statusIndicators
+                  : 0;
+              const statusIndicators = Array.from(
+                { length: indicatorCount },
+                (_, index) => {
+                  const columns = indicatorCount >= 16 ? 4 : 2;
+                  const rows = Math.ceil(indicatorCount / columns);
+                  const column = index % columns;
+                  const row = Math.floor(index / columns);
+                  const point = projectedFacePoint(
+                    face.points,
+                    0.27 + (0.46 * column) / Math.max(1, columns - 1),
+                    0.3 + (0.42 * row) / Math.max(1, rows - 1),
+                  );
+                  return { index, ...point };
+                },
+              );
+              const displayCorners =
+                hasFrontDetails && catalogFrontPanel?.display === "large"
+                  ? [
+                      projectedFacePoint(face.points, 0.3, 0.67),
+                      projectedFacePoint(face.points, 0.7, 0.67),
+                      projectedFacePoint(face.points, 0.7, 0.9),
+                      projectedFacePoint(face.points, 0.3, 0.9),
+                    ]
+                  : undefined;
               return (
                 <g
                   key={`${item.id}:${face.side}:${fragment}`}
@@ -1409,6 +1455,44 @@ function PanelViews({
                           : [0.8, 0.9, 0.68, 0.75, 0.85, 1][face.side]
                     }
                   />
+                  {displayCorners && (
+                    <polygon
+                      data-panel-detail="catalog-display"
+                      points={displayCorners
+                        .map((point) => `${point.x},${point.y}`)
+                        .join(" ")}
+                      fill="#263a4b"
+                      stroke="#8797a5"
+                      strokeWidth="1"
+                      pointerEvents="none"
+                    >
+                      <title>
+                        Large display presence documented; exact bezel and front
+                        position are illustrative
+                      </title>
+                    </polygon>
+                  )}
+                  {statusIndicators.map((indicator) => (
+                    <circle
+                      key={indicator.index}
+                      data-panel-detail="catalog-indicator"
+                      data-indicator-index={indicator.index}
+                      cx={indicator.x}
+                      cy={indicator.y}
+                      r={Math.max(
+                        0.8,
+                        Math.min(item.sizeMm.x, item.sizeMm.y) * 0.012,
+                      )}
+                      fill="#263a4b"
+                      stroke="#96a6b4"
+                      strokeWidth="0.7"
+                      pointerEvents="none"
+                    >
+                      <title>
+                        {`Status indicator ${indicator.index + 1}; location and state are illustrative/not modeled`}
+                      </title>
+                    </circle>
+                  ))}
                   {channelMarkers.map((marker) => (
                     <g
                       key={marker.index}

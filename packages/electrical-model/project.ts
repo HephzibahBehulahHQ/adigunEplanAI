@@ -154,6 +154,13 @@ export const schemas = {
             .optional(),
           terminalMarkings: z.array(name).min(1).max(256).optional(),
           mounting: z.string().trim().min(1).max(2000).optional(),
+          frontPanel: z
+            .object({
+              statusIndicators: z.number().int().min(0).max(256).optional(),
+              display: z.enum(["large", "standard"]).optional(),
+            })
+            .strict()
+            .optional(),
           sourceRevision: name.optional(),
         })
         .strict()

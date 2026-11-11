@@ -17,6 +17,8 @@ export type CatalogPart = {
   sourceRevision?: string;
   /** Display-only swatch based on manufacturer-described product finish. */
   appearance?: { finish: string; displayHex: string };
+  /** Manufacturer-documented front-panel feature counts; layout is illustrative. */
+  frontPanel?: { statusIndicators?: number; display?: "large" | "standard" };
   ratings: Record<string, string | number>;
   mapping:
     | {
@@ -207,6 +209,7 @@ export const catalog: readonly CatalogPart[] = [
     verification: "source-reviewed-facts",
     licensing: "factual-metadata-only",
     mounting: "Flush mounting; 1/3 × 19 in housing width",
+    frontPanel: { statusIndicators: 16, display: "large" },
     ratings: {
       binaryInputs: 11,
       binaryOutputs: 9,
@@ -340,6 +343,9 @@ export function assignCatalogPart(
       ? { terminalMarkings: [...part.terminalMarkings] }
       : {}),
     ...(part.mounting ? { mounting: part.mounting } : {}),
+    ...(part.frontPanel
+      ? { frontPanel: structuredClone(part.frontPanel) }
+      : {}),
     ...(part.sourceRevision ? { sourceRevision: part.sourceRevision } : {}),
   };
   let nativePart = next.manufacturerParts.find(

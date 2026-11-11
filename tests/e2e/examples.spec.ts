@@ -173,6 +173,16 @@ for (const [name, devices, wires, selector] of cases) {
         ),
       ).toHaveCount(8);
       await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.P1}"] [data-panel-detail="catalog-indicator"]`,
+        ),
+      ).toHaveCount(16);
+      await expect(
+        page.locator(
+          `.panel-3d-view [data-panel-object="${modeledDeviceIds.P1}"] [data-panel-detail="catalog-display"]`,
+        ),
+      ).toHaveCount(1);
+      await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
       await expect(

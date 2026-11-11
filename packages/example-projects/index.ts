@@ -705,6 +705,7 @@ export function buildExample(id: ExampleId): Project {
           sourceRevision:
             "SIPROTEC 5 Operation Manual C53000-G5040-C003-M, Edition 12.2023, Fig 3-13",
           mounting: "Flush mounting; 1/3 × 19 in housing width",
+          frontPanel: { statusIndicators: 16, display: "large" },
         },
       });
       relay.partId = relayPartId;
