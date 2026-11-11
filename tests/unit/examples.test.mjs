@@ -112,6 +112,7 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     (item) => item.id === relayEquipment.mountingStructureId,
   );
   assert.equal(relaySupport.kind, "door");
+  const terminalPlacements = [];
   for (const reference of ["X5", "X6", "X7", "X8"]) {
     const terminal = p.devices.find((device) => device.reference === reference);
     const part = p.manufacturerParts.find(
@@ -123,7 +124,21 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
     );
     assert.equal(placement.dimensionSource, "catalog");
     assert.deepEqual(placement.sizeMm, { x: 5.2, y: 47.7, z: 46.9 });
+    terminalPlacements.push(placement);
   }
+  assert.equal(
+    new Set(terminalPlacements.map((item) => item.mountingStructureId)).size,
+    1,
+  );
+  assert.equal(
+    new Set(terminalPlacements.map((item) => item.positionMm.y)).size,
+    1,
+  );
+  assert.ok(
+    terminalPlacements.every((item, index, all) =>
+      index === 0 || item.positionMm.x > all[index - 1].positionMm.x,
+    ),
+  );
   assert.ok(
     panelReport(p, relayEquipment.enclosureId).diagnostics.every(
       (diagnostic) =>
@@ -199,6 +214,7 @@ test("target substation opens with sourced BOM parts, PLC interface, and saved a
       .map(({ manufacturer, partNumber }) => ({ manufacturer, partNumber }))
       .sort((a, b) => a.partNumber.localeCompare(b.partNumber)),
     [
+      { manufacturer: "Phoenix Contact", partNumber: "3044076" },
       { manufacturer: "Phoenix Contact", partNumber: "3044076" },
       { manufacturer: "WAGO", partNumber: "750-1405" },
       { manufacturer: "WAGO", partNumber: "750-530" },
