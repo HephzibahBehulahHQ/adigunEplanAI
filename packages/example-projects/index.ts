@@ -660,6 +660,12 @@ export function buildExample(id: ExampleId): Project {
         },
       });
       relay.partId = relayPartId;
+      for (const reference of ["X5", "X6", "X7", "X8"]) {
+        const terminal = p.devices.find(
+          (device) => device.reference === reference,
+        )!;
+        p = assignCatalogPart(p, terminal.id, "phoenix-3044076");
+      }
 
       pageId = page("03 · Control and communications");
       note(
