@@ -155,8 +155,11 @@ function Workspace({ account }: { account: Account }) {
     else reveal(id);
   };
   const iconButton = (
-    label: MessageKey, icon: string, action: () => void,
-    pressed = false, disabled = false,
+    label: MessageKey,
+    icon: string,
+    action: () => void,
+    pressed = false,
+    disabled = false,
   ) => (
     <button
       type="button"
@@ -187,13 +190,20 @@ function Workspace({ account }: { account: Account }) {
   useEffect(() => {
     if (!commandOpen) return;
     const outside = (event: PointerEvent) => {
-      if ((event.target as Element).closest(".workbench-command-popover, .workbench-menu-trigger")) return;
+      if (
+        (event.target as Element).closest(
+          ".workbench-command-popover, .workbench-menu-trigger",
+        )
+      )
+        return;
       closeMenu();
     };
     const escape = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       closeMenu();
-      document.querySelector<HTMLButtonElement>(".workbench-menu-trigger")?.focus();
+      document
+        .querySelector<HTMLButtonElement>(".workbench-menu-trigger")
+        ?.focus();
     };
     document.addEventListener("pointerdown", outside);
     document.addEventListener("keydown", escape);
@@ -316,14 +326,21 @@ function Workspace({ account }: { account: Account }) {
           (id) =>
             prefs.panels[id].visible &&
             prefs.panels[id].dock === dock &&
-            (dock === "left" ? id === activeLeft : dock === "right" ? id === activeRight : false),
+            (dock === "left"
+              ? id === activeLeft
+              : dock === "right"
+                ? id === activeRight
+                : false),
         )
         .map(renderPanel)}
     </aside>
   );
   const has = (dock: Dock) => {
-    const id = dock === "left" ? activeLeft : dock === "right" ? activeRight : null;
-    return id !== null && prefs.panels[id].visible && prefs.panels[id].dock === dock;
+    const id =
+      dock === "left" ? activeLeft : dock === "right" ? activeRight : null;
+    return (
+      id !== null && prefs.panels[id].visible && prefs.panels[id].dock === dock
+    );
   };
   return (
     <div
@@ -344,7 +361,11 @@ function Workspace({ account }: { account: Account }) {
         openHelp={() => help.current?.showModal()}
       />
 
-      <div className="workbench-toolbar" role="toolbar" aria-label={t("ribbonWorkspace")}>
+      <div
+        className="workbench-toolbar"
+        role="toolbar"
+        aria-label={t("ribbonWorkspace")}
+      >
         <div className="workbench-file-tools">
           <ProjectTools native={native} t={t} home />
         </div>
@@ -353,10 +374,34 @@ function Workspace({ account }: { account: Account }) {
           {iconButton("redo", "redo", native.redo, false, !native.canRedo)}
         </div>
         <div className="workbench-tool-group">
-          {iconButton("selectTool", "select", () => native.requestEditorCommand("select"), false, !native.project)}
-          {iconButton("wireTool", "wire", () => native.requestEditorCommand("wire"), false, !native.project)}
-          {iconButton("junction", "junction", () => native.requestEditorCommand("junction"), false, !native.project)}
-          {iconButton("terminal", "terminal", () => native.requestEditorCommand("terminal"), false, !native.project)}
+          {iconButton(
+            "selectTool",
+            "select",
+            () => native.requestEditorCommand("select"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "wireTool",
+            "wire",
+            () => native.requestEditorCommand("wire"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "junction",
+            "junction",
+            () => native.requestEditorCommand("junction"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "terminal",
+            "terminal",
+            () => native.requestEditorCommand("terminal"),
+            false,
+            !native.project,
+          )}
           <button
             type="button"
             className="workbench-icon-button workbench-menu-trigger"
@@ -366,30 +411,102 @@ function Workspace({ account }: { account: Account }) {
             aria-expanded={commandOpen}
             onPointerEnter={cancelMenuClose}
             onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
-            onClick={() => { cancelMenuClose(); setTab("electrical"); setCommandOpen(!commandOpen); }}
+            onClick={() => {
+              cancelMenuClose();
+              setTab("electrical");
+              setCommandOpen(!commandOpen);
+            }}
           >
-            <span className="workbench-bolt" aria-hidden="true">ϟ</span>
-            <span className="workbench-chevron" aria-hidden="true">⌄</span>
+            <span className="workbench-bolt" aria-hidden="true">
+              ϟ
+            </span>
+            <span className="workbench-chevron" aria-hidden="true">
+              ⌄
+            </span>
           </button>
-          {iconButton("motor", "symbol", () => native.requestEditorCommand("motor"), false, !native.project)}
-          {iconButton("ground", "symbol", () => native.requestEditorCommand("ground"), false, !native.project)}
+          {iconButton(
+            "motor",
+            "symbol",
+            () => native.requestEditorCommand("motor"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "ground",
+            "symbol",
+            () => native.requestEditorCommand("ground"),
+            false,
+            !native.project,
+          )}
         </div>
         <div className="workbench-tool-group">
-          {iconButton("panTool", "pan", () => native.requestEditorCommand("pan"), false, !native.project)}
-          {iconButton("zoomIn", "fit", () => native.requestEditorCommand("zoomIn"), false, !native.project)}
-          {iconButton("fitPage", "fit", () => native.requestEditorCommand("fit"), false, !native.project)}
-          {iconButton("zoomOut", "fit", () => native.requestEditorCommand("zoomOut"), false, !native.project)}
+          {iconButton(
+            "panTool",
+            "pan",
+            () => native.requestEditorCommand("pan"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "zoomIn",
+            "fit",
+            () => native.requestEditorCommand("zoomIn"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "fitPage",
+            "fit",
+            () => native.requestEditorCommand("fit"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "zoomOut",
+            "fit",
+            () => native.requestEditorCommand("zoomOut"),
+            false,
+            !native.project,
+          )}
         </div>
         <div className="workbench-tool-group">
-          {iconButton("schematicView", "circuit", () => native.setView("schematic"), native.view === "schematic", !native.project)}
-          {iconButton("buildingDesign", "building", () => native.setView("building"), native.view === "building", !native.project)}
-          {iconButton("automationDesign", "junction", () => native.setView("automation"), native.view === "automation", !native.project)}
-          {iconButton("panelDesign", "panel", () => native.setView("panel"), native.view === "panel", !native.project)}
+          {iconButton(
+            "schematicView",
+            "circuit",
+            () => native.setView("schematic"),
+            native.view === "schematic",
+            !native.project,
+          )}
+          {iconButton(
+            "buildingDesign",
+            "building",
+            () => native.setView("building"),
+            native.view === "building",
+            !native.project,
+          )}
+          {iconButton(
+            "automationDesign",
+            "junction",
+            () => native.setView("automation"),
+            native.view === "automation",
+            !native.project,
+          )}
+          {iconButton(
+            "panelDesign",
+            "panel",
+            () => native.setView("panel"),
+            native.view === "panel",
+            !native.project,
+          )}
         </div>
         <div className="workbench-tool-group workbench-tool-end">
           {iconButton("openLibrary", "library", () => reveal("project"))}
-          {iconButton("openDiagnostics", "check", () => togglePanel("diagnostics"))}
-          {iconButton("workspaceSearch", "catalog", () => searchDialog.current?.showModal())}
+          {iconButton("openDiagnostics", "check", () =>
+            togglePanel("diagnostics"),
+          )}
+          {iconButton("workspaceSearch", "catalog", () =>
+            searchDialog.current?.showModal(),
+          )}
           <button
             type="button"
             className="workbench-icon-button workbench-menu-trigger"
@@ -399,7 +516,10 @@ function Workspace({ account }: { account: Account }) {
             aria-haspopup="menu"
             onPointerEnter={cancelMenuClose}
             onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
-            onClick={() => { cancelMenuClose(); setCommandOpen(!commandOpen); }}
+            onClick={() => {
+              cancelMenuClose();
+              setCommandOpen(!commandOpen);
+            }}
           >
             <CommandIcon kind="library" />
           </button>
@@ -423,171 +543,179 @@ function Workspace({ account }: { account: Account }) {
         aria-hidden={!commandOpen}
         inert={!commandOpen}
       >
-      <nav className="ribbon-tabs" aria-label={t("interface")}>
-        {ribbonTabs.map(([id, key]) => (
-          <button
-            key={id}
-            aria-pressed={tab === id}
-            aria-label={
-              id === "home" || id === "view" || id === "settings"
-                ? t(key)
-                : `${t(key)} ${t("ribbonMenu")}`
-            }
-            onClick={() =>
-              id === "help"
-                ? help.current?.showModal()
-                : id === "ai"
-                  ? setBotSignal((value) => value + 1)
-                  : setTab(id)
-            }
-          >
-            {t(key)}
-          </button>
-        ))}
-      </nav>
-      {native.error && (
-        <p className="storage-error" role="alert">
-          {t(native.error)}
-        </p>
-      )}
-      {account.checking && (
-        <p className="storage-error" role="status">
-          {t("accountChecking")}
-        </p>
-      )}
-      <div
-        className="ribbon"
-        data-tab={tab}
-        aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
-      >
-        {tab === "home" ? (
-          <>
-            <ProjectTools native={native} t={t} home />
-            <HomeRibbon
-              native={native}
-              t={t}
-              reveal={reveal}
-              themes={() => setTab("settings")}
-            />
-          </>
-        ) : tab === "file" || tab === "project" ? (
-          <>
-            <ProjectTools native={native} t={t} />
+        <nav className="ribbon-tabs" aria-label={t("interface")}>
+          {ribbonTabs.map(([id, key]) => (
             <button
-              className="ribbon-example-button"
-              onClick={() => examplesDialog.current?.showModal()}
+              key={id}
+              aria-pressed={tab === id}
+              aria-label={
+                id === "home" || id === "view" || id === "settings"
+                  ? t(key)
+                  : `${t(key)} ${t("ribbonMenu")}`
+              }
+              onClick={() =>
+                id === "help"
+                  ? help.current?.showModal()
+                  : id === "ai"
+                    ? setBotSignal((value) => value + 1)
+                    : setTab(id)
+              }
             >
-              {t("demoProjects")}
+              {t(key)}
             </button>
+          ))}
+        </nav>
+        {native.error && (
+          <p className="storage-error" role="alert">
+            {t(native.error)}
+          </p>
+        )}
+        {account.checking && (
+          <p className="storage-error" role="status">
+            {t("accountChecking")}
+          </p>
+        )}
+        <div
+          className="ribbon"
+          data-tab={tab}
+          aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
+        >
+          {tab === "home" ? (
+            <>
+              <ProjectTools native={native} t={t} home />
+              <HomeRibbon
+                native={native}
+                t={t}
+                reveal={reveal}
+                themes={() => setTab("settings")}
+              />
+            </>
+          ) : tab === "file" || tab === "project" ? (
+            <>
+              <ProjectTools native={native} t={t} />
+              <button
+                className="ribbon-example-button"
+                onClick={() => examplesDialog.current?.showModal()}
+              >
+                {t("demoProjects")}
+              </button>
+              <WorkspaceCommands
+                tab={tab}
+                native={native}
+                t={t}
+                reveal={reveal}
+              />
+            </>
+          ) : tab === "view" ? (
+            <>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={prefs.compact}
+                  onChange={(event) => set("compact", event.target.checked)}
+                />
+                {t("compactWorkspace")}
+              </label>
+              <div className="panel-toggles">
+                {panelIds.map((id) => (
+                  <label key={id}>
+                    <input
+                      type="checkbox"
+                      checked={prefs.panels[id].visible}
+                      onChange={(e) => panel(id, { visible: e.target.checked })}
+                    />
+                    {t(id)}
+                  </label>
+                ))}
+              </div>
+              <button
+                onClick={() =>
+                  setPrefs((p) => ({ ...p, panels: defaults().panels }))
+                }
+              >
+                {t("reset")}
+              </button>
+            </>
+          ) : tab === "settings" ? (
+            <>
+              <button
+                aria-label={t("workspaceSearch")}
+                onClick={() => searchDialog.current?.showModal()}
+              >
+                {t("workspaceSearch")}
+              </button>
+              <label>
+                {t("theme")}
+                <select
+                  aria-label={t("theme")}
+                  value={prefs.theme}
+                  onChange={(e) =>
+                    set("theme", e.target.value as Preferences["theme"])
+                  }
+                >
+                  <option value="dark">{t("dark")}</option>
+                  <option value="light">{t("light")}</option>
+                </select>
+              </label>
+              <label>
+                {t("language")}
+                <select
+                  aria-label={t("language")}
+                  value={prefs.language}
+                  onChange={(e) => set("language", e.target.value as Language)}
+                >
+                  {Object.entries({
+                    en: "English",
+                    de: "Deutsch",
+                    yo: "Yorùbá",
+                    pcm: "Naijá Pidgin",
+                  }).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                {t("sheetBackground")}
+                <select
+                  aria-label={t("sheetBackground")}
+                  value={prefs.background}
+                  onChange={(e) =>
+                    set(
+                      "background",
+                      e.target.value as Preferences["background"],
+                    )
+                  }
+                >
+                  {(["white", "dark", "custom"] as const).map((value) => (
+                    <option key={value} value={value}>
+                      {t(value)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {prefs.background === "custom" && (
+                <label>
+                  {t("backgroundColor")}
+                  <input
+                    aria-label={t("backgroundColor")}
+                    type="color"
+                    value={prefs.color}
+                    onChange={(e) => set("color", e.target.value)}
+                  />
+                </label>
+              )}
+            </>
+          ) : (
             <WorkspaceCommands
               tab={tab}
               native={native}
               t={t}
               reveal={reveal}
             />
-          </>
-        ) : tab === "view" ? (
-          <>
-            <label>
-              <input
-                type="checkbox"
-                checked={prefs.compact}
-                onChange={(event) => set("compact", event.target.checked)}
-              />
-              {t("compactWorkspace")}
-            </label>
-            <div className="panel-toggles">
-              {panelIds.map((id) => (
-                <label key={id}>
-                  <input
-                    type="checkbox"
-                    checked={prefs.panels[id].visible}
-                    onChange={(e) => panel(id, { visible: e.target.checked })}
-                  />
-                  {t(id)}
-                </label>
-              ))}
-            </div>
-            <button
-              onClick={() =>
-                setPrefs((p) => ({ ...p, panels: defaults().panels }))
-              }
-            >
-              {t("reset")}
-            </button>
-          </>
-        ) : tab === "settings" ? (
-          <>
-            <button
-              aria-label={t("workspaceSearch")}
-              onClick={() => searchDialog.current?.showModal()}
-            >
-              {t("workspaceSearch")}
-            </button>
-            <label>
-              {t("theme")}
-              <select
-                aria-label={t("theme")}
-                value={prefs.theme}
-                onChange={(e) =>
-                  set("theme", e.target.value as Preferences["theme"])
-                }
-              >
-                <option value="dark">{t("dark")}</option>
-                <option value="light">{t("light")}</option>
-              </select>
-            </label>
-            <label>
-              {t("language")}
-              <select
-                aria-label={t("language")}
-                value={prefs.language}
-                onChange={(e) => set("language", e.target.value as Language)}
-              >
-                {Object.entries({
-                  en: "English",
-                  de: "Deutsch",
-                  yo: "Yorùbá",
-                  pcm: "Naijá Pidgin",
-                }).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              {t("sheetBackground")}
-              <select
-                aria-label={t("sheetBackground")}
-                value={prefs.background}
-                onChange={(e) =>
-                  set("background", e.target.value as Preferences["background"])
-                }
-              >
-                {(["white", "dark", "custom"] as const).map((value) => (
-                  <option key={value} value={value}>
-                    {t(value)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {prefs.background === "custom" && (
-              <label>
-                {t("backgroundColor")}
-                <input
-                  aria-label={t("backgroundColor")}
-                  type="color"
-                  value={prefs.color}
-                  onChange={(e) => set("color", e.target.value)}
-                />
-              </label>
-            )}
-          </>
-        ) : (
-          <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
-        )}
-      </div>
+          )}
+        </div>
       </div>
       {storageError && (
         <p className="storage-error" role="status">
@@ -598,13 +726,50 @@ function Workspace({ account }: { account: Account }) {
         className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") ? "has-right" : ""}`}
         data-editor-tools-open={editorToolsOpen}
       >
-        <aside className="workbench-icon-rail workbench-rail-left" aria-label={t("panels")}>
-          {iconButton("project", "library", () => togglePanel("project"), activeLeft === "project")}
-          {iconButton("schematicView", "circuit", () => native.setView("schematic"), native.view === "schematic", !native.project)}
-          {iconButton("buildingDesign", "building", () => native.setView("building"), native.view === "building", !native.project)}
-          {iconButton("automationDesign", "junction", () => native.setView("automation"), native.view === "automation", !native.project)}
-          {iconButton("panelDesign", "panel", () => native.setView("panel"), native.view === "panel", !native.project)}
-          {iconButton("openLibrary", "catalog", () => togglePanel("project"), activeLeft === "project")}
+        <aside
+          className="workbench-icon-rail workbench-rail-left"
+          aria-label={t("panels")}
+        >
+          {iconButton(
+            "project",
+            "library",
+            () => togglePanel("project"),
+            activeLeft === "project",
+          )}
+          {iconButton(
+            "schematicView",
+            "circuit",
+            () => native.setView("schematic"),
+            native.view === "schematic",
+            !native.project,
+          )}
+          {iconButton(
+            "buildingDesign",
+            "building",
+            () => native.setView("building"),
+            native.view === "building",
+            !native.project,
+          )}
+          {iconButton(
+            "automationDesign",
+            "junction",
+            () => native.setView("automation"),
+            native.view === "automation",
+            !native.project,
+          )}
+          {iconButton(
+            "panelDesign",
+            "panel",
+            () => native.setView("panel"),
+            native.view === "panel",
+            !native.project,
+          )}
+          {iconButton(
+            "openLibrary",
+            "catalog",
+            () => togglePanel("project"),
+            activeLeft === "project",
+          )}
         </aside>
         {has("left") && region("left")}
         <main
@@ -663,15 +828,53 @@ function Workspace({ account }: { account: Account }) {
           </div>
         </main>
         {has("right") && region("right")}
-        <aside className="workbench-icon-rail workbench-rail-right" aria-label={t("panels")}>
-          {iconButton("properties", "align", () => togglePanel("properties"), activeRight === "properties")}
-          {iconButton("openDiagnostics", "check", () => togglePanel("diagnostics"), activeRight === "diagnostics")}
-          {iconButton("openCalculations", "calc", () => togglePanel("calculations"), activeRight === "calculations")}
-          {iconButton("panel3d", "panel", () => togglePanel("panel3d"), activeRight === "panel3d")}
-          {iconButton("openBom", "report", () => togglePanel("bom"), activeRight === "bom")}
-          {iconButton("reports", "report", () => togglePanel("reports"), activeRight === "reports")}
-          {iconButton("menuAiTools", "profile", () => setBotSignal((value) => value + 1))}
-          {iconButton("settings", "theme", () => { setTab("settings"); setCommandOpen(true); })}
+        <aside
+          className="workbench-icon-rail workbench-rail-right"
+          aria-label={t("panels")}
+        >
+          {iconButton(
+            "properties",
+            "align",
+            () => togglePanel("properties"),
+            activeRight === "properties",
+          )}
+          {iconButton(
+            "openDiagnostics",
+            "check",
+            () => togglePanel("diagnostics"),
+            activeRight === "diagnostics",
+          )}
+          {iconButton(
+            "openCalculations",
+            "calc",
+            () => togglePanel("calculations"),
+            activeRight === "calculations",
+          )}
+          {iconButton(
+            "panel3d",
+            "panel",
+            () => togglePanel("panel3d"),
+            activeRight === "panel3d",
+          )}
+          {iconButton(
+            "openBom",
+            "report",
+            () => togglePanel("bom"),
+            activeRight === "bom",
+          )}
+          {iconButton(
+            "reports",
+            "report",
+            () => togglePanel("reports"),
+            activeRight === "reports",
+          )}
+          {iconButton("menuAiTools", "profile", () =>
+            setBotSignal((value) => value + 1),
+          )}
+          {iconButton("settings", "theme", () => {
+            setTab("settings");
+            setCommandOpen(true);
+          })}
         </aside>
         <BotWindow
           native={native}

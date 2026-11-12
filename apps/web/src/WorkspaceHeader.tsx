@@ -78,8 +78,22 @@ export function WorkspaceHeader({
         </button>
         {native.view !== "schematic" && (
           <button type="button" aria-current="page" disabled={!native.project}>
-            <CommandIcon kind={native.view === "building" ? "building" : native.view === "panel" ? "panel" : "junction"} />
-            {t(native.view === "building" ? "buildingDesign" : native.view === "panel" ? "panelDesign" : "automationDesign")}
+            <CommandIcon
+              kind={
+                native.view === "building"
+                  ? "building"
+                  : native.view === "panel"
+                    ? "panel"
+                    : "junction"
+              }
+            />
+            {t(
+              native.view === "building"
+                ? "buildingDesign"
+                : native.view === "panel"
+                  ? "panelDesign"
+                  : "automationDesign",
+            )}
           </button>
         )}
         <button
@@ -90,7 +104,9 @@ export function WorkspaceHeader({
           disabled={!native.project}
           onClick={() => {
             native.setView("schematic");
-            native.addPage(`${t("sheet")} ${(native.project?.pages.length ?? 0) + 1}`);
+            native.addPage(
+              `${t("sheet")} ${(native.project?.pages.length ?? 0) + 1}`,
+            );
           }}
         >
           +
