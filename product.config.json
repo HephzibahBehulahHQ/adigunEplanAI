@@ -17,7 +17,12 @@
     "interfaceRepository": "HephzibahBehulahHQ/adigunEplanAI"
   },
   "features": {
-    "languages": ["en", "de", "yo", "pcm"],
+    "languages": [
+      "en",
+      "de",
+      "yo",
+      "pcm"
+    ],
     "defaultLanguage": "en",
     "themeSwitcher": true,
     "adigunBot": {
@@ -85,7 +90,7 @@
     "masterPlan": "docs/MASTER_SPECIFICATION.md",
     "ownerMasterPlan": "AdidunEplanAI Master PlanGoals",
     "interface": "docs/references/target-workspace.png",
-    "ownerInterface": "AdigunEplanTarget interface.png",
+    "ownerInterface": "docs/references/target-workspace.png",
     "interfaceSha256": "c99e97fccec545612872ddc5466df9109bc9af63f0d64b9e27420c6321d961c9"
   },
   "acceptance": {
