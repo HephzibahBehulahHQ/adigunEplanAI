@@ -343,6 +343,86 @@ function Workspace({ account }: { account: Account }) {
         openDiagnostics={() => reveal("diagnostics")}
         openHelp={() => help.current?.showModal()}
       />
+
+      <div className="workbench-toolbar" role="toolbar" aria-label={t("ribbonWorkspace")}>
+        <div className="workbench-file-tools">
+          <ProjectTools native={native} t={t} home />
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton("undo", "undo", native.undo, false, !native.canUndo)}
+          {iconButton("redo", "redo", native.redo, false, !native.canRedo)}
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton("selectTool", "select", () => native.requestEditorCommand("select"), false, !native.project)}
+          {iconButton("wireTool", "wire", () => native.requestEditorCommand("wire"), false, !native.project)}
+          {iconButton("junction", "junction", () => native.requestEditorCommand("junction"), false, !native.project)}
+          {iconButton("terminal", "terminal", () => native.requestEditorCommand("terminal"), false, !native.project)}
+          <button
+            type="button"
+            className="workbench-icon-button workbench-menu-trigger"
+            aria-label={t("menuElectrical")}
+            title={t("menuElectrical")}
+            aria-haspopup="menu"
+            aria-expanded={commandOpen}
+            onPointerEnter={cancelMenuClose}
+            onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+            onClick={() => { cancelMenuClose(); setTab("electrical"); setCommandOpen(!commandOpen); }}
+          >
+            <span className="workbench-bolt" aria-hidden="true">ϟ</span>
+            <span className="workbench-chevron" aria-hidden="true">⌄</span>
+          </button>
+          {iconButton("motor", "symbol", () => native.requestEditorCommand("motor"), false, !native.project)}
+          {iconButton("ground", "symbol", () => native.requestEditorCommand("ground"), false, !native.project)}
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton("panTool", "pan", () => native.requestEditorCommand("pan"), false, !native.project)}
+          {iconButton("zoomIn", "fit", () => native.requestEditorCommand("zoomIn"), false, !native.project)}
+          {iconButton("fitPage", "fit", () => native.requestEditorCommand("fit"), false, !native.project)}
+          {iconButton("zoomOut", "fit", () => native.requestEditorCommand("zoomOut"), false, !native.project)}
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton("schematicView", "circuit", () => native.setView("schematic"), native.view === "schematic", !native.project)}
+          {iconButton("buildingDesign", "building", () => native.setView("building"), native.view === "building", !native.project)}
+          {iconButton("automationDesign", "junction", () => native.setView("automation"), native.view === "automation", !native.project)}
+          {iconButton("panelDesign", "panel", () => native.setView("panel"), native.view === "panel", !native.project)}
+        </div>
+        <div className="workbench-tool-group workbench-tool-end">
+          {iconButton("openLibrary", "library", () => reveal("project"))}
+          {iconButton("openDiagnostics", "check", () => togglePanel("diagnostics"))}
+          {iconButton("workspaceSearch", "catalog", () => searchDialog.current?.showModal())}
+          <button
+            type="button"
+            className="workbench-icon-button workbench-menu-trigger"
+            aria-label={t("ribbonMenu")}
+            title={t("ribbonMenu")}
+            aria-expanded={commandOpen}
+            aria-haspopup="menu"
+            onPointerEnter={cancelMenuClose}
+            onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+            onClick={() => { cancelMenuClose(); setCommandOpen(!commandOpen); }}
+          >
+            <CommandIcon kind="library" />
+          </button>
+          <button
+            type="button"
+            className="workbench-icon-button"
+            aria-label={t("layout")}
+            title={t("layout")}
+            aria-pressed={editorToolsOpen}
+            onClick={() => setEditorToolsOpen(!editorToolsOpen)}
+          >
+            <CommandIcon kind="align" />
+          </button>
+        </div>
+      </div>
+      <div
+        className="workbench-command-popover"
+        data-open={commandOpen}
+        onPointerEnter={cancelMenuClose}
+        onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+        aria-hidden={!commandOpen}
+        inert={!commandOpen}
+      >
       <nav className="ribbon-tabs" aria-label={t("interface")}>
         {ribbonTabs.map(([id, key]) => (
           <button
@@ -507,6 +587,7 @@ function Workspace({ account }: { account: Account }) {
         ) : (
           <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
         )}
+      </div>
       </div>
       {storageError && (
         <p className="storage-error" role="status">
