@@ -1,3 +1,16 @@
+/* Shared workstation contract: ribbon content may scroll internally, never grow into a second toolbar row. */
+.ribbon {
+  height: 88px;
+  min-height: 88px;
+  padding: 6px 10px;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  background: linear-gradient(var(--raised), var(--navy));
+}
 /* Target header + one ribbon unit. No duplicate desktop editing rows. */
 .ribbon-tabs {
   height: 32px;

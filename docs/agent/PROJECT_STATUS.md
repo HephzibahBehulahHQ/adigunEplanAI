@@ -174,3 +174,10 @@ Added schema-18 STL surface assets with explicit units/axes, source/rights refer
 Local checks passed 341 unit/tooling tests, types, lint, format, licenses/notices and production build. Manual browser import measured an original regression tetrahedron at 20 × 30 × 40 mm, rendered its actual surface, and retained it after reload. A dock SVG background that initially obscured the WebGL canvas was fixed and regression-covered. Hosted browser checks for this increment remain pending. Test-only native/STL scratch files and `playwright.local.config.ts` are excluded from publication. The engineering example was restored in the preview.
 
 Release remains gated on exact target visual acceptance and full CI. Manufacturer model sourcing, remaining target commands/header/inspector, hosted BOT and wider specification gates remain open; no merge/deployment occurred for this increment.
+
+
+## 2026-11-12 — workstation baseline and pursuit goal
+
+Added the repository-level workstation preservation contract in `AGENTS.md` and `docs/agent/INTERFACE_BASELINE.md`; the canonical visual target remains `docs/references/target-workspace.png`. The 88 px ribbon rule and geometry regression keep category changes from shifting the approved workbench. Rewrote Part 26 in both synchronized master specification files to resume from the current React/Vite codebase, retain the full engineering destination, and list the current acceptance gates rather than restarting the project.
+
+CI passed on PR #40 head `0077e512ee0ecc1a5ba85834c9f120bb07b3a80e`: template checks, typecheck, lint, formatting, unit suite, build, BOT bundle, 155 browser tests, production browser check, and high-severity dependency audit. The PR is still open; this checkpoint does not claim merge or deployment. Hosted AI, authenticated cloud round-trip, full 500-project target, and exact visual acceptance remain open per `product.config.json` and existing status records.

@@ -1597,42 +1597,41 @@ Reasoning selection is a user-controlled Codex setting, not something the reposi
 
 ---
 
-# PART 26 — DEVELOPMENT CONTINUATION PROTOCOL
+# PART 26 — CURRENT PURSUIT GOAL AND CONTINUATION PROTOCOL
 
-At the beginning of a new Codex session:
+## Current pursuit goal — verified repository baseline (2026-11-12)
 
-1. Inspect the current Git branch and working-tree status.
-2. Read AGENTS.md.
-3. Read PROJECT_STATUS.md.
-4. Inspect the most recent relevant changes.
-5. Identify the next incomplete approved milestone.
-6. Implement only that milestone.
-7. Run the required tests.
-8. Update progress documentation.
-9. Report results.
-10. Wait for approval.
+Continue AdigunEplanAI from the existing React 19, TypeScript, Vite monorepo in this repository. The implementation is already substantial; do not restart the application or repeat completed foundation work. Keep this specification's full engineering scope and use the milestone roadmap below as the destination.
 
-Do not restart the application from scratch.
+The current product record and repository source describe these implemented foundations: a persistent multi-panel engineering workspace; corporate header, navigation ribbon, command strip, project/property docks, drawing canvas, Adigun BOT panel, diagnostics/data panels and status bar; four UI languages; functional themes and drawing backgrounds; native projects and pages with local persistence, import/export, validation, undo/redo; a 2D schematic editor with pin-to-pin wiring, net analysis, snapping, selection/transforms, layers and properties; a building electrical workspace; engineering calculations; native panel/3D and PLC documentation; account/cloud workflows; and a local read-only BOT. The library includes 69 original native definitions, with verified manufacturer parts distinguished from generic symbols. These are repository-reported capabilities; verify the relevant workflow before claiming a specific feature is complete.
 
-Do not assume remote GitHub reflects local unpushed changes.
+The product configuration currently records six validated sample projects out of the required 500, `fullSpecificationComplete=false`, `hostedAiVerified=false`, and `authenticatedCloudRoundTripVerified=false`. The README says CI does not deploy. Treat these as open release gates until current tests or live evidence proves otherwise. The latest project-status record says exact visual parity, remaining manufacturer cabinet details, remaining target ribbon/header/inspector detail, hosted AI, and broader engineering coverage remain incomplete. Recheck the current project-status record, product configuration, CI, and deployment state at the start of each session; do not infer current status from this paragraph.
 
-At the end of every milestone, use:
+The canonical visual baseline is `docs/references/target-workspace.png`, bound by `product.config.json`. Keep one canonical tracked copy. The owner-approved interface rule in `AGENTS.md` and `docs/agent/INTERFACE_BASELINE.md` applies across all projects, pages and engineering views: preserve the same header, menu tabs, single-row command ribbon, left project/property panels, central drawing sheet, right engineering/BOT area, bottom engineering panels and status bar. New controls fit in existing regions; they must not add a row or shift, resize, overlap or obscure the canvas. Keep the shared HB Elektroniker design tokens and EPLAN-specific functions. Use the AutoCAD product's interface only as a structural reference; do not copy its code or assets.
 
-STATUS
+## Session continuation
 
-Done:
-- Actual implementation completed.
+At the start of each session:
 
-Tested:
-- Tests executed and results.
+1. Inspect the actual current branch, main commit, open PRs, working tree if available, latest CI and deployment state.
+2. Read `AGENTS.md`, this specification, `docs/agent/PROJECT_STATUS.md`, and the relevant implementation/acceptance records.
+3. Resume the next incomplete approved acceptance item from the existing code and roadmap. Do not restart Milestone 0 or redo shipped work without evidence of a regression.
+4. Choose a focused increment that moves the full product closer to the specified end state; do not replace the destination with a smaller prototype.
+5. Preserve user changes, approved UI geometry, product identity, existing architecture and source-backed engineering data.
+6. Run the focused checks required by the repository. Fix verified failures and report scope and limits accurately.
+7. Update project-status and acceptance records with evidence, then publish through the repository's branch/PR workflow. Deploy only through a configured and verified deployment workflow and the user's standing authorization.
 
-Blocked:
-- Outstanding issues, if any.
+Continue autonomously through independent work. Ask only when an unresolved owner decision, missing source, credential, or external permission is genuinely required. Do not stop after writing a plan or wait for general approval when the next action is authorized.
 
-Next:
-- Next recommended milestone.
+## Work priority
 
-Keep reports concise.
+1. Keep the approved workstation interface intact and pass the layout/interaction regression checks.
+2. Restore a green template/build/test gate from the current repository state; treat CI failures caused by stale references as work to repair, not as proof that new UI code failed.
+3. Continue the highest-priority incomplete engineering acceptance item using real, traceable component data and functional interactions.
+4. Close the remaining building, calculations, panel/3D, PLC, exports, account/cloud, BOT and sample-project requirements in the sequence justified by current dependencies.
+5. Complete full end-to-end, security, accessibility, localization, performance, licensing and engineering validation before release.
+
+The sample-project target remains 500. A project counts only after its actual source data, connections, calculations where applicable, report/export behavior and acceptance evidence are independently validated. UI labels, generated visuals and BOM suggestions do not count as completed engineering projects.
 
 ---
 
@@ -1677,10 +1676,8 @@ Use the supplied screenshot as a visual and functional reference for the enginee
 
 Prioritize real engineering data, meaningful electrical connections, verified calculations, useful 3D geometry, functional AI tools, and traceable testing.
 
-The full specification defines the destination.
+The full specification defines the destination; the current repository state defines the starting point.
 
-Milestones define the execution path.
-
-Begin with Milestone 0, complete its verification, save the results, and stop for review before starting Milestone 1.
+Continue in small verified increments without restarting completed work or pausing for general approval. Preserve the approved interface and all engineering acceptance requirements. Deploy and release only after the configured gates and live evidence pass.
 
 Never substitute an attractive interface for working engineering software.
