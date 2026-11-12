@@ -1,6 +1,7 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { dxfFixture } from "../fixtures/dxf-plan.mjs";
 import { test, expect } from "@playwright/test";
+import { openEditorTools } from "./workbench";
 
 test("buildings, floors and dimensioned room outlines persist with undo and isolated floor views", async ({
   page,
@@ -12,6 +13,7 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     .getByLabel("Project name", { exact: true })
     .fill("Building reference");
   await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await openEditorTools(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();

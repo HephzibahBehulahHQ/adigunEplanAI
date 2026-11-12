@@ -104,12 +104,12 @@ for (const [name, devices, wires, selector] of cases) {
         page.getByText(/Drawing notes extend beyond the sheet/),
       ).toHaveCount(0);
       const appHeader = await page.locator(".workbench-header").boundingBox();
-      const ribbonTabs = await page.locator(".ribbon-tabs").boundingBox();
+      const toolbar = await page.locator(".workbench-toolbar").boundingBox();
       expect(appHeader).not.toBeNull();
-      expect(ribbonTabs).not.toBeNull();
+      expect(toolbar).not.toBeNull();
       expect(appHeader!.height).toBeLessThanOrEqual(38);
-      expect(ribbonTabs!.height).toBeLessThanOrEqual(33);
-      expect(ribbonTabs!.y).toBe(appHeader!.y + appHeader!.height);
+      expect(toolbar!.height).toBe(36);
+      expect(toolbar!.y).toBe(appHeader!.y + appHeader!.height);
       await expect(
         page.getByRole("button", {
           name: /PLC1 · WAGO PFC200 controller/,

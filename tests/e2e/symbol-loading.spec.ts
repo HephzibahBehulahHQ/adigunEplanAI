@@ -1,3 +1,4 @@
+import { openComponentLibrary, openEditorTools } from "./workbench";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 const storageKey = "adiguneplanai.projects.v1";
@@ -30,6 +31,7 @@ test("engineering symbols load only on demand and preserve search while collapse
   });
   await create(page);
   const before = await project(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   expect(requests).toBe(0);
   await summary(page).click();
@@ -52,6 +54,7 @@ test("failed engineering-symbol download leaves native editing and export functi
     (route) => route.abort("failed"),
   );
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await summary(page).click();
   await expect(
@@ -59,6 +62,7 @@ test("failed engineering-symbol download leaves native editing and export functi
   ).toHaveText(
     "Engineering symbols could not load. Your project remains available for editing and export.",
   );
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption("terminal");
@@ -89,6 +93,7 @@ test("secondary category browsing and search leave native project unchanged", as
 }) => {
   await create(page);
   const before = await project(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await summary(page).click();
   const category = page.getByRole("combobox", {
@@ -115,6 +120,7 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   const phoenix = page.getByRole("article", {
     name: "Phoenix Contact 3044076",
@@ -157,6 +163,7 @@ test("catalog loads only when opened and retains query after collapse", async ({
   await create(page);
   expect(requests).toBe(0);
   const before = await project(page);
+  await openComponentLibrary(page);
   const summary = page.locator(".component-library > summary");
   await summary.click();
   await page.getByLabel("Search parts", { exact: true }).fill("3044076");
@@ -179,6 +186,7 @@ test("failed catalog download preserves project export and schematic tools", asy
   );
   await create(page);
   const before = await project(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await expect(
     page.locator(".component-library").getByRole("alert"),

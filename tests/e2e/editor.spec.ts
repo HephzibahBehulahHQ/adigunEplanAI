@@ -1,3 +1,8 @@
+import {
+  openComponentLibrary,
+  openEditorTools,
+  selectMenuTab,
+} from "./workbench";
 import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
@@ -20,7 +25,10 @@ test("secondary home ribbon actions remain named when shown as icons", async ({
   page,
 }) => {
   await create(page);
-  const ribbon = page.locator('.ribbon[data-tab="home"]');
+  await selectMenuTab(page, "Home");
+  const ribbon = page.locator(
+    '.workbench-command-popover .ribbon[data-tab="home"]',
+  );
   const undo = ribbon.locator('[data-command="undo"]');
   await expect(undo).toHaveAttribute("data-icon-only", "true");
   await expect(undo).toHaveAttribute("title", "Undo");
@@ -47,6 +55,7 @@ async function clickWorld(page: Page, x: number, y: number) {
   await page.mouse.click(screen.x, screen.y);
 }
 async function place(page: Page, kind: string, x: number, y: number) {
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption(kind);
@@ -636,9 +645,7 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
   await page.getByRole("button", { name: "Group", exact: true }).click();
   expect((await project(page)).groups).toHaveLength(1);
   await page.getByRole("button", { name: "Copy", exact: true }).click();
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await page
     .locator(".drawing-tabs")
     .getByRole("button", { name: "Sheet 2", exact: true })
@@ -689,9 +696,7 @@ test("junction insertion updates the real wire graph and BOM while navigator con
   });
   await expect(bom.locator("tbody tr")).toHaveCount(3);
   await expect(bom).toContainText("J1");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await page
     .getByRole("region", { name: "Project navigator", exact: true })
     .getByRole("button", { name: "Sheet 2", exact: true })
@@ -729,6 +734,7 @@ test("component catalog searches and maps a sourced part to a real terminal", as
 }) => {
   await create(page);
   await place(page, "terminal", 100, 100);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
   await library.locator(":scope > summary").click();
   await library
@@ -798,6 +804,7 @@ test("engineering symbol search imports distinct transformer pins for native pla
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")
@@ -849,6 +856,7 @@ test("NO contact catalog mapping preserves native pins and offers only compatibl
   await create(page);
   await place(page, "contact", 80, 80);
   await place(page, "terminal", 140, 80);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   const library = page.locator(".component-library");
   await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
@@ -879,6 +887,7 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")
@@ -909,6 +918,7 @@ test("connector poles retain separate electrical nodes while each pole passes th
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")
@@ -949,6 +959,7 @@ for (const [id, query, terminals, pins] of [
     page,
   }) => {
     await create(page);
+    await openComponentLibrary(page);
     await page.locator(".component-library > summary").click();
     await page
       .locator(".component-library summary")
@@ -1007,6 +1018,7 @@ for (const [id, query, endpoint, count] of [
     page,
   }) => {
     await create(page);
+    await openComponentLibrary(page);
     await page.locator(".component-library > summary").click();
     await page
       .locator(".component-library summary")
@@ -1044,6 +1056,7 @@ for (const [id, query, endpoint, count] of [
     page,
   }) => {
     await create(page);
+    await openComponentLibrary(page);
     await page.locator(".component-library > summary").click();
     await page
       .locator(".component-library summary")
@@ -1095,6 +1108,7 @@ for (const [id, query, channel] of [
     page,
   }) => {
     await create(page);
+    await openComponentLibrary(page);
     await page.locator(".component-library > summary").click();
     await page
       .locator(".component-library summary")
@@ -1126,6 +1140,7 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")
@@ -1166,6 +1181,7 @@ test("custom symbols create native pins that wire and survive undo and reload", 
     page.getByRole("button", { name: "U1:IN", exact: true }),
   ).toBeVisible();
   expect((await project(page)).wires).toHaveLength(1);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")
@@ -1206,9 +1222,7 @@ test("cross-page net labels persist memberships and navigate to the real drawing
     await page.getByRole("button", { name: "Add label", exact: true }).click();
   }
   await label("R1:1");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await page
     .locator(".drawing-tabs")
     .getByRole("button", { name: "Sheet 2", exact: true })
@@ -1263,6 +1277,7 @@ test("component comparison preserves selections through search and shows missing
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .getByRole("checkbox", {
@@ -1332,6 +1347,7 @@ test("catalog filters, favorites and recent assignments persist without changing
   await create(page);
   await place(page, "terminal", 100, 100);
   const before = await project(page);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
   await library.locator(":scope > summary").click();
   await library
@@ -1425,6 +1441,7 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
     localStorage.setItem("adiguneplanai.catalog-preferences.v1", "{broken"),
   );
   await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
   await library.locator(":scope > summary").click();
   await expect(library.getByRole("alert")).toContainText(
@@ -1476,6 +1493,7 @@ test("catalog preference quota failure retains session favorites and reports uns
     };
   });
   const library = page.locator(".component-library");
+  await openComponentLibrary(page);
   await library.locator(":scope > summary").click();
   await library
     .getByRole("checkbox", {

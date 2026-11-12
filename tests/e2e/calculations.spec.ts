@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openProjectPanel } from "./workbench";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -288,6 +289,7 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     );
     await page.goto("/");
     await expect(page.locator(".empty-workspace")).toBeVisible();
+    await openProjectPanel(page);
     await page.getByTestId("project-picker").selectOption(project.id);
     const tools = page.getByRole("region", {
       name: t.calcTools,

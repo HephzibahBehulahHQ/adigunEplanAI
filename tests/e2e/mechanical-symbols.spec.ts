@@ -1,3 +1,4 @@
+import { openComponentLibrary } from "./workbench";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
@@ -35,6 +36,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")
@@ -110,6 +112,7 @@ test("custom mechanical drawings create without pins and reject reclassification
   page,
 }) => {
   await create(page);
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page
     .locator(".component-library summary")

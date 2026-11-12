@@ -1,3 +1,4 @@
+import { openComponentLibrary, openEditorTools } from "./workbench";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
@@ -18,6 +19,7 @@ async function create(page: Page, name: string) {
   await dialog.getByRole("button", { name: "Create", exact: true }).click();
 }
 async function terminal(page: Page, x: number) {
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption("terminal");
@@ -32,6 +34,7 @@ async function terminal(page: Page, x: number) {
   await page.mouse.click(point.x, point.y);
 }
 async function openLibrary(page: Page) {
+  await openComponentLibrary(page);
   await page.locator(".component-library > summary").click();
   await page.locator(".custom-components > summary").click();
 }

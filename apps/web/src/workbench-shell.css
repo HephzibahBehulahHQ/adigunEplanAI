@@ -6,8 +6,8 @@
   position: relative;
   background: #0b1220;
   --workbench-header: 34px;
-  --workbench-toolbar: 42px;
-  --workbench-rail: 42px;
+  --workbench-toolbar: 36px;
+  --workbench-rail: 36px;
 }
 .workbench-interface .app-header.workbench-header {
   height: var(--workbench-header);

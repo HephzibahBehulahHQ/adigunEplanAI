@@ -18,9 +18,7 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
   await expect(
     page.getByRole("application", { name: "Sheet 1", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await expect(
     page
       .locator(".drawing-tabs")

@@ -1,3 +1,4 @@
+import { openComponentLibrary, openEditorTools } from "./workbench";
 import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
@@ -54,6 +55,7 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
       .getByLabel("Project name", { exact: true })
       .fill(`Interface ${id}`);
     await dialog.getByRole("button", { name: "Create", exact: true }).click();
+    await openComponentLibrary(page);
     await page.locator(".component-library > summary").click();
     await page
       .locator(".component-library summary")
@@ -90,6 +92,7 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
     expect(data.pins).toHaveLength(pinCount);
     expect(data.nets).toHaveLength(nodes);
     if (endpoint) {
+      await openEditorTools(page);
       await page
         .getByRole("combobox", { name: "Symbols", exact: true })
         .selectOption("terminal");

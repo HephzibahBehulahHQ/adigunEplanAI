@@ -366,7 +366,7 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
 test("compact target workspace gives the drawing space and keeps native insert, undo, zoom and layout controls functional", async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 1672, height: 941 });
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   await selectMenuTab(page, "File menu");
   await page
@@ -387,6 +387,19 @@ test("compact target workspace gives the drawing space and keeps native insert, 
     .poll(async () => (await canvas.boundingBox())!.height)
     .toBeGreaterThan(450);
   const drawing = (await canvas.boundingBox())!;
+  const layout = (await page.locator(".engineering-layout").boundingBox())!;
+  const rails = await page.locator(".workbench-icon-rail").all();
+  const railBoxes = await Promise.all(rails.map((rail) => rail.boundingBox()));
+  const railWidth = railBoxes.reduce(
+    (total, box) => total + (box?.width ?? 0),
+    0,
+  );
+  const availableArea = Math.max(0, layout.width - railWidth) * layout.height;
+  const drawingArea = drawing.width * drawing.height;
+  expect(
+    drawingArea / availableArea,
+    `At 1440×900, the drawing occupies ${((drawingArea / availableArea) * 100).toFixed(1)}% of the available editor area`,
+  ).toBeGreaterThanOrEqual(0.75);
   const footer = (await page.locator(".status-bar").boundingBox())!;
   const bottomDock = page.locator(".dock-bottom");
   if (await bottomDock.count()) {

@@ -98,7 +98,7 @@ test("BOT moves, resizes, minimizes, maximizes, closes and restores without bloc
   await reloadAndReopenProject(page);
   await expect(bot).toHaveCount(0);
   const aiTools = page.getByRole("button", {
-    name: "AI tools menu",
+    name: "AI tools",
     exact: true,
   });
   await aiTools.click();
@@ -150,6 +150,10 @@ test("BOT answers from current native context, marks old snapshots and clears ob
   await expect(bot.locator("article").last()).toContainText(
     "Available commands",
   );
+  await page
+    .locator(".workbench-rail-right")
+    .getByRole("button", { name: "Properties", exact: true })
+    .click();
   await page
     .locator('[data-panel="properties"]')
     .getByLabel("Project name", { exact: true })

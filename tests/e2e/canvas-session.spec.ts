@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
+import { openProjectPanel } from "./workbench";
 
 test("refresh and a new tab start blank; saved projects reopen explicitly with clean history", async ({
   page,
@@ -12,9 +13,7 @@ test("refresh and a new tab start blank; saved projects reopen explicitly with c
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await expect(
     page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeEnabled();
@@ -32,6 +31,7 @@ test("refresh and a new tab start blank; saved projects reopen explicitly with c
   await expect(
     page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeDisabled();
+  await openProjectPanel(page);
   await page.getByTestId("project-picker").selectOption(project.id);
   await expect(page.locator(".engineering-canvas")).toBeVisible();
   await expect(
@@ -48,6 +48,7 @@ test("refresh and a new tab start blank; saved projects reopen explicitly with c
   const next = await context.newPage();
   await next.goto("/");
   await expect(next.locator(".empty-workspace")).toBeVisible();
+  await openProjectPanel(next);
   await next.getByTestId("project-picker").selectOption(project.id);
   await expect(next.locator("[data-instance]")).toHaveCount(2);
   next.once("dialog", async (dialog) => {
@@ -80,6 +81,7 @@ test("close and create-new reset the canvas while keeping saved projects", async
   await expect(
     page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeDisabled();
+  await openProjectPanel(page);
   await expect(
     page.getByTestId("project-picker").locator("option"),
   ).toHaveCount(2);
@@ -114,9 +116,7 @@ test("active projects warn before leaving; cancellation preserves work and local
       return original.call(this, key, value);
     };
   });
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await expect(page.locator(".project-save-state")).toHaveText("Not saved");
   const prevented = () =>
     page.evaluate(() => {

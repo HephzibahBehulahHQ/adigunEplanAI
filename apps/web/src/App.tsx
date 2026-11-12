@@ -56,6 +56,7 @@ const ExampleLibrary = lazy(() =>
     default: module.ExampleLibrary,
   })),
 );
+const activePanelsKey = "adiguneplanai.workbench-panels.v1";
 
 export function App() {
   const account = useAccount();
@@ -106,8 +107,33 @@ function Workspace({ account }: { account: Account }) {
   const [tab, setTab] = useState<RibbonTab>("home");
   const [commandOpen, setCommandOpen] = useState(false);
   const [editorToolsOpen, setEditorToolsOpen] = useState(false);
-  const [activeLeft, setActiveLeft] = useState<PanelId | null>(null);
-  const [activeRight, setActiveRight] = useState<PanelId | null>(null);
+  const restoreActivePanel = (dock: Dock): PanelId | null => {
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem(activePanelsKey) ?? "null",
+      ) as Partial<Record<Dock, unknown>> | null;
+      const id = saved?.[dock];
+      if (
+        typeof id === "string" &&
+        panelIds.includes(id as PanelId) &&
+        prefs.panels[id as PanelId].visible &&
+        prefs.panels[id as PanelId].dock === dock
+      )
+        return id as PanelId;
+    } catch {
+      /* Invalid panel activation state should leave compact rails collapsed. */
+    }
+    return null;
+  };
+  const [activeLeft, setActiveLeft] = useState<PanelId | null>(() =>
+    restoreActivePanel("left"),
+  );
+  const [activeRight, setActiveRight] = useState<PanelId | null>(() =>
+    restoreActivePanel("right"),
+  );
+  const [activeBottom, setActiveBottom] = useState<PanelId | null>(() =>
+    restoreActivePanel("bottom"),
+  );
   const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
@@ -124,6 +150,20 @@ function Workspace({ account }: { account: Account }) {
       setStorageError(true);
     }
   }, [prefs]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        activePanelsKey,
+        JSON.stringify({
+          left: activeLeft,
+          right: activeRight,
+          bottom: activeBottom,
+        }),
+      );
+    } catch {
+      setStorageError(true);
+    }
+  }, [activeLeft, activeRight, activeBottom]);
   const panel = (id: PanelId, change: Partial<PanelState>) =>
     setPrefs((previous) => ({
       ...previous,
@@ -132,6 +172,18 @@ function Workspace({ account }: { account: Account }) {
         [id]: { ...previous.panels[id], ...change },
       },
     }));
+  const activateDock = (dock: Dock, id: PanelId | null) => {
+    if (dock === "left") setActiveLeft(id);
+    else if (dock === "right") setActiveRight(id);
+    else setActiveBottom(id);
+  };
+  const movePanel = (id: PanelId, dock: Dock) => {
+    panel(id, { dock });
+    setActiveLeft((current) => (current === id ? null : current));
+    setActiveRight((current) => (current === id ? null : current));
+    setActiveBottom((current) => (current === id ? null : current));
+    if (prefs.panels[id].visible) activateDock(dock, id);
+  };
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const reveal = (id: PanelId) => {
@@ -160,11 +212,12 @@ function Workspace({ account }: { account: Account }) {
     action: () => void,
     pressed = false,
     disabled = false,
+    ariaLabel?: string,
   ) => (
     <button
       type="button"
       className="workbench-icon-button"
-      aria-label={t(label)}
+      aria-label={ariaLabel ?? t(label)}
       title={t(label)}
       aria-pressed={pressed}
       onClick={action}
@@ -236,6 +289,7 @@ function Workspace({ account }: { account: Account }) {
               panel(id, { visible: false });
               if (id === activeLeft) setActiveLeft(null);
               if (id === activeRight) setActiveRight(null);
+              if (id === activeBottom) setActiveBottom(null);
             }}
           >
             ×
@@ -289,7 +343,7 @@ function Workspace({ account }: { account: Account }) {
                 <select
                   aria-label={t("dock")}
                   value={state.dock}
-                  onChange={(e) => panel(id, { dock: e.target.value as Dock })}
+                  onChange={(e) => movePanel(id, e.target.value as Dock)}
                 >
                   {(["left", "right", "bottom"] as const).map((d) => (
                     <option key={d} value={d}>
@@ -330,14 +384,18 @@ function Workspace({ account }: { account: Account }) {
               ? id === activeLeft
               : dock === "right"
                 ? id === activeRight
-                : false),
+                : id === activeBottom),
         )
         .map(renderPanel)}
     </aside>
   );
   const has = (dock: Dock) => {
     const id =
-      dock === "left" ? activeLeft : dock === "right" ? activeRight : null;
+      dock === "left"
+        ? activeLeft
+        : dock === "right"
+          ? activeRight
+          : activeBottom;
     return (
       id !== null && prefs.panels[id].visible && prefs.panels[id].dock === dock
     );
@@ -483,6 +541,7 @@ function Workspace({ account }: { account: Account }) {
             () => native.setView("building"),
             native.view === "building",
             !native.project,
+            `${t("buildingDesign")} ${t("workspace")}`,
           )}
           {iconButton(
             "automationDesign",
@@ -490,6 +549,7 @@ function Workspace({ account }: { account: Account }) {
             () => native.setView("automation"),
             native.view === "automation",
             !native.project,
+            `${t("automationDesign")} ${t("workspace")}`,
           )}
           {iconButton(
             "panelDesign",
@@ -622,16 +682,34 @@ function Workspace({ account }: { account: Account }) {
                     <input
                       type="checkbox"
                       checked={prefs.panels[id].visible}
-                      onChange={(e) => panel(id, { visible: e.target.checked })}
+                      onChange={(e) => {
+                        const visible = e.target.checked;
+                        panel(id, { visible });
+                        if (visible) activateDock(prefs.panels[id].dock, id);
+                        else {
+                          setActiveLeft((current) =>
+                            current === id ? null : current,
+                          );
+                          setActiveRight((current) =>
+                            current === id ? null : current,
+                          );
+                          setActiveBottom((current) =>
+                            current === id ? null : current,
+                          );
+                        }
+                      }}
                     />
                     {t(id)}
                   </label>
                 ))}
               </div>
               <button
-                onClick={() =>
-                  setPrefs((p) => ({ ...p, panels: defaults().panels }))
-                }
+                onClick={() => {
+                  setPrefs((p) => ({ ...p, panels: defaults().panels }));
+                  setActiveLeft(null);
+                  setActiveRight(null);
+                  setActiveBottom(null);
+                }}
               >
                 {t("reset")}
               </button>
@@ -767,7 +845,10 @@ function Workspace({ account }: { account: Account }) {
           {iconButton(
             "openLibrary",
             "catalog",
-            () => togglePanel("project"),
+            () => {
+              if (activeLeft === "project") setActiveLeft(null);
+              else reveal("project");
+            },
             activeLeft === "project",
           )}
         </aside>

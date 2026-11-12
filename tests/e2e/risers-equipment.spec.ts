@@ -8,6 +8,7 @@ import {
 } from "../../packages/building-design/structure.ts";
 import { addPlanLayer } from "../../packages/building-design/walls.ts";
 import type { Project } from "../../packages/electrical-model/project.ts";
+import { openProjectPanel } from "./workbench";
 
 async function prepare(page: Page) {
   let project = addBuilding(nativeProject(), "Workshop", "");
@@ -33,6 +34,7 @@ async function prepare(page: Page) {
   }, project);
   await page.goto("/");
   await expect(page.locator(".empty-workspace")).toBeVisible();
+  await openProjectPanel(page);
   await page.getByTestId("project-picker").selectOption(project.id);
   await page
     .getByRole("button", { name: "Building design", exact: true })

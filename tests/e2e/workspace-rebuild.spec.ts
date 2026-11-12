@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
+import { selectMenuTab } from "./workbench";
 
 test("native drawing frame, cabinet and calculation records share the current project", async ({
   page,
@@ -103,7 +104,8 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
   page,
 }) => {
   await page.goto("/");
-  const menus = page.locator(".ribbon-tabs");
+  await selectMenuTab(page, "File menu");
+  const menus = page.locator(".workbench-command-popover .ribbon-tabs");
   await expect(menus.getByRole("button")).toHaveText([
     "File",
     "Home",
@@ -128,9 +130,7 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
   ]);
   for (const width of [1672, 375]) {
     await page.setViewportSize({ width, height: 941 });
-    await menus
-      .getByRole("button", { name: "Tools menu", exact: true })
-      .click();
+    await selectMenuTab(page, "Tools menu");
     await expect(
       page.getByRole("button", {
         name: "Fit page · Engineering commands",
