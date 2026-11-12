@@ -380,16 +380,21 @@ function Workspace({ account }: { account: Account }) {
           (id) =>
             prefs.panels[id].visible &&
             prefs.panels[id].dock === dock &&
-            (dock === "left"
-              ? id === activeLeft
-              : dock === "right"
-                ? id === activeRight
-                : id === activeBottom),
+            (!prefs.compact ||
+              (dock === "left"
+                ? id === activeLeft
+                : dock === "right"
+                  ? id === activeRight
+                  : id === activeBottom)),
         )
         .map(renderPanel)}
     </aside>
   );
   const has = (dock: Dock) => {
+    if (!prefs.compact)
+      return panelIds.some(
+        (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
+      );
     const id =
       dock === "left"
         ? activeLeft
