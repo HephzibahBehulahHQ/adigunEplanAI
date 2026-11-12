@@ -166,6 +166,7 @@
 .workbench-interface .workbench-feedback {
   position: absolute;
   z-index: 600;
+  pointer-events: none;
   top: calc(var(--workbench-header) + var(--workbench-toolbar) + 4px);
   left: 50%;
   width: max-content;
