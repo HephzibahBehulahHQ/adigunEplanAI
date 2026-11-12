@@ -82,9 +82,9 @@ export function productTemplateIssues(bundle) {
     c.specification?.ownerMasterPlan === "AdidunEplanAI Master PlanGoals" &&
     c.specification?.interface === "docs/references/target-workspace.png" &&
     c.specification?.ownerInterface ===
-      "AdigunEplanTarget interface.png", "Specification bindings changed");
+      "docs/references/target-workspace.png", "Specification bindings changed");
   require(crypto.createHash("sha256").update(ownerMaster).digest("hex") ===
-    "4f3847a5d0b78313643abe54cc6852136c3aef179d1a8b26890228eae41e8525", "Approved owner master plan changed");
+    "50851a526f3958f6bb820e0b41fb4f9eeb8dcdbbfbc2f9e56643d32c58d87fb8", "Approved owner master plan changed");
   require(c.branding?.logoPolicy === "single-corporate-logo" &&
     c.branding?.header?.productWordmark === true &&
     c.branding?.header?.divisionTextLabel === true &&
@@ -145,7 +145,7 @@ export function loadProductTemplate() {
     css: read("packages/design-tokens/tokens.css"),
     logo: hash("apps/web/src/assets/approved-header-reference.png"),
     target: hash("docs/references/target-workspace.png"),
-    ownerTarget: hash("AdigunEplanTarget interface.png"),
+    ownerTarget: hash("docs/references/target-workspace.png"),
     master: read("docs/MASTER_SPECIFICATION.md"),
     ownerMaster: read("AdidunEplanAI Master PlanGoals"),
   };
