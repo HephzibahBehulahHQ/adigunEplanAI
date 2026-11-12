@@ -110,20 +110,21 @@ test("workstation regions stay fixed while ribbon categories change", async ({
     ".status-bar",
   ];
   const geometry = () =>
-    page.evaluate((selectors) =>
-      Object.fromEntries(
-        selectors.map((selector) => {
-          const element = document.querySelector(selector);
-          if (!element) return [selector, null];
-          const rect = element.getBoundingClientRect();
-          return [
-            selector,
-            [rect.x, rect.y, rect.width, rect.height].map((value) =>
-              Math.round(value * 100) / 100,
-            ),
-          ];
-        }),
-      ),
+    page.evaluate(
+      (selectors) =>
+        Object.fromEntries(
+          selectors.map((selector) => {
+            const element = document.querySelector(selector);
+            if (!element) return [selector, null];
+            const rect = element.getBoundingClientRect();
+            return [
+              selector,
+              [rect.x, rect.y, rect.width, rect.height].map((value) =>
+                Math.round(value * 100) / 100,
+              ),
+            ];
+          }),
+        ),
       regions,
     );
   const baseline = await geometry();
