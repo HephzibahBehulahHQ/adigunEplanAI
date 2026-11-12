@@ -321,18 +321,28 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    expect(
-      await tools.evaluate((panel) =>
-        Array.from(panel.querySelectorAll("input,select,textarea,button"))
-          .filter((element) => !element.closest(".calculation-shortcuts"))
-          .every((element) => {
-            const rect = element.getBoundingClientRect();
-            return (
-              rect.width > 0 && rect.left >= 0 && rect.right <= innerWidth + 1
-            );
-          }),
-      ),
-    ).toBe(true);
+    const offscreenControls = await tools.evaluate((panel) =>
+      Array.from(panel.querySelectorAll("input,select,textarea,button"))
+        .filter((element) => !element.closest(".calculation-shortcuts"))
+        .flatMap((element) => {
+          const rect = element.getBoundingClientRect();
+          return rect.width > 0 &&
+            rect.left >= 0 &&
+            rect.right <= innerWidth + 1
+            ? []
+            : [
+                {
+                  label:
+                    element.getAttribute("aria-label") ??
+                    element.textContent?.trim(),
+                  x: rect.x,
+                  right: rect.right,
+                  width: rect.width,
+                },
+              ];
+        }),
+    );
+    expect(offscreenControls).toEqual([]);
     const shortcuts = tools.locator(".calculation-shortcuts");
     const lastShortcut = shortcuts.getByRole("button").last();
     await lastShortcut.focus();

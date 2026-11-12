@@ -392,6 +392,9 @@ body:has(.workbench-interface) {
 .workbench-interface .dock {
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 2;
+  min-width: 0;
   min-height: 0;
   height: 100%;
   max-height: 100%;
@@ -401,6 +404,11 @@ body:has(.workbench-interface) {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
   min-height: 0;
   max-height: 100%;
   overflow: hidden;
@@ -410,6 +418,8 @@ body:has(.workbench-interface) {
 }
 .workbench-interface .dock > .panel > .panel-body {
   flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
   min-height: 0;
   max-height: none;
   overflow: auto;
@@ -861,9 +871,9 @@ body:has(.workbench-interface) {
   }
   .workbench-interface .engineering-layout > .dock {
     position: fixed;
-    z-index: 30;
+    z-index: 40;
     top: 74px;
-    bottom: 40px;
+    bottom: calc(var(--workbench-footer) + 4px);
     display: flex;
     width: min(320px, calc(100vw - 88px));
     max-width: calc(100vw - 88px);
@@ -878,7 +888,7 @@ body:has(.workbench-interface) {
   .workbench-interface .engineering-layout > .dock-bottom {
     top: auto;
     right: 42px;
-    bottom: 40px;
+    bottom: calc(var(--workbench-footer) + 4px);
     left: 42px;
     width: auto;
     max-width: none;
@@ -886,10 +896,20 @@ body:has(.workbench-interface) {
   }
   .workbench-interface .engineering-layout > .bot-window[data-docked="true"] {
     position: fixed;
-    inset: 78px 8px 48px 44px;
+    top: auto;
+    right: 8px;
+    bottom: calc(var(--workbench-footer) + 4px);
+    left: auto;
     width: auto;
-    height: auto;
+    width: min(320px, calc(100vw - 52px));
+    height: min(
+      420px,
+      calc(64dvh - var(--workbench-header) - var(--workbench-footer))
+    );
     min-height: 0;
+    max-height: calc(
+      100dvh - var(--workbench-header) - var(--workbench-footer) - 8px
+    );
     grid-column: auto;
     z-index: 30;
   }
