@@ -1,3 +1,15 @@
+## CURRENT OWNER-APPROVED GOAL — UI-001 (2026-11-12)
+
+**FIRST DELIVERABLE: Project A must visually match Project B's compact CAD workstation.** This supersedes prior shell/ribbon screenshot guidance, not the original engineering feature requirements.
+
+- **Only writable product:** `HephzibahBehulahHQ/adigunEplanAI` (Project A). **DO NOT MODIFY** `HephzibahBehulahHQ/AdigunAiAutoCad` (Project B): read-only visual reference.
+- **Before code:** read [Project B interface transformation and next-agent handoff](docs/PROJECT_B_INTERFACE_TRANSFORMATION.md), the [master pursuing goal](AdidunEplanAI%20Master%20PlanGoals), and the actual Project B reference `index.html` / pursuing goal.
+- **Scope now:** replace only the shell visuals and relevant interactions: slim header/document tabs, compact icon bar, 32–44px left/right icon rails, true overlay menus, large white editable Project A schematic canvas, thin status bar. Preserve all native project models/editors and the full master goal.
+- **Current WIP:** `codex/project-b-interface-first`, draft PR #39. Validate and fix this existing branch; **do not restart from scratch**. Initial CI failed formatting; verify the latest CI after the one-time Prettier correction and resolve any subsequent errors.
+- **Ship and STOP:** Playwright visual/interaction checks, native engineering save/reopen regression, `npm run check`, CI and production checks → approved merge/deploy/verify → stop for explicit owner visual approval. Do not implement unrelated engineering features in this phase.
+- Do not describe an unapproved PR, mocked example, UI screenshot, or failed build as completed/deployed.
+- **No new permissions to bypass safety policy or existing repo approvals.**
+
 # AdigunEplanAI agent guidance
 
 Read the README, active product specification and docs/agent records before implementation.
