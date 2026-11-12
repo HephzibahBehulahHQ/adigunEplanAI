@@ -1,5 +1,5 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
-import { selectMenuTab } from "./workbench.ts";
+import { openWorkbenchPanel, selectMenuTab } from "./workbench.ts";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const key = "adiguneplanai.projects.v1";
@@ -29,6 +29,7 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
     name: "Properties",
     exact: true,
   });
+  await openWorkbenchPanel(page, "properties");
   await properties
     .getByLabel("Project name", { exact: true })
     .fill("Renamed project");
@@ -145,3 +146,4 @@ test("quota failure leaves the editable native project available for export", as
     JSON.parse(await readFile((await download.path())!, "utf8")).name,
   ).toBe("Unsaved project");
 });
+

@@ -1,5 +1,6 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
+import { openProjectNavigator } from "./workbench.ts";
 import { readFile } from "node:fs/promises";
 const cases = [
   [
@@ -281,6 +282,7 @@ test("project navigator tabs expose the real library, examples and search", asyn
   page,
 }) => {
   await page.goto("/");
+  await openProjectNavigator(page);
   const tabs = page.getByRole("tablist", { name: "Project navigator" });
   await expect(tabs.getByRole("tab", { name: "Examples (6)" })).toBeVisible();
   await tabs.getByRole("tab", { name: "Examples (6)" }).click();
@@ -298,3 +300,4 @@ test("project navigator tabs expose the real library, examples and search", asyn
   await tabs.getByRole("tab", { name: "Library" }).click();
   await expect(page.locator(".component-library[open]")).toBeVisible();
 });
+

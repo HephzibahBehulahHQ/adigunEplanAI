@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openProjectPanel } from "./workbench.ts";
+import { openProjectPanel, openWorkbenchPanel } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -35,6 +35,7 @@ test("calculation inputs, unit conversion, native replay and full report exports
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(createProject("Calculation project"))),
   });
+  await openWorkbenchPanel(page, "calculations");
   const tools = page.getByRole("region", {
     name: "Engineering calculations",
     exact: true,
@@ -220,6 +221,7 @@ test("calculation panel rejects missing engineering evidence and unsupported rec
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openWorkbenchPanel(page, "calculations");
   const tools = page.getByRole("region", {
     name: "Engineering calculations",
     exact: true,
@@ -291,6 +293,7 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     await expect(page.locator(".empty-workspace")).toBeVisible();
     await openProjectPanel(page);
     await page.getByTestId("project-picker").selectOption(project.id);
+    await openWorkbenchPanel(page, "calculations");
     const tools = page.getByRole("region", {
       name: t.calcTools,
       exact: true,
@@ -337,3 +340,4 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     await expect(lastShortcut).toBeInViewport();
   });
 }
+

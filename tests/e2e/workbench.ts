@@ -20,6 +20,34 @@ export async function openProjectPanel(page: Page) {
   return panel;
 }
 
+export async function openWorkbenchPanel(
+  page: Page,
+  id:
+    | "properties"
+    | "panel3d"
+    | "diagnostics"
+    | "calculations"
+    | "bom"
+    | "reports",
+) {
+  const panel = page.locator(`[data-panel="${id}"]`);
+  if (await panel.isVisible()) return panel;
+  const labels = {
+    properties: "Properties",
+    panel3d: "Panel design",
+    diagnostics: "Run electrical check",
+    calculations: "Open calculations",
+    bom: "Bill of materials",
+    reports: "Reports",
+  };
+  await page
+    .locator(".workbench-rail-right")
+    .getByRole("button", { name: labels[id], exact: true })
+    .click();
+  await expect(panel).toBeVisible();
+  return panel;
+}
+
 export async function openComponentLibrary(page: Page) {
   const panel = page.locator('[data-panel="project"]');
   if (!(await panel.isVisible())) {
@@ -49,3 +77,4 @@ export async function selectMenuTab(page: Page, name: string) {
     .getByRole("button", { name, exact: true })
     .click();
 }
+

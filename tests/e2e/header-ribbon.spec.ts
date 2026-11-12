@@ -94,8 +94,9 @@ test("mobile dock panels open over the workspace without moving it", async ({
 
   await button.click();
   const panel = page.locator('[data-panel="calculations"]');
+  const dock = page.locator(".engineering-layout > .dock");
   await expect(panel).toBeVisible();
-  await expect(panel).toHaveCSS("position", "fixed");
+  await expect(dock).toHaveCSS("position", "fixed");
   await expect
     .poll(async () => (await workspace.boundingBox())?.toJSON())
     .toEqual(before?.toJSON());
@@ -169,3 +170,4 @@ test("Home places native components, cuts and undoes, validates and opens real c
     .click();
   await expect(page.getByLabel("Theme", { exact: true })).toBeVisible();
 });
+
