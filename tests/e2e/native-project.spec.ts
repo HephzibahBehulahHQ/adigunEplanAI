@@ -1,4 +1,5 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
+import { selectMenuTab } from "./workbench.ts";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const key = "adiguneplanai.projects.v1";
@@ -43,7 +44,7 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
   await properties
     .getByLabel("Document Document language", { exact: true })
     .selectOption("de");
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectMenuTab(page, "Settings");
   await page.getByLabel("Language", { exact: true }).selectOption("yo");
   await reloadAndReopenProject(page);
   const data = await page.evaluate(

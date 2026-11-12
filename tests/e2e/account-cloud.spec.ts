@@ -2,7 +2,7 @@ import { test, expect, type Page, type Route } from "@playwright/test";
 import type { Project } from "../../packages/electrical-model/project.ts";
 import { accountStorageKey } from "../../packages/project-storage/repository.ts";
 import { avatarImages } from "../fixtures/avatar-image.mjs";
-import { openProjectPanel } from "./workbench.ts";
+import { openProjectPanel, selectMenuTab } from "./workbench.ts";
 const backend = "https://fqcbfnktdvqojyezxeis.supabase.co";
 const a = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
   b = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
@@ -631,8 +631,9 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   await create(page, "Alpha");
   await page.locator(".workbench-add-sheet").click();
   await create(page, "Beta");
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectMenuTab(page, "Settings");
   await page
+    .locator(".workbench-toolbar")
     .getByRole("button", { name: "Search workspace", exact: true })
     .click();
   const search = page.getByRole("dialog", {

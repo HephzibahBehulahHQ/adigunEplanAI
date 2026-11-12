@@ -163,6 +163,18 @@
   overflow-y: hidden;
   scrollbar-width: none;
 }
+.workbench-interface .workbench-feedback {
+  position: absolute;
+  z-index: 600;
+  top: calc(var(--workbench-header) + var(--workbench-toolbar) + 4px);
+  left: 50%;
+  width: max-content;
+  max-width: min(92vw, 680px);
+  transform: translateX(-50%);
+  border: 1px solid #a33b36;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px #07132140;
+}
 .workbench-interface .workbench-toolbar::-webkit-scrollbar {
   display: none;
 }

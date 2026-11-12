@@ -219,7 +219,10 @@ test("failed building download allows return to the unchanged schematic project"
   await expect(page.getByRole("alert")).toHaveText(
     "Building design could not load. Your project remains available in the schematic workspace.",
   );
-  await page.getByRole("button", { name: "Schematic", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Workspace view", exact: true })
+    .getByRole("button", { name: "Schematic", exact: true })
+    .click();
   await expect(page.locator(".engineering-canvas")).toBeVisible();
   expect(await project(page)).toEqual(before);
 });

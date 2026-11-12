@@ -425,7 +425,7 @@ function Workspace({ account }: { account: Account }) {
         aria-label={t("ribbonWorkspace")}
       >
         <div className="workbench-file-tools">
-          <ProjectTools native={native} t={t} home />
+          <ProjectTools native={native} t={t} />
         </div>
         <div className="workbench-tool-group">
           {iconButton("undo", "undo", native.undo, false, !native.canUndo)}
@@ -625,16 +625,6 @@ function Workspace({ account }: { account: Account }) {
             </button>
           ))}
         </nav>
-        {native.error && (
-          <p className="storage-error" role="alert">
-            {t(native.error)}
-          </p>
-        )}
-        {account.checking && (
-          <p className="storage-error" role="status">
-            {t("accountChecking")}
-          </p>
-        )}
         <div
           className="ribbon"
           data-tab={tab}
@@ -795,6 +785,16 @@ function Workspace({ account }: { account: Account }) {
           )}
         </div>
       </div>
+      {native.error && (
+        <p className="storage-error workbench-feedback" role="alert">
+          {t(native.error)}
+        </p>
+      )}
+      {account.checking && (
+        <p className="storage-error workbench-feedback" role="status">
+          {t("accountChecking")}
+        </p>
+      )}
       {storageError && (
         <p className="storage-error" role="status">
           {t("storageError")}

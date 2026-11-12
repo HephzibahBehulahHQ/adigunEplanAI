@@ -83,7 +83,10 @@ test("custom component revisions preserve native wiring and require explicit par
   await create(page, "Custom component revisions");
   await terminal(page, 100);
   await terminal(page, 160);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   await page.getByRole("button", { name: "X2:1", exact: true }).click();
   const before = await project(page);

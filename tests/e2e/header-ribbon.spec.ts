@@ -5,6 +5,9 @@ import { selectMenuTab } from "./workbench.ts";
 test("compact workstation geometry stays fixed while menus open at desktop and mobile widths", async ({
   page,
 }, testInfo) => {
+  await page.addInitScript(() =>
+    localStorage.removeItem("adiguneplanai.workbench-panels.v1"),
+  );
   await page.goto("/");
   for (const [width, height] of [
     [1920, 1080],

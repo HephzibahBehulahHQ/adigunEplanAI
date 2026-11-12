@@ -97,7 +97,10 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
         .getByRole("combobox", { name: "Symbols", exact: true })
         .selectOption("terminal");
       await click(240, 100);
-      await page.getByRole("button", { name: "Wire", exact: true }).click();
+      await page
+        .getByRole("main", { name: "Workspace", exact: true })
+        .getByRole("button", { name: "Wire", exact: true })
+        .click();
       const fromPinId = await clickWirePin(page, `U1:${endpoint}`);
       const toPinId = await clickWirePin(page, "X1:1");
       data = await project();

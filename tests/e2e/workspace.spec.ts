@@ -11,7 +11,7 @@ test("theme, locale and custom background survive reload", async ({ page }) => {
   await expect(
     page.getByRole("img", { name: "Hephzibah Behulah" }),
   ).toHaveCount(1);
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectMenuTab(page, "Settings");
   await page.getByLabel("Theme", { exact: true }).selectOption("light");
   await page
     .getByLabel("Drawing background", { exact: true })

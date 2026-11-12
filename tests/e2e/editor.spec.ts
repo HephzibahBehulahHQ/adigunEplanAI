@@ -95,10 +95,16 @@ test("manual route edits persist and reset through native undo history", async (
   await create(page);
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 100, 50);
   const route = page.getByRole("form", {
     name: "Apply manual route",
@@ -134,10 +140,16 @@ test("wire properties and shielded cable cores persist as native engineering met
   await create(page);
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 100, 50);
   await page.locator(".wire-properties summary").click();
   const wire = page.getByRole("form", { name: "Wire properties", exact: true });
@@ -251,7 +263,10 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 120, 80);
   await expect(page.locator("[data-instance]")).toHaveCount(2);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await expect(page.locator("[data-wire]")).toHaveCount(1);
@@ -264,7 +279,10 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await expect(connectivity.getByRole("table")).toContainText("W1");
   await expect(connectivity.getByRole("table")).toContainText("R1:2");
   await expect(connectivity.getByRole("table")).toContainText("H1:1");
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 50, 50);
   await page.getByRole("application", { name: "Sheet 1", exact: true }).focus();
   await page.keyboard.press("ArrowRight");
@@ -300,7 +318,10 @@ test("numbering preview can be cancelled, applied and undone", async ({
 }) => {
   await create(page);
   await place(page, "resistor", 50, 50);
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 50, 50);
   const props = page.getByRole("form", { name: "Properties", exact: true });
   await props.getByLabel("Reference", { exact: true }).fill("R9");
@@ -337,7 +358,10 @@ test("property editing, labels, layer locks, sheet sizes and zoom change real st
 }) => {
   await create(page);
   await place(page, "resistor", 50, 50);
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   const props = page.getByRole("form", { name: "Properties", exact: true });
   await props.getByLabel("Reference", { exact: true }).fill("R10");
   await props.getByRole("button", { name: "Apply", exact: true }).click();
@@ -637,7 +661,10 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
   await create(page);
   await place(page, "resistor", 80, 80);
   await place(page, "lamp", 140, 130);
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 80, 80);
   await page.keyboard.down("Shift");
   await clickWorld(page, 140, 130);
@@ -682,7 +709,10 @@ test("junction insertion updates the real wire graph and BOM while navigator con
   await create(page);
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await place(page, "junction", 100, 50);
@@ -901,7 +931,10 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   await clickWorld(page, 100, 100);
   await place(page, "terminal", 40, 60);
   await place(page, "terminal", 160, 60);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "U1:bus/tap1", exact: true }).click();
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   await page.getByRole("button", { name: "U1:bus/tap3", exact: true }).click();
@@ -941,7 +974,10 @@ test("connector poles retain separate electrical nodes while each pole passes th
   );
   expect(groups).toEqual([2, 2]);
   await place(page, "terminal", 40, 60);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "U1:pole1/in1", exact: true }).click();
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   data = await project(page);
@@ -1034,7 +1070,10 @@ for (const [id, query, endpoint, count] of [
     expect(data.terminals).toHaveLength(count);
     expect(data.nets).toHaveLength(count);
     await place(page, "terminal", 160, 80);
-    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
     await page
       .getByRole("button", { name: `U1:${endpoint}`, exact: true })
       .click();
@@ -1076,7 +1115,10 @@ for (const [id, query, endpoint, count] of [
     expect(data.terminals).toHaveLength(count);
     expect(data.nets).toHaveLength(count);
     await place(page, "terminal", 160, 80);
-    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
     await page
       .getByRole("button", { name: `U1:${endpoint}`, exact: true })
       .click();
@@ -1126,7 +1168,10 @@ for (const [id, query, channel] of [
     await clickWorld(page, 80, 80);
     expect((await project(page)).terminals).toHaveLength(6);
     await place(page, "resistor", 150, 80);
-    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
     const fromPinId = await clickWirePin(page, `U1:${channel}`);
     const toPinId = await clickWirePin(page, "R1:1");
     const data = await project(page);
@@ -1165,7 +1210,10 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   await expect(page.locator("[data-custom-artwork] line")).toHaveCount(1);
   await expect(page.locator("[data-custom-artwork] circle")).toHaveCount(1);
   await place(page, "lamp", 150, 80);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "U1:OUT", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   expect((await project(page)).wires).toHaveLength(1);

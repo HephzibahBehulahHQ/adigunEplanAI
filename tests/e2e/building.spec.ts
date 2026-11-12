@@ -1008,6 +1008,7 @@ test("floor equipment shares schematic identity, protects layers and persists a 
     .getByLabel("Project name", { exact: true })
     .fill("Equipment reference");
   await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption("lamp");

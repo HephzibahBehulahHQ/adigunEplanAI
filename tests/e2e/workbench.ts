@@ -44,5 +44,8 @@ export async function selectMenuTab(page: Page, name: string) {
   const trigger = page.getByRole("button", { name: "menu", exact: true });
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
     await trigger.click();
-  await page.getByRole("button", { name, exact: true }).click();
+  await page
+    .locator(".workbench-command-popover .ribbon-tabs")
+    .getByRole("button", { name, exact: true })
+    .click();
 }

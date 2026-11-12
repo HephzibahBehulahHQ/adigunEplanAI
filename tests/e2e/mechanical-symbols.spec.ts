@@ -62,7 +62,10 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   expect(data.terminals).toHaveLength(0);
   expect(data.nets).toHaveLength(0);
   await expect(page.getByRole("button", { name: /^ME1:/ })).toHaveCount(0);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await clickWorld(page, 100, 100);
   expect((await project(page)).wires).toHaveLength(0);
   await page.locator(".custom-components > summary").click();
