@@ -2,7 +2,7 @@ import {
   openComponentLibrary,
   openEditorTools,
   selectMenuTab,
-} from "./workbench";
+} from "./workbench.ts";
 import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";

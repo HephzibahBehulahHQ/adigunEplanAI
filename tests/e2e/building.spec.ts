@@ -1,7 +1,7 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { dxfFixture } from "../fixtures/dxf-plan.mjs";
 import { test, expect } from "@playwright/test";
-import { openEditorTools } from "./workbench";
+import { openEditorTools } from "./workbench.ts";
 
 test("buildings, floors and dimensioned room outlines persist with undo and isolated floor views", async ({
   page,

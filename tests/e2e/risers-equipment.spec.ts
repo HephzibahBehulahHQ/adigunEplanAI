@@ -8,7 +8,7 @@ import {
 } from "../../packages/building-design/structure.ts";
 import { addPlanLayer } from "../../packages/building-design/walls.ts";
 import type { Project } from "../../packages/electrical-model/project.ts";
-import { openProjectPanel } from "./workbench";
+import { openProjectPanel } from "./workbench.ts";
 
 async function prepare(page: Page) {
   let project = addBuilding(nativeProject(), "Workshop", "");

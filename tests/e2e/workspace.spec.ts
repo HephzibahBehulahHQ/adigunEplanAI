@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openProjectPanel, selectMenuTab } from "./workbench";
+import { openProjectPanel, selectMenuTab } from "./workbench.ts";
 
 test("theme, locale and custom background survive reload", async ({ page }) => {
   const errors: string[] = [];

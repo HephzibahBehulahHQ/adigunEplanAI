@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { openProjectPanel } from "./workbench";
+import { openProjectPanel } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";

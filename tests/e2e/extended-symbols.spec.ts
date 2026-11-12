@@ -1,4 +1,4 @@
-import { openComponentLibrary, openEditorTools } from "./workbench";
+import { openComponentLibrary, openEditorTools } from "./workbench.ts";
 import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";

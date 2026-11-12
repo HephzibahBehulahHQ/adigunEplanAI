@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
-import { selectMenuTab } from "./workbench";
+import { selectMenuTab } from "./workbench.ts";
 
 test("compact workstation geometry stays fixed while menus open at desktop and mobile widths", async ({
   page,

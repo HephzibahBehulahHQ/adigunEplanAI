@@ -2,7 +2,7 @@ import { test, expect, type Page, type Route } from "@playwright/test";
 import type { Project } from "../../packages/electrical-model/project.ts";
 import { accountStorageKey } from "../../packages/project-storage/repository.ts";
 import { avatarImages } from "../fixtures/avatar-image.mjs";
-import { openProjectPanel } from "./workbench";
+import { openProjectPanel } from "./workbench.ts";
 const backend = "https://fqcbfnktdvqojyezxeis.supabase.co";
 const a = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
   b = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";

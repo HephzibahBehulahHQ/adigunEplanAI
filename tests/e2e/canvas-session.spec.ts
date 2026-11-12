@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
-import { openProjectPanel } from "./workbench";
+import { openProjectPanel } from "./workbench.ts";
 
 test("refresh and a new tab start blank; saved projects reopen explicitly with clean history", async ({
   page,

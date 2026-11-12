@@ -1,4 +1,4 @@
-import { openComponentLibrary, openEditorTools } from "./workbench";
+import { openComponentLibrary, openEditorTools } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";

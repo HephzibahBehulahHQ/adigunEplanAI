@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
-import { selectMenuTab } from "./workbench";
+import { selectMenuTab } from "./workbench.ts";
 
 test("native drawing frame, cabinet and calculation records share the current project", async ({
   page,

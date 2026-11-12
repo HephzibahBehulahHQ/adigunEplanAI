@@ -1,4 +1,4 @@
-import { openComponentLibrary } from "./workbench";
+import { openComponentLibrary } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
