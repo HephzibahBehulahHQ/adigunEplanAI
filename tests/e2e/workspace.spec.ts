@@ -98,6 +98,7 @@ test("workstation regions stay fixed while ribbon categories change", async ({
 }) => {
   await page.setViewportSize({ width: 1680, height: 1050 });
   await page.goto("/");
+  await expect(page.locator(".storage-error[role=status]")).toHaveCount(0);
   const regions = [
     ".workbench-header",
     ".ribbon-tabs",
