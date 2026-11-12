@@ -12,6 +12,7 @@ import {
 } from "react";
 import {
   WorkspaceCommands,
+  CommandIcon,
   ribbonTabs,
   type RibbonTab,
 } from "./WorkspaceRibbon";
@@ -48,6 +49,7 @@ import {
 import "./workspace.css";
 import "./account.css";
 import "./home-ribbon.css";
+import "./workbench-shell.css";
 
 const ExampleLibrary = lazy(() =>
   import("./ExampleLibrary").then((module) => ({
@@ -102,6 +104,11 @@ function Workspace({ account }: { account: Account }) {
   const [botSignal, setBotSignal] = useState(0);
   const [librarySignal, setLibrarySignal] = useState(0);
   const [tab, setTab] = useState<RibbonTab>("home");
+  const [commandOpen, setCommandOpen] = useState(false);
+  const [editorToolsOpen, setEditorToolsOpen] = useState(false);
+  const [activeLeft, setActiveLeft] = useState<PanelId | null>(null);
+  const [activeRight, setActiveRight] = useState<PanelId | null>(null);
+  const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
@@ -128,7 +135,10 @@ function Workspace({ account }: { account: Account }) {
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const reveal = (id: PanelId) => {
-    panel(id, { visible: true, collapsed: false });
+    const dock: Dock = id === "project" ? "left" : "right";
+    panel(id, { visible: true, collapsed: false, dock });
+    if (dock === "left") setActiveLeft(id);
+    else setActiveRight(id);
     if (id === "project") setLibrarySignal((value) => value + 1);
     requestAnimationFrame(() => {
       const element = document.querySelector<HTMLElement>(
@@ -139,6 +149,59 @@ function Workspace({ account }: { account: Account }) {
         ?.focus();
     });
   };
+  const togglePanel = (id: PanelId) => {
+    if (id === "project" && activeLeft === id) setActiveLeft(null);
+    else if (id !== "project" && activeRight === id) setActiveRight(null);
+    else reveal(id);
+  };
+  const iconButton = (
+    label: MessageKey, icon: string, action: () => void,
+    pressed = false, disabled = false,
+  ) => (
+    <button
+      type="button"
+      className="workbench-icon-button"
+      aria-label={t(label)}
+      title={t(label)}
+      aria-pressed={pressed}
+      onClick={action}
+      disabled={disabled}
+    >
+      <CommandIcon kind={icon} />
+    </button>
+  );
+  const closeMenu = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = null;
+    setCommandOpen(false);
+  };
+  const cancelMenuClose = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = null;
+  };
+  const scheduleMenuClose = (pointerType: string) => {
+    if (pointerType !== "mouse" && pointerType !== "pen") return;
+    cancelMenuClose();
+    menuCloseTimer.current = setTimeout(() => setCommandOpen(false), 180);
+  };
+  useEffect(() => {
+    if (!commandOpen) return;
+    const outside = (event: PointerEvent) => {
+      if ((event.target as Element).closest(".workbench-command-popover, .workbench-menu-trigger")) return;
+      closeMenu();
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      closeMenu();
+      document.querySelector<HTMLButtonElement>(".workbench-menu-trigger")?.focus();
+    };
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [commandOpen]);
   const renderPanel = (id: PanelId) => {
     const state = prefs.panels[id];
     return (
@@ -159,7 +222,11 @@ function Workspace({ account }: { account: Account }) {
           <button
             title={t("hide")}
             aria-label={`${t("hide")} ${t(id)}`}
-            onClick={() => panel(id, { visible: false })}
+            onClick={() => {
+              panel(id, { visible: false });
+              if (id === activeLeft) setActiveLeft(null);
+              if (id === activeRight) setActiveRight(null);
+            }}
           >
             ×
           </button>
@@ -246,18 +313,21 @@ function Workspace({ account }: { account: Account }) {
     >
       {panelIds
         .filter(
-          (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
+          (id) =>
+            prefs.panels[id].visible &&
+            prefs.panels[id].dock === dock &&
+            (dock === "left" ? id === activeLeft : dock === "right" ? id === activeRight : false),
         )
         .map(renderPanel)}
     </aside>
   );
-  const has = (dock: Dock) =>
-    panelIds.some(
-      (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
-    );
+  const has = (dock: Dock) => {
+    const id = dock === "left" ? activeLeft : dock === "right" ? activeRight : null;
+    return id !== null && prefs.panels[id].visible && prefs.panels[id].dock === dock;
+  };
   return (
     <div
-      className="application"
+      className="application workbench-interface"
       data-project-id={native.project?.id ?? ""}
       data-compact={prefs.compact}
       inert={account.checking && !account.user}
@@ -445,7 +515,16 @@ function Workspace({ account }: { account: Account }) {
       )}
       <div
         className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") ? "has-right" : ""}`}
+        data-editor-tools-open={editorToolsOpen}
       >
+        <aside className="workbench-icon-rail workbench-rail-left" aria-label={t("panels")}>
+          {iconButton("project", "library", () => togglePanel("project"), activeLeft === "project")}
+          {iconButton("schematicView", "circuit", () => native.setView("schematic"), native.view === "schematic", !native.project)}
+          {iconButton("buildingDesign", "building", () => native.setView("building"), native.view === "building", !native.project)}
+          {iconButton("automationDesign", "junction", () => native.setView("automation"), native.view === "automation", !native.project)}
+          {iconButton("panelDesign", "panel", () => native.setView("panel"), native.view === "panel", !native.project)}
+          {iconButton("openLibrary", "catalog", () => togglePanel("project"), activeLeft === "project")}
+        </aside>
         {has("left") && region("left")}
         <main
           id="workspace"
@@ -503,6 +582,16 @@ function Workspace({ account }: { account: Account }) {
           </div>
         </main>
         {has("right") && region("right")}
+        <aside className="workbench-icon-rail workbench-rail-right" aria-label={t("panels")}>
+          {iconButton("properties", "align", () => togglePanel("properties"), activeRight === "properties")}
+          {iconButton("openDiagnostics", "check", () => togglePanel("diagnostics"), activeRight === "diagnostics")}
+          {iconButton("openCalculations", "calc", () => togglePanel("calculations"), activeRight === "calculations")}
+          {iconButton("panel3d", "panel", () => togglePanel("panel3d"), activeRight === "panel3d")}
+          {iconButton("openBom", "report", () => togglePanel("bom"), activeRight === "bom")}
+          {iconButton("reports", "report", () => togglePanel("reports"), activeRight === "reports")}
+          {iconButton("menuAiTools", "profile", () => setBotSignal((value) => value + 1))}
+          {iconButton("settings", "theme", () => { setTab("settings"); setCommandOpen(true); })}
+        </aside>
         <BotWindow
           native={native}
           ownerId={account.user?.id ?? null}
