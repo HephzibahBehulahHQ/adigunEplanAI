@@ -38,7 +38,7 @@ export async function openWorkbenchPanel(
   if (await panel.isVisible()) return panel;
   const labels = {
     properties: "Properties",
-    panel3d: "Panel design",
+    panel3d: "3D panel",
     diagnostics: "Run electrical check",
     calculations: "Open calculations",
     bom: "Bill of materials",
@@ -83,7 +83,7 @@ export async function selectWorkspaceView(page: Page, label: string) {
 }
 
 export async function selectMenuTab(page: Page, name: string) {
-  const trigger = page.getByRole("button", { name: "menu", exact: true });
+  const trigger = page.locator(".workbench-tool-end > .workbench-menu-trigger");
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
     await trigger.click();
   await page

@@ -1,12 +1,16 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
+import { openProjectPanel, openWorkbenchPanel } from "./workbench.ts";
 
 async function selectMenuTab(page: Page, name: string) {
-  const trigger = page.getByRole("button", { name: "menu", exact: true });
+  const trigger = page.locator(".workbench-tool-end > .workbench-menu-trigger");
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
     await trigger.click();
-  await page.getByRole("button", { name, exact: true }).click();
+  await page
+    .locator(".workbench-command-popover .ribbon-tabs")
+    .getByRole("button", { name, exact: true })
+    .click();
 }
 
 function mappedProject() {
@@ -49,6 +53,7 @@ test("cabinet camera pan, zoom and fit preserve engineering geometry", async ({
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openWorkbenchPanel(page, "panel3d");
   const preview = page.locator(".panel-preview");
   const canvas = preview.locator(".panel-3d-view");
   await expect(canvas).toBeVisible();
@@ -139,6 +144,7 @@ test("schematic and cabinet selection synchronize without changing saved enginee
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openWorkbenchPanel(page, "panel3d");
   const cabinet = page.locator('[data-panel="panel3d"]');
   const equipment = cabinet
     .locator('[data-panel-object="equipment-a"]')
@@ -220,6 +226,7 @@ test("ribbon commands edit native data once, support undo and survive view switc
     .getByRole("button", { name: "Undo · Engineering commands", exact: true })
     .click();
   await expect.poll(rotation).toBe(0);
+  await selectMenuTab(page, "Edit menu");
   await page
     .getByRole("button", { name: "Redo · Engineering commands", exact: true })
     .click();
@@ -235,6 +242,8 @@ test("project tree filtering selects genuine mapped devices without changing nat
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(mappedProject())),
   });
+  await openProjectPanel(page);
+  await openWorkbenchPanel(page, "panel3d");
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
@@ -317,6 +326,7 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openWorkbenchPanel(page, "panel3d");
   const before = await page.evaluate(() =>
     localStorage.getItem("adiguneplanai.projects.v1"),
   );
@@ -342,6 +352,7 @@ test("cabinet mapping opens the correct sheet and explicit page navigation clear
   );
   await enclosurePicker.selectOption("cabinet-2");
   await expect(remote).toHaveAttribute("aria-pressed", "true");
+  await openProjectPanel(page);
   await page
     .locator('[data-panel="project"]')
     .getByRole("button", { name: "Sheet 1", exact: true })

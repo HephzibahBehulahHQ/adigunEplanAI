@@ -8,6 +8,12 @@
   --workbench-header: 34px;
   --workbench-toolbar: 36px;
   --workbench-rail: 36px;
+  --workbench-footer: 27px;
+}
+html:has(.workbench-interface),
+body:has(.workbench-interface) {
+  height: 100%;
+  overflow: hidden;
 }
 .workbench-interface .app-header.workbench-header {
   height: var(--workbench-header);
@@ -263,26 +269,26 @@
   display: flex;
   justify-content: center;
   gap: 0;
-  flex-basis: 45px;
-  width: 45px;
+  flex-basis: 32px;
+  width: 32px;
   background: #d2f8ff;
   border-color: #67ddeb;
 }
 .workbench-interface .workbench-bolt {
-  font-size: 28px;
+  font-size: 18px;
   line-height: 1;
   font-weight: bold;
 }
 .workbench-interface .workbench-chevron {
-  font-size: 15px;
+  font-size: 11px;
 }
 .workbench-interface .workbench-command-popover {
-  position: absolute;
+  position: fixed;
   z-index: 500;
-  left: min(32vw, 420px);
+  left: 8px;
   top: calc(var(--workbench-header) + var(--workbench-toolbar) - 1px);
-  width: min(570px, calc(100vw - 25px));
-  max-height: min(70dvh, 650px);
+  width: min(800px, calc(100vw - 16px));
+  max-height: min(72dvh, 720px);
   overflow: auto;
   overscroll-behavior: contain;
   border: 1px solid #36667a;
@@ -370,13 +376,44 @@
   overflow: hidden;
   background: #f1f5f9;
 }
-.workbench-interface .engineering-layout:has(> .dock-bottom) {
+.workbench-interface
+  .engineering-layout:has(> .dock-bottom > .panel > .panel-body) {
   grid-template-rows: minmax(0, 1fr) minmax(0, min(36dvh, 280px));
 }
 .workbench-interface .engineering-layout > .dock-bottom {
   max-height: min(36dvh, 280px);
   min-height: 0;
   overflow: auto;
+}
+.workbench-interface .engineering-layout > .dock-bottom:not(:has(.panel-body)) {
+  max-height: 42px;
+  overflow: hidden;
+}
+.workbench-interface .dock {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+.workbench-interface .dock > .panel {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
+}
+.workbench-interface .dock > .panel > .panel-heading {
+  flex: none;
+}
+.workbench-interface .dock > .panel > .panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 .workbench-interface .engineering-layout.has-left {
   grid-template-columns:
@@ -524,6 +561,84 @@
     )
     > .workbench-rail-right {
     grid-column: 6;
+    grid-row: 1;
+  }
+}
+@media (min-width: 1600px) {
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    ) {
+    grid-template-columns:
+      var(--workbench-rail) minmax(240px, 280px) minmax(600px, 1fr)
+      minmax(300px, 340px) minmax(280px, 330px) var(--workbench-rail);
+  }
+}
+@media (min-width: 1001px) and (max-width: 1440px) {
+  .workbench-interface
+    .engineering-layout.has-left:has(> .bot-window[data-docked="true"]) {
+    grid-template-columns:
+      var(--workbench-rail) minmax(0, 1fr) minmax(230px, 280px)
+      var(--workbench-rail);
+  }
+  .workbench-interface
+    .engineering-layout.has-left:has(> .bot-window[data-docked="true"])
+    > .dock-left {
+    position: fixed;
+    z-index: 30;
+    top: calc(var(--workbench-header) + var(--workbench-toolbar));
+    bottom: var(--workbench-footer);
+    left: var(--workbench-rail);
+    width: min(280px, calc(100vw - 80px));
+  }
+  .workbench-interface
+    .engineering-layout.has-left:has(> .bot-window[data-docked="true"])
+    > .workspace {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left:has(> .bot-window[data-docked="true"])
+    > .bot-window[data-docked="true"] {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left:has(> .bot-window[data-docked="true"])
+    > .workbench-rail-right {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    ) {
+    grid-template-columns:
+      var(--workbench-rail) minmax(0, 1fr) minmax(210px, 250px)
+      minmax(230px, 280px) var(--workbench-rail);
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .dock-right {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .bot-window[data-docked="true"] {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .workbench-rail-right {
+    grid-column: 5;
     grid-row: 1;
   }
 }

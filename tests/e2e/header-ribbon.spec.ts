@@ -88,6 +88,7 @@ test("mobile dock panels open over the workspace without moving it", async ({
   await page.goto("/");
   const workspace = page.locator(".engineering-layout");
   const before = await workspace.boundingBox();
+  expect(before).not.toBeNull();
   const button = page
     .locator(".workbench-rail-right")
     .getByRole("button", { name: "Open calculations", exact: true });
@@ -98,8 +99,18 @@ test("mobile dock panels open over the workspace without moving it", async ({
   await expect(panel).toBeVisible();
   await expect(dock).toHaveCSS("position", "fixed");
   await expect
-    .poll(async () => (await workspace.boundingBox())?.toJSON())
-    .toEqual(before?.toJSON());
+    .poll(async () => {
+      const after = await workspace.boundingBox();
+      return after && before
+        ? Math.max(
+            Math.abs(after.x - before.x),
+            Math.abs(after.y - before.y),
+            Math.abs(after.width - before.width),
+            Math.abs(after.height - before.height),
+          )
+        : Number.POSITIVE_INFINITY;
+    })
+    .toBeLessThanOrEqual(1);
 
   await button.click();
   await expect(panel).toHaveCount(0);

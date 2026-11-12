@@ -7,6 +7,7 @@ import { WireProperties } from "./WireProperties";
 import "./schematic-editor.css";
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type PointerEvent as ReactPointerEvent,
@@ -106,7 +107,17 @@ export function SchematicEditor({
   const [preview, setPreview] = useState<Point>({ x: 0, y: 0 });
   const [marquee, setMarquee] = useState<{ a: Point; b: Point } | null>(null);
   const svg = useRef<SVGSVGElement>(null);
+  const editorRoot = useRef<HTMLDivElement>(null);
+  const [propertiesPortalTarget, setPropertiesPortalTarget] =
+    useState<HTMLElement | null>(null);
   const drag = useRef<Drag | null>(null);
+  useLayoutEffect(() => {
+    const target =
+      document.getElementById("native-object-properties") ?? editorRoot.current;
+    setPropertiesPortalTarget((current) =>
+      current === target ? current : target,
+    );
+  });
   useEffect(() => {
     const readout = coordinateReadout.current;
     return () => {
@@ -578,6 +589,7 @@ export function SchematicEditor({
   ).length;
   return (
     <div
+      ref={editorRoot}
       className="schematic-editor"
       onKeyDown={(event) => {
         if ((event.target as HTMLElement).closest("input,select,textarea"))
@@ -914,6 +926,7 @@ export function SchematicEditor({
       </details>
       {selectedInstance &&
         selectedDevice &&
+        propertiesPortalTarget &&
         createPortal(
           <form
             className="editor-toolbar"
@@ -988,8 +1001,7 @@ export function SchematicEditor({
               ))}
             <button>{t("apply")}</button>
           </form>,
-          document.getElementById("native-object-properties") ??
-            document.querySelector(".schematic-editor")!,
+          propertiesPortalTarget,
         )}
       {wire && (
         <WireProperties project={project} wire={wire} edit={edit} t={t} />

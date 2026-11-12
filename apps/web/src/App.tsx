@@ -3,12 +3,14 @@ import productConfig from "../../../product.config.json";
 import brands from "../../../packages/design-tokens/brands.json";
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   lazy,
   Suspense,
   type CSSProperties,
+  type MouseEvent,
 } from "react";
 import {
   WorkspaceCommands,
@@ -57,6 +59,7 @@ const ExampleLibrary = lazy(() =>
   })),
 );
 const activePanelsKey = "adiguneplanai.workbench-panels.v1";
+type MenuSource = "electrical" | "ribbon" | "settings";
 
 export function App() {
   const account = useAccount();
@@ -105,7 +108,12 @@ function Workspace({ account }: { account: Account }) {
   const [botSignal, setBotSignal] = useState(0);
   const [librarySignal, setLibrarySignal] = useState(0);
   const [tab, setTab] = useState<RibbonTab>("home");
-  const [commandOpen, setCommandOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<MenuSource | null>(null);
+  const commandOpen = activeMenu !== null;
+  const activeMenuRef = useRef<MenuSource | null>(null);
+  activeMenuRef.current = activeMenu;
+  const menuAnchorRef = useRef<HTMLButtonElement | null>(null);
+  const [popoverPosition, setPopoverPosition] = useState<CSSProperties>({});
   const [editorToolsOpen, setEditorToolsOpen] = useState(false);
   const restoreActivePanel = (dock: Dock): PanelId | null => {
     try {
@@ -209,7 +217,7 @@ function Workspace({ account }: { account: Account }) {
   const iconButton = (
     label: MessageKey,
     icon: string,
-    action: () => void,
+    action: (event: MouseEvent<HTMLButtonElement>) => void,
     pressed = false,
     disabled = false,
     ariaLabel?: string,
@@ -229,7 +237,7 @@ function Workspace({ account }: { account: Account }) {
   const closeMenu = () => {
     if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
     menuCloseTimer.current = null;
-    setCommandOpen(false);
+    setActiveMenu(null);
   };
   const cancelMenuClose = () => {
     if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
@@ -238,8 +246,66 @@ function Workspace({ account }: { account: Account }) {
   const scheduleMenuClose = (pointerType: string) => {
     if (pointerType !== "mouse" && pointerType !== "pen") return;
     cancelMenuClose();
-    menuCloseTimer.current = setTimeout(() => setCommandOpen(false), 180);
+    menuCloseTimer.current = setTimeout(() => {
+      const focused = document.activeElement;
+      if (
+        focused instanceof Element &&
+        document.querySelector(".workbench-command-popover")?.contains(focused)
+      )
+        return;
+      closeMenu();
+    }, 300);
   };
+  const measurePopover = (anchor: HTMLButtonElement) => {
+    const rect = anchor.getBoundingClientRect();
+    const width = Math.min(800, Math.max(0, window.innerWidth - 16));
+    const left = Math.max(
+      8,
+      Math.min(rect.left, window.innerWidth - width - 8),
+    );
+    const top = Math.min(
+      rect.bottom + 4,
+      Math.max(8, window.innerHeight - 120),
+    );
+    return {
+      left,
+      top,
+      maxHeight: Math.max(
+        120,
+        Math.min(window.innerHeight * 0.72, window.innerHeight - top - 8),
+      ),
+    };
+  };
+  const toggleMenu = (
+    source: MenuSource,
+    anchor: HTMLButtonElement,
+    nextTab?: RibbonTab,
+  ) => {
+    cancelMenuClose();
+    if (activeMenuRef.current === source) {
+      closeMenu();
+      return;
+    }
+    menuAnchorRef.current = anchor;
+    setPopoverPosition(measurePopover(anchor));
+    if (nextTab) setTab(nextTab);
+    activeMenuRef.current = source;
+    setActiveMenu(source);
+  };
+  useLayoutEffect(() => {
+    if (!commandOpen) return;
+    const reposition = () => {
+      if (menuAnchorRef.current?.isConnected)
+        setPopoverPosition(measurePopover(menuAnchorRef.current));
+    };
+    reposition();
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
+    return () => {
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
+    };
+  }, [commandOpen]);
   useEffect(() => {
     if (!commandOpen) return;
     const outside = (event: PointerEvent) => {
@@ -253,10 +319,9 @@ function Workspace({ account }: { account: Account }) {
     };
     const escape = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
+      if (document.querySelector("dialog[open]")) return;
       closeMenu();
-      document
-        .querySelector<HTMLButtonElement>(".workbench-menu-trigger")
-        ?.focus();
+      menuAnchorRef.current?.focus();
     };
     document.addEventListener("pointerdown", outside);
     document.addEventListener("keydown", escape);
@@ -471,13 +536,12 @@ function Workspace({ account }: { account: Account }) {
             aria-label={t("menuElectrical")}
             title={t("menuElectrical")}
             aria-haspopup="menu"
-            aria-expanded={commandOpen}
+            aria-expanded={activeMenu === "electrical"}
+            aria-controls="workbench-command-popover"
             onPointerEnter={cancelMenuClose}
             onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
-            onClick={() => {
-              cancelMenuClose();
-              setTab("electrical");
-              setCommandOpen(!commandOpen);
+            onClick={(event) => {
+              toggleMenu("electrical", event.currentTarget, "electrical");
             }}
           >
             <span className="workbench-bolt" aria-hidden="true">
@@ -577,13 +641,13 @@ function Workspace({ account }: { account: Account }) {
             className="workbench-icon-button workbench-menu-trigger"
             aria-label={t("ribbonMenu")}
             title={t("ribbonMenu")}
-            aria-expanded={commandOpen}
+            aria-expanded={activeMenu === "ribbon"}
+            aria-controls="workbench-command-popover"
             aria-haspopup="menu"
             onPointerEnter={cancelMenuClose}
             onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
-            onClick={() => {
-              cancelMenuClose();
-              setCommandOpen(!commandOpen);
+            onClick={(event) => {
+              toggleMenu("ribbon", event.currentTarget);
             }}
           >
             <CommandIcon kind="library" />
@@ -602,9 +666,23 @@ function Workspace({ account }: { account: Account }) {
       </div>
       <div
         className="workbench-command-popover"
+        id="workbench-command-popover"
         data-open={commandOpen}
+        style={popoverPosition}
         onPointerEnter={cancelMenuClose}
         onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+        onClick={(event) => {
+          const target = event.target;
+          if (
+            !(target instanceof Element) ||
+            target.closest(".ribbon-tabs") ||
+            !target.closest("button")
+          )
+            return;
+          closeMenu();
+          if (!document.querySelector("dialog[open]"))
+            menuAnchorRef.current?.focus();
+        }}
         aria-hidden={!commandOpen}
         inert={!commandOpen}
       >
@@ -957,9 +1035,8 @@ function Workspace({ account }: { account: Account }) {
           {iconButton("menuAiTools", "profile", () =>
             setBotSignal((value) => value + 1),
           )}
-          {iconButton("settings", "theme", () => {
-            setTab("settings");
-            setCommandOpen(true);
+          {iconButton("settings", "theme", (event) => {
+            toggleMenu("settings", event.currentTarget, "settings");
           })}
         </aside>
         <BotWindow

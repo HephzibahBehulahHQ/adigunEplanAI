@@ -643,6 +643,7 @@ test("Wire mode snaps nearby clicks to native pin coordinates", async ({
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(fixture)),
   });
+  await selectMenuTab(page, "Home");
   await page.getByRole("button", { name: "Wire · Home", exact: true }).click();
   const canvas = page.locator(".engineering-canvas");
   await canvas.scrollIntoViewIfNeeded();
@@ -696,7 +697,10 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
       (s: { pageId: string }) => s.pageId === data.pages[1].id,
     ),
   ).toHaveLength(2);
-  await page.getByRole("button", { name: "Pan", exact: true }).click();
+  await page
+    .locator(".schematic-editor .editor-toolbar")
+    .getByRole("button", { name: "Pan", exact: true })
+    .click();
   const canvas = page.locator(".engineering-canvas");
   await canvas.scrollIntoViewIfNeeded();
   const before = await canvas.getAttribute("viewBox");

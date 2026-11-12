@@ -140,7 +140,6 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth),
     ).toBeLessThanOrEqual(width);
-    const menuTrigger = page.getByRole("button", { name: "menu", exact: true });
     const help = menus.getByRole("button", { name: "Help menu", exact: true });
     await help.click();
     const guide = page.getByRole("dialog", {
@@ -153,7 +152,11 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(width + 1);
     await page.keyboard.press("Escape");
     await expect(guide).toHaveCount(0);
-    await expect(menuTrigger).toBeFocused();
+    await expect(
+      page
+        .locator(".workbench-command-popover .ribbon-tabs")
+        .getByRole("button", { name: "Help menu", exact: true }),
+    ).toBeFocused();
   }
 });
 
