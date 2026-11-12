@@ -291,7 +291,7 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     );
     await page.goto("/");
     await expect(page.locator(".empty-workspace")).toBeVisible();
-    await openProjectPanel(page);
+    await openProjectPanel(page, t.navigatorTabProject);
     await page.getByTestId("project-picker").selectOption(project.id);
     await openWorkbenchPanel(page, "calculations", t.openCalculations);
     const tools = page.getByRole("region", {

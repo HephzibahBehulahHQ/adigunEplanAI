@@ -13,9 +13,12 @@ export async function openProjectNavigator(page: Page) {
   return panel;
 }
 
-export async function openProjectPanel(page: Page) {
+export async function openProjectPanel(page: Page, translatedTab?: string) {
   const panel = await openProjectNavigator(page);
-  const tab = panel.getByRole("tab", { name: "Project", exact: true });
+  const tab = panel.getByRole("tab", {
+    name: translatedTab ?? "Project",
+    exact: true,
+  });
   if ((await tab.getAttribute("aria-selected")) !== "true") await tab.click();
   return panel;
 }
