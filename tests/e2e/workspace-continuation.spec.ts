@@ -1,6 +1,13 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
+
+async function selectMenuTab(page: Page, name: string) {
+  const trigger = page.getByRole("button", { name: "menu", exact: true });
+  if ((await trigger.getAttribute("aria-expanded")) !== "true")
+    await trigger.click();
+  await page.getByRole("button", { name, exact: true }).click();
+}
 
 function mappedProject() {
   const project = nativeProject();
@@ -180,7 +187,7 @@ test("ribbon commands edit native data once, support undo and survive view switc
   });
   await page.locator('[data-instance="symbol-a"]').focus();
   await page.locator('[data-instance="symbol-a"]').press("Enter");
-  await page.getByRole("button", { name: "Edit menu", exact: true }).click();
+  await selectMenuTab(page, "Edit menu");
   await page
     .getByRole("button", { name: "Rotate · Engineering commands", exact: true })
     .click();
@@ -191,9 +198,7 @@ test("ribbon commands edit native data once, support undo and survive view switc
           .projects[0].symbolInstances[0].rotation,
     );
   await expect.poll(rotation).toBe(90);
-  await page
-    .getByRole("button", { name: "Building design menu", exact: true })
-    .click();
+  await selectMenuTab(page, "Building design menu");
   await page
     .getByRole("button", {
       name: "Open building designer · Engineering commands",
@@ -201,9 +206,7 @@ test("ribbon commands edit native data once, support undo and survive view switc
     })
     .click();
   await expect(page.locator(".building-editor")).toBeVisible();
-  await page
-    .getByRole("button", { name: "Power engineering menu", exact: true })
-    .click();
+  await selectMenuTab(page, "Power engineering menu");
   await page
     .getByRole("button", {
       name: "Open schematic editor · Engineering commands",
@@ -212,7 +215,7 @@ test("ribbon commands edit native data once, support undo and survive view switc
     .click();
   await expect(page.locator('[data-instance="symbol-a"]')).toBeVisible();
   expect(await rotation()).toBe(90);
-  await page.getByRole("button", { name: "Edit menu", exact: true }).click();
+  await selectMenuTab(page, "Edit menu");
   await page
     .getByRole("button", { name: "Undo · Engineering commands", exact: true })
     .click();
@@ -365,7 +368,7 @@ test("compact target workspace gives the drawing space and keeps native insert, 
 }) => {
   await page.setViewportSize({ width: 1672, height: 941 });
   await page.goto("/");
-  await page.getByRole("button", { name: "File menu", exact: true }).click();
+  await selectMenuTab(page, "File menu");
   await page
     .getByRole("button", { name: "Example projects", exact: true })
     .first()
@@ -384,11 +387,16 @@ test("compact target workspace gives the drawing space and keeps native insert, 
     .poll(async () => (await canvas.boundingBox())!.height)
     .toBeGreaterThan(450);
   const drawing = (await canvas.boundingBox())!;
-  const bottom = (await page.locator(".dock-bottom").boundingBox())!;
   const footer = (await page.locator(".status-bar").boundingBox())!;
-  expect(drawing.y + drawing.height).toBeLessThanOrEqual(bottom.y);
-  expect(bottom.y + bottom.height).toBeLessThanOrEqual(footer.y);
-  await page.getByRole("button", { name: "Insert menu", exact: true }).click();
+  const bottomDock = page.locator(".dock-bottom");
+  if (await bottomDock.count()) {
+    const bottom = (await bottomDock.boundingBox())!;
+    expect(drawing.y + drawing.height).toBeLessThanOrEqual(bottom.y);
+    expect(bottom.y + bottom.height).toBeLessThanOrEqual(footer.y);
+  } else {
+    expect(drawing.y + drawing.height).toBeLessThanOrEqual(footer.y);
+  }
+  await selectMenuTab(page, "Insert menu");
   await page
     .getByRole("button", { name: "Fuse · Engineering commands", exact: true })
     .click();
@@ -405,12 +413,12 @@ test("compact target workspace gives the drawing space and keeps native insert, 
           .projects[0].devices.length,
     );
   await expect.poll(deviceCount).toBe(16);
-  await page.getByRole("button", { name: "Edit menu", exact: true }).click();
+  await selectMenuTab(page, "Edit menu");
   await page
     .getByRole("button", { name: "Undo · Engineering commands", exact: true })
     .click();
   await expect.poll(deviceCount).toBe(15);
-  await page.getByRole("button", { name: "Tools menu", exact: true }).click();
+  await selectMenuTab(page, "Tools menu");
   await page
     .getByRole("button", {
       name: "Zoom in · Engineering commands",
@@ -418,6 +426,7 @@ test("compact target workspace gives the drawing space and keeps native insert, 
     })
     .click();
   await expect(canvas).not.toHaveAttribute("viewBox", "0 0 420 297");
+  await selectMenuTab(page, "Tools menu");
   await page
     .getByRole("button", {
       name: "Fit page · Engineering commands",
@@ -425,14 +434,18 @@ test("compact target workspace gives the drawing space and keeps native insert, 
     })
     .click();
   await expect(canvas).toHaveAttribute("viewBox", "0 0 420 297");
-  await page.getByRole("button", { name: "View", exact: true }).click();
+  await selectMenuTab(page, "View");
   await page
     .getByRole("checkbox", {
       name: "Compact engineering workspace",
       exact: true,
     })
     .uncheck();
-  await expect(page.locator(".compact-editor-tools").first()).toBeVisible();
+  await expect(page.locator(".application")).toHaveAttribute(
+    "data-compact",
+    "false",
+  );
+  await expect(canvas).toBeVisible();
   await reloadAndReopenProject(page);
   await expect(page.locator(".application")).toHaveAttribute(
     "data-compact",

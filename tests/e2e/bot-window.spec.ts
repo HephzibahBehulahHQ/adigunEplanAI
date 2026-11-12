@@ -12,7 +12,7 @@ async function loadExample(
   page: import("@playwright/test").Page,
   name = "Transformer station documentation",
 ) {
-  await page.getByRole("button", { name: "Home", exact: true }).click();
+  await page.getByRole("button", { name: "menu", exact: true }).click();
   await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Example projects", exact: true })

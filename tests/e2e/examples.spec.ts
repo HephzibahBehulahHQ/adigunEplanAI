@@ -20,6 +20,7 @@ for (const [name, devices, wires, selector] of cases) {
   }, testInfo) => {
     await page.goto("/");
     async function open() {
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       await page
         .getByRole("button", { name: "File menu", exact: true })
         .click();
@@ -37,6 +38,7 @@ for (const [name, devices, wires, selector] of cases) {
     await expect(page.locator(selector)).toBeVisible();
     if (name === "Transformer station documentation") {
       await page.setViewportSize({ width: 1857, height: 1000 });
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
       const diagnostics = page.getByRole("region", {
         name: "Diagnostics",
@@ -80,6 +82,7 @@ for (const [name, devices, wires, selector] of cases) {
     }
     if (name.startsWith("Industry energy substation")) {
       await page.setViewportSize({ width: 1880, height: 970 });
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
       const overview = page.locator(".engineering-canvas");
       await expect(overview).toContainText("P1");

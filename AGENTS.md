@@ -127,3 +127,8 @@ The product specification determines exact scope and milestone acceptance. Do no
 Apply this directive to **every project and task**, regardless of repository, programming language, framework, cloud provider, or development environment.
 
 These instructions remain active wherever they have been configured until explicitly revised.
+
+
+## Approved workstation interface is frozen
+
+Follow [the interface baseline](docs/agent/INTERFACE_BASELINE.md) for every application and project view. Keep the approved header, single-row ribbon, dock/canvas arrangement, status bar, design tokens, and relative geometry intact. Put future commands inside existing UI regions; do not add rows or bars or let menus shift the drawing area. Run the workstation geometry regression before accepting interface changes. Change this baseline only with an explicit owner-approved design decision.

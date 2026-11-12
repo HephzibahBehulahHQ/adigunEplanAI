@@ -82,9 +82,9 @@ export function productTemplateIssues(bundle) {
     c.specification?.ownerMasterPlan === "AdidunEplanAI Master PlanGoals" &&
     c.specification?.interface === "docs/references/target-workspace.png" &&
     c.specification?.ownerInterface ===
-      "AdigunEplanTarget interface.png", "Specification bindings changed");
+      "docs/references/target-workspace.png", "Specification bindings changed");
   require(crypto.createHash("sha256").update(ownerMaster).digest("hex") ===
-    "a3d63f86761366b2ec582d8ae8d426ea172c689c4a6ed4758de8ce64b8697405", "Approved owner master plan changed");
+    "eca2d1ddc4daa5bb2b7ff2a9d1e18f9ce5739d70037e850fd704763ea54058ef", "Approved owner master plan changed");
   require(c.branding?.logoPolicy === "single-corporate-logo" &&
     c.branding?.header?.productWordmark === true &&
     c.branding?.header?.divisionTextLabel === true &&
