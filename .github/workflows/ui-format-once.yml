@@ -1,0 +1,28 @@
+name: Format UI changes once
+on:
+  push:
+    branches: [codex/project-b-interface-first]
+permissions:
+  contents: write
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/project-b-interface-first
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Format UI files and remove one-shot workflow
+        run: |
+          npx prettier --write apps/web/src/App.tsx apps/web/src/WorkspaceHeader.tsx apps/web/src/workbench-shell.css
+          git rm .github/workflows/ui-format-once.yml
+          git add apps/web/src/App.tsx apps/web/src/WorkspaceHeader.tsx apps/web/src/workbench-shell.css
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "style(ui): format Project B interface implementation"
+          git push origin HEAD:codex/project-b-interface-first
