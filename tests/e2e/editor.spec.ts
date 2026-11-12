@@ -395,7 +395,10 @@ test("property editing, labels, layer locks, sheet sizes and zoom change real st
   const before = await canvas.getAttribute("viewBox");
   await page.getByRole("button", { name: "+", exact: true }).click();
   expect(await canvas.getAttribute("viewBox")).not.toBe(before);
-  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await page
+    .getByRole("toolbar", { name: "Engineering commands", exact: true })
+    .getByRole("button", { name: "Fit page", exact: true })
+    .click();
   await expect(canvas).toHaveAttribute("viewBox", "0 0 210 297");
 });
 test("native clipboard survives deletion and undo restores the original graph", async ({
@@ -706,7 +709,10 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
   );
   await page.mouse.up();
   expect(await canvas.getAttribute("viewBox")).not.toBe(before);
-  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await page
+    .getByRole("toolbar", { name: "Engineering commands", exact: true })
+    .getByRole("button", { name: "Fit page", exact: true })
+    .click();
   await expect(canvas).toHaveAttribute("viewBox", "0 0 420 297");
 });
 
