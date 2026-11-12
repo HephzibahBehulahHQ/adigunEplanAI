@@ -119,8 +119,8 @@ test("workstation regions stay fixed while ribbon categories change", async ({
             const rect = element.getBoundingClientRect();
             return [
               selector,
-              [rect.x, rect.y, rect.width, rect.height].map((value) =>
-                Math.round(value * 100) / 100,
+              [rect.x, rect.y, rect.width, rect.height].map(
+                (value) => Math.round(value * 100) / 100,
               ),
             ];
           }),
