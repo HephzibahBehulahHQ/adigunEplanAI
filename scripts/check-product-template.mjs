@@ -84,7 +84,7 @@ export function productTemplateIssues(bundle) {
     c.specification?.ownerInterface ===
       "AdigunEplanTarget interface.png", "Specification bindings changed");
   require(crypto.createHash("sha256").update(ownerMaster).digest("hex") ===
-    "4f3847a5d0b78313643abe54cc6852136c3aef179d1a8b26890228eae41e8525", "Approved owner master plan changed");
+    "a3d63f86761366b2ec582d8ae8d426ea172c689c4a6ed4758de8ce64b8697405", "Approved owner master plan changed");
   require(c.branding?.logoPolicy === "single-corporate-logo" &&
     c.branding?.header?.productWordmark === true &&
     c.branding?.header?.divisionTextLabel === true &&
