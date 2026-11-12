@@ -17,12 +17,7 @@
     "interfaceRepository": "HephzibahBehulahHQ/adigunEplanAI"
   },
   "features": {
-    "languages": [
-      "en",
-      "de",
-      "yo",
-      "pcm"
-    ],
+    "languages": ["en", "de", "yo", "pcm"],
     "defaultLanguage": "en",
     "themeSwitcher": true,
     "adigunBot": {
