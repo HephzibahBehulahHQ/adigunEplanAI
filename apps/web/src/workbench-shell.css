@@ -370,6 +370,14 @@
   overflow: hidden;
   background: #f1f5f9;
 }
+.workbench-interface .engineering-layout:has(> .dock-bottom) {
+  grid-template-rows: minmax(0, 1fr) minmax(0, min(36dvh, 280px));
+}
+.workbench-interface .engineering-layout > .dock-bottom {
+  max-height: min(36dvh, 280px);
+  min-height: 0;
+  overflow: auto;
+}
 .workbench-interface .engineering-layout.has-left {
   grid-template-columns:
     var(--workbench-rail) minmax(210px, 270px) minmax(0, 1fr)
