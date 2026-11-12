@@ -92,3 +92,47 @@ for (const language of ["en", "de", "yo", "pcm"]) {
     ).toBe(true);
   });
 }
+
+test("workstation regions stay fixed while ribbon categories change", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1680, height: 1050 });
+  await page.goto("/");
+  const regions = [
+    ".workbench-header",
+    ".ribbon-tabs",
+    ".ribbon",
+    ".engineering-layout",
+    ".dock-left",
+    ".workspace",
+    ".dock-right",
+    ".dock-bottom",
+    ".status-bar",
+  ];
+  const geometry = () =>
+    page.evaluate((selectors) =>
+      Object.fromEntries(
+        selectors.map((selector) => {
+          const element = document.querySelector(selector);
+          if (!element) return [selector, null];
+          const rect = element.getBoundingClientRect();
+          return [
+            selector,
+            [rect.x, rect.y, rect.width, rect.height].map((value) =>
+              Math.round(value * 100) / 100,
+            ),
+          ];
+        }),
+      ),
+      regions,
+    );
+  const baseline = await geometry();
+  expect(baseline[".ribbon"]?.[3]).toBe(88);
+  for (const category of ["Electrical", "Automation", "View", "Settings", "Home"]) {
+    await page
+      .locator(".ribbon-tabs")
+      .getByRole("button", { name: new RegExp(`^${category}`) })
+      .click();
+    expect(await geometry()).toEqual(baseline);
+  }
+});
