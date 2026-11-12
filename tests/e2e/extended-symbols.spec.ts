@@ -63,6 +63,7 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
       .click();
     await page.getByLabel("Search symbols", { exact: true }).fill(query);
     await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await openEditorTools(page);
     await page
       .getByRole("combobox", { name: "Custom symbols", exact: true })
       .selectOption(`library-${id}`);

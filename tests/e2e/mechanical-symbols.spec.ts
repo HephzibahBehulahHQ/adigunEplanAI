@@ -1,4 +1,4 @@
-import { openComponentLibrary } from "./workbench.ts";
+import { openComponentLibrary, openEditorTools } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
@@ -52,6 +52,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
       exact: true,
     })
     .click();
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Custom symbols", exact: true })
     .selectOption("library-cable-gland-mechanical");
@@ -140,6 +141,7 @@ test("custom mechanical drawings create without pins and reject reclassification
   );
   expect(definition.connectionClass).toBe("mechanical");
   expect(definition.pins).toHaveLength(0);
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Custom symbols", exact: true })
     .selectOption(definition.id);
