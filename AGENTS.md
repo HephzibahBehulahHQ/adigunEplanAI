@@ -132,3 +132,12 @@ These instructions remain active wherever they have been configured until explic
 ## Approved workstation interface is frozen
 
 Follow [the interface baseline](docs/agent/INTERFACE_BASELINE.md) for every application and project view. Keep the approved header, single-row ribbon, dock/canvas arrangement, status bar, design tokens, and relative geometry intact. Put future commands inside existing UI regions; do not add rows or bars or let menus shift the drawing area. Run the workstation geometry regression before accepting interface changes. Change this baseline only with an explicit owner-approved design decision.
+
+
+## Owner-approved 2026-11-12 UI alignment override — EPLANAI_WORKBENCH_V2_START_NOW
+
+The owner explicitly requested an additional, **interface-only** correction to the previously frozen workstation geometry. This narrowly authorizes correcting the old application's wasted lower space, mismatched dock heights, oversized/mixed command icons and non-floating menus. The earlier baseline remains the rollback reference, not a reason to reject this specific owner instruction.
+
+**P0 instruction:** Continue existing draft PR #39 in `codex/project-b-interface-first` from its current tip. Read [the named implementation pack](docs/ui-redesign-eplanai-2026-11-12/README.md), especially the master prompt and two approved concept SVGs. All visible docked panels must end immediately above the status bar; menus are transient overlays and must never move the underlying canvas. Retain all native engineering, project/account, localization, 3D and BOT functions. Apply GLOBAL-UI-UX-001 to transient menus only; never mouseleave-close persistent editing panels or modal workflows. Run actual browser geometry/menu tests and CI. Use the repository's verified-runtime publication workflow only after owner review and successful source checks. Do not modify the other projects or create a competing implementation branch.
+
+**Trigger delivery limitation:** GitHub/Codex integration must acknowledge a task before work is considered started; repository instructions alone do not force-start an agent.
