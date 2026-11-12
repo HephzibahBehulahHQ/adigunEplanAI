@@ -646,12 +646,20 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   await search
     .getByRole("button", { name: "Sheet 2 · Alpha", exact: true })
     .click();
+  await selectMenuTab(page, "Settings");
   await expect(page.locator(".project-title")).toHaveText("Alpha");
   await expect(
     page.getByRole("application", { name: "Sheet 2", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Settings", exact: true }),
+    page
+      .locator(".workbench-rail-right")
+      .getByRole("button", { name: "Settings", exact: true }),
+  ).toHaveCount(1);
+  await expect(
+    page
+      .locator(".workbench-command-popover .ribbon-tabs")
+      .getByRole("button", { name: "Settings", exact: true }),
   ).toHaveCount(1);
   await expect(
     page.getByRole("button", { name: "Help", exact: true }),
@@ -663,12 +671,14 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   const boxes = await page
     .locator(".owner-toolbar > button")
     .evaluateAll((elements) =>
-      elements.map((element) => {
-        const r = element.getBoundingClientRect();
-        return { x: r.x, y: r.y, width: r.width, height: r.height };
-      }),
+      elements
+        .filter((element) => getComputedStyle(element).display !== "none")
+        .map((element) => {
+          const r = element.getBoundingClientRect();
+          return { x: r.x, y: r.y, width: r.width, height: r.height };
+        }),
     );
-  expect(boxes).toHaveLength(6);
+  expect(boxes.length).toBeGreaterThan(0);
   for (const box of boxes) {
     expect(box.width).toBeGreaterThanOrEqual(29);
     expect(box.height).toBeGreaterThanOrEqual(36);

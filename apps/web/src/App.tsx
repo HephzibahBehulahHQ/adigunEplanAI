@@ -696,7 +696,7 @@ function Workspace({ account }: { account: Account }) {
               <button
                 onClick={() => {
                   setPrefs((p) => ({ ...p, panels: defaults().panels }));
-                  setActiveLeft(null);
+                  setActiveLeft("project");
                   setActiveRight(null);
                   setActiveBottom(null);
                 }}

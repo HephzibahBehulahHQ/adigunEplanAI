@@ -36,7 +36,10 @@ test("compact workstation geometry stays fixed while menus open at desktop and m
     expect(layout.width).toBeLessThanOrEqual(width);
     expect(layout.header.height).toBe(34);
     expect(layout.toolbar.height).toBe(36);
-    expect(layout.leftRail.width).toBe(36);
+    expect(
+      layout.leftRail.width,
+      `left rail at ${width}px: ${JSON.stringify({ classes: await page.locator(".engineering-layout").getAttribute("class"), grid: await page.locator(".engineering-layout").evaluate((element) => getComputedStyle(element).gridTemplateColumns), botDocked: await page.locator(".bot-window").getAttribute("data-docked") })}`,
+    ).toBe(36);
     expect(layout.rightRail.width).toBe(36);
     expect(layout.header.bottom).toBeLessThanOrEqual(layout.toolbar.y + 1);
     expect(layout.toolbar.bottom).toBeLessThanOrEqual(layout.workspace.y + 1);
@@ -105,6 +108,7 @@ test("Home places native components, cuts and undoes, validates and opens real c
   await expect(canvas).toHaveAttribute("data-tool", "resistor");
   await canvas.click({ position: { x: 200, y: 170 } });
   await expect(canvas.locator("[data-instance]")).toHaveCount(3);
+  await selectMenuTab(page, "Home");
   await ribbon.getByRole("button", { name: "Cut · Home", exact: true }).click();
   await expect(canvas.locator("[data-instance]")).toHaveCount(2);
   await ribbon
@@ -118,6 +122,7 @@ test("Home places native components, cuts and undoes, validates and opens real c
     page.getByRole("dialog", { name: "Validate", exact: true }),
   ).toContainText("Native document structure and references are valid");
   await page.keyboard.press("Escape");
+  await selectMenuTab(page, "Home");
   await ribbon
     .getByRole("button", { name: "Symbol Library · Home", exact: true })
     .click();
@@ -127,6 +132,7 @@ test("Home places native components, cuts and undoes, validates and opens real c
       .getByLabel("Search symbols", { exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
+  await selectMenuTab(page, "Home");
   await ribbon
     .getByRole("button", { name: "Device Catalog · Home", exact: true })
     .click();
@@ -134,6 +140,7 @@ test("Home places native components, cuts and undoes, validates and opens real c
     page.getByRole("dialog", { name: "Device Catalog", exact: true }),
   ).toContainText("Phoenix");
   await page.keyboard.press("Escape");
+  await selectMenuTab(page, "Home");
   await ribbon
     .getByRole("button", { name: "Themes · Home", exact: true })
     .click();

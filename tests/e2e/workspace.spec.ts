@@ -61,6 +61,7 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
     .getByRole("button", { name: "Hide Project navigator", exact: true })
     .click();
   await expect(page.locator('[data-panel="project"]')).toHaveCount(0);
+  await selectMenuTab(page, "View");
   await page
     .getByRole("checkbox", { name: "Project navigator", exact: true })
     .check();

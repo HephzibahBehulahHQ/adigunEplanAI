@@ -715,6 +715,14 @@
   }
   .workbench-interface .header-profile {
     width: 36px;
+    min-width: 36px;
+    flex: 0 0 36px;
+  }
+  .workbench-interface .owner-toolbar > button {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
   }
   .workbench-interface .profile-caption,
   .workbench-interface .profile-chevron {
@@ -729,6 +737,27 @@
   }
   .workbench-interface .engineering-layout > .dock {
     display: none;
+  }
+  .workbench-interface .engineering-layout > .bot-window[data-docked="true"] {
+    position: fixed;
+    inset: 78px 8px 48px 44px;
+    width: auto;
+    height: auto;
+    min-height: 0;
+    grid-column: auto;
+    z-index: 30;
+  }
+  .workbench-interface .engineering-layout > .workbench-rail-left {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .workbench-interface .engineering-layout > .workspace {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .workbench-interface .engineering-layout > .workbench-rail-right {
+    grid-column: 3;
+    grid-row: 1;
   }
   .workbench-interface .workbench-command-popover {
     left: 7px;
