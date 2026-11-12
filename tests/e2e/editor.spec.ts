@@ -1,329 +1,1583 @@
-YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éí×Þ¸á:-jZ.¶›­–)Þ³V–×÷'B°¢÷Vä6ö×öæVçDÆ–'&'’À¢÷VäVF—F÷%FööÇ2À¢÷Våv÷&¶&Væ6…æVÂÀ¢6VÆV7DÖVçUF"À§Òg&öÒ"â÷v÷&¶&Væ6‚çG2#°¦–×÷'B²6Æ–6µv—&U–âÒg&öÒ"ââöf—‡GW&W2ö6Æ–6²×v—&R×–â#°¦–×÷'B²&VÆöDæE&V÷Vå&ö¦V7BÒg&öÒ"ââöf—‡GW&W2÷&V÷Vâ×&ö¦V7B#°¦–×÷'B²FW7BÂW‡V7BÂG—RvRÒg&öÒ$Æ—w&–v‡B÷FW7B#°¦–×÷'B²&VDf–ÆU7–æ2Òg&öÒ&æöFS¦g2#°¦–×÷'B²æF—fU&ö¦V7BÒg&öÒ"ââöf—‡GW&W2öæF—fR×&ö¦V7BæÖ§2#°¦6öç7B¶W’Ò&F–wVæWÆæ’ç&ö¦V7G2çc#°¦7–æ2gVæ7F–öâ7&VFR‡vS¢vR’°¢v—BvRæv÷Fò‚"ò"“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$æWr&ö¦V7B"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢6öç7BF–ÆörÒvRævWD'•&öÆR‚&F–Æör"Â²æÖS¢$æWr&ö¦V7B"ÂW†7C¢G'VRÒ“°¢v—BF–Æöp¢ævWD'”Æ&VÂ‚%&ö¦V7BæÖR"Â²W†7C¢G'VRÒ¢æf–ÆÂ‚$VF—F÷"&VfW&Væ6R"“°¢v—BF–ÆörævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$7&VFR"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BW‡V7B€¢vRævWD'•&öÆR‚&Æ–6F–öâ"Â²æÖS¢%6†VWB"ÂW†7C¢G'VRÒ’À¢’çFô&Uf—6–&ÆR‚“°¢v—B÷VäVF—F÷%FööÇ2‡vR“°§Ð§FW7B‚'6V6öæF'’†öÖR&–&&öâ7F–öç2&VÖ–âæÖVBv†Vâ6†÷vâ2–6öç2"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢v—B7&VFR‡vR“°¢v—B6VÆV7DÖVçUF"‡vRÂ$†öÖR"“°¢6öç7B&–&&öâÒvRæÆö6F÷"€¢rçv÷&¶&Væ6‚Ö6öÖÖæB×÷÷fW"ç&–&&öå¶FF×F#Ò&†öÖR%ÒrÀ¢“°¢6öç7BVæFòÒ&–&&öâæÆö6F÷"‚u¶FFÖ6öÖÖæCÒ'VæFò%Òr“°¢v—BW‡V7B‡VæFò’çFô†fTGG&–'WFR‚&FFÖ–6öâÖöæÇ’"Â'G'VR"“°¢v—BW‡V7B‡VæFò’çFô†fTGG&–'WFR‚'F—FÆR"Â%VæFò"“°¢v—BW‡V7B‡VæFò’çFô†fT66W76–&ÆTæÖR‚%VæFò+r†öÖR"“°¢v—BW‡V7B‡VæFòæÆö6F÷"‚'7â"’’çFô&T†–FFVâ‚“° ¢6öç7BÆ6VÖVçBÒ&–&&öâæÆö6F÷"‚u¶FFÖ6öÖÖæCÒ'&–&&öåÆ6R%Òr“°¢v—BW‡V7B‡Æ6VÖVçB’ææ÷BçFô†fTGG&–'WFR‚&FFÖ–6öâÖöæÇ’"Â'G'VR"“°¢v—BW‡V7B‡Æ6VÖVçB’çFô†fT66W76–&ÆTæÖR‚%Æ6R6ö×öæVçB+r†öÖR"“°¢v—BW‡V7B‡Æ6VÖVçBæÆö6F÷"‚'7â"’’çFô&Uf—6–&ÆR‚“°§Ò“° ¦7–æ2gVæ7F–öâ6Æ–6µv÷&ÆB‡vS¢vRÂƒ¢çVÖ&W"Â“¢çVÖ&W"’°¢v—BvRæÆö6F÷"‚"æVæv–æVW&–ærÖ6çf2"’ç67&öÆÄ–çFõf–Wt–dæVVFVB‚“°¢6öç7B67&VVâÒv—BvRæÆö6F÷"‚"æVæv–æVW&–ærÖ6çf2"’æWfÇVFR€¢‡7frÂö–çB’Óâ°¢6öç7BÒæWrDôÕö–çB‡ö–çBç‚Âö–çBç’’æÖG&—…G&ç6f÷&Ò€¢‡7fr25du5dtVÆVÖVçB’ævWE67&VVä5DÒ‚’À¢“°¢&WGW&â²ƒ¢ç‚Â“¢ç’Ó°¢ÒÀ¢²‚Â’ÒÀ¢“°¢v—BvRæÖ÷W6Ræ6Æ–6²‡67&VVâç‚Â67&VVâç’“°§Ð¦7–æ2gVæ7F–öâÆ6R‡vS¢vRÂ¶–æC¢7G&–ærÂƒ¢çVÖ&W"Â“¢çVÖ&W"’°¢v—B÷VäVF—F÷%FööÇ2‡vR“°¢v—BvP¢ævWD'•&öÆR‚&6öÖ&ö&÷‚"Â²æÖS¢%7–Ö&öÇ2"ÂW†7C¢G'VRÒ¢ç6VÆV7D÷F–öâ†¶–æB“°¢v—B6Æ–6µv÷&ÆB‡vRÂ‚Â’“°§Ð¦7–æ2gVæ7F–öâ&ö¦V7B‡vS¢vR’°¢&WGW&âvRæWfÇVFR€¢†²’Óâ¥4ôâç'6R†Æö6Å7F÷&vRævWD—FVÒ†²’’ç&ö¦V7G5³ÒÀ¢¶W’À¢“°§Ð §FW7B‚&7W7FöÒæF—fR6†VWBF–ÖVç6–öç2F—7Æ’F†V—"7GVÂ6—¦R6FVv÷'’"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢v—B7&VFR‡vR“°¢v—BvRæWfÇVFR‚‡7F÷&vT¶W’’Óâ°¢6öç7BÆ–'&'’Ò¥4ôâç'6R†Æö6Å7F÷&vRævWD—FVÒ‡7F÷&vT¶W’’“°¢Æ–'&'’ç&ö¦V7G5³ÒçvW5³Òçv–GF„ÖÒÒS°¢Æ–'&'’ç&ö¦V7G5³ÒçvW5³Òæ†V–v‡DÖÒÒ3S°¢Æö6Å7F÷&vRç6WD—FVÒ‡7F÷&vT¶W’Â¥4ôâç7G&–æv–g’†Æ–'&'’’“°¢ÒÂ¶W’“°¢v—B&VÆöDæE&V÷Vå&ö¦V7B‡vR“°¢v—B÷VäVF—F÷%FööÇ2‡vR“°¢v—BvRæÆö6F÷"‚"æVF—F÷"Ö÷F–öç27VÖÖ'’"’æ6Æ–6²‚“°¢v—BW‡V7B€¢vRævWD'•&öÆR‚&6öÖ&ö&÷‚"Â²æÖS¢%6†VWB6—¦R"ÂW†7C¢G'VRÒ’À¢’çFô†fUfÇVR‚&7W7FöÒ"“°¢v—BvP¢ævWD'•&öÆR‚&6öÖ&ö&÷‚"Â²æÖS¢%6†VWB6—¦R"ÂW†7C¢G'VRÒ¢ç6VÆV7D÷F–öâ‚$B"“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’çvW5³Òçv–GF„ÖÒ’çFô&Rƒ#“r“°§Ò“° §FW7B‚&ÖçVÂ&÷WFRVF—G2W'6—7BæB&W6WBF‡&÷Vv‚æF—fRVæFò†—7F÷'’"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢v—B7&VFR‡vR“°¢v—BÆ6R‡vRÂ'&W6—7F÷""ÂSÂS“°¢v—BÆ6R‡vRÂ&Æ×"ÂSÂS“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%v—&R"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%#£""ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$ƒ£"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%6VÆV7B"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—B6Æ–6µv÷&ÆB‡vRÂÂS“°¢6öç7B&÷WFRÒvRævWD'•&öÆR‚&f÷&Ò"Â°¢æÖS¢$Ç’ÖçVÂ&÷WFR"À¢W†7C¢G'VRÀ¢Ò“°¢v—B&÷WFP¢ævWD'•&öÆR‚'FW‡F&÷‚"¢æf–ÆÂ‚#cÂSÆãsÂSÆãsÂƒÆã3ÂƒÆã3ÂSÆãCBÂS"“°¢v—B&÷WFP¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’ÖçVÂ&÷WFR"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢ÆWBFFÒv—B&ö¦V7B‡vR“°¢W‡V7B†FFçv—&UF‡5³Òç&÷WF–ætÖöFR’çFô&R‚&ÖçVÂ"“°¢W‡V7B†FFçv—&UF‡5³Òçö–çG2’çFô†fTÆVæwF‚ƒb“°¢6öç7BÖçVÂÒFFçv—&UF‡5³Òçö–çG3°¢v—B&÷WFP¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%&W7F÷&RWFöÖF–2&÷WFR"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’çv—&UF‡5³Òç&÷WF–ætÖöFR’çFô&R‚&WFò"“°¢v—BvP¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%VæFò+r†VFW""ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’çv—&UF‡5³Òçö–çG2’çFôWVÂ†ÖçVÂ“°¢v—B&VÆöDæE&V÷Vå&ö¦V7B‡vR“°¢FFÒv—B&ö¦V7B‡vR“°¢W‡V7B†FFçv—&UF‡5³Òçö–çG2’çFôWVÂ†ÖçVÂ“°¢W‡V7B†FFçv—&W2’çFô†fTÆVæwF‚ƒ“°§Ò“° §FW7B‚'v—&R&÷W'F–W2æB6†–VÆFVB6&ÆR6÷&W2W'6—7B2æF—fRVæv–æVW&–ærÖWFFF"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢v—B7&VFR‡vR“°¢v—BÆ6R‡vRÂ'&W6—7F÷""ÂSÂS“°¢v—BÆ6R‡vRÂ&Æ×"ÂSÂS“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%v—&R"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%#£""ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$ƒ£"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%6VÆV7B"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—B6Æ–6µv÷&ÆB‡vRÂÂS“°¢v—BvRæÆö6F÷"‚"çv—&R×&÷W'F–W27VÖÖ'’"’æ6Æ–6²‚“°¢6öç7Bv—&RÒvRævWD'•&öÆR‚&f÷&Ò"Â²æÖS¢%v—&R&÷W'F–W2"ÂW†7C¢G'VRÒ“°¢v—Bv—&RævWD'”Æ&VÂ‚%v—&R"Â²W†7C¢G'VRÒ’æf–ÆÂ‚%s#"“°¢v—Bv—&P¢ævWD'”Æ&VÂ‚$G&v–ær6öÆ÷"‚5%$tt$"’"Â²W†7C¢G'VRÒ¢æf–ÆÂ‚"3#6&2"“°¢v—Bv—&P¢ævWD'”Æ&VÂ‚$FV6Æ&VB‡—6–6ÂÆVæwF‚†Ò’"Â²W†7C¢G'VRÒ¢æf–ÆÂ‚#"ãR"“°¢v—Bv—&RævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢6öç7B6÷&RÒvRævWD'•&öÆR‚&f÷&Ò"Â°¢æÖS¢$7&VFRæB76–vâ6÷&R"À¢W†7C¢G'VRÀ¢Ò“°¢v—B6÷&RævWD'”Æ&VÂ‚$6öæGV7F÷"6÷&R"Â²W†7C¢G'VRÒ’æf–ÆÂ‚#"“°¢v—B6÷&P¢ævWD'”Æ&VÂ‚$6÷&R6öÆ÷"÷"FW6–væF–öâ"Â²W†7C¢G'VRÒ¢æf–ÆÂ‚$%R"“°¢v—B6÷&RævWD'”Æ&VÂ‚$7&÷72×6V7F–öâ†ÖÜ+"’"Â²W†7C¢G'VRÒ’æf–ÆÂ‚#"ãR"“°¢v—B6÷&P¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$7&VFRæB76–vâ6÷&R"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢6öç7B6öææV7F—f—G’ÒvRævWD'•&öÆR‚'&Vv–öâ"Â°¢æÖS¢$6öææV7F—f—G’"À¢W†7C¢G'VRÀ¢Ò“°¢v—B6öææV7F—f—G¢æÆö6F÷"‚'7VÖÖ'’"¢æf–ÇFW"‡²†5FW‡C¢õä6&ÆRBòÒ¢æ6Æ–6²‚“°¢6öç7B6&ÆRÒ6öææV7F—f—G’ævWD'•&öÆR‚&f÷&Ò"Â²æÖS¢$6&ÆR"ÂW†7C¢G'VRÒ“°¢v—B6&ÆRævWD'”Æ&VÂ‚$6&ÆRæÖR"Â²W†7C¢G'VRÒ’æf–ÆÂ‚%rÔ3"“°¢ÆWBFFÒv—B&ö¦V7B‡vR“°¢v—B6&ÆP¢ævWD'”Æ&VÂ‚$6öæGV7F÷"6÷&R"Â²W†7C¢G'VRÒ¢ç6VÆV7D÷F–öâ†FFæ6öæGV7F÷'5³Òæ–B“°¢v—B6&ÆRævWD'”Æ&VÂ‚%6†–VÆFVB6&ÆR"Â²W†7C¢G'VRÒ’æ6†V6²‚“°¢v—B6&ÆP¢ævWD'”Æ&VÂ‚%6†–VÆB&öæBFW&Ö–æÇ2"Â²W†7C¢G'VRÒ¢ç6VÆV7D÷F–öâ†FFçFW&Ö–æÇ5³Òæ–B“°¢v—B6&ÆRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢FFÒv—B&ö¦V7B‡vR“°¢W‡V7B†FFçv—&W5³Ò’çFôÖF6„ö&¦V7B‡°¢æÖS¢%s#"À¢6öÆ÷#¢"3#6&2"À¢‡—6–6ÄÆVæwF„Ó¢"ãRÀ¢6öæGV7F÷$–C¢FFæ6öæGV7F÷'5³Òæ–BÀ¢Ò“°¢W‡V7B†FFæ6&ÆW5³Ò’çFôÖF6„ö&¦V7B‡°¢æÖS¢%rÔ3"À¢6†–VÆFVC¢G'VRÀ¢6öæGV7F÷$–G3¢¶FFæ6öæGV7F÷'5³Òæ–EÒÀ¢6†–VÆD&öæEFW&Ö–æÄ–G3¢¶FFçFW&Ö–æÇ5³Òæ–EÒÀ¢Ò“°¢v—B&VÆöDæE&V÷Vå&ö¦V7B‡vR“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’æ6&ÆW2’çFôWVÂ†FFæ6&ÆW2“°¢6öç7BæVÂÒvRævWD'•&öÆR‚'&Vv–öâ"Â²æÖS¢$6öææV7F—f—G’"ÂW†7C¢G'VRÒ“°¢v—BæVÀ¢æÆö6F÷"‚'7VÖÖ'’"¢æf–ÇFW"‡²†5FW‡C¢õäVF—B6÷&RBòÒ¢æ6Æ–6²‚“°¢6öç7BVF—F÷"ÒæVÂævWD'•&öÆR‚&f÷&Ò"Â²æÖS¢$VF—B6÷&R"ÂW†7C¢G'VRÒ“°¢v—BVF—F÷"ævWD'”Æ&VÂ‚$7&÷72×6V7F–öâ†ÖÜ+"’"Â²W†7C¢G'VRÒ’æf–ÆÂ‚#B"“°¢v—BVF—F÷"ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’æ6öæGV7F÷'5³Òæ7&÷756V7F–öäÖÓ"’çFô&RƒB“°¢v—BæVÀ¢æÆö6F÷"‚'7VÖÖ'’"¢æf–ÇFW"‡²†5FW‡C¢õåFW&Ö–æÂ&÷W'F–W2BòÒ¢æ6Æ–6²‚“°¢6öç7BFW&Ö–æÂÒæVÂævWD'•&öÆR‚&f÷&Ò"Â°¢æÖS¢%FW&Ö–æÂ&÷W'F–W2"À¢W†7C¢G'VRÀ¢Ò“°¢v—BFW&Ö–æÂævWD'”Æ&VÂ‚$6öææV7F–öâ&WV—&VB"Â²W†7C¢G'VRÒ’æ6†V6²‚“°¢v—BFW&Ö–æÀ¢ævWD'”Æ&VÂ‚$FV6Æ&VBÖ†–×VÒv—&R6öææV7F–öç2"Â²W†7C¢G'VRÒ¢æf–ÆÂ‚#"“°¢v—BFW&Ö–æÂævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BW‡V7B€¢æVÂævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$W'&÷'2ƒ’"ÂW†7C¢G'VRÒ’À¢’çFô&Uf—6–&ÆR‚“°¢v—BæVÀ¢æÆö6F÷"‚'7VÖÖ'’"¢æf–ÇFW"‡²†5FW‡C¢õåFW&Ö–æÂ7G&—BòÒ¢æ6Æ–6²‚“°¢6öç7B7G&—ÒæVÂævWD'•&öÆR‚&f÷&Ò"Â°¢æÖS¢%FW&Ö–æÂ7G&—"À¢W†7C¢G'VRÀ¢Ò“°¢v—B7G&—ævWD'”Æ&VÂ‚%7G&—æÖR"Â²W†7C¢G'VRÒ’æf–ÆÂ‚%ƒ"“°¢v—B7G&— ¢ævWD'”Æ&VÂ‚%7G&—ÖVÖ&W'2"Â²W†7C¢G'VRÒ¢ç6VÆV7D÷F–öâ…¶FFçFW&Ö–æÇ5³Òæ–BÂFFçFW&Ö–æÇ5³5Òæ–EÒ“°¢v—B7G&—ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’çFW&Ö–æÅ7G&—5³ÒçFW&Ö–æÄ–G2’çFôWVÂ…°¢FFçFW&Ö–æÇ5³Òæ–BÀ¢FFçFW&Ö–æÇ5³5Òæ–BÀ¢Ò“°¢v—BvP¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%VæFò+r†VFW""ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’çFW&Ö–æÅ7G&—2’çFô†fTÆVæwF‚ƒ“°§Ò“°§FW7B‚'7–Ö&öÇ27&VFRæF—fRFW&Ö–æÇ2Â6öææV7BF‡&÷Vv‚&VÂ–ç2æB&W&÷WFRgFW"VF—F–ær"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢6öç7BW'&÷'3¢7G&–æuµÒÒµÓ°¢vRæöâ‚'vVW'&÷""Â†R’ÓâW'&÷'2çW6‚†RæÖW76vR’“°¢v—B7&VFR‡vR“°¢v—BÆ6R‡vRÂ'&W6—7F÷""ÂSÂS“°¢v—BÆ6R‡vRÂ&Æ×"Â#Âƒ“°¢v—BW‡V7B‡vRæÆö6F÷"‚%¶FFÖ–ç7Fæ6UÒ"’’çFô†fT6÷VçBƒ"“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%v—&R"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%#£""ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$ƒ£"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BW‡V7B‡vRæÆö6F÷"‚%¶FF×v—&UÒ"’’çFô†fT6÷VçBƒ“°¢6öç7B6öææV7F—f—G’ÒvRævWD'•&öÆR‚'&Vv–öâ"Â°¢æÖS¢$6öææV7F—f—G’"À¢W†7C¢G'VRÀ¢Ò“°¢v—BW‡V7B†6öææV7F—f—G’’çFô6öçF–åFW‡B‚$æWFÆ—7Bƒ2’"“°¢v—B6öææV7F—f—G’ævWD'•FW‡B‚$6öææV7F–öç2ƒ’"Â²W†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BW‡V7B†6öææV7F—f—G’ævWD'•&öÆR‚'F&ÆR"’’çFô6öçF–åFW‡B‚%s"“°¢v—BW‡V7B†6öææV7F—f—G’ævWD'•&öÆR‚'F&ÆR"’’çFô6öçF–åFW‡B‚%#£""“°¢v—BW‡V7B†6öææV7F—f—G’ævWD'•&öÆR‚'F&ÆR"’’çFô6öçF–åFW‡B‚$ƒ£"“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%6VÆV7B"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—B6Æ–6µv÷&ÆB‡vRÂSÂS“°¢v—BvRævWD'•&öÆR‚&Æ–6F–öâ"Â²æÖS¢%6†VWB"ÂW†7C¢G'VRÒ’æfö7W2‚“°¢v—BvRæ¶W–&ö&Bç&W72‚$'&÷u&–v‡B"“°¢ÆWBFFÒv—B&ö¦V7B‡vR“°¢W‡V7B€¢FFç7–Ö&öÄ–ç7Fæ6W2æf–æB‚‡3¢²æÖS¢7G&–ærÒ’Óâ2ææÖRÓÓÒ%#"’ç÷6—F–öà¢ç‚À¢’çFô&RƒSR“°¢W‡V7B†FFçv—&W2’çFô†fTÆVæwF‚ƒ“°¢W‡V7B†FFçv—&UF‡5³Òçö–çG5³Òç‚’çFô&RƒcR“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%&÷FFR"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢FFÒv—B&ö¦V7B‡vR“°¢W‡V7B€¢FFç7–Ö&öÄ–ç7Fæ6W2æf–æB‚‡3¢²æÖS¢7G&–ærÒ’Óâ2ææÖRÓÓÒ%#"¢ç&÷FF–öâÀ¢’çFô&Rƒ““°¢W‡V7B†FFçv—&W2’çFô†fTÆVæwF‚ƒ“°¢v—BvP¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%VæFò+r†VFW""ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—B&VÆöDæE&V÷Vå&ö¦V7B‡vR“°¢FFÒv—B&ö¦V7B‡vR“°¢W‡V7B€¢FFç7–Ö&öÄ–ç7Fæ6W2æf–æB‚‡3¢²æÖS¢7G&–ærÒ’Óâ2ææÖRÓÓÒ%#"¢ç&÷FF–öâÀ¢’çFô&Rƒ“°¢v—BW‡V7B‡vRæÆö6F÷"‚%¶FF×v—&UÒ"’’çFô†fT6÷VçBƒ“°¢W‡V7B†W'&÷'2’çFôWVÂ…µÒ“°§Ò“° §FW7B‚&çVÖ&W&–ær&Wf–Wr6â&R6æ6VÆÆVBÂÆ–VBæBVæFöæR"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢v—B7&VFR‡vR“°¢v—BÆ6R‡vRÂ'&W6—7F÷""ÂSÂS“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%6VÆV7B"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—B6Æ–6µv÷&ÆB‡vRÂSÂS“°¢v—B÷Våv÷&¶&Væ6…æVÂ‡vRÂ'&÷W'F–W2"“°¢6öç7B&÷2ÒvRævWD'•&öÆR‚&f÷&Ò"Â²æÖS¢%&÷W'F–W2"ÂW†7C¢G'VRÒ“°¢v—B&÷2ævWD'”Æ&VÂ‚%&VfW&Væ6R"Â²W†7C¢G'VRÒ’æf–ÆÂ‚%#’"“°¢v—B&÷2ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢6öç7B6öææV7F—f—G’ÒvRævWD'•&öÆR‚'&Vv–öâ"Â°¢æÖS¢$6öææV7F—f—G’"À¢W†7C¢G'VRÀ¢Ò“°¢v—B6öææV7F—f—G¢ævWD'”Æ&VÂ‚%&VçVÖ&W""Â²W†7C¢G'VRÒ¢ç6VÆV7D÷F–öâ‚&FWf–6W2"“°¢v—B6öææV7F—f—G¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%&Wf–WrçVÖ&W&–ær"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢6öç7BF–ÆörÒvRævWD'•&öÆR‚&F–Æör"Â°¢æÖS¢%&Wf–WrçVÖ&W&–ær"À¢W†7C¢G'VRÀ¢Ò“°¢v—BW‡V7B†F–Æör’çFô6öçF–åFW‡B‚%#’(i"#"“°¢v—BF–ÆörævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$6æ6VÂ"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’æFWf–6W5³Òç&VfW&Væ6R’çFô&R‚%#’"“°¢v—B6öææV7F—f—G¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%&Wf–WrçVÖ&W&–ær"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—BF–ÆörævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’æFWf–6W5³Òç&VfW&Væ6R’çFô&R‚%#"“°¢v—BvP¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%VæFò+r†VFW""ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’æFWf–6W5³Òç&VfW&Væ6R’çFô&R‚%#’"“°§Ò“°§FW7B‚'&÷W'G’VF—F–ærÂÆ&VÇ2ÂÆ–W"Æö6·2Â6†VWB6—¦W2æB¦ööÒ6†ævR&VÂ7FFR"Â7–æ2‡°¢vRÀ§Ò’Óâ°¢v—B7&VFR‡vR“°¢v—BÆ6R‡vRÂ'&W6—7F÷""ÂSÂS“°¢v—BvP¢ævWD'•&öÆR‚&Ö–â"Â²æÖS¢%v÷&·76R"ÂW†7C¢G'VRÒ¢ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%6VÆV7B"ÂW†7C¢G'VRÒ¢æ6Æ–6²‚“°¢v—B÷Våv÷&¶&Væ6…æVÂ‡vRÂ'&÷W'F–W2"“°¢6öç7B&÷2ÒvRævWD'•&öÆR‚&f÷&Ò"Â²æÖS¢%&÷W'F–W2"ÂW†7C¢G'VRÒ“°¢v—B&÷2ævWD'”Æ&VÂ‚%&VfW&Væ6R"Â²W†7C¢G'VRÒ’æf–ÆÂ‚%#"“°¢v—B&÷2ævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$Ç’"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BW‡V7B€¢vRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%#£"ÂW†7C¢G'VRÒ’À¢’çFô&Uf—6–&ÆR‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$æWBÆ&VÂ"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢%#£"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢v—BvRævWD'”Æ&VÂ‚$Æ&VÂFW‡B"Â²W†7C¢G'VRÒ’æf–ÆÂ‚$4ôåE$ôÅó#Eb"“°¢v—BvRævWD'•&öÆR‚&'WGFöâ"Â²æÖS¢$FBÆ&VÂ"ÂW†7C¢G'VRÒ’æ6Æ–6²‚“°¢W‡V7B‚†v—B&ö¦V7B‡vR’’æææ÷FF–öç5³ÒçFW‡B’çFô&R‚$4ôåE$ôÅó#Eb"“°¢v—B÷VäVF—F÷%FööÇ2‡vR“°¢v—BvRæÆö6F÷"‚"æVF—F÷"Ö÷F–öç27VÖÖ'’"’æ6Æ–6²‚“°¢v—BvRævWD'•&öÆR‚&6†V6¶&÷‚"Â²æÖS¢$Æö6¶VB"ÂW†7C¢G'VRÒ’æ6†V6²‚“°¢v—BÆ6R‡vRÂ&Æ×"ÂCÂ“°¢v—BW‡V7B‡vRæÆö6F÷"‚%¶FFÖ–ç7Fæ6UÒ"’’çFô†fT6÷VçBƒ“°¢v—BvRævWD'•&öÆR‚&6†V6¶&÷‚"Â²æÖS¢$Æö6¶VB"ÂW†7C¢G'VRÒ’çVæ6†V6²‚“°¢v—BvP¢æv_zã‹h‘éì¶»§q«^uÈÝ]]‹“ÕUÜ\È—K—JBˆ\Ý
-]]ÛX][Ûˆ[\™˜XÙH	ÚYHXÙ\È[™Ú\™\È\Ý[˜Ý˜]]™HÚ[›™[Ø\Þ[˜È
-ÂˆYÙKˆJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]YÙBˆ›ØØ]ÜŠ‹˜ÛÛ\Û™[[Xœ˜\žHÝ[[X\žHŠBˆ™š[\ŠÈ\Õ^ˆ×‘[™Ú[™Y\š[™ÈÞ[X›ÛÉÈJBˆ˜ÛXÚÊ
-NÂˆ]ØZ]YÙK™Ù]žSX™[
-”ÙX\˜ÚÞ[X›ÛÈ‹È^XÝˆYHJK™š[
-]Y\žJNÂˆ]ØZ]YÙBˆ›ØØ]ÜŠ›HŠBˆ™š[\ŠÈ\ÎˆYÙK›ØØ]ÜŠÙ]K[Xœ˜\žK\™]šY]ÏH‰ÚYH—X
-HJBˆ™Ù]žT›ÛJ˜]ÛˆŠBˆ˜ÛXÚÊ
-NÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜ÛÛX›Ø›Þ‹È˜[YNˆÝ\ÝÛHÞ[X›ÛÈ‹^XÝˆYHJBˆœÙ[XÝÜ[ÛŠXœ˜\žKIÚYX
-NÂˆ]ØZ]ÛXÚÕÛÜ›
-YÙK
-NÂˆ^XÝ
+import {
+  openComponentLibrary,
+  openEditorTools,
+  openWorkbenchPanel,
+  selectMenuTab,
+} from "./workbench.ts";
+import { clickWirePin } from "../fixtures/click-wire-pin";
+import { reloadAndReopenProject } from "../fixtures/reopen-project";
+import { test, expect, type Page } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { nativeProject } from "../fixtures/native-project.mjs";
+const key = "adiguneplanai.projects.v1";
+async function create(page: Page) {
+  await page.goto("/");
+  await page.getByRole("button", { name: "New project", exact: true }).click();
+  const dialog = page.getByRole("dialog", { name: "New project", exact: true });
+  await dialog
+    .getByLabel("Project name", { exact: true })
+    .fill("Editor reference");
+  await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 1", exact: true }),
+  ).toBeVisible();
+  await openEditorTools(page);
+}
+test("secondary home ribbon actions remain named when shown as icons", async ({
+  page,
+}) => {
+  await create(page);
+  await selectMenuTab(page, "Home");
+  const ribbon = page.locator(
+    '.workbench-command-popover .ribbon[data-tab="home"]',
+  );
+  const undo = ribbon.locator('[data-command="undo"]');
+  await expect(undo).toHaveAttribute("data-icon-only", "true");
+  await expect(undo).toHaveAttribute("title", "Undo");
+  await expect(undo).toHaveAccessibleName("Undo Â· Home");
+  await expect(undo.locator("span")).toBeHidden();
 
-]ØZ]›Ú™XÝ
-YÙJJK\›Z[˜[ÊKÒ]™S[™Ý
-ŠNÂˆ]ØZ]XÙJYÙKœ™\Ú\ÝÜˆ‹ML
-NÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ›XZ[ˆ‹È˜[YNˆ•ÛÜšÜÜXÙH‹^XÝˆYHJBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ•Ú\™H‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆÛÛœÝœ›ÛT[’YH]ØZ]ÛXÚÕÚ\™T[ŠYÙKLN‰ØÚ[›™[X
-NÂˆÛÛœÝÔ[’YH]ØZ]ÛXÚÕÚ\™T[ŠYÙK”ŒNŒHŠNÂˆÛÛœÝ]HH]ØZ]›Ú™XÝ
-YÙJNÂˆ^XÝ
-]KÚ\™\ÊKÓX]ÚØš™XÝ
-ÞÈœ›ÛT[’YÔ[’YWJNÂˆ^XÝ
-]K›™]ÊKÒ]™S[™Ý
-ÊNÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ^XÝ
+  const placement = ribbon.locator('[data-command="ribbonPlace"]');
+  await expect(placement).not.toHaveAttribute("data-icon-only", "true");
+  await expect(placement).toHaveAccessibleName("Place Component Â· Home");
+  await expect(placement.locator("span")).toBeVisible();
+});
 
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™\ÊKÑ\]X[
-]KÚ\™\ÊNÂˆJNÂ‚\Ý
-˜Ý\ÝÛHÞ[X›ÛÈÜ™X]H˜]]™H[œÈ]Ú\™H[™Ý\š]™H[™È[™™[ØY‹\Þ[˜È
-ÂˆYÙKŸJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]YÙBˆ›ØØ]ÜŠ‹˜ÛÛ\Û™[[Xœ˜\žHÝ[[X\žHŠBˆ™š[\ŠÈ\Õ^ˆ×Ý\ÝÛHÞ[X›ÛÉÈJBˆ˜ÛXÚÊ
-NÂˆÛÛœÝ›Ü›HHYÙK™Ù]žT›ÛJ™›Ü›H‹È˜[YNˆÝ\ÝÛHÞ[X›ÛÈ‹^XÝˆYHJNÂˆ]ØZ]›Ü›K™Ù]žSX™[
-”Þ[X›Û˜[YH‹È^XÝˆYHJK™š[
-’[\™˜XÙHŠNÂˆ]ØZ]›Ü›K™Ù]žSX™[
-›ÙHÚY
-[JH‹È^XÝˆYHJK™š[
-ŒŒŠNÂˆ]ØZ]›Ü›K™Ù]žSX™[
-›ÙHZYÚ
-[JH‹È^XÝˆYHJK™š[
-ŒŒŠNÂˆ]ØZ]›Ü›K™Ù]žSX™[
-×”[œÎ‹ÊK™š[
-’S‹LL“ÕULŠNÂˆ]ØZ]›Ü›Bˆ™Ù]žSX™[
-×\ÛÜšÈ[ˆ[N‹ÊBˆ™š[
-›[™KLLL˜Ú\˜ÛKŠNÂˆ]ØZ]›Ü›K™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆÜ™X]H‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆÛÛœÝYš[š][ÛˆH
-]ØZ]›Ú™XÝ
-YÙJJKœÞ[X›ÛYš[š][ÛœË™š[™
-ˆ
-ˆÈ˜[YNˆÝš[™ÈJHOˆ›˜[YHOOH’[\™˜XÙH‹ˆ
-NÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜ÛÛX›Ø›Þ‹È˜[YNˆÝ\ÝÛHÞ[X›ÛÈ‹^XÝˆYHJBˆœÙ[XÝÜ[ÛŠYš[š][Û‹šY
-NÂˆ]ØZ]ÛXÚÕÛÜ›
-YÙK
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ–Ù]KXÝ\ÝÛKX\ÛÜš×H[™HŠJKÒ]™PÛÝ[
-JNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ–Ù]KXÝ\ÝÛKX\ÛÜš×HÚ\˜ÛHŠJKÒ]™PÛÝ[
-JNÂˆ]ØZ]XÙJYÙK›[\‹ML
-NÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ›XZ[ˆ‹È˜[YNˆ•ÛÜšÜÜXÙH‹^XÝˆYHJBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ•Ú\™H‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆ]ØZ]YÙK™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ•LN“ÕU‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ]ØZ]YÙK™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ’NŒH‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ^XÝ
+async function clickWorld(page: Page, x: number, y: number) {
+  await page.locator(".engineering-canvas").scrollIntoViewIfNeeded();
+  const screen = await page.locator(".engineering-canvas").evaluate(
+    (svg, point) => {
+      const p = new DOMPoint(point.x, point.y).matrixTransform(
+        (svg as SVGSVGElement).getScreenCTM()!,
+      );
+      return { x: p.x, y: p.y };
+    },
+    { x, y },
+  );
+  await page.mouse.click(screen.x, screen.y);
+}
+async function place(page: Page, kind: string, x: number, y: number) {
+  await openEditorTools(page);
+  await page
+    .getByRole("combobox", { name: "Symbols", exact: true })
+    .selectOption(kind);
+  await clickWorld(page, x, y);
+}
+async function project(page: Page) {
+  return page.evaluate(
+    (k) => JSON.parse(localStorage.getItem(k)!).projects[0],
+    key,
+  );
+}
 
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™\ÊKÒ]™S[™Ý
-JNÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ•[™È0­ÈXY\ˆ‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆ^XÝ
+test("custom native sheet dimensions display their actual size category", async ({
+  page,
+}) => {
+  await create(page);
+  await page.evaluate((storageKey) => {
+    const library = JSON.parse(localStorage.getItem(storageKey)!);
+    library.projects[0].pages[0].widthMm = 500;
+    library.projects[0].pages[0].heightMm = 350;
+    localStorage.setItem(storageKey, JSON.stringify(library));
+  }, key);
+  await reloadAndReopenProject(page);
+  await openEditorTools(page);
+  await page.locator(".editor-options summary").click();
+  await expect(
+    page.getByRole("combobox", { name: "Sheet size", exact: true }),
+  ).toHaveValue("custom");
+  await page
+    .getByRole("combobox", { name: "Sheet size", exact: true })
+    .selectOption("A4");
+  expect((await project(page)).pages[0].widthMm).toBe(297);
+});
 
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™\ÊKÒ]™S[™Ý
-
-NÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ”™YÈ0­ÈXY\ˆ‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ]ØZ]^XÝ
-ˆYÙK™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ•LN’Sˆ‹^XÝˆYHJKˆ
-KÐ™Uš\ÚX›J
-NÂˆ^XÝ
+test("manual route edits persist and reset through native undo history", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 150, 50);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await clickWorld(page, 100, 50);
+  const route = page.getByRole("form", {
+    name: "Apply manual route",
+    exact: true,
+  });
+  await route
+    .getByRole("textbox")
+    .fill("60, 50\n70, 50\n70, 80\n130, 80\n130, 50\n144, 50");
+  await route
+    .getByRole("button", { name: "Apply manual route", exact: true })
+    .click();
+  let data = await project(page);
+  expect(data.wirePaths[0].routingMode).toBe("manual");
+  expect(data.wirePaths[0].points).toHaveLength(6);
+  const manual = data.wirePaths[0].points;
+  await route
+    .getByRole("button", { name: "Restore automatic route", exact: true })
+    .click();
+  expect((await project(page)).wirePaths[0].routingMode).toBe("auto");
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).wirePaths[0].points).toEqual(manual);
+  await reloadAndReopenProject(page);
+  data = await project(page);
+  expect(data.wirePaths[0].points).toEqual(manual);
+  expect(data.wires).toHaveLength(1);
+});
 
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™\ÊKÒ]™S[™Ý
-JNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]YÙBˆ›ØØ]ÜŠ‹˜ÛÛ\Û™[[Xœ˜\žHÝ[[X\žHŠBˆ™š[\ŠÈ\Õ^ˆ×Ý\ÝÛHÞ[X›ÛÉÈJBˆ˜ÛXÚÊ
-NÂˆ]ØZ]YÙBˆ™Ù]žSX™[
-‘Y]Ý\ÝÛHÞ[X›Û‹È^XÝˆYHJBˆœÙ[XÝÜ[ÛŠYš[š][Û‹šY
-NÂˆÛÛœÝY]›Ü›HHYÙK™Ù]žT›ÛJ™›Ü›H‹Âˆ˜[YNˆÝ\ÝÛHÞ[X›ÛÈ‹ˆ^XÝˆYKˆJNÂˆ]ØZ]Y]›Ü›K™Ù]žSX™[
-›ÙHÚY
-[JH‹È^XÝˆYHJK™š[
-ŒŠNÂˆ]ØZ]Y]›Ü›K™Ù]žSX™[
-×”[œÎ‹ÊK™š[
-’S‹LL‹“ÕUL‹ŠNÂˆÛÛœÝÛH
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™\ÖÌNÂˆ]ØZ]Y]›Ü›K™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ\H‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ^XÝ
+test("wire properties and shielded cable cores persist as native engineering metadata", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 150, 50);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await clickWorld(page, 100, 50);
+  await page.locator(".wire-properties summary").click();
+  const wire = page.getByRole("form", { name: "Wire properties", exact: true });
+  await wire.getByLabel("Wire", { exact: true }).fill("W20");
+  await wire
+    .getByLabel("Drawing color (#RRGGBB)", { exact: true })
+    .fill("#123abc");
+  await wire
+    .getByLabel("Declared physical length (m)", { exact: true })
+    .fill("12.5");
+  await wire.getByRole("button", { name: "Apply", exact: true }).click();
+  const core = page.getByRole("form", {
+    name: "Create and assign core",
+    exact: true,
+  });
+  await core.getByLabel("Conductor core", { exact: true }).fill("1");
+  await core
+    .getByLabel("Core color or designation", { exact: true })
+    .fill("BU");
+  await core.getByLabel("Cross-section (mmÂ²)", { exact: true }).fill("2.5");
+  await core
+    .getByRole("button", { name: "Create and assign core", exact: true })
+    .click();
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await connectivity
+    .locator("summary")
+    .filter({ hasText: /^Cable$/ })
+    .click();
+  const cable = connectivity.getByRole("form", { name: "Cable", exact: true });
+  await cable.getByLabel("Cable name", { exact: true }).fill("W-C1");
+  let data = await project(page);
+  await cable
+    .getByLabel("Conductor core", { exact: true })
+    .selectOption(data.conductors[0].id);
+  await cable.getByLabel("Shielded cable", { exact: true }).check();
+  await cable
+    .getByLabel("Shield bond terminals", { exact: true })
+    .selectOption(data.terminals[0].id);
+  await cable.getByRole("button", { name: "Apply", exact: true }).click();
+  data = await project(page);
+  expect(data.wires[0]).toMatchObject({
+    name: "W20",
+    color: "#123abc",
+    physicalLengthM: 12.5,
+    conductorId: data.conductors[0].id,
+  });
+  expect(data.cables[0]).toMatchObject({
+    name: "W-C1",
+    shielded: true,
+    conductorIds: [data.conductors[0].id],
+    shieldBondTerminalIds: [data.terminals[0].id],
+  });
+  await reloadAndReopenProject(page);
+  expect((await project(page)).cables).toEqual(data.cables);
+  const panel = page.getByRole("region", { name: "Connectivity", exact: true });
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Edit core$/ })
+    .click();
+  const editor = panel.getByRole("form", { name: "Edit core", exact: true });
+  await editor.getByLabel("Cross-section (mmÂ²)", { exact: true }).fill("4");
+  await editor.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).conductors[0].crossSectionMm2).toBe(4);
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Terminal properties$/ })
+    .click();
+  const terminal = panel.getByRole("form", {
+    name: "Terminal properties",
+    exact: true,
+  });
+  await terminal.getByLabel("Connection required", { exact: true }).check();
+  await terminal
+    .getByLabel("Declared maximum wire connections", { exact: true })
+    .fill("1");
+  await terminal.getByRole("button", { name: "Apply", exact: true }).click();
+  await expect(
+    panel.getByRole("button", { name: "Errors (1)", exact: true }),
+  ).toBeVisible();
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Terminal strip$/ })
+    .click();
+  const strip = panel.getByRole("form", {
+    name: "Terminal strip",
+    exact: true,
+  });
+  await strip.getByLabel("Strip name", { exact: true }).fill("X1");
+  await strip
+    .getByLabel("Strip members", { exact: true })
+    .selectOption([data.terminals[0].id, data.terminals[3].id]);
+  await strip.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).terminalStrips[0].terminalIds).toEqual([
+    data.terminals[0].id,
+    data.terminals[3].id,
+  ]);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).terminalStrips).toHaveLength(0);
+});
+test("symbols create native terminals, connect through real pins and reroute after editing", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 120, 80);
+  await expect(page.locator("[data-instance]")).toHaveCount(2);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await expect(page.locator("[data-wire]")).toHaveCount(1);
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await expect(connectivity).toContainText("Netlist (3)");
+  await connectivity.getByText("Connections (1)", { exact: true }).click();
+  await expect(connectivity.getByRole("table")).toContainText("W1");
+  await expect(connectivity.getByRole("table")).toContainText("R1:2");
+  await expect(connectivity.getByRole("table")).toContainText("H1:1");
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await clickWorld(page, 50, 50);
+  await page.getByRole("application", { name: "Sheet 1", exact: true }).focus();
+  await page.keyboard.press("ArrowRight");
+  let data = await project(page);
+  expect(
+    data.symbolInstances.find((s: { name: string }) => s.name === "R1").position
+      .x,
+  ).toBe(55);
+  expect(data.wires).toHaveLength(1);
+  expect(data.wirePaths[0].points[0].x).toBe(65);
+  await page.getByRole("button", { name: "Rotate", exact: true }).click();
+  data = await project(page);
+  expect(
+    data.symbolInstances.find((s: { name: string }) => s.name === "R1")
+      .rotation,
+  ).toBe(90);
+  expect(data.wires).toHaveLength(1);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
+  data = await project(page);
+  expect(
+    data.symbolInstances.find((s: { name: string }) => s.name === "R1")
+      .rotation,
+  ).toBe(0);
+  await expect(page.locator("[data-wire]")).toHaveCount(1);
+  expect(errors).toEqual([]);
+});
 
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™\ÖÌJKÑ\]X[
-Û
-NÂˆ^XÝ
+test("numbering preview can be cancelled, applied and undone", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await clickWorld(page, 50, 50);
+  await openWorkbenchPanel(page, "properties");
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("Reference", { exact: true }).fill("R9");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await connectivity
+    .getByLabel("Renumber", { exact: true })
+    .selectOption("devices");
+  await connectivity
+    .getByRole("button", { name: "Preview numbering", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", {
+    name: "Preview numbering",
+    exact: true,
+  });
+  await expect(dialog).toContainText("R9 â†’ R1");
+  await dialog.getByRole("button", { name: "Cancel", exact: true }).click();
+  expect((await project(page)).devices[0].reference).toBe("R9");
+  await connectivity
+    .getByRole("button", { name: "Preview numbering", exact: true })
+    .click();
+  await dialog.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).devices[0].reference).toBe("R1");
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).devices[0].reference).toBe("R9");
+});
+test("property editing, labels, layer locks, sheet sizes and zoom change real state", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await openWorkbenchPanel(page, "properties");
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("Reference", { exact: true }).fill("R10");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "R10:1", exact: true }),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Net label", exact: true }).click();
+  await page.getByRole("button", { name: "R10:1", exact: true }).click();
+  await page.getByLabel("Label text", { exact: true }).fill("CONTROL_24V");
+  await page.getByRole("button", { name: "Add label", exact: true }).click();
+  expect((await project(page)).annotations[0].text).toBe("CONTROL_24V");
+  await openEditorTools(page);
+  await page.locator(".editor-options summary").click();
+  await page.getByRole("checkbox", { name: "Locked", exact: true }).check();
+  await place(page, "lamp", 140, 100);
+  await expect(page.locator("[data-instance]")).toHaveCount(1);
+  await page.getByRole("checkbox", { name: "Locked", exact: true }).uncheck();
+  await page
+    .getByRole("combobox", { name: "Sheet size", exact: true })
+    .selectOption("A4");
+  await page.getByRole("button", { name: "Portrait", exact: true }).click();
+  const data = await project(page);
+  expect(data.pages[0].widthMm).toBe(210);
+  expect(data.pages[0].heightMm).toBe(297);
+  const canvas = page.locator(".engineering-canvas");
+  const before = await canvas.getAttribute("viewBox");
+  await page.getByRole("button", { name: "+", exact: true }).click();
+  expect(await canvas.getAttribute("viewBox")).not.toBe(before);
+  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await expect(canvas).toHaveAttribute("viewBox", "0 0 210 297");
+});
+test("native clipboard survives deletion and undo restores the original graph", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "coil", 80, 70);
+  await page.getByRole("button", { name: "Copy", exact: true }).click();
+  await page.getByRole("button", { name: "Delete", exact: true }).click();
+  await expect(page.locator("[data-instance]")).toHaveCount(0);
+  await page.getByRole("button", { name: "Paste", exact: true }).click();
+  await expect(page.locator("[data-instance]")).toHaveCount(1);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  await expect(page.locator("[data-instance]")).toHaveCount(0);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  await expect(page.locator("[data-instance]")).toHaveCount(1);
+});
+for (const language of ["en", "de", "yo", "pcm"])
+  test(`native editor stays inside mobile viewport in ${language}`, async ({
+    page,
+  }) => {
+    const messages = JSON.parse(
+      readFileSync(`packages/localization/${language}.json`, "utf8"),
+    );
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.addInitScript(
+      (l) =>
+        localStorage.setItem(
+          "adiguneplanai.interface.v1",
+          JSON.stringify({ language: l }),
+        ),
+      language,
+    );
+    await page.goto("/");
+    await page
+      .getByRole("button", { name: messages.newProject, exact: true })
+      .click();
+    const dialog = page.getByRole("dialog", {
+      name: messages.newProject,
+      exact: true,
+    });
+    await dialog
+      .getByLabel(messages.projectName, { exact: true })
+      .fill("Mobile");
+    await dialog
+      .getByRole("button", { name: messages.create, exact: true })
+      .click();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  });
 
-]ØZ]›Ú™XÝ
-YÙJJKÚ\™T]ÖÌKœÚ[ÖÌKž
-KÐ™JLŠNÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ•[™È0­ÈXY\ˆ‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆ^XÝ
-ˆ
-]ØZ]›Ú™XÝ
-YÙJJKœÞ[X›ÛYš[š][ÛœË™š[™
-ˆ
-ˆÈYˆÝš[™ÈJHOˆšYOOHYš[š][Û‹šYˆ
-KÚY[Kˆ
-KÐ™JŒ
-NÂŸJNÂ‚\Ý
-˜Ü›ÜÜË\YÙH™]X™[È\œÚ\ÝY[X™\œÚ\È[™˜]šYØ]HÈH™X[˜]Ú[™È‹\Þ[˜È
-ÂˆYÙKŸJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆ]ØZ]XÙJYÙKœ™\Ú\ÝÜˆ‹LL
-NÂˆ\Þ[˜È[˜Ý[ÛˆX™[
-[ŽˆÝš[™ÊHÂˆ]ØZ]YÙK™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ“™]X™[‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ]ØZ]YÙK™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ[‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ]ØZ]YÙK™Ù]žSX™[
-“X™[^‹È^XÝˆYHJK™š[
-ÓÓ•“ÓÌˆŠNÂˆ]ØZ]YÙK™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆYX™[‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆBˆ]ØZ]X™[
-”ŒNŒHŠNÂˆ]ØZ]YÙK›ØØ]ÜŠ‹ÛÜšØ™[˜ÚXY\ÚY]ŠK˜ÛXÚÊ
-NÂˆ]ØZ]YÙBˆ›ØØ]ÜŠ‹™˜]Ú[™Ë]XœÈŠBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ”ÚY]ˆ‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆ]ØZ]XÙJYÙK›[\‹LL
-NÂˆ]ØZ]X™[
-’NŒHŠNÂˆÛÛœÝ]HH]ØZ]›Ú™XÝ
-YÙJNÂˆÛÛœÝ™]H]K›™]Ë™š[™
+test("drawing selection and exact coordinate edits preserve native geometry and history", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.pages.push({
+    ...fixture.pages[0],
+    id: "sheet-2",
+    name: "Sheet 2",
+    order: 1,
+  });
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wirePaths[0].points = [
+    { x: 100, y: 100 },
+    { x: 180, y: 100 },
+  ];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "selection.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const marqueePoints = () =>
+    canvas.evaluate((element) => {
+      const matrix = (element as SVGSVGElement).getScreenCTM()!;
+      return [new DOMPoint(99, 85), new DOMPoint(120, 115)].map((point) => {
+        const { x, y } = point.matrixTransform(matrix);
+        return { x, y };
+      });
+    });
+  const before = await project(page);
+  const coordinates = page.locator(".status-coordinates");
+  const [left] = await marqueePoints();
+  await page.mouse.move(left.x, left.y);
+  await expect(coordinates).toHaveText(/^X \d+\.\d{2} Â· Y \d+\.\d{2} mm$/);
+  const [readX, readY] = (await coordinates.innerText())
+    .match(/\d+\.\d+/g)!
+    .map(Number);
+  expect(Math.abs(readX - 99)).toBeLessThan(1);
+  expect(Math.abs(readY - 85)).toBeLessThan(1);
+  await page.locator(".app-header").hover();
+  await expect(coordinates).toBeEmpty();
+  await canvas.scrollIntoViewIfNeeded();
+  const [marqueeLeft, marqueeRight] = await marqueePoints();
+  for (const crossing of [false, true]) {
+    const [start, end] = crossing
+      ? [marqueeRight, marqueeLeft]
+      : [marqueeLeft, marqueeRight];
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(end.x, end.y);
+    await expect(canvas.locator(".schematic-marquee")).toHaveAttribute(
+      "data-crossing",
+      String(crossing),
+    );
+    await page.mouse.up();
+    await expect(
+      canvas.locator('[data-instance][aria-pressed="true"]'),
+    ).toHaveCount(crossing ? 1 : 0);
+  }
+  expect(await project(page)).toEqual(before);
+  await openWorkbenchPanel(page, "properties");
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("X (mm)", { exact: true }).fill("112.375");
+  await props.getByLabel("Y (mm)", { exact: true }).fill("103.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  const edited = await project(page);
+  expect(edited.symbolInstances[0].position).toEqual({
+    x: 112.375,
+    y: 103.125,
+  });
+  expect(edited.pages[0].snapping).toBe(true);
+  expect(edited.wirePaths[0].points[0]).toEqual(
+    edited.symbolInstances[0].position,
+  );
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await canvas.scrollIntoViewIfNeeded();
+  const [from, to] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(100, 100), new DOMPoint(112.4, 106.4)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  const symbol = canvas.locator('[data-instance="symbol-a"] > g[transform]');
+  await page.mouse.move(from.x, from.y);
+  await page.mouse.down();
+  await page.mouse.move(to.x, to.y);
+  await expect(symbol).toHaveAttribute("transform", /^translate\(110 105\)/);
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 110,
+    y: 105,
+  });
+  await props.getByLabel("Y (mm)", { exact: true }).fill("105.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.press("F8");
+  const ortho = page.getByRole("button", {
+    name: "Orthogonal move",
+    exact: true,
+  });
+  await expect(ortho).toHaveAttribute("aria-pressed", "true");
+  const [anchor, diagonal] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(110, 105.125), new DOMPoint(128, 114)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  await page.mouse.move(anchor.x, anchor.y);
+  await page.mouse.down();
+  await page.mouse.move(diagonal.x, diagonal.y);
+  await expect(symbol).toHaveAttribute(
+    "transform",
+    /^translate\(130 105\.125\)/,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 130,
+    y: 105.125,
+  });
+  await ortho.click();
+  await expect(ortho).toHaveAttribute("aria-pressed", "false");
+  const snap = page.getByRole("button", { name: "Snap to grid", exact: true });
+  await canvas.press("F9");
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  expect(
+    (await project(page)).pages.map(
+      ({ snapping }: { snapping: boolean }) => snapping,
+    ),
+  ).toEqual([false, true]);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  await expect(snap).toHaveAttribute("aria-pressed", "true");
+  await snap.click();
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  const beforePan = await project(page);
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.focus();
+  for (const button of ["left", "middle"] as const) {
+    const startView = await canvas.getAttribute("viewBox");
+    const center = await canvas.evaluate((element) => {
+      const { x, y } = new DOMPoint(130, 105.125).matrixTransform(
+        (element as SVGSVGElement).getScreenCTM()!,
+      );
+      return { x, y };
+    });
+    if (button === "left") await page.keyboard.down("Space");
+    await page.mouse.move(center.x, center.y);
+    await page.mouse.down({ button });
+    await page.mouse.move(center.x + 20, center.y + 15);
+    await page.mouse.up({ button });
+    if (button === "left") await page.keyboard.up("Space");
+    await expect(canvas).not.toHaveAttribute("viewBox", startView!);
+    await expect(canvas).toHaveAttribute("data-tool", "select");
+  }
+  expect(await project(page)).toEqual(beforePan);
+});
 
-][NˆÈX™[ÎˆÝš[™Ö×HJHO‚ˆ][K›X™[Ëš[˜ÛY\ÊÓÓ•“ÓÌˆŠKˆ
-NÂˆ^XÝ
-™]\›Z[˜[YÊKÒ]™S[™Ý
-ŠNÂˆÛÛœÝ[™[HYÙK™Ù]žT›ÛJœ™YÚ[Ûˆ‹È˜[YNˆÛÛ›™XÝ]š]H‹^XÝˆYHJNÂˆ]ØZ][™[ˆ›ØØ]ÜŠœÝ[[X\žHŠBˆ™š[\ŠÈ\Õ^ˆ×“™]\ÝÈJBˆ˜ÛXÚÊ
-NÂˆ]ØZ][™[™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ”ŒNŒH‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-ˆYÙK™Ù]žT›ÛJ˜\XØ][Ûˆ‹È˜[YNˆ”ÚY]H‹^XÝˆYHJKˆ
-KÐ™Uš\ÚX›J
-NÂˆ]ØZ][™[™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ’NŒH‹^XÝˆYHJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-ˆYÙK™Ù]žT›ÛJ˜\XØ][Ûˆ‹È˜[YNˆ”ÚY]ˆ‹^XÝˆYHJKˆ
-KÐ™Uš\ÚX›J
-NÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ^XÝ
-ˆ
-]ØZ]›Ú™XÝ
-YÙJJK›™]Ë™š[™
-ˆ
-][NˆÈYˆÝš[™ÈJHOˆ][KšYOOH™]šYˆ
-K\›Z[˜[YËˆ
-KÑ\]X[
-™]\›Z[˜[YÊNÂˆÛÛœÝ[\ÜXØÙ\YHYÙBˆØZ]›Ü‘]™[
-™X[ÙÈŠBˆ[Š
-X[ÙÊHOˆX[ÙË˜XØÙ\
+test("Wire mode snaps nearby clicks to native pin coordinates", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wires = [];
+  fixture.wirePaths = [];
+  fixture.nets = [];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "pin-snap.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await page.getByRole("button", { name: "Wire Â· Home", exact: true }).click();
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  for (const pin of fixture.pins) {
+    const target = canvas.locator(`[data-pin="${pin.id}"]`);
+    const bounds = (await target.locator(".pin-aperture").boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2 + 7;
+    await page.mouse.move(x, y);
+    await expect(target).toHaveAttribute("data-snap-pin", "true");
+    await page.mouse.click(x, y);
+  }
+  const result = await project(page);
+  expect(result.wires).toHaveLength(1);
+  expect(result.wires[0]).toMatchObject({
+    fromPinId: "pin-a",
+    toPinId: "pin-b",
+  });
+  expect(result.wirePaths[0].points[0]).toEqual({ x: 100, y: 100 });
+  expect(result.wirePaths[0].points.at(-1)).toEqual({ x: 180, y: 100 });
+});
 
-JNÂˆÛÛœÝ[\ÜY˜[YHH	Ù]K›˜[Y_H[\ÜYÂˆ]ØZ]YÙK™Ù]žSX™[
-’[\Ü›Ú™XÝ‹È^XÝˆYHJKœÙ][œ]š[\ÊÂˆ˜[YNˆœ™XÛÛ\]K˜Y\[‹šœÛÛˆ‹ˆZ[YU\Nˆ˜\XØ][Û‹ÚœÛÛˆ‹ˆY™™\ŽˆY™™\‹™œ›ÛJˆ”ÓÓ‹œÝš[™ÚYžJÈ‹‹™]K˜[YNˆ[\ÜY˜[YK™]Îˆ×Kš[™[™ÜÎˆ×HJKˆ
-KˆJNÂˆ]ØZ][\ÜXØÙ\YÂˆ]ØZ]^XÝœÛ
-\Þ[˜È
+test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 80, 80);
+  await place(page, "lamp", 140, 130);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await clickWorld(page, 80, 80);
+  await page.keyboard.down("Shift");
+  await clickWorld(page, 140, 130);
+  await page.keyboard.up("Shift");
+  await page.getByRole("button", { name: "Group", exact: true }).click();
+  expect((await project(page)).groups).toHaveLength(1);
+  await page.getByRole("button", { name: "Copy", exact: true }).click();
+  await page.locator(".workbench-add-sheet").click();
+  await page
+    .locator(".drawing-tabs")
+    .getByRole("button", { name: "Sheet 2", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Paste", exact: true }).click();
+  const data = await project(page);
+  expect(data.symbolInstances).toHaveLength(4);
+  expect(data.groups).toHaveLength(2);
+  expect(
+    data.symbolInstances.filter(
+      (s: { pageId: string }) => s.pageId === data.pages[1].id,
+    ),
+  ).toHaveLength(2);
+  await page.getByRole("button", { name: "Pan", exact: true }).click();
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const before = await canvas.getAttribute("viewBox");
+  const box = await canvas.boundingBox();
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    box!.x + box!.width / 2 + 30,
+    box!.y + box!.height / 2 + 20,
+  );
+  await page.mouse.up();
+  expect(await canvas.getAttribute("viewBox")).not.toBe(before);
+  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await expect(canvas).toHaveAttribute("viewBox", "0 0 420 297");
+});
 
-HOˆ
-]ØZ]›Ú™XÝ
-YÙJJK›˜[YJKÐ™J[\ÜY˜[YJNÂˆ^XÝ
-ˆ
-]ØZ]›Ú™XÝ
-YÙJJK›™]Ë™š[™
+test("junction insertion updates the real wire graph and BOM while navigator controls the active drawing", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 150, 50);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await place(page, "junction", 100, 50);
+  const data = await project(page);
+  expect(data.wires).toHaveLength(2);
+  expect(data.devices).toHaveLength(3);
+  expect(data.wirePaths).toHaveLength(2);
+  const bom = page.getByRole("region", {
+    name: "Bill of materials",
+    exact: true,
+  });
+  await expect(bom.locator("tbody tr")).toHaveCount(3);
+  await expect(bom).toContainText("J1");
+  await page.locator(".workbench-add-sheet").click();
+  await page
+    .getByRole("region", { name: "Project navigator", exact: true })
+    .getByRole("button", { name: "Sheet 2", exact: true })
+    .click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 2", exact: true }),
+  ).toBeVisible();
+});
 
-][NˆÈX™[ÎˆÝš[™Ö×HJHO‚ˆ][K›X™[Ëš[˜ÛY\ÊÓÓ•“ÓÌˆŠKˆ
-K\›Z[˜[YËˆ
-KÑ\]X[
-™]\›Z[˜[YÊNÂŸJNÂ‚\Ý
-˜ÛÛ\Û™[ÛÛ\\š\ÛÛˆ™\Ù\™\ÈÙ[XÝ[ÛœÈ›ÝYÚÙX\˜Ú[™ÚÝÜÈZ\ÜÚ[™È˜][™ÜÈ^XÚ]H‹\Þ[˜È
-ÂˆYÙKŸJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ”Ù[XÝ›ÜˆÛÛ\\š\ÛÛŽˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJBˆ˜ÚXÚÊ
-NÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ”Ù[XÝ›ÜˆÛÛ\\š\ÛÛŽˆØÚ™ZY\ˆ[XÝšXÈ‘LLH‹ˆ^XÝˆYKˆJBˆ˜ÚXÚÊ
-NÂˆÛÛœÝX›HHYÙK™Ù]žT›ÛJX›H‹Âˆ˜[YNˆÛÛ\\™HÛÛ\Û™[È‹ˆ^XÝˆYKˆJNÂˆ]ØZ]^XÝ
-X›JKÐ™Uš\ÚX›J
-NÂˆÛÛœÝ›ÛYÙHHX›K™Ù]žT›ÛJœ›ÝÈŠK™š[\ŠÂˆ\ÎˆYÙK™Ù]žT›ÛJœ›ÝÚXY\ˆ‹Âˆ˜[YNˆ“›ÛZ[˜[›ÛYÙH‹ˆ^XÝˆYKˆJKˆJNÂˆ]ØZ]^XÝ
-›ÛYÙK™Ù]žT›ÛJ˜Ù[ŠJKÒ]™U^
-ÈŽˆ‹“›ÝXÛ\™Y—JNÂˆÛÛœÝÙXÝ[ÛˆHX›K™Ù]žT›ÛJœ›ÝÈŠK™š[\ŠÂˆ\ÎˆYÙK™Ù]žT›ÛJœ›ÝÚXY\ˆ‹Âˆ˜[YNˆ”˜]YÜ›ÜÜË\ÙXÝ[Ûˆ‹ˆ^XÝˆYKˆJKˆJNÂˆ]ØZ]^XÝ
-ÙXÝ[Û‹™Ù]žT›ÛJ˜Ù[ŠJKÒ]™U^
-È[p¬ˆ‹“›ÝXÛ\™Y—JNÂˆ]ØZ]YÙK™Ù]žSX™[
-”ÙX\˜Ú\È‹È^XÝˆYHJK™š[
-–‘LLHŠNÂˆ]ØZ]^XÝ
-ˆX›K™Ù]žT›ÛJ˜ÛÛ[[šXY\ˆ‹Âˆ˜[YNˆ”Ù[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJKˆ
-KÐ™Uš\ÚX›J
-NÂˆÛÛœÝØ\™HYÙK™Ù]žT›ÛJ˜\XÛH‹Âˆ˜[YNˆ”ØÚ™ZY\ˆ[XÝšXÈ‘LLH‹ˆ^XÝˆYKˆJNÂˆ]ØZ]^XÝ
-ˆØ\™ˆ›ØØ]ÜŠ™ŠBˆ™š[\ŠÈ\Õ^ˆ×”˜]YÜ›ÜÜË\ÙXÝ[Û‰ÈJBˆ›ØØ]ÜŠŠÈŠKˆ
-KÒ]™U^
-“›ÝXÛ\™YŠNÂˆ]ØZ]^XÝ
-ˆX›K™Ù]žT›ÛJ›[šÈ‹È˜[YNˆŒÌÍŒˆ‹^XÝˆYHJKˆ
-KÒ]™P]šX]Jš™Yˆ‹×šÎ—×ÝÝÝ×œÙ[š^ÛÛXÝ˜ÛÛWËÊNÂˆ]ØZ]YÙBˆ™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ”Ù[XÝ›ÜˆÛÛ\\š\ÛÛŽˆØÚ™ZY\ˆ[XÝšXÈ‘LLH‹ˆ^XÝˆYKˆJBˆ[˜ÚXÚÊ
-NÂˆ]ØZ]^XÝ
-X›JKÒ]™PÛÝ[
-
-NÂˆ^XÝ
+test("desktop engineering workspace stays within the viewport", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  await create(page);
+  await selectMenuTab(page, "Insert menu");
+  await page
+    .getByRole("button", {
+      name: "Resistor Â· Engineering commands",
+      exact: true,
+    })
+    .click();
+  await clickWorld(page, 80, 80);
+  await openWorkbenchPanel(page, "properties");
+  await expect(
+    page.getByRole("form", { name: "Properties", exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollHeight <= window.innerHeight,
+    ),
+  ).toBe(true);
+});
 
-]ØZ]›Ú™XÝ
-YÙJJK›X[Y˜XÝ\™\”\ÊKÒ]™S[™Ý
-
-NÂˆ^XÝ
+test("component catalog searches and maps a sourced part to a real terminal", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  await openComponentLibrary(page);
+  const library = page.locator(".component-library");
+  await openComponentLibrary(page);
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("WAGO");
+  const wago = library.getByRole("article", {
+    name: "WAGO 2002-1201",
+    exact: true,
+  });
+  await expect(wago).toContainText("Not declared");
+  await expect(wago).not.toContainText("undefined");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("missing-part");
+  await expect(library.getByRole("status")).toHaveText("Results: 0");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("phoenix 3004362");
+  await library
+    .getByRole("combobox", { name: "Category", exact: true })
+    .selectOption("connections");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("Phoenix Contact");
+  await expect(library.getByRole("status")).toHaveText("Results: 1");
+  await expect(
+    library.getByRole("link", { name: "Manufacturer source", exact: true }),
+  ).toHaveAttribute("href", /phoenixcontact\.com/);
+  const data = await project(page);
+  await library
+    .getByLabel("Compatible device", { exact: true })
+    .selectOption(data.devices[0].id);
+  await library
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  let assigned = await project(page);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("3004362");
+  expect(assigned.terminals[0].capacity).toBe(2);
+  const bom = page.getByRole("region", {
+    name: "Bill of materials",
+    exact: true,
+  });
+  await expect(bom).toContainText("3004362");
+  await expect(
+    bom.getByRole("columnheader", { name: "Manufacturer" }),
+  ).toBeVisible();
+  await expect(
+    bom.getByRole("row").filter({ hasText: "3004362" }),
+  ).toContainText("Phoenix Contact");
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).devices[0].partId).toBeUndefined();
+  await page
+    .getByRole("button", { name: "Redo Â· Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
+  assigned = await project(page);
+  expect(assigned.devices[0].partId).toBe(assigned.manufacturerParts[0].id);
+  await expect(bom).toContainText("3004362");
+});
 
-]ØZ]›Ú™XÝ
-YÙJJK™]šXÙ\ÊKÒ]™S[™Ý
-
-NÂŸJNÂ‚\Ý
-˜Ø][ÙÈš[\œË˜]›Üš]\È[™™XÙ[\ÜÚYÛ›Y[È\œÚ\ÝÚ]Ý]Ú[™Ú[™ÈÚ\˜ÝZ]ÜÛÙÞH‹\Þ[˜È
-ÂˆYÙKŸJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆ]ØZ]XÙJYÙK\›Z[˜[‹LL
-NÂˆÛÛœÝ™Y›Ü™HH]ØZ]›Ú™XÝ
-YÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆÛÛœÝXœ˜\žHHYÙK›ØØ]ÜŠ‹˜ÛÛ\Û™[[Xœ˜\žHŠNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Xœ˜\žBˆ™Ù]žSX™[
-“Z[š[][HXÛ\™Y›ÛYÙH
-ŠH‹È^XÝˆYHJBˆ™š[
-ŒLŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™PÛÝ[
-JNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™P]šX]Jˆ˜\šXK[X™[‹ˆ”Ù[š^ÛÛXÝÌÍˆ‹ˆ
-NÂˆ]ØZ]Xœ˜\žBˆ™Ù]žSX™[
-“Z[š[][HXÛ\™YÝ\œ™[
-JH‹È^XÝˆYHJBˆ™š[
-ŒHŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™PÛÝ[
-
-NÂˆ]ØZ]Xœ˜\žBˆ™Ù]žSX™[
-“Z[š[][HXÛ\™Y›ÛYÙH
-ŠH‹È^XÝˆYHJBˆ™š[
-ˆŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™PÛÝ[
-JNÂˆ]ØZ]Xœ˜\žBˆ™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJBˆ˜ÚXÚÊ
-NÂˆ^XÝ
-]ØZ]›Ú™XÝ
-YÙJJKÑ\]X[
-™Y›Ü™JNÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]^XÝ
-ˆXœ˜\žK™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJKˆ
-KÐ™PÚXÚÙY
+test("engineering symbol search imports distinct transformer pins for native placement", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
+  await page
+    .getByLabel("Symbol category", { exact: true })
+    .selectOption("power");
+  const preview = page.locator(
+    '[data-library-preview="transformer-two-winding"]',
+  );
+  await expect(preview).toHaveAttribute("role", "img");
+  await expect(preview.locator("text")).toHaveCount(4);
+  await expect(preview.locator("circle")).toHaveCount(8);
+  await page
+    .getByRole("button", {
+      name: "Import symbol: Two-winding transformer",
+      exact: true,
+    })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-transformer-two-winding");
+  await clickWorld(page, 100, 100);
+  for (const pin of ["P1", "P2", "S1", "S2"])
+    await expect(
+      page.getByRole("button", { name: `U1:${pin}`, exact: true }),
+    ).toBeVisible();
+  const data = await project(page);
+  expect(data.terminals).toHaveLength(4);
+  expect(data.nets).toHaveLength(4);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).symbolInstances).toHaveLength(0);
+  await page
+    .getByRole("button", { name: "Redo Â· Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
+  await expect(
+    page.getByRole("button", { name: "U1:S1", exact: true }),
+  ).toBeVisible();
+});
 
-NÂˆ]ØZ]Xœ˜\žBˆ™Ù]žSX™[
-Ø][ÙÈšY]È‹È^XÝˆYHJBˆœÙ[XÝÜ[ÛŠ™˜]›Üš]\ÈŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™PÛÝ[
-JNÂˆ]ØZ]Xœ˜\žK™Ù]žSX™[
-Ø][ÙÈšY]È‹È^XÝˆYHJKœÙ[XÝÜ[ÛŠ˜[ŠNÂˆ›Üˆ
-ÛÛœÝ\ÙˆÈŒÌÍŒˆ‹ŒÌÍˆ‹ŒÌÍŒˆ—JHÂˆÛÛœÝØ\™HXœ˜\žK™Ù]žT›ÛJ˜\XÛH‹Âˆ˜[YNˆÙ[š^ÛÛXÝ	Ü\Xˆ^XÝˆYKˆJNÂˆ]ØZ]Ø\™ˆ™Ù]žSX™[
-ÛÛ\]X›H]šXÙH‹È^XÝˆYHJBˆœÙ[XÝÜ[ÛŠ™Y›Ü™K™]šXÙ\ÖÌKšY
-NÂˆ]ØZ]Ø\™ˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ\ÜÚYÛˆ\‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆBˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Xœ˜\žBˆ™Ù]žSX™[
-Ø][ÙÈšY]È‹È^XÝˆYHJBˆœÙ[XÝÜ[ÛŠœ™XÙ[ŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™PÛÝ[
-ŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠK›
-
-JKÒ]™P]šX]Jˆ˜\šXK[X™[‹ˆ”Ù[š^ÛÛXÝÌÍŒˆ‹ˆ
-NÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠK›
-JJKÒ]™P]šX]Jˆ˜\šXK[X™[‹ˆ”Ù[š^ÛÛXÝÌÍˆ‹ˆ
-NÂˆÛÛœÝY\ˆH]ØZ]›Ú™XÝ
-YÙJNÂˆ^XÝ
-Y\‹œ[œÊKÑ\]X[
-™Y›Ü™Kœ[œÊNÂˆ^XÝ
-Y\‹Ú\™\ÊKÑ\]X[
-™Y›Ü™KÚ\™\ÊNÂˆ^XÝ
-Y\‹™]šXÙ\ÖÌKœ\Y
-KÐ™QYš[™Y
+test("NO contact catalog mapping preserves native pins and offers only compatible devices", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "contact", 80, 80);
+  await place(page, "terminal", 140, 80);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  const library = page.locator(".component-library");
+  await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await library
+    .getByRole("combobox", { name: "Category", exact: true })
+    .selectOption("switching");
+  const article = library.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  const select = article.getByLabel("Compatible device", { exact: true });
+  await expect(select.locator("option")).toHaveCount(2);
+  const data = await project(page);
+  const device = data.devices.find(
+    (d: { reference: string }) => d.reference === "S1",
+  );
+  await select.selectOption(device.id);
+  await article
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  const assigned = await project(page);
+  expect(assigned.pins).toEqual(data.pins);
+  expect(assigned.terminals).toEqual(data.terminals);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("ZBE101");
+});
 
-NÂˆ^XÝ
-Y\‹œØÚ[XU™\œÚ[ÛŠKÐ™JN
-NÂˆÛÛœÝ\›Z[˜[\HY\‹›X[Y˜XÝ\™\”\Ë™š[™
-ˆ
-\ˆÈ\[X™\ŽˆÝš[™ÈJHOˆ\œ\[X™\ˆOOHŒÌÍˆ‹ˆ
-NÂˆ^XÝ
-\›Z[˜[\˜Ø][ÙÔÛ˜\ÚÝ™[Y[œÚ[ÛœÓ[JKÑ\]X[
-ÂˆÚYˆKŒ‹ˆZYÚˆËËˆ\ˆ‹ŽKˆJNÂˆ^XÝ
-\›Z[˜[\˜Ø][ÙÔÛ˜\ÚÝ›[Ý[Y\Ó[VÌWJKÑ\]X[
-Âˆ˜Z[ˆ“”ÈÍKÌMH‹ˆ\ˆMKˆJNÂˆ^XÝ
-\›Z[˜[\˜Ø][ÙÔÛ˜\ÚÝœÛÝ\˜ÙT™]š\Ú[ÛŠKÐ™U[™Yš[™Y
+test("busbar tap wiring shares one physical node and survives reload", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("busbar");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-busbar-four-taps");
+  await clickWorld(page, 100, 100);
+  await place(page, "terminal", 40, 60);
+  await place(page, "terminal", 160, 60);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "U1:bus/tap1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  await page.getByRole("button", { name: "U1:bus/tap3", exact: true }).click();
+  await page.getByRole("button", { name: "X2:1", exact: true }).click();
+  const data = await project(page);
+  expect(data.wires).toHaveLength(2);
+  expect(data.nets).toHaveLength(1);
+  expect(data.terminals).toHaveLength(3);
+  await reloadAndReopenProject(page);
+  expect((await project(page)).nets).toEqual(data.nets);
+});
 
-NÂŸJNÂ‚\Ý
-˜ÛÜœ\Ø][ÙÈ™Y™\™[˜Ù\È™[XZ[ˆ[XÝ[[^XÚ]™\Ù]Ú]Ý]ÝXÚ[™ÈH›Ú™XÝ‹\Þ[˜È
-ÂˆYÙKŸJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆÛÛœÝ™Y›Ü™HH]ØZ]›Ú™XÝ
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
+test("connector poles retain separate electrical nodes while each pole passes through", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page
+    .getByLabel("Search symbols", { exact: true })
+    .fill("two-pole pass-through");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-connector-two-pole");
+  await clickWorld(page, 100, 100);
+  let data = await project(page);
+  expect(data.pins).toHaveLength(4);
+  expect(data.terminals).toHaveLength(2);
+  expect(data.nets).toHaveLength(2);
+  const groups = data.nets.map(
+    (net: { pinIds: string[] }) => net.pinIds.length,
+  );
+  expect(groups).toEqual([2, 2]);
+  await place(page, "terminal", 40, 60);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "U1:pole1/in1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  data = await project(page);
+  expect(data.nets).toHaveLength(2);
+  await reloadAndReopenProject(page);
+  expect((await project(page)).nets).toEqual(data.nets);
+});
 
-HO‚ˆØØ[ÝÜ˜YÙKœÙ]][J˜YYÝ[™\[˜ZK˜Ø][ÙË\™Y™\™[˜Ù\ËŒH‹žØœ›ÚÙ[ˆŠKˆ
-NÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆÛÛœÝXœ˜\žHHYÙK›ØØ]ÜŠ‹˜ÛÛ\Û™[[Xœ˜\žHŠNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜[\ŠJKÐÛÛZ[•^
-ˆ”ÝÜ™Y]H\È™Y[ˆ™\Ù\™Y‹ˆ
-NÂˆ]ØZ]^XÝ
-ˆXœ˜\žK™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJKˆ
-KÐ™Q\ØX›Y
+for (const [id, query, terminals, pins] of [
+  ["distribution-three-way", "distribution board", 6, 12],
+  ["contactor-three-pole", "contactor", 8, 8],
+  ["isolator-three-pole-pe", "isolator", 7, 8],
+] as const)
+  test(`distribution and switching interface ${id} preserves declared node groups`, async ({
+    page,
+  }) => {
+    await create(page);
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 120, 120);
+    const data = await project(page);
+    expect(data.terminals).toHaveLength(terminals);
+    expect(data.pins).toHaveLength(pins);
+    expect(data.nets).toHaveLength(terminals);
+    if (id === "distribution-three-way") {
+      const neutral = data.terminals.find(
+        (t: { designation: string }) => t.designation === "N_bus",
+      );
+      const pe = data.terminals.find(
+        (t: { designation: string }) => t.designation === "PE_bus",
+      );
+      expect(neutral.id).not.toBe(pe.id);
+      expect(neutral.kind).toBe("neutral");
+      expect(pe.kind).toBe("pe");
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(neutral.id),
+        ).pinIds,
+      ).toHaveLength(4);
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(pe.id),
+        ).pinIds,
+      ).toHaveLength(4);
+    }
+    if (id === "isolator-three-pole-pe") {
+      const pe = data.terminals.find((t: { kind: string }) => t.kind === "pe");
+      expect(
+        data.nets.find((n: { terminalIds: string[] }) =>
+          n.terminalIds.includes(pe.id),
+        ).pinIds,
+      ).toHaveLength(2);
+    }
+    await reloadAndReopenProject(page);
+    expect((await project(page)).nets).toEqual(data.nets);
+  });
 
-NÂˆ^XÝ
-ˆ]ØZ]YÙK™]˜[X]J
+for (const [id, query, endpoint, count] of [
+  ["ac-dc-supply", "AC/DC supply", "positive", 5],
+  ["isolated-dc-dc", "isolated DC/DC", "OUT_positive", 4],
+  ["dc-ac-inverter", "DC/AC inverter", "L_out", 5],
+  ["ups-external-battery", "UPS interface", "L_out", 7],
+] as const)
+  test(`power interface ${id} retains independent ports and native wiring`, async ({
+    page,
+  }) => {
+    await create(page);
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    let data = await project(page);
+    expect(data.terminals).toHaveLength(count);
+    expect(data.nets).toHaveLength(count);
+    await place(page, "terminal", 160, 80);
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: `U1:${endpoint}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "X1:1", exact: true }).click();
+    data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(count);
+    await reloadAndReopenProject(page);
+    expect((await project(page)).wires).toEqual(data.wires);
+  });
 
-HO‚ˆØØ[ÝÜ˜YÙK™Ù]][J˜YYÝ[™\[˜ZK˜Ø][ÙË\™Y™\™[˜Ù\ËŒHŠKˆ
-Kˆ
-KÐ™JžØœ›ÚÙ[ˆŠNÂˆ^XÝ
-]ØZ]›Ú™XÝ
-YÙJJKÑ\]X[
-™Y›Ü™JNÂˆ]ØZ]Xœ˜\žBˆ™Ù]žT›ÛJ˜]Ûˆ‹È˜[YNˆ”™\Ù]Ø][ÙÈ™Y™\™[˜Ù\È‹^XÝˆYHJBˆ˜ÛXÚÊ
-NÂˆ]ØZ]Xœ˜\žBˆ™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJBˆ˜ÚXÚÊ
-NÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]^XÝ
-ˆXœ˜\žK™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJKˆ
-KÐ™PÚXÚÙY
+for (const [id, query, endpoint, count] of [
+  ["rcbo-two-pole", "RCBO", "L_out", 4],
+  ["motor-protection-three-pole", "motor-protection switch", "L1_out", 6],
+  ["surge-protector-l-pe", "surge protective", "L", 2],
+  ["protection-relay-trip", "protection relay", "trip_NO", 7],
+] as const)
+  test(`protection interface ${id} keeps isolated ports through wiring and reload`, async ({
+    page,
+  }) => {
+    await create(page);
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page
+      .locator("li")
+      .filter({ has: page.locator(`[data-library-preview="${id}"]`) })
+      .getByRole("button", { name: /^Import symbol:/ })
+      .click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    let data = await project(page);
+    expect(data.terminals).toHaveLength(count);
+    expect(data.nets).toHaveLength(count);
+    await place(page, "terminal", 160, 80);
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: `U1:${endpoint}`, exact: true })
+      .click();
+    await page.getByRole("button", { name: "X1:1", exact: true }).click();
+    data = await project(page);
+    expect(data.wires).toHaveLength(1);
+    expect(data.nets).toHaveLength(count);
+    const joined = data.nets.find(
+      (net: { terminalIds: string[] }) => net.terminalIds.length === 2,
+    );
+    expect(joined).toBeDefined();
+    expect(
+      data.nets.filter(
+        (net: { terminalIds: string[] }) => net.terminalIds.length === 1,
+      ),
+    ).toHaveLength(count - 1);
+    await reloadAndReopenProject(page);
+    expect((await project(page)).wires).toEqual(data.wires);
+    expect((await project(page)).nets).toEqual(data.nets);
+  });
 
-NÂˆ^XÝ
-]ØZ]›Ú™XÝ
-YÙJJKÑ\]X[
-™Y›Ü™JNÂŸJNÂ‚\Ý
-˜Ø][ÙÈ™Y™\™[˜ÙH][ÝH˜Z[\™H™]Z[œÈÙ\ÜÚ[Ûˆ˜]›Üš]\È[™™\ÜÈ[œØ]™YÝ]H‹\Þ[˜È
-ÂˆYÙKŸJHOˆÂˆ]ØZ]Ü™X]JYÙJNÂˆÛÛœÝ™Y›Ü™HH]ØZ]›Ú™XÝ
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
+for (const [id, query, channel] of [
+  ["digital-input-four", "digital input", "IN0"],
+  ["digital-output-four", "digital output", "OUT0"],
+  ["analog-input-two", "analog input", "IN0_plus"],
+  ["analog-output-two", "analog output", "OUT0_plus"],
+])
+  test(`automation interface ${id} places and wires distinct native channels`, async ({
+    page,
+  }) => {
+    await create(page);
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page
+      .locator("li")
+      .filter({ has: page.locator(`[data-library-preview="${id}"]`) })
+      .getByRole("button")
+      .click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 80, 80);
+    expect((await project(page)).terminals).toHaveLength(6);
+    await place(page, "resistor", 150, 80);
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
+    const fromPinId = await clickWirePin(page, `U1:${channel}`);
+    const toPinId = await clickWirePin(page, "R1:1");
+    const data = await project(page);
+    expect(data.wires).toMatchObject([{ fromPinId, toPinId }]);
+    expect(data.nets).toHaveLength(7);
+    await reloadAndReopenProject(page);
+    expect((await project(page)).wires).toEqual(data.wires);
+  });
 
-HOˆÂˆÛÛœÝÜšYÚ[˜[HÝÜ˜YÙKœ›ÝÝ\KœÙ]][NÂˆÝÜ˜YÙKœ›ÝÝ\KœÙ]][HH[˜Ý[Ûˆ
-Ù^K˜[YJHÂˆYˆ
-Ù^HOOH˜YYÝ[™\[˜ZK˜Ø][ÙË\™Y™\™[˜Ù\ËŒHŠBˆ›ÝÈ™]ÈÓQ^Ù\[ÛŠ”][ÝH‹”][ÝQ^ÙYYY\œ›ÜˆŠNÂˆÜšYÚ[˜[˜Ø[
-\ËÙ^K˜[YJNÂˆNÂˆJNÂˆÛÛœÝXœ˜\žHHYÙK›ØØ]ÜŠ‹˜ÛÛ\Û™[[Xœ˜\žHŠNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]Xœ˜\žBˆ™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJBˆ˜ÚXÚÊ
-NÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜[\ŠJKÐÛÛZ[•^
-˜ÛÝ[›Ý™HØ]™YŠNÂˆ]ØZ]Xœ˜\žBˆ™Ù]žSX™[
-Ø][ÙÈšY]È‹È^XÝˆYHJBˆœÙ[XÝÜ[ÛŠ™˜]›Üš]\ÈŠNÂˆ]ØZ]^XÝ
-Xœ˜\žK™Ù]žT›ÛJ˜\XÛHŠJKÒ]™PÛÝ[
-JNÂˆ^XÝ
-]ØZ]›Ú™XÝ
-YÙJJKÑ\]X[
-™Y›Ü™JNÂˆ]ØZ]™[ØY[™™[Ü[”›Ú™XÝ
-YÙJNÂˆ]ØZ]Ü[ÛÛ\Û™[Xœ˜\žJYÙJNÂˆ]ØZ]^XÝ
-ˆXœ˜\žK™Ù]žT›ÛJ˜ÚXÚØ›Þ‹Âˆ˜[YNˆ‘˜]›Üš]NˆÙ[š^ÛÛXÝÌÍŒˆ‹ˆ^XÝˆYKˆJKˆ
-K››ÝÐ™PÚXÚÙY
+test("custom symbols create native pins that wire and survive undo and reload", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Custom symbols$/ })
+    .click();
+  const form = page.getByRole("form", { name: "Custom symbols", exact: true });
+  await form.getByLabel("Symbol name", { exact: true }).fill("Interface");
+  await form.getByLabel("Body width (mm)", { exact: true }).fill("20");
+  await form.getByLabel("Body height (mm)", { exact: true }).fill("20");
+  await form.getByLabel(/^Pins:/).fill("IN, -10, 0\nOUT, 10, 0");
+  await form
+    .getByLabel(/^Artwork in mm:/)
+    .fill("line, -10, 0, 10, 0\ncircle, 0, 0, 4");
+  await form.getByRole("button", { name: "Create", exact: true }).click();
+  const definition = (await project(page)).symbolDefinitions.find(
+    (d: { name: string }) => d.name === "Interface",
+  );
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption(definition.id);
+  await clickWorld(page, 80, 80);
+  await expect(page.locator("[data-custom-artwork] line")).toHaveCount(1);
+  await expect(page.locator("[data-custom-artwork] circle")).toHaveCount(1);
+  await place(page, "lamp", 150, 80);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "U1:OUT", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  expect((await project(page)).wires).toHaveLength(1);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect((await project(page)).wires).toHaveLength(0);
+  await page
+    .getByRole("button", { name: "Redo Â· Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
+  await expect(
+    page.getByRole("button", { name: "U1:IN", exact: true }),
+  ).toBeVisible();
+  expect((await project(page)).wires).toHaveLength(1);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Custom symbols$/ })
+    .click();
+  await page
+    .getByLabel("Edit custom symbol", { exact: true })
+    .selectOption(definition.id);
+  const editForm = page.getByRole("form", {
+    name: "Custom symbols",
+    exact: true,
+  });
+  await editForm.getByLabel("Body width (mm)", { exact: true }).fill("24");
+  await editForm.getByLabel(/^Pins:/).fill("IN, -12, 0\nOUT, 12, 0");
+  const old = (await project(page)).wires[0];
+  await editForm.getByRole("button", { name: "Apply", exact: true }).click();
+  expect((await project(page)).wires[0]).toEqual(old);
+  expect((await project(page)).wirePaths[0].points[0].x).toBe(92);
+  await page
+    .getByRole("button", { name: "Undo Â· Header", exact: true })
+    .click();
+  expect(
+    (await project(page)).symbolDefinitions.find(
+      (d: { id: string }) => d.id === definition.id,
+    ).widthMm,
+  ).toBe(20);
+});
 
-NÂŸJNÂ‚‹ËÈ\ÙHÝZ]\È^\˜Ú\ÙHHÜ[Û˜[[ÛÛ^X[Y]ÜˆÛÛ›ÛË‚\Ý˜™Y›Ü™QXXÚ
-\Þ[˜È
-ÈYÙHJHOˆÂˆ]ØZ]YÙK˜Y[š]ØÜš\
+test("cross-page net labels persist memberships and navigate to the real drawing", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  async function label(pin: string) {
+    await page.getByRole("button", { name: "Net label", exact: true }).click();
+    await page.getByRole("button", { name: pin, exact: true }).click();
+    await page.getByLabel("Label text", { exact: true }).fill("CONTROL_24V");
+    await page.getByRole("button", { name: "Add label", exact: true }).click();
+  }
+  await label("R1:1");
+  await page.locator(".workbench-add-sheet").click();
+  await page
+    .locator(".drawing-tabs")
+    .getByRole("button", { name: "Sheet 2", exact: true })
+    .click();
+  await place(page, "lamp", 50, 50);
+  await label("H1:1");
+  const data = await project(page);
+  const net = data.nets.find((item: { labels: string[] }) =>
+    item.labels.includes("CONTROL_24V"),
+  );
+  expect(net.terminalIds).toHaveLength(2);
+  const panel = page.getByRole("region", { name: "Connectivity", exact: true });
+  await panel
+    .locator("summary")
+    .filter({ hasText: /^Netlist/ })
+    .click();
+  await panel.getByRole("button", { name: "R1:1", exact: true }).click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 1", exact: true }),
+  ).toBeVisible();
+  await panel.getByRole("button", { name: "H1:1", exact: true }).click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 2", exact: true }),
+  ).toBeVisible();
+  await reloadAndReopenProject(page);
+  expect(
+    (await project(page)).nets.find(
+      (item: { id: string }) => item.id === net.id,
+    ).terminalIds,
+  ).toEqual(net.terminalIds);
+  const importAccepted = page
+    .waitForEvent("dialog")
+    .then((dialog) => dialog.accept());
+  const importedName = `${data.name} imported`;
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "recompute.adeplan.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({ ...data, name: importedName, nets: [], findings: [] }),
+    ),
+  });
+  await importAccepted;
+  await expect.poll(async () => (await project(page)).name).toBe(importedName);
+  expect(
+    (await project(page)).nets.find((item: { labels: string[] }) =>
+      item.labels.includes("CONTROL_24V"),
+    ).terminalIds,
+  ).toEqual(net.terminalIds);
+});
 
+test("component comparison preserves selections through search and shows missing ratings explicitly", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Schneider Electric ZBE101",
+      exact: true,
+    })
+    .check();
+  const table = page.getByRole("table", {
+    name: "Compare components",
+    exact: true,
+  });
+  await expect(table).toBeVisible();
+  const voltage = table.getByRole("row").filter({
+    has: page.getByRole("rowheader", {
+      name: "Nominal voltage",
+      exact: true,
+    }),
+  });
+  await expect(voltage.getByRole("cell")).toHaveText(["800 V", "Not declared"]);
+  const section = table.getByRole("row").filter({
+    has: page.getByRole("rowheader", {
+      name: "Rated cross-section",
+      exact: true,
+    }),
+  });
+  await expect(section.getByRole("cell")).toHaveText(["4 mmÂ²", "Not declared"]);
+  await page.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await expect(
+    table.getByRole("columnheader", {
+      name: "Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeVisible();
+  const card = page.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  await expect(
+    card
+      .locator("dt")
+      .filter({ hasText: /^Rated cross-section$/ })
+      .locator("+ dd"),
+  ).toHaveText("Not declared");
+  await expect(
+    table.getByRole("link", { name: "3004362", exact: true }),
+  ).toHaveAttribute("href", /^https:\/\/www\.phoenixcontact\.com\//);
+  await page
+    .getByRole("checkbox", {
+      name: "Select for comparison: Schneider Electric ZBE101",
+      exact: true,
+    })
+    .uncheck();
+  await expect(table).toHaveCount(0);
+  expect((await project(page)).manufacturerParts).toHaveLength(0);
+  expect((await project(page)).devices).toHaveLength(0);
+});
 
-HOˆÂˆÛÛœÝÙ^HH˜YYÝ[™\[˜ZKš[\™˜XÙKŒHŽÂˆÛÛœÝ™YœÈH”ÓÓ‹œ\œÙJØØ[ÝÜ˜YÙK™Ù]][JÙ^JHžßHŠNÂˆØØ[ÝÜ˜YÙKœÙ]][JÙ^K”ÓÓ‹œÝš[™ÚYžJÈ‹‹œ™YœËÛÛ\XÝˆ˜[ÙHJJNÂˆJNÂŸJNÂ
+test("catalog filters, favorites and recent assignments persist without changing circuit topology", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  const before = await project(page);
+  await openComponentLibrary(page);
+  const library = page.locator(".component-library");
+  await openComponentLibrary(page);
+  await library
+    .getByLabel("Minimum declared voltage (V)", { exact: true })
+    .fill("1000");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await expect(library.getByRole("article")).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3044076",
+  );
+  await library
+    .getByLabel("Minimum declared current (A)", { exact: true })
+    .fill("25");
+  await expect(library.getByRole("article")).toHaveCount(0);
+  await library
+    .getByLabel("Minimum declared voltage (V)", { exact: true })
+    .fill("");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  expect(await project(page)).toEqual(before);
+  await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeChecked();
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("favorites");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  await library.getByLabel("Catalog view", { exact: true }).selectOption("all");
+  for (const part of ["3004362", "3044076", "3004362"]) {
+    const card = library.getByRole("article", {
+      name: `Phoenix Contact ${part}`,
+      exact: true,
+    });
+    await card
+      .getByLabel("Compatible device", { exact: true })
+      .selectOption(before.devices[0].id);
+    await card
+      .getByRole("button", { name: "Assign part", exact: true })
+      .click();
+  }
+  await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("recent");
+  await expect(library.getByRole("article")).toHaveCount(2);
+  await expect(library.getByRole("article").nth(0)).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3004362",
+  );
+  await expect(library.getByRole("article").nth(1)).toHaveAttribute(
+    "aria-label",
+    "Phoenix Contact 3044076",
+  );
+  const after = await project(page);
+  expect(after.pins).toEqual(before.pins);
+  expect(after.wires).toEqual(before.wires);
+  expect(after.devices[0].partId).toBeDefined();
+  expect(after.schemaVersion).toBe(18);
+  const terminalPart = after.manufacturerParts.find(
+    (part: { partNumber: string }) => part.partNumber === "3044076",
+  );
+  expect(terminalPart.catalogSnapshot.dimensionsMm).toEqual({
+    width: 5.2,
+    height: 47.7,
+    depth: 46.9,
+  });
+  expect(terminalPart.catalogSnapshot.mountedDepthsMm[1]).toEqual({
+    rail: "NS 35/15",
+    depth: 55,
+  });
+  expect(terminalPart.catalogSnapshot.sourceRevision).toBeUndefined();
+});
+
+test("corrupt catalog preferences remain intact until explicit reset without touching the project", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.evaluate(() =>
+    localStorage.setItem("adiguneplanai.catalog-preferences.v1", "{broken"),
+  );
+  await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
+  const library = page.locator(".component-library");
+  await openComponentLibrary(page);
+  await expect(library.getByRole("alert")).toContainText(
+    "Stored data has been preserved",
+  );
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeDisabled();
+  expect(
+    await page.evaluate(() =>
+      localStorage.getItem("adiguneplanai.catalog-preferences.v1"),
+    ),
+  ).toBe("{broken");
+  expect(await project(page)).toEqual(before);
+  await library
+    .getByRole("button", { name: "Reset catalog preferences", exact: true })
+    .click();
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).toBeChecked();
+  expect(await project(page)).toEqual(before);
+});
+
+test("catalog preference quota failure retains session favorites and reports unsaved state", async ({
+  page,
+}) => {
+  await create(page);
+  const before = await project(page);
+  await page.evaluate(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (key, value) {
+      if (key === "adiguneplanai.catalog-preferences.v1")
+        throw new DOMException("Quota", "QuotaExceededError");
+      original.call(this, key, value);
+    };
+  });
+  const library = page.locator(".component-library");
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
+  await library
+    .getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    })
+    .check();
+  await expect(library.getByRole("alert")).toContainText("could not be saved");
+  await library
+    .getByLabel("Catalog view", { exact: true })
+    .selectOption("favorites");
+  await expect(library.getByRole("article")).toHaveCount(1);
+  expect(await project(page)).toEqual(before);
+  await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
+  await expect(
+    library.getByRole("checkbox", {
+      name: "Favorite: Phoenix Contact 3004362",
+      exact: true,
+    }),
+  ).not.toBeChecked();
+});
+
+// These suites exercise the optional full contextual editor controls.
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => {
+    const key = "adiguneplanai.interface.v1";
+    const prefs = JSON.parse(localStorage.getItem(key) || "{}");
+    localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
+  });
+});
