@@ -81,6 +81,29 @@ test("compact workstation geometry stays fixed while menus open at desktop and m
   }
 });
 
+test("mobile dock panels open over the workspace without moving it", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const workspace = page.locator(".engineering-layout");
+  const before = await workspace.boundingBox();
+  const button = page
+    .locator(".workbench-rail-right")
+    .getByRole("button", { name: "Open calculations", exact: true });
+
+  await button.click();
+  const panel = page.locator('[data-panel="calculations"]');
+  await expect(panel).toBeVisible();
+  await expect(panel).toHaveCSS("position", "fixed");
+  await expect
+    .poll(async () => (await workspace.boundingBox())?.toJSON())
+    .toEqual(before?.toJSON());
+
+  await button.click();
+  await expect(panel).toHaveCount(0);
+});
+
 test("Home places native components, cuts and undoes, validates and opens real catalogues", async ({
   page,
 }) => {

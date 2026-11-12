@@ -736,7 +736,29 @@
       );
   }
   .workbench-interface .engineering-layout > .dock {
-    display: none;
+    position: fixed;
+    z-index: 30;
+    top: 74px;
+    bottom: 40px;
+    display: flex;
+    width: min(320px, calc(100vw - 88px));
+    max-width: calc(100vw - 88px);
+    box-shadow: 0 12px 32px rgb(9 24 39 / 28%);
+  }
+  .workbench-interface .engineering-layout > .dock-left {
+    left: 42px;
+  }
+  .workbench-interface .engineering-layout > .dock-right {
+    right: 42px;
+  }
+  .workbench-interface .engineering-layout > .dock-bottom {
+    top: auto;
+    right: 42px;
+    bottom: 40px;
+    left: 42px;
+    width: auto;
+    max-width: none;
+    max-height: min(40dvh, 300px);
   }
   .workbench-interface .engineering-layout > .bot-window[data-docked="true"] {
     position: fixed;
