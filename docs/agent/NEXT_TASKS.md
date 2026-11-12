@@ -1,3 +1,17 @@
+# Immediate hold-point — UI-001 Project B interface in Project A (2026-11-12)
+
+**Do first:** Continue existing Project A draft PR #39 (`codex/project-b-interface-first`) and complete the exact Project B visual shell **only in Project A**. Project B `HephzibahBehulahHQ/AdigunAiAutoCad` is READ ONLY. Use `docs/PROJECT_B_INTERFACE_TRANSFORMATION.md` and the updated `AdidunEplanAI Master PlanGoals` for the binding layout and next-agent instructions.
+
+1. Inspect latest PR #39 CI logs and eliminate every formatting/build/browser regression; keep existing Project A engineering modules untouched.
+2. Compare Project A and Project B actual browser screenshots at 1440×900/1920×1080. Match header, toolbar, two icon rails, white editable drawing sheet, tabs, status and floating menu geometry; improve code, not the reference repository.
+3. Verify click/away/escape/touch menu handling and **zero underlying layout shift**, native drawing editing, saved-project reopen/undo/redo, existing engineering smoke checks.
+4. Commit validated improvements, merge only after required CI and approvals, deploy Project A and verify live interface.
+5. **STOP for owner review of the deployed interface**. Do NOT proceed to engineering feature additions or example-library expansion until the owner explicitly approves the visual outcome.
+
+Previous tasks below are postponed, **not cancelled or deleted**.
+
+---
+
 # Next tasks
 
 1. Meet the user's strict `AdigunEplanTarget interface.png` acceptance target. Review the live main UI at the reference viewport and implement the real-data workbench composition (navigator, schematic, 3D panel, BOT, diagnostics, calculations, BOM and reports); keep cloud and connection indicators tied to verified state.
