@@ -145,7 +145,7 @@ export function loadProductTemplate() {
     css: read("packages/design-tokens/tokens.css"),
     logo: hash("apps/web/src/assets/approved-header-reference.png"),
     target: hash("docs/references/target-workspace.png"),
-    ownerTarget: hash("AdigunEplanTarget interface.png"),
+    ownerTarget: hash("docs/references/target-workspace.png"),
     master: read("docs/MASTER_SPECIFICATION.md"),
     ownerMaster: read("AdidunEplanAI Master PlanGoals"),
   };
