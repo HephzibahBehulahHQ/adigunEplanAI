@@ -5,7 +5,7 @@ This document freezes the AdigunEplanAI interface structure across every project
 ## Reference authority
 
 - Product visual reference: [`docs/references/target-workspace.png`](../references/target-workspace.png), recorded in `product.config.json` as the product interface.
-- Owner-provided reference: `AdigunEplanTarget interface.png`, also recorded in `product.config.json`.
+- This canonical tracked image is the owner-approved interface reference; keep one authoritative copy and use the path recorded in `product.config.json`.
 - Related approved shell pattern: [AdigunAiAutoCad workstation](https://github.com/HephzibahBehulahHQ/AdigunAiAutoCad). Use its layout and interaction pattern as guidance; do not copy its source code or assets.
 - Source implementation: `apps/web/src/WorkspaceHeader.tsx`, `WorkspaceRibbon.tsx`, `App.tsx`, `workspace-header.css`, `home-ribbon.css`, and `workspace.css`.
 
