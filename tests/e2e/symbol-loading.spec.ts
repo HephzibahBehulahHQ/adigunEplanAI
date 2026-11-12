@@ -32,7 +32,7 @@ test("engineering symbols load only on demand and preserve search while collapse
   await create(page);
   const before = await project(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   expect(requests).toBe(0);
   await summary(page).click();
   await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
@@ -55,7 +55,7 @@ test("failed engineering-symbol download leaves native editing and export functi
   );
   await create(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   await summary(page).click();
   await expect(
     page.locator(".component-library").getByRole("alert"),
@@ -94,7 +94,7 @@ test("secondary category browsing and search leave native project unchanged", as
   await create(page);
   const before = await project(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   await summary(page).click();
   const category = page.getByRole("combobox", {
     name: "Symbol category",
@@ -121,7 +121,7 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
 }) => {
   await create(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   const phoenix = page.getByRole("article", {
     name: "Phoenix Contact 3044076",
     exact: true,
@@ -187,7 +187,7 @@ test("failed catalog download preserves project export and schematic tools", asy
   await create(page);
   const before = await project(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   await expect(
     page.locator(".component-library").getByRole("alert"),
   ).toHaveText(

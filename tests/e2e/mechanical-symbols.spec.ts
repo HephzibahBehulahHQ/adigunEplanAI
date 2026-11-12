@@ -37,7 +37,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
 }) => {
   await create(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -117,7 +117,7 @@ test("custom mechanical drawings create without pins and reject reclassification
 }) => {
   await create(page);
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Custom symbols$/ })

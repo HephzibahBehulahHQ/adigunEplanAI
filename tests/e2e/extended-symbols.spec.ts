@@ -56,7 +56,7 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
       .fill(`Interface ${id}`);
     await dialog.getByRole("button", { name: "Create", exact: true }).click();
     await openComponentLibrary(page);
-    await page.locator(".component-library > summary").click();
+    await openComponentLibrary(page);
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })

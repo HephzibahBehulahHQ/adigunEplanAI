@@ -35,7 +35,7 @@ async function terminal(page: Page, x: number) {
 }
 async function openLibrary(page: Page) {
   await openComponentLibrary(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
   await page.locator(".custom-components > summary").click();
 }
 async function addComponent(page: Page) {
