@@ -146,4 +146,3 @@ test("quota failure leaves the editable native project available for export", as
     JSON.parse(await readFile((await download.path())!, "utf8")).name,
   ).toBe("Unsaved project");
 });
-

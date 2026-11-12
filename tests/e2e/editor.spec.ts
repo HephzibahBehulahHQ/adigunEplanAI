@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 14838)
-Total output lines: 1584
-
 import {
   openComponentLibrary,
   openEditorTools,
@@ -521,7 +518,516 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
   }
   expect(await project(page)).toEqual(before);
   await openWorkbenchPanel(page, "properties");
-  const props = page.getByRole("form", { name: "Prop…4838 tokens truncated…al");
+  const props = page.getByRole("form", { name: "Properties", exact: true });
+  await props.getByLabel("X (mm)", { exact: true }).fill("112.375");
+  await props.getByLabel("Y (mm)", { exact: true }).fill("103.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  const edited = await project(page);
+  expect(edited.symbolInstances[0].position).toEqual({
+    x: 112.375,
+    y: 103.125,
+  });
+  expect(edited.pages[0].snapping).toBe(true);
+  expect(edited.wirePaths[0].points[0]).toEqual(
+    edited.symbolInstances[0].position,
+  );
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await canvas.scrollIntoViewIfNeeded();
+  const [from, to] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(100, 100), new DOMPoint(112.4, 106.4)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  const symbol = canvas.locator('[data-instance="symbol-a"] > g[transform]');
+  await page.mouse.move(from.x, from.y);
+  await page.mouse.down();
+  await page.mouse.move(to.x, to.y);
+  await expect(symbol).toHaveAttribute("transform", /^translate\(110 105\)/);
+  expect((await project(page)).symbolInstances[0].position).toEqual(
+    before.symbolInstances[0].position,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 110,
+    y: 105,
+  });
+  await props.getByLabel("Y (mm)", { exact: true }).fill("105.125");
+  await props.getByRole("button", { name: "Apply", exact: true }).click();
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.press("F8");
+  const ortho = page.getByRole("button", {
+    name: "Orthogonal move",
+    exact: true,
+  });
+  await expect(ortho).toHaveAttribute("aria-pressed", "true");
+  const [anchor, diagonal] = await canvas.evaluate((element) => {
+    const matrix = (element as SVGSVGElement).getScreenCTM()!;
+    return [new DOMPoint(110, 105.125), new DOMPoint(128, 114)].map((point) => {
+      const { x, y } = point.matrixTransform(matrix);
+      return { x, y };
+    });
+  });
+  await page.mouse.move(anchor.x, anchor.y);
+  await page.mouse.down();
+  await page.mouse.move(diagonal.x, diagonal.y);
+  await expect(symbol).toHaveAttribute(
+    "transform",
+    /^translate\(130 105\.125\)/,
+  );
+  await page.mouse.up();
+  expect((await project(page)).symbolInstances[0].position).toEqual({
+    x: 130,
+    y: 105.125,
+  });
+  await ortho.click();
+  await expect(ortho).toHaveAttribute("aria-pressed", "false");
+  const snap = page.getByRole("button", { name: "Snap to grid", exact: true });
+  await canvas.press("F9");
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  expect(
+    (await project(page)).pages.map(
+      ({ snapping }: { snapping: boolean }) => snapping,
+    ),
+  ).toEqual([false, true]);
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  await expect(snap).toHaveAttribute("aria-pressed", "true");
+  await snap.click();
+  await expect(snap).toHaveAttribute("aria-pressed", "false");
+  const beforePan = await project(page);
+  await canvas.scrollIntoViewIfNeeded();
+  await canvas.focus();
+  for (const button of ["left", "middle"] as const) {
+    const startView = await canvas.getAttribute("viewBox");
+    const center = await canvas.evaluate((element) => {
+      const { x, y } = new DOMPoint(130, 105.125).matrixTransform(
+        (element as SVGSVGElement).getScreenCTM()!,
+      );
+      return { x, y };
+    });
+    if (button === "left") await page.keyboard.down("Space");
+    await page.mouse.move(center.x, center.y);
+    await page.mouse.down({ button });
+    await page.mouse.move(center.x + 20, center.y + 15);
+    await page.mouse.up({ button });
+    if (button === "left") await page.keyboard.up("Space");
+    await expect(canvas).not.toHaveAttribute("viewBox", startView!);
+    await expect(canvas).toHaveAttribute("data-tool", "select");
+  }
+  expect(await project(page)).toEqual(beforePan);
+});
+
+test("Wire mode snaps nearby clicks to native pin coordinates", async ({
+  page,
+}) => {
+  const fixture = nativeProject();
+  fixture.symbolInstances[0].position = { x: 100, y: 100 };
+  fixture.symbolInstances[1].position = { x: 180, y: 100 };
+  fixture.wires = [];
+  fixture.wirePaths = [];
+  fixture.nets = [];
+  await page.goto("/");
+  await page.getByLabel("Import project", { exact: true }).setInputFiles({
+    name: "pin-snap.adeplan",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture)),
+  });
+  await page.getByRole("button", { name: "Wire · Home", exact: true }).click();
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  for (const pin of fixture.pins) {
+    const target = canvas.locator(`[data-pin="${pin.id}"]`);
+    const bounds = (await target.locator(".pin-aperture").boundingBox())!;
+    const x = bounds.x + bounds.width / 2;
+    const y = bounds.y + bounds.height / 2 + 7;
+    await page.mouse.move(x, y);
+    await expect(target).toHaveAttribute("data-snap-pin", "true");
+    await page.mouse.click(x, y);
+  }
+  const result = await project(page);
+  expect(result.wires).toHaveLength(1);
+  expect(result.wires[0]).toMatchObject({
+    fromPinId: "pin-a",
+    toPinId: "pin-b",
+  });
+  expect(result.wirePaths[0].points[0]).toEqual({ x: 100, y: 100 });
+  expect(result.wirePaths[0].points.at(-1)).toEqual({ x: 180, y: 100 });
+});
+
+test("group selection, keyboard transforms, cross-page paste and panning persist real objects", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 80, 80);
+  await place(page, "lamp", 140, 130);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await clickWorld(page, 80, 80);
+  await page.keyboard.down("Shift");
+  await clickWorld(page, 140, 130);
+  await page.keyboard.up("Shift");
+  await page.getByRole("button", { name: "Group", exact: true }).click();
+  expect((await project(page)).groups).toHaveLength(1);
+  await page.getByRole("button", { name: "Copy", exact: true }).click();
+  await page.locator(".workbench-add-sheet").click();
+  await page
+    .locator(".drawing-tabs")
+    .getByRole("button", { name: "Sheet 2", exact: true })
+    .click();
+  await page.getByRole("button", { name: "Paste", exact: true }).click();
+  const data = await project(page);
+  expect(data.symbolInstances).toHaveLength(4);
+  expect(data.groups).toHaveLength(2);
+  expect(
+    data.symbolInstances.filter(
+      (s: { pageId: string }) => s.pageId === data.pages[1].id,
+    ),
+  ).toHaveLength(2);
+  await page.getByRole("button", { name: "Pan", exact: true }).click();
+  const canvas = page.locator(".engineering-canvas");
+  await canvas.scrollIntoViewIfNeeded();
+  const before = await canvas.getAttribute("viewBox");
+  const box = await canvas.boundingBox();
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(
+    box!.x + box!.width / 2 + 30,
+    box!.y + box!.height / 2 + 20,
+  );
+  await page.mouse.up();
+  expect(await canvas.getAttribute("viewBox")).not.toBe(before);
+  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await expect(canvas).toHaveAttribute("viewBox", "0 0 420 297");
+});
+
+test("junction insertion updates the real wire graph and BOM while navigator controls the active drawing", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "resistor", 50, 50);
+  await place(page, "lamp", 150, 50);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "R1:2", exact: true }).click();
+  await page.getByRole("button", { name: "H1:1", exact: true }).click();
+  await place(page, "junction", 100, 50);
+  const data = await project(page);
+  expect(data.wires).toHaveLength(2);
+  expect(data.devices).toHaveLength(3);
+  expect(data.wirePaths).toHaveLength(2);
+  const bom = page.getByRole("region", {
+    name: "Bill of materials",
+    exact: true,
+  });
+  await expect(bom.locator("tbody tr")).toHaveCount(3);
+  await expect(bom).toContainText("J1");
+  await page.locator(".workbench-add-sheet").click();
+  await page
+    .getByRole("region", { name: "Project navigator", exact: true })
+    .getByRole("button", { name: "Sheet 2", exact: true })
+    .click();
+  await expect(
+    page.getByRole("application", { name: "Sheet 2", exact: true }),
+  ).toBeVisible();
+});
+
+test("desktop engineering workspace stays within the viewport", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1672, height: 941 });
+  await create(page);
+  await selectMenuTab(page, "Insert menu");
+  await page
+    .getByRole("button", {
+      name: "Resistor · Engineering commands",
+      exact: true,
+    })
+    .click();
+  await clickWorld(page, 80, 80);
+  await openWorkbenchPanel(page, "properties");
+  await expect(
+    page.getByRole("form", { name: "Properties", exact: true }),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollHeight <= window.innerHeight,
+    ),
+  ).toBe(true);
+});
+
+test("component catalog searches and maps a sourced part to a real terminal", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "terminal", 100, 100);
+  await openComponentLibrary(page);
+  const library = page.locator(".component-library");
+  await library.locator(":scope > summary").click();
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("WAGO");
+  const wago = library.getByRole("article", {
+    name: "WAGO 2002-1201",
+    exact: true,
+  });
+  await expect(wago).toContainText("Not declared");
+  await expect(wago).not.toContainText("undefined");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("missing-part");
+  await expect(library.getByRole("status")).toHaveText("Results: 0");
+  await library
+    .getByLabel("Search parts", { exact: true })
+    .fill("phoenix 3004362");
+  await library
+    .getByRole("combobox", { name: "Category", exact: true })
+    .selectOption("connections");
+  await library
+    .getByRole("combobox", { name: "Manufacturer", exact: true })
+    .selectOption("Phoenix Contact");
+  await expect(library.getByRole("status")).toHaveText("Results: 1");
+  await expect(
+    library.getByRole("link", { name: "Manufacturer source", exact: true }),
+  ).toHaveAttribute("href", /phoenixcontact\.com/);
+  const data = await project(page);
+  await library
+    .getByLabel("Compatible device", { exact: true })
+    .selectOption(data.devices[0].id);
+  await library
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  let assigned = await project(page);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("3004362");
+  expect(assigned.terminals[0].capacity).toBe(2);
+  const bom = page.getByRole("region", {
+    name: "Bill of materials",
+    exact: true,
+  });
+  await expect(bom).toContainText("3004362");
+  await expect(
+    bom.getByRole("columnheader", { name: "Manufacturer" }),
+  ).toBeVisible();
+  await expect(
+    bom.getByRole("row").filter({ hasText: "3004362" }),
+  ).toContainText("Phoenix Contact");
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  expect((await project(page)).devices[0].partId).toBeUndefined();
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
+  assigned = await project(page);
+  expect(assigned.devices[0].partId).toBe(assigned.manufacturerParts[0].id);
+  await expect(bom).toContainText("3004362");
+});
+
+test("engineering symbol search imports distinct transformer pins for native placement", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
+  await page
+    .getByLabel("Symbol category", { exact: true })
+    .selectOption("power");
+  const preview = page.locator(
+    '[data-library-preview="transformer-two-winding"]',
+  );
+  await expect(preview).toHaveAttribute("role", "img");
+  await expect(preview.locator("text")).toHaveCount(4);
+  await expect(preview.locator("circle")).toHaveCount(8);
+  await page
+    .getByRole("button", {
+      name: "Import symbol: Two-winding transformer",
+      exact: true,
+    })
+    .click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-transformer-two-winding");
+  await clickWorld(page, 100, 100);
+  for (const pin of ["P1", "P2", "S1", "S2"])
+    await expect(
+      page.getByRole("button", { name: `U1:${pin}`, exact: true }),
+    ).toBeVisible();
+  const data = await project(page);
+  expect(data.terminals).toHaveLength(4);
+  expect(data.nets).toHaveLength(4);
+  await page
+    .getByRole("button", { name: "Undo · Header", exact: true })
+    .click();
+  expect((await project(page)).symbolInstances).toHaveLength(0);
+  await page
+    .getByRole("button", { name: "Redo · Header", exact: true })
+    .click();
+  await reloadAndReopenProject(page);
+  await expect(
+    page.getByRole("button", { name: "U1:S1", exact: true }),
+  ).toBeVisible();
+});
+
+test("NO contact catalog mapping preserves native pins and offers only compatible devices", async ({
+  page,
+}) => {
+  await create(page);
+  await place(page, "contact", 80, 80);
+  await place(page, "terminal", 140, 80);
+  await openComponentLibrary(page);
+  await page.locator(".component-library > summary").click();
+  const library = page.locator(".component-library");
+  await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
+  await library
+    .getByRole("combobox", { name: "Category", exact: true })
+    .selectOption("switching");
+  const article = library.getByRole("article", {
+    name: "Schneider Electric ZBE101",
+    exact: true,
+  });
+  const select = article.getByLabel("Compatible device", { exact: true });
+  await expect(select.locator("option")).toHaveCount(2);
+  const data = await project(page);
+  const device = data.devices.find(
+    (d: { reference: string }) => d.reference === "S1",
+  );
+  await select.selectOption(device.id);
+  await article
+    .getByRole("button", { name: "Assign part", exact: true })
+    .click();
+  const assigned = await project(page);
+  expect(assigned.pins).toEqual(data.pins);
+  expect(assigned.terminals).toEqual(data.terminals);
+  expect(assigned.manufacturerParts[0].partNumber).toBe("ZBE101");
+});
+
+test("busbar tap wiring shares one physical node and survives reload", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page.getByLabel("Search symbols", { exact: true }).fill("busbar");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-busbar-four-taps");
+  await clickWorld(page, 100, 100);
+  await place(page, "terminal", 40, 60);
+  await place(page, "terminal", 160, 60);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "U1:bus/tap1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  await page.getByRole("button", { name: "U1:bus/tap3", exact: true }).click();
+  await page.getByRole("button", { name: "X2:1", exact: true }).click();
+  const data = await project(page);
+  expect(data.wires).toHaveLength(2);
+  expect(data.nets).toHaveLength(1);
+  expect(data.terminals).toHaveLength(3);
+  await reloadAndReopenProject(page);
+  expect((await project(page)).nets).toEqual(data.nets);
+});
+
+test("connector poles retain separate electrical nodes while each pole passes through", async ({
+  page,
+}) => {
+  await create(page);
+  await openComponentLibrary(page);
+  await page.locator(".component-library > summary").click();
+  await page
+    .locator(".component-library summary")
+    .filter({ hasText: /^Engineering symbols$/ })
+    .click();
+  await page
+    .getByLabel("Search symbols", { exact: true })
+    .fill("two-pole pass-through");
+  await page.getByRole("button", { name: /^Import symbol:/ }).click();
+  await page
+    .getByRole("combobox", { name: "Custom symbols", exact: true })
+    .selectOption("library-connector-two-pole");
+  await clickWorld(page, 100, 100);
+  let data = await project(page);
+  expect(data.pins).toHaveLength(4);
+  expect(data.terminals).toHaveLength(2);
+  expect(data.nets).toHaveLength(2);
+  const groups = data.nets.map(
+    (net: { pinIds: string[] }) => net.pinIds.length,
+  );
+  expect(groups).toEqual([2, 2]);
+  await place(page, "terminal", 40, 60);
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
+  await page.getByRole("button", { name: "U1:pole1/in1", exact: true }).click();
+  await page.getByRole("button", { name: "X1:1", exact: true }).click();
+  data = await project(page);
+  expect(data.nets).toHaveLength(2);
+  await reloadAndReopenProject(page);
+  expect((await project(page)).nets).toEqual(data.nets);
+});
+
+for (const [id, query, terminals, pins] of [
+  ["distribution-three-way", "distribution board", 6, 12],
+  ["contactor-three-pole", "contactor", 8, 8],
+  ["isolator-three-pole-pe", "isolator", 7, 8],
+] as const)
+  test(`distribution and switching interface ${id} preserves declared node groups`, async ({
+    page,
+  }) => {
+    await create(page);
+    await openComponentLibrary(page);
+    await page.locator(".component-library > summary").click();
+    await page
+      .locator(".component-library summary")
+      .filter({ hasText: /^Engineering symbols$/ })
+      .click();
+    await page.getByLabel("Search symbols", { exact: true }).fill(query);
+    await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await page
+      .getByRole("combobox", { name: "Custom symbols", exact: true })
+      .selectOption(`library-${id}`);
+    await clickWorld(page, 120, 120);
+    const data = await project(page);
+    expect(data.terminals).toHaveLength(terminals);
+    expect(data.pins).toHaveLength(pins);
+    expect(data.nets).toHaveLength(terminals);
+    if (id === "distribution-three-way") {
+      const neutral = data.terminals.find(
+        (t: { designation: string }) => t.designation === "N_bus",
+      );
+      const pe = data.terminals.find(
+        (t: { designation: string }) => t.designation === "PE_bus",
+      );
+      expect(neutral.id).not.toBe(pe.id);
+      expect(neutral.kind).toBe("neutral");
       expect(pe.kind).toBe("pe");
       expect(
         data.nets.find((n: { terminalIds: string[] }) =>
@@ -1075,4 +1581,3 @@ test.beforeEach(async ({ page }) => {
     localStorage.setItem(key, JSON.stringify({ ...prefs, compact: false }));
   });
 });
-

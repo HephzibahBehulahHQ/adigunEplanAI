@@ -170,4 +170,3 @@ test("Home places native components, cuts and undoes, validates and opens real c
     .click();
   await expect(page.getByLabel("Theme", { exact: true })).toBeVisible();
 });
-

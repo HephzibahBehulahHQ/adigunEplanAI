@@ -340,4 +340,3 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     await expect(lastShortcut).toBeInViewport();
   });
 }
-

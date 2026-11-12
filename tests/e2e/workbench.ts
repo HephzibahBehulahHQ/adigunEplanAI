@@ -77,4 +77,3 @@ export async function selectMenuTab(page: Page, name: string) {
     .getByRole("button", { name, exact: true })
     .click();
 }
-
