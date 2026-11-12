@@ -1,4 +1,5 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
+import { selectWorkspaceView } from "./workbench.ts";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
@@ -89,9 +90,7 @@ for (const scenario of ["instrument", "marshalling"] as const) {
       mimeType: "application/json",
       buffer: Buffer.from(JSON.stringify(p)),
     });
-    await page
-      .getByRole("button", { name: "Panel design", exact: true })
-      .click();
+    await selectWorkspaceView(page, "Panel design");
     const panel = page.locator(".native-drawing .panel-editor");
     const view = panel.locator(".panel-3d-view");
     await expect(view).toBeVisible();
@@ -184,7 +183,7 @@ test("native panel editing synchronizes front and 3D geometry, undo, diagnostics
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(nativeProject())),
   });
-  await page.getByRole("button", { name: "Panel design", exact: true }).click();
+  await selectWorkspaceView(page, "Panel design");
   const panel = page.locator(".native-drawing .panel-editor");
   const enclosure = panel.getByRole("form", {
     name: "Save enclosure",
@@ -320,7 +319,7 @@ test("native panel editing synchronizes front and 3D geometry, undo, diagnostics
     16,
   );
   await reloadAndReopenProject(page);
-  await page.getByRole("button", { name: "Panel design", exact: true }).click();
+  await selectWorkspaceView(page, "Panel design");
   await expect(frontObject.locator("rect")).toHaveAttribute("x", "55");
   await expect(frontObject.locator("rect")).toHaveAttribute("width", "80");
   await page.setViewportSize({ width: 390, height: 844 });
@@ -365,7 +364,7 @@ test("face features, non-solid compartments, closed doors and the read-only dock
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
-  await page.getByRole("button", { name: "Panel design", exact: true }).click();
+  await selectWorkspaceView(page, "Panel design");
   const panel = page.locator(".native-drawing .panel-editor");
   await panel
     .locator("summary")
@@ -504,7 +503,7 @@ test("face features, non-solid compartments, closed doors and the read-only dock
     ),
   ).toBe(before);
   await reloadAndReopenProject(page);
-  await page.getByRole("button", { name: "Panel design", exact: true }).click();
+  await selectWorkspaceView(page, "Panel design");
   await expect(
     panel.locator(".panel-3d-view [data-panel-feature]"),
   ).toHaveCount(1);

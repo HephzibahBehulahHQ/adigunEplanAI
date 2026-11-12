@@ -1,4 +1,5 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
+import { selectWorkspaceView } from "./workbench.ts";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
@@ -36,9 +37,7 @@ for (const encoding of ["ascii", "binary"] as const) {
       mimeType: "application/json",
       buffer: Buffer.from(JSON.stringify(p)),
     });
-    await page
-      .getByRole("button", { name: "Panel design", exact: true })
-      .click();
+    await selectWorkspaceView(page, "Panel design");
     const panel = page.locator(".native-drawing .panel-editor");
     await panel
       .locator("summary")
@@ -185,9 +184,7 @@ for (const encoding of ["ascii", "binary"] as const) {
       obj.split("\n").filter((line) => line.startsWith("f ")),
     ).toHaveLength(10);
     await reloadAndReopenProject(page);
-    await page
-      .getByRole("button", { name: "Panel design", exact: true })
-      .click();
+    await selectWorkspaceView(page, "Panel design");
     await expect(canvas).toHaveAttribute("data-rendered", "true");
     await expect(front).toHaveAttribute("width", "30");
     await panel

@@ -75,6 +75,13 @@ export async function openEditorTools(page: Page) {
     await button.click();
 }
 
+export async function selectWorkspaceView(page: Page, label: string) {
+  await page
+    .getByRole("toolbar", { name: "Engineering commands", exact: true })
+    .getByRole("button", { name: label, exact: true })
+    .click();
+}
+
 export async function selectMenuTab(page: Page, name: string) {
   const trigger = page.getByRole("button", { name: "menu", exact: true });
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
