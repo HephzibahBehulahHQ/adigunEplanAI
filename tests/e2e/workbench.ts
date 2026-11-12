@@ -29,6 +29,7 @@ export async function openWorkbenchPanel(
     | "calculations"
     | "bom"
     | "reports",
+  translatedLabel?: string,
 ) {
   const panel = page.locator(`[data-panel="${id}"]`);
   if (await panel.isVisible()) return panel;
@@ -42,7 +43,10 @@ export async function openWorkbenchPanel(
   };
   await page
     .locator(".workbench-rail-right")
-    .getByRole("button", { name: labels[id], exact: true })
+    .getByRole("button", {
+      name: translatedLabel ?? labels[id],
+      exact: true,
+    })
     .click();
   await expect(panel).toBeVisible();
   return panel;

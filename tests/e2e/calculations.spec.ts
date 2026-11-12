@@ -293,7 +293,7 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     await expect(page.locator(".empty-workspace")).toBeVisible();
     await openProjectPanel(page);
     await page.getByTestId("project-picker").selectOption(project.id);
-    await openWorkbenchPanel(page, "calculations");
+    await openWorkbenchPanel(page, "calculations", t.openCalculations);
     const tools = page.getByRole("region", {
       name: t.calcTools,
       exact: true,
