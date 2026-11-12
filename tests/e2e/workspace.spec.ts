@@ -128,7 +128,13 @@ test("workstation regions stay fixed while ribbon categories change", async ({
     );
   const baseline = await geometry();
   expect(baseline[".ribbon"]?.[3]).toBe(88);
-  for (const category of ["Electrical", "Automation", "View", "Settings", "Home"]) {
+  for (const category of [
+    "Electrical",
+    "Automation",
+    "View",
+    "Settings",
+    "Home",
+  ]) {
     await page
       .locator(".ribbon-tabs")
       .getByRole("button", { name: new RegExp(`^${category}`) })
