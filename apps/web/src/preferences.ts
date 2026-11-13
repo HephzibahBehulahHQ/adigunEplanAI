@@ -95,4 +95,3 @@ export function drawingInk(color: string): string {
     ? "#000000"
     : "#ffffff";
 }
-
