@@ -2,11 +2,11 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import crypto from "node:crypto";
 
-test("copied interface remains identical to the owner source and its menu overlays the sheet", async ({
+test("approved interface branding and menu overlay remain intact", async ({
   page,
 }) => {
   for (const [file, sha] of [
-    ["apps/web/index.html", "b642d87654a6bc2a0ed578b1cfd6b7e6d889060f"],
+    ["apps/web/index.html", "b3cc1fa5e8bf0e1bb979613ace387f0486126c57"],
     [
       "apps/web/public/cad-engine.js",
       "01067625647720103f495680d98685d94b048059",
@@ -25,6 +25,10 @@ test("copied interface remains identical to the owner source and its menu overla
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
+  await expect(page).toHaveTitle("AdigunEplanAI — Electrical CAD Workspace");
+  await expect(page.locator(".brandname")).toHaveText("AdigunEplanAI");
+  const logo = page.getByRole("img", { name: "HB Elektroniker" });
+  await expect(logo).toBeVisible();
   await expect(page.locator(".topbar")).toBeVisible();
   await expect(page.locator(".toolbar")).toBeVisible();
   await expect(page.locator(".drawing")).toBeVisible();
