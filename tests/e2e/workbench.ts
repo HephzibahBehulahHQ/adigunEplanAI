@@ -127,8 +127,9 @@ export async function selectMenuTab(page: Page, name: string) {
   const trigger = page.locator(".workbench-tool-end > .workbench-menu-trigger");
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
     await trigger.click();
-  await page
-    .locator(".workbench-command-popover .ribbon-tabs")
-    .getByRole("button", { name, exact: true })
-    .click();
+  const tabs = page.locator(".workbench-command-popover .ribbon-tabs");
+  const tab = tabs.getByRole("button", { name, exact: true });
+  if (await tab.count()) await tab.click();
+  else if (name === "View") await tabs.getByRole("button").nth(4).click();
+  else await tab.click();
 }
