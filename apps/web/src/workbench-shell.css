@@ -440,6 +440,62 @@ body:has(.workbench-interface) {
     var(--workbench-rail) minmax(210px, 250px) minmax(0, 1fr)
     minmax(210px, 250px) var(--workbench-rail);
 }
+.workbench-interface .engineering-layout > .workbench-rail-left {
+  grid-column: 1;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-left:not(:has(> .bot-window[data-docked="true"]))
+  > .dock-left {
+  grid-column: 2;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-left:not(:has(> .bot-window[data-docked="true"]))
+  > .workspace {
+  grid-column: 3;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-right:not(:has(> .bot-window[data-docked="true"]))
+  > .workspace {
+  grid-column: 2;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-right:not(:has(> .bot-window[data-docked="true"]))
+  > .dock-right {
+  grid-column: 3;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-left.has-right:not(
+    :has(> .bot-window[data-docked="true"])
+  )
+  > .dock-right {
+  grid-column: 4;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-left:not(:has(> .bot-window[data-docked="true"]))
+  > .workbench-rail-right {
+  grid-column: 4;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-right:not(:has(> .bot-window[data-docked="true"]))
+  > .workbench-rail-right {
+  grid-column: 4;
+  grid-row: 1;
+}
+.workbench-interface
+  .engineering-layout.has-left.has-right:not(
+    :has(> .bot-window[data-docked="true"])
+  )
+  > .workbench-rail-right {
+  grid-column: 5;
+  grid-row: 1;
+}
 @media (min-width: 1001px) {
   .workbench-interface
     .engineering-layout:has(> .bot-window[data-docked="true"]) {
@@ -639,6 +695,14 @@ body:has(.workbench-interface) {
     .engineering-layout.has-left.has-right:has(
       > .bot-window[data-docked="true"]
     )
+    > .workspace {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
     > .bot-window[data-docked="true"] {
     grid-column: 4;
     grid-row: 1;
@@ -780,6 +844,10 @@ body:has(.workbench-interface) {
   > .editor-toolbar {
   position: relative;
   z-index: 3;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   flex-wrap: wrap;
   flex-shrink: 0;
   max-height: 140px;
@@ -893,6 +961,7 @@ body:has(.workbench-interface) {
     width: auto;
     max-width: none;
     max-height: min(40dvh, 300px);
+    z-index: 38;
   }
   .workbench-interface .engineering-layout > .bot-window[data-docked="true"] {
     position: fixed;
@@ -929,3 +998,4 @@ body:has(.workbench-interface) {
     left: 7px;
   }
 }
+
