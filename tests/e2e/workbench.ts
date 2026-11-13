@@ -1,13 +1,37 @@
 import { expect, type Page } from "@playwright/test";
 
+const panelToggleIndex = {
+  project: 0,
+  properties: 1,
+  panel3d: 2,
+  diagnostics: 3,
+  calculations: 4,
+  bom: 5,
+  reports: 6,
+} as const;
+
+async function showPanel(page: Page, id: keyof typeof panelToggleIndex) {
+  await selectMenuTab(page, "View");
+  const toggle = page
+    .locator(".panel-toggles input[type=checkbox]")
+    .nth(panelToggleIndex[id]);
+  if (!(await toggle.isChecked())) await toggle.check();
+  return page.locator(`[data-panel="${id}"]`);
+}
+
 export async function openProjectNavigator(page: Page) {
   const panel = page.locator('[data-panel="project"]');
   if (!(await panel.isVisible())) {
-    await page
-      .locator(".workbench-rail-left")
-      .getByRole("button")
-      .first()
-      .click();
+    if (
+      (await page.locator(".application").getAttribute("data-compact")) ===
+      "true"
+    ) {
+      await page
+        .locator(".workbench-rail-left")
+        .getByRole("button")
+        .first()
+        .click();
+    } else await showPanel(page, "project");
   }
   await expect(panel).toBeVisible();
   return panel;
@@ -55,25 +79,30 @@ export async function openWorkbenchPanel(
     bom: "Show bill of materials",
     reports: "Reports",
   };
-  await page
-    .locator(".workbench-rail-right")
-    .getByRole("button", {
-      name: translatedLabel ?? labels[id],
-      exact: true,
-    })
-    .click();
+  await showPanel(page, id);
+  if (
+    (await page.locator(".application").getAttribute("data-compact")) === "true"
+  ) {
+    const dock = id === "properties" ? "left" : "right";
+    await page
+      .locator(`.workbench-rail-${dock}`)
+      .getByRole("button", { name: translatedLabel ?? labels[id], exact: true })
+      .click();
+  }
+  if (
+    !(await panel.evaluate((element) =>
+      element.closest(".dock")?.classList.contains("dock-right"),
+    ))
+  ) {
+    await panel.locator(".panel-body > details > summary").click();
+    await panel.getByLabel("Dock", { exact: true }).selectOption("right");
+  }
   await expect(panel).toBeVisible();
   return panel;
 }
 
 export async function openComponentLibrary(page: Page) {
   const panel = page.locator('[data-panel="project"]');
-  if (!(await panel.isVisible())) {
-    await page
-      .locator(".workbench-rail-left")
-      .getByRole("button", { name: "Open component library", exact: true })
-      .click();
-  }
   const navigator = await openProjectNavigator(page);
   const tab = navigator.getByRole("tab", { name: "Library", exact: true });
   if ((await tab.getAttribute("aria-selected")) !== "true") await tab.click();
