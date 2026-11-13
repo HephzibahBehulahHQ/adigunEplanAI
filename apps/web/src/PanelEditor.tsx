@@ -1,4 +1,10 @@
-import { useRef, useState, type FormEvent, type PointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type PointerEvent,
+} from "react";
 import { CommandIcon } from "./WorkspaceRibbon";
 import type { NativeProjects } from "./useNativeProjects";
 import type { MessageKey } from "../../../packages/localization";
@@ -1753,24 +1759,33 @@ export function PanelPreview({
   const [selectedId, setSelectedId] = useState("");
   const [previousDeviceId, setPreviousDeviceId] = useState<string | null>(null);
   const project = native.project;
-  const matches =
-    project?.equipment3d.filter(
-      (item) => item.deviceId === native.selectedDeviceId,
-    ) ?? [];
-  if (native.selectedDeviceId !== previousDeviceId) {
-    setPreviousDeviceId(native.selectedDeviceId);
-    if (
-      matches.length &&
-      !matches.some((item) => item.enclosureId === selectedId)
-    ) {
-      setSelectedId(matches[0].enclosureId);
+  const selectedPlacement = project?.equipment3d.find(
+    (item) => item.deviceId === native.selectedDeviceId,
+  );
+  useEffect(() => {
+    if (native.selectedDeviceId !== previousDeviceId) {
+      setPreviousDeviceId(native.selectedDeviceId);
+      if (selectedPlacement && selectedPlacement.enclosureId !== selectedId) {
+        setSelectedId(selectedPlacement.enclosureId);
+      }
     }
-  }
+  }, [
+    native.selectedDeviceId,
+    previousDeviceId,
+    selectedPlacement,
+    selectedId,
+  ]);
   const enclosure =
     project?.enclosures.find((item) => item.id === selectedId) ??
+    project?.enclosures.find(
+      (item) => item.id === selectedPlacement?.enclosureId,
+    ) ??
     project?.enclosures[0];
   if (!project || !enclosure) return <p>{t("noRecords")}</p>;
-  const mapped = matches.find((item) => item.enclosureId === enclosure.id);
+  const mapped =
+    selectedPlacement?.enclosureId === enclosure.id
+      ? selectedPlacement
+      : undefined;
   return (
     <section className="panel-preview" aria-label={t("panel3d")}>
       <label>
