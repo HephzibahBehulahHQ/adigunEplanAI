@@ -1,6 +1,6 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
-import { openProjectNavigator, openWorkbenchPanel } from "./workbench.ts";
+import { openProjectPanel, openWorkbenchPanel } from "./workbench.ts";
 import { readFile } from "node:fs/promises";
 const cases = [
   [
@@ -36,13 +36,14 @@ for (const [name, devices, wires, selector] of cases) {
         .click();
     }
     await open();
-    await openProjectNavigator(page);
+    await openProjectPanel(page);
     await expect(page.locator(selector)).toBeVisible();
     if (name === "Transformer station documentation") {
       await page.setViewportSize({ width: 1857, height: 1000 });
       await openWorkbenchPanel(page, "diagnostics");
       await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       const diagnostics = page.getByRole("region", {
         name: "Diagnostics",
         exact: true,
@@ -85,6 +86,7 @@ for (const [name, devices, wires, selector] of cases) {
     }
     if (name.startsWith("Industry energy substation")) {
       await page.setViewportSize({ width: 1880, height: 970 });
+      await openWorkbenchPanel(page, "panel3d");
       await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
       const overview = page.locator(".engineering-canvas");
@@ -203,9 +205,11 @@ for (const [name, devices, wires, selector] of cases) {
       await expect(
         page.locator('.panel-3d-view [data-panel-detail="cable-duct-slot"]'),
       ).toHaveCount(111);
+      await openWorkbenchPanel(page, "reports");
       await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
+      await openWorkbenchPanel(page, "calculations");
       await expect(
         page.getByRole("region", { name: "Calculations", exact: true }),
       ).toContainText("20 kV transformer primary current estimate");
@@ -226,6 +230,7 @@ for (const [name, devices, wires, selector] of cases) {
       await expect(
         page.getByRole("button", { name: "Load", exact: true }),
       ).toHaveAttribute("aria-pressed", "true");
+      await openWorkbenchPanel(page, "bom");
       await expect(
         page.getByRole("region", { name: "Bill of materials" }),
       ).toContainText("750-8217");
@@ -284,7 +289,7 @@ test("project navigator tabs expose the real library, examples and search", asyn
   page,
 }) => {
   await page.goto("/");
-  await openProjectNavigator(page);
+  await openProjectPanel(page);
   const tabs = page.getByRole("tablist", { name: "Project navigator" });
   await expect(tabs.getByRole("tab", { name: "Examples (6)" })).toBeVisible();
   await tabs.getByRole("tab", { name: "Examples (6)" }).click();

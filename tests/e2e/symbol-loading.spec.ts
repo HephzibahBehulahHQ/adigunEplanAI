@@ -1,4 +1,8 @@
-import { openComponentLibrary, openEditorTools } from "./workbench.ts";
+import {
+  openComponentLibrary,
+  openEditorTools,
+  openProjectPanel,
+} from "./workbench.ts";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 const storageKey = "adiguneplanai.projects.v1";
@@ -163,11 +167,13 @@ test("catalog loads only when opened and retains query after collapse", async ({
   await create(page);
   expect(requests).toBe(0);
   const before = await project(page);
-  await openComponentLibrary(page);
+  const projectPanel = await openProjectPanel(page);
+  await projectPanel.getByRole("tab", { name: "Library", exact: true }).click();
+  await expect(page.locator(".component-library")).toBeVisible();
   const summary = page.locator(".component-library > summary");
-  await summary.click();
-  await page.getByLabel("Search parts", { exact: true }).fill("3044076");
+  await expect(page.getByLabel("Search parts", { exact: true })).toBeVisible();
   expect(requests).toBe(1);
+  await page.getByLabel("Search parts", { exact: true }).fill("3044076");
   await summary.click();
   await summary.click();
   await expect(page.getByLabel("Search parts", { exact: true })).toHaveValue(

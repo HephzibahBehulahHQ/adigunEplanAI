@@ -218,6 +218,7 @@ export function HomeRibbon({
               {Object.keys(primitives).map((kind) => (
                 <button
                   key={kind}
+                  aria-label={t(kind as MessageKey)}
                   onClick={() => {
                     tool(kind);
                     close();

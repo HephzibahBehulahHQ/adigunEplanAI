@@ -146,10 +146,12 @@ test("Home places native components, cuts and undoes, validates and opens real c
   await selectMenuTab(page, "Home");
   await ribbon.getByRole("button", { name: "Cut · Home", exact: true }).click();
   await expect(canvas.locator("[data-instance]")).toHaveCount(2);
+  await selectMenuTab(page, "Home");
   await ribbon
     .getByRole("button", { name: "Undo · Home", exact: true })
     .click();
   await expect(canvas.locator("[data-instance]")).toHaveCount(3);
+  await selectMenuTab(page, "Home");
   await ribbon
     .getByRole("button", { name: "Validate · Home", exact: true })
     .click();
@@ -179,5 +181,6 @@ test("Home places native components, cuts and undoes, validates and opens real c
   await ribbon
     .getByRole("button", { name: "Themes · Home", exact: true })
     .click();
+  await selectMenuTab(page, "Settings");
   await expect(page.getByLabel("Theme", { exact: true })).toBeVisible();
 });

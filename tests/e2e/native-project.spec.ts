@@ -101,6 +101,8 @@ test("corrupt local storage stays intact until explicit reset and can be downloa
   expect(await page.evaluate((k) => localStorage.getItem(k), key)).toBe(
     "{broken",
   );
+  await page.getByRole("button", { name: "menu", exact: true }).click();
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   const downloadPromise = page.waitForEvent("download");
   await page
     .getByRole("button", { name: "Download recovery data", exact: true })
@@ -108,6 +110,8 @@ test("corrupt local storage stays intact until explicit reset and can be downloa
   const download = await downloadPromise;
   expect(await readFile((await download.path())!, "utf8")).toBe("{broken");
   page.once("dialog", (d) => d.dismiss());
+  await page.getByRole("button", { name: "menu", exact: true }).click();
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Reset project storage", exact: true })
     .click();
@@ -115,6 +119,8 @@ test("corrupt local storage stays intact until explicit reset and can be downloa
     "{broken",
   );
   page.once("dialog", (d) => d.accept());
+  await page.getByRole("button", { name: "menu", exact: true }).click();
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Reset project storage", exact: true })
     .click();

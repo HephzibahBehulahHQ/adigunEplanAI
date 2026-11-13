@@ -34,6 +34,11 @@ export async function openWorkbenchPanel(
     | "reports",
   translatedLabel?: string,
 ) {
+  const menuTrigger = page.locator(
+    ".workbench-tool-end > .workbench-menu-trigger",
+  );
+  if ((await menuTrigger.getAttribute("aria-expanded")) === "true")
+    await menuTrigger.click();
   const panel = page.locator(`[data-panel="${id}"]`);
   if (
     (await panel.isVisible()) &&
@@ -47,7 +52,7 @@ export async function openWorkbenchPanel(
     panel3d: "3D panel",
     diagnostics: "Run electrical check",
     calculations: "Open calculations",
-    bom: "Bill of materials",
+    bom: "Show bill of materials",
     reports: "Reports",
   };
   await page

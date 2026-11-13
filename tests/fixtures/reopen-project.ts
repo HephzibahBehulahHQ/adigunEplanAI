@@ -19,10 +19,9 @@ export async function reloadAndReopenProject(page: Page) {
         .getByRole("button")
         .first()
         .click();
-    const projectTab = page.getByRole("tab", {
-      name: "Project",
-      exact: true,
-    });
+    const projectTab = page
+      .locator('[data-panel="project"] [role="tab"]')
+      .first();
     if (
       (await projectTab.count()) &&
       (await projectTab.getAttribute("aria-selected")) !== "true"

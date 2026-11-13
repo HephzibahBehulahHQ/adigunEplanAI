@@ -702,9 +702,9 @@ function Workspace({ account }: { account: Account }) {
             !target.closest("button")
           )
             return;
+          if (document.querySelector("dialog[open]")) return;
           closeMenu();
-          if (!document.querySelector("dialog[open]"))
-            menuAnchorRef.current?.focus();
+          menuAnchorRef.current?.focus();
         }}
         aria-hidden={!commandOpen}
         inert={!commandOpen}
