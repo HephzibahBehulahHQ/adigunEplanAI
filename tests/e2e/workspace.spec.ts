@@ -31,6 +31,8 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   page,
 }) => {
   await page.goto("/");
+  await expect(page.locator('.dock-left [data-panel="project"]')).toBeVisible();
+  await expect(page.locator('.dock-right [data-panel="panel3d"]')).toBeVisible();
   await openProjectPanel(page);
   const panel = page.locator('[data-panel="project"]');
   await panel.locator("summary").click();
