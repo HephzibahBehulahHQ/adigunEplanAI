@@ -30,6 +30,7 @@ test("theme, locale and custom background survive reload", async ({ page }) => {
 test("panels dock, resize, collapse and restore through keyboard-accessible controls", async ({
   page,
 }) => {
+  await page.setViewportSize({ width: 1680, height: 1050 });
   await page.goto("/");
   await expect(page.locator('.dock-left [data-panel="project"]')).toBeVisible();
   await expect(
