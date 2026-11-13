@@ -89,4 +89,3 @@ test("custom drawing backgrounds choose high-contrast black or white ink", () =>
   assert.equal(drawingInk("#123456"), "#ffffff");
   assert.equal(drawingInk("#ff0000"), "#000000");
 });
-
