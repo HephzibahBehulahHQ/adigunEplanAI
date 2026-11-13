@@ -141,4 +141,3 @@ test("workstation regions stay fixed while ribbon categories change", async ({
     expect(await geometry()).toEqual(baseline);
   }
 });
-
