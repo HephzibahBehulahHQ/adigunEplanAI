@@ -133,7 +133,7 @@ function Workspace({ account }: { account: Account }) {
         prefs.panels[id as PanelId].dock === dock
       )
         return id as PanelId;
-      if (raw === null)
+      if (raw === null && window.matchMedia("(min-width: 1600px)").matches)
         return (
           panelIds.find(
             (panelId) =>
