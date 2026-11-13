@@ -25,6 +25,13 @@ test("preferences recover malformed storage and bound untrusted layout values", 
   assert.equal(result.panels.project.visible, false);
   assert.equal(result.panels.bom.size, 140);
 });
+test("first-run desktop layout opens the project and 3D work areas", () => {
+  const value = defaults();
+  assert.equal(value.compact, false);
+  assert.equal(value.panels.project.visible, true);
+  assert.equal(value.panels.panel3d.visible, true);
+  assert.equal(value.panels.properties.visible, false);
+});
 test("layout/theme/locale preferences round trip independently", () => {
   const value = defaults();
   value.theme = "light";
@@ -82,3 +89,4 @@ test("custom drawing backgrounds choose high-contrast black or white ink", () =>
   assert.equal(drawingInk("#123456"), "#ffffff");
   assert.equal(drawingInk("#ff0000"), "#000000");
 });
+
