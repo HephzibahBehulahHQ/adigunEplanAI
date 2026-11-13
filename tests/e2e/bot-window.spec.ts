@@ -1,6 +1,6 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
-import { openProjectPanel } from "./workbench.ts";
+import { openProjectPanel, openWorkbenchPanel } from "./workbench.ts";
 const key = "adiguneplanai.bot.window.v1.guest";
 test.beforeEach(async ({ page }) => {
   // Exercise the optional floating mode independently of the default desktop dock.
@@ -147,10 +147,7 @@ test("BOT answers from current native context, marks old snapshots and clears ob
   await expect(bot.locator("article").last()).toContainText(
     "Available commands",
   );
-  await page
-    .locator(".workbench-rail-right")
-    .getByRole("button", { name: "Properties", exact: true })
-    .click();
+  await openWorkbenchPanel(page, "properties");
   await page
     .locator('[data-panel="properties"]')
     .getByLabel("Project name", { exact: true })

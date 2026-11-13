@@ -112,8 +112,8 @@ for (const [name, devices, wires, selector] of cases) {
       const toolbar = await page.locator(".workbench-toolbar").boundingBox();
       expect(appHeader).not.toBeNull();
       expect(toolbar).not.toBeNull();
-      expect(appHeader!.height).toBeLessThanOrEqual(38);
-      expect(toolbar!.height).toBe(36);
+      expect(appHeader!.height).toBe(50);
+      expect(toolbar!.height).toBe(44);
       expect(toolbar!.y).toBe(appHeader!.y + appHeader!.height);
       await expect(
         page.getByRole("button", {

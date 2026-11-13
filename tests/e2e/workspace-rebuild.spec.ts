@@ -255,8 +255,8 @@ test("many drawing sheets keep the add command visible on mobile", async ({
     .getByRole("button", { name: "Sheet 9", exact: true })
     .click();
   await page
-    .locator(".workbench-rail-left")
-    .getByRole("button", { name: "Project navigator", exact: true })
+    .locator('[data-panel="project"]')
+    .getByRole("button", { name: "Hide Project navigator", exact: true })
     .click();
   const tabs = page.locator(".drawing-pages");
   await tabs.scrollIntoViewIfNeeded();

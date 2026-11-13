@@ -1,13 +1,60 @@
 import { expect, type Page } from "@playwright/test";
 
+const panelToggleIndex = {
+  project: 0,
+  properties: 1,
+  panel3d: 2,
+  diagnostics: 3,
+  calculations: 4,
+  bom: 5,
+  reports: 6,
+} as const;
+
+async function showPanel(page: Page, id: keyof typeof panelToggleIndex) {
+  await selectMenuTab(page, "View");
+  const toggle = page
+    .locator(".panel-toggles input[type=checkbox]")
+    .nth(panelToggleIndex[id]);
+  const panel = page.locator(`[data-panel="${id}"]`);
+  if (!(await toggle.isChecked())) await toggle.check();
+  else if (
+    (await page.locator(".application").getAttribute("data-compact")) ===
+      "true" &&
+    !(await panel.isVisible())
+  ) {
+    const labels = {
+      project: "Project navigator",
+      properties: "Properties",
+      panel3d: "3D panel",
+      diagnostics: "Run electrical check",
+      calculations: "Open calculations",
+      bom: "Show bill of materials",
+      reports: "Reports",
+    };
+    const side = id === "project" ? "left" : "right";
+    await page
+      .locator(`.workbench-rail-${side}`)
+      .getByRole("button", { name: labels[id], exact: true })
+      .click();
+  }
+  const menu = page.locator(".workbench-tool-end > .workbench-menu-trigger");
+  if ((await menu.getAttribute("aria-expanded")) === "true") await menu.click();
+  return panel;
+}
+
 export async function openProjectNavigator(page: Page) {
   const panel = page.locator('[data-panel="project"]');
   if (!(await panel.isVisible())) {
-    await page
-      .locator(".workbench-rail-left")
-      .getByRole("button")
-      .first()
-      .click();
+    if (
+      (await page.locator(".application").getAttribute("data-compact")) ===
+      "true"
+    ) {
+      await page
+        .locator(".workbench-rail-left")
+        .getByRole("button")
+        .first()
+        .click();
+    } else await showPanel(page, "project");
   }
   await expect(panel).toBeVisible();
   return panel;
@@ -34,46 +81,23 @@ export async function openWorkbenchPanel(
     | "reports",
   translatedLabel?: string,
 ) {
-  const menuTrigger = page.locator(
-    ".workbench-tool-end > .workbench-menu-trigger",
-  );
-  if ((await menuTrigger.getAttribute("aria-expanded")) === "true")
-    await menuTrigger.click();
-  const panel = page.locator(`[data-panel="${id}"]`);
   if (
-    (await panel.isVisible()) &&
-    (await panel.evaluate((element) =>
-      element.closest(".dock")?.classList.contains("dock-right"),
-    ))
+    (await page.locator(`[data-panel="${id}"]`).isVisible()) &&
+    (await page
+      .locator(`[data-panel="${id}"]`)
+      .evaluate((element) =>
+        element.closest(".dock")?.classList.contains("dock-right"),
+      ))
   )
-    return panel;
-  const labels = {
-    properties: "Properties",
-    panel3d: "3D panel",
-    diagnostics: "Run electrical check",
-    calculations: "Open calculations",
-    bom: "Show bill of materials",
-    reports: "Reports",
-  };
-  await page
-    .locator(".workbench-rail-right")
-    .getByRole("button", {
-      name: translatedLabel ?? labels[id],
-      exact: true,
-    })
-    .click();
+    return page.locator(`[data-panel="${id}"]`);
+  const panel = page.locator(`[data-panel="${id}"]`);
+  await showPanel(page, id);
+  void translatedLabel;
   await expect(panel).toBeVisible();
   return panel;
 }
 
 export async function openComponentLibrary(page: Page) {
-  const panel = page.locator('[data-panel="project"]');
-  if (!(await panel.isVisible())) {
-    await page
-      .locator(".workbench-rail-left")
-      .getByRole("button", { name: "Open component library", exact: true })
-      .click();
-  }
   const navigator = await openProjectNavigator(page);
   const tab = navigator.getByRole("tab", { name: "Library", exact: true });
   if ((await tab.getAttribute("aria-selected")) !== "true") await tab.click();
@@ -97,8 +121,9 @@ export async function selectMenuTab(page: Page, name: string) {
   const trigger = page.locator(".workbench-tool-end > .workbench-menu-trigger");
   if ((await trigger.getAttribute("aria-expanded")) !== "true")
     await trigger.click();
-  await page
-    .locator(".workbench-command-popover .ribbon-tabs")
-    .getByRole("button", { name, exact: true })
-    .click();
+  const tabs = page.locator(".workbench-command-popover .ribbon-tabs");
+  const tab = tabs.getByRole("button", { name, exact: true });
+  if (await tab.count()) await tab.click();
+  else if (name === "View") await tabs.getByRole("button").nth(4).click();
+  else await tab.click();
 }

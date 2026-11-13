@@ -1,4 +1,8 @@
-import { openComponentLibrary, openEditorTools } from "./workbench.ts";
+import {
+  openComponentLibrary,
+  openEditorTools,
+  openWorkbenchPanel,
+} from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
@@ -102,6 +106,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   data = await project(page);
   expect(data.devices[0].partId).toBe(data.manufacturerParts[0].id);
   expect(data.manufacturerParts[0].custom.verification).toBe("unverified");
+  await openWorkbenchPanel(page, "bom");
   await expect(
     page.getByRole("region", { name: "Bill of materials", exact: true }),
   ).toContainText("USER-GLAND");

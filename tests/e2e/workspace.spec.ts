@@ -41,7 +41,7 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   const range = panel.getByRole("slider");
   await range.focus();
   await range.press("ArrowRight");
-  await expect(range).toHaveValue("340");
+  await expect(range).toHaveValue("290");
   await panel
     .getByRole("button", { name: "Project navigator", exact: false })
     .first()
@@ -128,7 +128,8 @@ test("workstation regions stay fixed while ribbon categories change", async ({
     );
   await selectMenuTab(page, "Electrical menu");
   const baseline = await geometry();
-  expect(baseline[".workbench-toolbar"]?.[3]).toBe(36);
+  expect(baseline[".workbench-header"]?.[3]).toBe(50);
+  expect(baseline[".workbench-toolbar"]?.[3]).toBe(44);
   for (const category of [
     "Electrical menu",
     "Automation menu",
