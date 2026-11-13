@@ -61,12 +61,7 @@ for (const match of html.matchAll(
   if (!info.assets[match[1].slice(1)])
     throw new Error("Entry page references an unverified asset");
 }
-// Retain prior public hashed assets for cached clients and rollback; publish no source directories.
-const assets = fs.readdirSync(path.join(root, "assets"));
-for (const name of assets) {
-  if (!allowed(`assets/${name}`)) throw new Error("Unexpected asset filename");
-  regular(`assets/${name}`);
-}
+// Publish only the exact-copy runtime; the rejected shell is not retained.
 for (const name of [
   ...files.map(([name]) => name),
   "index.html",
@@ -83,6 +78,6 @@ console.log(
   JSON.stringify({
     sourceCommit: info.sourceCommit,
     verifiedRuntimeFiles: files.length,
-    retainedAssets: assets.length,
+    retainedAssets: 0,
   }),
 );
