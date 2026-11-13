@@ -9,6 +9,7 @@ export default [
       "**/node_modules/**",
       "assets/**",
       "apps/web/public/cad-engine.js",
+      "cad-engine.js",
       "work/**",
     ],
   },
