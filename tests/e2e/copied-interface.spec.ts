@@ -43,9 +43,7 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   await page.locator('[data-module="Electrical"]').click();
-  await page
-    .getByRole("menuitem", { name: "Symbol Library", exact: true })
-    .click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
   await expect(page.locator('#symbolList [data-insert^="eplan-"]')).toHaveCount(
     83,
   );
