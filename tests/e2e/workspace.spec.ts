@@ -128,7 +128,8 @@ test("workstation regions stay fixed while ribbon categories change", async ({
     );
   await selectMenuTab(page, "Electrical menu");
   const baseline = await geometry();
-  expect(baseline[".workbench-toolbar"]?.[3]).toBe(36);
+  expect(baseline[".workbench-header"]?.[3]).toBe(50);
+  expect(baseline[".workbench-toolbar"]?.[3]).toBe(44);
   for (const category of [
     "Electrical menu",
     "Automation menu",
@@ -140,3 +141,4 @@ test("workstation regions stay fixed while ribbon categories change", async ({
     expect(await geometry()).toEqual(baseline);
   }
 });
+
