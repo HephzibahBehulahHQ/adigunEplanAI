@@ -121,9 +121,10 @@ function Workspace({ account }: { account: Account }) {
   const [editorToolsOpen, setEditorToolsOpen] = useState(false);
   const restoreActivePanel = (dock: Dock): PanelId | null => {
     try {
-      const saved = JSON.parse(
-        localStorage.getItem(activePanelsKey) ?? "null",
-      ) as Partial<Record<Dock, unknown>> | null;
+      const raw = localStorage.getItem(activePanelsKey);
+      const saved = JSON.parse(raw ?? "null") as
+        | Partial<Record<Dock, unknown>>
+        | null;
       const id = saved?.[dock];
       if (
         typeof id === "string" &&
@@ -132,6 +133,14 @@ function Workspace({ account }: { account: Account }) {
         prefs.panels[id as PanelId].dock === dock
       )
         return id as PanelId;
+      if (raw === null)
+        return (
+          panelIds.find(
+            (panelId) =>
+              prefs.panels[panelId].visible &&
+              prefs.panels[panelId].dock === dock,
+          ) ?? null
+        );
     } catch {
       /* Invalid panel activation state should leave compact rails collapsed. */
     }
