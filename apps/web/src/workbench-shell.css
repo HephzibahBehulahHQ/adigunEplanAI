@@ -1068,7 +1068,7 @@ body:has(.workbench-interface) {
     width: auto;
     max-width: none;
     max-height: min(40dvh, 300px);
-    z-index: 38;
+    z-index: 45;
   }
   .workbench-interface .engineering-layout > .bot-window[data-docked="true"] {
     position: fixed;
