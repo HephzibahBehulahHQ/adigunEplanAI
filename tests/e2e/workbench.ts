@@ -35,7 +35,13 @@ export async function openWorkbenchPanel(
   translatedLabel?: string,
 ) {
   const panel = page.locator(`[data-panel="${id}"]`);
-  if (await panel.isVisible()) return panel;
+  if (
+    (await panel.isVisible()) &&
+    (await panel.evaluate((element) =>
+      element.closest(".dock")?.classList.contains("dock-right"),
+    ))
+  )
+    return panel;
   const labels = {
     properties: "Properties",
     panel3d: "3D panel",

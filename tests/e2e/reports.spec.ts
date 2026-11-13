@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import { nativeProject } from "../fixtures/native-project.mjs";
+import { openWorkbenchPanel } from "./workbench.ts";
 import DxfParser from "dxf-parser";
 
 test("native SVG, actual PNG, CSV and print PDF agree with the stored project", async ({
@@ -17,6 +18,7 @@ test("native SVG, actual PNG, CSV and print PDF agree with the stored project", 
   await expect(page.locator(".project-title")).toHaveText(
     "Native model reference",
   );
+  await openWorkbenchPanel(page, "reports");
   const tools = page.getByRole("region", { name: "Report tools", exact: true });
   await expect(tools).toBeVisible();
   const before = await page.evaluate(() =>

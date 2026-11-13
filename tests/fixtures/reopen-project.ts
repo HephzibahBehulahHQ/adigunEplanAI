@@ -13,17 +13,21 @@ export async function reloadAndReopenProject(page: Page) {
     await expect(page.locator(".empty-workspace")).toBeVisible();
     await expect(page.locator(".engineering-canvas")).toHaveCount(0);
     const picker = page.getByTestId("project-picker");
-    if (!(await picker.isVisible()))
+    if (!(await page.locator('[data-panel="project"]').isVisible()))
       await page
         .locator(".workbench-rail-left")
         .getByRole("button")
-        .last()
+        .first()
         .click();
     const projectTab = page.getByRole("tab", {
       name: "Project",
       exact: true,
     });
-    if (await projectTab.count()) await projectTab.click();
+    if (
+      (await projectTab.count()) &&
+      (await projectTab.getAttribute("aria-selected")) !== "true"
+    )
+      await projectTab.click();
     await picker.selectOption(id);
   }
 }

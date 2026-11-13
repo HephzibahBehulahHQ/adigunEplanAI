@@ -1,6 +1,6 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
-import { openProjectNavigator } from "./workbench.ts";
+import { openProjectNavigator, openWorkbenchPanel } from "./workbench.ts";
 import { readFile } from "node:fs/promises";
 const cases = [
   [
@@ -36,9 +36,11 @@ for (const [name, devices, wires, selector] of cases) {
         .click();
     }
     await open();
+    await openProjectNavigator(page);
     await expect(page.locator(selector)).toBeVisible();
     if (name === "Transformer station documentation") {
       await page.setViewportSize({ width: 1857, height: 1000 });
+      await openWorkbenchPanel(page, "diagnostics");
       await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
       const diagnostics = page.getByRole("region", {

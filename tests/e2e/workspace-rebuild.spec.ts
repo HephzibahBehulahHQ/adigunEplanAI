@@ -1,6 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
-import { selectMenuTab } from "./workbench.ts";
+import {
+  openProjectNavigator,
+  openWorkbenchPanel,
+  selectMenuTab,
+} from "./workbench.ts";
 
 test("native drawing frame, cabinet and calculation records share the current project", async ({
   page,
@@ -43,6 +47,7 @@ test("native drawing frame, cabinet and calculation records share the current pr
   await expect(frame).toContainText(project.name);
   await expect(frame).toContainText(project.pages[0].name);
   await expect(frame).toContainText("420 × 297 mm");
+  await openWorkbenchPanel(page, "calculations");
   const calculations = page.locator('[data-panel="calculations"]');
   await expect(calculations.locator(".calculation-record")).toContainText(
     "400 V",
@@ -184,6 +189,7 @@ test("Home commands print native geometry, open the library and close without lo
   const pdf = await popup.pdf({ preferCSSPageSize: true });
   expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
   await popup.close();
+  await selectMenuTab(page, "Home");
   await page
     .getByRole("button", {
       name: "Device Catalog · Home",
@@ -197,6 +203,7 @@ test("Home commands print native geometry, open the library and close without lo
     .getByRole("dialog", { name: "Device Catalog", exact: true })
     .getByRole("button", { name: "Close", exact: true })
     .click();
+  await openProjectNavigator(page);
   await page.getByRole("tab", { name: "Project", exact: true }).click();
   await page
     .getByRole("button", { name: "Close project", exact: true })
@@ -236,6 +243,7 @@ test("many drawing sheets keep the add command visible on mobile", async ({
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openProjectNavigator(page);
   await page
     .locator('[data-panel="project"]')
     .getByRole("button", { name: "Sheet 9", exact: true })

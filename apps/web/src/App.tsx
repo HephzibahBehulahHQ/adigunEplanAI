@@ -148,6 +148,19 @@ function Workspace({ account }: { account: Account }) {
   const [layoutOpen, setLayoutOpen] = useState<
     Partial<Record<PanelId, boolean>>
   >({});
+  useEffect(() => {
+    const keepOneMobileDrawer = () => {
+      if (
+        window.matchMedia("(max-width: 620px)").matches &&
+        activeLeft !== null &&
+        activeRight !== null
+      )
+        setActiveRight(null);
+    };
+    keepOneMobileDrawer();
+    window.addEventListener("resize", keepOneMobileDrawer);
+    return () => window.removeEventListener("resize", keepOneMobileDrawer);
+  }, [activeLeft, activeRight]);
   const t = (key: MessageKey) => dictionaries[prefs.language][key];
   useEffect(() => {
     document.documentElement.lang = prefs.language;
@@ -190,15 +203,25 @@ function Workspace({ account }: { account: Account }) {
     setActiveLeft((current) => (current === id ? null : current));
     setActiveRight((current) => (current === id ? null : current));
     setActiveBottom((current) => (current === id ? null : current));
+    if (window.matchMedia("(max-width: 620px)").matches) {
+      if (dock === "left") setActiveRight(null);
+      else if (dock === "right") setActiveLeft(null);
+    }
     if (prefs.panels[id].visible) activateDock(dock, id);
   };
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const reveal = (id: PanelId) => {
     const dock: Dock = id === "project" ? "left" : "right";
+    const compactViewport = window.matchMedia("(max-width: 620px)").matches;
     panel(id, { visible: true, collapsed: false, dock });
-    if (dock === "left") setActiveLeft(id);
-    else setActiveRight(id);
+    if (dock === "left") {
+      setActiveLeft(id);
+      if (compactViewport) setActiveRight(null);
+    } else {
+      setActiveRight(id);
+      if (compactViewport) setActiveLeft(null);
+    }
     if (id === "project") setLibrarySignal((value) => value + 1);
     requestAnimationFrame(() => {
       const element = document.querySelector<HTMLElement>(
