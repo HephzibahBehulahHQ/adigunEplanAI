@@ -23,7 +23,7 @@ const files = Object.entries(info.assets ?? {});
 if (files.length < 3 || files.length > 128)
   throw new Error("Invalid runtime manifest size");
 const allowed = (name) =>
-  ["index.html", "THIRD_PARTY_NOTICES.txt"].includes(name) ||
+  ["index.html", "cad-engine.js", "THIRD_PARTY_NOTICES.txt"].includes(name) ||
   /^assets\/[A-Za-z0-9_-][A-Za-z0-9_.-]*$/.test(name);
 const regular = (name) => {
   const stat = fs.lstatSync(path.join(root, name));
@@ -68,7 +68,7 @@ for (const name of assets) {
   regular(`assets/${name}`);
 }
 for (const name of [
-  ...assets.map((name) => `assets/${name}`),
+  ...files.map(([name]) => name),
   "index.html",
   "THIRD_PARTY_NOTICES.txt",
   "build-info.json",

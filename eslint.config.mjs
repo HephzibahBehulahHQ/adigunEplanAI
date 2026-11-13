@@ -3,7 +3,15 @@ import tseslint from "typescript-eslint";
 import globals from "globals";
 
 export default [
-  { ignores: ["**/dist/**", "**/node_modules/**", "assets/**"] },
+  {
+    ignores: [
+      "**/dist/**",
+      "**/node_modules/**",
+      "assets/**",
+      "apps/web/public/cad-engine.js",
+      "work/**",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
