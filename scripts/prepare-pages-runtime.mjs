@@ -32,6 +32,11 @@ for (const name of fs.readdirSync(builtAssets)) {
 }
 
 const assets = {};
+fs.copyFileSync(
+  path.join(dist, "eplan-symbols.js"),
+  path.join(root, "eplan-symbols.js"),
+);
+assets["eplan-symbols.js"] = hash(path.join(root, "eplan-symbols.js"));
 assets["cad-engine.js"] = hash(path.join(root, "cad-engine.js"));
 for (const name of fs.readdirSync(builtAssets)) {
   if (!safeAsset(name)) throw new Error(`Unexpected runtime asset: ${name}`);
