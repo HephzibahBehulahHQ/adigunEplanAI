@@ -100,7 +100,11 @@ function Workspace({ account }: { account: Account }) {
   const [search, setSearch] = useState("");
   const [prefs, setPrefs] = useState<Preferences>(() => {
     try {
-      return restorePreferences(localStorage.getItem(storageKey));
+      const stored = localStorage.getItem(storageKey);
+      const restored = restorePreferences(stored);
+      if (stored === null && window.matchMedia("(max-width: 1000px)").matches)
+        restored.compact = true;
+      return restored;
     } catch {
       return defaults();
     }
@@ -255,6 +259,7 @@ function Workspace({ account }: { account: Account }) {
       disabled={disabled}
     >
       <CommandIcon kind={icon} />
+      <span className="workbench-toolbar-label">{t(label)}</span>
     </button>
   );
   const closeMenu = () => {
@@ -1234,3 +1239,4 @@ function Workspace({ account }: { account: Account }) {
     </div>
   );
 }
+
