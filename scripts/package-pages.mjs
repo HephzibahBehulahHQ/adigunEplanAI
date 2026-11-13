@@ -23,7 +23,7 @@ const files = Object.entries(info.assets ?? {});
 if (files.length < 3 || files.length > 128)
   throw new Error("Invalid runtime manifest size");
 const allowed = (name) =>
-  ["index.html", "THIRD_PARTY_NOTICES.txt"].includes(name) ||
+  ["index.html", "cad-engine.js", "THIRD_PARTY_NOTICES.txt"].includes(name) ||
   /^assets\/[A-Za-z0-9_-][A-Za-z0-9_.-]*$/.test(name);
 const regular = (name) => {
   const stat = fs.lstatSync(path.join(root, name));
@@ -61,14 +61,9 @@ for (const match of html.matchAll(
   if (!info.assets[match[1].slice(1)])
     throw new Error("Entry page references an unverified asset");
 }
-// Retain prior public hashed assets for cached clients and rollback; publish no source directories.
-const assets = fs.readdirSync(path.join(root, "assets"));
-for (const name of assets) {
-  if (!allowed(`assets/${name}`)) throw new Error("Unexpected asset filename");
-  regular(`assets/${name}`);
-}
+// Publish only the exact-copy runtime; the rejected shell is not retained.
 for (const name of [
-  ...assets.map((name) => `assets/${name}`),
+  ...files.map(([name]) => name),
   "index.html",
   "THIRD_PARTY_NOTICES.txt",
   "build-info.json",
@@ -83,6 +78,6 @@ console.log(
   JSON.stringify({
     sourceCommit: info.sourceCommit,
     verifiedRuntimeFiles: files.length,
-    retainedAssets: assets.length,
+    retainedAssets: 0,
   }),
 );

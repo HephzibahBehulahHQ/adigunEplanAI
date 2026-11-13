@@ -17,9 +17,12 @@ if (!fs.statSync(dist).isDirectory())
   throw new Error("Production build is missing");
 const builtIndex = path.join(dist, "index.html");
 const builtAssets = path.join(dist, "assets");
-if (!fs.statSync(builtAssets).isDirectory())
-  throw new Error("Built assets are missing");
+fs.mkdirSync(builtAssets, { recursive: true });
 fs.copyFileSync(builtIndex, path.join(root, "index.html"));
+fs.copyFileSync(
+  path.join(dist, "cad-engine.js"),
+  path.join(root, "cad-engine.js"),
+);
 for (const name of fs.readdirSync(builtAssets)) {
   if (!safeAsset(name)) throw new Error(`Unexpected build asset: ${name}`);
   const source = path.join(builtAssets, name);
@@ -29,6 +32,7 @@ for (const name of fs.readdirSync(builtAssets)) {
 }
 
 const assets = {};
+assets["cad-engine.js"] = hash(path.join(root, "cad-engine.js"));
 for (const name of fs.readdirSync(builtAssets)) {
   if (!safeAsset(name)) throw new Error(`Unexpected runtime asset: ${name}`);
   const file = path.join(builtAssets, name);

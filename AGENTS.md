@@ -1,3 +1,7 @@
+# CURRENT OWNER DIRECTION — 2026-11-13
+
+Use AdigunAiAutoCad's actual interface files verbatim, replacing the previous Eplan shell. This supersedes screenshot matching and React-shell adaptation instructions below. Do not change the reference repository. No backup of the rejected interface is wanted. Preserve engineering/domain/backend source; integration with the copied frontend is deferred by the owner. Source blobs: index.html b642d87654a6bc2a0ed578b1cfd6b7e6d889060f; cad-engine.js 01067625647720103f495680d98685d94b048059. Verify exact hashes in source and release output. Do not imply preserved Eplan engineering modules are connected to the copied frontend.
+
 ## CURRENT OWNER-APPROVED GOAL — UI-001 (2026-11-12)
 
 **FIRST DELIVERABLE: Project A must visually match Project B's compact CAD workstation.** This supersedes prior shell/ribbon screenshot guidance, not the original engineering feature requirements.

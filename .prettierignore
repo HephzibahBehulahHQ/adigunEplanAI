@@ -9,3 +9,7 @@ README.md
 assets/
 build-info.json
 index.html
+apps/web/index.html
+apps/web/public/cad-engine.js
+work/
+cad-engine.js
