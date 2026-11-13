@@ -5,8 +5,8 @@
   overflow: hidden;
   position: relative;
   background: #0b1220;
-  --workbench-header: 34px;
-  --workbench-toolbar: 36px;
+  --workbench-header: 50px;
+  --workbench-toolbar: 44px;
   --workbench-rail: 36px;
   --workbench-footer: 27px;
 }
@@ -29,14 +29,14 @@ body:has(.workbench-interface) {
   border-bottom: 1px solid #2c4d5c;
 }
 .workbench-interface .corporate-mark {
-  width: 156px;
-  min-width: 156px;
-  height: 28px;
+  width: 224px;
+  min-width: 224px;
+  height: 38px;
   flex: none;
 }
 .workbench-interface .corporate-mark svg {
-  width: 156px;
-  height: 28px;
+  width: 224px;
+  height: 38px;
 }
 .workbench-interface .product-heading {
   border-left: 1px solid #d4af37;
@@ -44,7 +44,7 @@ body:has(.workbench-interface) {
   flex: none;
 }
 .workbench-interface .product-heading strong {
-  font-size: 15px;
+  font-size: 20px;
   white-space: nowrap;
 }
 .workbench-interface .product-heading small,
@@ -52,8 +52,8 @@ body:has(.workbench-interface) {
   display: none;
 }
 .workbench-interface .project-save-chip {
-  flex: 0 1 175px;
-  min-width: 72px;
+  flex: 0 1 360px;
+  min-width: 180px;
   overflow: hidden;
   gap: 5px;
   padding: 3px 9px;
@@ -64,7 +64,7 @@ body:has(.workbench-interface) {
   box-shadow: none;
 }
 .workbench-interface .project-save-chip .project-name {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
 }
 .workbench-interface .project-save-state {
@@ -161,7 +161,7 @@ body:has(.workbench-interface) {
   flex: 0 0 var(--workbench-toolbar);
   height: var(--workbench-toolbar);
   min-height: var(--workbench-toolbar);
-  padding: 2px 7px;
+  padding: 3px 7px;
   background: linear-gradient(#f9fcff, #e9eff5);
   border-bottom: 1px solid #a6b4c2;
   color: #12243a;
@@ -193,7 +193,7 @@ body:has(.workbench-interface) {
   flex: none;
   padding: 0 5px;
   border-right: 1px solid #adbccc;
-  height: 30px;
+  height: 36px;
 }
 .workbench-interface .workbench-tool-end {
   margin-left: auto;
@@ -209,20 +209,25 @@ body:has(.workbench-interface) {
   flex-wrap: nowrap;
 }
 .workbench-interface .workbench-file-tools .native-tools > button {
-  display: grid;
+  display: inline-flex;
+  align-items: center;
   place-items: center;
-  flex: 0 0 30px;
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  max-width: 30px;
+  flex: 0 0 auto;
+  width: auto;
+  height: 34px;
+  min-width: 64px;
+  max-width: 104px;
+  gap: 6px;
   min-height: 0;
-  padding: 4px;
+  padding: 4px 9px;
   overflow: hidden;
-  background: transparent;
-  border: 1px solid transparent;
+  background: #f7fafc;
+  border: 1px solid #c6d3dc;
+  border-radius: 4px;
   color: #102238;
-  font-size: 0;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 .workbench-interface .workbench-file-tools .native-tools > button svg {
   width: 22px;
@@ -240,20 +245,34 @@ body:has(.workbench-interface) {
   background: #d9f5ff;
 }
 .workbench-interface .workbench-icon-button {
-  display: grid;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   place-items: center;
-  flex: 0 0 32px;
-  width: 32px;
-  height: 31px;
-  padding: 4px;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 62px;
+  height: 34px;
+  gap: 5px;
+  padding: 4px 8px;
   border: 1px solid transparent;
   border-radius: 3px;
   background: transparent;
   color: #0b1c30;
 }
 .workbench-interface .workbench-icon-button svg {
-  width: 23px;
-  height: 23px;
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.workbench-interface .workbench-toolbar-label {
+  display: none;
+}
+.workbench-interface .workbench-toolbar .workbench-toolbar-label {
+  display: inline;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 .workbench-interface .workbench-icon-button:hover,
 .workbench-interface .workbench-icon-button[aria-pressed="true"],
@@ -266,13 +285,20 @@ body:has(.workbench-interface) {
   opacity: 0.34;
 }
 .workbench-interface .workbench-menu-trigger {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
-  gap: 0;
-  flex-basis: 32px;
-  width: 32px;
+  gap: 5px;
+  min-width: 88px;
+  width: auto;
+  padding-inline: 9px;
   background: #d2f8ff;
   border-color: #67ddeb;
+}
+.workbench-interface .workbench-menu-trigger::after {
+  content: attr(aria-label);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 .workbench-interface .workbench-bolt {
   font-size: 18px;
@@ -287,7 +313,7 @@ body:has(.workbench-interface) {
   z-index: 500;
   left: 8px;
   top: calc(var(--workbench-header) + var(--workbench-toolbar) - 1px);
-  width: min(800px, calc(100vw - 16px));
+  width: min(568px, calc(100vw - 16px));
   max-height: min(72dvh, 720px);
   overflow: auto;
   overscroll-behavior: contain;
@@ -733,6 +759,56 @@ body:has(.workbench-interface) {
     grid-row: 1;
   }
 }
+@media (min-width: 1600px) {
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    ) {
+    grid-template-columns:
+      minmax(248px, 15%) minmax(0, 1fr) minmax(300px, 19%)
+      minmax(270px, 16%);
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .workbench-rail-left,
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .workbench-rail-right {
+    display: none;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .dock-left {
+    grid-column: 1;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .workspace {
+    grid-column: 2;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .dock-right {
+    grid-column: 3;
+  }
+  .workbench-interface
+    .engineering-layout.has-left.has-right:has(
+      > .bot-window[data-docked="true"]
+    )
+    > .bot-window[data-docked="true"] {
+    grid-column: 4;
+  }
+}
 .workbench-interface .workbench-icon-rail {
   display: flex;
   flex-direction: column;
@@ -1029,3 +1105,4 @@ body:has(.workbench-interface) {
     left: 7px;
   }
 }
+
