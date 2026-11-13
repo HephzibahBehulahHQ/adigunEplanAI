@@ -26,7 +26,7 @@ export type Preferences = {
 export const storageKey = "adiguneplanai.interface.v1";
 export function defaults(): Preferences {
   return {
-    compact: true,
+    compact: false,
     theme: "dark",
     language: "en",
     background: "white",
@@ -41,9 +41,9 @@ export function defaults(): Preferences {
               : id === "panel3d"
                 ? "right"
                 : "bottom",
-          visible: true,
+          visible: id === "project" || id === "panel3d",
           collapsed: false,
-          size: id === "project" ? 330 : 220,
+          size: id === "project" ? 280 : id === "panel3d" ? 360 : 220,
         },
       ]),
     ) as Preferences["panels"],
@@ -95,3 +95,4 @@ export function drawingInk(color: string): string {
     ? "#000000"
     : "#ffffff";
 }
+
