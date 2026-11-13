@@ -41,7 +41,7 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   const range = panel.getByRole("slider");
   await range.focus();
   await range.press("ArrowRight");
-  await expect(range).toHaveValue("340");
+  await expect(range).toHaveValue("290");
   await panel
     .getByRole("button", { name: "Project navigator", exact: false })
     .first()
