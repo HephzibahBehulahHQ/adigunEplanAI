@@ -27,7 +27,8 @@ test("approved interface branding and menu overlay remain intact", async ({
   await page.goto("/");
   await expect(page).toHaveTitle("AdigunEplanAI — Electrical CAD Workspace");
   await expect(page.locator(".brandname")).toHaveText("AdigunEplanAI");
-  await expect(page.getByRole("img", { name: "HB Elektroniker" })).toBeVisible();
+  const logo = page.getByRole("img", { name: "HB Elektroniker" });
+  await expect(logo).toBeVisible();
   await expect(page.locator(".topbar")).toBeVisible();
   await expect(page.locator(".toolbar")).toBeVisible();
   await expect(page.locator(".drawing")).toBeVisible();
