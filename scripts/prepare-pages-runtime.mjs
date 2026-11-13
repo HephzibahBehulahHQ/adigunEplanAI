@@ -75,4 +75,3 @@ fs.writeFileSync(
 console.log(
   `Prepared ${Object.keys(assets).length} verified runtime files from ${info.sourceCommit}`,
 );
-
