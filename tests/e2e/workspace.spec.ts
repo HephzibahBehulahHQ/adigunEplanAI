@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openProjectPanel, selectMenuTab } from "./workbench.ts";
 
 test("theme, locale and custom background survive reload", async ({ page }) => {
   const errors: string[] = [];
@@ -10,7 +11,7 @@ test("theme, locale and custom background survive reload", async ({ page }) => {
   await expect(
     page.getByRole("img", { name: "Hephzibah Behulah" }),
   ).toHaveCount(1);
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectMenuTab(page, "Settings");
   await page.getByLabel("Theme", { exact: true }).selectOption("light");
   await page
     .getByLabel("Drawing background", { exact: true })
@@ -30,7 +31,7 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   page,
 }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "View", exact: true }).click();
+  await openProjectPanel(page);
   const panel = page.locator('[data-panel="project"]');
   await panel.locator("summary").click();
   await panel.getByLabel("Dock", { exact: true }).selectOption("right");
@@ -53,13 +54,14 @@ test("panels dock, resize, collapse and restore through keyboard-accessible cont
   await expect(
     page.locator('.dock-right [data-panel="project"] button').first(),
   ).toHaveAttribute("aria-expanded", "false");
-  await page.getByRole("button", { name: "View", exact: true }).click();
+  await selectMenuTab(page, "View");
   await page.getByRole("button", { name: "Reset layout", exact: true }).click();
   await expect(page.locator('.dock-left [data-panel="project"]')).toBeVisible();
   await page
     .getByRole("button", { name: "Hide Project navigator", exact: true })
     .click();
   await expect(page.locator('[data-panel="project"]')).toHaveCount(0);
+  await selectMenuTab(page, "View");
   await page
     .getByRole("checkbox", { name: "Project navigator", exact: true })
     .check();
@@ -101,13 +103,9 @@ test("workstation regions stay fixed while ribbon categories change", async ({
   await expect(page.locator(".storage-error[role=status]")).toHaveCount(0);
   const regions = [
     ".workbench-header",
-    ".ribbon-tabs",
-    ".ribbon",
+    ".workbench-toolbar",
     ".engineering-layout",
-    ".dock-left",
     ".workspace",
-    ".dock-right",
-    ".dock-bottom",
     ".status-bar",
   ];
   const geometry = () =>
@@ -128,19 +126,17 @@ test("workstation regions stay fixed while ribbon categories change", async ({
         ),
       regions,
     );
+  await selectMenuTab(page, "Electrical menu");
   const baseline = await geometry();
-  expect(baseline[".ribbon"]?.[3]).toBe(88);
+  expect(baseline[".workbench-toolbar"]?.[3]).toBe(36);
   for (const category of [
-    "Electrical",
-    "Automation",
+    "Electrical menu",
+    "Automation menu",
     "View",
     "Settings",
     "Home",
   ]) {
-    await page
-      .locator(".ribbon-tabs")
-      .getByRole("button", { name: new RegExp(`^${category}`) })
-      .click();
+    await selectMenuTab(page, category);
     expect(await geometry()).toEqual(baseline);
   }
 });

@@ -3,15 +3,18 @@ import productConfig from "../../../product.config.json";
 import brands from "../../../packages/design-tokens/brands.json";
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   lazy,
   Suspense,
   type CSSProperties,
+  type MouseEvent,
 } from "react";
 import {
   WorkspaceCommands,
+  CommandIcon,
   ribbonTabs,
   type RibbonTab,
 } from "./WorkspaceRibbon";
@@ -48,12 +51,15 @@ import {
 import "./workspace.css";
 import "./account.css";
 import "./home-ribbon.css";
+import "./workbench-shell.css";
 
 const ExampleLibrary = lazy(() =>
   import("./ExampleLibrary").then((module) => ({
     default: module.ExampleLibrary,
   })),
 );
+const activePanelsKey = "adiguneplanai.workbench-panels.v1";
+type MenuSource = "electrical" | "ribbon" | "settings";
 
 export function App() {
   const account = useAccount();
@@ -102,11 +108,59 @@ function Workspace({ account }: { account: Account }) {
   const [botSignal, setBotSignal] = useState(0);
   const [librarySignal, setLibrarySignal] = useState(0);
   const [tab, setTab] = useState<RibbonTab>("home");
+  const [activeMenu, setActiveMenu] = useState<MenuSource | null>(null);
+  const commandOpen = activeMenu !== null;
+  const activeMenuRef = useRef<MenuSource | null>(null);
+  activeMenuRef.current = activeMenu;
+  const menuAnchorRef = useRef<HTMLButtonElement | null>(null);
+  const [popoverPosition, setPopoverPosition] = useState<CSSProperties>({});
+  const [editorToolsOpen, setEditorToolsOpen] = useState(false);
+  const restoreActivePanel = (dock: Dock): PanelId | null => {
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem(activePanelsKey) ?? "null",
+      ) as Partial<Record<Dock, unknown>> | null;
+      const id = saved?.[dock];
+      if (
+        typeof id === "string" &&
+        panelIds.includes(id as PanelId) &&
+        prefs.panels[id as PanelId].visible &&
+        prefs.panels[id as PanelId].dock === dock
+      )
+        return id as PanelId;
+    } catch {
+      /* Invalid panel activation state should leave compact rails collapsed. */
+    }
+    return null;
+  };
+  const [activeLeft, setActiveLeft] = useState<PanelId | null>(() =>
+    restoreActivePanel("left"),
+  );
+  const [activeRight, setActiveRight] = useState<PanelId | null>(() =>
+    restoreActivePanel("right"),
+  );
+  const [activeBottom, setActiveBottom] = useState<PanelId | null>(() =>
+    restoreActivePanel("bottom"),
+  );
+  const menuCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [storageError, setStorageError] = useState(false);
   const help = useRef<HTMLDialogElement>(null);
   const [layoutOpen, setLayoutOpen] = useState<
     Partial<Record<PanelId, boolean>>
   >({});
+  useEffect(() => {
+    const keepOneMobileDrawer = () => {
+      if (
+        window.matchMedia("(max-width: 620px)").matches &&
+        activeLeft !== null &&
+        activeRight !== null
+      )
+        setActiveRight(null);
+    };
+    keepOneMobileDrawer();
+    window.addEventListener("resize", keepOneMobileDrawer);
+    return () => window.removeEventListener("resize", keepOneMobileDrawer);
+  }, [activeLeft, activeRight]);
   const t = (key: MessageKey) => dictionaries[prefs.language][key];
   useEffect(() => {
     document.documentElement.lang = prefs.language;
@@ -117,6 +171,20 @@ function Workspace({ account }: { account: Account }) {
       setStorageError(true);
     }
   }, [prefs]);
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        activePanelsKey,
+        JSON.stringify({
+          left: activeLeft,
+          right: activeRight,
+          bottom: activeBottom,
+        }),
+      );
+    } catch {
+      setStorageError(true);
+    }
+  }, [activeLeft, activeRight, activeBottom]);
   const panel = (id: PanelId, change: Partial<PanelState>) =>
     setPrefs((previous) => ({
       ...previous,
@@ -125,10 +193,35 @@ function Workspace({ account }: { account: Account }) {
         [id]: { ...previous.panels[id], ...change },
       },
     }));
+  const activateDock = (dock: Dock, id: PanelId | null) => {
+    if (dock === "left") setActiveLeft(id);
+    else if (dock === "right") setActiveRight(id);
+    else setActiveBottom(id);
+  };
+  const movePanel = (id: PanelId, dock: Dock) => {
+    panel(id, { dock });
+    setActiveLeft((current) => (current === id ? null : current));
+    setActiveRight((current) => (current === id ? null : current));
+    setActiveBottom((current) => (current === id ? null : current));
+    if (window.matchMedia("(max-width: 620px)").matches) {
+      if (dock === "left") setActiveRight(null);
+      else if (dock === "right") setActiveLeft(null);
+    }
+    if (prefs.panels[id].visible) activateDock(dock, id);
+  };
   const set = <K extends keyof Preferences>(key: K, value: Preferences[K]) =>
     setPrefs((previous) => ({ ...previous, [key]: value }));
   const reveal = (id: PanelId) => {
-    panel(id, { visible: true, collapsed: false });
+    const dock: Dock = id === "project" ? "left" : "right";
+    const compactViewport = window.matchMedia("(max-width: 620px)").matches;
+    panel(id, { visible: true, collapsed: false, dock });
+    if (dock === "left") {
+      setActiveLeft(id);
+      if (compactViewport) setActiveRight(null);
+    } else {
+      setActiveRight(id);
+      if (compactViewport) setActiveLeft(null);
+    }
     if (id === "project") setLibrarySignal((value) => value + 1);
     requestAnimationFrame(() => {
       const element = document.querySelector<HTMLElement>(
@@ -139,6 +232,127 @@ function Workspace({ account }: { account: Account }) {
         ?.focus();
     });
   };
+  const togglePanel = (id: PanelId) => {
+    if (id === "project" && activeLeft === id) setActiveLeft(null);
+    else if (id !== "project" && activeRight === id) setActiveRight(null);
+    else reveal(id);
+  };
+  const iconButton = (
+    label: MessageKey,
+    icon: string,
+    action: (event: MouseEvent<HTMLButtonElement>) => void,
+    pressed = false,
+    disabled = false,
+    ariaLabel?: string,
+  ) => (
+    <button
+      type="button"
+      className="workbench-icon-button"
+      aria-label={ariaLabel ?? t(label)}
+      title={t(label)}
+      aria-pressed={pressed}
+      onClick={action}
+      disabled={disabled}
+    >
+      <CommandIcon kind={icon} />
+    </button>
+  );
+  const closeMenu = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = null;
+    setActiveMenu(null);
+  };
+  const cancelMenuClose = () => {
+    if (menuCloseTimer.current) clearTimeout(menuCloseTimer.current);
+    menuCloseTimer.current = null;
+  };
+  const scheduleMenuClose = (pointerType: string) => {
+    if (pointerType !== "mouse" && pointerType !== "pen") return;
+    cancelMenuClose();
+    menuCloseTimer.current = setTimeout(() => {
+      const focused = document.activeElement;
+      if (
+        focused instanceof Element &&
+        document.querySelector(".workbench-command-popover")?.contains(focused)
+      )
+        return;
+      closeMenu();
+    }, 300);
+  };
+  const measurePopover = (anchor: HTMLButtonElement) => {
+    const rect = anchor.getBoundingClientRect();
+    const width = Math.min(800, Math.max(0, window.innerWidth - 16));
+    const left = Math.max(
+      8,
+      Math.min(rect.left, window.innerWidth - width - 8),
+    );
+    const top = Math.min(
+      rect.bottom + 4,
+      Math.max(8, window.innerHeight - 120),
+    );
+    return {
+      left,
+      top,
+      maxHeight: Math.max(
+        120,
+        Math.min(window.innerHeight * 0.72, window.innerHeight - top - 8),
+      ),
+    };
+  };
+  const toggleMenu = (
+    source: MenuSource,
+    anchor: HTMLButtonElement,
+    nextTab?: RibbonTab,
+  ) => {
+    cancelMenuClose();
+    if (activeMenuRef.current === source) {
+      closeMenu();
+      return;
+    }
+    menuAnchorRef.current = anchor;
+    setPopoverPosition(measurePopover(anchor));
+    if (nextTab) setTab(nextTab);
+    activeMenuRef.current = source;
+    setActiveMenu(source);
+  };
+  useLayoutEffect(() => {
+    if (!commandOpen) return;
+    const reposition = () => {
+      if (menuAnchorRef.current?.isConnected)
+        setPopoverPosition(measurePopover(menuAnchorRef.current));
+    };
+    reposition();
+    window.addEventListener("resize", reposition);
+    window.addEventListener("scroll", reposition, true);
+    return () => {
+      window.removeEventListener("resize", reposition);
+      window.removeEventListener("scroll", reposition, true);
+    };
+  }, [commandOpen]);
+  useEffect(() => {
+    if (!commandOpen) return;
+    const outside = (event: PointerEvent) => {
+      if (
+        (event.target as Element).closest(
+          ".workbench-command-popover, .workbench-menu-trigger",
+        )
+      )
+        return;
+      closeMenu();
+    };
+    const escape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (document.querySelector("dialog[open]")) return;
+      closeMenu();
+      menuAnchorRef.current?.focus();
+    };
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [commandOpen]);
   const renderPanel = (id: PanelId) => {
     const state = prefs.panels[id];
     return (
@@ -159,7 +373,12 @@ function Workspace({ account }: { account: Account }) {
           <button
             title={t("hide")}
             aria-label={`${t("hide")} ${t(id)}`}
-            onClick={() => panel(id, { visible: false })}
+            onClick={() => {
+              panel(id, { visible: false });
+              if (id === activeLeft) setActiveLeft(null);
+              if (id === activeRight) setActiveRight(null);
+              if (id === activeBottom) setActiveBottom(null);
+            }}
           >
             ×
           </button>
@@ -212,7 +431,7 @@ function Workspace({ account }: { account: Account }) {
                 <select
                   aria-label={t("dock")}
                   value={state.dock}
-                  onChange={(e) => panel(id, { dock: e.target.value as Dock })}
+                  onChange={(e) => movePanel(id, e.target.value as Dock)}
                 >
                   {(["left", "right", "bottom"] as const).map((d) => (
                     <option key={d} value={d}>
@@ -246,18 +465,37 @@ function Workspace({ account }: { account: Account }) {
     >
       {panelIds
         .filter(
-          (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
+          (id) =>
+            prefs.panels[id].visible &&
+            prefs.panels[id].dock === dock &&
+            (!prefs.compact ||
+              (dock === "left"
+                ? id === activeLeft
+                : dock === "right"
+                  ? id === activeRight
+                  : id === activeBottom)),
         )
         .map(renderPanel)}
     </aside>
   );
-  const has = (dock: Dock) =>
-    panelIds.some(
-      (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
+  const has = (dock: Dock) => {
+    if (!prefs.compact)
+      return panelIds.some(
+        (id) => prefs.panels[id].visible && prefs.panels[id].dock === dock,
+      );
+    const id =
+      dock === "left"
+        ? activeLeft
+        : dock === "right"
+          ? activeRight
+          : activeBottom;
+    return (
+      id !== null && prefs.panels[id].visible && prefs.panels[id].dock === dock
     );
+  };
   return (
     <div
-      className="application"
+      className="application workbench-interface"
       data-project-id={native.project?.id ?? ""}
       data-compact={prefs.compact}
       inert={account.checking && !account.user}
@@ -273,171 +511,396 @@ function Workspace({ account }: { account: Account }) {
         openDiagnostics={() => reveal("diagnostics")}
         openHelp={() => help.current?.showModal()}
       />
-      <nav className="ribbon-tabs" aria-label={t("interface")}>
-        {ribbonTabs.map(([id, key]) => (
-          <button
-            key={id}
-            aria-pressed={tab === id}
-            aria-label={
-              id === "home" || id === "view" || id === "settings"
-                ? t(key)
-                : `${t(key)} ${t("ribbonMenu")}`
-            }
-            onClick={() =>
-              id === "help"
-                ? help.current?.showModal()
-                : id === "ai"
-                  ? setBotSignal((value) => value + 1)
-                  : setTab(id)
-            }
-          >
-            {t(key)}
-          </button>
-        ))}
-      </nav>
-      {native.error && (
-        <p className="storage-error" role="alert">
-          {t(native.error)}
-        </p>
-      )}
-      {account.checking && (
-        <p className="storage-error" role="status">
-          {t("accountChecking")}
-        </p>
-      )}
+
       <div
-        className="ribbon"
-        data-tab={tab}
-        aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
+        className="workbench-toolbar"
+        role="toolbar"
+        aria-label={t("ribbonWorkspace")}
       >
-        {tab === "home" ? (
-          <>
-            <ProjectTools native={native} t={t} home />
-            <HomeRibbon
-              native={native}
-              t={t}
-              reveal={reveal}
-              themes={() => setTab("settings")}
-            />
-          </>
-        ) : tab === "file" || tab === "project" ? (
-          <>
-            <ProjectTools native={native} t={t} />
+        <div className="workbench-file-tools">
+          <ProjectTools native={native} t={t} />
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton("undo", "undo", native.undo, false, !native.canUndo)}
+          {iconButton("redo", "redo", native.redo, false, !native.canRedo)}
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton(
+            "selectTool",
+            "select",
+            () => native.requestEditorCommand("select"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "wireTool",
+            "wire",
+            () => native.requestEditorCommand("wire"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "junction",
+            "junction",
+            () => native.requestEditorCommand("junction"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "terminal",
+            "terminal",
+            () => native.requestEditorCommand("terminal"),
+            false,
+            !native.project,
+          )}
+          <button
+            type="button"
+            className="workbench-icon-button workbench-menu-trigger"
+            aria-label={t("menuElectrical")}
+            title={t("menuElectrical")}
+            aria-haspopup="menu"
+            aria-expanded={activeMenu === "electrical"}
+            aria-controls="workbench-command-popover"
+            onPointerEnter={cancelMenuClose}
+            onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+            onClick={(event) => {
+              toggleMenu("electrical", event.currentTarget, "electrical");
+            }}
+          >
+            <span className="workbench-bolt" aria-hidden="true">
+              ϟ
+            </span>
+            <span className="workbench-chevron" aria-hidden="true">
+              ⌄
+            </span>
+          </button>
+          {iconButton(
+            "motor",
+            "symbol",
+            () => native.requestEditorCommand("motor"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "ground",
+            "symbol",
+            () => native.requestEditorCommand("ground"),
+            false,
+            !native.project,
+          )}
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton(
+            "panTool",
+            "pan",
+            () => native.requestEditorCommand("pan"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "zoomIn",
+            "fit",
+            () => native.requestEditorCommand("zoomIn"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "fitPage",
+            "fit",
+            () => native.requestEditorCommand("fit"),
+            false,
+            !native.project,
+          )}
+          {iconButton(
+            "zoomOut",
+            "fit",
+            () => native.requestEditorCommand("zoomOut"),
+            false,
+            !native.project,
+          )}
+        </div>
+        <div className="workbench-tool-group">
+          {iconButton(
+            "schematicView",
+            "circuit",
+            () => native.setView("schematic"),
+            native.view === "schematic",
+            !native.project,
+          )}
+          {iconButton(
+            "buildingDesign",
+            "building",
+            () => native.setView("building"),
+            native.view === "building",
+            !native.project,
+            `${t("buildingDesign")} ${t("workspace")}`,
+          )}
+          {iconButton(
+            "automationDesign",
+            "junction",
+            () => native.setView("automation"),
+            native.view === "automation",
+            !native.project,
+            `${t("automationDesign")} ${t("workspace")}`,
+          )}
+          {iconButton(
+            "panelDesign",
+            "panel",
+            () => native.setView("panel"),
+            native.view === "panel",
+            !native.project,
+          )}
+        </div>
+        <div className="workbench-tool-group workbench-tool-end">
+          {iconButton("openLibrary", "library", () => reveal("project"))}
+          {iconButton("openDiagnostics", "check", () =>
+            togglePanel("diagnostics"),
+          )}
+          {iconButton("workspaceSearch", "catalog", () =>
+            searchDialog.current?.showModal(),
+          )}
+          <button
+            type="button"
+            className="workbench-icon-button workbench-menu-trigger"
+            aria-label={t("ribbonMenu")}
+            title={t("ribbonMenu")}
+            aria-expanded={activeMenu === "ribbon"}
+            aria-controls="workbench-command-popover"
+            aria-haspopup="menu"
+            onPointerEnter={cancelMenuClose}
+            onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+            onClick={(event) => {
+              toggleMenu("ribbon", event.currentTarget);
+            }}
+          >
+            <CommandIcon kind="library" />
+          </button>
+          <button
+            type="button"
+            className="workbench-icon-button"
+            aria-label={t("layout")}
+            title={t("layout")}
+            aria-pressed={editorToolsOpen}
+            onClick={() => setEditorToolsOpen(!editorToolsOpen)}
+          >
+            <CommandIcon kind="align" />
+          </button>
+        </div>
+      </div>
+      <div
+        className="workbench-command-popover"
+        id="workbench-command-popover"
+        data-open={commandOpen}
+        style={popoverPosition}
+        onPointerEnter={cancelMenuClose}
+        onPointerLeave={(event) => scheduleMenuClose(event.pointerType)}
+        onClick={(event) => {
+          const target = event.target;
+          if (
+            !(target instanceof Element) ||
+            target.closest(".ribbon-tabs") ||
+            !target.closest("button")
+          )
+            return;
+          if (document.querySelector("dialog[open]")) return;
+          closeMenu();
+          menuAnchorRef.current?.focus();
+        }}
+        aria-hidden={!commandOpen}
+        inert={!commandOpen}
+      >
+        <nav className="ribbon-tabs" aria-label={t("interface")}>
+          {ribbonTabs.map(([id, key]) => (
             <button
-              className="ribbon-example-button"
-              onClick={() => examplesDialog.current?.showModal()}
+              key={id}
+              aria-pressed={tab === id}
+              aria-label={
+                id === "home" || id === "view" || id === "settings"
+                  ? t(key)
+                  : `${t(key)} ${t("ribbonMenu")}`
+              }
+              onClick={() =>
+                id === "help"
+                  ? help.current?.showModal()
+                  : id === "ai"
+                    ? setBotSignal((value) => value + 1)
+                    : setTab(id)
+              }
             >
-              {t("demoProjects")}
+              {t(key)}
             </button>
+          ))}
+        </nav>
+        <div
+          className="ribbon"
+          data-tab={tab}
+          aria-label={t(ribbonTabs.find(([id]) => id === tab)?.[1] ?? "home")}
+        >
+          {tab === "home" ? (
+            <>
+              <ProjectTools native={native} t={t} home />
+              <HomeRibbon
+                native={native}
+                t={t}
+                reveal={reveal}
+                themes={() => setTab("settings")}
+              />
+            </>
+          ) : tab === "file" || tab === "project" ? (
+            <>
+              <ProjectTools native={native} t={t} />
+              <button
+                className="ribbon-example-button"
+                onClick={() => examplesDialog.current?.showModal()}
+              >
+                {t("demoProjects")}
+              </button>
+              <WorkspaceCommands
+                tab={tab}
+                native={native}
+                t={t}
+                reveal={reveal}
+              />
+            </>
+          ) : tab === "view" ? (
+            <>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={prefs.compact}
+                  onChange={(event) => set("compact", event.target.checked)}
+                />
+                {t("compactWorkspace")}
+              </label>
+              <div className="panel-toggles">
+                {panelIds.map((id) => (
+                  <label key={id}>
+                    <input
+                      type="checkbox"
+                      checked={prefs.panels[id].visible}
+                      onChange={(e) => {
+                        const visible = e.target.checked;
+                        panel(id, { visible });
+                        if (visible) activateDock(prefs.panels[id].dock, id);
+                        else {
+                          setActiveLeft((current) =>
+                            current === id ? null : current,
+                          );
+                          setActiveRight((current) =>
+                            current === id ? null : current,
+                          );
+                          setActiveBottom((current) =>
+                            current === id ? null : current,
+                          );
+                        }
+                      }}
+                    />
+                    {t(id)}
+                  </label>
+                ))}
+              </div>
+              <button
+                onClick={() => {
+                  setPrefs((p) => ({ ...p, panels: defaults().panels }));
+                  setActiveLeft("project");
+                  setActiveRight(null);
+                  setActiveBottom(null);
+                }}
+              >
+                {t("reset")}
+              </button>
+            </>
+          ) : tab === "settings" ? (
+            <>
+              <button
+                aria-label={t("workspaceSearch")}
+                onClick={() => searchDialog.current?.showModal()}
+              >
+                {t("workspaceSearch")}
+              </button>
+              <label>
+                {t("theme")}
+                <select
+                  aria-label={t("theme")}
+                  value={prefs.theme}
+                  onChange={(e) =>
+                    set("theme", e.target.value as Preferences["theme"])
+                  }
+                >
+                  <option value="dark">{t("dark")}</option>
+                  <option value="light">{t("light")}</option>
+                </select>
+              </label>
+              <label>
+                {t("language")}
+                <select
+                  aria-label={t("language")}
+                  value={prefs.language}
+                  onChange={(e) => set("language", e.target.value as Language)}
+                >
+                  {Object.entries({
+                    en: "English",
+                    de: "Deutsch",
+                    yo: "Yorùbá",
+                    pcm: "Naijá Pidgin",
+                  }).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                {t("sheetBackground")}
+                <select
+                  aria-label={t("sheetBackground")}
+                  value={prefs.background}
+                  onChange={(e) =>
+                    set(
+                      "background",
+                      e.target.value as Preferences["background"],
+                    )
+                  }
+                >
+                  {(["white", "dark", "custom"] as const).map((value) => (
+                    <option key={value} value={value}>
+                      {t(value)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {prefs.background === "custom" && (
+                <label>
+                  {t("backgroundColor")}
+                  <input
+                    aria-label={t("backgroundColor")}
+                    type="color"
+                    value={prefs.color}
+                    onChange={(e) => set("color", e.target.value)}
+                  />
+                </label>
+              )}
+            </>
+          ) : (
             <WorkspaceCommands
               tab={tab}
               native={native}
               t={t}
               reveal={reveal}
             />
-          </>
-        ) : tab === "view" ? (
-          <>
-            <label>
-              <input
-                type="checkbox"
-                checked={prefs.compact}
-                onChange={(event) => set("compact", event.target.checked)}
-              />
-              {t("compactWorkspace")}
-            </label>
-            <div className="panel-toggles">
-              {panelIds.map((id) => (
-                <label key={id}>
-                  <input
-                    type="checkbox"
-                    checked={prefs.panels[id].visible}
-                    onChange={(e) => panel(id, { visible: e.target.checked })}
-                  />
-                  {t(id)}
-                </label>
-              ))}
-            </div>
-            <button
-              onClick={() =>
-                setPrefs((p) => ({ ...p, panels: defaults().panels }))
-              }
-            >
-              {t("reset")}
-            </button>
-          </>
-        ) : tab === "settings" ? (
-          <>
-            <button
-              aria-label={t("workspaceSearch")}
-              onClick={() => searchDialog.current?.showModal()}
-            >
-              {t("workspaceSearch")}
-            </button>
-            <label>
-              {t("theme")}
-              <select
-                aria-label={t("theme")}
-                value={prefs.theme}
-                onChange={(e) =>
-                  set("theme", e.target.value as Preferences["theme"])
-                }
-              >
-                <option value="dark">{t("dark")}</option>
-                <option value="light">{t("light")}</option>
-              </select>
-            </label>
-            <label>
-              {t("language")}
-              <select
-                aria-label={t("language")}
-                value={prefs.language}
-                onChange={(e) => set("language", e.target.value as Language)}
-              >
-                {Object.entries({
-                  en: "English",
-                  de: "Deutsch",
-                  yo: "Yorùbá",
-                  pcm: "Naijá Pidgin",
-                }).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              {t("sheetBackground")}
-              <select
-                aria-label={t("sheetBackground")}
-                value={prefs.background}
-                onChange={(e) =>
-                  set("background", e.target.value as Preferences["background"])
-                }
-              >
-                {(["white", "dark", "custom"] as const).map((value) => (
-                  <option key={value} value={value}>
-                    {t(value)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {prefs.background === "custom" && (
-              <label>
-                {t("backgroundColor")}
-                <input
-                  aria-label={t("backgroundColor")}
-                  type="color"
-                  value={prefs.color}
-                  onChange={(e) => set("color", e.target.value)}
-                />
-              </label>
-            )}
-          </>
-        ) : (
-          <WorkspaceCommands tab={tab} native={native} t={t} reveal={reveal} />
-        )}
+          )}
+        </div>
       </div>
+      {native.error && (
+        <p className="storage-error workbench-feedback" role="alert">
+          {t(native.error)}
+        </p>
+      )}
+      {account.checking && (
+        <p className="storage-error workbench-feedback" role="status">
+          {t("accountChecking")}
+        </p>
+      )}
       {storageError && (
         <p className="storage-error" role="status">
           {t("storageError")}
@@ -445,7 +908,56 @@ function Workspace({ account }: { account: Account }) {
       )}
       <div
         className={`engineering-layout ${has("left") ? "has-left" : ""} ${has("right") ? "has-right" : ""}`}
+        data-editor-tools-open={editorToolsOpen}
       >
+        <aside
+          className="workbench-icon-rail workbench-rail-left"
+          aria-label={t("panels")}
+        >
+          {iconButton(
+            "project",
+            "library",
+            () => togglePanel("project"),
+            activeLeft === "project",
+          )}
+          {iconButton(
+            "schematicView",
+            "circuit",
+            () => native.setView("schematic"),
+            native.view === "schematic",
+            !native.project,
+          )}
+          {iconButton(
+            "buildingDesign",
+            "building",
+            () => native.setView("building"),
+            native.view === "building",
+            !native.project,
+          )}
+          {iconButton(
+            "automationDesign",
+            "junction",
+            () => native.setView("automation"),
+            native.view === "automation",
+            !native.project,
+          )}
+          {iconButton(
+            "panelDesign",
+            "panel",
+            () => native.setView("panel"),
+            native.view === "panel",
+            !native.project,
+          )}
+          {iconButton(
+            "openLibrary",
+            "catalog",
+            () => {
+              if (activeLeft === "project") setActiveLeft(null);
+              else reveal("project");
+            },
+            activeLeft === "project",
+          )}
+        </aside>
         {has("left") && region("left")}
         <main
           id="workspace"
@@ -503,6 +1015,53 @@ function Workspace({ account }: { account: Account }) {
           </div>
         </main>
         {has("right") && region("right")}
+        <aside
+          className="workbench-icon-rail workbench-rail-right"
+          aria-label={t("panels")}
+        >
+          {iconButton(
+            "properties",
+            "align",
+            () => togglePanel("properties"),
+            activeRight === "properties",
+          )}
+          {iconButton(
+            "openDiagnostics",
+            "check",
+            () => togglePanel("diagnostics"),
+            activeRight === "diagnostics",
+          )}
+          {iconButton(
+            "openCalculations",
+            "calc",
+            () => togglePanel("calculations"),
+            activeRight === "calculations",
+          )}
+          {iconButton(
+            "panel3d",
+            "panel",
+            () => togglePanel("panel3d"),
+            activeRight === "panel3d",
+          )}
+          {iconButton(
+            "openBom",
+            "report",
+            () => togglePanel("bom"),
+            activeRight === "bom",
+          )}
+          {iconButton(
+            "reports",
+            "report",
+            () => togglePanel("reports"),
+            activeRight === "reports",
+          )}
+          {iconButton("menuAiTools", "profile", () =>
+            setBotSignal((value) => value + 1),
+          )}
+          {iconButton("settings", "theme", (event) => {
+            toggleMenu("settings", event.currentTarget, "settings");
+          })}
+        </aside>
         <BotWindow
           native={native}
           ownerId={account.user?.id ?? null}

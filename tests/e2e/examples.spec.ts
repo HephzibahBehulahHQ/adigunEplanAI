@@ -1,5 +1,6 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
+import { openProjectPanel, openWorkbenchPanel } from "./workbench.ts";
 import { readFile } from "node:fs/promises";
 const cases = [
   [
@@ -20,6 +21,7 @@ for (const [name, devices, wires, selector] of cases) {
   }, testInfo) => {
     await page.goto("/");
     async function open() {
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       await page
         .getByRole("button", { name: "File menu", exact: true })
         .click();
@@ -34,10 +36,14 @@ for (const [name, devices, wires, selector] of cases) {
         .click();
     }
     await open();
+    await openProjectPanel(page);
     await expect(page.locator(selector)).toBeVisible();
     if (name === "Transformer station documentation") {
       await page.setViewportSize({ width: 1857, height: 1000 });
+      await openWorkbenchPanel(page, "diagnostics");
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       const diagnostics = page.getByRole("region", {
         name: "Diagnostics",
         exact: true,
@@ -80,6 +86,8 @@ for (const [name, devices, wires, selector] of cases) {
     }
     if (name.startsWith("Industry energy substation")) {
       await page.setViewportSize({ width: 1880, height: 970 });
+      await openWorkbenchPanel(page, "panel3d");
+      await page.getByRole("button", { name: "menu", exact: true }).click();
       await page.getByRole("button", { name: "Home", exact: true }).click();
       const overview = page.locator(".engineering-canvas");
       await expect(overview).toContainText("P1");
@@ -101,12 +109,12 @@ for (const [name, devices, wires, selector] of cases) {
         page.getByText(/Drawing notes extend beyond the sheet/),
       ).toHaveCount(0);
       const appHeader = await page.locator(".workbench-header").boundingBox();
-      const ribbonTabs = await page.locator(".ribbon-tabs").boundingBox();
+      const toolbar = await page.locator(".workbench-toolbar").boundingBox();
       expect(appHeader).not.toBeNull();
-      expect(ribbonTabs).not.toBeNull();
+      expect(toolbar).not.toBeNull();
       expect(appHeader!.height).toBeLessThanOrEqual(38);
-      expect(ribbonTabs!.height).toBeLessThanOrEqual(33);
-      expect(ribbonTabs!.y).toBe(appHeader!.y + appHeader!.height);
+      expect(toolbar!.height).toBe(36);
+      expect(toolbar!.y).toBe(appHeader!.y + appHeader!.height);
       await expect(
         page.getByRole("button", {
           name: /PLC1 · WAGO PFC200 controller/,
@@ -197,9 +205,11 @@ for (const [name, devices, wires, selector] of cases) {
       await expect(
         page.locator('.panel-3d-view [data-panel-detail="cable-duct-slot"]'),
       ).toHaveCount(111);
+      await openWorkbenchPanel(page, "reports");
       await expect(
         page.getByRole("button", { name: "Drawing index (CSV)", exact: true }),
       ).toBeVisible();
+      await openWorkbenchPanel(page, "calculations");
       await expect(
         page.getByRole("region", { name: "Calculations", exact: true }),
       ).toContainText("20 kV transformer primary current estimate");
@@ -220,6 +230,7 @@ for (const [name, devices, wires, selector] of cases) {
       await expect(
         page.getByRole("button", { name: "Load", exact: true }),
       ).toHaveAttribute("aria-pressed", "true");
+      await openWorkbenchPanel(page, "bom");
       await expect(
         page.getByRole("region", { name: "Bill of materials" }),
       ).toContainText("750-8217");
@@ -278,6 +289,7 @@ test("project navigator tabs expose the real library, examples and search", asyn
   page,
 }) => {
   await page.goto("/");
+  await openProjectPanel(page);
   const tabs = page.getByRole("tablist", { name: "Project navigator" });
   await expect(tabs.getByRole("tab", { name: "Examples (6)" })).toBeVisible();
   await tabs.getByRole("tab", { name: "Examples (6)" }).click();

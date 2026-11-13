@@ -1,3 +1,4 @@
+import { openComponentLibrary, openEditorTools } from "./workbench.ts";
 import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
@@ -54,13 +55,15 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
       .getByLabel("Project name", { exact: true })
       .fill(`Interface ${id}`);
     await dialog.getByRole("button", { name: "Create", exact: true }).click();
-    await page.locator(".component-library > summary").click();
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
       .click();
     await page.getByLabel("Search symbols", { exact: true }).fill(query);
     await page.getByRole("button", { name: /^Import symbol:/ }).click();
+    await openEditorTools(page);
     await page
       .getByRole("combobox", { name: "Custom symbols", exact: true })
       .selectOption(`library-${id}`);
@@ -90,11 +93,15 @@ for (const [id, query, endpoint, nodes, pinCount] of cases)
     expect(data.pins).toHaveLength(pinCount);
     expect(data.nets).toHaveLength(nodes);
     if (endpoint) {
+      await openEditorTools(page);
       await page
         .getByRole("combobox", { name: "Symbols", exact: true })
         .selectOption("terminal");
       await click(240, 100);
-      await page.getByRole("button", { name: "Wire", exact: true }).click();
+      await page
+        .getByRole("main", { name: "Workspace", exact: true })
+        .getByRole("button", { name: "Wire", exact: true })
+        .click();
       const fromPinId = await clickWirePin(page, `U1:${endpoint}`);
       const toPinId = await clickWirePin(page, "X1:1");
       data = await project();

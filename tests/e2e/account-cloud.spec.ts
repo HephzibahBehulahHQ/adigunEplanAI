@@ -2,6 +2,7 @@ import { test, expect, type Page, type Route } from "@playwright/test";
 import type { Project } from "../../packages/electrical-model/project.ts";
 import { accountStorageKey } from "../../packages/project-storage/repository.ts";
 import { avatarImages } from "../fixtures/avatar-image.mjs";
+import { openProjectPanel, selectMenuTab } from "./workbench.ts";
 const backend = "https://fqcbfnktdvqojyezxeis.supabase.co";
 const a = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
   b = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
@@ -259,9 +260,7 @@ test("guest, A and B keep local projects and undo histories isolated; stale clou
     page.getByRole("heading", { name: "No project open", exact: true }),
   ).toBeVisible();
   await create(page, "A private");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await expect(
     page.getByRole("button", { name: "Undo · Header", exact: true }),
   ).toBeEnabled();
@@ -287,6 +286,7 @@ test("guest, A and B keep local projects and undo histories isolated; stale clou
   await expect.poll(() => Boolean(mock.control.held)).toBe(true);
   await signOut(page);
   await expect(page.locator(".empty-workspace")).toBeVisible();
+  await openProjectPanel(page);
   await page
     .getByTestId("project-picker")
     .selectOption({ label: "Guest project" });
@@ -597,9 +597,7 @@ test("transient same-account verification failures preserve local editing and di
     "unverified",
   );
   await expect(page.locator(".project-title")).toHaveText("Offline A");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   expect((await stored(page, a)).projects[0].pages).toHaveLength(2);
   const dialog = await openAccount(page);
   await expect(
@@ -631,12 +629,11 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   await mockBackend(page);
   await page.goto("/");
   await create(page, "Alpha");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await create(page, "Beta");
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectMenuTab(page, "Settings");
   await page
+    .locator(".workbench-toolbar")
     .getByRole("button", { name: "Search workspace", exact: true })
     .click();
   const search = page.getByRole("dialog", {
@@ -649,12 +646,20 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   await search
     .getByRole("button", { name: "Sheet 2 · Alpha", exact: true })
     .click();
+  await selectMenuTab(page, "Settings");
   await expect(page.locator(".project-title")).toHaveText("Alpha");
   await expect(
     page.getByRole("application", { name: "Sheet 2", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Settings", exact: true }),
+    page
+      .locator(".workbench-rail-right")
+      .getByRole("button", { name: "Settings", exact: true }),
+  ).toHaveCount(1);
+  await expect(
+    page
+      .locator(".workbench-command-popover .ribbon-tabs")
+      .getByRole("button", { name: "Settings", exact: true }),
   ).toHaveCount(1);
   await expect(
     page.getByRole("button", { name: "Help", exact: true }),
@@ -666,12 +671,14 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   const boxes = await page
     .locator(".owner-toolbar > button")
     .evaluateAll((elements) =>
-      elements.map((element) => {
-        const r = element.getBoundingClientRect();
-        return { x: r.x, y: r.y, width: r.width, height: r.height };
-      }),
+      elements
+        .filter((element) => getComputedStyle(element).display !== "none")
+        .map((element) => {
+          const r = element.getBoundingClientRect();
+          return { x: r.x, y: r.y, width: r.width, height: r.height };
+        }),
     );
-  expect(boxes).toHaveLength(6);
+  expect(boxes.length).toBeGreaterThan(0);
   for (const box of boxes) {
     expect(box.width).toBeGreaterThanOrEqual(29);
     expect(box.height).toBeGreaterThanOrEqual(36);

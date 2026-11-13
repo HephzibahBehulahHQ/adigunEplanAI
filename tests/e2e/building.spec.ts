@@ -1,6 +1,7 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { dxfFixture } from "../fixtures/dxf-plan.mjs";
 import { test, expect } from "@playwright/test";
+import { openEditorTools } from "./workbench.ts";
 
 test("buildings, floors and dimensioned room outlines persist with undo and isolated floor views", async ({
   page,
@@ -12,6 +13,7 @@ test("buildings, floors and dimensioned room outlines persist with undo and isol
     .getByLabel("Project name", { exact: true })
     .fill("Building reference");
   await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await openEditorTools(page);
   await page
     .getByRole("button", { name: "Building design", exact: true })
     .click();
@@ -1006,6 +1008,7 @@ test("floor equipment shares schematic identity, protects layers and persists a 
     .getByLabel("Project name", { exact: true })
     .fill("Equipment reference");
   await dialog.getByRole("button", { name: "Create", exact: true }).click();
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption("lamp");

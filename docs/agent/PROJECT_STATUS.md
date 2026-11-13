@@ -1,5 +1,14 @@
 # Project status
 
+## 2026-11-12 — owner-approved UI-001 transformation (Project A only)
+
+**Owner decision:** Project A (`adigunEplanAI`) must adopt the **exact visual workstation design and interaction architecture** seen in Project B (`AdigunAiAutoCad`), which is read-only and must not be modified. Interface comes before further feature work. Preserve Project A's entire 27-part master engineering scope, existing native editors/data and project compatibility. After actual merged/deployed interface verification, **stop for owner visual approval**. See `docs/PROJECT_B_INTERFACE_TRANSFORMATION.md` and updated `AdidunEplanAI Master PlanGoals`.
+
+**Implementation checkpoint:** branch `codex/project-b-interface-first` and draft PR #39. Initial implementation changes `App.tsx`, `WorkspaceHeader.tsx` and new `workbench-shell.css`, adding compact title/document tabs, icon toolbar/rails, white drawing viewport and overlay menu composition without intentionally replacing electrical engines. This code is **not yet accepted as an exact Project B match**. Earlier CI runs failed formatting; one-off Prettier job succeeded, but a final checked head, layout screenshots, native browser regression, merge and deployment are still required. Do not mark UI-001 complete prematurely.
+
+**Next Codex instructions:** fix the pending CI/visual issues; collect desktop/browser evidence; verify no regression in native edit/save/reopen and zero menu layout movement; merge/deploy only after required checks; verify production, then stop for owner sign-off. No changes to Project B.
+
+
 ## 2026-11-10 header/ribbon increment
 
 Previous release: source PR #23 merged as `2260ffdc3bdbebf13286d074d1d628ee41bb16db`;

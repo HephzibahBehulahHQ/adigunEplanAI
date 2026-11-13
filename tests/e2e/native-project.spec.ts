@@ -1,4 +1,5 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
+import { openWorkbenchPanel, selectMenuTab } from "./workbench.ts";
 import { test, expect } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 const key = "adiguneplanai.projects.v1";
@@ -18,9 +19,7 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
   await expect(
     page.getByRole("application", { name: "Sheet 1", exact: true }),
   ).toBeVisible();
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await expect(
     page
       .locator(".drawing-tabs")
@@ -30,6 +29,7 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
     name: "Properties",
     exact: true,
   });
+  await openWorkbenchPanel(page, "properties");
   await properties
     .getByLabel("Project name", { exact: true })
     .fill("Renamed project");
@@ -45,7 +45,7 @@ test("create, edit, undo/redo, document language, pages and reload use the nativ
   await properties
     .getByLabel("Document Document language", { exact: true })
     .selectOption("de");
-  await page.getByRole("button", { name: "Settings", exact: true }).click();
+  await selectMenuTab(page, "Settings");
   await page.getByLabel("Language", { exact: true }).selectOption("yo");
   await reloadAndReopenProject(page);
   const data = await page.evaluate(
@@ -101,6 +101,8 @@ test("corrupt local storage stays intact until explicit reset and can be downloa
   expect(await page.evaluate((k) => localStorage.getItem(k), key)).toBe(
     "{broken",
   );
+  await page.getByRole("button", { name: "menu", exact: true }).click();
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   const downloadPromise = page.waitForEvent("download");
   await page
     .getByRole("button", { name: "Download recovery data", exact: true })
@@ -108,6 +110,8 @@ test("corrupt local storage stays intact until explicit reset and can be downloa
   const download = await downloadPromise;
   expect(await readFile((await download.path())!, "utf8")).toBe("{broken");
   page.once("dialog", (d) => d.dismiss());
+  await page.getByRole("button", { name: "menu", exact: true }).click();
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Reset project storage", exact: true })
     .click();
@@ -115,6 +119,8 @@ test("corrupt local storage stays intact until explicit reset and can be downloa
     "{broken",
   );
   page.once("dialog", (d) => d.accept());
+  await page.getByRole("button", { name: "menu", exact: true }).click();
+  await page.getByRole("button", { name: "File menu", exact: true }).click();
   await page
     .getByRole("button", { name: "Reset project storage", exact: true })
     .click();

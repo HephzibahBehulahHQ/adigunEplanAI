@@ -66,6 +66,52 @@ export function WorkspaceHeader({
           {t(native.saved ? "savedLocally" : "notSaved")}
         </span>
       </div>
+      <nav className="workbench-document-tabs" aria-label={t("workspaceView")}>
+        <button
+          type="button"
+          aria-current={native.view === "schematic" ? "page" : undefined}
+          onClick={() => native.setView("schematic")}
+          disabled={!native.project}
+        >
+          <CommandIcon kind="circuit" />
+          {t("schematicView")}
+        </button>
+        {native.view !== "schematic" && (
+          <button type="button" aria-current="page" disabled={!native.project}>
+            <CommandIcon
+              kind={
+                native.view === "building"
+                  ? "building"
+                  : native.view === "panel"
+                    ? "panel"
+                    : "junction"
+              }
+            />
+            {t(
+              native.view === "building"
+                ? "buildingDesign"
+                : native.view === "panel"
+                  ? "panelDesign"
+                  : "automationDesign",
+            )}
+          </button>
+        )}
+        <button
+          type="button"
+          className="workbench-add-sheet"
+          title={t("newPage")}
+          aria-label={t("newPage")}
+          disabled={!native.project}
+          onClick={() => {
+            native.setView("schematic");
+            native.addPage(
+              `${t("sheet")} ${(native.project?.pages.length ?? 0) + 1}`,
+            );
+          }}
+        >
+          +
+        </button>
+      </nav>
       <div
         className="owner-toolbar header-actions"
         aria-label={t("accountToolbar")}

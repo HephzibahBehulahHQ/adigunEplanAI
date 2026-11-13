@@ -1,3 +1,4 @@
+import { openComponentLibrary, openEditorTools } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 const key = "adiguneplanai.projects.v1";
@@ -35,7 +36,8 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -50,6 +52,7 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
       exact: true,
     })
     .click();
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Custom symbols", exact: true })
     .selectOption("library-cable-gland-mechanical");
@@ -60,7 +63,10 @@ test("mechanical gland remains pinless through native placement, BOM assignment 
   expect(data.terminals).toHaveLength(0);
   expect(data.nets).toHaveLength(0);
   await expect(page.getByRole("button", { name: /^ME1:/ })).toHaveCount(0);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await clickWorld(page, 100, 100);
   expect((await project(page)).wires).toHaveLength(0);
   await page.locator(".custom-components > summary").click();
@@ -110,7 +116,8 @@ test("custom mechanical drawings create without pins and reject reclassification
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Custom symbols$/ })
@@ -134,6 +141,7 @@ test("custom mechanical drawings create without pins and reject reclassification
   );
   expect(definition.connectionClass).toBe("mechanical");
   expect(definition.pins).toHaveLength(0);
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Custom symbols", exact: true })
     .selectOption(definition.id);

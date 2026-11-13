@@ -1,3 +1,4 @@
+import { openComponentLibrary, openEditorTools } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
@@ -18,6 +19,7 @@ async function create(page: Page, name: string) {
   await dialog.getByRole("button", { name: "Create", exact: true }).click();
 }
 async function terminal(page: Page, x: number) {
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption("terminal");
@@ -32,7 +34,8 @@ async function terminal(page: Page, x: number) {
   await page.mouse.click(point.x, point.y);
 }
 async function openLibrary(page: Page) {
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page.locator(".custom-components > summary").click();
 }
 async function addComponent(page: Page) {
@@ -80,7 +83,10 @@ test("custom component revisions preserve native wiring and require explicit par
   await create(page, "Custom component revisions");
   await terminal(page, 100);
   await terminal(page, 160);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   await page.getByRole("button", { name: "X2:1", exact: true }).click();
   const before = await project(page);

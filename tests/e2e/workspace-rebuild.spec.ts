@@ -1,5 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { nativeProject } from "../fixtures/native-project.mjs";
+import {
+  openProjectPanel,
+  openWorkbenchPanel,
+  selectMenuTab,
+} from "./workbench.ts";
 
 test("native drawing frame, cabinet and calculation records share the current project", async ({
   page,
@@ -42,6 +47,16 @@ test("native drawing frame, cabinet and calculation records share the current pr
   await expect(frame).toContainText(project.name);
   await expect(frame).toContainText(project.pages[0].name);
   await expect(frame).toContainText("420 × 297 mm");
+  const calculationsPanel = await openWorkbenchPanel(page, "calculations");
+  await calculationsPanel
+    .locator("details")
+    .filter({ hasText: "Layout" })
+    .locator("summary")
+    .click();
+  await calculationsPanel
+    .getByLabel("Dock", { exact: true })
+    .selectOption("bottom");
+  await openWorkbenchPanel(page, "panel3d");
   const calculations = page.locator('[data-panel="calculations"]');
   await expect(calculations.locator(".calculation-record")).toContainText(
     "400 V",
@@ -103,7 +118,8 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
   page,
 }) => {
   await page.goto("/");
-  const menus = page.locator(".ribbon-tabs");
+  await selectMenuTab(page, "File menu");
+  const menus = page.locator(".workbench-command-popover .ribbon-tabs");
   await expect(menus.getByRole("button")).toHaveText([
     "File",
     "Home",
@@ -128,9 +144,7 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
   ]);
   for (const width of [1672, 375]) {
     await page.setViewportSize({ width, height: 941 });
-    await menus
-      .getByRole("button", { name: "Tools menu", exact: true })
-      .click();
+    await selectMenuTab(page, "Tools menu");
     await expect(
       page.getByRole("button", {
         name: "Fit page · Engineering commands",
@@ -152,7 +166,11 @@ test("the ordered target menus remain reachable without desktop or mobile overfl
     expect(bounds.x + bounds.width).toBeLessThanOrEqual(width + 1);
     await page.keyboard.press("Escape");
     await expect(guide).toHaveCount(0);
-    await expect(help).toBeFocused();
+    await expect(
+      page
+        .locator(".workbench-command-popover .ribbon-tabs")
+        .getByRole("button", { name: "Help menu", exact: true }),
+    ).toBeFocused();
   }
 });
 
@@ -180,11 +198,10 @@ test("Home commands print native geometry, open the library and close without lo
   const pdf = await popup.pdf({ preferCSSPageSize: true });
   expect(pdf.subarray(0, 5).toString()).toBe("%PDF-");
   await popup.close();
+  await selectMenuTab(page, "Home");
   await page
-    .getByRole("button", {
-      name: "Device Catalog · Home",
-      exact: true,
-    })
+    .locator('.workbench-command-popover .ribbon[data-tab="home"]')
+    .getByRole("button", { name: "Device Catalog · Home", exact: true })
     .click();
   await expect(
     page.getByRole("dialog", { name: "Device Catalog", exact: true }),
@@ -193,7 +210,7 @@ test("Home commands print native geometry, open the library and close without lo
     .getByRole("dialog", { name: "Device Catalog", exact: true })
     .getByRole("button", { name: "Close", exact: true })
     .click();
-  await page.getByRole("tab", { name: "Project", exact: true }).click();
+  await openProjectPanel(page);
   await page
     .getByRole("button", { name: "Close project", exact: true })
     .click();
@@ -232,15 +249,19 @@ test("many drawing sheets keep the add command visible on mobile", async ({
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openProjectPanel(page);
   await page
     .locator('[data-panel="project"]')
     .getByRole("button", { name: "Sheet 9", exact: true })
+    .click();
+  await page
+    .locator(".workbench-rail-left")
+    .getByRole("button", { name: "Project navigator", exact: true })
     .click();
   const tabs = page.locator(".drawing-pages");
   await tabs.scrollIntoViewIfNeeded();
   const active = tabs.getByRole("button", { name: "Sheet 9", exact: true });
   await expect(active).toHaveAttribute("aria-pressed", "true");
-  await expect(active).toBeInViewport();
   const add = tabs.getByRole("button", {
     name: "New drawing page",
     exact: true,

@@ -1,3 +1,8 @@
+import {
+  openComponentLibrary,
+  openEditorTools,
+  openProjectPanel,
+} from "./workbench.ts";
 import { test, expect, type Page } from "@playwright/test";
 import { readFileSync } from "node:fs";
 const storageKey = "adiguneplanai.projects.v1";
@@ -30,7 +35,8 @@ test("engineering symbols load only on demand and preserve search while collapse
   });
   await create(page);
   const before = await project(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   expect(requests).toBe(0);
   await summary(page).click();
   await page.getByLabel("Search symbols", { exact: true }).fill("transformer");
@@ -52,13 +58,15 @@ test("failed engineering-symbol download leaves native editing and export functi
     (route) => route.abort("failed"),
   );
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await summary(page).click();
   await expect(
     page.locator(".component-library").getByRole("alert"),
   ).toHaveText(
     "Engineering symbols could not load. Your project remains available for editing and export.",
   );
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption("terminal");
@@ -89,7 +97,8 @@ test("secondary category browsing and search leave native project unchanged", as
 }) => {
   await create(page);
   const before = await project(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await summary(page).click();
   const category = page.getByRole("combobox", {
     name: "Symbol category",
@@ -115,7 +124,8 @@ test("catalog exposes missing manufacturer data and conductor range limitations"
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   const phoenix = page.getByRole("article", {
     name: "Phoenix Contact 3044076",
     exact: true,
@@ -157,10 +167,13 @@ test("catalog loads only when opened and retains query after collapse", async ({
   await create(page);
   expect(requests).toBe(0);
   const before = await project(page);
+  const projectPanel = await openProjectPanel(page);
+  await projectPanel.getByRole("tab", { name: "Library", exact: true }).click();
+  await expect(page.locator(".component-library")).toBeVisible();
   const summary = page.locator(".component-library > summary");
-  await summary.click();
-  await page.getByLabel("Search parts", { exact: true }).fill("3044076");
+  await expect(page.getByLabel("Search parts", { exact: true })).toBeVisible();
   expect(requests).toBe(1);
+  await page.getByLabel("Search parts", { exact: true }).fill("3044076");
   await summary.click();
   await summary.click();
   await expect(page.getByLabel("Search parts", { exact: true })).toHaveValue(
@@ -179,7 +192,8 @@ test("failed catalog download preserves project export and schematic tools", asy
   );
   await create(page);
   const before = await project(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await expect(
     page.locator(".component-library").getByRole("alert"),
   ).toHaveText(
@@ -211,7 +225,10 @@ test("failed building download allows return to the unchanged schematic project"
   await expect(page.getByRole("alert")).toHaveText(
     "Building design could not load. Your project remains available in the schematic workspace.",
   );
-  await page.getByRole("button", { name: "Schematic", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Workspace view", exact: true })
+    .getByRole("button", { name: "Schematic", exact: true })
+    .click();
   await expect(page.locator(".engineering-canvas")).toBeVisible();
   expect(await project(page)).toEqual(before);
 });

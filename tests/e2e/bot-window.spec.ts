@@ -1,5 +1,6 @@
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect } from "@playwright/test";
+import { openProjectPanel } from "./workbench.ts";
 const key = "adiguneplanai.bot.window.v1.guest";
 test.beforeEach(async ({ page }) => {
   // Exercise the optional floating mode independently of the default desktop dock.
@@ -12,12 +13,8 @@ async function loadExample(
   page: import("@playwright/test").Page,
   name = "Transformer station documentation",
 ) {
-  await page.getByRole("button", { name: "Home", exact: true }).click();
-  await page.getByRole("button", { name: "File menu", exact: true }).click();
-  await page
-    .getByRole("button", { name: "Example projects", exact: true })
-    .first()
-    .click();
+  const projectPanel = await openProjectPanel(page);
+  await projectPanel.getByRole("tab", { name: "Examples (6)" }).click();
   await page
     .getByRole("article")
     .filter({ hasText: name })
@@ -98,7 +95,7 @@ test("BOT moves, resizes, minimizes, maximizes, closes and restores without bloc
   await reloadAndReopenProject(page);
   await expect(bot).toHaveCount(0);
   const aiTools = page.getByRole("button", {
-    name: "AI tools menu",
+    name: "AI tools",
     exact: true,
   });
   await aiTools.click();
@@ -151,10 +148,17 @@ test("BOT answers from current native context, marks old snapshots and clears ob
     "Available commands",
   );
   await page
+    .locator(".workbench-rail-right")
+    .getByRole("button", { name: "Properties", exact: true })
+    .click();
+  await page
     .locator('[data-panel="properties"]')
     .getByLabel("Project name", { exact: true })
     .fill("Updated substation");
-  await page.getByRole("button", { name: "Rename", exact: true }).click();
+  await page
+    .locator('[data-panel="properties"]')
+    .getByLabel("Project name", { exact: true })
+    .press("Enter");
   await expect(bot).toContainText("Earlier project revision");
   await expect(
     bot.getByLabel("Current project context", { exact: true }),

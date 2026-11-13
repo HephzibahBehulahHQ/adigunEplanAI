@@ -1,3 +1,9 @@
+import {
+  openComponentLibrary,
+  openEditorTools,
+  openWorkbenchPanel,
+  selectMenuTab,
+} from "./workbench.ts";
 import { clickWirePin } from "../fixtures/click-wire-pin";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { test, expect, type Page } from "@playwright/test";
@@ -15,12 +21,16 @@ async function create(page: Page) {
   await expect(
     page.getByRole("application", { name: "Sheet 1", exact: true }),
   ).toBeVisible();
+  await openEditorTools(page);
 }
 test("secondary home ribbon actions remain named when shown as icons", async ({
   page,
 }) => {
   await create(page);
-  const ribbon = page.locator('.ribbon[data-tab="home"]');
+  await selectMenuTab(page, "Home");
+  const ribbon = page.locator(
+    '.workbench-command-popover .ribbon[data-tab="home"]',
+  );
   const undo = ribbon.locator('[data-command="undo"]');
   await expect(undo).toHaveAttribute("data-icon-only", "true");
   await expect(undo).toHaveAttribute("title", "Undo");
@@ -47,6 +57,7 @@ async function clickWorld(page: Page, x: number, y: number) {
   await page.mouse.click(screen.x, screen.y);
 }
 async function place(page: Page, kind: string, x: number, y: number) {
+  await openEditorTools(page);
   await page
     .getByRole("combobox", { name: "Symbols", exact: true })
     .selectOption(kind);
@@ -70,6 +81,7 @@ test("custom native sheet dimensions display their actual size category", async 
     localStorage.setItem(storageKey, JSON.stringify(library));
   }, key);
   await reloadAndReopenProject(page);
+  await openEditorTools(page);
   await page.locator(".editor-options summary").click();
   await expect(
     page.getByRole("combobox", { name: "Sheet size", exact: true }),
@@ -86,10 +98,16 @@ test("manual route edits persist and reset through native undo history", async (
   await create(page);
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 100, 50);
   const route = page.getByRole("form", {
     name: "Apply manual route",
@@ -125,10 +143,16 @@ test("wire properties and shielded cable cores persist as native engineering met
   await create(page);
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 100, 50);
   await page.locator(".wire-properties summary").click();
   const wire = page.getByRole("form", { name: "Wire properties", exact: true });
@@ -242,7 +266,10 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 120, 80);
   await expect(page.locator("[data-instance]")).toHaveCount(2);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await expect(page.locator("[data-wire]")).toHaveCount(1);
@@ -255,7 +282,10 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await expect(connectivity.getByRole("table")).toContainText("W1");
   await expect(connectivity.getByRole("table")).toContainText("R1:2");
   await expect(connectivity.getByRole("table")).toContainText("H1:1");
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 50, 50);
   await page.getByRole("application", { name: "Sheet 1", exact: true }).focus();
   await page.keyboard.press("ArrowRight");
@@ -291,8 +321,12 @@ test("numbering preview can be cancelled, applied and undone", async ({
 }) => {
   await create(page);
   await place(page, "resistor", 50, 50);
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 50, 50);
+  await openWorkbenchPanel(page, "properties");
   const props = page.getByRole("form", { name: "Properties", exact: true });
   await props.getByLabel("Reference", { exact: true }).fill("R9");
   await props.getByRole("button", { name: "Apply", exact: true }).click();
@@ -328,7 +362,11 @@ test("property editing, labels, layer locks, sheet sizes and zoom change real st
 }) => {
   await create(page);
   await place(page, "resistor", 50, 50);
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
+  await openWorkbenchPanel(page, "properties");
   const props = page.getByRole("form", { name: "Properties", exact: true });
   await props.getByLabel("Reference", { exact: true }).fill("R10");
   await props.getByRole("button", { name: "Apply", exact: true }).click();
@@ -340,6 +378,7 @@ test("property editing, labels, layer locks, sheet sizes and zoom change real st
   await page.getByLabel("Label text", { exact: true }).fill("CONTROL_24V");
   await page.getByRole("button", { name: "Add label", exact: true }).click();
   expect((await project(page)).annotations[0].text).toBe("CONTROL_24V");
+  await openEditorTools(page);
   await page.locator(".editor-options summary").click();
   await page.getByRole("checkbox", { name: "Locked", exact: true }).check();
   await place(page, "lamp", 140, 100);
@@ -356,7 +395,10 @@ test("property editing, labels, layer locks, sheet sizes and zoom change real st
   const before = await canvas.getAttribute("viewBox");
   await page.getByRole("button", { name: "+", exact: true }).click();
   expect(await canvas.getAttribute("viewBox")).not.toBe(before);
-  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await page
+    .getByRole("toolbar", { name: "Engineering commands", exact: true })
+    .getByRole("button", { name: "Fit page", exact: true })
+    .click();
   await expect(canvas).toHaveAttribute("viewBox", "0 0 210 297");
 });
 test("native clipboard survives deletion and undo restores the original graph", async ({
@@ -478,6 +520,7 @@ test("drawing selection and exact coordinate edits preserve native geometry and 
     ).toHaveCount(crossing ? 1 : 0);
   }
   expect(await project(page)).toEqual(before);
+  await openWorkbenchPanel(page, "properties");
   const props = page.getByRole("form", { name: "Properties", exact: true });
   await props.getByLabel("X (mm)", { exact: true }).fill("112.375");
   await props.getByLabel("Y (mm)", { exact: true }).fill("103.125");
@@ -600,6 +643,7 @@ test("Wire mode snaps nearby clicks to native pin coordinates", async ({
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(fixture)),
   });
+  await selectMenuTab(page, "Home");
   await page.getByRole("button", { name: "Wire · Home", exact: true }).click();
   const canvas = page.locator(".engineering-canvas");
   await canvas.scrollIntoViewIfNeeded();
@@ -628,7 +672,10 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
   await create(page);
   await place(page, "resistor", 80, 80);
   await place(page, "lamp", 140, 130);
-  await page.getByRole("button", { name: "Select", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Select", exact: true })
+    .click();
   await clickWorld(page, 80, 80);
   await page.keyboard.down("Shift");
   await clickWorld(page, 140, 130);
@@ -636,9 +683,7 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
   await page.getByRole("button", { name: "Group", exact: true }).click();
   expect((await project(page)).groups).toHaveLength(1);
   await page.getByRole("button", { name: "Copy", exact: true }).click();
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await page
     .locator(".drawing-tabs")
     .getByRole("button", { name: "Sheet 2", exact: true })
@@ -652,7 +697,10 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
       (s: { pageId: string }) => s.pageId === data.pages[1].id,
     ),
   ).toHaveLength(2);
-  await page.getByRole("button", { name: "Pan", exact: true }).click();
+  await page
+    .locator(".schematic-editor .editor-toolbar")
+    .getByRole("button", { name: "Pan", exact: true })
+    .click();
   const canvas = page.locator(".engineering-canvas");
   await canvas.scrollIntoViewIfNeeded();
   const before = await canvas.getAttribute("viewBox");
@@ -665,7 +713,10 @@ test("group selection, keyboard transforms, cross-page paste and panning persist
   );
   await page.mouse.up();
   expect(await canvas.getAttribute("viewBox")).not.toBe(before);
-  await page.getByRole("button", { name: "Fit page", exact: true }).click();
+  await page
+    .getByRole("toolbar", { name: "Engineering commands", exact: true })
+    .getByRole("button", { name: "Fit page", exact: true })
+    .click();
   await expect(canvas).toHaveAttribute("viewBox", "0 0 420 297");
 });
 
@@ -675,7 +726,10 @@ test("junction insertion updates the real wire graph and BOM while navigator con
   await create(page);
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await place(page, "junction", 100, 50);
@@ -689,9 +743,7 @@ test("junction insertion updates the real wire graph and BOM while navigator con
   });
   await expect(bom.locator("tbody tr")).toHaveCount(3);
   await expect(bom).toContainText("J1");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await page
     .getByRole("region", { name: "Project navigator", exact: true })
     .getByRole("button", { name: "Sheet 2", exact: true })
@@ -706,7 +758,7 @@ test("desktop engineering workspace stays within the viewport", async ({
 }) => {
   await page.setViewportSize({ width: 1672, height: 941 });
   await create(page);
-  await page.getByRole("button", { name: "Insert menu", exact: true }).click();
+  await selectMenuTab(page, "Insert menu");
   await page
     .getByRole("button", {
       name: "Resistor · Engineering commands",
@@ -714,6 +766,7 @@ test("desktop engineering workspace stays within the viewport", async ({
     })
     .click();
   await clickWorld(page, 80, 80);
+  await openWorkbenchPanel(page, "properties");
   await expect(
     page.getByRole("form", { name: "Properties", exact: true }),
   ).toBeVisible();
@@ -729,8 +782,9 @@ test("component catalog searches and maps a sourced part to a real terminal", as
 }) => {
   await create(page);
   await place(page, "terminal", 100, 100);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await library
     .getByRole("combobox", { name: "Manufacturer", exact: true })
     .selectOption("WAGO");
@@ -798,7 +852,8 @@ test("engineering symbol search imports distinct transformer pins for native pla
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -849,7 +904,8 @@ test("NO contact catalog mapping preserves native pins and offers only compatibl
   await create(page);
   await place(page, "contact", 80, 80);
   await place(page, "terminal", 140, 80);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
   await library.getByLabel("Search parts", { exact: true }).fill("ZBE101");
   await library
@@ -879,7 +935,8 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -892,7 +949,10 @@ test("busbar tap wiring shares one physical node and survives reload", async ({
   await clickWorld(page, 100, 100);
   await place(page, "terminal", 40, 60);
   await place(page, "terminal", 160, 60);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "U1:bus/tap1", exact: true }).click();
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   await page.getByRole("button", { name: "U1:bus/tap3", exact: true }).click();
@@ -909,7 +969,8 @@ test("connector poles retain separate electrical nodes while each pole passes th
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Engineering symbols$/ })
@@ -931,7 +992,10 @@ test("connector poles retain separate electrical nodes while each pole passes th
   );
   expect(groups).toEqual([2, 2]);
   await place(page, "terminal", 40, 60);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "U1:pole1/in1", exact: true }).click();
   await page.getByRole("button", { name: "X1:1", exact: true }).click();
   data = await project(page);
@@ -949,7 +1013,8 @@ for (const [id, query, terminals, pins] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -1007,7 +1072,8 @@ for (const [id, query, endpoint, count] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -1022,7 +1088,10 @@ for (const [id, query, endpoint, count] of [
     expect(data.terminals).toHaveLength(count);
     expect(data.nets).toHaveLength(count);
     await place(page, "terminal", 160, 80);
-    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
     await page
       .getByRole("button", { name: `U1:${endpoint}`, exact: true })
       .click();
@@ -1044,7 +1113,8 @@ for (const [id, query, endpoint, count] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -1063,7 +1133,10 @@ for (const [id, query, endpoint, count] of [
     expect(data.terminals).toHaveLength(count);
     expect(data.nets).toHaveLength(count);
     await place(page, "terminal", 160, 80);
-    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
     await page
       .getByRole("button", { name: `U1:${endpoint}`, exact: true })
       .click();
@@ -1095,7 +1168,8 @@ for (const [id, query, channel] of [
     page,
   }) => {
     await create(page);
-    await page.locator(".component-library > summary").click();
+    await openComponentLibrary(page);
+    await openComponentLibrary(page);
     await page
       .locator(".component-library summary")
       .filter({ hasText: /^Engineering symbols$/ })
@@ -1112,7 +1186,10 @@ for (const [id, query, channel] of [
     await clickWorld(page, 80, 80);
     expect((await project(page)).terminals).toHaveLength(6);
     await place(page, "resistor", 150, 80);
-    await page.getByRole("button", { name: "Wire", exact: true }).click();
+    await page
+      .getByRole("main", { name: "Workspace", exact: true })
+      .getByRole("button", { name: "Wire", exact: true })
+      .click();
     const fromPinId = await clickWirePin(page, `U1:${channel}`);
     const toPinId = await clickWirePin(page, "R1:1");
     const data = await project(page);
@@ -1126,7 +1203,8 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Custom symbols$/ })
@@ -1150,7 +1228,10 @@ test("custom symbols create native pins that wire and survive undo and reload", 
   await expect(page.locator("[data-custom-artwork] line")).toHaveCount(1);
   await expect(page.locator("[data-custom-artwork] circle")).toHaveCount(1);
   await place(page, "lamp", 150, 80);
-  await page.getByRole("button", { name: "Wire", exact: true }).click();
+  await page
+    .getByRole("main", { name: "Workspace", exact: true })
+    .getByRole("button", { name: "Wire", exact: true })
+    .click();
   await page.getByRole("button", { name: "U1:OUT", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   expect((await project(page)).wires).toHaveLength(1);
@@ -1166,7 +1247,8 @@ test("custom symbols create native pins that wire and survive undo and reload", 
     page.getByRole("button", { name: "U1:IN", exact: true }),
   ).toBeVisible();
   expect((await project(page)).wires).toHaveLength(1);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .locator(".component-library summary")
     .filter({ hasText: /^Custom symbols$/ })
@@ -1206,9 +1288,7 @@ test("cross-page net labels persist memberships and navigate to the real drawing
     await page.getByRole("button", { name: "Add label", exact: true }).click();
   }
   await label("R1:1");
-  await page
-    .getByRole("button", { name: "New drawing page", exact: true })
-    .click();
+  await page.locator(".workbench-add-sheet").click();
   await page
     .locator(".drawing-tabs")
     .getByRole("button", { name: "Sheet 2", exact: true })
@@ -1263,7 +1343,8 @@ test("component comparison preserves selections through search and shows missing
   page,
 }) => {
   await create(page);
-  await page.locator(".component-library > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await page
     .getByRole("checkbox", {
       name: "Select for comparison: Phoenix Contact 3004362",
@@ -1332,8 +1413,9 @@ test("catalog filters, favorites and recent assignments persist without changing
   await create(page);
   await place(page, "terminal", 100, 100);
   const before = await project(page);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await library
     .getByLabel("Minimum declared voltage (V)", { exact: true })
     .fill("1000");
@@ -1358,7 +1440,7 @@ test("catalog filters, favorites and recent assignments persist without changing
     .check();
   expect(await project(page)).toEqual(before);
   await reloadAndReopenProject(page);
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await expect(
     library.getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
@@ -1383,7 +1465,7 @@ test("catalog filters, favorites and recent assignments persist without changing
       .click();
   }
   await reloadAndReopenProject(page);
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await library
     .getByLabel("Catalog view", { exact: true })
     .selectOption("recent");
@@ -1425,8 +1507,9 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
     localStorage.setItem("adiguneplanai.catalog-preferences.v1", "{broken"),
   );
   await reloadAndReopenProject(page);
+  await openComponentLibrary(page);
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await expect(library.getByRole("alert")).toContainText(
     "Stored data has been preserved",
   );
@@ -1452,7 +1535,7 @@ test("corrupt catalog preferences remain intact until explicit reset without tou
     })
     .check();
   await reloadAndReopenProject(page);
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await expect(
     library.getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
@@ -1476,7 +1559,8 @@ test("catalog preference quota failure retains session favorites and reports uns
     };
   });
   const library = page.locator(".component-library");
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
+  await openComponentLibrary(page);
   await library
     .getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",
@@ -1490,7 +1574,7 @@ test("catalog preference quota failure retains session favorites and reports uns
   await expect(library.getByRole("article")).toHaveCount(1);
   expect(await project(page)).toEqual(before);
   await reloadAndReopenProject(page);
-  await library.locator(":scope > summary").click();
+  await openComponentLibrary(page);
   await expect(
     library.getByRole("checkbox", {
       name: "Favorite: Phoenix Contact 3004362",

@@ -84,7 +84,7 @@ export function productTemplateIssues(bundle) {
     c.specification?.ownerInterface ===
       "docs/references/target-workspace.png", "Specification bindings changed");
   require(crypto.createHash("sha256").update(ownerMaster).digest("hex") ===
-    "50851a526f3958f6bb820e0b41fb4f9eeb8dcdbbfbc2f9e56643d32c58d87fb8", "Approved owner master plan changed");
+    "eca2d1ddc4daa5bb2b7ff2a9d1e18f9ce5739d70037e850fd704763ea54058ef", "Approved owner master plan changed");
   require(c.branding?.logoPolicy === "single-corporate-logo" &&
     c.branding?.header?.productWordmark === true &&
     c.branding?.header?.divisionTextLabel === true &&

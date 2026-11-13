@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { openProjectPanel, openWorkbenchPanel } from "./workbench.ts";
 import { reloadAndReopenProject } from "../fixtures/reopen-project";
 import { readFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -34,6 +35,7 @@ test("calculation inputs, unit conversion, native replay and full report exports
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(createProject("Calculation project"))),
   });
+  await openWorkbenchPanel(page, "calculations");
   const tools = page.getByRole("region", {
     name: "Engineering calculations",
     exact: true,
@@ -219,6 +221,7 @@ test("calculation panel rejects missing engineering evidence and unsupported rec
     mimeType: "application/json",
     buffer: Buffer.from(JSON.stringify(project)),
   });
+  await openWorkbenchPanel(page, "calculations");
   const tools = page.getByRole("region", {
     name: "Engineering calculations",
     exact: true,
@@ -288,7 +291,9 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
     );
     await page.goto("/");
     await expect(page.locator(".empty-workspace")).toBeVisible();
+    await openProjectPanel(page, t.navigatorTabProject);
     await page.getByTestId("project-picker").selectOption(project.id);
+    await openWorkbenchPanel(page, "calculations", t.openCalculations);
     const tools = page.getByRole("region", {
       name: t.calcTools,
       exact: true,
@@ -316,18 +321,28 @@ for (const language of ["en", "de", "yo", "pcm"] as const) {
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    expect(
-      await tools.evaluate((panel) =>
-        Array.from(panel.querySelectorAll("input,select,textarea,button"))
-          .filter((element) => !element.closest(".calculation-shortcuts"))
-          .every((element) => {
-            const rect = element.getBoundingClientRect();
-            return (
-              rect.width > 0 && rect.left >= 0 && rect.right <= innerWidth + 1
-            );
-          }),
-      ),
-    ).toBe(true);
+    const offscreenControls = await tools.evaluate((panel) =>
+      Array.from(panel.querySelectorAll("input,select,textarea,button"))
+        .filter((element) => !element.closest(".calculation-shortcuts"))
+        .flatMap((element) => {
+          const rect = element.getBoundingClientRect();
+          return rect.width > 0 &&
+            rect.left >= 0 &&
+            rect.right <= innerWidth + 1
+            ? []
+            : [
+                {
+                  label:
+                    element.getAttribute("aria-label") ??
+                    element.textContent?.trim(),
+                  x: rect.x,
+                  right: rect.right,
+                  width: rect.width,
+                },
+              ];
+        }),
+    );
+    expect(offscreenControls).toEqual([]);
     const shortcuts = tools.locator(".calculation-shortcuts");
     const lastShortcut = shortcuts.getByRole("button").last();
     await lastShortcut.focus();

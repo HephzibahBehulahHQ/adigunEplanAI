@@ -12,6 +12,21 @@ export async function reloadAndReopenProject(page: Page) {
   if (id) {
     await expect(page.locator(".empty-workspace")).toBeVisible();
     await expect(page.locator(".engineering-canvas")).toHaveCount(0);
-    await page.getByTestId("project-picker").selectOption(id);
+    const picker = page.getByTestId("project-picker");
+    if (!(await page.locator('[data-panel="project"]').isVisible()))
+      await page
+        .locator(".workbench-rail-left")
+        .getByRole("button")
+        .first()
+        .click();
+    const projectTab = page
+      .locator('[data-panel="project"] [role="tab"]')
+      .first();
+    if (
+      (await projectTab.count()) &&
+      (await projectTab.getAttribute("aria-selected")) !== "true"
+    )
+      await projectTab.click();
+    await picker.selectOption(id);
   }
 }

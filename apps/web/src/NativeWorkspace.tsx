@@ -101,7 +101,7 @@ export function ProjectTools({
         ref={file}
         type="file"
         accept=".json,.adeplan"
-        aria-label={t("importProject")}
+        aria-label={t(home ? "ribbonOpen" : "importProject")}
         onChange={async (e) => {
           const selected = e.target.files?.[0];
           if (!selected) return;

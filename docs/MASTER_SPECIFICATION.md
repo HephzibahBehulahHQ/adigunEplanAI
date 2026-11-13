@@ -1,3 +1,25 @@
+# ACTIVE OWNER PRIORITY — 2026-11-12: UI-001 PROJECT A → PROJECT B INTERFACE FIRST
+
+> **BINDING CURRENT MILESTONE:** First transform the **AdigunEplanAI (Project A)** application interface into the approved **AdigunAiAutoCad (Project B)** compact CAD workstation appearance. The owner specifically wants the **EXACT PROJECT B INTERFACE ARCHITECTURE**, not a merely similar, redesigned, or generic substitute. The only differences should be Project A branding and real internal engineering features.
+>
+> **WRITABLE TARGET: Project A ONLY:** https://github.com/HephzibahBehulahHQ/adigunEplanAI
+>
+> **READ-ONLY REFERENCE: Project B:** https://github.com/HephzibahBehulahHQ/AdigunAiAutoCad — **NEVER MODIFY PROJECT B** (no writes, PRs, commits, releases or configuration edits).
+>
+> **FULL EXECUTION SPECIFICATION AND NEXT-AGENT HANDOFF:** [docs/PROJECT_B_INTERFACE_TRANSFORMATION.md](docs/PROJECT_B_INTERFACE_TRANSFORMATION.md). Read this **before** continuing any development. Use Project B's actual `index.html`, master pursuing-goal specification and approved reference screenshots as the exact UI source; rebuild its compact layout in Project A's existing React/TypeScript/Vite architecture without replacing the electrical model or copying Project B's simplified CAD engine.
+>
+> **FIRST-DELIVERY CONTENT:** compact navy header and native document tabs; light compact icon toolbar; narrow left/right navigation icon rails; Project B-style floating menus and panels; full-size white editable native electrical drawing canvas; thin status rail; zero dropdown-caused layout shifts; existing engineering commands preserved and accessible.
+>
+> **ORDER:** inspect Project A and read Project B → protect current engineering functionality → build Project B visual shell in Project A → validate with screenshots and browser/engineering regression tests → commit and PR → merge only after required checks/approvals → deploy Project A and verify live UI → **STOP for explicit owner visual review**. Do not begin new electrical, PLC, building, panel, AI or 500-example engineering development during UI-001.
+>
+> **CONTINUATION STATE:** A Project A-only draft PR #39 exists on branch `codex/project-b-interface-first` with an initial, unapproved shell implementation. This is work in progress, not merged or deployed. Verify the latest CI logs, fix issues, test visual equivalence, and preserve existing services. All original scope and remaining milestones below are retained, not deleted.
+>
+> **SUPERSESSION RULE:** Earlier references to an EPLAN-like screenshot or a large expanded engineering ribbon are superseded **only for interface composition and styling**. The engineering specifications in Parts 1–27, legal/safety constraints, enterprise branding, persistence, native editing, test criteria and later milestones remain binding.
+>
+> **AGENT HOLD POINT:** Once the interface is genuinely merged, deployed and verified, report live URL, screenshots and CI evidence, then STOP until the user explicitly approves the visual result. Do not skip this hold point.
+
+---
+
 # ADIGUNEPLANAI
 ## OFFICIAL CODEX MASTER ENGINEERING AND IMPLEMENTATION SPECIFICATION
 ### Hephzibah Behulah → HB Elektroniker → AdigunEplanAI
@@ -1672,12 +1694,16 @@ Respect the canonical corporate and HB Elektroniker design system.
 
 Preserve the exact approved product name and destination repository.
 
-Use the supplied screenshot as a visual and functional reference for the engineering workspace.
+Use the approved Project B workstation as the **current interface visual and interaction authority** under the UI-001 addendum. Earlier EPLAN screenshot guidance applies only to engineering content and useful workbench functionality, not the current shell layout.
 
 Prioritize real engineering data, meaningful electrical connections, verified calculations, useful 3D geometry, functional AI tools, and traceable testing.
 
 The full specification defines the destination; the current repository state defines the starting point.
 
-Continue in small verified increments without restarting completed work or pausing for general approval. Preserve the approved interface and all engineering acceptance requirements. Deploy and release only after the configured gates and live evidence pass.
+Milestones define the execution path.
+
+Current work must **continue from the actual existing implementation, beginning with UI-001**. Do not restart completed Milestones 0–12. Complete the Project B-style interface, verify/merge/deploy, and stop for owner UI approval before resuming incomplete milestones.
+
+Continue in small verified increments without restarting completed work or pausing for general approval. Preserve the approved interface and all engineering acceptance requirements. Push and merge each verified increment after its required gates; deploy each production-ready increment and verify live evidence. Observe the UI-001 owner-review hold point before resuming engineering features.
 
 Never substitute an attractive interface for working engineering software.
