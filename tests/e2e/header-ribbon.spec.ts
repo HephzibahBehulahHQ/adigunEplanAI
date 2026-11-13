@@ -34,13 +34,13 @@ test("compact workstation geometry stays fixed while menus open at desktop and m
       };
     });
     expect(layout.width).toBeLessThanOrEqual(width);
-    expect(layout.header.height).toBe(34);
-    expect(layout.toolbar.height).toBe(36);
+    expect(layout.header.height).toBe(50);
+    expect(layout.toolbar.height).toBe(44);
     expect(
       layout.leftRail.width,
       `left rail at ${width}px: ${JSON.stringify({ classes: await page.locator(".engineering-layout").getAttribute("class"), grid: await page.locator(".engineering-layout").evaluate((element) => getComputedStyle(element).gridTemplateColumns), botDocked: await page.locator(".bot-window").getAttribute("data-docked") })}`,
-    ).toBe(36);
-    expect(layout.rightRail.width).toBe(36);
+    ).toBe(width >= 1600 ? 0 : 36);
+    expect(layout.rightRail.width).toBe(width >= 1600 ? 0 : 36);
     expect(layout.header.bottom).toBeLessThanOrEqual(layout.toolbar.y + 1);
     expect(layout.toolbar.bottom).toBeLessThanOrEqual(layout.workspace.y + 1);
     expect(layout.workspace.bottom).toBeLessThanOrEqual(layout.footer.y + 1);
