@@ -141,6 +141,7 @@ test("wire properties and shielded cable cores persist as native engineering met
   page,
 }) => {
   await create(page);
+  await openWorkbenchPanel(page, "diagnostics");
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
   await page
@@ -273,6 +274,7 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await expect(page.locator("[data-wire]")).toHaveCount(1);
+  await openWorkbenchPanel(page, "diagnostics");
   const connectivity = page.getByRole("region", {
     name: "Connectivity",
     exact: true,
@@ -327,6 +329,7 @@ test("numbering preview can be cancelled, applied and undone", async ({
     .click();
   await clickWorld(page, 50, 50);
   await openWorkbenchPanel(page, "properties");
+  await openWorkbenchPanel(page, "diagnostics");
   const props = page.getByRole("form", { name: "Properties", exact: true });
   await props.getByLabel("Reference", { exact: true }).fill("R9");
   await props.getByRole("button", { name: "Apply", exact: true }).click();
@@ -737,6 +740,7 @@ test("junction insertion updates the real wire graph and BOM while navigator con
   expect(data.wires).toHaveLength(2);
   expect(data.devices).toHaveLength(3);
   expect(data.wirePaths).toHaveLength(2);
+  await openWorkbenchPanel(page, "bom");
   const bom = page.getByRole("region", {
     name: "Bill of materials",
     exact: true,
@@ -824,6 +828,7 @@ test("component catalog searches and maps a sourced part to a real terminal", as
   let assigned = await project(page);
   expect(assigned.manufacturerParts[0].partNumber).toBe("3004362");
   expect(assigned.terminals[0].capacity).toBe(2);
+  await openWorkbenchPanel(page, "bom");
   const bom = page.getByRole("region", {
     name: "Bill of materials",
     exact: true,
@@ -1295,6 +1300,7 @@ test("cross-page net labels persist memberships and navigate to the real drawing
     .click();
   await place(page, "lamp", 50, 50);
   await label("H1:1");
+  await openWorkbenchPanel(page, "diagnostics");
   const data = await project(page);
   const net = data.nets.find((item: { labels: string[] }) =>
     item.labels.includes("CONTROL_24V"),
