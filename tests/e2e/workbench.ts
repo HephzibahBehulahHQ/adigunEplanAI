@@ -15,8 +15,31 @@ async function showPanel(page: Page, id: keyof typeof panelToggleIndex) {
   const toggle = page
     .locator(".panel-toggles input[type=checkbox]")
     .nth(panelToggleIndex[id]);
+  const panel = page.locator(`[data-panel="${id}"]`);
   if (!(await toggle.isChecked())) await toggle.check();
-  return page.locator(`[data-panel="${id}"]`);
+  else if (
+    (await page.locator(".application").getAttribute("data-compact")) ===
+      "true" &&
+    !(await panel.isVisible())
+  ) {
+    const labels = {
+      project: "Project navigator",
+      properties: "Properties",
+      panel3d: "3D panel",
+      diagnostics: "Run electrical check",
+      calculations: "Open calculations",
+      bom: "Show bill of materials",
+      reports: "Reports",
+    };
+    const side = id === "project" ? "left" : "right";
+    await page
+      .locator(`.workbench-rail-${side}`)
+      .getByRole("button", { name: labels[id], exact: true })
+      .click();
+  }
+  const menu = page.locator(".workbench-tool-end > .workbench-menu-trigger");
+  if ((await menu.getAttribute("aria-expanded")) === "true") await menu.click();
+  return panel;
 }
 
 export async function openProjectNavigator(page: Page) {
@@ -58,11 +81,6 @@ export async function openWorkbenchPanel(
     | "reports",
   translatedLabel?: string,
 ) {
-  const menuTrigger = page.locator(
-    ".workbench-tool-end > .workbench-menu-trigger",
-  );
-  if ((await menuTrigger.getAttribute("aria-expanded")) === "true")
-    await menuTrigger.click();
   if (
     (await page.locator(`[data-panel="${id}"]`).isVisible()) &&
     (await page
@@ -72,33 +90,9 @@ export async function openWorkbenchPanel(
       ))
   )
     return page.locator(`[data-panel="${id}"]`);
-  const labels = {
-    properties: "Properties",
-    panel3d: "3D panel",
-    diagnostics: "Run electrical check",
-    calculations: "Open calculations",
-    bom: "Show bill of materials",
-    reports: "Reports",
-  };
   const panel = page.locator(`[data-panel="${id}"]`);
   await showPanel(page, id);
-  if (
-    (await page.locator(".application").getAttribute("data-compact")) === "true"
-  ) {
-    const dock = id === "properties" ? "left" : "right";
-    await page
-      .locator(`.workbench-rail-${dock}`)
-      .getByRole("button", { name: translatedLabel ?? labels[id], exact: true })
-      .click();
-  }
-  if (
-    !(await panel.evaluate((element) =>
-      element.closest(".dock")?.classList.contains("dock-right"),
-    ))
-  ) {
-    await panel.locator(".panel-body > details > summary").click();
-    await panel.getByLabel("Dock", { exact: true }).selectOption("right");
-  }
+  void translatedLabel;
   await expect(panel).toBeVisible();
   return panel;
 }
