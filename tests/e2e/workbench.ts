@@ -63,14 +63,15 @@ export async function openWorkbenchPanel(
   );
   if ((await menuTrigger.getAttribute("aria-expanded")) === "true")
     await menuTrigger.click();
-  const panel = page.locator(`[data-panel="${id}"]`);
   if (
-    (await panel.isVisible()) &&
-    (await panel.evaluate((element) =>
-      element.closest(".dock")?.classList.contains("dock-right"),
-    ))
+    (await page.locator(`[data-panel="${id}"]`).isVisible()) &&
+    (await page
+      .locator(`[data-panel="${id}"]`)
+      .evaluate((element) =>
+        element.closest(".dock")?.classList.contains("dock-right"),
+      ))
   )
-    return panel;
+    return page.locator(`[data-panel="${id}"]`);
   const labels = {
     properties: "Properties",
     panel3d: "3D panel",
@@ -79,6 +80,7 @@ export async function openWorkbenchPanel(
     bom: "Show bill of materials",
     reports: "Reports",
   };
+  const panel = page.locator(`[data-panel="${id}"]`);
   await showPanel(page, id);
   if (
     (await page.locator(".application").getAttribute("data-compact")) === "true"
@@ -102,7 +104,6 @@ export async function openWorkbenchPanel(
 }
 
 export async function openComponentLibrary(page: Page) {
-  const panel = page.locator('[data-panel="project"]');
   const navigator = await openProjectNavigator(page);
   const tab = navigator.getByRole("tab", { name: "Library", exact: true });
   if ((await tab.getAttribute("aria-selected")) !== "true") await tab.click();
