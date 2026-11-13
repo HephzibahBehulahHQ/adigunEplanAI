@@ -1239,4 +1239,3 @@ function Workspace({ account }: { account: Account }) {
     </div>
   );
 }
-
