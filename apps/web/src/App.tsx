@@ -122,9 +122,9 @@ function Workspace({ account }: { account: Account }) {
   const restoreActivePanel = (dock: Dock): PanelId | null => {
     try {
       const raw = localStorage.getItem(activePanelsKey);
-      const saved = JSON.parse(raw ?? "null") as
-        | Partial<Record<Dock, unknown>>
-        | null;
+      const saved = JSON.parse(raw ?? "null") as Partial<
+        Record<Dock, unknown>
+      > | null;
       const id = saved?.[dock];
       if (
         typeof id === "string" &&
