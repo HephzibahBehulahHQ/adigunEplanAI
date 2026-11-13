@@ -141,7 +141,6 @@ test("wire properties and shielded cable cores persist as native engineering met
   page,
 }) => {
   await create(page);
-  await openWorkbenchPanel(page, "diagnostics");
   await place(page, "resistor", 50, 50);
   await place(page, "lamp", 150, 50);
   await page
@@ -177,6 +176,7 @@ test("wire properties and shielded cable cores persist as native engineering met
   await core
     .getByRole("button", { name: "Create and assign core", exact: true })
     .click();
+  await openWorkbenchPanel(page, "diagnostics");
   const connectivity = page.getByRole("region", {
     name: "Connectivity",
     exact: true,
@@ -274,16 +274,6 @@ test("symbols create native terminals, connect through real pins and reroute aft
   await page.getByRole("button", { name: "R1:2", exact: true }).click();
   await page.getByRole("button", { name: "H1:1", exact: true }).click();
   await expect(page.locator("[data-wire]")).toHaveCount(1);
-  await openWorkbenchPanel(page, "diagnostics");
-  const connectivity = page.getByRole("region", {
-    name: "Connectivity",
-    exact: true,
-  });
-  await expect(connectivity).toContainText("Netlist (3)");
-  await connectivity.getByText("Connections (1)", { exact: true }).click();
-  await expect(connectivity.getByRole("table")).toContainText("W1");
-  await expect(connectivity.getByRole("table")).toContainText("R1:2");
-  await expect(connectivity.getByRole("table")).toContainText("H1:1");
   await page
     .getByRole("main", { name: "Workspace", exact: true })
     .getByRole("button", { name: "Select", exact: true })
@@ -305,6 +295,16 @@ test("symbols create native terminals, connect through real pins and reroute aft
       .rotation,
   ).toBe(90);
   expect(data.wires).toHaveLength(1);
+  await openWorkbenchPanel(page, "diagnostics");
+  const connectivity = page.getByRole("region", {
+    name: "Connectivity",
+    exact: true,
+  });
+  await expect(connectivity).toContainText("Netlist (3)");
+  await connectivity.getByText("Connections (1)", { exact: true }).click();
+  await expect(connectivity.getByRole("table")).toContainText("W1");
+  await expect(connectivity.getByRole("table")).toContainText("R1:2");
+  await expect(connectivity.getByRole("table")).toContainText("H1:1");
   await page
     .getByRole("button", { name: "Undo · Header", exact: true })
     .click();
