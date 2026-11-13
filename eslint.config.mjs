@@ -10,6 +10,8 @@ export default [
       "assets/**",
       "apps/web/public/cad-engine.js",
       "cad-engine.js",
+      "eplan-symbols.js",
+      "apps/web/public/eplan-symbols.js",
       "work/**",
     ],
   },

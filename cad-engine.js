@@ -786,11 +786,12 @@
     return true;
   }
 
-  function component(id) { return COMPONENTS[id] || null; }
+  const EPLAN_COMPONENTS = Object.freeze(Object.fromEntries((root.AdigunEplanSymbols || []).map(function(def) { return [def.id, deepFreeze(def)]; })));
+  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || null; }
   function catalog() {
-    return Object.keys(COMPONENTS).map(function (id) {
-      const def = COMPONENTS[id];
-      return { id: def.id, componentId: def.id, name: def.model + ' · ' + def.manufacturerPartNumber, category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
+    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS)).map(function (id) {
+      const def = component(id);
+      return { id: def.id, componentId: def.id, name: def.generic ? def.name : def.model + ' · ' + def.manufacturerPartNumber, category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
     });
   }
   function createInstance(componentId, x, y, ref) {
