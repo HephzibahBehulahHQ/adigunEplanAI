@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-1201",
+    "title": "Motor-control centre section \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1201.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1202",
+    "title": "Motor-control centre section \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1202.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1203",
+    "title": "Motor-control centre section \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1203.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1204",
+    "title": "Motor-control centre section \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1204.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1205",
+    "title": "Motor-control centre section \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1205.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1206",
+    "title": "Motor-control centre section \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1206.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1207",
+    "title": "Motor-control centre section \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1207.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1208",
+    "title": "Motor-control centre section \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1208.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1209",
+    "title": "Motor-control centre section \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1209.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1210",
+    "title": "Motor-control centre section \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1210.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1211",
+    "title": "Motor-control centre section \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1211.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1212",
+    "title": "Motor-control centre section \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1212.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1213",
+    "title": "Motor-control centre section \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1213.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1214",
+    "title": "Motor-control centre section \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1214.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1215",
+    "title": "Motor-control centre section \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1215.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1216",
+    "title": "Motor-control centre section \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1216.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1217",
+    "title": "Motor-control centre section \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1217.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1218",
+    "title": "Motor-control centre section \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1218.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1219",
+    "title": "Motor-control centre section \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1219.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1220",
+    "title": "Motor-control centre section \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1220.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1221",
+    "title": "Motor-control centre section \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1221.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1222",
+    "title": "Motor-control centre section \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1222.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1223",
+    "title": "Motor-control centre section \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1223.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1224",
+    "title": "Motor-control centre section \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1224.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1225",
+    "title": "Motor-control centre section \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1225.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1226",
+    "title": "Motor-control centre section \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1226.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1227",
+    "title": "Motor-control centre section \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1227.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1228",
+    "title": "Motor-control centre section \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1228.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1229",
+    "title": "Motor-control centre section \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1229.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1230",
+    "title": "Motor-control centre section \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Motor-control centre section",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1230.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1231",
+    "title": "PLC marshalling cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1231.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1232",
+    "title": "PLC marshalling cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1232.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1233",
+    "title": "PLC marshalling cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1233.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1234",
+    "title": "PLC marshalling cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1234.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1235",
+    "title": "PLC marshalling cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1235.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1236",
+    "title": "PLC marshalling cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1236.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1237",
+    "title": "PLC marshalling cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1237.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1238",
+    "title": "PLC marshalling cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1238.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1239",
+    "title": "PLC marshalling cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1239.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1240",
+    "title": "PLC marshalling cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1240.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1241",
+    "title": "PLC marshalling cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1241.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1242",
+    "title": "PLC marshalling cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1242.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1243",
+    "title": "PLC marshalling cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1243.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1244",
+    "title": "PLC marshalling cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1244.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1245",
+    "title": "PLC marshalling cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1245.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1246",
+    "title": "PLC marshalling cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1246.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1247",
+    "title": "PLC marshalling cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1247.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1248",
+    "title": "PLC marshalling cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1248.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1249",
+    "title": "PLC marshalling cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1249.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1250",
+    "title": "PLC marshalling cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1250.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1251",
+    "title": "PLC marshalling cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1251.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1252",
+    "title": "PLC marshalling cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1252.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1253",
+    "title": "PLC marshalling cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1253.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1254",
+    "title": "PLC marshalling cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1254.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1255",
+    "title": "PLC marshalling cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1255.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1256",
+    "title": "PLC marshalling cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1256.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1257",
+    "title": "PLC marshalling cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1257.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1258",
+    "title": "PLC marshalling cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1258.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1259",
+    "title": "PLC marshalling cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1259.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1260",
+    "title": "PLC marshalling cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "PLC marshalling cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1260.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1261",
+    "title": "VFD drive cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1261.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1262",
+    "title": "VFD drive cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1262.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1263",
+    "title": "VFD drive cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1263.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1264",
+    "title": "VFD drive cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1264.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1265",
+    "title": "VFD drive cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1265.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1266",
+    "title": "VFD drive cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1266.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1267",
+    "title": "VFD drive cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1267.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1268",
+    "title": "VFD drive cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1268.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1269",
+    "title": "VFD drive cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1269.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1270",
+    "title": "VFD drive cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1270.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1271",
+    "title": "VFD drive cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1271.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1272",
+    "title": "VFD drive cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1272.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1273",
+    "title": "VFD drive cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1273.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1274",
+    "title": "VFD drive cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1274.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1275",
+    "title": "VFD drive cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1275.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1276",
+    "title": "VFD drive cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1276.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1277",
+    "title": "VFD drive cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1277.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1278",
+    "title": "VFD drive cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1278.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1279",
+    "title": "VFD drive cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1279.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1280",
+    "title": "VFD drive cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1280.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1281",
+    "title": "VFD drive cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1281.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1282",
+    "title": "VFD drive cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1282.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1283",
+    "title": "VFD drive cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1283.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1284",
+    "title": "VFD drive cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1284.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1285",
+    "title": "VFD drive cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1285.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1286",
+    "title": "VFD drive cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1286.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1287",
+    "title": "VFD drive cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1287.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1288",
+    "title": "VFD drive cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1288.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1289",
+    "title": "VFD drive cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1289.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1290",
+    "title": "VFD drive cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "VFD drive cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1290.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1291",
+    "title": "Instrumentation interface cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1291.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1292",
+    "title": "Instrumentation interface cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1292.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1293",
+    "title": "Instrumentation interface cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1293.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1294",
+    "title": "Instrumentation interface cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1294.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1295",
+    "title": "Instrumentation interface cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1295.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1296",
+    "title": "Instrumentation interface cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1296.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1297",
+    "title": "Instrumentation interface cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1297.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1298",
+    "title": "Instrumentation interface cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1298.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1299",
+    "title": "Instrumentation interface cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1299.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1300",
+    "title": "Instrumentation interface cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1300.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1301",
+    "title": "Instrumentation interface cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1301.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1302",
+    "title": "Instrumentation interface cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1302.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1303",
+    "title": "Instrumentation interface cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1303.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1304",
+    "title": "Instrumentation interface cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1304.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1305",
+    "title": "Instrumentation interface cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1305.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1306",
+    "title": "Instrumentation interface cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1306.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1307",
+    "title": "Instrumentation interface cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1307.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1308",
+    "title": "Instrumentation interface cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1308.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1309",
+    "title": "Instrumentation interface cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1309.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1310",
+    "title": "Instrumentation interface cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1310.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1311",
+    "title": "Instrumentation interface cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1311.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1312",
+    "title": "Instrumentation interface cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1312.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1313",
+    "title": "Instrumentation interface cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1313.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1314",
+    "title": "Instrumentation interface cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1314.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1315",
+    "title": "Instrumentation interface cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1315.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1316",
+    "title": "Instrumentation interface cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1316.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1317",
+    "title": "Instrumentation interface cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1317.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1318",
+    "title": "Instrumentation interface cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1318.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1319",
+    "title": "Instrumentation interface cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1319.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1320",
+    "title": "Instrumentation interface cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Instrumentation interface cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1320.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1321",
+    "title": "Network and control cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1321.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1322",
+    "title": "Network and control cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1322.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1323",
+    "title": "Network and control cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1323.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1324",
+    "title": "Network and control cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1324.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1325",
+    "title": "Network and control cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1325.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1326",
+    "title": "Network and control cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1326.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1327",
+    "title": "Network and control cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1327.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1328",
+    "title": "Network and control cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1328.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1329",
+    "title": "Network and control cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1329.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1330",
+    "title": "Network and control cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1330.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1331",
+    "title": "Network and control cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1331.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1332",
+    "title": "Network and control cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1332.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1333",
+    "title": "Network and control cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1333.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1334",
+    "title": "Network and control cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1334.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1335",
+    "title": "Network and control cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1335.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1336",
+    "title": "Network and control cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1336.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1337",
+    "title": "Network and control cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1337.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1338",
+    "title": "Network and control cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1338.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1339",
+    "title": "Network and control cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1339.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1340",
+    "title": "Network and control cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1340.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1341",
+    "title": "Network and control cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1341.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1342",
+    "title": "Network and control cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1342.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1343",
+    "title": "Network and control cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1343.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1344",
+    "title": "Network and control cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1344.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1345",
+    "title": "Network and control cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1345.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1346",
+    "title": "Network and control cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1346.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1347",
+    "title": "Network and control cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1347.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1348",
+    "title": "Network and control cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1348.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1349",
+    "title": "Network and control cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1349.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1350",
+    "title": "Network and control cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Network and control cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1350.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1351",
+    "title": "Remote junction enclosure \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1351.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1352",
+    "title": "Remote junction enclosure \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1352.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1353",
+    "title": "Remote junction enclosure \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1353.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1354",
+    "title": "Remote junction enclosure \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1354.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1355",
+    "title": "Remote junction enclosure \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1355.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1356",
+    "title": "Remote junction enclosure \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1356.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1357",
+    "title": "Remote junction enclosure \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1357.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1358",
+    "title": "Remote junction enclosure \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1358.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1359",
+    "title": "Remote junction enclosure \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1359.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1360",
+    "title": "Remote junction enclosure \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1360.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1361",
+    "title": "Remote junction enclosure \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1361.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1362",
+    "title": "Remote junction enclosure \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1362.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1363",
+    "title": "Remote junction enclosure \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1363.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1364",
+    "title": "Remote junction enclosure \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1364.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1365",
+    "title": "Remote junction enclosure \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1365.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1366",
+    "title": "Remote junction enclosure \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1366.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1367",
+    "title": "Remote junction enclosure \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1367.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1368",
+    "title": "Remote junction enclosure \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1368.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1369",
+    "title": "Remote junction enclosure \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1369.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1370",
+    "title": "Remote junction enclosure \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1370.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1371",
+    "title": "Remote junction enclosure \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1371.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1372",
+    "title": "Remote junction enclosure \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1372.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1373",
+    "title": "Remote junction enclosure \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1373.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1374",
+    "title": "Remote junction enclosure \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1374.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1375",
+    "title": "Remote junction enclosure \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1375.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1376",
+    "title": "Remote junction enclosure \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1376.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1377",
+    "title": "Remote junction enclosure \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1377.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1378",
+    "title": "Remote junction enclosure \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1378.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1379",
+    "title": "Remote junction enclosure \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1379.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1380",
+    "title": "Remote junction enclosure \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Remote junction enclosure",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1380.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1381",
+    "title": "Machine auxiliary cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1381.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1382",
+    "title": "Machine auxiliary cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1382.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1383",
+    "title": "Machine auxiliary cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1383.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1384",
+    "title": "Machine auxiliary cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1384.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1385",
+    "title": "Machine auxiliary cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1385.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1386",
+    "title": "Machine auxiliary cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1386.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1387",
+    "title": "Machine auxiliary cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1387.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1388",
+    "title": "Machine auxiliary cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1388.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1389",
+    "title": "Machine auxiliary cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1389.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1390",
+    "title": "Machine auxiliary cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1390.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1391",
+    "title": "Machine auxiliary cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1391.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1392",
+    "title": "Machine auxiliary cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1392.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1393",
+    "title": "Machine auxiliary cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1393.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1394",
+    "title": "Machine auxiliary cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1394.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1395",
+    "title": "Machine auxiliary cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1395.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1396",
+    "title": "Machine auxiliary cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1396.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1397",
+    "title": "Machine auxiliary cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1397.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1398",
+    "title": "Machine auxiliary cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1398.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1399",
+    "title": "Machine auxiliary cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1399.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1400",
+    "title": "Machine auxiliary cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1400.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1401",
+    "title": "Machine auxiliary cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1401.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1402",
+    "title": "Machine auxiliary cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1402.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1403",
+    "title": "Machine auxiliary cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1403.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1404",
+    "title": "Machine auxiliary cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1404.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1405",
+    "title": "Machine auxiliary cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1405.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1406",
+    "title": "Machine auxiliary cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1406.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1407",
+    "title": "Machine auxiliary cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1407.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1408",
+    "title": "Machine auxiliary cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1408.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1409",
+    "title": "Machine auxiliary cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1409.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1410",
+    "title": "Machine auxiliary cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Machine auxiliary cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1410.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1411",
+    "title": "Panel thermal-management system \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1411.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1412",
+    "title": "Panel thermal-management system \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1412.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1413",
+    "title": "Panel thermal-management system \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1413.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1414",
+    "title": "Panel thermal-management system \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1414.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1415",
+    "title": "Panel thermal-management system \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1415.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1416",
+    "title": "Panel thermal-management system \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1416.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1417",
+    "title": "Panel thermal-management system \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1417.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1418",
+    "title": "Panel thermal-management system \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1418.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1419",
+    "title": "Panel thermal-management system \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1419.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1420",
+    "title": "Panel thermal-management system \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1420.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1421",
+    "title": "Panel thermal-management system \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1421.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1422",
+    "title": "Panel thermal-management system \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1422.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1423",
+    "title": "Panel thermal-management system \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1423.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1424",
+    "title": "Panel thermal-management system \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1424.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1425",
+    "title": "Panel thermal-management system \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1425.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1426",
+    "title": "Panel thermal-management system \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1426.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1427",
+    "title": "Panel thermal-management system \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1427.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1428",
+    "title": "Panel thermal-management system \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1428.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1429",
+    "title": "Panel thermal-management system \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1429.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1430",
+    "title": "Panel thermal-management system \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1430.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1431",
+    "title": "Panel thermal-management system \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1431.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1432",
+    "title": "Panel thermal-management system \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1432.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1433",
+    "title": "Panel thermal-management system \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1433.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1434",
+    "title": "Panel thermal-management system \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1434.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1435",
+    "title": "Panel thermal-management system \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1435.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1436",
+    "title": "Panel thermal-management system \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1436.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1437",
+    "title": "Panel thermal-management system \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1437.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1438",
+    "title": "Panel thermal-management system \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1438.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1439",
+    "title": "Panel thermal-management system \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1439.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1440",
+    "title": "Panel thermal-management system \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Panel thermal-management system",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1440.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1441",
+    "title": "Lighting contactor cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1441.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1442",
+    "title": "Lighting contactor cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1442.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1443",
+    "title": "Lighting contactor cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1443.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1444",
+    "title": "Lighting contactor cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1444.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1445",
+    "title": "Lighting contactor cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1445.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1446",
+    "title": "Lighting contactor cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1446.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1447",
+    "title": "Lighting contactor cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1447.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1448",
+    "title": "Lighting contactor cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1448.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1449",
+    "title": "Lighting contactor cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1449.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1450",
+    "title": "Lighting contactor cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1450.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1451",
+    "title": "Lighting contactor cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1451.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1452",
+    "title": "Lighting contactor cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1452.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1453",
+    "title": "Lighting contactor cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1453.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1454",
+    "title": "Lighting contactor cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1454.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1455",
+    "title": "Lighting contactor cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1455.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1456",
+    "title": "Lighting contactor cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1456.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1457",
+    "title": "Lighting contactor cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1457.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1458",
+    "title": "Lighting contactor cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1458.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1459",
+    "title": "Lighting contactor cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1459.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1460",
+    "title": "Lighting contactor cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1460.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1461",
+    "title": "Lighting contactor cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1461.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1462",
+    "title": "Lighting contactor cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1462.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1463",
+    "title": "Lighting contactor cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1463.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1464",
+    "title": "Lighting contactor cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1464.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1465",
+    "title": "Lighting contactor cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1465.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1466",
+    "title": "Lighting contactor cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1466.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1467",
+    "title": "Lighting contactor cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1467.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1468",
+    "title": "Lighting contactor cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1468.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1469",
+    "title": "Lighting contactor cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1469.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1470",
+    "title": "Lighting contactor cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "Lighting contactor cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1470.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1471",
+    "title": "DC distribution cabinet \u2014 Local manual baseline",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/panel-engineering/ENG-1471.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1472",
+    "title": "DC distribution cabinet \u2014 Remote supervisory operation",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/panel-engineering/ENG-1472.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1473",
+    "title": "DC distribution cabinet \u2014 Scheduled operation",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/panel-engineering/ENG-1473.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1474",
+    "title": "DC distribution cabinet \u2014 Demand-controlled enable",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/panel-engineering/ENG-1474.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1475",
+    "title": "DC distribution cabinet \u2014 Supply undervoltage supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/panel-engineering/ENG-1475.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1476",
+    "title": "DC distribution cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/panel-engineering/ENG-1476.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1477",
+    "title": "DC distribution cabinet \u2014 Individual branch metering",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/panel-engineering/ENG-1477.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1478",
+    "title": "DC distribution cabinet \u2014 Whole-system energy reporting",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/panel-engineering/ENG-1478.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1479",
+    "title": "DC distribution cabinet \u2014 Two-zone operation",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/panel-engineering/ENG-1479.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1480",
+    "title": "DC distribution cabinet \u2014 Three-stage load sequencing",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/panel-engineering/ENG-1480.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1481",
+    "title": "DC distribution cabinet \u2014 Priority load shedding",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/panel-engineering/ENG-1481.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1482",
+    "title": "DC distribution cabinet \u2014 Buffered control power",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/panel-engineering/ENG-1482.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1483",
+    "title": "DC distribution cabinet \u2014 Redundant control-power inputs",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/panel-engineering/ENG-1483.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1484",
+    "title": "DC distribution cabinet \u2014 Environmental temperature supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/panel-engineering/ENG-1484.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1485",
+    "title": "DC distribution cabinet \u2014 Condensation management",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Condensation management",
+    "path": "projects/panel-engineering/ENG-1485.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1486",
+    "title": "DC distribution cabinet \u2014 Door and enclosure supervision",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/panel-engineering/ENG-1486.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1487",
+    "title": "DC distribution cabinet \u2014 Maintenance test mode",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/panel-engineering/ENG-1487.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1488",
+    "title": "DC distribution cabinet \u2014 Remote alarm annunciation",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/panel-engineering/ENG-1488.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1489",
+    "title": "DC distribution cabinet \u2014 First-out fault capture",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/panel-engineering/ENG-1489.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1490",
+    "title": "DC distribution cabinet \u2014 Event and operating-hour logging",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/panel-engineering/ENG-1490.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1491",
+    "title": "DC distribution cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1491.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1492",
+    "title": "DC distribution cabinet \u2014 Serial supervisory gateway",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/panel-engineering/ENG-1492.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1493",
+    "title": "DC distribution cabinet \u2014 Hardwired permissive chain",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/panel-engineering/ENG-1493.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1494",
+    "title": "DC distribution cabinet \u2014 Controlled shutdown interface",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/panel-engineering/ENG-1494.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1495",
+    "title": "DC distribution cabinet \u2014 Commissioning simulation terminals",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/panel-engineering/ENG-1495.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1496",
+    "title": "DC distribution cabinet \u2014 Modular field connections",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/panel-engineering/ENG-1496.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1497",
+    "title": "DC distribution cabinet \u2014 Distributed field enclosure",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/panel-engineering/ENG-1497.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1498",
+    "title": "DC distribution cabinet \u2014 Future expansion provision",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/panel-engineering/ENG-1498.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1499",
+    "title": "DC distribution cabinet \u2014 Supply restoration management",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/panel-engineering/ENG-1499.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1500",
+    "title": "DC distribution cabinet \u2014 Integrated diagnostics package",
+    "domain": "panel-engineering",
+    "baseSystem": "DC distribution cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/panel-engineering/ENG-1500.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
