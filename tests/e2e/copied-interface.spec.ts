@@ -194,7 +194,7 @@ test("manufacturer projects open, expose editable parts and preserve connections
     expect(reopened.data.objects).toEqual(saved.data.objects);
     await page.locator('[data-inspector="Electrical checks"]').click();
     await expect(page.locator("#inspectorContent")).toContainText(
-      "No wire geometry issues found",
+      "Geometry errors0",
     );
     await page.locator("#closeRightPanel").click();
   }
