@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-0601",
+    "title": "Direct-on-line pump starter \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0601.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0602",
+    "title": "Direct-on-line pump starter \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0602.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0603",
+    "title": "Direct-on-line pump starter \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0603.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0604",
+    "title": "Direct-on-line pump starter \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0604.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0605",
+    "title": "Direct-on-line pump starter \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0605.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0606",
+    "title": "Direct-on-line pump starter \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0606.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0607",
+    "title": "Direct-on-line pump starter \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0607.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0608",
+    "title": "Direct-on-line pump starter \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0608.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0609",
+    "title": "Direct-on-line pump starter \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0609.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0610",
+    "title": "Direct-on-line pump starter \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0610.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0611",
+    "title": "Direct-on-line pump starter \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0611.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0612",
+    "title": "Direct-on-line pump starter \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0612.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0613",
+    "title": "Direct-on-line pump starter \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0613.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0614",
+    "title": "Direct-on-line pump starter \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0614.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0615",
+    "title": "Direct-on-line pump starter \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0615.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0616",
+    "title": "Direct-on-line pump starter \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0616.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0617",
+    "title": "Direct-on-line pump starter \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0617.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0618",
+    "title": "Direct-on-line pump starter \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0618.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0619",
+    "title": "Direct-on-line pump starter \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0619.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0620",
+    "title": "Direct-on-line pump starter \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0620.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0621",
+    "title": "Direct-on-line pump starter \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0621.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0622",
+    "title": "Direct-on-line pump starter \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0622.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0623",
+    "title": "Direct-on-line pump starter \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0623.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0624",
+    "title": "Direct-on-line pump starter \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0624.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0625",
+    "title": "Direct-on-line pump starter \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0625.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0626",
+    "title": "Direct-on-line pump starter \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0626.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0627",
+    "title": "Direct-on-line pump starter \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0627.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0628",
+    "title": "Direct-on-line pump starter \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0628.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0629",
+    "title": "Direct-on-line pump starter \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0629.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0630",
+    "title": "Direct-on-line pump starter \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Direct-on-line pump starter",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0630.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0631",
+    "title": "Reversing conveyor starter \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0631.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0632",
+    "title": "Reversing conveyor starter \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0632.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0633",
+    "title": "Reversing conveyor starter \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0633.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0634",
+    "title": "Reversing conveyor starter \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0634.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0635",
+    "title": "Reversing conveyor starter \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0635.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0636",
+    "title": "Reversing conveyor starter \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0636.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0637",
+    "title": "Reversing conveyor starter \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0637.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0638",
+    "title": "Reversing conveyor starter \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0638.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0639",
+    "title": "Reversing conveyor starter \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0639.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0640",
+    "title": "Reversing conveyor starter \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0640.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0641",
+    "title": "Reversing conveyor starter \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0641.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0642",
+    "title": "Reversing conveyor starter \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0642.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0643",
+    "title": "Reversing conveyor starter \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0643.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0644",
+    "title": "Reversing conveyor starter \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0644.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0645",
+    "title": "Reversing conveyor starter \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0645.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0646",
+    "title": "Reversing conveyor starter \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0646.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0647",
+    "title": "Reversing conveyor starter \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0647.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0648",
+    "title": "Reversing conveyor starter \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0648.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0649",
+    "title": "Reversing conveyor starter \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0649.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0650",
+    "title": "Reversing conveyor starter \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0650.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0651",
+    "title": "Reversing conveyor starter \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0651.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0652",
+    "title": "Reversing conveyor starter \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0652.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0653",
+    "title": "Reversing conveyor starter \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0653.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0654",
+    "title": "Reversing conveyor starter \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0654.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0655",
+    "title": "Reversing conveyor starter \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0655.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0656",
+    "title": "Reversing conveyor starter \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0656.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0657",
+    "title": "Reversing conveyor starter \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0657.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0658",
+    "title": "Reversing conveyor starter \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0658.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0659",
+    "title": "Reversing conveyor starter \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0659.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0660",
+    "title": "Reversing conveyor starter \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Reversing conveyor starter",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0660.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0661",
+    "title": "Star-delta fan starter \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0661.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0662",
+    "title": "Star-delta fan starter \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0662.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0663",
+    "title": "Star-delta fan starter \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0663.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0664",
+    "title": "Star-delta fan starter \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0664.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0665",
+    "title": "Star-delta fan starter \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0665.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0666",
+    "title": "Star-delta fan starter \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0666.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0667",
+    "title": "Star-delta fan starter \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0667.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0668",
+    "title": "Star-delta fan starter \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0668.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0669",
+    "title": "Star-delta fan starter \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0669.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0670",
+    "title": "Star-delta fan starter \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0670.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0671",
+    "title": "Star-delta fan starter \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0671.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0672",
+    "title": "Star-delta fan starter \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0672.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0673",
+    "title": "Star-delta fan starter \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0673.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0674",
+    "title": "Star-delta fan starter \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0674.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0675",
+    "title": "Star-delta fan starter \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0675.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0676",
+    "title": "Star-delta fan starter \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0676.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0677",
+    "title": "Star-delta fan starter \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0677.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0678",
+    "title": "Star-delta fan starter \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0678.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0679",
+    "title": "Star-delta fan starter \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0679.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0680",
+    "title": "Star-delta fan starter \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0680.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0681",
+    "title": "Star-delta fan starter \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0681.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0682",
+    "title": "Star-delta fan starter \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0682.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0683",
+    "title": "Star-delta fan starter \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0683.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0684",
+    "title": "Star-delta fan starter \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0684.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0685",
+    "title": "Star-delta fan starter \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0685.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0686",
+    "title": "Star-delta fan starter \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0686.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0687",
+    "title": "Star-delta fan starter \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0687.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0688",
+    "title": "Star-delta fan starter \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0688.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0689",
+    "title": "Star-delta fan starter \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0689.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0690",
+    "title": "Star-delta fan starter \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Star-delta fan starter",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0690.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0691",
+    "title": "Soft-start compressor feeder \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0691.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0692",
+    "title": "Soft-start compressor feeder \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0692.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0693",
+    "title": "Soft-start compressor feeder \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0693.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0694",
+    "title": "Soft-start compressor feeder \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0694.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0695",
+    "title": "Soft-start compressor feeder \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0695.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0696",
+    "title": "Soft-start compressor feeder \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0696.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0697",
+    "title": "Soft-start compressor feeder \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0697.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0698",
+    "title": "Soft-start compressor feeder \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0698.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0699",
+    "title": "Soft-start compressor feeder \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0699.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0700",
+    "title": "Soft-start compressor feeder \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0700.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0701",
+    "title": "Soft-start compressor feeder \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0701.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0702",
+    "title": "Soft-start compressor feeder \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0702.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0703",
+    "title": "Soft-start compressor feeder \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0703.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0704",
+    "title": "Soft-start compressor feeder \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0704.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0705",
+    "title": "Soft-start compressor feeder \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0705.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0706",
+    "title": "Soft-start compressor feeder \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0706.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0707",
+    "title": "Soft-start compressor feeder \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0707.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0708",
+    "title": "Soft-start compressor feeder \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0708.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0709",
+    "title": "Soft-start compressor feeder \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0709.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0710",
+    "title": "Soft-start compressor feeder \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0710.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0711",
+    "title": "Soft-start compressor feeder \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0711.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0712",
+    "title": "Soft-start compressor feeder \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0712.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0713",
+    "title": "Soft-start compressor feeder \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0713.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0714",
+    "title": "Soft-start compressor feeder \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0714.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0715",
+    "title": "Soft-start compressor feeder \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0715.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0716",
+    "title": "Soft-start compressor feeder \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0716.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0717",
+    "title": "Soft-start compressor feeder \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0717.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0718",
+    "title": "Soft-start compressor feeder \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0718.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0719",
+    "title": "Soft-start compressor feeder \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0719.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0720",
+    "title": "Soft-start compressor feeder \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Soft-start compressor feeder",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0720.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0721",
+    "title": "Variable-speed extraction fan \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0721.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0722",
+    "title": "Variable-speed extraction fan \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0722.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0723",
+    "title": "Variable-speed extraction fan \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0723.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0724",
+    "title": "Variable-speed extraction fan \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0724.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0725",
+    "title": "Variable-speed extraction fan \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0725.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0726",
+    "title": "Variable-speed extraction fan \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0726.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0727",
+    "title": "Variable-speed extraction fan \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0727.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0728",
+    "title": "Variable-speed extraction fan \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0728.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0729",
+    "title": "Variable-speed extraction fan \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0729.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0730",
+    "title": "Variable-speed extraction fan \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0730.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0731",
+    "title": "Variable-speed extraction fan \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0731.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0732",
+    "title": "Variable-speed extraction fan \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0732.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0733",
+    "title": "Variable-speed extraction fan \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0733.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0734",
+    "title": "Variable-speed extraction fan \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0734.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0735",
+    "title": "Variable-speed extraction fan \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0735.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0736",
+    "title": "Variable-speed extraction fan \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0736.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0737",
+    "title": "Variable-speed extraction fan \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0737.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0738",
+    "title": "Variable-speed extraction fan \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0738.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0739",
+    "title": "Variable-speed extraction fan \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0739.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0740",
+    "title": "Variable-speed extraction fan \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0740.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0741",
+    "title": "Variable-speed extraction fan \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0741.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0742",
+    "title": "Variable-speed extraction fan \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0742.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0743",
+    "title": "Variable-speed extraction fan \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0743.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0744",
+    "title": "Variable-speed extraction fan \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0744.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0745",
+    "title": "Variable-speed extraction fan \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0745.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0746",
+    "title": "Variable-speed extraction fan \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0746.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0747",
+    "title": "Variable-speed extraction fan \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0747.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0748",
+    "title": "Variable-speed extraction fan \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0748.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0749",
+    "title": "Variable-speed extraction fan \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0749.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0750",
+    "title": "Variable-speed extraction fan \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Variable-speed extraction fan",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0750.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0751",
+    "title": "Duty-standby drainage pumps \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0751.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0752",
+    "title": "Duty-standby drainage pumps \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0752.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0753",
+    "title": "Duty-standby drainage pumps \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0753.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0754",
+    "title": "Duty-standby drainage pumps \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0754.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0755",
+    "title": "Duty-standby drainage pumps \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0755.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0756",
+    "title": "Duty-standby drainage pumps \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0756.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0757",
+    "title": "Duty-standby drainage pumps \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0757.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0758",
+    "title": "Duty-standby drainage pumps \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0758.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0759",
+    "title": "Duty-standby drainage pumps \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0759.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0760",
+    "title": "Duty-standby drainage pumps \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0760.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0761",
+    "title": "Duty-standby drainage pumps \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0761.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0762",
+    "title": "Duty-standby drainage pumps \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0762.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0763",
+    "title": "Duty-standby drainage pumps \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0763.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0764",
+    "title": "Duty-standby drainage pumps \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0764.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0765",
+    "title": "Duty-standby drainage pumps \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0765.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0766",
+    "title": "Duty-standby drainage pumps \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0766.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0767",
+    "title": "Duty-standby drainage pumps \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0767.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0768",
+    "title": "Duty-standby drainage pumps \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0768.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0769",
+    "title": "Duty-standby drainage pumps \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0769.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0770",
+    "title": "Duty-standby drainage pumps \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0770.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0771",
+    "title": "Duty-standby drainage pumps \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0771.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0772",
+    "title": "Duty-standby drainage pumps \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0772.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0773",
+    "title": "Duty-standby drainage pumps \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0773.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0774",
+    "title": "Duty-standby drainage pumps \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0774.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0775",
+    "title": "Duty-standby drainage pumps \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0775.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0776",
+    "title": "Duty-standby drainage pumps \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0776.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0777",
+    "title": "Duty-standby drainage pumps \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0777.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0778",
+    "title": "Duty-standby drainage pumps \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0778.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0779",
+    "title": "Duty-standby drainage pumps \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0779.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0780",
+    "title": "Duty-standby drainage pumps \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Duty-standby drainage pumps",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0780.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0781",
+    "title": "Three-motor transfer conveyor \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0781.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0782",
+    "title": "Three-motor transfer conveyor \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0782.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0783",
+    "title": "Three-motor transfer conveyor \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0783.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0784",
+    "title": "Three-motor transfer conveyor \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0784.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0785",
+    "title": "Three-motor transfer conveyor \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0785.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0786",
+    "title": "Three-motor transfer conveyor \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0786.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0787",
+    "title": "Three-motor transfer conveyor \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0787.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0788",
+    "title": "Three-motor transfer conveyor \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0788.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0789",
+    "title": "Three-motor transfer conveyor \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0789.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0790",
+    "title": "Three-motor transfer conveyor \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0790.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0791",
+    "title": "Three-motor transfer conveyor \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0791.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0792",
+    "title": "Three-motor transfer conveyor \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0792.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0793",
+    "title": "Three-motor transfer conveyor \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0793.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0794",
+    "title": "Three-motor transfer conveyor \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0794.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0795",
+    "title": "Three-motor transfer conveyor \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0795.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0796",
+    "title": "Three-motor transfer conveyor \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0796.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0797",
+    "title": "Three-motor transfer conveyor \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0797.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0798",
+    "title": "Three-motor transfer conveyor \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0798.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0799",
+    "title": "Three-motor transfer conveyor \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0799.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0800",
+    "title": "Three-motor transfer conveyor \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0800.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0801",
+    "title": "Three-motor transfer conveyor \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0801.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0802",
+    "title": "Three-motor transfer conveyor \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0802.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0803",
+    "title": "Three-motor transfer conveyor \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0803.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0804",
+    "title": "Three-motor transfer conveyor \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0804.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0805",
+    "title": "Three-motor transfer conveyor \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0805.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0806",
+    "title": "Three-motor transfer conveyor \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0806.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0807",
+    "title": "Three-motor transfer conveyor \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0807.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0808",
+    "title": "Three-motor transfer conveyor \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0808.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0809",
+    "title": "Three-motor transfer conveyor \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0809.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0810",
+    "title": "Three-motor transfer conveyor \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Three-motor transfer conveyor",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0810.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0811",
+    "title": "Mixer agitator drive \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0811.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0812",
+    "title": "Mixer agitator drive \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0812.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0813",
+    "title": "Mixer agitator drive \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0813.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0814",
+    "title": "Mixer agitator drive \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0814.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0815",
+    "title": "Mixer agitator drive \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0815.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0816",
+    "title": "Mixer agitator drive \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0816.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0817",
+    "title": "Mixer agitator drive \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0817.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0818",
+    "title": "Mixer agitator drive \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0818.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0819",
+    "title": "Mixer agitator drive \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0819.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0820",
+    "title": "Mixer agitator drive \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0820.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0821",
+    "title": "Mixer agitator drive \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0821.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0822",
+    "title": "Mixer agitator drive \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0822.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0823",
+    "title": "Mixer agitator drive \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0823.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0824",
+    "title": "Mixer agitator drive \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0824.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0825",
+    "title": "Mixer agitator drive \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0825.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0826",
+    "title": "Mixer agitator drive \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0826.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0827",
+    "title": "Mixer agitator drive \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0827.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0828",
+    "title": "Mixer agitator drive \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0828.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0829",
+    "title": "Mixer agitator drive \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0829.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0830",
+    "title": "Mixer agitator drive \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0830.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0831",
+    "title": "Mixer agitator drive \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0831.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0832",
+    "title": "Mixer agitator drive \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0832.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0833",
+    "title": "Mixer agitator drive \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0833.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0834",
+    "title": "Mixer agitator drive \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0834.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0835",
+    "title": "Mixer agitator drive \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0835.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0836",
+    "title": "Mixer agitator drive \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0836.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0837",
+    "title": "Mixer agitator drive \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0837.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0838",
+    "title": "Mixer agitator drive \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0838.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0839",
+    "title": "Mixer agitator drive \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0839.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0840",
+    "title": "Mixer agitator drive \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Mixer agitator drive",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0840.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0841",
+    "title": "Hydraulic power-unit starter \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0841.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0842",
+    "title": "Hydraulic power-unit starter \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0842.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0843",
+    "title": "Hydraulic power-unit starter \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0843.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0844",
+    "title": "Hydraulic power-unit starter \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0844.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0845",
+    "title": "Hydraulic power-unit starter \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0845.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0846",
+    "title": "Hydraulic power-unit starter \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0846.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0847",
+    "title": "Hydraulic power-unit starter \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0847.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0848",
+    "title": "Hydraulic power-unit starter \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0848.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0849",
+    "title": "Hydraulic power-unit starter \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0849.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0850",
+    "title": "Hydraulic power-unit starter \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0850.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0851",
+    "title": "Hydraulic power-unit starter \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0851.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0852",
+    "title": "Hydraulic power-unit starter \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0852.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0853",
+    "title": "Hydraulic power-unit starter \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0853.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0854",
+    "title": "Hydraulic power-unit starter \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0854.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0855",
+    "title": "Hydraulic power-unit starter \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0855.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0856",
+    "title": "Hydraulic power-unit starter \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0856.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0857",
+    "title": "Hydraulic power-unit starter \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0857.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0858",
+    "title": "Hydraulic power-unit starter \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0858.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0859",
+    "title": "Hydraulic power-unit starter \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0859.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0860",
+    "title": "Hydraulic power-unit starter \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0860.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0861",
+    "title": "Hydraulic power-unit starter \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0861.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0862",
+    "title": "Hydraulic power-unit starter \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0862.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0863",
+    "title": "Hydraulic power-unit starter \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0863.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0864",
+    "title": "Hydraulic power-unit starter \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0864.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0865",
+    "title": "Hydraulic power-unit starter \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0865.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0866",
+    "title": "Hydraulic power-unit starter \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0866.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0867",
+    "title": "Hydraulic power-unit starter \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0867.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0868",
+    "title": "Hydraulic power-unit starter \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0868.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0869",
+    "title": "Hydraulic power-unit starter \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0869.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0870",
+    "title": "Hydraulic power-unit starter \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Hydraulic power-unit starter",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0870.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0871",
+    "title": "Screw-compressor auxiliaries \u2014 Local manual baseline",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Local manual baseline",
+    "path": "projects/motor-control/ENG-0871.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0872",
+    "title": "Screw-compressor auxiliaries \u2014 Remote supervisory operation",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Remote supervisory operation",
+    "path": "projects/motor-control/ENG-0872.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0873",
+    "title": "Screw-compressor auxiliaries \u2014 Scheduled operation",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Scheduled operation",
+    "path": "projects/motor-control/ENG-0873.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0874",
+    "title": "Screw-compressor auxiliaries \u2014 Demand-controlled enable",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Demand-controlled enable",
+    "path": "projects/motor-control/ENG-0874.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0875",
+    "title": "Screw-compressor auxiliaries \u2014 Supply undervoltage supervision",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/motor-control/ENG-0875.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0876",
+    "title": "Screw-compressor auxiliaries \u2014 Phase and supply-quality supervision",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/motor-control/ENG-0876.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0877",
+    "title": "Screw-compressor auxiliaries \u2014 Individual branch metering",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Individual branch metering",
+    "path": "projects/motor-control/ENG-0877.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0878",
+    "title": "Screw-compressor auxiliaries \u2014 Whole-system energy reporting",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/motor-control/ENG-0878.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0879",
+    "title": "Screw-compressor auxiliaries \u2014 Two-zone operation",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Two-zone operation",
+    "path": "projects/motor-control/ENG-0879.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0880",
+    "title": "Screw-compressor auxiliaries \u2014 Three-stage load sequencing",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/motor-control/ENG-0880.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0881",
+    "title": "Screw-compressor auxiliaries \u2014 Priority load shedding",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Priority load shedding",
+    "path": "projects/motor-control/ENG-0881.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0882",
+    "title": "Screw-compressor auxiliaries \u2014 Buffered control power",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Buffered control power",
+    "path": "projects/motor-control/ENG-0882.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0883",
+    "title": "Screw-compressor auxiliaries \u2014 Redundant control-power inputs",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/motor-control/ENG-0883.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0884",
+    "title": "Screw-compressor auxiliaries \u2014 Environmental temperature supervision",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/motor-control/ENG-0884.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0885",
+    "title": "Screw-compressor auxiliaries \u2014 Condensation management",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Condensation management",
+    "path": "projects/motor-control/ENG-0885.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0886",
+    "title": "Screw-compressor auxiliaries \u2014 Door and enclosure supervision",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/motor-control/ENG-0886.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0887",
+    "title": "Screw-compressor auxiliaries \u2014 Maintenance test mode",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Maintenance test mode",
+    "path": "projects/motor-control/ENG-0887.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0888",
+    "title": "Screw-compressor auxiliaries \u2014 Remote alarm annunciation",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/motor-control/ENG-0888.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0889",
+    "title": "Screw-compressor auxiliaries \u2014 First-out fault capture",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "First-out fault capture",
+    "path": "projects/motor-control/ENG-0889.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0890",
+    "title": "Screw-compressor auxiliaries \u2014 Event and operating-hour logging",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/motor-control/ENG-0890.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0891",
+    "title": "Screw-compressor auxiliaries \u2014 Ethernet supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/motor-control/ENG-0891.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0892",
+    "title": "Screw-compressor auxiliaries \u2014 Serial supervisory gateway",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/motor-control/ENG-0892.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0893",
+    "title": "Screw-compressor auxiliaries \u2014 Hardwired permissive chain",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/motor-control/ENG-0893.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0894",
+    "title": "Screw-compressor auxiliaries \u2014 Controlled shutdown interface",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/motor-control/ENG-0894.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0895",
+    "title": "Screw-compressor auxiliaries \u2014 Commissioning simulation terminals",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/motor-control/ENG-0895.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0896",
+    "title": "Screw-compressor auxiliaries \u2014 Modular field connections",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Modular field connections",
+    "path": "projects/motor-control/ENG-0896.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0897",
+    "title": "Screw-compressor auxiliaries \u2014 Distributed field enclosure",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Distributed field enclosure",
+    "path": "projects/motor-control/ENG-0897.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0898",
+    "title": "Screw-compressor auxiliaries \u2014 Future expansion provision",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Future expansion provision",
+    "path": "projects/motor-control/ENG-0898.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0899",
+    "title": "Screw-compressor auxiliaries \u2014 Supply restoration management",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Supply restoration management",
+    "path": "projects/motor-control/ENG-0899.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0900",
+    "title": "Screw-compressor auxiliaries \u2014 Integrated diagnostics package",
+    "domain": "motor-control",
+    "baseSystem": "Screw-compressor auxiliaries",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/motor-control/ENG-0900.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
