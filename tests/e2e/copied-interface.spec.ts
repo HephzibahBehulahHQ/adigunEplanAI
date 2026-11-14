@@ -65,6 +65,12 @@ async function saveDrawing(page: Page, name: string) {
   return { path, data: JSON.parse(fs.readFileSync(path, "utf8")) };
 }
 
+async function addSectionSheet(page: Page, section = "A2") {
+  await page.locator('[data-project-section="' + section + '"]').click();
+  await page.locator("#newSheet").click();
+  await page.locator("#sheetDialog [data-new-sheet]").first().click();
+}
+
 test("new project wires attach to terminals, follow edits, undo and reopen", async ({
   page,
 }) => {
@@ -77,6 +83,7 @@ test("new project wires attach to terminals, follow edits, undo and reopen", asy
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Bench circuit");
   await page.locator("#createProject").click();
+  await addSectionSheet(page);
   await page.locator('[data-module="Electrical"]').click();
   await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
   for (const [id, x] of [
@@ -182,7 +189,7 @@ test("manufacturer projects open, expose editable parts and preserve connections
     );
     await page.locator('[data-inspector="Properties"]').click();
     await page.locator("#userDrawings .drawing-object").first().click();
-    await expect(page.locator("#sheetDesignation")).toHaveText("A3/201");
+    await expect(page.locator("#sheetDesignation")).toHaveText("A2/000");
     await expect(
       page.locator("#inspectorContent .inspector-block").first(),
     ).toContainText(
@@ -240,6 +247,8 @@ test("imported sheet metadata overrides sample labels when opening properties", 
   await page.locator("#newProjectName").fill("Imported cabinet");
   await page.locator("#createProject").click();
   const saved = await saveDrawing(page, "metadata-source");
+  delete saved.data.sections;
+  delete saved.data.activeSection;
   saved.data.activeSheet = "control";
   saved.data.sheets = [
     { id: "control", number: "CAB/042", name: "Pump enable circuit" },
@@ -277,6 +286,7 @@ test("existing insertion toolbar places verified PLC motor and earth terminal", 
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
+  await addSectionSheet(page);
   const parts = [
     ["plc", "siemens-6es7212-1ae40-0xb0"],
     ["motor", "sew-eurodrive-drn63ms4"],
@@ -310,6 +320,7 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Eplan symbol regression");
   await page.locator("#createProject").click();
+  await addSectionSheet(page);
   await page.locator('[data-module="Electrical"]').click();
   await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
   await expect(page.locator('#symbolList [data-insert^="eplan-"]')).toHaveCount(
@@ -343,35 +354,57 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
   expect(errors).toEqual([]);
 });
 
-test("empty active sheet retains its definition through save and reopen", async ({
+test("new projects own four empty sections and continuously numbered sheets survive reopening", async ({
   page,
 }) => {
   await page.goto("/");
+  await page.locator('[data-panel="symbols"]').click();
   await page.locator('[data-action="new"]').first().click();
-  await page.locator("#newProjectName").fill("Empty sheets regression");
+  await page.locator("#newProjectName").fill("Section workflow");
   await page.locator("#createProject").click();
-  const initial = await saveDrawing(page, "empty-initial");
-  await page.locator('#projectTree [data-sheet="power"]').click();
-  const saved = await saveDrawing(page, "empty-active");
-  expect(saved.data.activeSheet).toBe("power");
-  expect(saved.data.objects).toEqual([]);
-  expect(saved.data.sheets).toEqual(
-    expect.arrayContaining(initial.data.sheets),
+  await expect(page.locator("[data-project-root]")).toHaveText(
+    "Section workflow",
   );
-  const definition = saved.data.sheets.find(
-    (sheet: { id: string }) => sheet.id === "power",
-  );
-  expect(definition).toBeDefined();
-  expect(definition.name).toBeTruthy();
+  await expect(page.locator("[data-project-section]")).toHaveCount(4);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(0);
+  const empty = await saveDrawing(page, "empty-four-sections");
   expect(
-    new Set(saved.data.sheets.map((sheet: { id: string }) => sheet.id)).size,
-  ).toBe(saved.data.sheets.length);
+    empty.data.sections.map((section: { id: string }) => section.id),
+  ).toEqual(["A1", "A2", "A3", "A4"]);
+  expect(empty.data.sheets).toEqual([]);
+  expect(empty.data.objects).toEqual([]);
+  expect(empty.data.activeSheet).toBeNull();
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(empty.path);
+  await expect(page.locator("[data-project-section]")).toHaveCount(4);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(0);
+  for (const section of ["A2", "A4", "A1", "A3", "A1"])
+    await addSectionSheet(page, section);
+  const saved = await saveDrawing(page, "sectioned");
+  expect(
+    saved.data.sheets.map((sheet: { number: string }) => sheet.number),
+  ).toEqual(["A1/000", "A1/001", "A2/002", "A3/003", "A4/004"]);
+  for (const sheet of saved.data.sheets) {
+    await expect(
+      page.locator(
+        '[data-section-container="' +
+          sheet.sectionId +
+          '"] [data-sheet="' +
+          sheet.id +
+          '"]',
+      ),
+    ).toBeVisible();
+  }
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
-  const reopened = await saveDrawing(page, "empty-reopened");
-  expect(reopened.data.activeSheet).toBe("power");
+  const reopened = await saveDrawing(page, "sectioned-reopened");
+  expect(reopened.data.sections).toEqual(saved.data.sections);
   expect(reopened.data.sheets).toEqual(saved.data.sheets);
-  expect(reopened.data.project).toBe("Empty sheets regression");
+  await addSectionSheet(page, "A2");
+  const extended = await saveDrawing(page, "sectioned-extended");
+  expect(
+    extended.data.sheets.map((sheet: { number: string }) => sheet.number),
+  ).toEqual(["A1/000", "A1/001", "A2/002", "A2/003", "A3/004", "A4/005"]);
 });
 
 test("Project Explorer exposes searchable examples and opens an editable copy", async ({
@@ -411,7 +444,5 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   ).toHaveLength(6);
   await page.locator('[data-panel="project"]').click();
   await expect(page.locator("#projectSearch")).toHaveValue("");
-  await expect(
-    page.locator('[data-project-example="indicator"]'),
-  ).toBeVisible();
+  await expect(page.locator("[data-project-section]")).toHaveCount(4);
 });

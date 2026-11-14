@@ -1,3 +1,9 @@
+# DEFAULT PROJECT TEMPLATE — OWNER CORRECTION (2026-11-14)
+
+Every newly created project must contain A1 General information, A2 Electrical design, A3 Panel layout and installation, and A4 Final documentation as four containers in ONE project. Create no automatic blank sheets. Add Sheet targets the selected section. Number pages globally from 000 across A1–A4 in section order; preserve stable sheet IDs so cross-references survive renumbering. Persist sections, section membership and selected section. Use the existing sidebar, Add Sheet dialog and menus; retain locked styles.
+
+The inverter was an illustration of structure, not a mandatory project topic. For the next coordinated educational example, use MASTER_SPECIFICATION.md Part 14 and document engineering assumptions separately from verified manufacturer data. Selected topic: Direct-on-line starter, section 14.3, line 961. Do not present six independent bench circuits as one complete coordinated project. This template implementation is the immediate task; the complete A1–A4 example remains subsequent work.
+
 # ACTIVE OWNER GOAL — FUNCTIONAL ENGINEERING WORKSPACE (2026-11-14)
 
 The owner has approved continuing components, wiring and editable project examples, followed by testing, merge and deployment. This is the current goal for this project. It supersedes all earlier screenshot matching, exact source-copy hashes, UI rebuild, and stop-after-branding instructions.
