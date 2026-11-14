@@ -19,8 +19,10 @@ test("project import rejects malformed attachment data and duplicate identities"
 });
 
 test("examples are independent editable projects with complete terminal attachments", () => {
-  assert.equal(engine.projectExamples().length, 2);
-  for (const example of engine.projectExamples()) {
+  assert.equal(engine.projectExamples().length, 5);
+  for (const example of engine
+    .projectExamples()
+    .filter((item) => !item.hardware)) {
     const project = engine.createExample(example.id, "Workshop project");
     assert.equal(project.project, "Workshop project");
     assert.equal(engine.validateProject(project).valid, true);
@@ -47,6 +49,78 @@ test("examples are independent editable projects with complete terminal attachme
       engine.createExample(example.id).objects[0].id,
       project.objects[0].id,
     );
+  }
+});
+
+test("manufacturer examples preserve separate circuits and editable source-backed parts", () => {
+  for (const [id, components, wires, spare] of [
+    ["hardware-relay", 7, 6, 5],
+    ["hardware-sensor", 4, 3, 3],
+    ["hardware-sitop", 3, 2, 5],
+  ]) {
+    const project = engine.createExample(id);
+    const report = engine.analyze(project.objects);
+    assert.equal(report.componentCount, components);
+    assert.equal(report.wireCount, wires);
+    assert.equal(
+      report.netCount,
+      wires,
+      "separate circuits must not short together",
+    );
+    assert.equal(report.openEndpointCount, 0);
+    assert.equal(report.geometryErrorCount, 0);
+    assert.equal(
+      report.unconnectedPinCount,
+      spare,
+      "external boundaries and spare pins remain explicit",
+    );
+    assert.equal(engine.billOfMaterials(project.objects).valid, true);
+    for (const item of project.objects.filter(
+      (o) => o.kind === "component-instance",
+    )) {
+      const definition = engine.component(item.componentId);
+      assert.ok(definition.manufacturerPartNumber);
+      assert.ok(
+        definition.sources.every((source) => source.url.startsWith("https://")),
+      );
+    }
+    for (const wire of project.objects.filter((o) => o.kind === "wire")) {
+      const net = report.nets.find((n) => n.wireIds.includes(wire.id));
+      for (const end of [wire.attachments.start, wire.attachments.end]) {
+        assert.ok(
+          net.pins.some(
+            (pin) =>
+              pin.instanceId === end.instanceId && pin.pinId === end.pinId,
+          ),
+        );
+      }
+    }
+    const device = project.objects.find((o) => o.kind === "component-instance");
+    engine.moveInstance(device, device.x + 40, device.y + 80);
+    engine.rotateInstance(device, 90);
+    engine.synchronizeWireAttachments(project.objects);
+    assert.equal(engine.wireAttachmentIssues(project.objects).length, 0);
+    const restored = engine.parseProject(engine.serializeProject(project));
+    assert.equal(restored.valid, true);
+    assert.deepEqual(plain(restored.project), plain(project));
+  }
+});
+
+test("screw terminal definitions retain manufacturer ratings and local connection identities", () => {
+  for (const [id, voltage, current, section] of [
+    ["phoenix-contact-3004362", 800, 32, 4],
+    ["phoenix-contact-3044076", 1000, 24, 2.5],
+  ]) {
+    const part = engine.component(id);
+    assert.equal(part.specifications.nominalVoltage.value, voltage);
+    assert.equal(part.specifications.nominalCurrent.value, current);
+    assert.equal(part.specifications.ratedCrossSection.value, section);
+    assert.deepEqual(plain(part.symbol.pins.map((pin) => pin.id)), [
+      "connection-1",
+      "connection-2",
+    ]);
+    assert.match(part.sources[0].revisionNote, /model-local/);
+    assert.ok(part.symbol.pins.every((pin) => pin.connectionType === "screw"));
   }
 });
 
