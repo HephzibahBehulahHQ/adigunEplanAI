@@ -177,7 +177,7 @@ test("manufacturer projects open, expose editable parts and preserve connections
     await page.locator('[data-inspector="Properties"]').click();
     await page.locator("#userDrawings .drawing-object").first().click();
     await expect(page.locator("#inspectorContent")).toContainText(
-      /Phoenix Contact|Siemens/,
+      /UK 5 N|UT 2,5|SITOP PSU100C/,
     );
     await page.locator('[data-component-property="ref"]').fill("TEST1");
     await page.locator('[data-component-property="ref"]').press("Tab");
