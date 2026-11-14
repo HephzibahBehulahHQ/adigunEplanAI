@@ -1,5 +1,12 @@
 # Active engineering goal — 2026-11-14
 
+## Sidebar document management — shipped 2026-11-14
+
+PR #72 merged as 9bb407703a13fb61fc096f32e16bd6cbceb5dffd. A1–A4 remain defaults, with additional sections via the root +. Section + creates documents without opening them. Inline rename, folder collapse, drag/drop ordering and cross-section moves retain stable sheet IDs and custom names. Canvas tabs are views: closing never deletes. Only explicit sidebar Delete removes documents; shared cross-page potentials retain their remaining branches. Save/reopen preserves sections, order, contents, connections and open views. Removed the former 200-sheet import/creation cap and object truncation.
+
+Final premerge CI runs 43648428074 and 43648423881 passed, including 11 browser regressions and a 208-sheet roundtrip. Local focused engineering tests: 12 passed; full checks passed before the final connection-deletion fix, which final CI covers. Pages run 43648579087 succeeded. Live verification confirmed four default folders, repeated + creation without tabs, A5 creation, inline A1/Power rename and close/reopen retaining all four documents. Evidence: work/live-sidebar-management.jpg. Static shell/CSS preserved. AGENTS.md records the owner’s sidebar/document/view rules. No coordinated DOL example is claimed complete by this change.
+
+
 ## Default A1–A4 template — owner requirement, shipped 2026-11-14
 
 PR #59 merged as 87e4aae10334c2c77740217878fbae03699cf45b. Every newly created project now owns A1 General information, A2 Electrical design, A3 Panel layout and installation and A4 Final documentation. Blank creation adds no sheets. Selecting a section targets the existing Add Sheet dialog; pages nest under that section and are continuously numbered from 000 across the section order. Stable sheet IDs preserve cross-reference destinations when numbers change. Save/reopen retains the sections and memberships. Legacy imports remain supported; example creation also receives all four sections. The loader now retains per-sheet objects and cross-sheet links.
