@@ -1,5 +1,13 @@
 # Active engineering goal — 2026-11-14
 
+## Default A1–A4 template — owner requirement, shipped 2026-11-14
+
+PR #59 merged as 87e4aae10334c2c77740217878fbae03699cf45b. Every newly created project now owns A1 General information, A2 Electrical design, A3 Panel layout and installation and A4 Final documentation. Blank creation adds no sheets. Selecting a section targets the existing Add Sheet dialog; pages nest under that section and are continuously numbered from 000 across the section order. Stable sheet IDs preserve cross-reference destinations when numbers change. Save/reopen retains the sections and memberships. Legacy imports remain supported; example creation also receives all four sections. The loader now retains per-sheet objects and cross-sheet links.
+
+Validation: 368 local unit/tooling tests; nine browser tests in development and production-build CI. Final premerge runs 43644923863 and 43644918984 passed. Main CI 43645078452 and Pages 43645078487 passed. Live creation showed exactly four sections and zero pages; adding in A2, A4, A1, A3 order produced A1/000, A2/001, A3/002, A4/003 beneath their correct parents. Screenshot: work/live-a1-a4-template.jpg. Static markup/CSS unchanged; existing sidebar/dialog content is connected to the template.
+
+Next requested work remains a coordinated educational project, not six independent bench circuits. Selected master topic: Direct-on-line starter, MASTER_SPECIFICATION.md section 14.3, line 961; acceptance requirements in section 14.12. The owner clarified that the 3 kVA inverter was a structural illustration, not a mandated topic. Choose coherent researched equipment and clearly distinguish educational assumptions from verified manufacturer facts; do not ask the owner to do the research. No complete A1–A4 DOL example has been claimed or delivered yet. Preserve this new default project workflow while building it.
+
 ## Explorer discoverability correction — 2026-11-14
 
 The owner could not find examples through Project Explorer. PR #58 (8b007d26ce2bf40d18b34b06bc7ee08b275bdd0c) exposes all six templates as searchable rows at the top of the existing explorer. Activate a row, then use the existing Create from selected example button. Clicking a row alone does not replace current work. Panel navigation now honors hidden state despite flex styles, and returning to Explorer clears stale search filters and scrolls to the examples. No new menu or CSS was added.
