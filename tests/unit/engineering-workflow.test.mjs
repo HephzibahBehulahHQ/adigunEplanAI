@@ -296,3 +296,76 @@ test("bound example nets remain identical through component rotation and movemen
     }
   }
 });
+
+test("default sections contain no pages and numbering follows section order without resetting", () => {
+  const sections = engine.defaultProjectSections();
+  assert.deepEqual(
+    plain(sections).map((section) => section.id),
+    ["A1", "A2", "A3", "A4"],
+  );
+  const project = {
+    project: "New Project",
+    sections,
+    activeSection: "A1",
+    activeSheet: null,
+    sheets: [],
+    objects: [],
+    crossSheetConnections: [],
+  };
+  assert.deepEqual(
+    plain(
+      engine.parseProject(engine.serializeProject(project)).project.sections,
+    ),
+    plain(sections),
+  );
+  const sheets = engine.numberProjectSheets(
+    [
+      { id: "circuit", name: "Circuit", sectionId: "A2" },
+      { id: "handover", name: "Handover", sectionId: "A4" },
+      { id: "overview", name: "Overview", sectionId: "A1" },
+      { id: "panel", name: "Panel", sectionId: "A3" },
+    ],
+    sections,
+  );
+  assert.deepEqual(
+    plain(sheets).map((sheet) => sheet.number),
+    ["A1/000", "A2/001", "A3/002", "A4/003"],
+  );
+  const extra = engine.numberProjectSheets(
+    sheets.concat({ id: "terms", name: "Terms", sectionId: "A1" }),
+    sections,
+  );
+  assert.equal(extra.find((sheet) => sheet.id === "circuit").number, "A2/002");
+  const links = {
+    sheets: extra,
+    crossSheetConnections: [
+      {
+        id: "L",
+        name: "L",
+        endpoints: [
+          {
+            sheetId: "overview",
+            point: { x: 1, y: 1 },
+            connector: {
+              targetSheetId: "circuit",
+              targetRef: "X1",
+              direction: "out",
+            },
+          },
+        ],
+      },
+    ],
+  };
+  assert.equal(
+    engine.crossSheetConnectors(links, "overview")[0].targetSheetNumber,
+    "A2/002",
+  );
+  assert.throws(
+    () =>
+      engine.numberProjectSheets([{ id: "bad", sectionId: "A5" }], sections),
+    /section/,
+  );
+  const bad = Object.assign({}, project, { sheets: plain(sheets) });
+  bad.sheets[1].number = "A2/000";
+  assert.throws(() => engine.serializeProject(bad), /continuous/);
+});

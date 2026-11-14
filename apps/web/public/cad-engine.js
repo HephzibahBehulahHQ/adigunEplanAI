@@ -891,12 +891,30 @@
       };
     });
   }
+  function defaultProjectSections() {
+    return [{id:'A1',name:'General information'},{id:'A2',name:'Electrical design'},{id:'A3',name:'Panel layout and installation'},{id:'A4',name:'Final documentation'}];
+  }
+  function numberProjectSheets(sheets,sections) {
+    const order=new Map(sections.map(function(section,index){return [section.id,index];}));
+    if(sheets.some(function(sheet){return !order.has(sheet.sectionId);}))throw new Error('Every sheet must belong to a project section.');
+    return sheets.slice().sort(function(a,b){return order.get(a.sectionId)-order.get(b.sectionId);}).map(function(sheet,index){return Object.assign({},sheet,{number:sheet.sectionId+'/'+String(index).padStart(3,'0')});});
+  }
   function validateProject(project) {
     const errors = [];
     if (!project || typeof project !== 'object') return { valid: false, errors: ['Project must be a JSON object.'] };
     if (project.format !== PROJECT_FORMAT) errors.push('Unsupported Adigun project format.');
     if (![1, PROJECT_VERSION].includes(project.version)) errors.push('Unsupported project version.');
     if (!Array.isArray(project.objects) || !Array.isArray(project.sheets)) errors.push('Project objects and sheets must be arrays.');
+    if(project.sections !== undefined) {
+      const sections=project.sections;
+      if(!Array.isArray(sections)||sections.length!==4||sections.some(function(section,index){return !section||section.id!=='A'+(index+1)||typeof section.name!=='string'||!section.name.trim();}))errors.push('Project sections must contain A1, A2, A3 and A4 in order.');
+      else if(Array.isArray(project.sheets)){
+        try{const numbered=numberProjectSheets(project.sheets,sections);if(numbered.some(function(sheet,index){return sheet.id!==project.sheets[index].id||sheet.number!==project.sheets[index].number;}))errors.push('Project sheet numbers must be continuous across sections.');}catch(error){errors.push(error.message);}
+        if(project.activeSection&&!sections.some(function(section){return section.id===project.activeSection;}))errors.push('Unknown active project section.');
+        if(project.activeSheet&&!project.sheets.some(function(sheet){return sheet.id===project.activeSheet;}))errors.push('Unknown active project sheet.');
+        if(Array.isArray(project.objects)&&project.objects.some(function(object){return !object.sheetId;}))errors.push('Every object must belong to a project sheet.');
+      }
+    }
     if (Array.isArray(project.sheets)) {
       const sheetIds = new Set();
       project.sheets.forEach(function (sheet, index) {
@@ -1555,6 +1573,8 @@
   }
 
   root.AdigunCADEngine = Object.freeze({
+    defaultProjectSections: defaultProjectSections,
+    numberProjectSheets: numberProjectSheets,
     endpointPin: endpointPin,
     attachWire: attachWire,
     synchronizeWireAttachments: synchronizeWireAttachments,
