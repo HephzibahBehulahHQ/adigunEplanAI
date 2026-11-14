@@ -358,6 +358,7 @@ test("new projects own four empty sections and continuously numbered sheets surv
   page,
 }) => {
   await page.goto("/");
+  await page.locator('[data-panel="symbols"]').click();
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Section workflow");
   await page.locator("#createProject").click();
