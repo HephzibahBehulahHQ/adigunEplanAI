@@ -3,6 +3,47 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+test("title block edits propagate shared fields and retain sheet overrides", async ({
+  page,
+}) => {
+  page.setDefaultTimeout(5000);
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page, "A1");
+  await page.locator("#customSheetFrame rect").last().dblclick();
+  await page
+    .getByLabel("Project manager", { exact: true })
+    .fill("Manager example");
+  await page.getByLabel("Project manager", { exact: true }).press("Tab");
+  await page.getByLabel("Sheet revision", { exact: true }).fill("02");
+  await page.getByLabel("Sheet revision", { exact: true }).press("Tab");
+  await expect(page.locator("#customSheetFrame")).toContainText(
+    "Manager example",
+  );
+  const first = await page
+    .locator("#projectTree [data-sheet]")
+    .first()
+    .getAttribute("data-sheet");
+  await addSectionSheet(page, "A2");
+  await expect(page.locator("#customSheetFrame")).toContainText(
+    "Manager example",
+  );
+  await expect(page.locator("#customSheetFrame")).not.toContainText(
+    "Revision: 02",
+  );
+  await page.locator('#projectTree [data-sheet="' + first + '"]').click();
+  const saved = await saveDrawing(page, "title-block");
+  expect(saved.data.metadata.manager).toBe("Manager example");
+  expect(saved.data.sheets[0].metadata.revision).toBe("02");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#customSheetFrame")).toContainText("Revision: 02");
+  await expect(page.locator("#customSheetFrame")).toContainText(
+    "Hephzibah Behulah",
+  );
+});
+
 test("paper sheets support multiline writing, formatting and saved editing", async ({
   page,
 }) => {

@@ -1060,6 +1060,26 @@
     }
     return { valid: errors.length === 0, errors: errors };
   }
+  const titleBlockProjectFields = ['jobNumber','manager','customer','site','drawnBy','checkedBy','approvedBy','drawingDate','issueStatus','notes'];
+  const titleBlockSheetFields = ['drawingNumber','revision','revisionDate','drawnBy','checkedBy','approvedBy','drawingDate','issueStatus','notes'];
+  function titleBlockValues(project,sheet) {
+    const shared=project.metadata||{},local=sheet.metadata||{},values={};
+    titleBlockProjectFields.forEach(function(key){values[key]=typeof shared[key]==='string'?shared[key]:'';});
+    titleBlockSheetFields.forEach(function(key){if(typeof local[key]==='string')values[key]=local[key];else if(values[key]===undefined)values[key]='';});
+    values.projectTitle=typeof project.project==='string'?project.project:'';
+    values.sheetTitle=sheet.name||'';
+    values.sheetReference=sheet.customName?sheet.sectionId+'/'+sheet.name:sheet.number;
+    values.corporateIdentity='Hephzibah Behulah';
+    values.softwareIdentity='AdigunEplanAI';
+    return values;
+  }
+  function titleBlockBounds(width,height,margin) {
+    if(!Number.isFinite(width)||!Number.isFinite(height)||width<300||height<240)throw new Error('Invalid drawing dimensions.');
+    margin=Number.isFinite(margin)?Math.max(0,margin):26;
+    const blockWidth=Math.min(474,width-2*margin),blockHeight=160;
+    if(blockWidth<200||height-2*margin<blockHeight)throw new Error('Drawing margins leave no room for the title block.');
+    return {x:width-margin-blockWidth,y:height-margin-blockHeight,width:blockWidth,height:blockHeight};
+  }
   function serializeProject(project) {
     const payload = Object.assign({}, project, {
       format: PROJECT_FORMAT,
@@ -1625,6 +1645,10 @@
     validateInstance: validateInstance,
     worldPins: worldPins,
     validateProject: validateProject,
+    titleBlockValues: titleBlockValues,
+    titleBlockBounds: titleBlockBounds,
+    titleBlockProjectFields: Object.freeze(titleBlockProjectFields),
+    titleBlockSheetFields: Object.freeze(titleBlockSheetFields),
     serializeProject: serializeProject,
     parseProject: parseProject,
     analyze: analyze,
