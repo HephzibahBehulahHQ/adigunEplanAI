@@ -256,3 +256,43 @@ test("missing terminals and sheet mismatches are diagnosed, not silently reconne
   ];
   assert.equal(engine.nextReference(refs, "U"), "U2");
 });
+
+test("bound example nets remain identical through component rotation and movement", () => {
+  const signature = (objects) =>
+    engine
+      .analyze(objects)
+      .nets.map((net) =>
+        net.pins
+          .map((pin) => pin.instanceId + ":" + pin.pinId)
+          .sort()
+          .join("|"),
+      )
+      .sort();
+  for (const example of engine.projectExamples()) {
+    const project = engine.createExample(example.id);
+    const expected = signature(project.objects);
+    for (const device of project.objects.filter(
+      (object) => object.kind === "component-instance",
+    )) {
+      const original = { x: device.x, y: device.y };
+      for (let turn = 0; turn < 4; turn++) {
+        engine.rotateInstance(device, 90);
+        engine.synchronizeWireAttachments(project.objects);
+        assert.deepEqual(
+          signature(project.objects),
+          expected,
+          example.id + " rotation " + device.ref,
+        );
+      }
+      engine.moveInstance(device, original.x + 170, original.y + 110);
+      engine.synchronizeWireAttachments(project.objects);
+      assert.deepEqual(
+        signature(project.objects),
+        expected,
+        example.id + " movement " + device.ref,
+      );
+      engine.moveInstance(device, original.x, original.y);
+      engine.synchronizeWireAttachments(project.objects);
+    }
+  }
+});

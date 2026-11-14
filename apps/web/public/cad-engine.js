@@ -1164,7 +1164,7 @@
         errors.push({ code: 'zero-length-wire', objectId: object.id || null, message: 'A wire has zero length.' });
         return;
       }
-      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments });
+      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments, attachments: object.attachments });
     });
 
     source.forEach(function (object) {
@@ -1195,11 +1195,13 @@
     wires.forEach(function (wire) { wire.node = addNode(); });
     pins.forEach(function (pin) { pin.node = addNode(); });
 
+    // Explicit terminal bindings own connectivity; only free endpoints may form geometric branches.
+    const junctionPoints = function (wire) { return wire.attachments ? ['start','end'].filter(function (end) { return !wire.attachments[end]; }).map(function (end) { return wire[end]; }) : wire.points; };
     for (let i = 0; i < wires.length; i += 1) {
       for (let j = i + 1; j < wires.length; j += 1) {
-        const touches = wires[i].points.some(function (point) {
+        const touches = junctionPoints(wires[i]).some(function (point) {
           return wires[j].segments.some(function (segment) { return pointOnSegment(point, segment); });
-        }) || wires[j].points.some(function (point) {
+        }) || junctionPoints(wires[j]).some(function (point) {
           return wires[i].segments.some(function (segment) { return pointOnSegment(point, segment); });
         });
         if (touches) join(wires[i].node, wires[j].node);
@@ -1208,6 +1210,10 @@
     let connectedPinCount = 0;
     pins.forEach(function (pin) {
       const attachedWires = wires.filter(function (wire) {
+        if (wire.attachments) return ['start','end'].some(function (end) {
+          const attachment = wire.attachments[end];
+          return attachment ? attachment.instanceId === pin.instanceId && attachment.pinId === pin.pinId : Math.abs(wire[end].x-pin.point.x)<=EPSILON && Math.abs(wire[end].y-pin.point.y)<=EPSILON;
+        });
         return wire.segments.some(function (segment) { return pointOnSegment(pin.point, segment); });
       });
       if (attachedWires.length) connectedPinCount += 1;

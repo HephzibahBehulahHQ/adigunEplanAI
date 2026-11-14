@@ -199,7 +199,9 @@ test("manufacturer projects open, expose editable parts and preserve connections
     );
     await page.locator('[data-component-property="ref"]').fill("TEST1");
     await page.locator('[data-component-property="ref"]').press("Tab");
+    await page.locator("[data-rotate-object]").click();
     const saved = await saveDrawing(page, id);
+    expect(saved.data.objects[0].rotation).toBe(90);
     expect(
       saved.data.objects.filter((o: { kind: string }) => o.kind === "wire"),
     ).toHaveLength(wireCount);
@@ -213,6 +215,17 @@ test("manufacturer projects open, expose editable parts and preserve connections
     await page.locator('[data-inspector="Electrical checks"]').click();
     await expect(page.locator("#inspectorContent")).toContainText(
       "Geometry errors0",
+    );
+    const expectedNets =
+      id === "hardware-plc-input"
+        ? 4
+        : id === "hardware-relay"
+          ? 6
+          : id === "hardware-sensor"
+            ? 3
+            : 2;
+    await expect(page.locator("#inspectorContent")).toContainText(
+      "Connected nets" + expectedNets,
     );
     await page.locator("#closeRightPanel").click();
   }
