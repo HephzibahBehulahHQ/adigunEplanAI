@@ -1,3 +1,7 @@
+# SIDEBAR DOCUMENT MANAGEMENT — OWNER REQUIREMENT (2026-11-14)
+
+A1–A4 are starting containers, not a maximum: users can add A5 and onward. A section's + creates another real sheet in that section without opening its canvas view. Only selecting a sheet opens it. Keep renaming inline in the sidebar, support section collapse and drag/drop ordering/moving between sections, and persist stable sheet IDs, custom names, section membership, order, contents and electrical links. Canvas tabs are views: closing a tab must NEVER delete its document. Deletion is an explicit sidebar action. Persist open views separately from project sheets. Do not reintroduce the former 200-sheet cap or silent import truncation. Preserve the approved layout and use small sidebar controls rather than new top-level menus or large dialogs.
+
 # DEFAULT PROJECT TEMPLATE — OWNER CORRECTION (2026-11-14)
 
 Every newly created project must contain A1 General information, A2 Electrical design, A3 Panel layout and installation, and A4 Final documentation as four containers in ONE project. Create no automatic blank sheets. Add Sheet targets the selected section. Number pages globally from 000 across A1–A4 in section order; preserve stable sheet IDs so cross-references survive renumbering. Persist sections, section membership and selected section. Use the existing sidebar, Add Sheet dialog and menus; retain locked styles.

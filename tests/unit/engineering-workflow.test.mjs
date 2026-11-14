@@ -369,3 +369,93 @@ test("default sections contain no pages and numbering follows section order with
   bad.sheets[1].number = "A2/000";
   assert.throws(() => engine.serializeProject(bad), /continuous/);
 });
+
+test("sidebar ordering keeps document identities, custom names and electrical links across sections", () => {
+  const sections = engine.defaultProjectSections().concat([
+    { id: "A5", name: "Extra", collapsed: true },
+    { id: "A6", name: "Extra 2" },
+  ]);
+  const sheets = engine.numberProjectSheets(
+    Array.from({ length: 250 }, (_, index) => ({
+      id: "sheet-" + index,
+      name: index === 0 ? "Power" : "Sheet",
+      customName: index === 0,
+      sectionId: index < 6 ? "A1" : "A5",
+    })),
+    sections,
+  );
+  let moved = engine.moveProjectSheet(
+    sheets,
+    sections,
+    "sheet-0",
+    "sheet-4",
+    "after",
+  );
+  assert.deepEqual(
+    plain(moved)
+      .slice(0, 6)
+      .map((sheet) => sheet.id),
+    ["sheet-1", "sheet-2", "sheet-3", "sheet-4", "sheet-0", "sheet-5"],
+  );
+  assert.equal(moved[4].name, "Power");
+  moved = engine.moveProjectSheet(
+    moved,
+    sections,
+    "sheet-0",
+    null,
+    "after",
+    "A6",
+  );
+  assert.equal(moved[249].id, "sheet-0");
+  assert.equal(moved[249].number, "A6/249");
+  const objects = [
+    {
+      id: "wa",
+      kind: "wire",
+      sheetId: "sheet-0",
+      x1: 0,
+      y1: 0,
+      x2: 100,
+      y2: 0,
+    },
+    {
+      id: "wb",
+      kind: "wire",
+      sheetId: "sheet-1",
+      x1: 0,
+      y1: 0,
+      x2: 100,
+      y2: 0,
+    },
+  ];
+  const links = [
+    {
+      id: "potential",
+      name: "TEST",
+      endpoints: [
+        { sheetId: "sheet-0", wireId: "wa", point: { x: 100, y: 0 } },
+        { sheetId: "sheet-1", wireId: "wb", point: { x: 0, y: 0 } },
+      ],
+    },
+  ];
+  const project = {
+    project: "Sidebar regression",
+    sections,
+    sheets: moved,
+    objects,
+    crossSheetConnections: links,
+    activeSection: "A6",
+    activeSheet: null,
+    openSheetIds: [],
+  };
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  assert.deepEqual(plain(restored.project.sheets), plain(moved));
+  assert.deepEqual(plain(restored.project.crossSheetConnections), links);
+  assert.equal(engine.analyzeProject(restored.project).valid, true);
+  assert.equal(restored.project.objects.length, 2);
+  assert.throws(
+    () => engine.serializeProject({ ...project, openSheetIds: ["missing"] }),
+    /Open sheet views/,
+  );
+});
