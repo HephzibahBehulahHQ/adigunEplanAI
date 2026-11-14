@@ -54,7 +54,7 @@ test("paper sheets support multiline writing, formatting and saved editing", asy
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(text).toHaveAttribute("text-decoration", "underline");
-  await text.dblclick();
+  await text.locator("tspan").first().dblclick();
   await editor.fill(note + "\nHandover notes");
   await editor.press("Control+Enter");
   const edited = await saveDrawing(page, "edited-paper");
