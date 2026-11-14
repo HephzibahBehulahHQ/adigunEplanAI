@@ -44,6 +44,11 @@ Continue components, wiring and project examples. Keep the current interface loc
 - Current increment fixes project-specific navigator/property metadata: imported sheet records take precedence over sample names; properties refresh on reopening and sheet changes; existing tabs and tree rows display matching project labels. Browser regression covers an imported control sheet renamed CAB/042 / Pump enable circuit and all hardware example property labels. Await CI/merge/deployment verification before reporting this increment live.
 - Next: add a source-backed PLC input wiring example through existing project controls. Preserve shell and current five working examples. Goal remains active; do not mark the broad engineering workflow finished merely because an increment shipped.
 
+## PLC source correction
+
+- Manufacturer verification for the next example found that CPU 1212C DC/DC/DC output labels had incorrectly followed the relay variant. Siemens V20 CPU 1212C wiring diagrams, tables 5/6, assign X12:1=3L+, X12:2=3M and X12:3–8=DQ a.0–a.5. Source: https://docs.tia.siemens.cloud/r/simatic_s7_1200_manual_collection_enus_20/technical-specifications/cpu-1212c/cpu-1212c-wiring-diagrams . The earlier PDF endpoint returned 403; use this verified official HTML table.
+- Corrected the component definition and source link; existing physical connector IDs and coordinates remain unchanged, so wires are not silently moved to other terminals. Existing properties show a correction note requesting review of earlier output wiring. Targeted tests verify every X12 function and retained endpoint identity. Await full CI and release verification.
+
 ## Workspace caution
 
 Local checkout has an old HEAD and unrelated earlier edits/deletions. Do not blanket commit, reset, or delete it. Use current remote main as the merge base and publish only this task's reviewed files. Keep root runtime copies synchronized with apps/web source. Deployment regenerates build-info; do not publish stale local provenance.

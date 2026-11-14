@@ -642,8 +642,8 @@
     ['X10', '7', 'DI a.0'], ['X10', '8', 'DI a.1'], ['X10', '9', 'DI a.2'], ['X10', '10', 'DI a.3'],
     ['X10', '11', 'DI a.4'], ['X10', '12', 'DI a.5'], ['X10', '13', 'DI a.6'], ['X10', '14', 'DI a.7'],
     ['X11', '1', '2M'], ['X11', '2', 'AI 0'], ['X11', '3', 'AI 1'],
-    ['X12', '1', '1L'], ['X12', '2', 'DQ a.0'], ['X12', '3', 'DQ a.1'], ['X12', '4', 'DQ a.2'],
-    ['X12', '5', 'DQ a.3'], ['X12', '6', '2L'], ['X12', '7', 'DQ a.4'], ['X12', '8', 'DQ a.5']
+    ['X12', '1', '3L+'], ['X12', '2', '3M'], ['X12', '3', 'DQ a.0'], ['X12', '4', 'DQ a.1'],
+    ['X12', '5', 'DQ a.2'], ['X12', '6', 'DQ a.3'], ['X12', '7', 'DQ a.4'], ['X12', '8', 'DQ a.5']
   ];
   const siemensCpuPins = siemensCpuPinRows.map(function (row, index) {
     const group = row[0], groupIndex = siemensCpuPinRows.slice(0, index).filter(function (item) { return item[0] === group; }).length;
@@ -653,7 +653,7 @@
   const siemensCpuDefinition = deepFreeze({
     schemaVersion: COMPONENT_SCHEMA_VERSION, id: 'siemens-6es7212-1ae40-0xb0', manufacturer: 'Siemens', manufacturerPartNumber: '6ES7212-1AE40-0XB0',
     model: 'SIMATIC S7-1200 CPU 1212C DC/DC/DC', name: 'Compact PLC CPU', family: 'plc-cpu', referencePrefix: 'A', category: 'Automation · Verified PLC CPU',
-    symbol: { id: 'plc.siemens.cpu-1212c.dcdcdc.v1', view: 'schematic', unit: 'mm', width: 260, height: 290, pins: siemensCpuPins, internalConnections: [], numberingNote: 'Terminal group and pin identities X10, X11 and X12 match Siemens System Manual V4.7, Table A-49. Pin coordinates are schematic connection points, not physical connector geometry.' },
+    symbol: { id: 'plc.siemens.cpu-1212c.dcdcdc.v2', view: 'schematic', unit: 'mm', width: 260, height: 290, pins: siemensCpuPins, internalConnections: [], numberingNote: 'Terminal groups match Siemens CPU 1212C DC/DC/DC connector table 6. X12 labels were corrected from the relay variant on 2026-11-14: pins 1/2 are 3L+/3M and pins 3–8 are DQ a.0–a.5. Existing physical pin identities are preserved; review earlier output wiring against these corrected functions. Coordinates are schematic, not physical connector geometry.' },
     specifications: {
       onboardDigitalInputs: { value: 8, unit: '24 V DC DI' }, onboardDigitalOutputs: { value: 6, unit: '24 V DC transistor DQ' }, onboardAnalogInputs: { value: 2, unit: '0–10 V DC AI' },
       supplyVoltage: { minimum: 20.4, maximum: 28.8, unit: 'V DC' }, programDataMemory: { value: 100, unit: 'KB' },
@@ -661,7 +661,7 @@
     },
     instanceProperties: { marking: { type: 'string', default: '', maximumLength: 40 }, position: { type: 'string', default: '', maximumLength: 24 }, comment: { type: 'string', default: '', maximumLength: 160 } },
     sources: [
-      { publisher: 'Siemens', title: 'SIMATIC S7-1200 System Manual V4.7 · CPU 1212C DC/DC/DC · Tables A-49 and A-50', url: 'https://support.industry.siemens.com/cs/attachments/109977302/s71200_system_manual_en-US.pdf', documentRevision: 'V4.7 · 12/2024 · A5E02486680-AQ', revisionNote: 'Manufacturer manual supplies exact connector pin assignments for X10, X11 and X12.' , retrievedAt: '2026-11-12' },
+      { publisher: 'Siemens', title: 'CPU 1212C wiring diagrams · DC/DC/DC · Tables 5 and 6', url: 'https://docs.tia.siemens.cloud/r/simatic_s7_1200_manual_collection_enus_20/technical-specifications/cpu-1212c/cpu-1212c-wiring-diagrams', documentRevision: 'V20 · 11/2024', revisionNote: 'Exact connector assignments for 6ES7212-1AE40-0XB0. DC/DC/DC X12 is 3L+, 3M, then six DQ terminals; do not use the DC/DC/Relay table.' , retrievedAt: '2026-11-14' },
       { publisher: 'Siemens', title: 'SIMATIC S7-1200 CPU 1212C product record', url: 'https://mall.industry.siemens.com/mall/en/gb/Catalog/Product/6ES72121AE400XB0', documentRevision: 'Live manufacturer product record', revisionNote: 'Confirms onboard I/O counts and DC supply range.', retrievedAt: '2026-11-12' }
     ]
   });

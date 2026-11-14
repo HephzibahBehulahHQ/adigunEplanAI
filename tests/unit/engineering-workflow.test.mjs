@@ -8,6 +8,57 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("CPU 1212C transistor outputs use the DC/DC/DC connector table and preserve physical attachments", () => {
+  const id = "siemens-6es7212-1ae40-0xb0";
+  const part = engine.component(id);
+  assert.deepEqual(
+    plain(
+      part.symbol.pins
+        .filter((p) => p.id.startsWith("x12-"))
+        .map((p) => [p.id, p.name]),
+    ),
+    [
+      ["x12-1", "3L+"],
+      ["x12-2", "3M"],
+      ["x12-3", "DQ a.0"],
+      ["x12-4", "DQ a.1"],
+      ["x12-5", "DQ a.2"],
+      ["x12-6", "DQ a.3"],
+      ["x12-7", "DQ a.4"],
+      ["x12-8", "DQ a.5"],
+    ],
+  );
+  assert.match(part.sources[0].url, /docs\.tia\.siemens\.cloud/);
+  assert.match(part.symbol.numberingNote, /review earlier output wiring/i);
+  const cpu = engine.createInstance(id, 500, 300, "A1");
+  const terminal = engine.createInstance(
+    "phoenix-contact-3044076",
+    900,
+    324,
+    "X1",
+  );
+  const wire = {
+    id: "existing-output-wire",
+    kind: "wire",
+    x1: 630,
+    y1: 324,
+    x2: 865,
+    y2: 324,
+    attachments: {
+      start: { instanceId: cpu.id, pinId: "x12-3" },
+      end: { instanceId: terminal.id, pinId: "connection-1" },
+    },
+  };
+  const objects = [cpu, terminal, wire];
+  engine.synchronizeWireAttachments(objects);
+  assert.equal(wire.attachments.start.pinId, "x12-3");
+  assert.equal(
+    engine.endpointPin(objects, wire.attachments.start).name,
+    "DQ a.0",
+  );
+  assert.equal(engine.wireAttachmentIssues(objects).length, 0);
+});
+
 test("project import rejects malformed attachment data and duplicate identities", () => {
   const project = engine.createExample("indicator");
   const wire = project.objects.find((o) => o.kind === "wire");
