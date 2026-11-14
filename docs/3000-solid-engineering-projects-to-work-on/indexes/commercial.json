@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-0301",
+    "title": "Office-floor distribution \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0301.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0302",
+    "title": "Office-floor distribution \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0302.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0303",
+    "title": "Office-floor distribution \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0303.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0304",
+    "title": "Office-floor distribution \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0304.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0305",
+    "title": "Office-floor distribution \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0305.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0306",
+    "title": "Office-floor distribution \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0306.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0307",
+    "title": "Office-floor distribution \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0307.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0308",
+    "title": "Office-floor distribution \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0308.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0309",
+    "title": "Office-floor distribution \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0309.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0310",
+    "title": "Office-floor distribution \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0310.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0311",
+    "title": "Office-floor distribution \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0311.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0312",
+    "title": "Office-floor distribution \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0312.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0313",
+    "title": "Office-floor distribution \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0313.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0314",
+    "title": "Office-floor distribution \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0314.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0315",
+    "title": "Office-floor distribution \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0315.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0316",
+    "title": "Office-floor distribution \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0316.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0317",
+    "title": "Office-floor distribution \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0317.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0318",
+    "title": "Office-floor distribution \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0318.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0319",
+    "title": "Office-floor distribution \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0319.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0320",
+    "title": "Office-floor distribution \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0320.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0321",
+    "title": "Office-floor distribution \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0321.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0322",
+    "title": "Office-floor distribution \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0322.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0323",
+    "title": "Office-floor distribution \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0323.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0324",
+    "title": "Office-floor distribution \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0324.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0325",
+    "title": "Office-floor distribution \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0325.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0326",
+    "title": "Office-floor distribution \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0326.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0327",
+    "title": "Office-floor distribution \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0327.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0328",
+    "title": "Office-floor distribution \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0328.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0329",
+    "title": "Office-floor distribution \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0329.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0330",
+    "title": "Office-floor distribution \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Office-floor distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0330.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0331",
+    "title": "Retail-store electrical services \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0331.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0332",
+    "title": "Retail-store electrical services \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0332.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0333",
+    "title": "Retail-store electrical services \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0333.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0334",
+    "title": "Retail-store electrical services \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0334.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0335",
+    "title": "Retail-store electrical services \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0335.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0336",
+    "title": "Retail-store electrical services \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0336.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0337",
+    "title": "Retail-store electrical services \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0337.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0338",
+    "title": "Retail-store electrical services \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0338.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0339",
+    "title": "Retail-store electrical services \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0339.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0340",
+    "title": "Retail-store electrical services \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0340.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0341",
+    "title": "Retail-store electrical services \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0341.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0342",
+    "title": "Retail-store electrical services \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0342.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0343",
+    "title": "Retail-store electrical services \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0343.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0344",
+    "title": "Retail-store electrical services \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0344.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0345",
+    "title": "Retail-store electrical services \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0345.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0346",
+    "title": "Retail-store electrical services \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0346.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0347",
+    "title": "Retail-store electrical services \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0347.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0348",
+    "title": "Retail-store electrical services \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0348.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0349",
+    "title": "Retail-store electrical services \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0349.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0350",
+    "title": "Retail-store electrical services \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0350.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0351",
+    "title": "Retail-store electrical services \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0351.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0352",
+    "title": "Retail-store electrical services \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0352.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0353",
+    "title": "Retail-store electrical services \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0353.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0354",
+    "title": "Retail-store electrical services \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0354.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0355",
+    "title": "Retail-store electrical services \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0355.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0356",
+    "title": "Retail-store electrical services \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0356.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0357",
+    "title": "Retail-store electrical services \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0357.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0358",
+    "title": "Retail-store electrical services \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0358.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0359",
+    "title": "Retail-store electrical services \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0359.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0360",
+    "title": "Retail-store electrical services \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Retail-store electrical services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0360.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0361",
+    "title": "Restaurant kitchen distribution \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0361.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0362",
+    "title": "Restaurant kitchen distribution \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0362.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0363",
+    "title": "Restaurant kitchen distribution \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0363.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0364",
+    "title": "Restaurant kitchen distribution \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0364.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0365",
+    "title": "Restaurant kitchen distribution \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0365.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0366",
+    "title": "Restaurant kitchen distribution \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0366.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0367",
+    "title": "Restaurant kitchen distribution \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0367.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0368",
+    "title": "Restaurant kitchen distribution \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0368.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0369",
+    "title": "Restaurant kitchen distribution \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0369.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0370",
+    "title": "Restaurant kitchen distribution \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0370.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0371",
+    "title": "Restaurant kitchen distribution \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0371.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0372",
+    "title": "Restaurant kitchen distribution \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0372.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0373",
+    "title": "Restaurant kitchen distribution \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0373.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0374",
+    "title": "Restaurant kitchen distribution \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0374.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0375",
+    "title": "Restaurant kitchen distribution \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0375.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0376",
+    "title": "Restaurant kitchen distribution \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0376.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0377",
+    "title": "Restaurant kitchen distribution \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0377.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0378",
+    "title": "Restaurant kitchen distribution \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0378.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0379",
+    "title": "Restaurant kitchen distribution \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0379.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0380",
+    "title": "Restaurant kitchen distribution \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0380.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0381",
+    "title": "Restaurant kitchen distribution \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0381.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0382",
+    "title": "Restaurant kitchen distribution \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0382.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0383",
+    "title": "Restaurant kitchen distribution \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0383.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0384",
+    "title": "Restaurant kitchen distribution \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0384.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0385",
+    "title": "Restaurant kitchen distribution \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0385.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0386",
+    "title": "Restaurant kitchen distribution \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0386.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0387",
+    "title": "Restaurant kitchen distribution \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0387.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0388",
+    "title": "Restaurant kitchen distribution \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0388.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0389",
+    "title": "Restaurant kitchen distribution \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0389.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0390",
+    "title": "Restaurant kitchen distribution \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Restaurant kitchen distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0390.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0391",
+    "title": "Hotel-floor distribution \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0391.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0392",
+    "title": "Hotel-floor distribution \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0392.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0393",
+    "title": "Hotel-floor distribution \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0393.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0394",
+    "title": "Hotel-floor distribution \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0394.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0395",
+    "title": "Hotel-floor distribution \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0395.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0396",
+    "title": "Hotel-floor distribution \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0396.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0397",
+    "title": "Hotel-floor distribution \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0397.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0398",
+    "title": "Hotel-floor distribution \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0398.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0399",
+    "title": "Hotel-floor distribution \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0399.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0400",
+    "title": "Hotel-floor distribution \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0400.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0401",
+    "title": "Hotel-floor distribution \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0401.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0402",
+    "title": "Hotel-floor distribution \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0402.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0403",
+    "title": "Hotel-floor distribution \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0403.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0404",
+    "title": "Hotel-floor distribution \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0404.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0405",
+    "title": "Hotel-floor distribution \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0405.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0406",
+    "title": "Hotel-floor distribution \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0406.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0407",
+    "title": "Hotel-floor distribution \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0407.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0408",
+    "title": "Hotel-floor distribution \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0408.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0409",
+    "title": "Hotel-floor distribution \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0409.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0410",
+    "title": "Hotel-floor distribution \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0410.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0411",
+    "title": "Hotel-floor distribution \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0411.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0412",
+    "title": "Hotel-floor distribution \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0412.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0413",
+    "title": "Hotel-floor distribution \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0413.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0414",
+    "title": "Hotel-floor distribution \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0414.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0415",
+    "title": "Hotel-floor distribution \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0415.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0416",
+    "title": "Hotel-floor distribution \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0416.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0417",
+    "title": "Hotel-floor distribution \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0417.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0418",
+    "title": "Hotel-floor distribution \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0418.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0419",
+    "title": "Hotel-floor distribution \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0419.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0420",
+    "title": "Hotel-floor distribution \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Hotel-floor distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0420.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0421",
+    "title": "School teaching-block supply \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0421.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0422",
+    "title": "School teaching-block supply \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0422.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0423",
+    "title": "School teaching-block supply \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0423.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0424",
+    "title": "School teaching-block supply \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0424.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0425",
+    "title": "School teaching-block supply \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0425.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0426",
+    "title": "School teaching-block supply \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0426.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0427",
+    "title": "School teaching-block supply \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0427.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0428",
+    "title": "School teaching-block supply \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0428.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0429",
+    "title": "School teaching-block supply \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0429.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0430",
+    "title": "School teaching-block supply \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0430.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0431",
+    "title": "School teaching-block supply \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0431.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0432",
+    "title": "School teaching-block supply \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0432.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0433",
+    "title": "School teaching-block supply \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0433.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0434",
+    "title": "School teaching-block supply \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0434.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0435",
+    "title": "School teaching-block supply \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0435.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0436",
+    "title": "School teaching-block supply \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0436.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0437",
+    "title": "School teaching-block supply \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0437.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0438",
+    "title": "School teaching-block supply \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0438.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0439",
+    "title": "School teaching-block supply \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0439.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0440",
+    "title": "School teaching-block supply \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0440.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0441",
+    "title": "School teaching-block supply \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0441.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0442",
+    "title": "School teaching-block supply \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0442.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0443",
+    "title": "School teaching-block supply \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0443.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0444",
+    "title": "School teaching-block supply \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0444.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0445",
+    "title": "School teaching-block supply \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0445.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0446",
+    "title": "School teaching-block supply \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0446.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0447",
+    "title": "School teaching-block supply \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0447.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0448",
+    "title": "School teaching-block supply \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0448.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0449",
+    "title": "School teaching-block supply \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0449.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0450",
+    "title": "School teaching-block supply \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "School teaching-block supply",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0450.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0451",
+    "title": "Warehouse electrical distribution \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0451.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0452",
+    "title": "Warehouse electrical distribution \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0452.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0453",
+    "title": "Warehouse electrical distribution \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0453.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0454",
+    "title": "Warehouse electrical distribution \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0454.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0455",
+    "title": "Warehouse electrical distribution \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0455.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0456",
+    "title": "Warehouse electrical distribution \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0456.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0457",
+    "title": "Warehouse electrical distribution \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0457.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0458",
+    "title": "Warehouse electrical distribution \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0458.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0459",
+    "title": "Warehouse electrical distribution \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0459.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0460",
+    "title": "Warehouse electrical distribution \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0460.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0461",
+    "title": "Warehouse electrical distribution \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0461.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0462",
+    "title": "Warehouse electrical distribution \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0462.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0463",
+    "title": "Warehouse electrical distribution \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0463.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0464",
+    "title": "Warehouse electrical distribution \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0464.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0465",
+    "title": "Warehouse electrical distribution \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0465.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0466",
+    "title": "Warehouse electrical distribution \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0466.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0467",
+    "title": "Warehouse electrical distribution \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0467.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0468",
+    "title": "Warehouse electrical distribution \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0468.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0469",
+    "title": "Warehouse electrical distribution \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0469.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0470",
+    "title": "Warehouse electrical distribution \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0470.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0471",
+    "title": "Warehouse electrical distribution \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0471.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0472",
+    "title": "Warehouse electrical distribution \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0472.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0473",
+    "title": "Warehouse electrical distribution \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0473.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0474",
+    "title": "Warehouse electrical distribution \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0474.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0475",
+    "title": "Warehouse electrical distribution \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0475.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0476",
+    "title": "Warehouse electrical distribution \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0476.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0477",
+    "title": "Warehouse electrical distribution \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0477.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0478",
+    "title": "Warehouse electrical distribution \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0478.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0479",
+    "title": "Warehouse electrical distribution \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0479.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0480",
+    "title": "Warehouse electrical distribution \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Warehouse electrical distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0480.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0481",
+    "title": "Data-room auxiliary supply \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0481.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0482",
+    "title": "Data-room auxiliary supply \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0482.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0483",
+    "title": "Data-room auxiliary supply \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0483.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0484",
+    "title": "Data-room auxiliary supply \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0484.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0485",
+    "title": "Data-room auxiliary supply \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0485.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0486",
+    "title": "Data-room auxiliary supply \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0486.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0487",
+    "title": "Data-room auxiliary supply \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0487.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0488",
+    "title": "Data-room auxiliary supply \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0488.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0489",
+    "title": "Data-room auxiliary supply \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0489.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0490",
+    "title": "Data-room auxiliary supply \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0490.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0491",
+    "title": "Data-room auxiliary supply \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0491.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0492",
+    "title": "Data-room auxiliary supply \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0492.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0493",
+    "title": "Data-room auxiliary supply \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0493.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0494",
+    "title": "Data-room auxiliary supply \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0494.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0495",
+    "title": "Data-room auxiliary supply \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0495.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0496",
+    "title": "Data-room auxiliary supply \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0496.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0497",
+    "title": "Data-room auxiliary supply \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0497.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0498",
+    "title": "Data-room auxiliary supply \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0498.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0499",
+    "title": "Data-room auxiliary supply \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0499.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0500",
+    "title": "Data-room auxiliary supply \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0500.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0501",
+    "title": "Data-room auxiliary supply \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0501.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0502",
+    "title": "Data-room auxiliary supply \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0502.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0503",
+    "title": "Data-room auxiliary supply \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0503.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0504",
+    "title": "Data-room auxiliary supply \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0504.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0505",
+    "title": "Data-room auxiliary supply \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0505.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0506",
+    "title": "Data-room auxiliary supply \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0506.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0507",
+    "title": "Data-room auxiliary supply \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0507.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0508",
+    "title": "Data-room auxiliary supply \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0508.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0509",
+    "title": "Data-room auxiliary supply \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0509.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0510",
+    "title": "Data-room auxiliary supply \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Data-room auxiliary supply",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0510.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0511",
+    "title": "Medical-office general services \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0511.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0512",
+    "title": "Medical-office general services \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0512.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0513",
+    "title": "Medical-office general services \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0513.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0514",
+    "title": "Medical-office general services \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0514.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0515",
+    "title": "Medical-office general services \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0515.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0516",
+    "title": "Medical-office general services \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0516.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0517",
+    "title": "Medical-office general services \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0517.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0518",
+    "title": "Medical-office general services \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0518.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0519",
+    "title": "Medical-office general services \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0519.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0520",
+    "title": "Medical-office general services \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0520.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0521",
+    "title": "Medical-office general services \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0521.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0522",
+    "title": "Medical-office general services \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0522.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0523",
+    "title": "Medical-office general services \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0523.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0524",
+    "title": "Medical-office general services \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0524.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0525",
+    "title": "Medical-office general services \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0525.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0526",
+    "title": "Medical-office general services \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0526.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0527",
+    "title": "Medical-office general services \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0527.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0528",
+    "title": "Medical-office general services \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0528.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0529",
+    "title": "Medical-office general services \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0529.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0530",
+    "title": "Medical-office general services \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0530.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0531",
+    "title": "Medical-office general services \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0531.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0532",
+    "title": "Medical-office general services \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0532.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0533",
+    "title": "Medical-office general services \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0533.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0534",
+    "title": "Medical-office general services \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0534.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0535",
+    "title": "Medical-office general services \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0535.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0536",
+    "title": "Medical-office general services \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0536.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0537",
+    "title": "Medical-office general services \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0537.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0538",
+    "title": "Medical-office general services \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0538.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0539",
+    "title": "Medical-office general services \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0539.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0540",
+    "title": "Medical-office general services \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Medical-office general services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0540.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0541",
+    "title": "Community-centre distribution \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0541.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0542",
+    "title": "Community-centre distribution \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0542.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0543",
+    "title": "Community-centre distribution \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0543.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0544",
+    "title": "Community-centre distribution \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0544.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0545",
+    "title": "Community-centre distribution \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0545.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0546",
+    "title": "Community-centre distribution \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0546.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0547",
+    "title": "Community-centre distribution \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0547.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0548",
+    "title": "Community-centre distribution \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0548.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0549",
+    "title": "Community-centre distribution \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0549.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0550",
+    "title": "Community-centre distribution \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0550.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0551",
+    "title": "Community-centre distribution \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0551.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0552",
+    "title": "Community-centre distribution \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0552.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0553",
+    "title": "Community-centre distribution \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0553.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0554",
+    "title": "Community-centre distribution \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0554.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0555",
+    "title": "Community-centre distribution \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0555.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0556",
+    "title": "Community-centre distribution \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0556.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0557",
+    "title": "Community-centre distribution \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0557.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0558",
+    "title": "Community-centre distribution \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0558.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0559",
+    "title": "Community-centre distribution \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0559.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0560",
+    "title": "Community-centre distribution \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0560.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0561",
+    "title": "Community-centre distribution \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0561.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0562",
+    "title": "Community-centre distribution \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0562.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0563",
+    "title": "Community-centre distribution \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0563.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0564",
+    "title": "Community-centre distribution \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0564.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0565",
+    "title": "Community-centre distribution \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0565.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0566",
+    "title": "Community-centre distribution \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0566.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0567",
+    "title": "Community-centre distribution \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0567.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0568",
+    "title": "Community-centre distribution \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0568.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0569",
+    "title": "Community-centre distribution \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0569.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0570",
+    "title": "Community-centre distribution \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Community-centre distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0570.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0571",
+    "title": "Car-park electrical services \u2014 Local manual baseline",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Local manual baseline",
+    "path": "projects/commercial/ENG-0571.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0572",
+    "title": "Car-park electrical services \u2014 Remote supervisory operation",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/commercial/ENG-0572.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0573",
+    "title": "Car-park electrical services \u2014 Scheduled operation",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Scheduled operation",
+    "path": "projects/commercial/ENG-0573.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0574",
+    "title": "Car-park electrical services \u2014 Demand-controlled enable",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/commercial/ENG-0574.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0575",
+    "title": "Car-park electrical services \u2014 Supply undervoltage supervision",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/commercial/ENG-0575.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0576",
+    "title": "Car-park electrical services \u2014 Phase and supply-quality supervision",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/commercial/ENG-0576.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0577",
+    "title": "Car-park electrical services \u2014 Individual branch metering",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Individual branch metering",
+    "path": "projects/commercial/ENG-0577.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0578",
+    "title": "Car-park electrical services \u2014 Whole-system energy reporting",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/commercial/ENG-0578.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0579",
+    "title": "Car-park electrical services \u2014 Two-zone operation",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Two-zone operation",
+    "path": "projects/commercial/ENG-0579.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0580",
+    "title": "Car-park electrical services \u2014 Three-stage load sequencing",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/commercial/ENG-0580.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0581",
+    "title": "Car-park electrical services \u2014 Priority load shedding",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Priority load shedding",
+    "path": "projects/commercial/ENG-0581.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0582",
+    "title": "Car-park electrical services \u2014 Buffered control power",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Buffered control power",
+    "path": "projects/commercial/ENG-0582.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0583",
+    "title": "Car-park electrical services \u2014 Redundant control-power inputs",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/commercial/ENG-0583.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0584",
+    "title": "Car-park electrical services \u2014 Environmental temperature supervision",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/commercial/ENG-0584.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0585",
+    "title": "Car-park electrical services \u2014 Condensation management",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Condensation management",
+    "path": "projects/commercial/ENG-0585.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0586",
+    "title": "Car-park electrical services \u2014 Door and enclosure supervision",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/commercial/ENG-0586.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0587",
+    "title": "Car-park electrical services \u2014 Maintenance test mode",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Maintenance test mode",
+    "path": "projects/commercial/ENG-0587.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0588",
+    "title": "Car-park electrical services \u2014 Remote alarm annunciation",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/commercial/ENG-0588.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0589",
+    "title": "Car-park electrical services \u2014 First-out fault capture",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "First-out fault capture",
+    "path": "projects/commercial/ENG-0589.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0590",
+    "title": "Car-park electrical services \u2014 Event and operating-hour logging",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/commercial/ENG-0590.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0591",
+    "title": "Car-park electrical services \u2014 Ethernet supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/commercial/ENG-0591.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0592",
+    "title": "Car-park electrical services \u2014 Serial supervisory gateway",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/commercial/ENG-0592.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0593",
+    "title": "Car-park electrical services \u2014 Hardwired permissive chain",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/commercial/ENG-0593.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0594",
+    "title": "Car-park electrical services \u2014 Controlled shutdown interface",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/commercial/ENG-0594.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0595",
+    "title": "Car-park electrical services \u2014 Commissioning simulation terminals",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/commercial/ENG-0595.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0596",
+    "title": "Car-park electrical services \u2014 Modular field connections",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Modular field connections",
+    "path": "projects/commercial/ENG-0596.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0597",
+    "title": "Car-park electrical services \u2014 Distributed field enclosure",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/commercial/ENG-0597.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0598",
+    "title": "Car-park electrical services \u2014 Future expansion provision",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Future expansion provision",
+    "path": "projects/commercial/ENG-0598.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0599",
+    "title": "Car-park electrical services \u2014 Supply restoration management",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Supply restoration management",
+    "path": "projects/commercial/ENG-0599.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0600",
+    "title": "Car-park electrical services \u2014 Integrated diagnostics package",
+    "domain": "commercial",
+    "baseSystem": "Car-park electrical services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/commercial/ENG-0600.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
