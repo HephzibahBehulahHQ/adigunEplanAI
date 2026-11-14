@@ -6,6 +6,10 @@ import type { Page } from "@playwright/test";
 test("paper sheets support multiline writing, formatting and saved editing", async ({
   page,
 }) => {
+  page.setDefaultTimeout(5000);
+  page.on("pageerror", (error) => {
+    throw error;
+  });
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
