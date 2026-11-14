@@ -899,6 +899,14 @@
     if(sheets.some(function(sheet){return !order.has(sheet.sectionId);}))throw new Error('Every sheet must belong to a project section.');
     return sheets.slice().sort(function(a,b){return order.get(a.sectionId)-order.get(b.sectionId);}).map(function(sheet,index){return Object.assign({},sheet,{number:sheet.sectionId+'/'+String(index).padStart(3,'0')});});
   }
+  function removeSheetConnections(connections,sheetId){
+    return connections.map(function(connection){
+      const endpoints=connection.endpoints.filter(function(endpoint){return endpoint.sheetId!==sheetId;}).map(function(endpoint){
+        if(endpoint.connector&&endpoint.connector.targetSheetId===sheetId){const copy=Object.assign({},endpoint);delete copy.connector;return copy;}return endpoint;
+      });
+      return Object.assign({},connection,{endpoints:endpoints});
+    }).filter(function(connection){return new Set(connection.endpoints.map(function(endpoint){return endpoint.sheetId;})).size>=2;});
+  }
   function moveProjectSheet(sheets,sections,sourceId,targetId,position,sectionId){
     const source=sheets.find(function(sheet){return sheet.id===sourceId;});
     if(!source)throw new Error('Unknown source sheet.');
@@ -1592,6 +1600,7 @@
   }
 
   root.AdigunCADEngine = Object.freeze({
+    removeSheetConnections: removeSheetConnections,
     moveProjectSheet: moveProjectSheet,
     defaultProjectSections: defaultProjectSections,
     numberProjectSheets: numberProjectSheets,

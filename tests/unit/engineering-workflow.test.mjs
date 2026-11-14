@@ -459,3 +459,38 @@ test("sidebar ordering keeps document identities, custom names and electrical li
     /Open sheet views/,
   );
 });
+
+test("deleting a sheet preserves the remaining branches of shared cross-page potentials", () => {
+  const links = [
+    {
+      id: "shared",
+      name: "+24V",
+      endpoints: [
+        { sheetId: "a", wireId: "wa", point: { x: 0, y: 0 } },
+        {
+          sheetId: "b",
+          wireId: "wb",
+          point: { x: 0, y: 0 },
+          connector: { targetSheetId: "a", targetRef: "X1", direction: "left" },
+        },
+        {
+          sheetId: "c",
+          wireId: "wc",
+          point: { x: 0, y: 0 },
+          connector: { targetSheetId: "b", targetRef: "X2", direction: "left" },
+        },
+      ],
+    },
+  ];
+  const kept = engine.removeSheetConnections(links, "a");
+  assert.equal(kept.length, 1);
+  assert.equal(kept[0].id, "shared");
+  assert.deepEqual(
+    plain(kept[0].endpoints).map((endpoint) => endpoint.sheetId),
+    ["b", "c"],
+  );
+  assert.equal(kept[0].endpoints[0].connector, undefined);
+  assert.equal(kept[0].endpoints[1].connector.targetSheetId, "b");
+  assert.equal(links[0].endpoints.length, 3);
+  assert.equal(engine.removeSheetConnections(kept, "b").length, 0);
+});
