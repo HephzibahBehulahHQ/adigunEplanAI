@@ -70,7 +70,7 @@ test("project import rejects malformed attachment data and duplicate identities"
 });
 
 test("examples are independent editable projects with complete terminal attachments", () => {
-  assert.equal(engine.projectExamples().length, 5);
+  assert.equal(engine.projectExamples().length, 6);
   for (const example of engine
     .projectExamples()
     .filter((item) => !item.hardware)) {
@@ -104,7 +104,8 @@ test("examples are independent editable projects with complete terminal attachme
 });
 
 test("manufacturer examples preserve separate circuits and editable source-backed parts", () => {
-  for (const [id, components, wires, spare] of [
+  for (const [id, components, wires, spare, nets = wires] of [
+    ["hardware-plc-input", 5, 6, 21, 4],
     ["hardware-relay", 7, 6, 5],
     ["hardware-sensor", 4, 3, 3],
     ["hardware-sitop", 3, 2, 5],
@@ -115,7 +116,7 @@ test("manufacturer examples preserve separate circuits and editable source-backe
     assert.equal(report.wireCount, wires);
     assert.equal(
       report.netCount,
-      wires,
+      nets,
       "separate circuits must not short together",
     );
     assert.equal(report.openEndpointCount, 0);
@@ -155,6 +156,22 @@ test("manufacturer examples preserve separate circuits and editable source-backe
     assert.equal(restored.valid, true);
     assert.deepEqual(plain(restored.project), plain(project));
   }
+});
+
+test("PLC input example keeps positive, return, functional earth and switched input separate", () => {
+  const project = engine.createExample("hardware-plc-input");
+  const nets = plain(engine.analyze(project.objects).nets)
+    .map((net) => net.pins.map((pin) => pin.ref + ":" + pin.pinId).sort())
+    .sort((a, b) => a.join().localeCompare(b.join()));
+  const expected = [
+    ["A1:x10-1", "S1:contact-13", "X1:connection-1", "X1:connection-2"],
+    ["A1:x10-2", "A1:x10-6", "X2:connection-1", "X2:connection-2"],
+    ["A1:x10-3", "X3:connection-1", "X3:connection-2"],
+    ["A1:x10-7", "S1:contact-14"],
+  ]
+    .map((net) => net.sort())
+    .sort((a, b) => a.join().localeCompare(b.join()));
+  assert.deepEqual(nets, expected);
 });
 
 test("screw terminal definitions retain manufacturer ratings and local connection identities", () => {
