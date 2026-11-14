@@ -2,7 +2,7 @@
 
 ## Scope and authority
 
-Read root AGENTS.md, docs/ACTIVE_ENGINEERING_GOAL.md and the electrical scope in docs/MASTER_SPECIFICATION.md. Current owner request creates a 3,000-project planning library. Preserve the approved interface and existing functional examples. This delivery does not claim 3,000 working native projects.
+Read root AGENTS.md, docs/ACTIVE_ENGINEERING_GOAL.md and the electrical scope in docs/MASTER_SPECIFICATION.md. Read [CONTINUITY.md](CONTINUITY.md) before authoring any electrical drawing: A2 continuation is mandatory, and every future electrical section inherits it. This policy applies to every project brief linked to this handoff. Current owner request creates a 3,000-project planning library. Preserve the approved interface and existing functional examples. This delivery does not claim 3,000 working native projects.
 
 ## Start here
 

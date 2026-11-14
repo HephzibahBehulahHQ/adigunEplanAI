@@ -15,3 +15,7 @@ The existing A1–A4 app template was implemented in PR #59; do not recreate it.
 Local verification: complete generator validation; 3,000 distinct titles and IDs; every brief has exactly 30 consecutively numbered sheets; a deliberately corrupted sheet was rejected and restored; all 3,015 packaged document hashes and byte counts matched. Foundation npm run check passed with 367 unit/tooling tests; each batch passed hosted CI, including browser checks. Final live verification checks all ten indexes and representative first/last documents per domain against the publication manifest.
 
 Latest owner clarification: section + controls create sheets directly in the sidebar, sheets rename inline, only selection opens the canvas, and users can add A5/A6 or more sections. TEMPLATE.md records the required behaviour and acceptance sequence. These sidebar extensions are specified here, not claimed implemented by the documentation-only catalog delivery.
+
+## Owner continuity clarification
+
+A2 electrical drawings MUST form connected schematics, with reciprocal FROM/TO references for every actual off-page conductor. This applies project-wide to electrical drawings in any current or future user-created section, including A5/A6; do not hard-code A2 as the only supported section. CONTINUITY.md gives examples, stable identity/persistence requirements and acceptance checks, and NEXT_AGENT.md makes it mandatory for all 3,000 briefs. No actual drawing connectivity is claimed by this planning-policy update.
