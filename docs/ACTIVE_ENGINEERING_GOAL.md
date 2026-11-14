@@ -27,8 +27,11 @@ Continue components, wiring and project examples. Keep the current interface loc
 - Implemented explicit component/pin attachments for new wires, synchronization after movement/rotation, missing-terminal diagnostics, and identity remapping for copied objects/sheets. Legacy unattached wires keep geometric connectivity behavior.
 - Generic symbol properties now expose reference/comment in the existing inspector; automatic placement selects unused references.
 - Existing New Project dialog now selects blank, indicator circuit, or relay control circuit. Both examples use the same editable generic component/wire model and explicitly state their limitations.
-- Focused model tests pass for examples, identity preservation, movement/rotation, missing terminals, malformed attachment data and project round-trips. Full local checks passed before the final null-safe sheet-selection fix; CI and browser workflow checks remain required before merge/deploy.
-- Work branch: `codex/engineering-workflow`. Publish only task files from current remote main. Do not claim completion until CI, deployment and live behavior are verified.
+- Verified completion of this increment: 362 unit/tooling tests and four browser tests passed, including development and production-build runs. Browser tests cover manual terminal wiring, coordinate edits, undo/redo, reference edits, named project save/reopen, both examples and locked CSS/menu overlay behavior.
+- PR #50 merged as `dc0bcfc9ff90995198c2cd46869f6fc6d7eafbba`. CI: https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/43633095163 . Pages package/deploy succeeded: https://github.com/HephzibahBehulahHQ/adigunEplanAI/actions/runs/43633198145 .
+- Live verification on 2026-11-14: New Project exposed both templates; Indicator circuit opened with five component instances, four wires, eight connected pins, zero unconnected pins, zero open endpoints and zero geometry errors. An invisible hit area fixes selection inside generic unfilled symbols without altering visible artwork.
+- Scope limits: examples are generic schematic learning templates, not simulated, manufacturer-configured or certified designs. Legacy wires retain geometry-based attachment; only newly authored bound wires have explicit terminal identities. Broader engineering integrations remain future work.
+- Completed work branch: `codex/engineering-workflow`, PR https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/50 . Start subsequent work from verified current main; do not reimplement this increment or restart the retired interface rebuild.
 
 ## Workspace caution
 
