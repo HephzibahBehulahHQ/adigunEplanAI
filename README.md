@@ -15,3 +15,7 @@ for AdigunEplanAI and HB Elektroniker. The application consumes its identity;
 `npm run template:check` verifies branding, authority bindings, source documents
 and capability declarations before the normal CI/build gates. Adoption pins and
 limits are recorded in [the adoption record](docs/references/global-template-adoption.md).
+
+## Engineering project planning catalog
+
+[3000 Solid Engineering Projects to Work On](docs/3000-solid-engineering-projects-to-work-on/README.md) contains 3,000 indexed project briefs with 30 A1–A4 sheet requirements each, a reusable template and next-agent handoff. These are planning records, separate from implemented and validated native examples. [Published documents](https://adiguneplanai.hephzibahbehulah.com/engineering-projects/README.md).

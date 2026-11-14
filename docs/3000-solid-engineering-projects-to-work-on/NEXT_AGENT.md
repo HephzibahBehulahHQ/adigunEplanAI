@@ -8,7 +8,7 @@ Read root AGENTS.md, docs/ACTIVE_ENGINEERING_GOAL.md and the electrical scope in
 
 1. Run `python3 docs/3000-solid-engineering-projects-to-work-on/catalog.py --complete`. A partial batch can be checked without `--complete`.
 2. Select an ID from a domain index. Read its project file and all thirty sheet requirements. Do not ask the owner to choose an inverter model merely because an inverter was used as a structural example.
-3. Inspect the existing project/sheet/persistence model. Implement the default four-container template through existing Create New Project and Add Sheet controls; this documentation alone does not implement that application behaviour.
+3. Inspect the existing project/sheet/persistence model. The default A1–A4 template was implemented separately in PR #59. Preserve that implementation and extend it to the latest sidebar requirements in TEMPLATE.md: per-section + controls, repeated sheet creation, inline renaming, selection-only canvas activation and user-created A5/A6 sections. Verify save/reopen and stable cross-references. This planning catalog does not itself add native project designs.
 4. Research the chosen project's engineering requirements and primary manufacturer documentation. Make coherent educational assumptions, record their provenance and distinguish unresolved installation inputs. Never invent a verified specification.
 5. Create one native project with stable identity; populate A1, then A2, A3 and A4 with the actual content described. Expand beyond thirty sheets when needed. Do not substitute title-only empty pages.
 6. Implement the selected variant's distinct requirements and acceptance scenario. Do not count renamed copies as independent validated examples.

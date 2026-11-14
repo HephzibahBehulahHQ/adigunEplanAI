@@ -16,7 +16,7 @@ if (
   !fs.existsSync(path.join(staging, "build-info.json"))
 )
   throw new Error("Provide the already verified Pages staging directory");
-execFileSync("python3", [path.join(source, "catalog.py")], {
+execFileSync("python3", [path.join(source, "catalog.py"), "--complete"], {
   stdio: "inherit",
 });
 const target = path.join(staging, "engineering-projects");

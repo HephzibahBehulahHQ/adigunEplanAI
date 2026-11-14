@@ -15,7 +15,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Validate engineering planning catalog
-        run: python3 docs/3000-solid-engineering-projects-to-work-on/catalog.py
+        run: python3 docs/3000-solid-engineering-projects-to-work-on/catalog.py --complete
       - run: npm run check
       - name: Verify hosted BOT Worker bundle
         if: ${{ hashFiles('apps/bot-worker/wrangler.toml') != '' }}
