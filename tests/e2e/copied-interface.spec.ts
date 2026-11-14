@@ -176,6 +176,16 @@ test("manufacturer projects open, expose editable parts and preserve connections
     );
     await page.locator('[data-inspector="Properties"]').click();
     await page.locator("#userDrawings .drawing-object").first().click();
+    await expect(page.locator("#sheetDesignation")).toHaveText("A3/201");
+    await expect(
+      page.locator("#inspectorContent .inspector-block").first(),
+    ).toContainText(
+      id === "hardware-relay"
+        ? "24 V momentary relay control"
+        : id === "hardware-sensor"
+          ? "PNP proximity sensor terminal wiring"
+          : "SITOP 24 V terminal distribution",
+    );
     await expect(page.locator("#inspectorContent")).toContainText(
       /UK 5 N|UT 2,5|SITOP PSU100C/,
     );
@@ -199,6 +209,43 @@ test("manufacturer projects open, expose editable parts and preserve connections
     await page.locator("#closeRightPanel").click();
   }
   expect(errors).toEqual([]);
+});
+
+test("imported sheet metadata overrides sample labels when opening properties", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Imported cabinet");
+  await page.locator("#createProject").click();
+  const saved = await saveDrawing(page, "metadata-source");
+  saved.data.activeSheet = "control";
+  saved.data.sheets = [
+    { id: "control", number: "CAB/042", name: "Pump enable circuit" },
+  ];
+  saved.data.objects = [];
+  saved.data.sheetLabels = {};
+  await page.locator("#openFile").setInputFiles({
+    name: "cabinet.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(saved.data)),
+  });
+  await page.locator('[data-inspector="Electrical checks"]').click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#sheetDesignation")).toHaveText("CAB/042");
+  await expect(page.locator('#sheetTabs [data-sheet="control"]')).toContainText(
+    "CAB/042 · Pump enable circuit",
+  );
+  await expect(
+    page.locator('#projectTree [data-sheet="control"]'),
+  ).toHaveAttribute("aria-label", "CAB/042 · Pump enable circuit");
+  await expect(
+    page.locator("#inspectorContent .inspector-block").first(),
+  ).toContainText("Pump enable circuit");
+  await expect(page.locator("#drawing")).toHaveAttribute(
+    "aria-label",
+    "Electrical drawing · Pump enable circuit",
+  );
 });
 
 test("existing Electrical Symbol Library places and saves original Eplan symbols", async ({
