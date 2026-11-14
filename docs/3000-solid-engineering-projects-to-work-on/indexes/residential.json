@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-0001",
+    "title": "Apartment distribution \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0001.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0002",
+    "title": "Apartment distribution \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0002.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0003",
+    "title": "Apartment distribution \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0003.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0004",
+    "title": "Apartment distribution \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0004.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0005",
+    "title": "Apartment distribution \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0005.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0006",
+    "title": "Apartment distribution \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0006.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0007",
+    "title": "Apartment distribution \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0007.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0008",
+    "title": "Apartment distribution \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0008.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0009",
+    "title": "Apartment distribution \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0009.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0010",
+    "title": "Apartment distribution \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0010.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0011",
+    "title": "Apartment distribution \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0011.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0012",
+    "title": "Apartment distribution \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0012.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0013",
+    "title": "Apartment distribution \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0013.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0014",
+    "title": "Apartment distribution \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0014.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0015",
+    "title": "Apartment distribution \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0015.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0016",
+    "title": "Apartment distribution \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0016.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0017",
+    "title": "Apartment distribution \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0017.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0018",
+    "title": "Apartment distribution \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0018.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0019",
+    "title": "Apartment distribution \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0019.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0020",
+    "title": "Apartment distribution \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0020.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0021",
+    "title": "Apartment distribution \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0021.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0022",
+    "title": "Apartment distribution \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0022.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0023",
+    "title": "Apartment distribution \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0023.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0024",
+    "title": "Apartment distribution \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0024.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0025",
+    "title": "Apartment distribution \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0025.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0026",
+    "title": "Apartment distribution \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0026.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0027",
+    "title": "Apartment distribution \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0027.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0028",
+    "title": "Apartment distribution \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0028.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0029",
+    "title": "Apartment distribution \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0029.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0030",
+    "title": "Apartment distribution \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Apartment distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0030.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0031",
+    "title": "Detached-house distribution \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0031.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0032",
+    "title": "Detached-house distribution \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0032.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0033",
+    "title": "Detached-house distribution \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0033.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0034",
+    "title": "Detached-house distribution \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0034.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0035",
+    "title": "Detached-house distribution \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0035.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0036",
+    "title": "Detached-house distribution \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0036.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0037",
+    "title": "Detached-house distribution \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0037.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0038",
+    "title": "Detached-house distribution \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0038.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0039",
+    "title": "Detached-house distribution \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0039.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0040",
+    "title": "Detached-house distribution \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0040.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0041",
+    "title": "Detached-house distribution \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0041.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0042",
+    "title": "Detached-house distribution \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0042.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0043",
+    "title": "Detached-house distribution \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0043.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0044",
+    "title": "Detached-house distribution \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0044.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0045",
+    "title": "Detached-house distribution \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0045.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0046",
+    "title": "Detached-house distribution \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0046.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0047",
+    "title": "Detached-house distribution \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0047.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0048",
+    "title": "Detached-house distribution \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0048.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0049",
+    "title": "Detached-house distribution \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0049.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0050",
+    "title": "Detached-house distribution \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0050.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0051",
+    "title": "Detached-house distribution \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0051.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0052",
+    "title": "Detached-house distribution \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0052.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0053",
+    "title": "Detached-house distribution \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0053.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0054",
+    "title": "Detached-house distribution \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0054.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0055",
+    "title": "Detached-house distribution \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0055.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0056",
+    "title": "Detached-house distribution \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0056.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0057",
+    "title": "Detached-house distribution \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0057.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0058",
+    "title": "Detached-house distribution \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0058.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0059",
+    "title": "Detached-house distribution \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0059.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0060",
+    "title": "Detached-house distribution \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Detached-house distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0060.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0061",
+    "title": "Apartment-block riser \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0061.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0062",
+    "title": "Apartment-block riser \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0062.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0063",
+    "title": "Apartment-block riser \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0063.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0064",
+    "title": "Apartment-block riser \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0064.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0065",
+    "title": "Apartment-block riser \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0065.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0066",
+    "title": "Apartment-block riser \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0066.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0067",
+    "title": "Apartment-block riser \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0067.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0068",
+    "title": "Apartment-block riser \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0068.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0069",
+    "title": "Apartment-block riser \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0069.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0070",
+    "title": "Apartment-block riser \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0070.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0071",
+    "title": "Apartment-block riser \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0071.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0072",
+    "title": "Apartment-block riser \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0072.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0073",
+    "title": "Apartment-block riser \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0073.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0074",
+    "title": "Apartment-block riser \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0074.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0075",
+    "title": "Apartment-block riser \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0075.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0076",
+    "title": "Apartment-block riser \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0076.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0077",
+    "title": "Apartment-block riser \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0077.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0078",
+    "title": "Apartment-block riser \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0078.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0079",
+    "title": "Apartment-block riser \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0079.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0080",
+    "title": "Apartment-block riser \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0080.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0081",
+    "title": "Apartment-block riser \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0081.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0082",
+    "title": "Apartment-block riser \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0082.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0083",
+    "title": "Apartment-block riser \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0083.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0084",
+    "title": "Apartment-block riser \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0084.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0085",
+    "title": "Apartment-block riser \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0085.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0086",
+    "title": "Apartment-block riser \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0086.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0087",
+    "title": "Apartment-block riser \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0087.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0088",
+    "title": "Apartment-block riser \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0088.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0089",
+    "title": "Apartment-block riser \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0089.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0090",
+    "title": "Apartment-block riser \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Apartment-block riser",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0090.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0091",
+    "title": "Residential heat-pump supply \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0091.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0092",
+    "title": "Residential heat-pump supply \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0092.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0093",
+    "title": "Residential heat-pump supply \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0093.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0094",
+    "title": "Residential heat-pump supply \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0094.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0095",
+    "title": "Residential heat-pump supply \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0095.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0096",
+    "title": "Residential heat-pump supply \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0096.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0097",
+    "title": "Residential heat-pump supply \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0097.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0098",
+    "title": "Residential heat-pump supply \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0098.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0099",
+    "title": "Residential heat-pump supply \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0099.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0100",
+    "title": "Residential heat-pump supply \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0100.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0101",
+    "title": "Residential heat-pump supply \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0101.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0102",
+    "title": "Residential heat-pump supply \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0102.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0103",
+    "title": "Residential heat-pump supply \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0103.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0104",
+    "title": "Residential heat-pump supply \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0104.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0105",
+    "title": "Residential heat-pump supply \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0105.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0106",
+    "title": "Residential heat-pump supply \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0106.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0107",
+    "title": "Residential heat-pump supply \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0107.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0108",
+    "title": "Residential heat-pump supply \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0108.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0109",
+    "title": "Residential heat-pump supply \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0109.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0110",
+    "title": "Residential heat-pump supply \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0110.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0111",
+    "title": "Residential heat-pump supply \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0111.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0112",
+    "title": "Residential heat-pump supply \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0112.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0113",
+    "title": "Residential heat-pump supply \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0113.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0114",
+    "title": "Residential heat-pump supply \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0114.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0115",
+    "title": "Residential heat-pump supply \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0115.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0116",
+    "title": "Residential heat-pump supply \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0116.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0117",
+    "title": "Residential heat-pump supply \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0117.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0118",
+    "title": "Residential heat-pump supply \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0118.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0119",
+    "title": "Residential heat-pump supply \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0119.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0120",
+    "title": "Residential heat-pump supply \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Residential heat-pump supply",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0120.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0121",
+    "title": "Home EV charging \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0121.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0122",
+    "title": "Home EV charging \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0122.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0123",
+    "title": "Home EV charging \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0123.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0124",
+    "title": "Home EV charging \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0124.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0125",
+    "title": "Home EV charging \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0125.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0126",
+    "title": "Home EV charging \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0126.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0127",
+    "title": "Home EV charging \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0127.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0128",
+    "title": "Home EV charging \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0128.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0129",
+    "title": "Home EV charging \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0129.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0130",
+    "title": "Home EV charging \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0130.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0131",
+    "title": "Home EV charging \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0131.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0132",
+    "title": "Home EV charging \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0132.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0133",
+    "title": "Home EV charging \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0133.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0134",
+    "title": "Home EV charging \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0134.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0135",
+    "title": "Home EV charging \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0135.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0136",
+    "title": "Home EV charging \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0136.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0137",
+    "title": "Home EV charging \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0137.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0138",
+    "title": "Home EV charging \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0138.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0139",
+    "title": "Home EV charging \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0139.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0140",
+    "title": "Home EV charging \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0140.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0141",
+    "title": "Home EV charging \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0141.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0142",
+    "title": "Home EV charging \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0142.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0143",
+    "title": "Home EV charging \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0143.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0144",
+    "title": "Home EV charging \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0144.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0145",
+    "title": "Home EV charging \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0145.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0146",
+    "title": "Home EV charging \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0146.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0147",
+    "title": "Home EV charging \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0147.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0148",
+    "title": "Home EV charging \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0148.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0149",
+    "title": "Home EV charging \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0149.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0150",
+    "title": "Home EV charging \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Home EV charging",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0150.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0151",
+    "title": "Garage workshop supply \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0151.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0152",
+    "title": "Garage workshop supply \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0152.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0153",
+    "title": "Garage workshop supply \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0153.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0154",
+    "title": "Garage workshop supply \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0154.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0155",
+    "title": "Garage workshop supply \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0155.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0156",
+    "title": "Garage workshop supply \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0156.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0157",
+    "title": "Garage workshop supply \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0157.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0158",
+    "title": "Garage workshop supply \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0158.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0159",
+    "title": "Garage workshop supply \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0159.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0160",
+    "title": "Garage workshop supply \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0160.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0161",
+    "title": "Garage workshop supply \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0161.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0162",
+    "title": "Garage workshop supply \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0162.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0163",
+    "title": "Garage workshop supply \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0163.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0164",
+    "title": "Garage workshop supply \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0164.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0165",
+    "title": "Garage workshop supply \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0165.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0166",
+    "title": "Garage workshop supply \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0166.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0167",
+    "title": "Garage workshop supply \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0167.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0168",
+    "title": "Garage workshop supply \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0168.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0169",
+    "title": "Garage workshop supply \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0169.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0170",
+    "title": "Garage workshop supply \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0170.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0171",
+    "title": "Garage workshop supply \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0171.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0172",
+    "title": "Garage workshop supply \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0172.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0173",
+    "title": "Garage workshop supply \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0173.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0174",
+    "title": "Garage workshop supply \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0174.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0175",
+    "title": "Garage workshop supply \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0175.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0176",
+    "title": "Garage workshop supply \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0176.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0177",
+    "title": "Garage workshop supply \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0177.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0178",
+    "title": "Garage workshop supply \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0178.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0179",
+    "title": "Garage workshop supply \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0179.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0180",
+    "title": "Garage workshop supply \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Garage workshop supply",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0180.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0181",
+    "title": "Smart-home lighting cabinet \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0181.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0182",
+    "title": "Smart-home lighting cabinet \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0182.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0183",
+    "title": "Smart-home lighting cabinet \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0183.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0184",
+    "title": "Smart-home lighting cabinet \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0184.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0185",
+    "title": "Smart-home lighting cabinet \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0185.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0186",
+    "title": "Smart-home lighting cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0186.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0187",
+    "title": "Smart-home lighting cabinet \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0187.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0188",
+    "title": "Smart-home lighting cabinet \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0188.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0189",
+    "title": "Smart-home lighting cabinet \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0189.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0190",
+    "title": "Smart-home lighting cabinet \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0190.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0191",
+    "title": "Smart-home lighting cabinet \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0191.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0192",
+    "title": "Smart-home lighting cabinet \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0192.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0193",
+    "title": "Smart-home lighting cabinet \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0193.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0194",
+    "title": "Smart-home lighting cabinet \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0194.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0195",
+    "title": "Smart-home lighting cabinet \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0195.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0196",
+    "title": "Smart-home lighting cabinet \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0196.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0197",
+    "title": "Smart-home lighting cabinet \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0197.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0198",
+    "title": "Smart-home lighting cabinet \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0198.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0199",
+    "title": "Smart-home lighting cabinet \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0199.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0200",
+    "title": "Smart-home lighting cabinet \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0200.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0201",
+    "title": "Smart-home lighting cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0201.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0202",
+    "title": "Smart-home lighting cabinet \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0202.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0203",
+    "title": "Smart-home lighting cabinet \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0203.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0204",
+    "title": "Smart-home lighting cabinet \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0204.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0205",
+    "title": "Smart-home lighting cabinet \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0205.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0206",
+    "title": "Smart-home lighting cabinet \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0206.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0207",
+    "title": "Smart-home lighting cabinet \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0207.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0208",
+    "title": "Smart-home lighting cabinet \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0208.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0209",
+    "title": "Smart-home lighting cabinet \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0209.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0210",
+    "title": "Smart-home lighting cabinet \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Smart-home lighting cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0210.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0211",
+    "title": "Domestic water services \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0211.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0212",
+    "title": "Domestic water services \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0212.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0213",
+    "title": "Domestic water services \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0213.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0214",
+    "title": "Domestic water services \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0214.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0215",
+    "title": "Domestic water services \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0215.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0216",
+    "title": "Domestic water services \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0216.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0217",
+    "title": "Domestic water services \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0217.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0218",
+    "title": "Domestic water services \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0218.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0219",
+    "title": "Domestic water services \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0219.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0220",
+    "title": "Domestic water services \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0220.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0221",
+    "title": "Domestic water services \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0221.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0222",
+    "title": "Domestic water services \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0222.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0223",
+    "title": "Domestic water services \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0223.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0224",
+    "title": "Domestic water services \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0224.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0225",
+    "title": "Domestic water services \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0225.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0226",
+    "title": "Domestic water services \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0226.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0227",
+    "title": "Domestic water services \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0227.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0228",
+    "title": "Domestic water services \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0228.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0229",
+    "title": "Domestic water services \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0229.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0230",
+    "title": "Domestic water services \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0230.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0231",
+    "title": "Domestic water services \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0231.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0232",
+    "title": "Domestic water services \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0232.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0233",
+    "title": "Domestic water services \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0233.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0234",
+    "title": "Domestic water services \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0234.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0235",
+    "title": "Domestic water services \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0235.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0236",
+    "title": "Domestic water services \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0236.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0237",
+    "title": "Domestic water services \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0237.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0238",
+    "title": "Domestic water services \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0238.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0239",
+    "title": "Domestic water services \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0239.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0240",
+    "title": "Domestic water services \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Domestic water services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0240.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0241",
+    "title": "Accessible dwelling electrical services \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0241.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0242",
+    "title": "Accessible dwelling electrical services \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0242.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0243",
+    "title": "Accessible dwelling electrical services \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0243.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0244",
+    "title": "Accessible dwelling electrical services \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0244.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0245",
+    "title": "Accessible dwelling electrical services \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0245.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0246",
+    "title": "Accessible dwelling electrical services \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0246.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0247",
+    "title": "Accessible dwelling electrical services \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0247.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0248",
+    "title": "Accessible dwelling electrical services \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0248.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0249",
+    "title": "Accessible dwelling electrical services \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0249.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0250",
+    "title": "Accessible dwelling electrical services \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0250.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0251",
+    "title": "Accessible dwelling electrical services \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0251.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0252",
+    "title": "Accessible dwelling electrical services \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0252.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0253",
+    "title": "Accessible dwelling electrical services \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0253.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0254",
+    "title": "Accessible dwelling electrical services \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0254.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0255",
+    "title": "Accessible dwelling electrical services \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0255.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0256",
+    "title": "Accessible dwelling electrical services \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0256.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0257",
+    "title": "Accessible dwelling electrical services \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0257.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0258",
+    "title": "Accessible dwelling electrical services \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0258.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0259",
+    "title": "Accessible dwelling electrical services \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0259.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0260",
+    "title": "Accessible dwelling electrical services \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0260.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0261",
+    "title": "Accessible dwelling electrical services \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0261.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0262",
+    "title": "Accessible dwelling electrical services \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0262.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0263",
+    "title": "Accessible dwelling electrical services \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0263.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0264",
+    "title": "Accessible dwelling electrical services \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0264.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0265",
+    "title": "Accessible dwelling electrical services \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0265.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0266",
+    "title": "Accessible dwelling electrical services \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0266.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0267",
+    "title": "Accessible dwelling electrical services \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0267.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0268",
+    "title": "Accessible dwelling electrical services \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0268.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0269",
+    "title": "Accessible dwelling electrical services \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0269.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0270",
+    "title": "Accessible dwelling electrical services \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Accessible dwelling electrical services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0270.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0271",
+    "title": "Residential outbuilding distribution \u2014 Local manual baseline",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/residential/ENG-0271.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0272",
+    "title": "Residential outbuilding distribution \u2014 Remote supervisory operation",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/residential/ENG-0272.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0273",
+    "title": "Residential outbuilding distribution \u2014 Scheduled operation",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/residential/ENG-0273.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0274",
+    "title": "Residential outbuilding distribution \u2014 Demand-controlled enable",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/residential/ENG-0274.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0275",
+    "title": "Residential outbuilding distribution \u2014 Supply undervoltage supervision",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/residential/ENG-0275.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0276",
+    "title": "Residential outbuilding distribution \u2014 Phase and supply-quality supervision",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/residential/ENG-0276.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0277",
+    "title": "Residential outbuilding distribution \u2014 Individual branch metering",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/residential/ENG-0277.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0278",
+    "title": "Residential outbuilding distribution \u2014 Whole-system energy reporting",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/residential/ENG-0278.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0279",
+    "title": "Residential outbuilding distribution \u2014 Two-zone operation",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/residential/ENG-0279.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0280",
+    "title": "Residential outbuilding distribution \u2014 Three-stage load sequencing",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/residential/ENG-0280.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0281",
+    "title": "Residential outbuilding distribution \u2014 Priority load shedding",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/residential/ENG-0281.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0282",
+    "title": "Residential outbuilding distribution \u2014 Buffered control power",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Buffered control power",
+    "path": "projects/residential/ENG-0282.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0283",
+    "title": "Residential outbuilding distribution \u2014 Redundant control-power inputs",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/residential/ENG-0283.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0284",
+    "title": "Residential outbuilding distribution \u2014 Environmental temperature supervision",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/residential/ENG-0284.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0285",
+    "title": "Residential outbuilding distribution \u2014 Condensation management",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Condensation management",
+    "path": "projects/residential/ENG-0285.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0286",
+    "title": "Residential outbuilding distribution \u2014 Door and enclosure supervision",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/residential/ENG-0286.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0287",
+    "title": "Residential outbuilding distribution \u2014 Maintenance test mode",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/residential/ENG-0287.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0288",
+    "title": "Residential outbuilding distribution \u2014 Remote alarm annunciation",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/residential/ENG-0288.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0289",
+    "title": "Residential outbuilding distribution \u2014 First-out fault capture",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/residential/ENG-0289.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0290",
+    "title": "Residential outbuilding distribution \u2014 Event and operating-hour logging",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/residential/ENG-0290.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0291",
+    "title": "Residential outbuilding distribution \u2014 Ethernet supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/residential/ENG-0291.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0292",
+    "title": "Residential outbuilding distribution \u2014 Serial supervisory gateway",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/residential/ENG-0292.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0293",
+    "title": "Residential outbuilding distribution \u2014 Hardwired permissive chain",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/residential/ENG-0293.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0294",
+    "title": "Residential outbuilding distribution \u2014 Controlled shutdown interface",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/residential/ENG-0294.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0295",
+    "title": "Residential outbuilding distribution \u2014 Commissioning simulation terminals",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/residential/ENG-0295.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0296",
+    "title": "Residential outbuilding distribution \u2014 Modular field connections",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Modular field connections",
+    "path": "projects/residential/ENG-0296.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0297",
+    "title": "Residential outbuilding distribution \u2014 Distributed field enclosure",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/residential/ENG-0297.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0298",
+    "title": "Residential outbuilding distribution \u2014 Future expansion provision",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/residential/ENG-0298.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0299",
+    "title": "Residential outbuilding distribution \u2014 Supply restoration management",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/residential/ENG-0299.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0300",
+    "title": "Residential outbuilding distribution \u2014 Integrated diagnostics package",
+    "domain": "residential",
+    "baseSystem": "Residential outbuilding distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/residential/ENG-0300.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
