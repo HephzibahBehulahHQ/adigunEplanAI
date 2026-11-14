@@ -2,11 +2,26 @@
 
 ## Current state — supersedes older pending-run notes below
 
-- Pursuing goal is active. The approved interface remains locked; use existing menus and controls only.
-- Main d9a95dd028708110582af1e95c7f33922126e0e5 includes merged PR #54. CI 43638038533 and main CI 43638204251 passed; Pages 43638204206 succeeded. PLC input bench verified live: five components, six wires, four nets, zero open wire endpoints/geometry errors, 21 intentionally unused/external pins reported.
-- Six editable examples now exist. CPU DC/DC/DC X12 functions are corrected against Siemens' connector table; keep physical terminal IDs stable.
-- Current toolbar increment connects existing PLC/motor/earth buttons to their existing manufacturer components. Static markup/CSS remain unchanged; runtime labels describe the selected part. Local checks passed; new browser regression covers placement and save/reopen. Await its PR browser CI, merge, deployment and live verification before calling it shipped.
-- After toolbar release, audit new-project initialization, real terminal wiring, movement/rotation/undo, save/reopen, reports, examples and UI invariants against this goal. Fix observed gaps; do not equate incremental green tests with completion of the entire workflow.
+- Engineering workflow goal achieved and verified on 2026-11-14. Preserve the approved interface; any subsequent work uses existing menus and controls.
+- Runtime release: main 219ce0140b40f2682648502b2f472853555d1440 (PR #57). Both premerge CI runs 43640407126 and 43640403660 passed. Main CI 43640583841 and Pages deployment 43640583800 passed.
+- PR #56 (6d550e1a67d64e3947c3f5e44d7dccec1547fb03) fixed empty active-sheet export. Live downloaded Release-acceptance-bench.adigun.json retained its name, active power sheet, zero objects and both custom/power sheet definitions.
+- PR #57 fixed a live-discovered rotation defect: route overlaps previously merged the PLC example's four nets into three. Explicit terminal identities now govern bound endpoints; free endpoints may form geometric branches and legacy unbound wires retain geometric connectivity.
+- Final live verification: rotating X1 by 90 degrees in the PLC input example preserves four distinct nets, six wires, five components, zero open wire endpoints and zero geometry errors. The report explicitly identifies 21 spare/external pins. Screenshot: local work/live-rotation-verification.jpg.
+- Do not repeat old interface rebuild work or reset the worktree. It contains unrelated prior modifications. New changes must start from verified current remote main and use focused commits.
+
+## Acceptance audit — 2026-11-14
+
+| Requirement | Verified evidence |
+| --- | --- |
+| Named projects, valid sheets and immediate placement/wiring | Browser regression creates a named blank project, places terminal/resistor from the existing library, wires pins, edits and saves/reopens. Empty active-sheet regression retains definitions; production download inspected. |
+| Original symbols and source-backed components in existing controls | Original 83-symbol export/unit regression, library browser regression and manufacturer insertion toolbar regression passed. Properties expose part numbers, source references, editable references/comments and exact or explicitly model-local terminal IDs. |
+| Terminal identity, movement/rotation, history and persistence | Manual UI wiring regression verifies attachment IDs, coordinate editing, undo/redo and save/reopen. Domain regression verifies exact net membership across all six examples through every component's movement and four rotations. Browser regression rotates each hardware example and verifies saved/reopened objects and expected net counts. Missing-terminal and cross-sheet mismatch tests reject silent reconnection. Live PLC rotation confirmed the corrected result. |
+| Editable connected examples | Six templates: indicator, relay, PLC digital input, momentary hardware relay, PNP sensor and SITOP distribution. All use the same component/wire model, have complete explicit terminal bindings and pass export/import equality tests. Browser tests create all six and edit/save/reopen hardware examples. |
+| Meaningful properties and connectivity reports | Manufacturer identities/provenance and declared pins retained; Siemens DC/DC/DC output map corrected against official connector tables. Exact PLC net membership and intentionally spare pins tested. Live checks show separate positive/return/functional-earth/switched-input nets. No safety/compliance or simulation claims. |
+| Locked interface, regression, merge and deployment | Approved CSS hash e74748cfcb584a2be56e86f0aa52d959947718daf9ed4caaf773191ebfd96b29 and floating-menu geometry regression passed. All changes use existing menus, inspectors and toolbar buttons. Full local check passed: 367 unit/tooling tests. Eight browser tests passed in development and production-build CI. PRs #50–#57 merged, Pages release and live behavior verified. |
+| Next-agent rules | AGENTS.md records the locked-interface rule and authorized engineering scope. This record identifies the final release, evidence and limitations. |
+
+These are editable schematic engineering examples with real part identities and declared external boundaries, not certified installations or electrical simulations. Pin coordinates are schematic, not physical placement coordinates. Manufacturer ratings remain read-only; references and instance properties are editable. Bound wires use explicit terminal identities; legacy unbound wires retain geometry-based behavior.
 
 ## Owner authorization
 
@@ -65,3 +80,4 @@ Local checkout has an old HEAD and unrelated earlier edits/deletions. Do not bla
 - Next uncommitted local increment: existing PLC/motor/PE toolbar controls now map to defined manufacturer parts; no layout/menu changes. Source/root HTML synchronized, browser placement/save/reopen test added; npm run check passed (work/toolbar-check.log). Do not include these files when merging PR #54: they belong to the subsequent toolbar increment. Browser verification remains required before publishing this increment.
 - PR #54 final correction moved X2/X3 to avoid overlapping terminal selection targets while preserving the four exact nets. Head c99f3b42aa450efb053dcce67a234a9cfbd4f3f6 passed CI 43638038533; merged as d9a95dd028708110582af1e95c7f33922126e0e5. Deployment/live verification is next. Supersedes earlier queued-head notes.
 - PR #54 deployment 43638204206 passed. Live PLC digital input bench verified: 5 components, 6 wires, 4 nets, 0 open wire endpoints, 0 geometry errors; 21 external/unused pins explicitly flagged. Browser connection changed from unavailable ID 3 to Chrome ID 6. Next publish the locally tested toolbar increment from current remote main; no interface redesign.
+- PR #55 latest head 15e71aa9723fc2870fbb36ac57265cb57ff591cb passed full CI run 43638899458 (7 browser tests). Existing insertion controls and navigator search are fixed; awaiting merged deployment/live verification. Remaining audit gap: projectSheets() can omit an empty active built-in sheet after navigation because it collects metadata only from state.sheets and authored objects. Add active/visited empty sheet definitions or enforce project-owned navigation, with a save/reopen regression; do not mark the overall goal complete yet.
