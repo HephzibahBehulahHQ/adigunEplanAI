@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-1501",
+    "title": "Low-voltage main switchboard \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1501.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1502",
+    "title": "Low-voltage main switchboard \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1502.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1503",
+    "title": "Low-voltage main switchboard \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1503.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1504",
+    "title": "Low-voltage main switchboard \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1504.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1505",
+    "title": "Low-voltage main switchboard \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1505.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1506",
+    "title": "Low-voltage main switchboard \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1506.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1507",
+    "title": "Low-voltage main switchboard \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1507.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1508",
+    "title": "Low-voltage main switchboard \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1508.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1509",
+    "title": "Low-voltage main switchboard \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1509.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1510",
+    "title": "Low-voltage main switchboard \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1510.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1511",
+    "title": "Low-voltage main switchboard \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1511.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1512",
+    "title": "Low-voltage main switchboard \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1512.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1513",
+    "title": "Low-voltage main switchboard \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1513.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1514",
+    "title": "Low-voltage main switchboard \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1514.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1515",
+    "title": "Low-voltage main switchboard \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1515.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1516",
+    "title": "Low-voltage main switchboard \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1516.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1517",
+    "title": "Low-voltage main switchboard \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1517.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1518",
+    "title": "Low-voltage main switchboard \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1518.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1519",
+    "title": "Low-voltage main switchboard \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1519.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1520",
+    "title": "Low-voltage main switchboard \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1520.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1521",
+    "title": "Low-voltage main switchboard \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1521.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1522",
+    "title": "Low-voltage main switchboard \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1522.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1523",
+    "title": "Low-voltage main switchboard \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1523.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1524",
+    "title": "Low-voltage main switchboard \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1524.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1525",
+    "title": "Low-voltage main switchboard \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1525.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1526",
+    "title": "Low-voltage main switchboard \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1526.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1527",
+    "title": "Low-voltage main switchboard \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1527.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1528",
+    "title": "Low-voltage main switchboard \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1528.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1529",
+    "title": "Low-voltage main switchboard \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1529.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1530",
+    "title": "Low-voltage main switchboard \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Low-voltage main switchboard",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1530.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1531",
+    "title": "Transformer secondary distribution \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1531.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1532",
+    "title": "Transformer secondary distribution \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1532.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1533",
+    "title": "Transformer secondary distribution \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1533.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1534",
+    "title": "Transformer secondary distribution \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1534.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1535",
+    "title": "Transformer secondary distribution \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1535.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1536",
+    "title": "Transformer secondary distribution \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1536.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1537",
+    "title": "Transformer secondary distribution \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1537.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1538",
+    "title": "Transformer secondary distribution \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1538.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1539",
+    "title": "Transformer secondary distribution \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1539.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1540",
+    "title": "Transformer secondary distribution \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1540.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1541",
+    "title": "Transformer secondary distribution \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1541.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1542",
+    "title": "Transformer secondary distribution \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1542.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1543",
+    "title": "Transformer secondary distribution \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1543.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1544",
+    "title": "Transformer secondary distribution \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1544.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1545",
+    "title": "Transformer secondary distribution \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1545.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1546",
+    "title": "Transformer secondary distribution \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1546.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1547",
+    "title": "Transformer secondary distribution \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1547.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1548",
+    "title": "Transformer secondary distribution \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1548.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1549",
+    "title": "Transformer secondary distribution \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1549.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1550",
+    "title": "Transformer secondary distribution \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1550.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1551",
+    "title": "Transformer secondary distribution \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1551.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1552",
+    "title": "Transformer secondary distribution \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1552.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1553",
+    "title": "Transformer secondary distribution \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1553.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1554",
+    "title": "Transformer secondary distribution \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1554.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1555",
+    "title": "Transformer secondary distribution \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1555.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1556",
+    "title": "Transformer secondary distribution \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1556.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1557",
+    "title": "Transformer secondary distribution \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1557.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1558",
+    "title": "Transformer secondary distribution \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1558.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1559",
+    "title": "Transformer secondary distribution \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1559.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1560",
+    "title": "Transformer secondary distribution \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Transformer secondary distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1560.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1561",
+    "title": "Generator changeover board \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1561.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1562",
+    "title": "Generator changeover board \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1562.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1563",
+    "title": "Generator changeover board \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1563.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1564",
+    "title": "Generator changeover board \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1564.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1565",
+    "title": "Generator changeover board \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1565.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1566",
+    "title": "Generator changeover board \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1566.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1567",
+    "title": "Generator changeover board \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1567.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1568",
+    "title": "Generator changeover board \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1568.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1569",
+    "title": "Generator changeover board \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1569.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1570",
+    "title": "Generator changeover board \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1570.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1571",
+    "title": "Generator changeover board \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1571.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1572",
+    "title": "Generator changeover board \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1572.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1573",
+    "title": "Generator changeover board \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1573.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1574",
+    "title": "Generator changeover board \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1574.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1575",
+    "title": "Generator changeover board \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1575.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1576",
+    "title": "Generator changeover board \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1576.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1577",
+    "title": "Generator changeover board \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1577.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1578",
+    "title": "Generator changeover board \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1578.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1579",
+    "title": "Generator changeover board \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1579.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1580",
+    "title": "Generator changeover board \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1580.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1581",
+    "title": "Generator changeover board \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1581.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1582",
+    "title": "Generator changeover board \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1582.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1583",
+    "title": "Generator changeover board \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1583.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1584",
+    "title": "Generator changeover board \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1584.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1585",
+    "title": "Generator changeover board \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1585.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1586",
+    "title": "Generator changeover board \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1586.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1587",
+    "title": "Generator changeover board \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1587.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1588",
+    "title": "Generator changeover board \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1588.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1589",
+    "title": "Generator changeover board \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1589.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1590",
+    "title": "Generator changeover board \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Generator changeover board",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1590.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1591",
+    "title": "Bus-section coupling panel \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1591.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1592",
+    "title": "Bus-section coupling panel \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1592.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1593",
+    "title": "Bus-section coupling panel \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1593.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1594",
+    "title": "Bus-section coupling panel \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1594.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1595",
+    "title": "Bus-section coupling panel \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1595.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1596",
+    "title": "Bus-section coupling panel \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1596.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1597",
+    "title": "Bus-section coupling panel \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1597.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1598",
+    "title": "Bus-section coupling panel \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1598.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1599",
+    "title": "Bus-section coupling panel \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1599.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1600",
+    "title": "Bus-section coupling panel \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1600.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1601",
+    "title": "Bus-section coupling panel \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1601.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1602",
+    "title": "Bus-section coupling panel \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1602.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1603",
+    "title": "Bus-section coupling panel \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1603.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1604",
+    "title": "Bus-section coupling panel \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1604.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1605",
+    "title": "Bus-section coupling panel \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1605.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1606",
+    "title": "Bus-section coupling panel \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1606.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1607",
+    "title": "Bus-section coupling panel \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1607.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1608",
+    "title": "Bus-section coupling panel \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1608.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1609",
+    "title": "Bus-section coupling panel \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1609.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1610",
+    "title": "Bus-section coupling panel \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1610.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1611",
+    "title": "Bus-section coupling panel \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1611.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1612",
+    "title": "Bus-section coupling panel \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1612.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1613",
+    "title": "Bus-section coupling panel \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1613.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1614",
+    "title": "Bus-section coupling panel \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1614.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1615",
+    "title": "Bus-section coupling panel \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1615.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1616",
+    "title": "Bus-section coupling panel \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1616.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1617",
+    "title": "Bus-section coupling panel \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1617.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1618",
+    "title": "Bus-section coupling panel \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1618.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1619",
+    "title": "Bus-section coupling panel \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1619.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1620",
+    "title": "Bus-section coupling panel \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Bus-section coupling panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1620.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1621",
+    "title": "Industrial feeder pillar \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1621.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1622",
+    "title": "Industrial feeder pillar \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1622.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1623",
+    "title": "Industrial feeder pillar \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1623.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1624",
+    "title": "Industrial feeder pillar \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1624.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1625",
+    "title": "Industrial feeder pillar \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1625.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1626",
+    "title": "Industrial feeder pillar \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1626.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1627",
+    "title": "Industrial feeder pillar \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1627.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1628",
+    "title": "Industrial feeder pillar \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1628.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1629",
+    "title": "Industrial feeder pillar \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1629.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1630",
+    "title": "Industrial feeder pillar \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1630.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1631",
+    "title": "Industrial feeder pillar \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1631.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1632",
+    "title": "Industrial feeder pillar \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1632.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1633",
+    "title": "Industrial feeder pillar \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1633.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1634",
+    "title": "Industrial feeder pillar \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1634.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1635",
+    "title": "Industrial feeder pillar \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1635.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1636",
+    "title": "Industrial feeder pillar \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1636.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1637",
+    "title": "Industrial feeder pillar \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1637.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1638",
+    "title": "Industrial feeder pillar \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1638.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1639",
+    "title": "Industrial feeder pillar \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1639.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1640",
+    "title": "Industrial feeder pillar \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1640.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1641",
+    "title": "Industrial feeder pillar \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1641.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1642",
+    "title": "Industrial feeder pillar \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1642.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1643",
+    "title": "Industrial feeder pillar \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1643.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1644",
+    "title": "Industrial feeder pillar \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1644.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1645",
+    "title": "Industrial feeder pillar \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1645.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1646",
+    "title": "Industrial feeder pillar \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1646.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1647",
+    "title": "Industrial feeder pillar \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1647.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1648",
+    "title": "Industrial feeder pillar \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1648.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1649",
+    "title": "Industrial feeder pillar \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1649.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1650",
+    "title": "Industrial feeder pillar \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Industrial feeder pillar",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1650.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1651",
+    "title": "Power-factor correction bank \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1651.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1652",
+    "title": "Power-factor correction bank \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1652.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1653",
+    "title": "Power-factor correction bank \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1653.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1654",
+    "title": "Power-factor correction bank \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1654.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1655",
+    "title": "Power-factor correction bank \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1655.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1656",
+    "title": "Power-factor correction bank \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1656.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1657",
+    "title": "Power-factor correction bank \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1657.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1658",
+    "title": "Power-factor correction bank \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1658.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1659",
+    "title": "Power-factor correction bank \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1659.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1660",
+    "title": "Power-factor correction bank \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1660.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1661",
+    "title": "Power-factor correction bank \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1661.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1662",
+    "title": "Power-factor correction bank \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1662.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1663",
+    "title": "Power-factor correction bank \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1663.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1664",
+    "title": "Power-factor correction bank \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1664.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1665",
+    "title": "Power-factor correction bank \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1665.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1666",
+    "title": "Power-factor correction bank \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1666.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1667",
+    "title": "Power-factor correction bank \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1667.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1668",
+    "title": "Power-factor correction bank \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1668.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1669",
+    "title": "Power-factor correction bank \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1669.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1670",
+    "title": "Power-factor correction bank \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1670.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1671",
+    "title": "Power-factor correction bank \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1671.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1672",
+    "title": "Power-factor correction bank \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1672.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1673",
+    "title": "Power-factor correction bank \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1673.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1674",
+    "title": "Power-factor correction bank \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1674.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1675",
+    "title": "Power-factor correction bank \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1675.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1676",
+    "title": "Power-factor correction bank \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1676.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1677",
+    "title": "Power-factor correction bank \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1677.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1678",
+    "title": "Power-factor correction bank \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1678.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1679",
+    "title": "Power-factor correction bank \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1679.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1680",
+    "title": "Power-factor correction bank \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Power-factor correction bank",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1680.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1681",
+    "title": "Substation auxiliary AC board \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1681.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1682",
+    "title": "Substation auxiliary AC board \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1682.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1683",
+    "title": "Substation auxiliary AC board \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1683.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1684",
+    "title": "Substation auxiliary AC board \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1684.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1685",
+    "title": "Substation auxiliary AC board \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1685.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1686",
+    "title": "Substation auxiliary AC board \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1686.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1687",
+    "title": "Substation auxiliary AC board \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1687.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1688",
+    "title": "Substation auxiliary AC board \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1688.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1689",
+    "title": "Substation auxiliary AC board \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1689.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1690",
+    "title": "Substation auxiliary AC board \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1690.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1691",
+    "title": "Substation auxiliary AC board \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1691.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1692",
+    "title": "Substation auxiliary AC board \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1692.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1693",
+    "title": "Substation auxiliary AC board \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1693.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1694",
+    "title": "Substation auxiliary AC board \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1694.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1695",
+    "title": "Substation auxiliary AC board \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1695.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1696",
+    "title": "Substation auxiliary AC board \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1696.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1697",
+    "title": "Substation auxiliary AC board \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1697.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1698",
+    "title": "Substation auxiliary AC board \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1698.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1699",
+    "title": "Substation auxiliary AC board \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1699.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1700",
+    "title": "Substation auxiliary AC board \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1700.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1701",
+    "title": "Substation auxiliary AC board \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1701.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1702",
+    "title": "Substation auxiliary AC board \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1702.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1703",
+    "title": "Substation auxiliary AC board \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1703.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1704",
+    "title": "Substation auxiliary AC board \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1704.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1705",
+    "title": "Substation auxiliary AC board \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1705.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1706",
+    "title": "Substation auxiliary AC board \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1706.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1707",
+    "title": "Substation auxiliary AC board \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1707.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1708",
+    "title": "Substation auxiliary AC board \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1708.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1709",
+    "title": "Substation auxiliary AC board \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1709.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1710",
+    "title": "Substation auxiliary AC board \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary AC board",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1710.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1711",
+    "title": "Substation auxiliary DC board \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1711.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1712",
+    "title": "Substation auxiliary DC board \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1712.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1713",
+    "title": "Substation auxiliary DC board \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1713.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1714",
+    "title": "Substation auxiliary DC board \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1714.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1715",
+    "title": "Substation auxiliary DC board \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1715.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1716",
+    "title": "Substation auxiliary DC board \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1716.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1717",
+    "title": "Substation auxiliary DC board \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1717.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1718",
+    "title": "Substation auxiliary DC board \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1718.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1719",
+    "title": "Substation auxiliary DC board \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1719.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1720",
+    "title": "Substation auxiliary DC board \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1720.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1721",
+    "title": "Substation auxiliary DC board \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1721.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1722",
+    "title": "Substation auxiliary DC board \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1722.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1723",
+    "title": "Substation auxiliary DC board \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1723.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1724",
+    "title": "Substation auxiliary DC board \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1724.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1725",
+    "title": "Substation auxiliary DC board \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1725.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1726",
+    "title": "Substation auxiliary DC board \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1726.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1727",
+    "title": "Substation auxiliary DC board \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1727.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1728",
+    "title": "Substation auxiliary DC board \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1728.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1729",
+    "title": "Substation auxiliary DC board \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1729.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1730",
+    "title": "Substation auxiliary DC board \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1730.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1731",
+    "title": "Substation auxiliary DC board \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1731.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1732",
+    "title": "Substation auxiliary DC board \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1732.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1733",
+    "title": "Substation auxiliary DC board \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1733.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1734",
+    "title": "Substation auxiliary DC board \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1734.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1735",
+    "title": "Substation auxiliary DC board \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1735.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1736",
+    "title": "Substation auxiliary DC board \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1736.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1737",
+    "title": "Substation auxiliary DC board \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1737.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1738",
+    "title": "Substation auxiliary DC board \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1738.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1739",
+    "title": "Substation auxiliary DC board \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1739.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1740",
+    "title": "Substation auxiliary DC board \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Substation auxiliary DC board",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1740.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1741",
+    "title": "Protection relay interface panel \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1741.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1742",
+    "title": "Protection relay interface panel \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1742.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1743",
+    "title": "Protection relay interface panel \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1743.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1744",
+    "title": "Protection relay interface panel \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1744.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1745",
+    "title": "Protection relay interface panel \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1745.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1746",
+    "title": "Protection relay interface panel \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1746.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1747",
+    "title": "Protection relay interface panel \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1747.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1748",
+    "title": "Protection relay interface panel \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1748.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1749",
+    "title": "Protection relay interface panel \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1749.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1750",
+    "title": "Protection relay interface panel \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1750.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1751",
+    "title": "Protection relay interface panel \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1751.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1752",
+    "title": "Protection relay interface panel \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1752.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1753",
+    "title": "Protection relay interface panel \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1753.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1754",
+    "title": "Protection relay interface panel \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1754.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1755",
+    "title": "Protection relay interface panel \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1755.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1756",
+    "title": "Protection relay interface panel \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1756.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1757",
+    "title": "Protection relay interface panel \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1757.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1758",
+    "title": "Protection relay interface panel \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1758.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1759",
+    "title": "Protection relay interface panel \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1759.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1760",
+    "title": "Protection relay interface panel \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1760.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1761",
+    "title": "Protection relay interface panel \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1761.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1762",
+    "title": "Protection relay interface panel \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1762.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1763",
+    "title": "Protection relay interface panel \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1763.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1764",
+    "title": "Protection relay interface panel \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1764.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1765",
+    "title": "Protection relay interface panel \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1765.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1766",
+    "title": "Protection relay interface panel \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1766.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1767",
+    "title": "Protection relay interface panel \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1767.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1768",
+    "title": "Protection relay interface panel \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1768.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1769",
+    "title": "Protection relay interface panel \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1769.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1770",
+    "title": "Protection relay interface panel \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Protection relay interface panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1770.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1771",
+    "title": "Facility energy-metering panel \u2014 Local manual baseline",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Local manual baseline",
+    "path": "projects/power-distribution/ENG-1771.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1772",
+    "title": "Facility energy-metering panel \u2014 Remote supervisory operation",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/power-distribution/ENG-1772.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1773",
+    "title": "Facility energy-metering panel \u2014 Scheduled operation",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Scheduled operation",
+    "path": "projects/power-distribution/ENG-1773.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1774",
+    "title": "Facility energy-metering panel \u2014 Demand-controlled enable",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/power-distribution/ENG-1774.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1775",
+    "title": "Facility energy-metering panel \u2014 Supply undervoltage supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/power-distribution/ENG-1775.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1776",
+    "title": "Facility energy-metering panel \u2014 Phase and supply-quality supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/power-distribution/ENG-1776.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1777",
+    "title": "Facility energy-metering panel \u2014 Individual branch metering",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Individual branch metering",
+    "path": "projects/power-distribution/ENG-1777.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1778",
+    "title": "Facility energy-metering panel \u2014 Whole-system energy reporting",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/power-distribution/ENG-1778.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1779",
+    "title": "Facility energy-metering panel \u2014 Two-zone operation",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Two-zone operation",
+    "path": "projects/power-distribution/ENG-1779.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1780",
+    "title": "Facility energy-metering panel \u2014 Three-stage load sequencing",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/power-distribution/ENG-1780.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1781",
+    "title": "Facility energy-metering panel \u2014 Priority load shedding",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Priority load shedding",
+    "path": "projects/power-distribution/ENG-1781.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1782",
+    "title": "Facility energy-metering panel \u2014 Buffered control power",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Buffered control power",
+    "path": "projects/power-distribution/ENG-1782.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1783",
+    "title": "Facility energy-metering panel \u2014 Redundant control-power inputs",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/power-distribution/ENG-1783.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1784",
+    "title": "Facility energy-metering panel \u2014 Environmental temperature supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/power-distribution/ENG-1784.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1785",
+    "title": "Facility energy-metering panel \u2014 Condensation management",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Condensation management",
+    "path": "projects/power-distribution/ENG-1785.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1786",
+    "title": "Facility energy-metering panel \u2014 Door and enclosure supervision",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/power-distribution/ENG-1786.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1787",
+    "title": "Facility energy-metering panel \u2014 Maintenance test mode",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/power-distribution/ENG-1787.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1788",
+    "title": "Facility energy-metering panel \u2014 Remote alarm annunciation",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/power-distribution/ENG-1788.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1789",
+    "title": "Facility energy-metering panel \u2014 First-out fault capture",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "First-out fault capture",
+    "path": "projects/power-distribution/ENG-1789.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1790",
+    "title": "Facility energy-metering panel \u2014 Event and operating-hour logging",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/power-distribution/ENG-1790.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1791",
+    "title": "Facility energy-metering panel \u2014 Ethernet supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/power-distribution/ENG-1791.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1792",
+    "title": "Facility energy-metering panel \u2014 Serial supervisory gateway",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/power-distribution/ENG-1792.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1793",
+    "title": "Facility energy-metering panel \u2014 Hardwired permissive chain",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/power-distribution/ENG-1793.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1794",
+    "title": "Facility energy-metering panel \u2014 Controlled shutdown interface",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/power-distribution/ENG-1794.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1795",
+    "title": "Facility energy-metering panel \u2014 Commissioning simulation terminals",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/power-distribution/ENG-1795.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1796",
+    "title": "Facility energy-metering panel \u2014 Modular field connections",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Modular field connections",
+    "path": "projects/power-distribution/ENG-1796.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1797",
+    "title": "Facility energy-metering panel \u2014 Distributed field enclosure",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/power-distribution/ENG-1797.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1798",
+    "title": "Facility energy-metering panel \u2014 Future expansion provision",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Future expansion provision",
+    "path": "projects/power-distribution/ENG-1798.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1799",
+    "title": "Facility energy-metering panel \u2014 Supply restoration management",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Supply restoration management",
+    "path": "projects/power-distribution/ENG-1799.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1800",
+    "title": "Facility energy-metering panel \u2014 Integrated diagnostics package",
+    "domain": "power-distribution",
+    "baseSystem": "Facility energy-metering panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/power-distribution/ENG-1800.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
