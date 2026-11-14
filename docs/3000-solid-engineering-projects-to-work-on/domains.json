@@ -1,0 +1,452 @@
+{
+  "residential": [
+    "Residential installations",
+    [
+      [
+        "Apartment distribution",
+        "lighting groups, socket radials, kitchen appliances, bathroom circuits"
+      ],
+      [
+        "Detached-house distribution",
+        "floor subboards, kitchen feeders, outdoor supplies, utility circuits"
+      ],
+      [
+        "Apartment-block riser",
+        "meter positions, floor feeders, landlord services, dwelling isolation"
+      ],
+      [
+        "Residential heat-pump supply",
+        "compressor feeder, auxiliary heater, outdoor isolator, tariff-enable contact"
+      ],
+      [
+        "Home EV charging",
+        "charge-point feeder, residual-current protection interface, load-management meter, enable contact"
+      ],
+      [
+        "Garage workshop supply",
+        "workbench sockets, machinery feeder, task lighting, garage subboard"
+      ],
+      [
+        "Smart-home lighting cabinet",
+        "actuator channels, wall inputs, lighting loads, bus power supply"
+      ],
+      [
+        "Domestic water services",
+        "booster-pump feeder, pressure switch, dry-run contact, maintenance isolator"
+      ],
+      [
+        "Accessible dwelling electrical services",
+        "call buttons, assistance indicators, door interfaces, essential supply"
+      ],
+      [
+        "Residential outbuilding distribution",
+        "buried feeder interfaces, shed subboard, outdoor sockets, external lighting"
+      ]
+    ]
+  ],
+  "commercial": [
+    "Commercial buildings",
+    [
+      [
+        "Office-floor distribution",
+        "lighting circuits, desk sockets, kitchenette circuits, floor subboard"
+      ],
+      [
+        "Retail-store electrical services",
+        "sales-floor lighting, till circuits, signage feeders, back-office supplies"
+      ],
+      [
+        "Restaurant kitchen distribution",
+        "cooking equipment feeders, extraction interlock, wash-area supplies, local isolation"
+      ],
+      [
+        "Hotel-floor distribution",
+        "guest-room feeders, corridor lighting, housekeeping sockets, floor isolation"
+      ],
+      [
+        "School teaching-block supply",
+        "classroom circuits, ICT outlets, laboratory enable interfaces, caretaker subboard"
+      ],
+      [
+        "Warehouse electrical distribution",
+        "high-bay lighting, loading-door supplies, service sockets, distribution panel"
+      ],
+      [
+        "Data-room auxiliary supply",
+        "rack feeder boundaries, cooling interfaces, maintenance sockets, status monitoring"
+      ],
+      [
+        "Medical-office general services",
+        "general lighting, nonmedical sockets, reception supplies, landlord interface"
+      ],
+      [
+        "Community-centre distribution",
+        "hall lighting, stage feeder boundary, catering circuits, emergency-service interface"
+      ],
+      [
+        "Car-park electrical services",
+        "lighting groups, barrier feeders, payment-machine supplies, ventilation interface"
+      ]
+    ]
+  ],
+  "motor-control": [
+    "Industrial motor control",
+    [
+      [
+        "Direct-on-line pump starter",
+        "motor contactor, overload relay, pressure permissive, local isolator"
+      ],
+      [
+        "Reversing conveyor starter",
+        "forward contactor, reverse contactor, electrical interlock, travel limits"
+      ],
+      [
+        "Star-delta fan starter",
+        "main contactor, star contactor, delta contactor, transition timer"
+      ],
+      [
+        "Soft-start compressor feeder",
+        "soft starter, bypass interface, pressure permissive, motor protection"
+      ],
+      [
+        "Variable-speed extraction fan",
+        "frequency converter, run-enable interface, speed reference, airflow feedback"
+      ],
+      [
+        "Duty-standby drainage pumps",
+        "pump-one feeder, pump-two feeder, level contacts, alternation logic"
+      ],
+      [
+        "Three-motor transfer conveyor",
+        "infeed drive, transfer drive, outfeed drive, sequence permissives"
+      ],
+      [
+        "Mixer agitator drive",
+        "drive feeder, lid interlock interface, speed command, motor temperature input"
+      ],
+      [
+        "Hydraulic power-unit starter",
+        "pump starter, pressure feedback, oil-level contact, cooling-fan feeder"
+      ],
+      [
+        "Screw-compressor auxiliaries",
+        "compressor feeder, dryer feeder, condensate drain, temperature permissive"
+      ]
+    ]
+  ],
+  "plc-automation": [
+    "PLC and automation wiring",
+    [
+      [
+        "Tank filling and draining control",
+        "inlet valve, outlet valve, level transmitter, overflow switch"
+      ],
+      [
+        "Packaging conveyor I/O cabinet",
+        "photoelectric sensors, drive enables, diverter outputs, jam contacts"
+      ],
+      [
+        "Temperature-control station",
+        "temperature transmitter, heater enable, cooling valve, overtemperature input"
+      ],
+      [
+        "Pressure-regulation skid",
+        "pressure transmitter, control valve, pump enable, pressure alarm"
+      ],
+      [
+        "Batch-dosing controller",
+        "ingredient valves, weighing transmitter, mixer enable, discharge actuator"
+      ],
+      [
+        "Part-counting station",
+        "count sensor, reject actuator, counter reset, collection-bin switch"
+      ],
+      [
+        "Sorting conveyor controller",
+        "identification input, diverter solenoids, belt encoder, bin-full inputs"
+      ],
+      [
+        "Industrial wash-cycle controller",
+        "fill valve, circulation pump, heater interface, drain valve"
+      ],
+      [
+        "Cold-room monitoring cabinet",
+        "temperature probes, door contacts, refrigeration enable, alarm outputs"
+      ],
+      [
+        "Remote utility I/O station",
+        "utility meters, pulse inputs, valve status contacts, communication coupler"
+      ]
+    ]
+  ],
+  "panel-engineering": [
+    "Control cabinets and panels",
+    [
+      [
+        "Motor-control centre section",
+        "starter buckets, control transformer, common terminals, feeder isolation"
+      ],
+      [
+        "PLC marshalling cabinet",
+        "controller rack, interposing relays, field terminals, instrument supply"
+      ],
+      [
+        "VFD drive cabinet",
+        "drive modules, EMC interfaces, braking interfaces, motor terminals"
+      ],
+      [
+        "Instrumentation interface cabinet",
+        "signal isolators, transmitter supplies, shield bar, analog terminals"
+      ],
+      [
+        "Network and control cabinet",
+        "industrial switches, control power supplies, fibre interfaces, copper patching"
+      ],
+      [
+        "Remote junction enclosure",
+        "field cable glands, terminal groups, shield terminations, bonding studs"
+      ],
+      [
+        "Machine auxiliary cabinet",
+        "service sockets, work lighting, auxiliary feeders, maintenance isolation"
+      ],
+      [
+        "Panel thermal-management system",
+        "filter fans, cabinet heater, thermostat, temperature alarm"
+      ],
+      [
+        "Lighting contactor cabinet",
+        "lighting contactors, group switches, schedule controller, outgoing terminals"
+      ],
+      [
+        "DC distribution cabinet",
+        "DC protective devices, distribution terminals, return bar, earth-fault interface"
+      ]
+    ]
+  ],
+  "power-distribution": [
+    "Power distribution and substations",
+    [
+      [
+        "Low-voltage main switchboard",
+        "incoming breaker, busbar sections, outgoing feeders, metering transformers"
+      ],
+      [
+        "Transformer secondary distribution",
+        "LV incomer, transformer temperature interface, feeder protection, neutral-earth boundary"
+      ],
+      [
+        "Generator changeover board",
+        "utility incomer, generator incomer, transfer interlocks, source monitoring"
+      ],
+      [
+        "Bus-section coupling panel",
+        "section-one incomer, section-two incomer, bus coupler, permissive logic"
+      ],
+      [
+        "Industrial feeder pillar",
+        "supply isolator, outgoing feeder protection, service sockets, metering"
+      ],
+      [
+        "Power-factor correction bank",
+        "capacitor steps, step contactors, controller inputs, discharge provisions"
+      ],
+      [
+        "Substation auxiliary AC board",
+        "station-service incomer, heating feeders, charger supply, lighting feeders"
+      ],
+      [
+        "Substation auxiliary DC board",
+        "battery interface, charger interface, trip-circuit feeders, DC monitoring"
+      ],
+      [
+        "Protection relay interface panel",
+        "CT test blocks, VT test blocks, trip outputs, breaker status contacts"
+      ],
+      [
+        "Facility energy-metering panel",
+        "voltage fuses, current-transformer interfaces, meter channels, communications"
+      ]
+    ]
+  ],
+  "renewables-storage": [
+    "Renewable energy and storage",
+    [
+      [
+        "Off-grid inverter installation",
+        "inverter DC interface, battery isolation, AC output board, load circuits"
+      ],
+      [
+        "Hybrid solar backup installation",
+        "PV interface, battery interface, inverter transfer boundary, essential-load board"
+      ],
+      [
+        "Grid-connected PV AC interface",
+        "inverter AC feeder, generation meter, grid isolation, export-control interface"
+      ],
+      [
+        "PV DC combiner installation",
+        "string inputs, DC protection, surge protection, inverter DC terminals"
+      ],
+      [
+        "Battery storage auxiliary panel",
+        "BMS interface, contactor permissive, auxiliary supply, thermal alarm"
+      ],
+      [
+        "Small-wind converter interface",
+        "generator interface, converter supply, brake permissive, load-side isolation"
+      ],
+      [
+        "Solar irrigation power cabinet",
+        "PV converter, pump drive, water-level inputs, irrigation enable"
+      ],
+      [
+        "Renewable microgrid supervisory panel",
+        "source status inputs, load-shed outputs, metering, communications"
+      ],
+      [
+        "Containerised storage auxiliary supply",
+        "HVAC feeder, control supply, leak detection interface, emergency-service boundary"
+      ],
+      [
+        "DC critical-load energy system",
+        "charger supply, storage interface, protected DC branches, undervoltage shedding"
+      ]
+    ]
+  ],
+  "lighting": [
+    "Lighting and emergency lighting",
+    [
+      [
+        "Office lighting control",
+        "luminaire circuits, presence inputs, manual overrides, control-bus supply"
+      ],
+      [
+        "Industrial high-bay lighting",
+        "lighting zones, contactor outputs, daylight sensors, local overrides"
+      ],
+      [
+        "External area lighting",
+        "lighting columns, photocell input, timer outputs, feeder protection"
+      ],
+      [
+        "Stairwell lighting control",
+        "floor pushbuttons, timer relay, luminaire groups, override switch"
+      ],
+      [
+        "Architectural lighting cabinet",
+        "dimming channels, scene inputs, driver supplies, control interfaces"
+      ],
+      [
+        "Sports-hall lighting system",
+        "court zones, contactor groups, scene controller, maintenance isolation"
+      ],
+      [
+        "Emergency-lighting monitoring interface",
+        "test controls, luminaire status interfaces, alarm relay, protected auxiliary supply"
+      ],
+      [
+        "Central-battery lighting distribution",
+        "battery-system boundary, final circuits, circuit monitoring, test interface"
+      ],
+      [
+        "Car-park occupancy lighting",
+        "occupancy detectors, zone relays, lighting feeders, brightness controls"
+      ],
+      [
+        "Tunnel service lighting",
+        "lighting sections, feeder interfaces, local control stations, failure monitoring"
+      ]
+    ]
+  ],
+  "low-voltage-security": [
+    "Fire alarm, security and low-voltage interfaces",
+    [
+      [
+        "Fire-alarm interface cabinet",
+        "fire-panel relay boundaries, monitored interface modules, plant shutdown relays, fault contacts"
+      ],
+      [
+        "Access-control door installation",
+        "door controller, lock power, door contact, request-to-exit input"
+      ],
+      [
+        "Intrusion-alarm interface panel",
+        "zone contacts, tamper loop, alarm outputs, auxiliary supply"
+      ],
+      [
+        "CCTV auxiliary distribution",
+        "camera supply branches, network switch, surge interfaces, UPS boundary"
+      ],
+      [
+        "Intercom entrance installation",
+        "door station, internal station interfaces, lock relay, power supply"
+      ],
+      [
+        "Assistance-call installation",
+        "call points, reset inputs, corridor indicators, alarm interface"
+      ],
+      [
+        "Smoke-extraction control interface",
+        "fire command input, damper status, fan enable boundary, fault feedback"
+      ],
+      [
+        "Security gate controller",
+        "motor-controller interface, access input, position switches, obstacle-detection boundary"
+      ],
+      [
+        "Building-management interface panel",
+        "plant dry contacts, analog signals, command relays, gateway supply"
+      ],
+      [
+        "Leak-detection monitoring cabinet",
+        "leak zones, controller inputs, isolation-valve command, alarm interface"
+      ]
+    ]
+  ],
+  "protection-integrated": [
+    "Protection, earthing and integrated systems",
+    [
+      [
+        "Equipment bonding and monitoring",
+        "PE distribution bar, bonding conductors, continuity test points, monitoring contacts"
+      ],
+      [
+        "Surge-protection coordination panel",
+        "incoming SPD interface, downstream SPD interface, backup protection, remote status"
+      ],
+      [
+        "Residual-current monitoring installation",
+        "current transformers, monitoring relays, alarm contacts, feeder identification"
+      ],
+      [
+        "Insulation-monitoring interface",
+        "insulation monitor, coupling interface, alarm outputs, test/reset inputs"
+      ],
+      [
+        "Lightning equipotential-bonding documentation",
+        "service entry bonds, bonding bar, surge interfaces, inspection points"
+      ],
+      [
+        "Workshop integrated electrical services",
+        "distribution board, motor feeders, lighting circuits, service sockets"
+      ],
+      [
+        "Water-treatment integrated cabinet",
+        "pump feeders, valve interfaces, process transmitters, controller I/O"
+      ],
+      [
+        "Agricultural service installation",
+        "ventilation feeders, irrigation controls, lighting circuits, outdoor supplies"
+      ],
+      [
+        "Telecom shelter auxiliary services",
+        "AC distribution, DC rectifier boundary, battery monitoring, cooling interface"
+      ],
+      [
+        "Critical utility monitoring panel",
+        "supply meters, breaker-status inputs, alarm outputs, supervisory gateway"
+      ]
+    ]
+  ]
+}

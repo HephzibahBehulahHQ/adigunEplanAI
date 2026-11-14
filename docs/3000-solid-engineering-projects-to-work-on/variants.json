@@ -1,0 +1,152 @@
+[
+  [
+    "Local manual baseline",
+    "Provide local enable/disable controls, visible operating indication and lockable maintenance isolation.",
+    "Demonstrate local start/enable, stop/disable and restoration without unintended re-energisation."
+  ],
+  [
+    "Remote supervisory operation",
+    "Add isolated remote command and run/ready/fault feedback terminals; define local/remote priority.",
+    "Test conflicting commands, local priority and remote cable interruption."
+  ],
+  [
+    "Scheduled operation",
+    "Add a time-switch enable path, manual override and schedule-state indication.",
+    "Test scheduled transitions, override expiry and clock recovery."
+  ],
+  [
+    "Demand-controlled enable",
+    "Add a demand sensor or dry-contact interface with adjustable threshold and hysteresis.",
+    "Test threshold crossing, sensor failure and stable recovery."
+  ],
+  [
+    "Supply undervoltage supervision",
+    "Add supply-monitoring contacts and a defined loss-of-voltage inhibit path.",
+    "Test undervoltage inhibit and documented restart policy."
+  ],
+  [
+    "Phase and supply-quality supervision",
+    "Provide a supply-monitor interface; for single-phase cases monitor voltage/frequency rather than inventing phases.",
+    "Test declared supply faults and contact fail state."
+  ],
+  [
+    "Individual branch metering",
+    "Add separate metering channels to two identified outgoing circuits with protected sensing interfaces.",
+    "Verify meter channel assignment, polarity and energy reconciliation."
+  ],
+  [
+    "Whole-system energy reporting",
+    "Add incomer metering, communications isolation and a register/address schedule.",
+    "Compare indicated energy direction with a declared reference and test loss of communications."
+  ],
+  [
+    "Two-zone operation",
+    "Divide controllable outputs into two independently isolated operating zones.",
+    "Verify independent operation and that isolation of one zone leaves the other correctly defined."
+  ],
+  [
+    "Three-stage load sequencing",
+    "Add three controlled enable stages with adjustable delays and stage feedback.",
+    "Test sequence timing, failed-stage response and restart order."
+  ],
+  [
+    "Priority load shedding",
+    "Classify outgoing loads into essential and deferrable groups and add a staged shedding interface.",
+    "Test demand limit, shedding order and controlled reconnection."
+  ],
+  [
+    "Buffered control power",
+    "Add a control-power buffer interface, health contact and protected control branches.",
+    "Test supply interruption, hold-up requirement and orderly recovery."
+  ],
+  [
+    "Redundant control-power inputs",
+    "Provide two isolated control-power sources through a documented decoupling interface.",
+    "Test loss of each source, alarm response and prevention of backfeed."
+  ],
+  [
+    "Environmental temperature supervision",
+    "Add cabinet temperature sensing, high-temperature alarm and a documented inhibit interface.",
+    "Test warning threshold, inhibit threshold and sensor open circuit."
+  ],
+  [
+    "Condensation management",
+    "Add hygrostat/heater control, protective separation and heater status feedback.",
+    "Test humidity demand and operation while the primary process is disabled."
+  ],
+  [
+    "Door and enclosure supervision",
+    "Add enclosure-door contact inputs, access indication and a defined access response.",
+    "Test contact opening, bypass authorisation and return to normal operation."
+  ],
+  [
+    "Maintenance test mode",
+    "Add keyed test selection and segregated test terminals; prevent test commands reaching unintended outputs.",
+    "Prove mode indication, command isolation and return to service."
+  ],
+  [
+    "Remote alarm annunciation",
+    "Add common alarm, common warning and healthy contacts with fail-state definitions.",
+    "Test loss of control power, individual faults, reset and remote contact behaviour."
+  ],
+  [
+    "First-out fault capture",
+    "Add individually identified fault inputs and first-event latching/reset logic.",
+    "Inject ordered faults and verify retained initiating cause and reset conditions."
+  ],
+  [
+    "Event and operating-hour logging",
+    "Provide event counter and operating-hour interfaces with retention requirements.",
+    "Test counter rollover policy, power-loss retention and reset access."
+  ],
+  [
+    "Ethernet supervisory gateway",
+    "Add an industrial gateway supply, port schedule and network-boundary documentation.",
+    "Test link loss, stale data indication and continued defined local operation."
+  ],
+  [
+    "Serial supervisory gateway",
+    "Add isolated RS-485 interface terminals, shield termination and address/termination schedules.",
+    "Test address uniqueness, bus termination and communications failure state."
+  ],
+  [
+    "Hardwired permissive chain",
+    "Add three individually labelled external permissives with diagnostic test points.",
+    "Open each permissive and verify the specified inhibit and reset behaviour."
+  ],
+  [
+    "Controlled shutdown interface",
+    "Add a plant shutdown input and ordered deactivation outputs; distinguish operational stop from safety functions.",
+    "Test shutdown order, residual-energy documentation and restart authorisation."
+  ],
+  [
+    "Commissioning simulation terminals",
+    "Add removable simulation links and isolated test inputs with normal-service link positions.",
+    "Verify simulated faults without energising field loads and audit restored link positions."
+  ],
+  [
+    "Modular field connections",
+    "Replace selected fixed field terminations with keyed connector interfaces and a pin-assignment schedule.",
+    "Verify mating compatibility, PE continuity where applicable and prevention of swapped connections."
+  ],
+  [
+    "Distributed field enclosure",
+    "Move identified field terminals into a second enclosure with an interconnecting cable schedule.",
+    "Verify end-to-end terminal mapping, screen continuity and cross-enclosure isolation boundaries."
+  ],
+  [
+    "Future expansion provision",
+    "Provide a defined additional outgoing circuit and reserved control/terminal capacity with load allowance.",
+    "Validate reserved space, protective-device coordination assumptions and available supply capacity."
+  ],
+  [
+    "Supply restoration management",
+    "Add manual acknowledgement or delayed automatic restoration according to the documented operating risk.",
+    "Test short and extended outages, acknowledgement and prevention of unexpected actuation."
+  ],
+  [
+    "Integrated diagnostics package",
+    "Combine branch status feedback, supply-health monitoring and a structured diagnostic terminal strip.",
+    "Inject branch/supply faults and verify unique fault identification at the handover interface."
+  ]
+]

@@ -31,6 +31,8 @@ jobs:
         run: node scripts/prepare-pages-runtime.mjs
       - name: Verify provenance, checksums and package the reviewed runtime
         run: node scripts/package-pages.mjs "$RUNNER_TEMP/verified-pages"
+      - name: Package validated engineering planning library
+        run: node scripts/package-engineering-catalog.mjs "$RUNNER_TEMP/verified-pages"
       - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
         with:
