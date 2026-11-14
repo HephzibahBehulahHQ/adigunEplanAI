@@ -899,6 +899,28 @@
     if(sheets.some(function(sheet){return !order.has(sheet.sectionId);}))throw new Error('Every sheet must belong to a project section.');
     return sheets.slice().sort(function(a,b){return order.get(a.sectionId)-order.get(b.sectionId);}).map(function(sheet,index){return Object.assign({},sheet,{number:sheet.sectionId+'/'+String(index).padStart(3,'0')});});
   }
+  function removeSheetConnections(connections,sheetId){
+    return connections.map(function(connection){
+      const endpoints=connection.endpoints.filter(function(endpoint){return endpoint.sheetId!==sheetId;}).map(function(endpoint){
+        if(endpoint.connector&&endpoint.connector.targetSheetId===sheetId){const copy=Object.assign({},endpoint);delete copy.connector;return copy;}return endpoint;
+      });
+      return Object.assign({},connection,{endpoints:endpoints});
+    }).filter(function(connection){return new Set(connection.endpoints.map(function(endpoint){return endpoint.sheetId;})).size>=2;});
+  }
+  function moveProjectSheet(sheets,sections,sourceId,targetId,position,sectionId){
+    const source=sheets.find(function(sheet){return sheet.id===sourceId;});
+    if(!source)throw new Error('Unknown source sheet.');
+    if(targetId===sourceId)return numberProjectSheets(sheets,sections);
+    const target=targetId?sheets.find(function(sheet){return sheet.id===targetId;}):null;
+    if(targetId&&!target)throw new Error('Unknown target sheet.');
+    const destination=target?target.sectionId:sectionId;
+    if(!sections.some(function(section){return section.id===destination;}))throw new Error('Unknown destination section.');
+    const result=sheets.filter(function(sheet){return sheet.id!==sourceId;});
+    const moved=Object.assign({},source,{sectionId:destination});
+    if(target){const index=result.findIndex(function(sheet){return sheet.id===target.id;});result.splice(index+(position==='after'?1:0),0,moved);}
+    else{const index=result.map(function(sheet){return sheet.sectionId;}).lastIndexOf(destination);result.splice(index<0?result.length:index+1,0,moved);}
+    return numberProjectSheets(result,sections);
+  }
   function validateProject(project) {
     const errors = [];
     if (!project || typeof project !== 'object') return { valid: false, errors: ['Project must be a JSON object.'] };
@@ -907,7 +929,7 @@
     if (!Array.isArray(project.objects) || !Array.isArray(project.sheets)) errors.push('Project objects and sheets must be arrays.');
     if(project.sections !== undefined) {
       const sections=project.sections;
-      if(!Array.isArray(sections)||sections.length!==4||sections.some(function(section,index){return !section||section.id!=='A'+(index+1)||typeof section.name!=='string'||!section.name.trim();}))errors.push('Project sections must contain A1, A2, A3 and A4 in order.');
+      if(!Array.isArray(sections)||sections.length<4||sections.some(function(section,index){return !section||section.id!=='A'+(index+1)||typeof section.name!=='string'||!section.name.trim();}))errors.push('Project sections must start with A1–A4 and continue with consecutively numbered sections.');
       else if(Array.isArray(project.sheets)){
         try{const numbered=numberProjectSheets(project.sheets,sections);if(numbered.some(function(sheet,index){return sheet.id!==project.sheets[index].id||sheet.number!==project.sheets[index].number;}))errors.push('Project sheet numbers must be continuous across sections.');}catch(error){errors.push(error.message);}
         if(project.activeSection&&!sections.some(function(section){return section.id===project.activeSection;}))errors.push('Unknown active project section.');
@@ -962,6 +984,11 @@
           errors.push('Wire ' + (object.id || index + 1) + ' has invalid coordinates.');
         }
       });
+    }
+    if(project.openSheetIds !== undefined){
+      const ids=project.openSheetIds,known=new Set((project.sheets||[]).map(function(sheet){return sheet.id;}));
+      if(!Array.isArray(ids)||ids.some(function(id){return typeof id!=='string'||!known.has(id);})||new Set(ids).size!==ids.length)errors.push('Open sheet views must refer to unique project sheets.');
+      else if(project.activeSheet&&!ids.includes(project.activeSheet))errors.push('The active sheet must have an open view.');
     }
     if (project.crossSheetConnections !== undefined && !Array.isArray(project.crossSheetConnections)) {
       errors.push('Project cross-sheet connections must be an array.');
@@ -1573,6 +1600,8 @@
   }
 
   root.AdigunCADEngine = Object.freeze({
+    removeSheetConnections: removeSheetConnections,
+    moveProjectSheet: moveProjectSheet,
     defaultProjectSections: defaultProjectSections,
     numberProjectSheets: numberProjectSheets,
     endpointPin: endpointPin,

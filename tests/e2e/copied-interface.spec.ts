@@ -69,6 +69,10 @@ async function addSectionSheet(page: Page, section = "A2") {
   await page.locator('[data-project-section="' + section + '"]').click();
   await page.locator("#newSheet").click();
   await page.locator("#sheetDialog [data-new-sheet]").first().click();
+  await page
+    .locator('[data-section-container="' + section + '"] [data-sheet]')
+    .last()
+    .click();
 }
 
 test("new project wires attach to terminals, follow edits, undo and reopen", async ({
@@ -247,6 +251,7 @@ test("imported sheet metadata overrides sample labels when opening properties", 
   await page.locator("#newProjectName").fill("Imported cabinet");
   await page.locator("#createProject").click();
   const saved = await saveDrawing(page, "metadata-source");
+  delete saved.data.openSheetIds;
   delete saved.data.sections;
   delete saved.data.activeSection;
   saved.data.activeSheet = "control";
@@ -362,7 +367,7 @@ test("new projects own four empty sections and continuously numbered sheets surv
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Section workflow");
   await page.locator("#createProject").click();
-  await expect(page.locator("[data-project-root]")).toHaveText(
+  await expect(page.locator("[data-project-root] b")).toHaveText(
     "Section workflow",
   );
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
@@ -445,4 +450,183 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   await page.locator('[data-panel="project"]').click();
   await expect(page.locator("#projectSearch")).toHaveValue("");
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
+});
+
+test("sidebar creates documents without opening, renames inline, reorders and closes views without deleting", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  for (let i = 0; i < 5; i++)
+    await page.locator('[data-add-section-sheet="A1"]').click();
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(5);
+  await expect(page.locator("#sheetTabs [data-sheet]")).toHaveCount(0);
+  const created = await saveDrawing(page, "sidebar-created");
+  const ids = created.data.sheets.map((sheet: { id: string }) => sheet.id);
+  expect(created.data.activeSheet).toBeNull();
+  const first = page.locator('#projectTree [data-sheet="' + ids[0] + '"]');
+  await first.click();
+  await page.locator('[data-insert-tool="terminal"]').click();
+  const point = await sheetPoint(page, 300, 300);
+  await page.mouse.click(point.x, point.y);
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  await page.locator('[data-sheet-name="' + ids[0] + '"]').dblclick();
+  await page
+    .getByRole("textbox", { name: "Rename sheet", exact: true })
+    .fill("Power");
+  await page
+    .getByRole("textbox", { name: "Rename sheet", exact: true })
+    .press("Enter");
+  await expect(first).toHaveAttribute("aria-label", "A1/Power");
+  await page.locator('#sheetTabs [data-close-sheet="' + ids[0] + '"]').click();
+  await expect(page.locator("#sheetTabs [data-sheet]")).toHaveCount(0);
+  await expect(first).toBeVisible();
+  const closed = await saveDrawing(page, "closed-view");
+  expect(closed.data.sheets).toHaveLength(5);
+  expect(closed.data.objects).toHaveLength(1);
+  expect(closed.data.openSheetIds).toEqual([]);
+  await first.click();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  await page.locator('#projectTree [data-sheet="' + ids[1] + '"]').click();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+  await first.click();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  const target = page.locator('#projectTree [data-sheet="' + ids[4] + '"]');
+  const box = await target.boundingBox();
+  await first.dragTo(target, { targetPosition: { x: 40, y: box!.height - 2 } });
+  const moved = await saveDrawing(page, "reordered-sidebar");
+  expect(moved.data.sheets.map((sheet: { id: string }) => sheet.id)).toEqual([
+    ...ids.slice(1),
+    ids[0],
+  ]);
+  expect(moved.data.sheets[4]).toMatchObject({
+    id: ids[0],
+    name: "Power",
+    number: "A1/004",
+  });
+  expect(moved.data.objects).toEqual(closed.data.objects);
+  await page.locator("[data-add-project-section]").click();
+  await page.locator("[data-add-project-section]").click();
+  await expect(page.locator("[data-project-section]")).toHaveCount(6);
+  for (let i = 0; i < 2; i++)
+    await page.locator('[data-add-section-sheet="A5"]').click();
+  await expect(
+    page.locator('[data-section-container="A5"] [data-sheet]'),
+  ).toHaveCount(2);
+  await expect(
+    page.locator('#sheetTabs [data-sheet="' + ids[0] + '"]'),
+  ).toHaveAttribute("aria-selected", "true");
+  await page.locator('[data-toggle-section="A1"]').click();
+  await expect(first).toBeHidden();
+  const saved = await saveDrawing(page, "sidebar-state");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("[data-project-section]")).toHaveCount(6);
+  await expect(first).toBeHidden();
+  await page.locator('[data-toggle-section="A1"]').click();
+  await expect(first).toBeVisible();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  await first.click({ button: "right" });
+  await page
+    .getByRole("menuitem", { name: "Rename sheet…", exact: true })
+    .click();
+  await page
+    .getByRole("textbox", { name: "Rename sheet", exact: true })
+    .fill("Supply");
+  await page
+    .getByRole("textbox", { name: "Rename sheet", exact: true })
+    .press("Enter");
+  await first.click({ button: "right" });
+  page.once("dialog", (dialog) => dialog.accept());
+  await page
+    .getByRole("menuitem", { name: "Delete sheet", exact: true })
+    .click();
+  await expect(first).toHaveCount(0);
+  const deleted = await saveDrawing(page, "sidebar-deleted");
+  expect(deleted.data.sheets).toHaveLength(6);
+  expect(deleted.data.objects).toEqual([]);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(deleted.path);
+  await expect(first).toHaveCount(0);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(6);
+  expect(errors).toEqual([]);
+});
+
+test("projects above the former sheet limit preserve connections, order and additional sheets", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  const seed = await saveDrawing(page, "large-project-seed");
+  seed.data.sheets = Array.from({ length: 205 }, (_, index) => ({
+    id: "page-" + index,
+    sectionId: "A1",
+    name: "Sheet",
+    customName: false,
+    number: "A1/" + String(index).padStart(3, "0"),
+  }));
+  seed.data.objects = [
+    {
+      id: "wire-a",
+      kind: "wire",
+      sheetId: "page-0",
+      x1: 100,
+      y1: 100,
+      x2: 200,
+      y2: 100,
+    },
+    {
+      id: "wire-b",
+      kind: "wire",
+      sheetId: "page-1",
+      x1: 100,
+      y1: 100,
+      x2: 200,
+      y2: 100,
+    },
+  ];
+  seed.data.crossSheetConnections = [
+    {
+      id: "link-1",
+      name: "TEST-POTENTIAL",
+      endpoints: [
+        { sheetId: "page-0", wireId: "wire-a", point: { x: 200, y: 100 } },
+        { sheetId: "page-1", wireId: "wire-b", point: { x: 100, y: 100 } },
+      ],
+    },
+  ];
+  await page.locator("#openFile").setInputFiles({
+    name: "large-project.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(seed.data)),
+  });
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(205);
+  for (let i = 0; i < 3; i++)
+    await page.locator('[data-add-section-sheet="A1"]').click();
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(208);
+  await expect(page.locator("#sheetTabs [data-sheet]")).toHaveCount(0);
+  const last = page.locator("#projectTree [data-sheet]").last();
+  await last.click();
+  await page.locator('[data-insert-tool="terminal"]').click();
+  const point = await sheetPoint(page, 300, 300);
+  await page.mouse.click(point.x, point.y);
+  const saved = await saveDrawing(page, "large-project-saved");
+  expect(saved.data.sheets).toHaveLength(208);
+  expect(saved.data.objects).toHaveLength(3);
+  expect(saved.data.crossSheetConnections).toEqual(
+    seed.data.crossSheetConnections,
+  );
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  const restored = await saveDrawing(page, "large-project-restored");
+  expect(restored.data.sheets).toEqual(saved.data.sheets);
+  expect(restored.data.objects).toEqual(saved.data.objects);
+  expect(restored.data.crossSheetConnections).toEqual(
+    saved.data.crossSheetConnections,
+  );
 });
