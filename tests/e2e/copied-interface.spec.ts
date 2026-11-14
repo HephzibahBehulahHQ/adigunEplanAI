@@ -50,7 +50,7 @@ async function sheetPoint(page: Page, x: number, y: number) {
 }
 
 async function saveDrawing(page: Page, name: string) {
-  const event = page.waitForEvent("download");
+  const event = page.waitForEvent("download", { timeout: 5000 });
   await page
     .getByRole("button", { name: "Save project locally", exact: true })
     .click();
@@ -63,6 +63,8 @@ async function saveDrawing(page: Page, name: string) {
 test("new project wires attach to terminals, follow edits, undo and reopen", async ({
   page,
 }) => {
+  page.setDefaultTimeout(5000);
+  test.setTimeout(60000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 900 });
