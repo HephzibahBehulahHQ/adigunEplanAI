@@ -31,3 +31,7 @@ For passive protection or bonding projects, operational variants apply to auxili
 - Switching sheets must preserve edits. Save/reopen must retain section membership, custom names, order, drawing content and electrical links. Use the approved sidebar geometry and existing canvas; do not redesign the shell.
 
 Acceptance: create a project; verify A1–A4; add multiple sheets independently under A1 and A2; confirm adding does not navigate; rename a sheet inline to Power; select it and verify A1/Power on its editable canvas; add A5 and repeat; save/reopen and verify all names, contents and cross-sheet links. The catalog's fixed baseline labels remain planning identifiers, not a prohibition on user-defined display names.
+
+## Mandatory electrical continuation — all current and future sections
+
+**A2 electrical drawings MUST be connected across sheets, with reciprocal FROM/TO continuation references.** Apply the same rule automatically to electrical drawings in any additional section, including A5/A6 and later. The mandatory [project-wide continuity policy](CONTINUITY.md) is inherited by every catalog project and every new electrical sheet. Follow actual circuit topology and preserve net/sheet identity through rename, reorder, tab closing and save/reopen. Do not treat section names as an electrical boundary.
