@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-0901",
+    "title": "Tank filling and draining control \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-0901.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0902",
+    "title": "Tank filling and draining control \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-0902.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0903",
+    "title": "Tank filling and draining control \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-0903.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0904",
+    "title": "Tank filling and draining control \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-0904.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0905",
+    "title": "Tank filling and draining control \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-0905.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0906",
+    "title": "Tank filling and draining control \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-0906.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0907",
+    "title": "Tank filling and draining control \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-0907.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0908",
+    "title": "Tank filling and draining control \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-0908.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0909",
+    "title": "Tank filling and draining control \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-0909.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0910",
+    "title": "Tank filling and draining control \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-0910.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0911",
+    "title": "Tank filling and draining control \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-0911.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0912",
+    "title": "Tank filling and draining control \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-0912.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0913",
+    "title": "Tank filling and draining control \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-0913.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0914",
+    "title": "Tank filling and draining control \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-0914.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0915",
+    "title": "Tank filling and draining control \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-0915.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0916",
+    "title": "Tank filling and draining control \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-0916.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0917",
+    "title": "Tank filling and draining control \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-0917.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0918",
+    "title": "Tank filling and draining control \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-0918.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0919",
+    "title": "Tank filling and draining control \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-0919.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0920",
+    "title": "Tank filling and draining control \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-0920.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0921",
+    "title": "Tank filling and draining control \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-0921.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0922",
+    "title": "Tank filling and draining control \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-0922.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0923",
+    "title": "Tank filling and draining control \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-0923.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0924",
+    "title": "Tank filling and draining control \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-0924.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0925",
+    "title": "Tank filling and draining control \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-0925.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0926",
+    "title": "Tank filling and draining control \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-0926.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0927",
+    "title": "Tank filling and draining control \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-0927.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0928",
+    "title": "Tank filling and draining control \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-0928.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0929",
+    "title": "Tank filling and draining control \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-0929.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0930",
+    "title": "Tank filling and draining control \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Tank filling and draining control",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-0930.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0931",
+    "title": "Packaging conveyor I/O cabinet \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-0931.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0932",
+    "title": "Packaging conveyor I/O cabinet \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-0932.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0933",
+    "title": "Packaging conveyor I/O cabinet \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-0933.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0934",
+    "title": "Packaging conveyor I/O cabinet \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-0934.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0935",
+    "title": "Packaging conveyor I/O cabinet \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-0935.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0936",
+    "title": "Packaging conveyor I/O cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-0936.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0937",
+    "title": "Packaging conveyor I/O cabinet \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-0937.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0938",
+    "title": "Packaging conveyor I/O cabinet \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-0938.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0939",
+    "title": "Packaging conveyor I/O cabinet \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-0939.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0940",
+    "title": "Packaging conveyor I/O cabinet \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-0940.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0941",
+    "title": "Packaging conveyor I/O cabinet \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-0941.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0942",
+    "title": "Packaging conveyor I/O cabinet \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-0942.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0943",
+    "title": "Packaging conveyor I/O cabinet \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-0943.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0944",
+    "title": "Packaging conveyor I/O cabinet \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-0944.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0945",
+    "title": "Packaging conveyor I/O cabinet \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-0945.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0946",
+    "title": "Packaging conveyor I/O cabinet \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-0946.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0947",
+    "title": "Packaging conveyor I/O cabinet \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-0947.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0948",
+    "title": "Packaging conveyor I/O cabinet \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-0948.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0949",
+    "title": "Packaging conveyor I/O cabinet \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-0949.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0950",
+    "title": "Packaging conveyor I/O cabinet \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-0950.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0951",
+    "title": "Packaging conveyor I/O cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-0951.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0952",
+    "title": "Packaging conveyor I/O cabinet \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-0952.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0953",
+    "title": "Packaging conveyor I/O cabinet \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-0953.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0954",
+    "title": "Packaging conveyor I/O cabinet \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-0954.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0955",
+    "title": "Packaging conveyor I/O cabinet \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-0955.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0956",
+    "title": "Packaging conveyor I/O cabinet \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-0956.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0957",
+    "title": "Packaging conveyor I/O cabinet \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-0957.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0958",
+    "title": "Packaging conveyor I/O cabinet \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-0958.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0959",
+    "title": "Packaging conveyor I/O cabinet \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-0959.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0960",
+    "title": "Packaging conveyor I/O cabinet \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Packaging conveyor I/O cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-0960.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0961",
+    "title": "Temperature-control station \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-0961.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0962",
+    "title": "Temperature-control station \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-0962.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0963",
+    "title": "Temperature-control station \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-0963.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0964",
+    "title": "Temperature-control station \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-0964.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0965",
+    "title": "Temperature-control station \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-0965.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0966",
+    "title": "Temperature-control station \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-0966.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0967",
+    "title": "Temperature-control station \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-0967.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0968",
+    "title": "Temperature-control station \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-0968.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0969",
+    "title": "Temperature-control station \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-0969.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0970",
+    "title": "Temperature-control station \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-0970.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0971",
+    "title": "Temperature-control station \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-0971.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0972",
+    "title": "Temperature-control station \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-0972.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0973",
+    "title": "Temperature-control station \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-0973.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0974",
+    "title": "Temperature-control station \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-0974.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0975",
+    "title": "Temperature-control station \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-0975.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0976",
+    "title": "Temperature-control station \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-0976.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0977",
+    "title": "Temperature-control station \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-0977.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0978",
+    "title": "Temperature-control station \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-0978.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0979",
+    "title": "Temperature-control station \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-0979.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0980",
+    "title": "Temperature-control station \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-0980.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0981",
+    "title": "Temperature-control station \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-0981.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0982",
+    "title": "Temperature-control station \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-0982.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0983",
+    "title": "Temperature-control station \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-0983.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0984",
+    "title": "Temperature-control station \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-0984.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0985",
+    "title": "Temperature-control station \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-0985.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0986",
+    "title": "Temperature-control station \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-0986.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0987",
+    "title": "Temperature-control station \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-0987.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0988",
+    "title": "Temperature-control station \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-0988.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0989",
+    "title": "Temperature-control station \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-0989.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0990",
+    "title": "Temperature-control station \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Temperature-control station",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-0990.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0991",
+    "title": "Pressure-regulation skid \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-0991.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0992",
+    "title": "Pressure-regulation skid \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-0992.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0993",
+    "title": "Pressure-regulation skid \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-0993.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0994",
+    "title": "Pressure-regulation skid \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-0994.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0995",
+    "title": "Pressure-regulation skid \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-0995.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0996",
+    "title": "Pressure-regulation skid \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-0996.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0997",
+    "title": "Pressure-regulation skid \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-0997.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0998",
+    "title": "Pressure-regulation skid \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-0998.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-0999",
+    "title": "Pressure-regulation skid \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-0999.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1000",
+    "title": "Pressure-regulation skid \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1000.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1001",
+    "title": "Pressure-regulation skid \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1001.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1002",
+    "title": "Pressure-regulation skid \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1002.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1003",
+    "title": "Pressure-regulation skid \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1003.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1004",
+    "title": "Pressure-regulation skid \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1004.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1005",
+    "title": "Pressure-regulation skid \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1005.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1006",
+    "title": "Pressure-regulation skid \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1006.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1007",
+    "title": "Pressure-regulation skid \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1007.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1008",
+    "title": "Pressure-regulation skid \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1008.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1009",
+    "title": "Pressure-regulation skid \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1009.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1010",
+    "title": "Pressure-regulation skid \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1010.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1011",
+    "title": "Pressure-regulation skid \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1011.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1012",
+    "title": "Pressure-regulation skid \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1012.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1013",
+    "title": "Pressure-regulation skid \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1013.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1014",
+    "title": "Pressure-regulation skid \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1014.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1015",
+    "title": "Pressure-regulation skid \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1015.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1016",
+    "title": "Pressure-regulation skid \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1016.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1017",
+    "title": "Pressure-regulation skid \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1017.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1018",
+    "title": "Pressure-regulation skid \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1018.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1019",
+    "title": "Pressure-regulation skid \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1019.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1020",
+    "title": "Pressure-regulation skid \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Pressure-regulation skid",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1020.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1021",
+    "title": "Batch-dosing controller \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-1021.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1022",
+    "title": "Batch-dosing controller \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-1022.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1023",
+    "title": "Batch-dosing controller \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-1023.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1024",
+    "title": "Batch-dosing controller \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-1024.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1025",
+    "title": "Batch-dosing controller \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-1025.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1026",
+    "title": "Batch-dosing controller \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-1026.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1027",
+    "title": "Batch-dosing controller \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-1027.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1028",
+    "title": "Batch-dosing controller \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-1028.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1029",
+    "title": "Batch-dosing controller \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-1029.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1030",
+    "title": "Batch-dosing controller \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1030.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1031",
+    "title": "Batch-dosing controller \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1031.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1032",
+    "title": "Batch-dosing controller \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1032.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1033",
+    "title": "Batch-dosing controller \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1033.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1034",
+    "title": "Batch-dosing controller \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1034.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1035",
+    "title": "Batch-dosing controller \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1035.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1036",
+    "title": "Batch-dosing controller \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1036.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1037",
+    "title": "Batch-dosing controller \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1037.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1038",
+    "title": "Batch-dosing controller \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1038.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1039",
+    "title": "Batch-dosing controller \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1039.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1040",
+    "title": "Batch-dosing controller \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1040.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1041",
+    "title": "Batch-dosing controller \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1041.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1042",
+    "title": "Batch-dosing controller \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1042.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1043",
+    "title": "Batch-dosing controller \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1043.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1044",
+    "title": "Batch-dosing controller \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1044.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1045",
+    "title": "Batch-dosing controller \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1045.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1046",
+    "title": "Batch-dosing controller \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1046.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1047",
+    "title": "Batch-dosing controller \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1047.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1048",
+    "title": "Batch-dosing controller \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1048.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1049",
+    "title": "Batch-dosing controller \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1049.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1050",
+    "title": "Batch-dosing controller \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Batch-dosing controller",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1050.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1051",
+    "title": "Part-counting station \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-1051.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1052",
+    "title": "Part-counting station \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-1052.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1053",
+    "title": "Part-counting station \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-1053.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1054",
+    "title": "Part-counting station \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-1054.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1055",
+    "title": "Part-counting station \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-1055.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1056",
+    "title": "Part-counting station \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-1056.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1057",
+    "title": "Part-counting station \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-1057.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1058",
+    "title": "Part-counting station \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-1058.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1059",
+    "title": "Part-counting station \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-1059.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1060",
+    "title": "Part-counting station \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1060.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1061",
+    "title": "Part-counting station \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1061.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1062",
+    "title": "Part-counting station \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1062.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1063",
+    "title": "Part-counting station \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1063.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1064",
+    "title": "Part-counting station \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1064.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1065",
+    "title": "Part-counting station \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1065.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1066",
+    "title": "Part-counting station \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1066.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1067",
+    "title": "Part-counting station \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1067.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1068",
+    "title": "Part-counting station \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1068.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1069",
+    "title": "Part-counting station \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1069.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1070",
+    "title": "Part-counting station \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1070.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1071",
+    "title": "Part-counting station \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1071.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1072",
+    "title": "Part-counting station \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1072.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1073",
+    "title": "Part-counting station \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1073.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1074",
+    "title": "Part-counting station \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1074.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1075",
+    "title": "Part-counting station \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1075.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1076",
+    "title": "Part-counting station \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1076.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1077",
+    "title": "Part-counting station \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1077.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1078",
+    "title": "Part-counting station \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1078.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1079",
+    "title": "Part-counting station \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1079.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1080",
+    "title": "Part-counting station \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Part-counting station",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1080.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1081",
+    "title": "Sorting conveyor controller \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-1081.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1082",
+    "title": "Sorting conveyor controller \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-1082.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1083",
+    "title": "Sorting conveyor controller \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-1083.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1084",
+    "title": "Sorting conveyor controller \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-1084.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1085",
+    "title": "Sorting conveyor controller \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-1085.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1086",
+    "title": "Sorting conveyor controller \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-1086.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1087",
+    "title": "Sorting conveyor controller \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-1087.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1088",
+    "title": "Sorting conveyor controller \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-1088.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1089",
+    "title": "Sorting conveyor controller \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-1089.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1090",
+    "title": "Sorting conveyor controller \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1090.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1091",
+    "title": "Sorting conveyor controller \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1091.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1092",
+    "title": "Sorting conveyor controller \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1092.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1093",
+    "title": "Sorting conveyor controller \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1093.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1094",
+    "title": "Sorting conveyor controller \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1094.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1095",
+    "title": "Sorting conveyor controller \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1095.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1096",
+    "title": "Sorting conveyor controller \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1096.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1097",
+    "title": "Sorting conveyor controller \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1097.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1098",
+    "title": "Sorting conveyor controller \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1098.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1099",
+    "title": "Sorting conveyor controller \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1099.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1100",
+    "title": "Sorting conveyor controller \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1100.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1101",
+    "title": "Sorting conveyor controller \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1101.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1102",
+    "title": "Sorting conveyor controller \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1102.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1103",
+    "title": "Sorting conveyor controller \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1103.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1104",
+    "title": "Sorting conveyor controller \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1104.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1105",
+    "title": "Sorting conveyor controller \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1105.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1106",
+    "title": "Sorting conveyor controller \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1106.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1107",
+    "title": "Sorting conveyor controller \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1107.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1108",
+    "title": "Sorting conveyor controller \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1108.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1109",
+    "title": "Sorting conveyor controller \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1109.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1110",
+    "title": "Sorting conveyor controller \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Sorting conveyor controller",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1110.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1111",
+    "title": "Industrial wash-cycle controller \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-1111.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1112",
+    "title": "Industrial wash-cycle controller \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-1112.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1113",
+    "title": "Industrial wash-cycle controller \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-1113.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1114",
+    "title": "Industrial wash-cycle controller \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-1114.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1115",
+    "title": "Industrial wash-cycle controller \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-1115.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1116",
+    "title": "Industrial wash-cycle controller \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-1116.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1117",
+    "title": "Industrial wash-cycle controller \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-1117.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1118",
+    "title": "Industrial wash-cycle controller \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-1118.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1119",
+    "title": "Industrial wash-cycle controller \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-1119.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1120",
+    "title": "Industrial wash-cycle controller \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1120.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1121",
+    "title": "Industrial wash-cycle controller \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1121.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1122",
+    "title": "Industrial wash-cycle controller \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1122.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1123",
+    "title": "Industrial wash-cycle controller \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1123.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1124",
+    "title": "Industrial wash-cycle controller \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1124.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1125",
+    "title": "Industrial wash-cycle controller \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1125.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1126",
+    "title": "Industrial wash-cycle controller \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1126.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1127",
+    "title": "Industrial wash-cycle controller \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1127.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1128",
+    "title": "Industrial wash-cycle controller \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1128.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1129",
+    "title": "Industrial wash-cycle controller \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1129.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1130",
+    "title": "Industrial wash-cycle controller \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1130.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1131",
+    "title": "Industrial wash-cycle controller \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1131.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1132",
+    "title": "Industrial wash-cycle controller \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1132.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1133",
+    "title": "Industrial wash-cycle controller \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1133.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1134",
+    "title": "Industrial wash-cycle controller \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1134.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1135",
+    "title": "Industrial wash-cycle controller \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1135.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1136",
+    "title": "Industrial wash-cycle controller \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1136.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1137",
+    "title": "Industrial wash-cycle controller \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1137.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1138",
+    "title": "Industrial wash-cycle controller \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1138.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1139",
+    "title": "Industrial wash-cycle controller \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1139.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1140",
+    "title": "Industrial wash-cycle controller \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Industrial wash-cycle controller",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1140.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1141",
+    "title": "Cold-room monitoring cabinet \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-1141.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1142",
+    "title": "Cold-room monitoring cabinet \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-1142.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1143",
+    "title": "Cold-room monitoring cabinet \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-1143.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1144",
+    "title": "Cold-room monitoring cabinet \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-1144.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1145",
+    "title": "Cold-room monitoring cabinet \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-1145.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1146",
+    "title": "Cold-room monitoring cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-1146.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1147",
+    "title": "Cold-room monitoring cabinet \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-1147.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1148",
+    "title": "Cold-room monitoring cabinet \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-1148.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1149",
+    "title": "Cold-room monitoring cabinet \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-1149.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1150",
+    "title": "Cold-room monitoring cabinet \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1150.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1151",
+    "title": "Cold-room monitoring cabinet \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1151.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1152",
+    "title": "Cold-room monitoring cabinet \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1152.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1153",
+    "title": "Cold-room monitoring cabinet \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1153.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1154",
+    "title": "Cold-room monitoring cabinet \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1154.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1155",
+    "title": "Cold-room monitoring cabinet \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1155.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1156",
+    "title": "Cold-room monitoring cabinet \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1156.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1157",
+    "title": "Cold-room monitoring cabinet \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1157.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1158",
+    "title": "Cold-room monitoring cabinet \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1158.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1159",
+    "title": "Cold-room monitoring cabinet \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1159.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1160",
+    "title": "Cold-room monitoring cabinet \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1160.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1161",
+    "title": "Cold-room monitoring cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1161.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1162",
+    "title": "Cold-room monitoring cabinet \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1162.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1163",
+    "title": "Cold-room monitoring cabinet \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1163.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1164",
+    "title": "Cold-room monitoring cabinet \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1164.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1165",
+    "title": "Cold-room monitoring cabinet \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1165.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1166",
+    "title": "Cold-room monitoring cabinet \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1166.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1167",
+    "title": "Cold-room monitoring cabinet \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1167.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1168",
+    "title": "Cold-room monitoring cabinet \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1168.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1169",
+    "title": "Cold-room monitoring cabinet \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1169.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1170",
+    "title": "Cold-room monitoring cabinet \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Cold-room monitoring cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1170.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1171",
+    "title": "Remote utility I/O station \u2014 Local manual baseline",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Local manual baseline",
+    "path": "projects/plc-automation/ENG-1171.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1172",
+    "title": "Remote utility I/O station \u2014 Remote supervisory operation",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Remote supervisory operation",
+    "path": "projects/plc-automation/ENG-1172.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1173",
+    "title": "Remote utility I/O station \u2014 Scheduled operation",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Scheduled operation",
+    "path": "projects/plc-automation/ENG-1173.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1174",
+    "title": "Remote utility I/O station \u2014 Demand-controlled enable",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Demand-controlled enable",
+    "path": "projects/plc-automation/ENG-1174.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1175",
+    "title": "Remote utility I/O station \u2014 Supply undervoltage supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/plc-automation/ENG-1175.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1176",
+    "title": "Remote utility I/O station \u2014 Phase and supply-quality supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/plc-automation/ENG-1176.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1177",
+    "title": "Remote utility I/O station \u2014 Individual branch metering",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Individual branch metering",
+    "path": "projects/plc-automation/ENG-1177.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1178",
+    "title": "Remote utility I/O station \u2014 Whole-system energy reporting",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/plc-automation/ENG-1178.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1179",
+    "title": "Remote utility I/O station \u2014 Two-zone operation",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Two-zone operation",
+    "path": "projects/plc-automation/ENG-1179.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1180",
+    "title": "Remote utility I/O station \u2014 Three-stage load sequencing",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/plc-automation/ENG-1180.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1181",
+    "title": "Remote utility I/O station \u2014 Priority load shedding",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Priority load shedding",
+    "path": "projects/plc-automation/ENG-1181.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1182",
+    "title": "Remote utility I/O station \u2014 Buffered control power",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Buffered control power",
+    "path": "projects/plc-automation/ENG-1182.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1183",
+    "title": "Remote utility I/O station \u2014 Redundant control-power inputs",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/plc-automation/ENG-1183.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1184",
+    "title": "Remote utility I/O station \u2014 Environmental temperature supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/plc-automation/ENG-1184.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1185",
+    "title": "Remote utility I/O station \u2014 Condensation management",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Condensation management",
+    "path": "projects/plc-automation/ENG-1185.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1186",
+    "title": "Remote utility I/O station \u2014 Door and enclosure supervision",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/plc-automation/ENG-1186.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1187",
+    "title": "Remote utility I/O station \u2014 Maintenance test mode",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Maintenance test mode",
+    "path": "projects/plc-automation/ENG-1187.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1188",
+    "title": "Remote utility I/O station \u2014 Remote alarm annunciation",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/plc-automation/ENG-1188.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1189",
+    "title": "Remote utility I/O station \u2014 First-out fault capture",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "First-out fault capture",
+    "path": "projects/plc-automation/ENG-1189.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1190",
+    "title": "Remote utility I/O station \u2014 Event and operating-hour logging",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/plc-automation/ENG-1190.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1191",
+    "title": "Remote utility I/O station \u2014 Ethernet supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/plc-automation/ENG-1191.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1192",
+    "title": "Remote utility I/O station \u2014 Serial supervisory gateway",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/plc-automation/ENG-1192.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1193",
+    "title": "Remote utility I/O station \u2014 Hardwired permissive chain",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/plc-automation/ENG-1193.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1194",
+    "title": "Remote utility I/O station \u2014 Controlled shutdown interface",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/plc-automation/ENG-1194.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1195",
+    "title": "Remote utility I/O station \u2014 Commissioning simulation terminals",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/plc-automation/ENG-1195.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1196",
+    "title": "Remote utility I/O station \u2014 Modular field connections",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Modular field connections",
+    "path": "projects/plc-automation/ENG-1196.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1197",
+    "title": "Remote utility I/O station \u2014 Distributed field enclosure",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Distributed field enclosure",
+    "path": "projects/plc-automation/ENG-1197.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1198",
+    "title": "Remote utility I/O station \u2014 Future expansion provision",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Future expansion provision",
+    "path": "projects/plc-automation/ENG-1198.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1199",
+    "title": "Remote utility I/O station \u2014 Supply restoration management",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Supply restoration management",
+    "path": "projects/plc-automation/ENG-1199.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1200",
+    "title": "Remote utility I/O station \u2014 Integrated diagnostics package",
+    "domain": "plc-automation",
+    "baseSystem": "Remote utility I/O station",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/plc-automation/ENG-1200.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
