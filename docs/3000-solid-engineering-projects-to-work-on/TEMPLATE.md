@@ -35,3 +35,7 @@ Acceptance: create a project; verify A1–A4; add multiple sheets independently 
 ## Mandatory electrical continuation — all current and future sections
 
 **A2 electrical drawings MUST be connected across sheets, with reciprocal FROM/TO continuation references.** Apply the same rule automatically to electrical drawings in any additional section, including A5/A6 and later. The mandatory [project-wide continuity policy](CONTINUITY.md) is inherited by every catalog project and every new electrical sheet. Follow actual circuit topology and preserve net/sheet identity through rename, reorder, tab closing and save/reopen. Do not treat section names as an electrical boundary.
+
+## Mandatory bottom-right editable title block
+
+Every sheet, including sheets in future sections, inherits [TITLE_BLOCK.md](TITLE_BLOCK.md). Place its title block inside the bottom-right sheet frame on the canvas. Project title, manager, customer/site and sheet/drawing/revision information must be editable. Only **Hephzibah Behulah** and **AdigunEplanAI** are fixed identity texts. Preserve data and placement through rename/reorder, paper changes, save/reopen and supported exports. The existing simple footer does not yet fulfil this implementation requirement.

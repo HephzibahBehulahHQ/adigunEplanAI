@@ -19,3 +19,7 @@ Latest owner clarification: section + controls create sheets directly in the sid
 ## Owner continuity clarification
 
 A2 electrical drawings MUST form connected schematics, with reciprocal FROM/TO references for every actual off-page conductor. This applies project-wide to electrical drawings in any current or future user-created section, including A5/A6; do not hard-code A2 as the only supported section. CONTINUITY.md gives examples, stable identity/persistence requirements and acceptance checks, and NEXT_AGENT.md makes it mandatory for all 3,000 briefs. No actual drawing connectivity is claimed by this planning-policy update.
+
+## Owner title-block clarification
+
+Every sheet in every current/future section must display an editable bottom-right canvas title block. Only Hephzibah Behulah and AdigunEplanAI are fixed identities. TITLE_BLOCK.md records editable project/manager/client/site/drawing/revision fields, shared-versus-sheet metadata, source references, persistence/export and acceptance checks. Main has a basic footer, not the full required editable block. The catalog policy is updated; runtime implementation remains an explicit next-agent task.
