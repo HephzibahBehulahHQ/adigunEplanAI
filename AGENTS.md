@@ -1,3 +1,7 @@
+# EMPTY STARTUP — OWNER CORRECTION (2026-11-14)
+
+Opening or refreshing the website starts with no active project, an empty project tree, no sheet tabs and no drawing content. A1–A4 are created only by New Project or loading an example. Examples populate the sidebar but their drawing opens only when the user selects a sheet. Do not restore the legacy Z0010000 sample or auto-create a project at startup. PR #75 fixes startup initialization; this was not a saved-user-data cache problem. Preserve user project files and content-versioned script loading.
+
 # SIDEBAR DOCUMENT MANAGEMENT — OWNER REQUIREMENT (2026-11-14)
 
 A1–A4 are starting containers, not a maximum: users can add A5 and onward. A section's + creates another real sheet in that section without opening its canvas view. Only selecting a sheet opens it. Keep renaming inline in the sidebar, support section collapse and drag/drop ordering/moving between sections, and persist stable sheet IDs, custom names, section membership, order, contents and electrical links. Canvas tabs are views: closing a tab must NEVER delete its document. Deletion is an explicit sidebar action. Persist open views separately from project sheets. Do not reintroduce the former 200-sheet cap or silent import truncation. Preserve the approved layout and use small sidebar controls rather than new top-level menus or large dialogs.
