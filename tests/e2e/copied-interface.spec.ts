@@ -24,6 +24,11 @@ test("approved interface branding and menu overlay remain intact", async ({
   await expect(page.locator(".topbar")).toBeVisible();
   await expect(page.locator(".toolbar")).toBeVisible();
   await expect(page.locator(".drawing")).toBeVisible();
+  await page.locator("#projectSearch").fill("PLC");
+  await expect(page.locator('#projectTree [data-sheet="plc"]')).toBeVisible();
+  await expect(page.locator('#projectTree [data-sheet="power"]')).toBeHidden();
+  await page.locator("#projectSearch").fill("");
+  await expect(page.locator('#projectTree [data-sheet="power"]')).toBeVisible();
   const before = await page.locator(".drawing").boundingBox();
   await page.locator('[data-module="Electrical"]').click();
   await expect(page.locator("#moduleMenu")).toBeVisible();
