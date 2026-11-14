@@ -156,6 +156,51 @@ test("existing New Project dialog opens both connected editable examples", async
   expect(errors).toEqual([]);
 });
 
+test("manufacturer projects open, expose editable parts and preserve connections on reopen", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  for (const [id, count, wireCount] of [
+    ["hardware-relay", 15, 6],
+    ["hardware-sensor", 9, 3],
+    ["hardware-sitop", 7, 2],
+  ] as const) {
+    await page.locator('[data-action="new"]').first().click();
+    await page.locator("#newProjectName").fill(id + " bench");
+    await page.locator("#projectTemplate").selectOption(id);
+    await page.locator("#createProject").click();
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
+      count,
+    );
+    await page.locator('[data-inspector="Properties"]').click();
+    await page.locator("#userDrawings .drawing-object").first().click();
+    await expect(page.locator("#inspectorContent")).toContainText(
+      /UK 5 N|UT 2,5|SITOP PSU100C/,
+    );
+    await page.locator('[data-component-property="ref"]').fill("TEST1");
+    await page.locator('[data-component-property="ref"]').press("Tab");
+    const saved = await saveDrawing(page, id);
+    expect(
+      saved.data.objects.filter((o: { kind: string }) => o.kind === "wire"),
+    ).toHaveLength(wireCount);
+    expect(
+      saved.data.objects.some((o: { ref?: string }) => o.ref === "TEST1"),
+    ).toBe(true);
+    await page.reload();
+    await page.locator("#openFile").setInputFiles(saved.path);
+    const reopened = await saveDrawing(page, id + "-restored");
+    expect(reopened.data.objects).toEqual(saved.data.objects);
+    await page.locator('[data-inspector="Electrical checks"]').click();
+    await expect(page.locator("#inspectorContent")).toContainText(
+      "Geometry errors0",
+    );
+    await page.locator("#closeRightPanel").click();
+  }
+  expect(errors).toEqual([]);
+});
+
 test("existing Electrical Symbol Library places and saves original Eplan symbols", async ({
   page,
 }) => {

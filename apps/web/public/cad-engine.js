@@ -735,7 +735,18 @@
     instanceProperties: { terminalStrip: { type: 'string', default: '', maximumLength: 40 }, position: { type: 'string', default: '', maximumLength: 24 }, marking: { type: 'string', default: '', maximumLength: 40 }, comment: { type: 'string', default: '', maximumLength: 160 } },
     sources: [{ publisher: 'Phoenix Contact', title: 'PT 16 N-PE · Protective conductor terminal block · Item 3212147', url: 'https://www.phoenixcontact.com/en-nl/products/ground-terminal-pt-16-n-pe-3212147', documentRevision: 'Live manufacturer product data · retrieved 2026-11-12', revisionNote: 'Manufacturer specifies two push-in connections, 16 mm² rated cross-section, 0.5–25 mm² conductor range, IEC 60947-7-2, green-yellow color and a grounding foot. It does not number the connection points.' , retrievedAt: '2026-11-12' }]
   });
-  const COMPONENTS = Object.freeze({ [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+  function screwTerminalDefinition(part, model, voltage, current, section, minimum, maximum, flexibleMaximum, width, height, depth7, depth15, url) {
+    return deepFreeze(Object.assign({}, terminalDefinition, {
+      id:'phoenix-contact-'+part,manufacturerPartNumber:part,model:model,name:model+' screw feed-through terminal block',
+      symbol:Object.assign({},terminalDefinition.symbol,{id:'terminal.phoenix.'+part+'.v1',pins:terminalDefinition.symbol.pins.map(function(pin){return Object.assign({},pin,{connectionType:'screw'});})}),
+      specifications:{nominalVoltage:{value:voltage,unit:'V'},nominalCurrent:{value:current,unit:'A'},ratedCrossSection:{value:section,unit:'mm²'},rigidConductorRange:{minimum:minimum,maximum:maximum,unit:'mm²'},flexibleConductorRange:{minimum:minimum,maximum:flexibleMaximum,unit:'mm²'},connectionCount:{value:2,unit:'connections'},connectionMethod:{value:'Screw connection'},productStandard:{value:'IEC 60947-7-1'},mountingRails:{value:part==='3004362'?['NS 35/7.5','NS 35/15','NS 32']:['NS 35/7.5','NS 35/15']},dimensions:{width:{value:width,unit:'mm'},height:{value:height,unit:'mm'},depthOnNS35_7_5:{value:depth7,unit:'mm'},depthOnNS35_15:{value:depth15,unit:'mm'}},color:{value:'Gray (RAL 7042)'}},
+      sources:[{publisher:'Phoenix Contact',title:model+' · Feed-through terminal block · '+part,url:url,documentRevision:'Live manufacturer product record',revisionNote:'Two screw connections at one potential. Connection IDs 1 and 2 are model-local, not manufacturer terminal numbers. Ratings are nominal IEC data; approvals and conductor preparation have separate limits. Symbol coordinates are schematic, not physical.',retrievedAt:'2026-11-14'}]
+    }));
+  }
+  const uk5TerminalDefinition=screwTerminalDefinition('3004362','UK 5 N',800,32,4,0.2,6,4,6.2,42.5,47,54.5,'https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-uk-5-n-3004362');
+  const ut25TerminalDefinition=screwTerminalDefinition('3044076','UT 2,5',1000,24,2.5,0.14,4,4,5.2,47.7,47.5,55,'https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-ut-25-3044076');
+
+  const COMPONENTS = Object.freeze({ [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;
@@ -1074,11 +1085,40 @@
   }
   function projectExamples() {
     return [{id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
-      {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'}];
+      {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
+      {id:'hardware-relay',hardware:true,name:'24 V momentary relay control',description:'Phoenix Contact relay and terminals with Schneider start/stop buttons. External supply/load boundaries; no seal-in or safety function.'},
+      {id:'hardware-sensor',hardware:true,name:'PNP proximity sensor terminal wiring',description:'ifm IFS204 pin 1 supply, pin 3 return and pin 4 output with Phoenix Contact terminals. External supply/PLC boundaries.'},
+      {id:'hardware-sitop',hardware:true,name:'SITOP 24 V terminal distribution',description:'Siemens PSU100C output distribution through Phoenix Contact terminals. Input supply, bonding and protection require engineering.'}];
   }
+  function createHardwareExample(example, name) {
+    const sheetId='example-'+example.id,objects=[],byRef={};
+    function device(id,ref,x,y,comment){const instance=createInstance(id,x,y,ref);instance.sheetId=sheetId;instance.properties.comment=comment||'';objects.push(instance);byRef[ref]=instance;return instance;}
+    function connect(from,pinA,to,pinB){const a=byRef[from],b=byRef[to],ap=worldPins(a).find(function(p){return p.id===pinA;}),bp=worldPins(b).find(function(p){return p.id===pinB;});if(!ap||!bp)throw new Error('Example references an unknown terminal.');objects.push(attachWire({id:'wire-'+example.id+'-'+objects.length,kind:'wire',sheetId:sheetId,x:ap.x,y:ap.y,x1:ap.x,y1:ap.y,x2:bp.x,y2:bp.y,rotation:0,stroke:'#164eac'},Object.assign({},ap,{attachment:{instanceId:a.id,pinId:ap.id}}),Object.assign({},bp,{attachment:{instanceId:b.id,pinId:bp.id}})));}
+    const ut='phoenix-contact-3044076',uk='phoenix-contact-3004362';
+    if(example.id==='hardware-relay'){
+      device(uk,'X1',140,320,'External protected 24 V DC positive supply boundary; protection and supply selection remain project-specific.');
+      device(ut,'X2',500,180,'External 0 V return boundary.');
+      device('schneider-electric-xb5aa42','S1',320,320,'Momentary stop NC 21/22; not an emergency-stop safety circuit.');
+      device('schneider-electric-xb5aa31','S2',500,320,'Momentary start NO 13/14. No seal-in circuit is modeled.');
+      device('phoenix-contact-2966171','K1',760,300,'A1 positive; A2 return. Contacts 11/12/14 are not simulated.');
+      device(ut,'X3',1000,300,'External dry-contact common boundary.');
+      device(ut,'X4',1000,440,'External normally-open load interface; assign an appropriate load and protection.');
+      connect('X1','connection-2','S1','contact-21');connect('S1','contact-22','S2','contact-13');connect('S2','contact-14','K1','coil-a1');connect('X2','connection-2','K1','coil-a2');connect('K1','contact-11','X3','connection-1');connect('K1','contact-14','X4','connection-1');
+    }else if(example.id==='hardware-sensor'){
+      device(ut,'X1',200,310,'External 24 V DC positive supply boundary.');device(ut,'X2',400,350,'External 0 V return boundary.');device('ifm-ifs204','B1',750,330,'PNP normally-open output on M12 pin 4; connect to a compatible input. No switching simulation.');device(ut,'X3',1000,330,'External PLC digital-input interface; select a compatible input and common.');
+      connect('X1','connection-2','B1','pin-1-lplus');connect('X2','connection-2','B1','pin-3-lminus');connect('B1','pin-4-output','X3','connection-1');
+    }else if(example.id==='hardware-sitop'){
+      device('siemens-sitop-psu100c-6ep1332-5ba00','PS1',300,300,'L/N/PE input boundary intentionally left for site-specific supply, protection and bonding design.');device(uk,'X1',650,270,'24 V positive distribution terminal.');device(ut,'X2',650,330,'0 V return distribution terminal.');connect('PS1','output-positive','X1','connection-1');connect('PS1','output-negative','X2','connection-1');
+    }
+    objects.push({id:'note-'+example.id,kind:'text',sheetId:sheetId,x:100,y:100,text:example.name,rotation:0,stroke:'#164eac'});
+    objects.push({id:'scope-'+example.id,kind:'text',sheetId:sheetId,x:100,y:600,text:'Editable wiring example. External boundaries and spare pins remain to be engineered; not simulated or certified.',rotation:0,stroke:'#164eac'});
+    return parseProject(serializeProject({project:String(name||example.name).slice(0,80),activeSheet:sheetId,sheets:[{id:sheetId,name:example.name,number:'A3/201'}],objects:objects,crossSheetConnections:[],example:{id:example.id,description:example.description}})).project;
+  }
+
   function createExample(id, name) {
     const example=projectExamples().find(function(item){return item.id===id;});
     if(!example)throw new Error('Unknown project example.');
+    if(example.hardware)return createHardwareExample(example,name);
     const sheetId='example-'+id, kinds=['terminal','fuse','contact',id==='indicator'?'lamp':'coil','terminal'], refs=['X1','F1','S1',id==='indicator'?'H1':'K1','X2'];
     const instances=kinds.map(function(kind,index){const instance=createInstance('eplan-'+kind,200+index*160,300,refs[index]);instance.sheetId=sheetId;instance.properties.comment=index===0?'Supply boundary: assign the actual supply and rating':index===4?'Return boundary: assign the actual return':example.description;return instance;});
     const wires=[];
@@ -1225,7 +1265,7 @@
       openEndpoints: openEndpoints,
       geometryErrorCount: errors.length,
       errors: errors,
-      scope: 'source-backed component instances and user-authored orthogonal wire geometry; imported/embedded reference artwork is excluded'
+      scope: 'defined component terminals and user-authored orthogonal wire geometry; imported/embedded reference artwork is excluded'
     };
   }
 
