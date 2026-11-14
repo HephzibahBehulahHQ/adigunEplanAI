@@ -2,7 +2,7 @@
 
 Owner-requested engineering planning library: **3,000 project briefs, each with 30 individually specified sheets**, using one project with A1–A4 sections. This expands the planning backlog beyond the master specification's 500 implemented-example target; it does not change the number of validated native examples.
 
-Start with [NEXT_AGENT.md](NEXT_AGENT.md), then [TEMPLATE.md](TEMPLATE.md). The ten domain indexes below are published incrementally, 300 projects per domain. A missing index means that batch has not yet been published.
+Start with [NEXT_AGENT.md](NEXT_AGENT.md), then [TEMPLATE.md](TEMPLATE.md). All ten domain indexes below are published, with 300 projects per domain. The complete library contains 3,000 separate project briefs and 90,000 sheet requirements.
 
 | Domain | IDs | Index |
 | --- | --- | --- |
