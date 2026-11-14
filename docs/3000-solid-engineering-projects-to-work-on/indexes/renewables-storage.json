@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-1801",
+    "title": "Off-grid inverter installation \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1801.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1802",
+    "title": "Off-grid inverter installation \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1802.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1803",
+    "title": "Off-grid inverter installation \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1803.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1804",
+    "title": "Off-grid inverter installation \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1804.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1805",
+    "title": "Off-grid inverter installation \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1805.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1806",
+    "title": "Off-grid inverter installation \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1806.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1807",
+    "title": "Off-grid inverter installation \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1807.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1808",
+    "title": "Off-grid inverter installation \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1808.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1809",
+    "title": "Off-grid inverter installation \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1809.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1810",
+    "title": "Off-grid inverter installation \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1810.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1811",
+    "title": "Off-grid inverter installation \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1811.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1812",
+    "title": "Off-grid inverter installation \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1812.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1813",
+    "title": "Off-grid inverter installation \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1813.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1814",
+    "title": "Off-grid inverter installation \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1814.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1815",
+    "title": "Off-grid inverter installation \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1815.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1816",
+    "title": "Off-grid inverter installation \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1816.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1817",
+    "title": "Off-grid inverter installation \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1817.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1818",
+    "title": "Off-grid inverter installation \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1818.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1819",
+    "title": "Off-grid inverter installation \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1819.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1820",
+    "title": "Off-grid inverter installation \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-1820.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1821",
+    "title": "Off-grid inverter installation \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1821.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1822",
+    "title": "Off-grid inverter installation \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1822.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1823",
+    "title": "Off-grid inverter installation \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-1823.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1824",
+    "title": "Off-grid inverter installation \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-1824.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1825",
+    "title": "Off-grid inverter installation \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-1825.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1826",
+    "title": "Off-grid inverter installation \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-1826.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1827",
+    "title": "Off-grid inverter installation \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-1827.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1828",
+    "title": "Off-grid inverter installation \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-1828.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1829",
+    "title": "Off-grid inverter installation \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-1829.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1830",
+    "title": "Off-grid inverter installation \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Off-grid inverter installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-1830.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1831",
+    "title": "Hybrid solar backup installation \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1831.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1832",
+    "title": "Hybrid solar backup installation \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1832.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1833",
+    "title": "Hybrid solar backup installation \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1833.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1834",
+    "title": "Hybrid solar backup installation \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1834.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1835",
+    "title": "Hybrid solar backup installation \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1835.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1836",
+    "title": "Hybrid solar backup installation \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1836.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1837",
+    "title": "Hybrid solar backup installation \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1837.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1838",
+    "title": "Hybrid solar backup installation \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1838.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1839",
+    "title": "Hybrid solar backup installation \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1839.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1840",
+    "title": "Hybrid solar backup installation \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1840.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1841",
+    "title": "Hybrid solar backup installation \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1841.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1842",
+    "title": "Hybrid solar backup installation \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1842.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1843",
+    "title": "Hybrid solar backup installation \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1843.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1844",
+    "title": "Hybrid solar backup installation \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1844.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1845",
+    "title": "Hybrid solar backup installation \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1845.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1846",
+    "title": "Hybrid solar backup installation \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1846.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1847",
+    "title": "Hybrid solar backup installation \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1847.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1848",
+    "title": "Hybrid solar backup installation \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1848.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1849",
+    "title": "Hybrid solar backup installation \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1849.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1850",
+    "title": "Hybrid solar backup installation \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-1850.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1851",
+    "title": "Hybrid solar backup installation \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1851.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1852",
+    "title": "Hybrid solar backup installation \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1852.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1853",
+    "title": "Hybrid solar backup installation \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-1853.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1854",
+    "title": "Hybrid solar backup installation \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-1854.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1855",
+    "title": "Hybrid solar backup installation \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-1855.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1856",
+    "title": "Hybrid solar backup installation \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-1856.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1857",
+    "title": "Hybrid solar backup installation \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-1857.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1858",
+    "title": "Hybrid solar backup installation \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-1858.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1859",
+    "title": "Hybrid solar backup installation \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-1859.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1860",
+    "title": "Hybrid solar backup installation \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Hybrid solar backup installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-1860.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1861",
+    "title": "Grid-connected PV AC interface \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1861.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1862",
+    "title": "Grid-connected PV AC interface \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1862.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1863",
+    "title": "Grid-connected PV AC interface \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1863.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1864",
+    "title": "Grid-connected PV AC interface \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1864.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1865",
+    "title": "Grid-connected PV AC interface \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1865.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1866",
+    "title": "Grid-connected PV AC interface \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1866.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1867",
+    "title": "Grid-connected PV AC interface \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1867.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1868",
+    "title": "Grid-connected PV AC interface \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1868.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1869",
+    "title": "Grid-connected PV AC interface \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1869.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1870",
+    "title": "Grid-connected PV AC interface \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1870.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1871",
+    "title": "Grid-connected PV AC interface \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1871.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1872",
+    "title": "Grid-connected PV AC interface \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1872.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1873",
+    "title": "Grid-connected PV AC interface \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1873.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1874",
+    "title": "Grid-connected PV AC interface \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1874.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1875",
+    "title": "Grid-connected PV AC interface \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1875.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1876",
+    "title": "Grid-connected PV AC interface \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1876.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1877",
+    "title": "Grid-connected PV AC interface \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1877.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1878",
+    "title": "Grid-connected PV AC interface \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1878.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1879",
+    "title": "Grid-connected PV AC interface \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1879.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1880",
+    "title": "Grid-connected PV AC interface \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-1880.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1881",
+    "title": "Grid-connected PV AC interface \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1881.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1882",
+    "title": "Grid-connected PV AC interface \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1882.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1883",
+    "title": "Grid-connected PV AC interface \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-1883.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1884",
+    "title": "Grid-connected PV AC interface \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-1884.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1885",
+    "title": "Grid-connected PV AC interface \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-1885.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1886",
+    "title": "Grid-connected PV AC interface \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-1886.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1887",
+    "title": "Grid-connected PV AC interface \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-1887.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1888",
+    "title": "Grid-connected PV AC interface \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-1888.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1889",
+    "title": "Grid-connected PV AC interface \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-1889.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1890",
+    "title": "Grid-connected PV AC interface \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Grid-connected PV AC interface",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-1890.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1891",
+    "title": "PV DC combiner installation \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1891.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1892",
+    "title": "PV DC combiner installation \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1892.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1893",
+    "title": "PV DC combiner installation \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1893.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1894",
+    "title": "PV DC combiner installation \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1894.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1895",
+    "title": "PV DC combiner installation \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1895.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1896",
+    "title": "PV DC combiner installation \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1896.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1897",
+    "title": "PV DC combiner installation \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1897.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1898",
+    "title": "PV DC combiner installation \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1898.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1899",
+    "title": "PV DC combiner installation \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1899.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1900",
+    "title": "PV DC combiner installation \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1900.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1901",
+    "title": "PV DC combiner installation \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1901.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1902",
+    "title": "PV DC combiner installation \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1902.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1903",
+    "title": "PV DC combiner installation \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1903.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1904",
+    "title": "PV DC combiner installation \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1904.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1905",
+    "title": "PV DC combiner installation \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1905.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1906",
+    "title": "PV DC combiner installation \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1906.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1907",
+    "title": "PV DC combiner installation \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1907.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1908",
+    "title": "PV DC combiner installation \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1908.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1909",
+    "title": "PV DC combiner installation \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1909.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1910",
+    "title": "PV DC combiner installation \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-1910.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1911",
+    "title": "PV DC combiner installation \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1911.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1912",
+    "title": "PV DC combiner installation \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1912.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1913",
+    "title": "PV DC combiner installation \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-1913.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1914",
+    "title": "PV DC combiner installation \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-1914.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1915",
+    "title": "PV DC combiner installation \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-1915.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1916",
+    "title": "PV DC combiner installation \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-1916.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1917",
+    "title": "PV DC combiner installation \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-1917.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1918",
+    "title": "PV DC combiner installation \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-1918.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1919",
+    "title": "PV DC combiner installation \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-1919.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1920",
+    "title": "PV DC combiner installation \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "PV DC combiner installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-1920.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1921",
+    "title": "Battery storage auxiliary panel \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1921.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1922",
+    "title": "Battery storage auxiliary panel \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1922.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1923",
+    "title": "Battery storage auxiliary panel \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1923.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1924",
+    "title": "Battery storage auxiliary panel \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1924.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1925",
+    "title": "Battery storage auxiliary panel \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1925.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1926",
+    "title": "Battery storage auxiliary panel \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1926.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1927",
+    "title": "Battery storage auxiliary panel \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1927.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1928",
+    "title": "Battery storage auxiliary panel \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1928.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1929",
+    "title": "Battery storage auxiliary panel \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1929.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1930",
+    "title": "Battery storage auxiliary panel \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1930.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1931",
+    "title": "Battery storage auxiliary panel \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1931.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1932",
+    "title": "Battery storage auxiliary panel \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1932.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1933",
+    "title": "Battery storage auxiliary panel \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1933.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1934",
+    "title": "Battery storage auxiliary panel \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1934.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1935",
+    "title": "Battery storage auxiliary panel \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1935.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1936",
+    "title": "Battery storage auxiliary panel \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1936.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1937",
+    "title": "Battery storage auxiliary panel \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1937.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1938",
+    "title": "Battery storage auxiliary panel \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1938.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1939",
+    "title": "Battery storage auxiliary panel \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1939.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1940",
+    "title": "Battery storage auxiliary panel \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-1940.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1941",
+    "title": "Battery storage auxiliary panel \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1941.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1942",
+    "title": "Battery storage auxiliary panel \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1942.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1943",
+    "title": "Battery storage auxiliary panel \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-1943.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1944",
+    "title": "Battery storage auxiliary panel \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-1944.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1945",
+    "title": "Battery storage auxiliary panel \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-1945.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1946",
+    "title": "Battery storage auxiliary panel \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-1946.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1947",
+    "title": "Battery storage auxiliary panel \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-1947.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1948",
+    "title": "Battery storage auxiliary panel \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-1948.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1949",
+    "title": "Battery storage auxiliary panel \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-1949.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1950",
+    "title": "Battery storage auxiliary panel \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Battery storage auxiliary panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-1950.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1951",
+    "title": "Small-wind converter interface \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1951.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1952",
+    "title": "Small-wind converter interface \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1952.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1953",
+    "title": "Small-wind converter interface \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1953.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1954",
+    "title": "Small-wind converter interface \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1954.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1955",
+    "title": "Small-wind converter interface \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1955.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1956",
+    "title": "Small-wind converter interface \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1956.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1957",
+    "title": "Small-wind converter interface \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1957.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1958",
+    "title": "Small-wind converter interface \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1958.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1959",
+    "title": "Small-wind converter interface \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1959.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1960",
+    "title": "Small-wind converter interface \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1960.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1961",
+    "title": "Small-wind converter interface \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1961.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1962",
+    "title": "Small-wind converter interface \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1962.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1963",
+    "title": "Small-wind converter interface \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1963.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1964",
+    "title": "Small-wind converter interface \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1964.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1965",
+    "title": "Small-wind converter interface \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1965.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1966",
+    "title": "Small-wind converter interface \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1966.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1967",
+    "title": "Small-wind converter interface \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1967.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1968",
+    "title": "Small-wind converter interface \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1968.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1969",
+    "title": "Small-wind converter interface \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1969.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1970",
+    "title": "Small-wind converter interface \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-1970.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1971",
+    "title": "Small-wind converter interface \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1971.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1972",
+    "title": "Small-wind converter interface \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-1972.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1973",
+    "title": "Small-wind converter interface \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-1973.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1974",
+    "title": "Small-wind converter interface \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-1974.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1975",
+    "title": "Small-wind converter interface \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-1975.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1976",
+    "title": "Small-wind converter interface \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-1976.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1977",
+    "title": "Small-wind converter interface \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-1977.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1978",
+    "title": "Small-wind converter interface \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-1978.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1979",
+    "title": "Small-wind converter interface \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-1979.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1980",
+    "title": "Small-wind converter interface \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Small-wind converter interface",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-1980.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1981",
+    "title": "Solar irrigation power cabinet \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-1981.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1982",
+    "title": "Solar irrigation power cabinet \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-1982.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1983",
+    "title": "Solar irrigation power cabinet \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-1983.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1984",
+    "title": "Solar irrigation power cabinet \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-1984.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1985",
+    "title": "Solar irrigation power cabinet \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-1985.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1986",
+    "title": "Solar irrigation power cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-1986.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1987",
+    "title": "Solar irrigation power cabinet \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-1987.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1988",
+    "title": "Solar irrigation power cabinet \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-1988.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1989",
+    "title": "Solar irrigation power cabinet \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-1989.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1990",
+    "title": "Solar irrigation power cabinet \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-1990.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1991",
+    "title": "Solar irrigation power cabinet \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-1991.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1992",
+    "title": "Solar irrigation power cabinet \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-1992.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1993",
+    "title": "Solar irrigation power cabinet \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-1993.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1994",
+    "title": "Solar irrigation power cabinet \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-1994.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1995",
+    "title": "Solar irrigation power cabinet \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-1995.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1996",
+    "title": "Solar irrigation power cabinet \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-1996.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1997",
+    "title": "Solar irrigation power cabinet \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-1997.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1998",
+    "title": "Solar irrigation power cabinet \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-1998.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-1999",
+    "title": "Solar irrigation power cabinet \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-1999.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2000",
+    "title": "Solar irrigation power cabinet \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-2000.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2001",
+    "title": "Solar irrigation power cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2001.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2002",
+    "title": "Solar irrigation power cabinet \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2002.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2003",
+    "title": "Solar irrigation power cabinet \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-2003.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2004",
+    "title": "Solar irrigation power cabinet \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-2004.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2005",
+    "title": "Solar irrigation power cabinet \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-2005.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2006",
+    "title": "Solar irrigation power cabinet \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-2006.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2007",
+    "title": "Solar irrigation power cabinet \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-2007.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2008",
+    "title": "Solar irrigation power cabinet \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-2008.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2009",
+    "title": "Solar irrigation power cabinet \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-2009.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2010",
+    "title": "Solar irrigation power cabinet \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Solar irrigation power cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-2010.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2011",
+    "title": "Renewable microgrid supervisory panel \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-2011.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2012",
+    "title": "Renewable microgrid supervisory panel \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-2012.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2013",
+    "title": "Renewable microgrid supervisory panel \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-2013.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2014",
+    "title": "Renewable microgrid supervisory panel \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-2014.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2015",
+    "title": "Renewable microgrid supervisory panel \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-2015.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2016",
+    "title": "Renewable microgrid supervisory panel \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-2016.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2017",
+    "title": "Renewable microgrid supervisory panel \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-2017.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2018",
+    "title": "Renewable microgrid supervisory panel \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-2018.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2019",
+    "title": "Renewable microgrid supervisory panel \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-2019.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2020",
+    "title": "Renewable microgrid supervisory panel \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-2020.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2021",
+    "title": "Renewable microgrid supervisory panel \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-2021.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2022",
+    "title": "Renewable microgrid supervisory panel \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-2022.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2023",
+    "title": "Renewable microgrid supervisory panel \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-2023.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2024",
+    "title": "Renewable microgrid supervisory panel \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-2024.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2025",
+    "title": "Renewable microgrid supervisory panel \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-2025.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2026",
+    "title": "Renewable microgrid supervisory panel \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-2026.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2027",
+    "title": "Renewable microgrid supervisory panel \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-2027.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2028",
+    "title": "Renewable microgrid supervisory panel \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-2028.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2029",
+    "title": "Renewable microgrid supervisory panel \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-2029.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2030",
+    "title": "Renewable microgrid supervisory panel \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-2030.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2031",
+    "title": "Renewable microgrid supervisory panel \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2031.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2032",
+    "title": "Renewable microgrid supervisory panel \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2032.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2033",
+    "title": "Renewable microgrid supervisory panel \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-2033.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2034",
+    "title": "Renewable microgrid supervisory panel \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-2034.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2035",
+    "title": "Renewable microgrid supervisory panel \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-2035.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2036",
+    "title": "Renewable microgrid supervisory panel \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-2036.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2037",
+    "title": "Renewable microgrid supervisory panel \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-2037.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2038",
+    "title": "Renewable microgrid supervisory panel \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-2038.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2039",
+    "title": "Renewable microgrid supervisory panel \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-2039.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2040",
+    "title": "Renewable microgrid supervisory panel \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Renewable microgrid supervisory panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-2040.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2041",
+    "title": "Containerised storage auxiliary supply \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-2041.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2042",
+    "title": "Containerised storage auxiliary supply \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-2042.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2043",
+    "title": "Containerised storage auxiliary supply \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-2043.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2044",
+    "title": "Containerised storage auxiliary supply \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-2044.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2045",
+    "title": "Containerised storage auxiliary supply \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-2045.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2046",
+    "title": "Containerised storage auxiliary supply \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-2046.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2047",
+    "title": "Containerised storage auxiliary supply \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-2047.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2048",
+    "title": "Containerised storage auxiliary supply \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-2048.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2049",
+    "title": "Containerised storage auxiliary supply \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-2049.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2050",
+    "title": "Containerised storage auxiliary supply \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-2050.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2051",
+    "title": "Containerised storage auxiliary supply \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-2051.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2052",
+    "title": "Containerised storage auxiliary supply \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-2052.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2053",
+    "title": "Containerised storage auxiliary supply \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-2053.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2054",
+    "title": "Containerised storage auxiliary supply \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-2054.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2055",
+    "title": "Containerised storage auxiliary supply \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-2055.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2056",
+    "title": "Containerised storage auxiliary supply \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-2056.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2057",
+    "title": "Containerised storage auxiliary supply \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-2057.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2058",
+    "title": "Containerised storage auxiliary supply \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-2058.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2059",
+    "title": "Containerised storage auxiliary supply \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-2059.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2060",
+    "title": "Containerised storage auxiliary supply \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-2060.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2061",
+    "title": "Containerised storage auxiliary supply \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2061.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2062",
+    "title": "Containerised storage auxiliary supply \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2062.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2063",
+    "title": "Containerised storage auxiliary supply \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-2063.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2064",
+    "title": "Containerised storage auxiliary supply \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-2064.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2065",
+    "title": "Containerised storage auxiliary supply \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-2065.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2066",
+    "title": "Containerised storage auxiliary supply \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-2066.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2067",
+    "title": "Containerised storage auxiliary supply \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-2067.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2068",
+    "title": "Containerised storage auxiliary supply \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-2068.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2069",
+    "title": "Containerised storage auxiliary supply \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-2069.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2070",
+    "title": "Containerised storage auxiliary supply \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "Containerised storage auxiliary supply",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-2070.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2071",
+    "title": "DC critical-load energy system \u2014 Local manual baseline",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Local manual baseline",
+    "path": "projects/renewables-storage/ENG-2071.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2072",
+    "title": "DC critical-load energy system \u2014 Remote supervisory operation",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Remote supervisory operation",
+    "path": "projects/renewables-storage/ENG-2072.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2073",
+    "title": "DC critical-load energy system \u2014 Scheduled operation",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Scheduled operation",
+    "path": "projects/renewables-storage/ENG-2073.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2074",
+    "title": "DC critical-load energy system \u2014 Demand-controlled enable",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Demand-controlled enable",
+    "path": "projects/renewables-storage/ENG-2074.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2075",
+    "title": "DC critical-load energy system \u2014 Supply undervoltage supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/renewables-storage/ENG-2075.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2076",
+    "title": "DC critical-load energy system \u2014 Phase and supply-quality supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/renewables-storage/ENG-2076.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2077",
+    "title": "DC critical-load energy system \u2014 Individual branch metering",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Individual branch metering",
+    "path": "projects/renewables-storage/ENG-2077.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2078",
+    "title": "DC critical-load energy system \u2014 Whole-system energy reporting",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/renewables-storage/ENG-2078.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2079",
+    "title": "DC critical-load energy system \u2014 Two-zone operation",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Two-zone operation",
+    "path": "projects/renewables-storage/ENG-2079.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2080",
+    "title": "DC critical-load energy system \u2014 Three-stage load sequencing",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/renewables-storage/ENG-2080.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2081",
+    "title": "DC critical-load energy system \u2014 Priority load shedding",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Priority load shedding",
+    "path": "projects/renewables-storage/ENG-2081.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2082",
+    "title": "DC critical-load energy system \u2014 Buffered control power",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Buffered control power",
+    "path": "projects/renewables-storage/ENG-2082.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2083",
+    "title": "DC critical-load energy system \u2014 Redundant control-power inputs",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/renewables-storage/ENG-2083.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2084",
+    "title": "DC critical-load energy system \u2014 Environmental temperature supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/renewables-storage/ENG-2084.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2085",
+    "title": "DC critical-load energy system \u2014 Condensation management",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Condensation management",
+    "path": "projects/renewables-storage/ENG-2085.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2086",
+    "title": "DC critical-load energy system \u2014 Door and enclosure supervision",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/renewables-storage/ENG-2086.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2087",
+    "title": "DC critical-load energy system \u2014 Maintenance test mode",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Maintenance test mode",
+    "path": "projects/renewables-storage/ENG-2087.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2088",
+    "title": "DC critical-load energy system \u2014 Remote alarm annunciation",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/renewables-storage/ENG-2088.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2089",
+    "title": "DC critical-load energy system \u2014 First-out fault capture",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "First-out fault capture",
+    "path": "projects/renewables-storage/ENG-2089.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2090",
+    "title": "DC critical-load energy system \u2014 Event and operating-hour logging",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/renewables-storage/ENG-2090.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2091",
+    "title": "DC critical-load energy system \u2014 Ethernet supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2091.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2092",
+    "title": "DC critical-load energy system \u2014 Serial supervisory gateway",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/renewables-storage/ENG-2092.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2093",
+    "title": "DC critical-load energy system \u2014 Hardwired permissive chain",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/renewables-storage/ENG-2093.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2094",
+    "title": "DC critical-load energy system \u2014 Controlled shutdown interface",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/renewables-storage/ENG-2094.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2095",
+    "title": "DC critical-load energy system \u2014 Commissioning simulation terminals",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/renewables-storage/ENG-2095.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2096",
+    "title": "DC critical-load energy system \u2014 Modular field connections",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Modular field connections",
+    "path": "projects/renewables-storage/ENG-2096.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2097",
+    "title": "DC critical-load energy system \u2014 Distributed field enclosure",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Distributed field enclosure",
+    "path": "projects/renewables-storage/ENG-2097.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2098",
+    "title": "DC critical-load energy system \u2014 Future expansion provision",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Future expansion provision",
+    "path": "projects/renewables-storage/ENG-2098.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2099",
+    "title": "DC critical-load energy system \u2014 Supply restoration management",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Supply restoration management",
+    "path": "projects/renewables-storage/ENG-2099.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2100",
+    "title": "DC critical-load energy system \u2014 Integrated diagnostics package",
+    "domain": "renewables-storage",
+    "baseSystem": "DC critical-load energy system",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/renewables-storage/ENG-2100.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
