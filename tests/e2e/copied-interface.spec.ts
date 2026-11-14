@@ -25,10 +25,11 @@ test("approved interface branding and menu overlay remain intact", async ({
   await expect(page.locator(".toolbar")).toBeVisible();
   await expect(page.locator(".drawing")).toBeVisible();
   for (let visit = 0; visit < 2; visit++) {
-    await expect(page.locator("[data-project-section]")).toHaveCount(4);
+    await expect(page.locator("[data-project-section]")).toHaveCount(0);
     await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(0);
     await expect(page.locator("#sheetTabs [data-sheet]")).toHaveCount(0);
-    await expect(page.locator("[data-project-root] b")).toHaveText("New Project");
+    await expect(page.locator("#projectTree")).toBeEmpty();
+    await expect(page.locator("#sheetDesign")).toBeHidden();
     await expect(page.locator("#projectTree")).not.toContainText("Z0010000");
     if (visit === 0) await page.reload();
   }
@@ -160,6 +161,8 @@ test("existing New Project dialog opens both connected editable examples", async
     await page.locator("#newProjectName").fill(id + " workshop");
     await page.locator("#projectTemplate").selectOption(id);
     await page.locator("#createProject").click();
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+    await page.locator("#projectTree [data-sheet]").first().click();
     await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(9);
     const saved = await saveDrawing(page, id);
     expect(saved.data.project).toBe(id + " workshop");
@@ -191,6 +194,8 @@ test("manufacturer projects open, expose editable parts and preserve connections
     await page.locator("#newProjectName").fill(id + " bench");
     await page.locator("#projectTemplate").selectOption(id);
     await page.locator("#createProject").click();
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+    await page.locator("#projectTree [data-sheet]").first().click();
     await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
       count,
     );
@@ -439,6 +444,8 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
     "PLC digital input bench",
   );
   await page.locator("#createProject").click();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+  await page.locator("#projectTree [data-sheet]").first().click();
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(13);
   await page.locator('[data-inspector="Electrical checks"]').click();
   await expect(page.locator("#inspectorContent")).toContainText(
