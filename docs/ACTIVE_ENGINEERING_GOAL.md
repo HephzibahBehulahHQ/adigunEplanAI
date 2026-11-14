@@ -1,5 +1,12 @@
 # Active engineering goal — 2026-11-14
 
+## Paper text editing — shipped 2026-11-15
+
+PR #76 merged as 8d151ad02f35f9c52a198a57856466d6ab80c5e3. Existing T tool creates a multiline on-sheet editor; Ctrl+Enter or leaving the editor commits, Escape cancels the current edit. Double-click a note to edit again. Existing Properties offers font, size, text width, alignment, bold/italic/underline and colour. Long text wraps to the chosen width; stored text retains its original line breaks. Existing shapes and palette remain in place. Formatting is per text object, not per selected character range. User drawing shortcuts do not intercept text inputs. Preserve empty startup and sheet/document identities.
+
+Final premerge CI 43653067722 / 43653062454 passed (370 unit/tooling tests, 12 browser tests including writing, formatting, sheet switching, save/reopen and restored editing). Main CI 43653213729 and Pages 43653213725 passed. Live A1 typing, formatting and double-click editing verified; screenshot work/live-paper-editor.jpg. No complete coordinated example project is claimed by this change.
+
+
 ## Sidebar document management — shipped 2026-11-14
 
 PR #72 merged as 9bb407703a13fb61fc096f32e16bd6cbceb5dffd. A1–A4 remain defaults, with additional sections via the root +. Section + creates documents without opening them. Inline rename, folder collapse, drag/drop ordering and cross-section moves retain stable sheet IDs and custom names. Canvas tabs are views: closing never deletes. Only explicit sidebar Delete removes documents; shared cross-page potentials retain their remaining branches. Save/reopen preserves sections, order, contents, connections and open views. Removed the former 200-sheet import/creation cap and object truncation.
