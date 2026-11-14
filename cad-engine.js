@@ -908,10 +908,21 @@
       }
     }
     if (Array.isArray(project.objects)) {
+      const objectIds = new Set();
       project.objects.forEach(function (object, index) {
         if (!object || typeof object !== 'object') {
           errors.push('Drawing object ' + (index + 1) + ' is invalid.');
           return;
+        }
+        if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
+        objectIds.add(object.id);
+        if (object.kind === 'wire' && object.attachments !== undefined) {
+          const endpoints = object.attachments;
+          if (!endpoints || typeof endpoints !== 'object' || Array.isArray(endpoints)) errors.push('Wire attachments must be an endpoint map.');
+          else Object.keys(endpoints).forEach(function(end) {
+            const target=endpoints[end];
+            if (!['start','end'].includes(end) || !target || typeof target.instanceId !== 'string' || !target.instanceId || typeof target.pinId !== 'string' || !target.pinId) errors.push('Wire has an invalid terminal attachment.');
+          });
         }
         if (object.kind === 'component-instance') {
           const validation = validateInstance(object);
@@ -1021,15 +1032,74 @@
       && point.y >= Math.min(segment.a.y, segment.b.y) - EPSILON
       && point.y <= Math.max(segment.a.y, segment.b.y) + EPSILON;
   }
+  function endpointPin(objects, attachment, sheetId) {
+    if (!attachment || typeof attachment.instanceId !== 'string' || typeof attachment.pinId !== 'string') return null;
+    const instance = objects.find(function(obj) { return obj && obj.kind === 'component-instance' && obj.id === attachment.instanceId && (!sheetId || !obj.sheetId || obj.sheetId === sheetId); });
+    return instance ? worldPins(instance).find(function(pin) { return pin.id === attachment.pinId; }) || null : null;
+  }
+  function wireAttachmentIssues(objects) {
+    const issues = [];
+    objects.filter(function(obj) { return obj && obj.kind === 'wire'; }).forEach(function(wire) {
+      ['start', 'end'].forEach(function(end, index) {
+        const attachment = wire.attachments && wire.attachments[end];
+        if (!attachment) return;
+        const pin = endpointPin(objects, attachment, wire.sheetId), x = wire[index ? 'x2' : 'x1'], y = wire[index ? 'y2' : 'y1'];
+        if (!pin) issues.push({code:'missing-terminal',objectId:wire.id,message:'Wire '+wire.id+' '+end+' refers to a missing component terminal.'});
+        else if (Math.hypot(pin.x-x,pin.y-y)>EPSILON) issues.push({code:'detached-terminal',objectId:wire.id,message:'Wire '+wire.id+' '+end+' is detached from '+attachment.pinId+'.'});
+      });
+    });
+    return issues;
+  }
+  function synchronizeWireAttachments(objects) {
+    objects.filter(function(obj) { return obj && obj.kind === 'wire'; }).forEach(function(wire) {
+      ['start','end'].forEach(function(end,index) {
+        const pin = endpointPin(objects,wire.attachments && wire.attachments[end],wire.sheetId);
+        if (!pin) return;
+        wire[index?'x2':'x1']=pin.x;wire[index?'y2':'y1']=pin.y;
+        if (!index) {wire.x=pin.x;wire.y=pin.y;}
+      });
+    });
+    return wireAttachmentIssues(objects);
+  }
+  function attachWire(wire, start, end) {
+    wire.attachments = {};
+    if (start.attachment) wire.attachments.start = Object.assign({},start.attachment);
+    if (end.attachment) wire.attachments.end = Object.assign({},end.attachment);
+    return wire;
+  }
+  function nextReference(objects, prefix) {
+    const occupied = new Set(objects.filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;}));
+    let number=1;while(occupied.has(prefix+number))number++;
+    return prefix+number;
+  }
+  function projectExamples() {
+    return [{id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
+      {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'}];
+  }
+  function createExample(id, name) {
+    const example=projectExamples().find(function(item){return item.id===id;});
+    if(!example)throw new Error('Unknown project example.');
+    const sheetId='example-'+id, kinds=['terminal','fuse','contact',id==='indicator'?'lamp':'coil','terminal'], refs=['X1','F1','S1',id==='indicator'?'H1':'K1','X2'];
+    const instances=kinds.map(function(kind,index){const instance=createInstance('eplan-'+kind,200+index*160,300,refs[index]);instance.sheetId=sheetId;instance.properties.comment=index===0?'Supply boundary: assign the actual supply and rating':index===4?'Return boundary: assign the actual return':example.description;return instance;});
+    const wires=[];
+    for(let i=0;i<instances.length-1;i++){
+      const a=instances[i],b=instances[i+1],ap=worldPins(a).slice().sort(function(p,q){return q.x-p.x;})[0],bp=worldPins(b).slice().sort(function(p,q){return p.x-q.x;})[0];
+      wires.push(attachWire({id:'wire-'+id+'-'+i,kind:'wire',sheetId:sheetId,x:ap.x,y:ap.y,x1:ap.x,y1:ap.y,x2:bp.x,y2:bp.y,rotation:0,stroke:'#164eac'},Object.assign({},ap,{attachment:{instanceId:a.id,pinId:ap.id}}),Object.assign({},bp,{attachment:{instanceId:b.id,pinId:bp.id}})));
+    }
+    const project={project:String(name||example.name).slice(0,80),activeSheet:sheetId,sheets:[{id:sheetId,name:example.name,number:'A3/201'}],objects:instances.concat(wires),crossSheetConnections:[],example:{id:id,description:example.description}};
+    return parseProject(serializeProject(project)).project;
+  }
+
   function analyze(objects) {
     const source = Array.isArray(objects) ? objects : [];
     const wires = [];
     const pins = [];
-    const errors = [];
+    const errors = wireAttachmentIssues(source);
+    const invalidWires = new Set(errors.map(function(issue){return issue.objectId;}));
     const validInstances = [];
 
     source.forEach(function (object, index) {
-      if (!object || object.kind !== 'wire') return;
+      if (!object || object.kind !== 'wire' || invalidWires.has(object.id)) return;
       const coords = [object.x1, object.y1, object.x2, object.y2];
       if (!coords.every(finite)) {
         errors.push({ code: 'invalid-coordinate', objectId: object.id || null, message: 'A wire has a missing or non-finite endpoint.' });
@@ -1430,6 +1500,13 @@
   }
 
   root.AdigunCADEngine = Object.freeze({
+    endpointPin: endpointPin,
+    attachWire: attachWire,
+    synchronizeWireAttachments: synchronizeWireAttachments,
+    wireAttachmentIssues: wireAttachmentIssues,
+    nextReference: nextReference,
+    projectExamples: projectExamples,
+    createExample: createExample,
     componentSchemaVersion: COMPONENT_SCHEMA_VERSION,
     netSchemaVersion: 1,
     projectFormat: PROJECT_FORMAT,

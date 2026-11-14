@@ -1,0 +1,116 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import vm from "node:vm";
+const context = vm.createContext({});
+for (const file of ["eplan-symbols.js", "cad-engine.js"])
+  vm.runInContext(fs.readFileSync(`apps/web/public/${file}`, "utf8"), context);
+const engine = context.AdigunCADEngine;
+const plain = (value) => JSON.parse(JSON.stringify(value));
+
+test("project import rejects malformed attachment data and duplicate identities", () => {
+  const project = engine.createExample("indicator");
+  const wire = project.objects.find((o) => o.kind === "wire");
+  wire.attachments.start = { instanceId: "", pinId: 42 };
+  assert.equal(engine.validateProject(project).valid, false);
+  delete wire.attachments;
+  project.objects[1].id = project.objects[0].id;
+  assert.equal(engine.validateProject(project).valid, false);
+});
+
+test("examples are independent editable projects with complete terminal attachments", () => {
+  assert.equal(engine.projectExamples().length, 2);
+  for (const example of engine.projectExamples()) {
+    const project = engine.createExample(example.id, "Workshop project");
+    assert.equal(project.project, "Workshop project");
+    assert.equal(engine.validateProject(project).valid, true);
+    const report = engine.analyzeProject(project);
+    assert.equal(report.valid, true);
+    const sheet = engine.analyze(project.objects);
+    assert.equal(sheet.wireCount, 4);
+    assert.equal(sheet.openEndpointCount, 0);
+    assert.equal(sheet.unconnectedPinCount, 0);
+    assert.equal(sheet.geometryErrorCount, 0);
+    assert.equal(
+      sheet.netCount,
+      4,
+      "generic devices do not invent internal continuity",
+    );
+    assert.ok(
+      project.objects
+        .filter((o) => o.kind === "wire")
+        .every((w) => w.attachments.start && w.attachments.end),
+    );
+    const restored = engine.parseProject(engine.serializeProject(project));
+    assert.deepEqual(plain(restored.project), plain(project));
+    assert.notEqual(
+      engine.createExample(example.id).objects[0].id,
+      project.objects[0].id,
+    );
+  }
+});
+
+test("terminal identities survive movement, rotation and restore without stealing a coincident pin", () => {
+  const project = engine.createExample("indicator"),
+    component = project.objects[1];
+  const wire = project.objects.find(
+    (o) => o.kind === "wire" && o.attachments.end.instanceId === component.id,
+  );
+  const coincident = engine.createInstance(
+    component.componentId,
+    component.x,
+    component.y,
+    "F2",
+  );
+  coincident.sheetId = component.sheetId;
+  project.objects.push(coincident);
+  const before = { x: wire.x2, y: wire.y2 };
+  engine.moveInstance(coincident, 10, 10);
+  engine.synchronizeWireAttachments(project.objects);
+  assert.deepEqual({ x: wire.x2, y: wire.y2 }, before);
+  engine.moveInstance(component, 360, 500);
+  engine.rotateInstance(component, 90);
+  assert.ok(
+    engine
+      .wireAttachmentIssues(project.objects)
+      .some((i) => i.code === "detached-terminal"),
+  );
+  engine.synchronizeWireAttachments(project.objects);
+  const pin = engine.endpointPin(
+    project.objects,
+    wire.attachments.end,
+    wire.sheetId,
+  );
+  assert.equal(wire.x2, pin.x);
+  assert.equal(wire.y2, pin.y);
+  assert.equal(engine.wireAttachmentIssues(project.objects).length, 0);
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  assert.equal(engine.wireAttachmentIssues(restored.project.objects).length, 0);
+});
+
+test("missing terminals and sheet mismatches are diagnosed, not silently reconnected", () => {
+  const project = engine.createExample("relay"),
+    removed = project.objects.shift();
+  let report = engine.analyze(project.objects);
+  assert.ok(report.errors.some((i) => i.code === "missing-terminal"));
+  assert.equal(
+    report.wireCount,
+    3,
+    "invalid bound wire is excluded from valid connectivity",
+  );
+  project.objects.unshift(removed);
+  removed.sheetId = "another-sheet";
+  assert.ok(
+    engine
+      .wireAttachmentIssues(project.objects)
+      .some((i) => i.code === "missing-terminal"),
+  );
+  removed.sheetId = project.activeSheet;
+  assert.equal(engine.wireAttachmentIssues(project.objects).length, 0);
+  const refs = [
+    { kind: "component-instance", ref: "U1" },
+    { kind: "component-instance", ref: "U3" },
+  ];
+  assert.equal(engine.nextReference(refs, "U"), "U2");
+});
