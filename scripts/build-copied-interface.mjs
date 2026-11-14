@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import "./export-eplan-symbols.mjs";
 const root = fileURLToPath(new URL("../", import.meta.url));
@@ -14,6 +15,16 @@ for (const [source, target] of [
 ]) {
   fs.copyFileSync(`${root}${source}`, `${dist}/${target}`);
 }
-console.log(
-  "Copied the source interface without transforming HTML, styles, or scripts.",
-);
+// Stable asset names otherwise let returning browsers reuse an older engine.
+// Version script requests by their actual content without changing the UI.
+let html = fs.readFileSync(`${dist}/index.html`, "utf8");
+for (const asset of ["cad-engine.js", "eplan-symbols.js"]) {
+  const digest = crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(`${dist}/${asset}`))
+    .digest("hex")
+    .slice(0, 16);
+  html = html.replace(`src="./${asset}"`, `src="./${asset}?v=${digest}"`);
+}
+fs.writeFileSync(`${dist}/index.html`, html);
+console.log("Copied the fixed interface with content-versioned script URLs.");

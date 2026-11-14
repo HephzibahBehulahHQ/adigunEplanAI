@@ -22,7 +22,7 @@ Continue components, wiring and project examples. Keep the current interface loc
 
 ## Current implementation and remaining verification
 
-- Goal-tool replacement failed because the old goal is unfinished; it remains paused. Do not claim a new tracked goal was created or falsely complete the old goal. Use this document as the authorized execution objective until the app supports replacing it.
+- The owner cleared the obsolete goal on 2026-11-14. The replacement engineering goal is now active: components, terminal wiring and editable real examples, locked interface, existing menus, tests, merge, deploy and live verification.
 - Implemented named project persistence and complete saved sheet definitions, including initial built-in sheets.
 - Implemented explicit component/pin attachments for new wires, synchronization after movement/rotation, missing-terminal diagnostics, and identity remapping for copied objects/sheets. Legacy unattached wires keep geometric connectivity behavior.
 - Generic symbol properties now expose reference/comment in the existing inspector; automatic placement selects unused references.
@@ -32,6 +32,14 @@ Continue components, wiring and project examples. Keep the current interface loc
 - Live verification on 2026-11-14: New Project exposed both templates; Indicator circuit opened with five component instances, four wires, eight connected pins, zero unconnected pins, zero open endpoints and zero geometry errors. An invisible hit area fixes selection inside generic unfilled symbols without altering visible artwork.
 - Scope limits: examples are generic schematic learning templates, not simulated, manufacturer-configured or certified designs. Legacy wires retain geometry-based attachment; only newly authored bound wires have explicit terminal identities. Broader engineering integrations remain future work.
 - Completed work branch: `codex/engineering-workflow`, PR https://github.com/HephzibahBehulahHQ/adigunEplanAI/pull/50 . Start subsequent work from verified current main; do not reimplement this increment or restart the retired interface rebuild.
+
+## Hardware examples increment — PR #51
+
+- Added manufacturer-defined Phoenix Contact UK 5 N (3004362) and UT 2,5 (3044076) screw feed-through terminals through the existing Symbol Library. Ratings and connection limitations cite their primary manufacturer records; connection IDs are explicitly model-local.
+- Existing New Project selector now includes three connected editable hardware examples: momentary 24 V relay control, ifm IFS204 PNP terminal wiring, and Siemens SITOP output distribution. External supply/load/protection boundaries and spare pins remain explicit; these are not complete certified installations or simulations.
+- Local full checks passed with 364 tests. Circuit-separation, terminal identities, BOM provenance, movement/rotation and save/reopen tests passed. CSS and pre-script interface markup remain identical to the approved main baseline.
+- Browser CI found a pre-existing pushbutton renderer lookup against reduced catalog metadata; corrected it to use the full component definition. All five browser tests passed against development and production builds. PR #51 merged as b4011d6d1864ebcac87427b4758304879ffc7315; main CI 43635269217 and Pages 43635269353 passed.
+- Live build-info confirms that release, but the browser reused an older unversioned engine and displayed the old templates. Follow-up adds content-hashed script query parameters at build time; verify all three hardware examples live after deployment. UI layout, styles and menu structure stay unchanged.
 
 ## Workspace caution
 

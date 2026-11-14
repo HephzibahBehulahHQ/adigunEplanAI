@@ -12,7 +12,7 @@ The owner has approved continuing components, wiring and editable project exampl
 
 ## CURRENT EXECUTION AND HANDOFF
 
-Read docs/ACTIVE_ENGINEERING_GOAL.md before changes. Continue from current remote main and actual worktree, preserving unrelated local work. Do not revive the paused obsolete screenshot goal. The goal tool currently refuses to replace that unfinished goal; this does not block authorized engineering work and is not grounds to falsely mark the old goal complete.
+Read docs/ACTIVE_ENGINEERING_GOAL.md before changes. Continue from current remote main and actual worktree, preserving unrelated local work. Do not revive the paused obsolete screenshot goal. The owner cleared the obsolete goal on 2026-11-14. A new active pursuing goal now covers components, terminal wiring and editable real project examples with the interface locked. Continue this goal; do not recreate the obsolete interface goal.
 
 Required outcome: an engineer can create a named project, place/edit components, connect identifiable terminals, move/rotate components without losing connections, inspect connectivity, save/reopen without data loss, and open/edit connected examples. Validate each workflow, verify locked styles/menu structure, pass CI, merge and deploy, and inspect the live result. Report limitations honestly. Maintain the progress and handoff record so another agent does not repeat completed work or reverse this direction.
 
