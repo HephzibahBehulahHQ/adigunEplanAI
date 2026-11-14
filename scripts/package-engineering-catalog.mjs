@@ -36,6 +36,7 @@ const visit = (dir, prefix = "") => {
         "README.md",
         "TEMPLATE.md",
         "CONTINUITY.md",
+        "TITLE_BLOCK.md",
         "NEXT_AGENT.md",
         "domains.json",
         "variants.json",
