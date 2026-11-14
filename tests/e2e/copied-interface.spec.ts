@@ -96,6 +96,7 @@ test("new project wires attach to terminals, follow edits, undo and reopen", asy
   expect(initialWire.attachments.start.pinId).toBe("1");
   expect(initialWire.attachments.end.pinId).toBe("1");
   await page.locator('[data-draw="select"]').click();
+  await page.locator('[data-inspector="Properties"]').click();
   await page
     .locator("#userDrawings .drawing-object")
     .filter({ has: page.locator("title", { hasText: "R1 · Resistor" }) })
