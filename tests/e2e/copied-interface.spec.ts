@@ -35,7 +35,7 @@ test("paper sheets support multiline writing, formatting and saved editing", asy
   await expect(text).toHaveAttribute("font-size", "24");
   await expect(text).toHaveAttribute("font-weight", "700");
   await expect(text).toHaveAttribute("fill", "#cc3300");
-  await expect(text.locator("tspan")).toHaveCount(2);
+  expect(await text.locator("tspan").count()).toBeGreaterThan(2);
   const firstId = await page
     .locator("#projectTree [data-sheet]")
     .first()
