@@ -3,6 +3,64 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+test("paper sheets support multiline writing, formatting and saved editing", async ({
+  page,
+}) => {
+  page.setDefaultTimeout(5000);
+  page.on("pageerror", (error) => {
+    throw error;
+  });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page, "A1");
+  await page.locator('[data-draw="text"]').click();
+  const point = await sheetPoint(page, 220, 220);
+  await page.mouse.click(point.x, point.y);
+  const editor = page.getByRole("textbox", {
+    name: "Write on sheet",
+    exact: true,
+  });
+  const note =
+    "Project overview\nScope: " + "Editable documentation. ".repeat(12);
+  await editor.fill(note);
+  await editor.press("Control+Enter");
+  await page.getByLabel("Text size", { exact: true }).fill("24");
+  await page.getByLabel("Text size", { exact: true }).press("Tab");
+  await page.getByLabel("Text bold", { exact: true }).check();
+  await page.getByLabel("Text italic", { exact: true }).check();
+  await page.getByLabel("Text underline", { exact: true }).check();
+  await page.getByLabel("Text font", { exact: true }).selectOption("Georgia");
+  await page
+    .getByLabel("Text alignment", { exact: true })
+    .selectOption("middle");
+  await page.getByLabel("Text colour", { exact: true }).fill("#cc3300");
+  const text = page.locator("#userDrawings text.drawing-object");
+  await expect(text).toHaveAttribute("font-size", "24");
+  await expect(text).toHaveAttribute("font-weight", "700");
+  await expect(text).toHaveAttribute("fill", "#cc3300");
+  expect(await text.locator("tspan").count()).toBeGreaterThan(2);
+  const firstId = await page
+    .locator("#projectTree [data-sheet]")
+    .first()
+    .getAttribute("data-sheet");
+  await addSectionSheet(page, "A2");
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+  await page.locator('#projectTree [data-sheet="' + firstId + '"]').click();
+  await expect(text).toHaveAttribute("font-family", "Georgia");
+  const saved = await saveDrawing(page, "formatted-paper");
+  expect(saved.data.objects[0].text).toBe(note);
+  expect(saved.data.objects[0].italic).toBe(true);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(text).toHaveAttribute("text-decoration", "underline");
+  await text.locator("tspan").first().dblclick();
+  await editor.fill(note + "\nHandover notes");
+  await editor.press("Control+Enter");
+  const edited = await saveDrawing(page, "edited-paper");
+  expect(edited.data.objects[0].text).toBe(note + "\nHandover notes");
+});
+
 test("approved interface branding and menu overlay remain intact", async ({
   page,
 }) => {
