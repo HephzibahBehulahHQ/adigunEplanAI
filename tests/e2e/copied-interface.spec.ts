@@ -251,6 +251,37 @@ test("imported sheet metadata overrides sample labels when opening properties", 
   );
 });
 
+test("existing insertion toolbar places verified PLC motor and earth terminal", async ({
+  page,
+}) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  const parts = [
+    ["plc", "siemens-6es7212-1ae40-0xb0"],
+    ["motor", "sew-eurodrive-drn63ms4"],
+    ["ground", "phoenix-contact-3212147"],
+  ];
+  for (const [index, [tool]] of parts.entries()) {
+    const button = page.locator(`[data-insert-tool="${tool}"]`);
+    await expect(button).toBeEnabled();
+    await button.click();
+    await page
+      .locator("#drawing")
+      .click({ position: { x: 200 + index * 160, y: 240 } });
+  }
+  const saved = await saveDrawing(page, "toolbar-parts");
+  expect(
+    saved.data.objects.map((item: { componentId: string }) => item.componentId),
+  ).toEqual(parts.map((part) => part[1]));
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(3);
+  expect(errors).toEqual([]);
+});
+
 test("existing Electrical Symbol Library places and saves original Eplan symbols", async ({
   page,
 }) => {

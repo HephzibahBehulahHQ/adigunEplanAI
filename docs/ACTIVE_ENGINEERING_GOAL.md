@@ -1,5 +1,13 @@
 # Active engineering goal — 2026-11-14
 
+## Current state — supersedes older pending-run notes below
+
+- Pursuing goal is active. The approved interface remains locked; use existing menus and controls only.
+- Main d9a95dd028708110582af1e95c7f33922126e0e5 includes merged PR #54. CI 43638038533 and main CI 43638204251 passed; Pages 43638204206 succeeded. PLC input bench verified live: five components, six wires, four nets, zero open wire endpoints/geometry errors, 21 intentionally unused/external pins reported.
+- Six editable examples now exist. CPU DC/DC/DC X12 functions are corrected against Siemens' connector table; keep physical terminal IDs stable.
+- Current toolbar increment connects existing PLC/motor/earth buttons to their existing manufacturer components. Static markup/CSS remain unchanged; runtime labels describe the selected part. Local checks passed; new browser regression covers placement and save/reopen. Await its PR browser CI, merge, deployment and live verification before calling it shipped.
+- After toolbar release, audit new-project initialization, real terminal wiring, movement/rotation/undo, save/reopen, reports, examples and UI invariants against this goal. Fix observed gaps; do not equate incremental green tests with completion of the entire workflow.
+
 ## Owner authorization
 
 Continue components, wiring and project examples. Keep the current interface locked and use existing menus. Test, merge and deploy. The earlier navy/cyan screenshot rebuild is superseded; do not resume it.
@@ -53,3 +61,7 @@ Continue components, wiring and project examples. Keep the current interface loc
 ## Workspace caution
 
 Local checkout has an old HEAD and unrelated earlier edits/deletions. Do not blanket commit, reset, or delete it. Use current remote main as the merge base and publish only this task's reviewed files. Keep root runtime copies synchronized with apps/web source. Deployment regenerates build-info; do not publish stale local provenance.
+- PR #54 latest head: 29d1f12a5d408a7a9e27a256dbd2fb50f27817e1; current browser CI run 43637292637, job 132576783167, verified queued. Local full checks pass with 366 tests. Merge/deploy remain outstanding. Check this exact run before starting any replacement work. Next after shipping: connect existing disabled PLC/motor/PE toolbar actions to their already-defined manufacturer parts without adding controls.
+- Next uncommitted local increment: existing PLC/motor/PE toolbar controls now map to defined manufacturer parts; no layout/menu changes. Source/root HTML synchronized, browser placement/save/reopen test added; npm run check passed (work/toolbar-check.log). Do not include these files when merging PR #54: they belong to the subsequent toolbar increment. Browser verification remains required before publishing this increment.
+- PR #54 final correction moved X2/X3 to avoid overlapping terminal selection targets while preserving the four exact nets. Head c99f3b42aa450efb053dcce67a234a9cfbd4f3f6 passed CI 43638038533; merged as d9a95dd028708110582af1e95c7f33922126e0e5. Deployment/live verification is next. Supersedes earlier queued-head notes.
+- PR #54 deployment 43638204206 passed. Live PLC digital input bench verified: 5 components, 6 wires, 4 nets, 0 open wire endpoints, 0 geometry errors; 21 external/unused pins explicitly flagged. Browser connection changed from unavailable ID 3 to Chrome ID 6. Next publish the locally tested toolbar increment from current remote main; no interface redesign.

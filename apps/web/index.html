@@ -587,11 +587,13 @@
   $$('[data-tip]').forEach(b=>{b.title=b.dataset.tip;});
   $$('[data-action]').forEach(b=>b.addEventListener('click',()=>runAction(b.dataset.action)));
   $$('[data-draw]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.draw==='symbol')openSymbolPicker();else setTool(b.dataset.draw);}));
-  $$('[data-insert-tool]').forEach(b=>b.addEventListener('click',()=>{
-    if(b.disabled)return;
-    if(b.dataset.insertTool==='terminal')insertCatalogSymbol('phoenix-contact-3212144');
-    else notify('This insertion stays unavailable until its real part, pins, properties, and source are verified.');
-  }));
+  const insertionParts={terminal:'phoenix-contact-3212144',plc:'siemens-6es7212-1ae40-0xb0',motor:'sew-eurodrive-drn63ms4',ground:'phoenix-contact-3212147'};
+  $$('[data-insert-tool]').forEach(function(button){
+    const part=window.AdigunCADEngine.component(insertionParts[button.dataset.insertTool]);
+    button.disabled=!part;
+    if(part){const label='Insert '+part.manufacturer+' '+part.model;button.setAttribute('aria-label',label);button.dataset.tip=label;button.title=label;}
+    button.addEventListener('click',function(){if(!button.disabled&&part)insertCatalogSymbol(part.id);});
+  });
 
   $('#paletteFillEnabled').checked=state.fillEnabled;
   $('#paletteFillEnabled').addEventListener('change',e=>{state.fillEnabled=e.target.checked;$('#fillEnabledTool').setAttribute('aria-pressed',String(state.fillEnabled));persist();notify(state.fillEnabled?'Shape fill enabled.':'Shape fill disabled.');});
