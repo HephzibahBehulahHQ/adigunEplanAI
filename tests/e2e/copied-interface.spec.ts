@@ -24,11 +24,14 @@ test("approved interface branding and menu overlay remain intact", async ({
   await expect(page.locator(".topbar")).toBeVisible();
   await expect(page.locator(".toolbar")).toBeVisible();
   await expect(page.locator(".drawing")).toBeVisible();
-  await page.locator("#projectSearch").fill("PLC");
-  await expect(page.locator('#projectTree [data-sheet="plc"]')).toBeVisible();
-  await expect(page.locator('#projectTree [data-sheet="power"]')).toBeHidden();
-  await page.locator("#projectSearch").fill("");
-  await expect(page.locator('#projectTree [data-sheet="power"]')).toBeVisible();
+  for (let visit = 0; visit < 2; visit++) {
+    await expect(page.locator("[data-project-section]")).toHaveCount(4);
+    await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(0);
+    await expect(page.locator("#sheetTabs [data-sheet]")).toHaveCount(0);
+    await expect(page.locator("[data-project-root] b")).toHaveText("New Project");
+    await expect(page.locator("#projectTree")).not.toContainText("Z0010000");
+    if (visit === 0) await page.reload();
+  }
   const before = await page.locator(".drawing").boundingBox();
   await page.locator('[data-module="Electrical"]').click();
   await expect(page.locator("#moduleMenu")).toBeVisible();
