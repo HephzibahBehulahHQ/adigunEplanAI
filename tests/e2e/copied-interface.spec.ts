@@ -102,7 +102,7 @@ test("new project wires attach to terminals, follow edits, undo and reopen", asy
   await page
     .locator("#userDrawings .drawing-object")
     .filter({ has: page.locator("title", { hasText: "R1 · Resistor" }) })
-    .locator("rect")
+    .locator(".component-hit-target")
     .click();
   await page.locator('[data-object-coordinate="x"]').fill("450");
   await page.locator('[data-object-coordinate="x"]').press("Tab");
@@ -181,7 +181,9 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
     }),
   });
   await expect(placed).toHaveCount(1);
-  await expect(placed.locator("rect")).toHaveCount(1);
+  await expect(placed.locator("rect:not(.component-hit-target)")).toHaveCount(
+    1,
+  );
   await expect(placed.locator("circle")).toHaveCount(2);
   const downloadEvent = page.waitForEvent("download");
   await page.locator('[data-action="save"]').first().click();
