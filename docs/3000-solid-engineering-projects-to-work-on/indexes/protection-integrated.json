@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-2701",
+    "title": "Equipment bonding and monitoring \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2701.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2702",
+    "title": "Equipment bonding and monitoring \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2702.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2703",
+    "title": "Equipment bonding and monitoring \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2703.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2704",
+    "title": "Equipment bonding and monitoring \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2704.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2705",
+    "title": "Equipment bonding and monitoring \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2705.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2706",
+    "title": "Equipment bonding and monitoring \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2706.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2707",
+    "title": "Equipment bonding and monitoring \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2707.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2708",
+    "title": "Equipment bonding and monitoring \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2708.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2709",
+    "title": "Equipment bonding and monitoring \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2709.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2710",
+    "title": "Equipment bonding and monitoring \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2710.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2711",
+    "title": "Equipment bonding and monitoring \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2711.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2712",
+    "title": "Equipment bonding and monitoring \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2712.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2713",
+    "title": "Equipment bonding and monitoring \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2713.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2714",
+    "title": "Equipment bonding and monitoring \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2714.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2715",
+    "title": "Equipment bonding and monitoring \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2715.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2716",
+    "title": "Equipment bonding and monitoring \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2716.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2717",
+    "title": "Equipment bonding and monitoring \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2717.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2718",
+    "title": "Equipment bonding and monitoring \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2718.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2719",
+    "title": "Equipment bonding and monitoring \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2719.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2720",
+    "title": "Equipment bonding and monitoring \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2720.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2721",
+    "title": "Equipment bonding and monitoring \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2721.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2722",
+    "title": "Equipment bonding and monitoring \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2722.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2723",
+    "title": "Equipment bonding and monitoring \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2723.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2724",
+    "title": "Equipment bonding and monitoring \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2724.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2725",
+    "title": "Equipment bonding and monitoring \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2725.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2726",
+    "title": "Equipment bonding and monitoring \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2726.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2727",
+    "title": "Equipment bonding and monitoring \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2727.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2728",
+    "title": "Equipment bonding and monitoring \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2728.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2729",
+    "title": "Equipment bonding and monitoring \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2729.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2730",
+    "title": "Equipment bonding and monitoring \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Equipment bonding and monitoring",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2730.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2731",
+    "title": "Surge-protection coordination panel \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2731.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2732",
+    "title": "Surge-protection coordination panel \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2732.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2733",
+    "title": "Surge-protection coordination panel \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2733.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2734",
+    "title": "Surge-protection coordination panel \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2734.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2735",
+    "title": "Surge-protection coordination panel \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2735.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2736",
+    "title": "Surge-protection coordination panel \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2736.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2737",
+    "title": "Surge-protection coordination panel \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2737.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2738",
+    "title": "Surge-protection coordination panel \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2738.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2739",
+    "title": "Surge-protection coordination panel \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2739.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2740",
+    "title": "Surge-protection coordination panel \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2740.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2741",
+    "title": "Surge-protection coordination panel \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2741.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2742",
+    "title": "Surge-protection coordination panel \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2742.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2743",
+    "title": "Surge-protection coordination panel \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2743.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2744",
+    "title": "Surge-protection coordination panel \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2744.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2745",
+    "title": "Surge-protection coordination panel \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2745.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2746",
+    "title": "Surge-protection coordination panel \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2746.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2747",
+    "title": "Surge-protection coordination panel \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2747.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2748",
+    "title": "Surge-protection coordination panel \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2748.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2749",
+    "title": "Surge-protection coordination panel \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2749.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2750",
+    "title": "Surge-protection coordination panel \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2750.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2751",
+    "title": "Surge-protection coordination panel \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2751.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2752",
+    "title": "Surge-protection coordination panel \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2752.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2753",
+    "title": "Surge-protection coordination panel \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2753.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2754",
+    "title": "Surge-protection coordination panel \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2754.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2755",
+    "title": "Surge-protection coordination panel \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2755.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2756",
+    "title": "Surge-protection coordination panel \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2756.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2757",
+    "title": "Surge-protection coordination panel \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2757.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2758",
+    "title": "Surge-protection coordination panel \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2758.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2759",
+    "title": "Surge-protection coordination panel \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2759.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2760",
+    "title": "Surge-protection coordination panel \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Surge-protection coordination panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2760.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2761",
+    "title": "Residual-current monitoring installation \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2761.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2762",
+    "title": "Residual-current monitoring installation \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2762.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2763",
+    "title": "Residual-current monitoring installation \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2763.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2764",
+    "title": "Residual-current monitoring installation \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2764.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2765",
+    "title": "Residual-current monitoring installation \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2765.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2766",
+    "title": "Residual-current monitoring installation \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2766.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2767",
+    "title": "Residual-current monitoring installation \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2767.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2768",
+    "title": "Residual-current monitoring installation \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2768.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2769",
+    "title": "Residual-current monitoring installation \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2769.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2770",
+    "title": "Residual-current monitoring installation \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2770.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2771",
+    "title": "Residual-current monitoring installation \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2771.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2772",
+    "title": "Residual-current monitoring installation \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2772.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2773",
+    "title": "Residual-current monitoring installation \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2773.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2774",
+    "title": "Residual-current monitoring installation \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2774.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2775",
+    "title": "Residual-current monitoring installation \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2775.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2776",
+    "title": "Residual-current monitoring installation \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2776.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2777",
+    "title": "Residual-current monitoring installation \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2777.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2778",
+    "title": "Residual-current monitoring installation \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2778.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2779",
+    "title": "Residual-current monitoring installation \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2779.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2780",
+    "title": "Residual-current monitoring installation \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2780.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2781",
+    "title": "Residual-current monitoring installation \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2781.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2782",
+    "title": "Residual-current monitoring installation \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2782.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2783",
+    "title": "Residual-current monitoring installation \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2783.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2784",
+    "title": "Residual-current monitoring installation \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2784.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2785",
+    "title": "Residual-current monitoring installation \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2785.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2786",
+    "title": "Residual-current monitoring installation \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2786.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2787",
+    "title": "Residual-current monitoring installation \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2787.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2788",
+    "title": "Residual-current monitoring installation \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2788.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2789",
+    "title": "Residual-current monitoring installation \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2789.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2790",
+    "title": "Residual-current monitoring installation \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Residual-current monitoring installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2790.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2791",
+    "title": "Insulation-monitoring interface \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2791.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2792",
+    "title": "Insulation-monitoring interface \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2792.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2793",
+    "title": "Insulation-monitoring interface \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2793.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2794",
+    "title": "Insulation-monitoring interface \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2794.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2795",
+    "title": "Insulation-monitoring interface \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2795.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2796",
+    "title": "Insulation-monitoring interface \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2796.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2797",
+    "title": "Insulation-monitoring interface \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2797.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2798",
+    "title": "Insulation-monitoring interface \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2798.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2799",
+    "title": "Insulation-monitoring interface \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2799.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2800",
+    "title": "Insulation-monitoring interface \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2800.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2801",
+    "title": "Insulation-monitoring interface \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2801.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2802",
+    "title": "Insulation-monitoring interface \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2802.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2803",
+    "title": "Insulation-monitoring interface \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2803.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2804",
+    "title": "Insulation-monitoring interface \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2804.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2805",
+    "title": "Insulation-monitoring interface \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2805.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2806",
+    "title": "Insulation-monitoring interface \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2806.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2807",
+    "title": "Insulation-monitoring interface \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2807.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2808",
+    "title": "Insulation-monitoring interface \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2808.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2809",
+    "title": "Insulation-monitoring interface \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2809.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2810",
+    "title": "Insulation-monitoring interface \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2810.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2811",
+    "title": "Insulation-monitoring interface \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2811.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2812",
+    "title": "Insulation-monitoring interface \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2812.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2813",
+    "title": "Insulation-monitoring interface \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2813.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2814",
+    "title": "Insulation-monitoring interface \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2814.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2815",
+    "title": "Insulation-monitoring interface \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2815.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2816",
+    "title": "Insulation-monitoring interface \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2816.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2817",
+    "title": "Insulation-monitoring interface \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2817.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2818",
+    "title": "Insulation-monitoring interface \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2818.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2819",
+    "title": "Insulation-monitoring interface \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2819.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2820",
+    "title": "Insulation-monitoring interface \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Insulation-monitoring interface",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2820.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2821",
+    "title": "Lightning equipotential-bonding documentation \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2821.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2822",
+    "title": "Lightning equipotential-bonding documentation \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2822.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2823",
+    "title": "Lightning equipotential-bonding documentation \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2823.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2824",
+    "title": "Lightning equipotential-bonding documentation \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2824.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2825",
+    "title": "Lightning equipotential-bonding documentation \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2825.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2826",
+    "title": "Lightning equipotential-bonding documentation \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2826.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2827",
+    "title": "Lightning equipotential-bonding documentation \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2827.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2828",
+    "title": "Lightning equipotential-bonding documentation \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2828.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2829",
+    "title": "Lightning equipotential-bonding documentation \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2829.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2830",
+    "title": "Lightning equipotential-bonding documentation \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2830.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2831",
+    "title": "Lightning equipotential-bonding documentation \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2831.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2832",
+    "title": "Lightning equipotential-bonding documentation \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2832.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2833",
+    "title": "Lightning equipotential-bonding documentation \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2833.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2834",
+    "title": "Lightning equipotential-bonding documentation \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2834.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2835",
+    "title": "Lightning equipotential-bonding documentation \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2835.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2836",
+    "title": "Lightning equipotential-bonding documentation \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2836.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2837",
+    "title": "Lightning equipotential-bonding documentation \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2837.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2838",
+    "title": "Lightning equipotential-bonding documentation \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2838.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2839",
+    "title": "Lightning equipotential-bonding documentation \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2839.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2840",
+    "title": "Lightning equipotential-bonding documentation \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2840.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2841",
+    "title": "Lightning equipotential-bonding documentation \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2841.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2842",
+    "title": "Lightning equipotential-bonding documentation \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2842.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2843",
+    "title": "Lightning equipotential-bonding documentation \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2843.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2844",
+    "title": "Lightning equipotential-bonding documentation \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2844.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2845",
+    "title": "Lightning equipotential-bonding documentation \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2845.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2846",
+    "title": "Lightning equipotential-bonding documentation \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2846.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2847",
+    "title": "Lightning equipotential-bonding documentation \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2847.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2848",
+    "title": "Lightning equipotential-bonding documentation \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2848.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2849",
+    "title": "Lightning equipotential-bonding documentation \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2849.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2850",
+    "title": "Lightning equipotential-bonding documentation \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Lightning equipotential-bonding documentation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2850.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2851",
+    "title": "Workshop integrated electrical services \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2851.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2852",
+    "title": "Workshop integrated electrical services \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2852.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2853",
+    "title": "Workshop integrated electrical services \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2853.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2854",
+    "title": "Workshop integrated electrical services \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2854.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2855",
+    "title": "Workshop integrated electrical services \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2855.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2856",
+    "title": "Workshop integrated electrical services \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2856.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2857",
+    "title": "Workshop integrated electrical services \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2857.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2858",
+    "title": "Workshop integrated electrical services \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2858.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2859",
+    "title": "Workshop integrated electrical services \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2859.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2860",
+    "title": "Workshop integrated electrical services \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2860.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2861",
+    "title": "Workshop integrated electrical services \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2861.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2862",
+    "title": "Workshop integrated electrical services \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2862.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2863",
+    "title": "Workshop integrated electrical services \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2863.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2864",
+    "title": "Workshop integrated electrical services \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2864.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2865",
+    "title": "Workshop integrated electrical services \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2865.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2866",
+    "title": "Workshop integrated electrical services \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2866.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2867",
+    "title": "Workshop integrated electrical services \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2867.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2868",
+    "title": "Workshop integrated electrical services \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2868.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2869",
+    "title": "Workshop integrated electrical services \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2869.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2870",
+    "title": "Workshop integrated electrical services \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2870.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2871",
+    "title": "Workshop integrated electrical services \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2871.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2872",
+    "title": "Workshop integrated electrical services \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2872.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2873",
+    "title": "Workshop integrated electrical services \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2873.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2874",
+    "title": "Workshop integrated electrical services \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2874.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2875",
+    "title": "Workshop integrated electrical services \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2875.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2876",
+    "title": "Workshop integrated electrical services \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2876.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2877",
+    "title": "Workshop integrated electrical services \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2877.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2878",
+    "title": "Workshop integrated electrical services \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2878.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2879",
+    "title": "Workshop integrated electrical services \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2879.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2880",
+    "title": "Workshop integrated electrical services \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Workshop integrated electrical services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2880.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2881",
+    "title": "Water-treatment integrated cabinet \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2881.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2882",
+    "title": "Water-treatment integrated cabinet \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2882.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2883",
+    "title": "Water-treatment integrated cabinet \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2883.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2884",
+    "title": "Water-treatment integrated cabinet \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2884.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2885",
+    "title": "Water-treatment integrated cabinet \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2885.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2886",
+    "title": "Water-treatment integrated cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2886.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2887",
+    "title": "Water-treatment integrated cabinet \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2887.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2888",
+    "title": "Water-treatment integrated cabinet \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2888.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2889",
+    "title": "Water-treatment integrated cabinet \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2889.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2890",
+    "title": "Water-treatment integrated cabinet \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2890.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2891",
+    "title": "Water-treatment integrated cabinet \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2891.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2892",
+    "title": "Water-treatment integrated cabinet \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2892.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2893",
+    "title": "Water-treatment integrated cabinet \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2893.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2894",
+    "title": "Water-treatment integrated cabinet \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2894.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2895",
+    "title": "Water-treatment integrated cabinet \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2895.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2896",
+    "title": "Water-treatment integrated cabinet \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2896.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2897",
+    "title": "Water-treatment integrated cabinet \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2897.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2898",
+    "title": "Water-treatment integrated cabinet \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2898.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2899",
+    "title": "Water-treatment integrated cabinet \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2899.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2900",
+    "title": "Water-treatment integrated cabinet \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2900.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2901",
+    "title": "Water-treatment integrated cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2901.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2902",
+    "title": "Water-treatment integrated cabinet \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2902.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2903",
+    "title": "Water-treatment integrated cabinet \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2903.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2904",
+    "title": "Water-treatment integrated cabinet \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2904.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2905",
+    "title": "Water-treatment integrated cabinet \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2905.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2906",
+    "title": "Water-treatment integrated cabinet \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2906.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2907",
+    "title": "Water-treatment integrated cabinet \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2907.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2908",
+    "title": "Water-treatment integrated cabinet \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2908.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2909",
+    "title": "Water-treatment integrated cabinet \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2909.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2910",
+    "title": "Water-treatment integrated cabinet \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Water-treatment integrated cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2910.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2911",
+    "title": "Agricultural service installation \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2911.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2912",
+    "title": "Agricultural service installation \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2912.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2913",
+    "title": "Agricultural service installation \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2913.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2914",
+    "title": "Agricultural service installation \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2914.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2915",
+    "title": "Agricultural service installation \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2915.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2916",
+    "title": "Agricultural service installation \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2916.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2917",
+    "title": "Agricultural service installation \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2917.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2918",
+    "title": "Agricultural service installation \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2918.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2919",
+    "title": "Agricultural service installation \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2919.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2920",
+    "title": "Agricultural service installation \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2920.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2921",
+    "title": "Agricultural service installation \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2921.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2922",
+    "title": "Agricultural service installation \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2922.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2923",
+    "title": "Agricultural service installation \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2923.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2924",
+    "title": "Agricultural service installation \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2924.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2925",
+    "title": "Agricultural service installation \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2925.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2926",
+    "title": "Agricultural service installation \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2926.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2927",
+    "title": "Agricultural service installation \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2927.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2928",
+    "title": "Agricultural service installation \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2928.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2929",
+    "title": "Agricultural service installation \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2929.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2930",
+    "title": "Agricultural service installation \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2930.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2931",
+    "title": "Agricultural service installation \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2931.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2932",
+    "title": "Agricultural service installation \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2932.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2933",
+    "title": "Agricultural service installation \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2933.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2934",
+    "title": "Agricultural service installation \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2934.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2935",
+    "title": "Agricultural service installation \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2935.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2936",
+    "title": "Agricultural service installation \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2936.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2937",
+    "title": "Agricultural service installation \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2937.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2938",
+    "title": "Agricultural service installation \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2938.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2939",
+    "title": "Agricultural service installation \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2939.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2940",
+    "title": "Agricultural service installation \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Agricultural service installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2940.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2941",
+    "title": "Telecom shelter auxiliary services \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2941.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2942",
+    "title": "Telecom shelter auxiliary services \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2942.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2943",
+    "title": "Telecom shelter auxiliary services \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2943.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2944",
+    "title": "Telecom shelter auxiliary services \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2944.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2945",
+    "title": "Telecom shelter auxiliary services \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2945.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2946",
+    "title": "Telecom shelter auxiliary services \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2946.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2947",
+    "title": "Telecom shelter auxiliary services \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2947.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2948",
+    "title": "Telecom shelter auxiliary services \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2948.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2949",
+    "title": "Telecom shelter auxiliary services \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2949.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2950",
+    "title": "Telecom shelter auxiliary services \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2950.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2951",
+    "title": "Telecom shelter auxiliary services \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2951.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2952",
+    "title": "Telecom shelter auxiliary services \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2952.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2953",
+    "title": "Telecom shelter auxiliary services \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2953.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2954",
+    "title": "Telecom shelter auxiliary services \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2954.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2955",
+    "title": "Telecom shelter auxiliary services \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2955.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2956",
+    "title": "Telecom shelter auxiliary services \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2956.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2957",
+    "title": "Telecom shelter auxiliary services \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2957.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2958",
+    "title": "Telecom shelter auxiliary services \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2958.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2959",
+    "title": "Telecom shelter auxiliary services \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2959.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2960",
+    "title": "Telecom shelter auxiliary services \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2960.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2961",
+    "title": "Telecom shelter auxiliary services \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2961.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2962",
+    "title": "Telecom shelter auxiliary services \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2962.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2963",
+    "title": "Telecom shelter auxiliary services \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2963.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2964",
+    "title": "Telecom shelter auxiliary services \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2964.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2965",
+    "title": "Telecom shelter auxiliary services \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2965.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2966",
+    "title": "Telecom shelter auxiliary services \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2966.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2967",
+    "title": "Telecom shelter auxiliary services \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2967.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2968",
+    "title": "Telecom shelter auxiliary services \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2968.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2969",
+    "title": "Telecom shelter auxiliary services \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2969.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2970",
+    "title": "Telecom shelter auxiliary services \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Telecom shelter auxiliary services",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-2970.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2971",
+    "title": "Critical utility monitoring panel \u2014 Local manual baseline",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Local manual baseline",
+    "path": "projects/protection-integrated/ENG-2971.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2972",
+    "title": "Critical utility monitoring panel \u2014 Remote supervisory operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/protection-integrated/ENG-2972.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2973",
+    "title": "Critical utility monitoring panel \u2014 Scheduled operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Scheduled operation",
+    "path": "projects/protection-integrated/ENG-2973.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2974",
+    "title": "Critical utility monitoring panel \u2014 Demand-controlled enable",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/protection-integrated/ENG-2974.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2975",
+    "title": "Critical utility monitoring panel \u2014 Supply undervoltage supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/protection-integrated/ENG-2975.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2976",
+    "title": "Critical utility monitoring panel \u2014 Phase and supply-quality supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/protection-integrated/ENG-2976.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2977",
+    "title": "Critical utility monitoring panel \u2014 Individual branch metering",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Individual branch metering",
+    "path": "projects/protection-integrated/ENG-2977.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2978",
+    "title": "Critical utility monitoring panel \u2014 Whole-system energy reporting",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/protection-integrated/ENG-2978.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2979",
+    "title": "Critical utility monitoring panel \u2014 Two-zone operation",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Two-zone operation",
+    "path": "projects/protection-integrated/ENG-2979.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2980",
+    "title": "Critical utility monitoring panel \u2014 Three-stage load sequencing",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/protection-integrated/ENG-2980.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2981",
+    "title": "Critical utility monitoring panel \u2014 Priority load shedding",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Priority load shedding",
+    "path": "projects/protection-integrated/ENG-2981.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2982",
+    "title": "Critical utility monitoring panel \u2014 Buffered control power",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Buffered control power",
+    "path": "projects/protection-integrated/ENG-2982.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2983",
+    "title": "Critical utility monitoring panel \u2014 Redundant control-power inputs",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/protection-integrated/ENG-2983.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2984",
+    "title": "Critical utility monitoring panel \u2014 Environmental temperature supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/protection-integrated/ENG-2984.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2985",
+    "title": "Critical utility monitoring panel \u2014 Condensation management",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Condensation management",
+    "path": "projects/protection-integrated/ENG-2985.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2986",
+    "title": "Critical utility monitoring panel \u2014 Door and enclosure supervision",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/protection-integrated/ENG-2986.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2987",
+    "title": "Critical utility monitoring panel \u2014 Maintenance test mode",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/protection-integrated/ENG-2987.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2988",
+    "title": "Critical utility monitoring panel \u2014 Remote alarm annunciation",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/protection-integrated/ENG-2988.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2989",
+    "title": "Critical utility monitoring panel \u2014 First-out fault capture",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "First-out fault capture",
+    "path": "projects/protection-integrated/ENG-2989.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2990",
+    "title": "Critical utility monitoring panel \u2014 Event and operating-hour logging",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/protection-integrated/ENG-2990.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2991",
+    "title": "Critical utility monitoring panel \u2014 Ethernet supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2991.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2992",
+    "title": "Critical utility monitoring panel \u2014 Serial supervisory gateway",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/protection-integrated/ENG-2992.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2993",
+    "title": "Critical utility monitoring panel \u2014 Hardwired permissive chain",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/protection-integrated/ENG-2993.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2994",
+    "title": "Critical utility monitoring panel \u2014 Controlled shutdown interface",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/protection-integrated/ENG-2994.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2995",
+    "title": "Critical utility monitoring panel \u2014 Commissioning simulation terminals",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/protection-integrated/ENG-2995.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2996",
+    "title": "Critical utility monitoring panel \u2014 Modular field connections",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Modular field connections",
+    "path": "projects/protection-integrated/ENG-2996.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2997",
+    "title": "Critical utility monitoring panel \u2014 Distributed field enclosure",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/protection-integrated/ENG-2997.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2998",
+    "title": "Critical utility monitoring panel \u2014 Future expansion provision",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Future expansion provision",
+    "path": "projects/protection-integrated/ENG-2998.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2999",
+    "title": "Critical utility monitoring panel \u2014 Supply restoration management",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Supply restoration management",
+    "path": "projects/protection-integrated/ENG-2999.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-3000",
+    "title": "Critical utility monitoring panel \u2014 Integrated diagnostics package",
+    "domain": "protection-integrated",
+    "baseSystem": "Critical utility monitoring panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/protection-integrated/ENG-3000.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
