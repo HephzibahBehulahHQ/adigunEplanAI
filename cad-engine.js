@@ -1098,8 +1098,8 @@
     const ut='phoenix-contact-3044076',uk='phoenix-contact-3004362';
     if(example.id==='hardware-plc-input'){
       device(ut,'X1',160,204,'External protected 24 V DC supply. Source selection and protection remain project-specific.');
-      device(ut,'X2',160,222,'External DC return shared by CPU supply M and input common 1M.');
-      device(ut,'X3',450,240,'Functional-earth interface to engineered cabinet bonding; this feed-through terminal is not a PE rail-bonding terminal.');
+      device(ut,'X2',400,222,'External DC return shared by CPU supply M and input common 1M.');
+      device(ut,'X3',500,240,'Functional-earth interface to engineered cabinet bonding; this feed-through terminal is not a PE rail-bonding terminal.');
       device('schneider-electric-xb5aa31','S1',350,312,'NO momentary contact to CPU X10:7 (DI a.0); PLC address/program configuration is not simulated.');
       device('siemens-6es7212-1ae40-0xb0','A1',750,330,'Sinking input with 1M on DC return. Sensor supply, outputs and unused analog inputs require separate project engineering; see manufacturer wiring notes.');
       connect('X1','connection-2','A1','x10-1');connect('X2','connection-2','A1','x10-2');connect('X3','connection-2','A1','x10-3');
