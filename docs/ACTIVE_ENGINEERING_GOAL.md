@@ -1,5 +1,11 @@
 # Active engineering goal — 2026-11-14
 
+## Explorer discoverability correction — 2026-11-14
+
+The owner could not find examples through Project Explorer. PR #58 (8b007d26ce2bf40d18b34b06bc7ee08b275bdd0c) exposes all six templates as searchable rows at the top of the existing explorer. Activate a row, then use the existing Create from selected example button. Clicking a row alone does not replace current work. Panel navigation now honors hidden state despite flex styles, and returning to Explorer clears stale search filters and scrolls to the examples. No new menu or CSS was added.
+
+Premerge CI 43641726225 and 43641722773 passed with nine browser tests; local checks passed with 367 unit/tooling tests. Pages 43641854901 succeeded. Live verification showed all six rows and opened the PLC input example with 13 drawing objects through Explorer. Screenshot: work/live-project-examples.jpg. Retain this route in future changes; examples must not be discoverable only inside New Project. These are six examples, not a large catalog.
+
 ## Current state — supersedes older pending-run notes below
 
 - Engineering workflow goal achieved and verified on 2026-11-14. Preserve the approved interface; any subsequent work uses existing menus and controls.
