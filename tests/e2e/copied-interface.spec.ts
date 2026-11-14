@@ -329,3 +329,34 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
   );
   expect(errors).toEqual([]);
 });
+
+test("empty active sheet retains its definition through save and reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Empty sheets regression");
+  await page.locator("#createProject").click();
+  const initial = await saveDrawing(page, "empty-initial");
+  await page.locator('#projectTree [data-sheet="power"]').click();
+  const saved = await saveDrawing(page, "empty-active");
+  expect(saved.data.activeSheet).toBe("power");
+  expect(saved.data.objects).toEqual([]);
+  expect(saved.data.sheets).toEqual(
+    expect.arrayContaining(initial.data.sheets),
+  );
+  const definition = saved.data.sheets.find(
+    (sheet: { id: string }) => sheet.id === "power",
+  );
+  expect(definition).toBeDefined();
+  expect(definition.name).toBeTruthy();
+  expect(
+    new Set(saved.data.sheets.map((sheet: { id: string }) => sheet.id)).size,
+  ).toBe(saved.data.sheets.length);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "empty-reopened");
+  expect(reopened.data.activeSheet).toBe("power");
+  expect(reopened.data.sheets).toEqual(saved.data.sheets);
+  expect(reopened.data.project).toBe("Empty sheets regression");
+});
