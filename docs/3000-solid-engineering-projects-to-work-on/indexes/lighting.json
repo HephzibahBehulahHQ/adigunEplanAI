@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-2101",
+    "title": "Office lighting control \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2101.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2102",
+    "title": "Office lighting control \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2102.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2103",
+    "title": "Office lighting control \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2103.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2104",
+    "title": "Office lighting control \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2104.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2105",
+    "title": "Office lighting control \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2105.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2106",
+    "title": "Office lighting control \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2106.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2107",
+    "title": "Office lighting control \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2107.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2108",
+    "title": "Office lighting control \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2108.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2109",
+    "title": "Office lighting control \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2109.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2110",
+    "title": "Office lighting control \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2110.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2111",
+    "title": "Office lighting control \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2111.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2112",
+    "title": "Office lighting control \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2112.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2113",
+    "title": "Office lighting control \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2113.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2114",
+    "title": "Office lighting control \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2114.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2115",
+    "title": "Office lighting control \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2115.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2116",
+    "title": "Office lighting control \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2116.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2117",
+    "title": "Office lighting control \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2117.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2118",
+    "title": "Office lighting control \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2118.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2119",
+    "title": "Office lighting control \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2119.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2120",
+    "title": "Office lighting control \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2120.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2121",
+    "title": "Office lighting control \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2121.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2122",
+    "title": "Office lighting control \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2122.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2123",
+    "title": "Office lighting control \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2123.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2124",
+    "title": "Office lighting control \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2124.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2125",
+    "title": "Office lighting control \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2125.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2126",
+    "title": "Office lighting control \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2126.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2127",
+    "title": "Office lighting control \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2127.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2128",
+    "title": "Office lighting control \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2128.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2129",
+    "title": "Office lighting control \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2129.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2130",
+    "title": "Office lighting control \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Office lighting control",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2130.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2131",
+    "title": "Industrial high-bay lighting \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2131.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2132",
+    "title": "Industrial high-bay lighting \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2132.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2133",
+    "title": "Industrial high-bay lighting \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2133.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2134",
+    "title": "Industrial high-bay lighting \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2134.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2135",
+    "title": "Industrial high-bay lighting \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2135.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2136",
+    "title": "Industrial high-bay lighting \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2136.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2137",
+    "title": "Industrial high-bay lighting \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2137.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2138",
+    "title": "Industrial high-bay lighting \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2138.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2139",
+    "title": "Industrial high-bay lighting \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2139.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2140",
+    "title": "Industrial high-bay lighting \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2140.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2141",
+    "title": "Industrial high-bay lighting \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2141.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2142",
+    "title": "Industrial high-bay lighting \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2142.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2143",
+    "title": "Industrial high-bay lighting \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2143.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2144",
+    "title": "Industrial high-bay lighting \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2144.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2145",
+    "title": "Industrial high-bay lighting \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2145.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2146",
+    "title": "Industrial high-bay lighting \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2146.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2147",
+    "title": "Industrial high-bay lighting \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2147.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2148",
+    "title": "Industrial high-bay lighting \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2148.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2149",
+    "title": "Industrial high-bay lighting \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2149.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2150",
+    "title": "Industrial high-bay lighting \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2150.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2151",
+    "title": "Industrial high-bay lighting \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2151.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2152",
+    "title": "Industrial high-bay lighting \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2152.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2153",
+    "title": "Industrial high-bay lighting \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2153.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2154",
+    "title": "Industrial high-bay lighting \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2154.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2155",
+    "title": "Industrial high-bay lighting \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2155.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2156",
+    "title": "Industrial high-bay lighting \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2156.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2157",
+    "title": "Industrial high-bay lighting \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2157.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2158",
+    "title": "Industrial high-bay lighting \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2158.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2159",
+    "title": "Industrial high-bay lighting \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2159.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2160",
+    "title": "Industrial high-bay lighting \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Industrial high-bay lighting",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2160.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2161",
+    "title": "External area lighting \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2161.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2162",
+    "title": "External area lighting \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2162.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2163",
+    "title": "External area lighting \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2163.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2164",
+    "title": "External area lighting \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2164.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2165",
+    "title": "External area lighting \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2165.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2166",
+    "title": "External area lighting \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2166.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2167",
+    "title": "External area lighting \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2167.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2168",
+    "title": "External area lighting \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2168.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2169",
+    "title": "External area lighting \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2169.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2170",
+    "title": "External area lighting \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2170.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2171",
+    "title": "External area lighting \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2171.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2172",
+    "title": "External area lighting \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2172.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2173",
+    "title": "External area lighting \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2173.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2174",
+    "title": "External area lighting \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2174.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2175",
+    "title": "External area lighting \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2175.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2176",
+    "title": "External area lighting \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2176.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2177",
+    "title": "External area lighting \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2177.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2178",
+    "title": "External area lighting \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2178.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2179",
+    "title": "External area lighting \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2179.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2180",
+    "title": "External area lighting \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2180.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2181",
+    "title": "External area lighting \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2181.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2182",
+    "title": "External area lighting \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2182.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2183",
+    "title": "External area lighting \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2183.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2184",
+    "title": "External area lighting \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2184.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2185",
+    "title": "External area lighting \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2185.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2186",
+    "title": "External area lighting \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2186.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2187",
+    "title": "External area lighting \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2187.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2188",
+    "title": "External area lighting \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2188.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2189",
+    "title": "External area lighting \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2189.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2190",
+    "title": "External area lighting \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "External area lighting",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2190.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2191",
+    "title": "Stairwell lighting control \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2191.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2192",
+    "title": "Stairwell lighting control \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2192.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2193",
+    "title": "Stairwell lighting control \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2193.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2194",
+    "title": "Stairwell lighting control \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2194.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2195",
+    "title": "Stairwell lighting control \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2195.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2196",
+    "title": "Stairwell lighting control \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2196.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2197",
+    "title": "Stairwell lighting control \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2197.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2198",
+    "title": "Stairwell lighting control \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2198.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2199",
+    "title": "Stairwell lighting control \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2199.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2200",
+    "title": "Stairwell lighting control \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2200.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2201",
+    "title": "Stairwell lighting control \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2201.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2202",
+    "title": "Stairwell lighting control \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2202.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2203",
+    "title": "Stairwell lighting control \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2203.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2204",
+    "title": "Stairwell lighting control \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2204.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2205",
+    "title": "Stairwell lighting control \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2205.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2206",
+    "title": "Stairwell lighting control \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2206.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2207",
+    "title": "Stairwell lighting control \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2207.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2208",
+    "title": "Stairwell lighting control \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2208.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2209",
+    "title": "Stairwell lighting control \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2209.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2210",
+    "title": "Stairwell lighting control \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2210.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2211",
+    "title": "Stairwell lighting control \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2211.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2212",
+    "title": "Stairwell lighting control \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2212.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2213",
+    "title": "Stairwell lighting control \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2213.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2214",
+    "title": "Stairwell lighting control \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2214.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2215",
+    "title": "Stairwell lighting control \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2215.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2216",
+    "title": "Stairwell lighting control \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2216.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2217",
+    "title": "Stairwell lighting control \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2217.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2218",
+    "title": "Stairwell lighting control \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2218.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2219",
+    "title": "Stairwell lighting control \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2219.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2220",
+    "title": "Stairwell lighting control \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Stairwell lighting control",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2220.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2221",
+    "title": "Architectural lighting cabinet \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2221.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2222",
+    "title": "Architectural lighting cabinet \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2222.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2223",
+    "title": "Architectural lighting cabinet \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2223.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2224",
+    "title": "Architectural lighting cabinet \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2224.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2225",
+    "title": "Architectural lighting cabinet \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2225.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2226",
+    "title": "Architectural lighting cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2226.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2227",
+    "title": "Architectural lighting cabinet \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2227.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2228",
+    "title": "Architectural lighting cabinet \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2228.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2229",
+    "title": "Architectural lighting cabinet \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2229.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2230",
+    "title": "Architectural lighting cabinet \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2230.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2231",
+    "title": "Architectural lighting cabinet \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2231.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2232",
+    "title": "Architectural lighting cabinet \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2232.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2233",
+    "title": "Architectural lighting cabinet \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2233.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2234",
+    "title": "Architectural lighting cabinet \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2234.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2235",
+    "title": "Architectural lighting cabinet \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2235.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2236",
+    "title": "Architectural lighting cabinet \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2236.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2237",
+    "title": "Architectural lighting cabinet \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2237.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2238",
+    "title": "Architectural lighting cabinet \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2238.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2239",
+    "title": "Architectural lighting cabinet \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2239.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2240",
+    "title": "Architectural lighting cabinet \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2240.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2241",
+    "title": "Architectural lighting cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2241.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2242",
+    "title": "Architectural lighting cabinet \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2242.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2243",
+    "title": "Architectural lighting cabinet \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2243.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2244",
+    "title": "Architectural lighting cabinet \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2244.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2245",
+    "title": "Architectural lighting cabinet \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2245.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2246",
+    "title": "Architectural lighting cabinet \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2246.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2247",
+    "title": "Architectural lighting cabinet \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2247.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2248",
+    "title": "Architectural lighting cabinet \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2248.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2249",
+    "title": "Architectural lighting cabinet \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2249.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2250",
+    "title": "Architectural lighting cabinet \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Architectural lighting cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2250.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2251",
+    "title": "Sports-hall lighting system \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2251.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2252",
+    "title": "Sports-hall lighting system \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2252.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2253",
+    "title": "Sports-hall lighting system \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2253.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2254",
+    "title": "Sports-hall lighting system \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2254.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2255",
+    "title": "Sports-hall lighting system \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2255.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2256",
+    "title": "Sports-hall lighting system \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2256.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2257",
+    "title": "Sports-hall lighting system \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2257.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2258",
+    "title": "Sports-hall lighting system \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2258.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2259",
+    "title": "Sports-hall lighting system \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2259.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2260",
+    "title": "Sports-hall lighting system \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2260.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2261",
+    "title": "Sports-hall lighting system \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2261.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2262",
+    "title": "Sports-hall lighting system \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2262.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2263",
+    "title": "Sports-hall lighting system \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2263.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2264",
+    "title": "Sports-hall lighting system \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2264.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2265",
+    "title": "Sports-hall lighting system \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2265.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2266",
+    "title": "Sports-hall lighting system \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2266.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2267",
+    "title": "Sports-hall lighting system \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2267.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2268",
+    "title": "Sports-hall lighting system \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2268.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2269",
+    "title": "Sports-hall lighting system \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2269.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2270",
+    "title": "Sports-hall lighting system \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2270.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2271",
+    "title": "Sports-hall lighting system \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2271.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2272",
+    "title": "Sports-hall lighting system \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2272.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2273",
+    "title": "Sports-hall lighting system \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2273.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2274",
+    "title": "Sports-hall lighting system \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2274.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2275",
+    "title": "Sports-hall lighting system \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2275.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2276",
+    "title": "Sports-hall lighting system \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2276.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2277",
+    "title": "Sports-hall lighting system \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2277.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2278",
+    "title": "Sports-hall lighting system \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2278.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2279",
+    "title": "Sports-hall lighting system \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2279.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2280",
+    "title": "Sports-hall lighting system \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Sports-hall lighting system",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2280.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2281",
+    "title": "Emergency-lighting monitoring interface \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2281.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2282",
+    "title": "Emergency-lighting monitoring interface \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2282.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2283",
+    "title": "Emergency-lighting monitoring interface \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2283.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2284",
+    "title": "Emergency-lighting monitoring interface \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2284.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2285",
+    "title": "Emergency-lighting monitoring interface \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2285.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2286",
+    "title": "Emergency-lighting monitoring interface \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2286.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2287",
+    "title": "Emergency-lighting monitoring interface \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2287.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2288",
+    "title": "Emergency-lighting monitoring interface \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2288.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2289",
+    "title": "Emergency-lighting monitoring interface \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2289.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2290",
+    "title": "Emergency-lighting monitoring interface \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2290.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2291",
+    "title": "Emergency-lighting monitoring interface \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2291.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2292",
+    "title": "Emergency-lighting monitoring interface \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2292.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2293",
+    "title": "Emergency-lighting monitoring interface \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2293.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2294",
+    "title": "Emergency-lighting monitoring interface \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2294.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2295",
+    "title": "Emergency-lighting monitoring interface \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2295.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2296",
+    "title": "Emergency-lighting monitoring interface \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2296.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2297",
+    "title": "Emergency-lighting monitoring interface \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2297.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2298",
+    "title": "Emergency-lighting monitoring interface \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2298.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2299",
+    "title": "Emergency-lighting monitoring interface \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2299.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2300",
+    "title": "Emergency-lighting monitoring interface \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2300.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2301",
+    "title": "Emergency-lighting monitoring interface \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2301.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2302",
+    "title": "Emergency-lighting monitoring interface \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2302.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2303",
+    "title": "Emergency-lighting monitoring interface \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2303.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2304",
+    "title": "Emergency-lighting monitoring interface \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2304.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2305",
+    "title": "Emergency-lighting monitoring interface \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2305.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2306",
+    "title": "Emergency-lighting monitoring interface \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2306.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2307",
+    "title": "Emergency-lighting monitoring interface \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2307.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2308",
+    "title": "Emergency-lighting monitoring interface \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2308.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2309",
+    "title": "Emergency-lighting monitoring interface \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2309.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2310",
+    "title": "Emergency-lighting monitoring interface \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Emergency-lighting monitoring interface",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2310.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2311",
+    "title": "Central-battery lighting distribution \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2311.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2312",
+    "title": "Central-battery lighting distribution \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2312.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2313",
+    "title": "Central-battery lighting distribution \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2313.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2314",
+    "title": "Central-battery lighting distribution \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2314.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2315",
+    "title": "Central-battery lighting distribution \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2315.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2316",
+    "title": "Central-battery lighting distribution \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2316.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2317",
+    "title": "Central-battery lighting distribution \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2317.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2318",
+    "title": "Central-battery lighting distribution \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2318.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2319",
+    "title": "Central-battery lighting distribution \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2319.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2320",
+    "title": "Central-battery lighting distribution \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2320.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2321",
+    "title": "Central-battery lighting distribution \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2321.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2322",
+    "title": "Central-battery lighting distribution \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2322.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2323",
+    "title": "Central-battery lighting distribution \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2323.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2324",
+    "title": "Central-battery lighting distribution \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2324.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2325",
+    "title": "Central-battery lighting distribution \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2325.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2326",
+    "title": "Central-battery lighting distribution \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2326.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2327",
+    "title": "Central-battery lighting distribution \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2327.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2328",
+    "title": "Central-battery lighting distribution \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2328.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2329",
+    "title": "Central-battery lighting distribution \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2329.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2330",
+    "title": "Central-battery lighting distribution \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2330.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2331",
+    "title": "Central-battery lighting distribution \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2331.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2332",
+    "title": "Central-battery lighting distribution \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2332.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2333",
+    "title": "Central-battery lighting distribution \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2333.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2334",
+    "title": "Central-battery lighting distribution \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2334.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2335",
+    "title": "Central-battery lighting distribution \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2335.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2336",
+    "title": "Central-battery lighting distribution \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2336.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2337",
+    "title": "Central-battery lighting distribution \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2337.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2338",
+    "title": "Central-battery lighting distribution \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2338.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2339",
+    "title": "Central-battery lighting distribution \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2339.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2340",
+    "title": "Central-battery lighting distribution \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Central-battery lighting distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2340.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2341",
+    "title": "Car-park occupancy lighting \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2341.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2342",
+    "title": "Car-park occupancy lighting \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2342.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2343",
+    "title": "Car-park occupancy lighting \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2343.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2344",
+    "title": "Car-park occupancy lighting \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2344.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2345",
+    "title": "Car-park occupancy lighting \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2345.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2346",
+    "title": "Car-park occupancy lighting \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2346.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2347",
+    "title": "Car-park occupancy lighting \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2347.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2348",
+    "title": "Car-park occupancy lighting \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2348.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2349",
+    "title": "Car-park occupancy lighting \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2349.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2350",
+    "title": "Car-park occupancy lighting \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2350.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2351",
+    "title": "Car-park occupancy lighting \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2351.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2352",
+    "title": "Car-park occupancy lighting \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2352.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2353",
+    "title": "Car-park occupancy lighting \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2353.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2354",
+    "title": "Car-park occupancy lighting \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2354.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2355",
+    "title": "Car-park occupancy lighting \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2355.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2356",
+    "title": "Car-park occupancy lighting \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2356.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2357",
+    "title": "Car-park occupancy lighting \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2357.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2358",
+    "title": "Car-park occupancy lighting \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2358.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2359",
+    "title": "Car-park occupancy lighting \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2359.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2360",
+    "title": "Car-park occupancy lighting \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2360.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2361",
+    "title": "Car-park occupancy lighting \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2361.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2362",
+    "title": "Car-park occupancy lighting \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2362.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2363",
+    "title": "Car-park occupancy lighting \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2363.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2364",
+    "title": "Car-park occupancy lighting \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2364.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2365",
+    "title": "Car-park occupancy lighting \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2365.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2366",
+    "title": "Car-park occupancy lighting \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2366.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2367",
+    "title": "Car-park occupancy lighting \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2367.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2368",
+    "title": "Car-park occupancy lighting \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2368.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2369",
+    "title": "Car-park occupancy lighting \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2369.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2370",
+    "title": "Car-park occupancy lighting \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Car-park occupancy lighting",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2370.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2371",
+    "title": "Tunnel service lighting \u2014 Local manual baseline",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Local manual baseline",
+    "path": "projects/lighting/ENG-2371.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2372",
+    "title": "Tunnel service lighting \u2014 Remote supervisory operation",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Remote supervisory operation",
+    "path": "projects/lighting/ENG-2372.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2373",
+    "title": "Tunnel service lighting \u2014 Scheduled operation",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Scheduled operation",
+    "path": "projects/lighting/ENG-2373.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2374",
+    "title": "Tunnel service lighting \u2014 Demand-controlled enable",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Demand-controlled enable",
+    "path": "projects/lighting/ENG-2374.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2375",
+    "title": "Tunnel service lighting \u2014 Supply undervoltage supervision",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/lighting/ENG-2375.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2376",
+    "title": "Tunnel service lighting \u2014 Phase and supply-quality supervision",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/lighting/ENG-2376.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2377",
+    "title": "Tunnel service lighting \u2014 Individual branch metering",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Individual branch metering",
+    "path": "projects/lighting/ENG-2377.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2378",
+    "title": "Tunnel service lighting \u2014 Whole-system energy reporting",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/lighting/ENG-2378.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2379",
+    "title": "Tunnel service lighting \u2014 Two-zone operation",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Two-zone operation",
+    "path": "projects/lighting/ENG-2379.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2380",
+    "title": "Tunnel service lighting \u2014 Three-stage load sequencing",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/lighting/ENG-2380.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2381",
+    "title": "Tunnel service lighting \u2014 Priority load shedding",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Priority load shedding",
+    "path": "projects/lighting/ENG-2381.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2382",
+    "title": "Tunnel service lighting \u2014 Buffered control power",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Buffered control power",
+    "path": "projects/lighting/ENG-2382.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2383",
+    "title": "Tunnel service lighting \u2014 Redundant control-power inputs",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/lighting/ENG-2383.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2384",
+    "title": "Tunnel service lighting \u2014 Environmental temperature supervision",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/lighting/ENG-2384.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2385",
+    "title": "Tunnel service lighting \u2014 Condensation management",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Condensation management",
+    "path": "projects/lighting/ENG-2385.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2386",
+    "title": "Tunnel service lighting \u2014 Door and enclosure supervision",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/lighting/ENG-2386.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2387",
+    "title": "Tunnel service lighting \u2014 Maintenance test mode",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Maintenance test mode",
+    "path": "projects/lighting/ENG-2387.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2388",
+    "title": "Tunnel service lighting \u2014 Remote alarm annunciation",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/lighting/ENG-2388.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2389",
+    "title": "Tunnel service lighting \u2014 First-out fault capture",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "First-out fault capture",
+    "path": "projects/lighting/ENG-2389.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2390",
+    "title": "Tunnel service lighting \u2014 Event and operating-hour logging",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/lighting/ENG-2390.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2391",
+    "title": "Tunnel service lighting \u2014 Ethernet supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/lighting/ENG-2391.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2392",
+    "title": "Tunnel service lighting \u2014 Serial supervisory gateway",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/lighting/ENG-2392.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2393",
+    "title": "Tunnel service lighting \u2014 Hardwired permissive chain",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/lighting/ENG-2393.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2394",
+    "title": "Tunnel service lighting \u2014 Controlled shutdown interface",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/lighting/ENG-2394.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2395",
+    "title": "Tunnel service lighting \u2014 Commissioning simulation terminals",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/lighting/ENG-2395.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2396",
+    "title": "Tunnel service lighting \u2014 Modular field connections",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Modular field connections",
+    "path": "projects/lighting/ENG-2396.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2397",
+    "title": "Tunnel service lighting \u2014 Distributed field enclosure",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Distributed field enclosure",
+    "path": "projects/lighting/ENG-2397.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2398",
+    "title": "Tunnel service lighting \u2014 Future expansion provision",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Future expansion provision",
+    "path": "projects/lighting/ENG-2398.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2399",
+    "title": "Tunnel service lighting \u2014 Supply restoration management",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Supply restoration management",
+    "path": "projects/lighting/ENG-2399.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2400",
+    "title": "Tunnel service lighting \u2014 Integrated diagnostics package",
+    "domain": "lighting",
+    "baseSystem": "Tunnel service lighting",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/lighting/ENG-2400.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
