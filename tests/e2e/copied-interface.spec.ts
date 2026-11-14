@@ -163,6 +163,7 @@ test("manufacturer projects open, expose editable parts and preserve connections
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   for (const [id, count, wireCount] of [
+    ["hardware-plc-input", 13, 6],
     ["hardware-relay", 15, 6],
     ["hardware-sensor", 9, 3],
     ["hardware-sitop", 7, 2],
@@ -180,11 +181,13 @@ test("manufacturer projects open, expose editable parts and preserve connections
     await expect(
       page.locator("#inspectorContent .inspector-block").first(),
     ).toContainText(
-      id === "hardware-relay"
-        ? "24 V momentary relay control"
-        : id === "hardware-sensor"
-          ? "PNP proximity sensor terminal wiring"
-          : "SITOP 24 V terminal distribution",
+      id === "hardware-plc-input"
+        ? "PLC digital input bench"
+        : id === "hardware-relay"
+          ? "24 V momentary relay control"
+          : id === "hardware-sensor"
+            ? "PNP proximity sensor terminal wiring"
+            : "SITOP 24 V terminal distribution",
     );
     await expect(page.locator("#inspectorContent")).toContainText(
       /UK 5 N|UT 2,5|SITOP PSU100C/,

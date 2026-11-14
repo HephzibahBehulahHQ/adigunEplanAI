@@ -642,8 +642,8 @@
     ['X10', '7', 'DI a.0'], ['X10', '8', 'DI a.1'], ['X10', '9', 'DI a.2'], ['X10', '10', 'DI a.3'],
     ['X10', '11', 'DI a.4'], ['X10', '12', 'DI a.5'], ['X10', '13', 'DI a.6'], ['X10', '14', 'DI a.7'],
     ['X11', '1', '2M'], ['X11', '2', 'AI 0'], ['X11', '3', 'AI 1'],
-    ['X12', '1', '1L'], ['X12', '2', 'DQ a.0'], ['X12', '3', 'DQ a.1'], ['X12', '4', 'DQ a.2'],
-    ['X12', '5', 'DQ a.3'], ['X12', '6', '2L'], ['X12', '7', 'DQ a.4'], ['X12', '8', 'DQ a.5']
+    ['X12', '1', '3L+'], ['X12', '2', '3M'], ['X12', '3', 'DQ a.0'], ['X12', '4', 'DQ a.1'],
+    ['X12', '5', 'DQ a.2'], ['X12', '6', 'DQ a.3'], ['X12', '7', 'DQ a.4'], ['X12', '8', 'DQ a.5']
   ];
   const siemensCpuPins = siemensCpuPinRows.map(function (row, index) {
     const group = row[0], groupIndex = siemensCpuPinRows.slice(0, index).filter(function (item) { return item[0] === group; }).length;
@@ -653,7 +653,7 @@
   const siemensCpuDefinition = deepFreeze({
     schemaVersion: COMPONENT_SCHEMA_VERSION, id: 'siemens-6es7212-1ae40-0xb0', manufacturer: 'Siemens', manufacturerPartNumber: '6ES7212-1AE40-0XB0',
     model: 'SIMATIC S7-1200 CPU 1212C DC/DC/DC', name: 'Compact PLC CPU', family: 'plc-cpu', referencePrefix: 'A', category: 'Automation · Verified PLC CPU',
-    symbol: { id: 'plc.siemens.cpu-1212c.dcdcdc.v1', view: 'schematic', unit: 'mm', width: 260, height: 290, pins: siemensCpuPins, internalConnections: [], numberingNote: 'Terminal group and pin identities X10, X11 and X12 match Siemens System Manual V4.7, Table A-49. Pin coordinates are schematic connection points, not physical connector geometry.' },
+    symbol: { id: 'plc.siemens.cpu-1212c.dcdcdc.v2', view: 'schematic', unit: 'mm', width: 260, height: 290, pins: siemensCpuPins, internalConnections: [], numberingNote: 'Terminal groups match Siemens CPU 1212C DC/DC/DC connector table 6. X12 labels were corrected from the relay variant on 2026-11-14: pins 1/2 are 3L+/3M and pins 3–8 are DQ a.0–a.5. Existing physical pin identities are preserved; review earlier output wiring against these corrected functions. Coordinates are schematic, not physical connector geometry.' },
     specifications: {
       onboardDigitalInputs: { value: 8, unit: '24 V DC DI' }, onboardDigitalOutputs: { value: 6, unit: '24 V DC transistor DQ' }, onboardAnalogInputs: { value: 2, unit: '0–10 V DC AI' },
       supplyVoltage: { minimum: 20.4, maximum: 28.8, unit: 'V DC' }, programDataMemory: { value: 100, unit: 'KB' },
@@ -661,7 +661,7 @@
     },
     instanceProperties: { marking: { type: 'string', default: '', maximumLength: 40 }, position: { type: 'string', default: '', maximumLength: 24 }, comment: { type: 'string', default: '', maximumLength: 160 } },
     sources: [
-      { publisher: 'Siemens', title: 'SIMATIC S7-1200 System Manual V4.7 · CPU 1212C DC/DC/DC · Tables A-49 and A-50', url: 'https://support.industry.siemens.com/cs/attachments/109977302/s71200_system_manual_en-US.pdf', documentRevision: 'V4.7 · 12/2024 · A5E02486680-AQ', revisionNote: 'Manufacturer manual supplies exact connector pin assignments for X10, X11 and X12.' , retrievedAt: '2026-11-12' },
+      { publisher: 'Siemens', title: 'CPU 1212C wiring diagrams · DC/DC/DC · Tables 5 and 6', url: 'https://docs.tia.siemens.cloud/r/simatic_s7_1200_manual_collection_enus_20/technical-specifications/cpu-1212c/cpu-1212c-wiring-diagrams', documentRevision: 'V20 · 11/2024', revisionNote: 'Exact connector assignments for 6ES7212-1AE40-0XB0. DC/DC/DC X12 is 3L+, 3M, then six DQ terminals; do not use the DC/DC/Relay table.' , retrievedAt: '2026-11-14' },
       { publisher: 'Siemens', title: 'SIMATIC S7-1200 CPU 1212C product record', url: 'https://mall.industry.siemens.com/mall/en/gb/Catalog/Product/6ES72121AE400XB0', documentRevision: 'Live manufacturer product record', revisionNote: 'Confirms onboard I/O counts and DC supply range.', retrievedAt: '2026-11-12' }
     ]
   });
@@ -1086,6 +1086,7 @@
   function projectExamples() {
     return [{id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
+      {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
       {id:'hardware-relay',hardware:true,name:'24 V momentary relay control',description:'Phoenix Contact relay and terminals with Schneider start/stop buttons. External supply/load boundaries; no seal-in or safety function.'},
       {id:'hardware-sensor',hardware:true,name:'PNP proximity sensor terminal wiring',description:'ifm IFS204 pin 1 supply, pin 3 return and pin 4 output with Phoenix Contact terminals. External supply/PLC boundaries.'},
       {id:'hardware-sitop',hardware:true,name:'SITOP 24 V terminal distribution',description:'Siemens PSU100C output distribution through Phoenix Contact terminals. Input supply, bonding and protection require engineering.'}];
@@ -1095,7 +1096,15 @@
     function device(id,ref,x,y,comment){const instance=createInstance(id,x,y,ref);instance.sheetId=sheetId;instance.properties.comment=comment||'';objects.push(instance);byRef[ref]=instance;return instance;}
     function connect(from,pinA,to,pinB){const a=byRef[from],b=byRef[to],ap=worldPins(a).find(function(p){return p.id===pinA;}),bp=worldPins(b).find(function(p){return p.id===pinB;});if(!ap||!bp)throw new Error('Example references an unknown terminal.');objects.push(attachWire({id:'wire-'+example.id+'-'+objects.length,kind:'wire',sheetId:sheetId,x:ap.x,y:ap.y,x1:ap.x,y1:ap.y,x2:bp.x,y2:bp.y,rotation:0,stroke:'#164eac'},Object.assign({},ap,{attachment:{instanceId:a.id,pinId:ap.id}}),Object.assign({},bp,{attachment:{instanceId:b.id,pinId:bp.id}})));}
     const ut='phoenix-contact-3044076',uk='phoenix-contact-3004362';
-    if(example.id==='hardware-relay'){
+    if(example.id==='hardware-plc-input'){
+      device(ut,'X1',160,204,'External protected 24 V DC supply. Source selection and protection remain project-specific.');
+      device(ut,'X2',400,222,'External DC return shared by CPU supply M and input common 1M.');
+      device(ut,'X3',500,240,'Functional-earth interface to engineered cabinet bonding; this feed-through terminal is not a PE rail-bonding terminal.');
+      device('schneider-electric-xb5aa31','S1',350,312,'NO momentary contact to CPU X10:7 (DI a.0); PLC address/program configuration is not simulated.');
+      device('siemens-6es7212-1ae40-0xb0','A1',750,330,'Sinking input with 1M on DC return. Sensor supply, outputs and unused analog inputs require separate project engineering; see manufacturer wiring notes.');
+      connect('X1','connection-2','A1','x10-1');connect('X2','connection-2','A1','x10-2');connect('X3','connection-2','A1','x10-3');
+      connect('X1','connection-1','S1','contact-13');connect('S1','contact-14','A1','x10-7');connect('A1','x10-6','X2','connection-1');
+    }else if(example.id==='hardware-relay'){
       device(uk,'X1',140,320,'External protected 24 V DC positive supply boundary; protection and supply selection remain project-specific.');
       device(ut,'X2',500,180,'External 0 V return boundary.');
       device('schneider-electric-xb5aa42','S1',320,320,'Momentary stop NC 21/22; not an emergency-stop safety circuit.');

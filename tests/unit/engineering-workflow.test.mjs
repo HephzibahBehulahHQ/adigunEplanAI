@@ -8,6 +8,57 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("CPU 1212C transistor outputs use the DC/DC/DC connector table and preserve physical attachments", () => {
+  const id = "siemens-6es7212-1ae40-0xb0";
+  const part = engine.component(id);
+  assert.deepEqual(
+    plain(
+      part.symbol.pins
+        .filter((p) => p.id.startsWith("x12-"))
+        .map((p) => [p.id, p.name]),
+    ),
+    [
+      ["x12-1", "3L+"],
+      ["x12-2", "3M"],
+      ["x12-3", "DQ a.0"],
+      ["x12-4", "DQ a.1"],
+      ["x12-5", "DQ a.2"],
+      ["x12-6", "DQ a.3"],
+      ["x12-7", "DQ a.4"],
+      ["x12-8", "DQ a.5"],
+    ],
+  );
+  assert.match(part.sources[0].url, /docs\.tia\.siemens\.cloud/);
+  assert.match(part.symbol.numberingNote, /review earlier output wiring/i);
+  const cpu = engine.createInstance(id, 500, 300, "A1");
+  const terminal = engine.createInstance(
+    "phoenix-contact-3044076",
+    900,
+    324,
+    "X1",
+  );
+  const wire = {
+    id: "existing-output-wire",
+    kind: "wire",
+    x1: 630,
+    y1: 324,
+    x2: 865,
+    y2: 324,
+    attachments: {
+      start: { instanceId: cpu.id, pinId: "x12-3" },
+      end: { instanceId: terminal.id, pinId: "connection-1" },
+    },
+  };
+  const objects = [cpu, terminal, wire];
+  engine.synchronizeWireAttachments(objects);
+  assert.equal(wire.attachments.start.pinId, "x12-3");
+  assert.equal(
+    engine.endpointPin(objects, wire.attachments.start).name,
+    "DQ a.0",
+  );
+  assert.equal(engine.wireAttachmentIssues(objects).length, 0);
+});
+
 test("project import rejects malformed attachment data and duplicate identities", () => {
   const project = engine.createExample("indicator");
   const wire = project.objects.find((o) => o.kind === "wire");
@@ -19,7 +70,7 @@ test("project import rejects malformed attachment data and duplicate identities"
 });
 
 test("examples are independent editable projects with complete terminal attachments", () => {
-  assert.equal(engine.projectExamples().length, 5);
+  assert.equal(engine.projectExamples().length, 6);
   for (const example of engine
     .projectExamples()
     .filter((item) => !item.hardware)) {
@@ -53,7 +104,8 @@ test("examples are independent editable projects with complete terminal attachme
 });
 
 test("manufacturer examples preserve separate circuits and editable source-backed parts", () => {
-  for (const [id, components, wires, spare] of [
+  for (const [id, components, wires, spare, nets = wires] of [
+    ["hardware-plc-input", 5, 6, 21, 4],
     ["hardware-relay", 7, 6, 5],
     ["hardware-sensor", 4, 3, 3],
     ["hardware-sitop", 3, 2, 5],
@@ -64,7 +116,7 @@ test("manufacturer examples preserve separate circuits and editable source-backe
     assert.equal(report.wireCount, wires);
     assert.equal(
       report.netCount,
-      wires,
+      nets,
       "separate circuits must not short together",
     );
     assert.equal(report.openEndpointCount, 0);
@@ -104,6 +156,22 @@ test("manufacturer examples preserve separate circuits and editable source-backe
     assert.equal(restored.valid, true);
     assert.deepEqual(plain(restored.project), plain(project));
   }
+});
+
+test("PLC input example keeps positive, return, functional earth and switched input separate", () => {
+  const project = engine.createExample("hardware-plc-input");
+  const nets = plain(engine.analyze(project.objects).nets)
+    .map((net) => net.pins.map((pin) => pin.ref + ":" + pin.pinId).sort())
+    .sort((a, b) => a.join().localeCompare(b.join()));
+  const expected = [
+    ["A1:x10-1", "S1:contact-13", "X1:connection-1", "X1:connection-2"],
+    ["A1:x10-2", "A1:x10-6", "X2:connection-1", "X2:connection-2"],
+    ["A1:x10-3", "X3:connection-1", "X3:connection-2"],
+    ["A1:x10-7", "S1:contact-14"],
+  ]
+    .map((net) => net.sort())
+    .sort((a, b) => a.join().localeCompare(b.join()));
+  assert.deepEqual(nets, expected);
 });
 
 test("screw terminal definitions retain manufacturer ratings and local connection identities", () => {
