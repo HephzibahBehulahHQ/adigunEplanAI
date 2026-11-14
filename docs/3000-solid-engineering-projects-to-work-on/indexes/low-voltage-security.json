@@ -1,0 +1,3002 @@
+[
+  {
+    "id": "ENG-2401",
+    "title": "Fire-alarm interface cabinet \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2401.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2402",
+    "title": "Fire-alarm interface cabinet \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2402.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2403",
+    "title": "Fire-alarm interface cabinet \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2403.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2404",
+    "title": "Fire-alarm interface cabinet \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2404.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2405",
+    "title": "Fire-alarm interface cabinet \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2405.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2406",
+    "title": "Fire-alarm interface cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2406.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2407",
+    "title": "Fire-alarm interface cabinet \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2407.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2408",
+    "title": "Fire-alarm interface cabinet \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2408.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2409",
+    "title": "Fire-alarm interface cabinet \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2409.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2410",
+    "title": "Fire-alarm interface cabinet \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2410.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2411",
+    "title": "Fire-alarm interface cabinet \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2411.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2412",
+    "title": "Fire-alarm interface cabinet \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2412.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2413",
+    "title": "Fire-alarm interface cabinet \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2413.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2414",
+    "title": "Fire-alarm interface cabinet \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2414.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2415",
+    "title": "Fire-alarm interface cabinet \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2415.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2416",
+    "title": "Fire-alarm interface cabinet \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2416.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2417",
+    "title": "Fire-alarm interface cabinet \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2417.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2418",
+    "title": "Fire-alarm interface cabinet \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2418.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2419",
+    "title": "Fire-alarm interface cabinet \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2419.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2420",
+    "title": "Fire-alarm interface cabinet \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2420.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2421",
+    "title": "Fire-alarm interface cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2421.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2422",
+    "title": "Fire-alarm interface cabinet \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2422.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2423",
+    "title": "Fire-alarm interface cabinet \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2423.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2424",
+    "title": "Fire-alarm interface cabinet \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2424.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2425",
+    "title": "Fire-alarm interface cabinet \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2425.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2426",
+    "title": "Fire-alarm interface cabinet \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2426.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2427",
+    "title": "Fire-alarm interface cabinet \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2427.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2428",
+    "title": "Fire-alarm interface cabinet \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2428.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2429",
+    "title": "Fire-alarm interface cabinet \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2429.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2430",
+    "title": "Fire-alarm interface cabinet \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Fire-alarm interface cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2430.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2431",
+    "title": "Access-control door installation \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2431.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2432",
+    "title": "Access-control door installation \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2432.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2433",
+    "title": "Access-control door installation \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2433.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2434",
+    "title": "Access-control door installation \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2434.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2435",
+    "title": "Access-control door installation \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2435.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2436",
+    "title": "Access-control door installation \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2436.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2437",
+    "title": "Access-control door installation \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2437.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2438",
+    "title": "Access-control door installation \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2438.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2439",
+    "title": "Access-control door installation \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2439.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2440",
+    "title": "Access-control door installation \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2440.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2441",
+    "title": "Access-control door installation \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2441.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2442",
+    "title": "Access-control door installation \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2442.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2443",
+    "title": "Access-control door installation \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2443.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2444",
+    "title": "Access-control door installation \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2444.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2445",
+    "title": "Access-control door installation \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2445.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2446",
+    "title": "Access-control door installation \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2446.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2447",
+    "title": "Access-control door installation \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2447.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2448",
+    "title": "Access-control door installation \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2448.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2449",
+    "title": "Access-control door installation \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2449.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2450",
+    "title": "Access-control door installation \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2450.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2451",
+    "title": "Access-control door installation \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2451.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2452",
+    "title": "Access-control door installation \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2452.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2453",
+    "title": "Access-control door installation \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2453.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2454",
+    "title": "Access-control door installation \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2454.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2455",
+    "title": "Access-control door installation \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2455.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2456",
+    "title": "Access-control door installation \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2456.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2457",
+    "title": "Access-control door installation \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2457.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2458",
+    "title": "Access-control door installation \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2458.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2459",
+    "title": "Access-control door installation \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2459.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2460",
+    "title": "Access-control door installation \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Access-control door installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2460.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2461",
+    "title": "Intrusion-alarm interface panel \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2461.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2462",
+    "title": "Intrusion-alarm interface panel \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2462.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2463",
+    "title": "Intrusion-alarm interface panel \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2463.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2464",
+    "title": "Intrusion-alarm interface panel \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2464.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2465",
+    "title": "Intrusion-alarm interface panel \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2465.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2466",
+    "title": "Intrusion-alarm interface panel \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2466.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2467",
+    "title": "Intrusion-alarm interface panel \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2467.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2468",
+    "title": "Intrusion-alarm interface panel \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2468.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2469",
+    "title": "Intrusion-alarm interface panel \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2469.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2470",
+    "title": "Intrusion-alarm interface panel \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2470.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2471",
+    "title": "Intrusion-alarm interface panel \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2471.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2472",
+    "title": "Intrusion-alarm interface panel \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2472.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2473",
+    "title": "Intrusion-alarm interface panel \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2473.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2474",
+    "title": "Intrusion-alarm interface panel \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2474.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2475",
+    "title": "Intrusion-alarm interface panel \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2475.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2476",
+    "title": "Intrusion-alarm interface panel \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2476.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2477",
+    "title": "Intrusion-alarm interface panel \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2477.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2478",
+    "title": "Intrusion-alarm interface panel \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2478.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2479",
+    "title": "Intrusion-alarm interface panel \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2479.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2480",
+    "title": "Intrusion-alarm interface panel \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2480.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2481",
+    "title": "Intrusion-alarm interface panel \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2481.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2482",
+    "title": "Intrusion-alarm interface panel \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2482.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2483",
+    "title": "Intrusion-alarm interface panel \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2483.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2484",
+    "title": "Intrusion-alarm interface panel \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2484.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2485",
+    "title": "Intrusion-alarm interface panel \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2485.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2486",
+    "title": "Intrusion-alarm interface panel \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2486.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2487",
+    "title": "Intrusion-alarm interface panel \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2487.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2488",
+    "title": "Intrusion-alarm interface panel \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2488.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2489",
+    "title": "Intrusion-alarm interface panel \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2489.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2490",
+    "title": "Intrusion-alarm interface panel \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intrusion-alarm interface panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2490.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2491",
+    "title": "CCTV auxiliary distribution \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2491.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2492",
+    "title": "CCTV auxiliary distribution \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2492.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2493",
+    "title": "CCTV auxiliary distribution \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2493.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2494",
+    "title": "CCTV auxiliary distribution \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2494.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2495",
+    "title": "CCTV auxiliary distribution \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2495.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2496",
+    "title": "CCTV auxiliary distribution \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2496.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2497",
+    "title": "CCTV auxiliary distribution \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2497.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2498",
+    "title": "CCTV auxiliary distribution \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2498.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2499",
+    "title": "CCTV auxiliary distribution \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2499.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2500",
+    "title": "CCTV auxiliary distribution \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2500.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2501",
+    "title": "CCTV auxiliary distribution \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2501.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2502",
+    "title": "CCTV auxiliary distribution \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2502.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2503",
+    "title": "CCTV auxiliary distribution \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2503.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2504",
+    "title": "CCTV auxiliary distribution \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2504.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2505",
+    "title": "CCTV auxiliary distribution \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2505.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2506",
+    "title": "CCTV auxiliary distribution \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2506.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2507",
+    "title": "CCTV auxiliary distribution \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2507.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2508",
+    "title": "CCTV auxiliary distribution \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2508.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2509",
+    "title": "CCTV auxiliary distribution \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2509.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2510",
+    "title": "CCTV auxiliary distribution \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2510.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2511",
+    "title": "CCTV auxiliary distribution \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2511.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2512",
+    "title": "CCTV auxiliary distribution \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2512.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2513",
+    "title": "CCTV auxiliary distribution \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2513.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2514",
+    "title": "CCTV auxiliary distribution \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2514.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2515",
+    "title": "CCTV auxiliary distribution \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2515.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2516",
+    "title": "CCTV auxiliary distribution \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2516.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2517",
+    "title": "CCTV auxiliary distribution \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2517.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2518",
+    "title": "CCTV auxiliary distribution \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2518.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2519",
+    "title": "CCTV auxiliary distribution \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2519.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2520",
+    "title": "CCTV auxiliary distribution \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "CCTV auxiliary distribution",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2520.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2521",
+    "title": "Intercom entrance installation \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2521.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2522",
+    "title": "Intercom entrance installation \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2522.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2523",
+    "title": "Intercom entrance installation \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2523.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2524",
+    "title": "Intercom entrance installation \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2524.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2525",
+    "title": "Intercom entrance installation \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2525.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2526",
+    "title": "Intercom entrance installation \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2526.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2527",
+    "title": "Intercom entrance installation \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2527.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2528",
+    "title": "Intercom entrance installation \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2528.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2529",
+    "title": "Intercom entrance installation \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2529.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2530",
+    "title": "Intercom entrance installation \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2530.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2531",
+    "title": "Intercom entrance installation \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2531.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2532",
+    "title": "Intercom entrance installation \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2532.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2533",
+    "title": "Intercom entrance installation \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2533.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2534",
+    "title": "Intercom entrance installation \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2534.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2535",
+    "title": "Intercom entrance installation \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2535.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2536",
+    "title": "Intercom entrance installation \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2536.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2537",
+    "title": "Intercom entrance installation \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2537.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2538",
+    "title": "Intercom entrance installation \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2538.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2539",
+    "title": "Intercom entrance installation \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2539.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2540",
+    "title": "Intercom entrance installation \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2540.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2541",
+    "title": "Intercom entrance installation \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2541.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2542",
+    "title": "Intercom entrance installation \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2542.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2543",
+    "title": "Intercom entrance installation \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2543.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2544",
+    "title": "Intercom entrance installation \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2544.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2545",
+    "title": "Intercom entrance installation \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2545.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2546",
+    "title": "Intercom entrance installation \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2546.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2547",
+    "title": "Intercom entrance installation \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2547.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2548",
+    "title": "Intercom entrance installation \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2548.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2549",
+    "title": "Intercom entrance installation \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2549.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2550",
+    "title": "Intercom entrance installation \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Intercom entrance installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2550.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2551",
+    "title": "Assistance-call installation \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2551.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2552",
+    "title": "Assistance-call installation \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2552.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2553",
+    "title": "Assistance-call installation \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2553.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2554",
+    "title": "Assistance-call installation \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2554.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2555",
+    "title": "Assistance-call installation \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2555.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2556",
+    "title": "Assistance-call installation \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2556.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2557",
+    "title": "Assistance-call installation \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2557.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2558",
+    "title": "Assistance-call installation \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2558.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2559",
+    "title": "Assistance-call installation \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2559.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2560",
+    "title": "Assistance-call installation \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2560.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2561",
+    "title": "Assistance-call installation \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2561.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2562",
+    "title": "Assistance-call installation \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2562.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2563",
+    "title": "Assistance-call installation \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2563.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2564",
+    "title": "Assistance-call installation \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2564.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2565",
+    "title": "Assistance-call installation \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2565.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2566",
+    "title": "Assistance-call installation \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2566.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2567",
+    "title": "Assistance-call installation \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2567.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2568",
+    "title": "Assistance-call installation \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2568.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2569",
+    "title": "Assistance-call installation \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2569.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2570",
+    "title": "Assistance-call installation \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2570.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2571",
+    "title": "Assistance-call installation \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2571.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2572",
+    "title": "Assistance-call installation \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2572.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2573",
+    "title": "Assistance-call installation \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2573.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2574",
+    "title": "Assistance-call installation \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2574.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2575",
+    "title": "Assistance-call installation \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2575.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2576",
+    "title": "Assistance-call installation \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2576.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2577",
+    "title": "Assistance-call installation \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2577.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2578",
+    "title": "Assistance-call installation \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2578.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2579",
+    "title": "Assistance-call installation \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2579.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2580",
+    "title": "Assistance-call installation \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Assistance-call installation",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2580.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2581",
+    "title": "Smoke-extraction control interface \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2581.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2582",
+    "title": "Smoke-extraction control interface \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2582.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2583",
+    "title": "Smoke-extraction control interface \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2583.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2584",
+    "title": "Smoke-extraction control interface \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2584.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2585",
+    "title": "Smoke-extraction control interface \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2585.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2586",
+    "title": "Smoke-extraction control interface \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2586.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2587",
+    "title": "Smoke-extraction control interface \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2587.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2588",
+    "title": "Smoke-extraction control interface \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2588.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2589",
+    "title": "Smoke-extraction control interface \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2589.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2590",
+    "title": "Smoke-extraction control interface \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2590.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2591",
+    "title": "Smoke-extraction control interface \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2591.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2592",
+    "title": "Smoke-extraction control interface \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2592.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2593",
+    "title": "Smoke-extraction control interface \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2593.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2594",
+    "title": "Smoke-extraction control interface \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2594.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2595",
+    "title": "Smoke-extraction control interface \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2595.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2596",
+    "title": "Smoke-extraction control interface \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2596.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2597",
+    "title": "Smoke-extraction control interface \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2597.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2598",
+    "title": "Smoke-extraction control interface \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2598.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2599",
+    "title": "Smoke-extraction control interface \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2599.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2600",
+    "title": "Smoke-extraction control interface \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2600.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2601",
+    "title": "Smoke-extraction control interface \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2601.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2602",
+    "title": "Smoke-extraction control interface \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2602.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2603",
+    "title": "Smoke-extraction control interface \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2603.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2604",
+    "title": "Smoke-extraction control interface \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2604.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2605",
+    "title": "Smoke-extraction control interface \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2605.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2606",
+    "title": "Smoke-extraction control interface \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2606.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2607",
+    "title": "Smoke-extraction control interface \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2607.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2608",
+    "title": "Smoke-extraction control interface \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2608.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2609",
+    "title": "Smoke-extraction control interface \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2609.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2610",
+    "title": "Smoke-extraction control interface \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Smoke-extraction control interface",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2610.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2611",
+    "title": "Security gate controller \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2611.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2612",
+    "title": "Security gate controller \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2612.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2613",
+    "title": "Security gate controller \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2613.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2614",
+    "title": "Security gate controller \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2614.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2615",
+    "title": "Security gate controller \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2615.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2616",
+    "title": "Security gate controller \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2616.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2617",
+    "title": "Security gate controller \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2617.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2618",
+    "title": "Security gate controller \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2618.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2619",
+    "title": "Security gate controller \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2619.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2620",
+    "title": "Security gate controller \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2620.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2621",
+    "title": "Security gate controller \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2621.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2622",
+    "title": "Security gate controller \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2622.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2623",
+    "title": "Security gate controller \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2623.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2624",
+    "title": "Security gate controller \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2624.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2625",
+    "title": "Security gate controller \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2625.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2626",
+    "title": "Security gate controller \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2626.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2627",
+    "title": "Security gate controller \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2627.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2628",
+    "title": "Security gate controller \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2628.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2629",
+    "title": "Security gate controller \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2629.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2630",
+    "title": "Security gate controller \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2630.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2631",
+    "title": "Security gate controller \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2631.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2632",
+    "title": "Security gate controller \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2632.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2633",
+    "title": "Security gate controller \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2633.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2634",
+    "title": "Security gate controller \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2634.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2635",
+    "title": "Security gate controller \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2635.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2636",
+    "title": "Security gate controller \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2636.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2637",
+    "title": "Security gate controller \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2637.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2638",
+    "title": "Security gate controller \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2638.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2639",
+    "title": "Security gate controller \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2639.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2640",
+    "title": "Security gate controller \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Security gate controller",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2640.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2641",
+    "title": "Building-management interface panel \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2641.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2642",
+    "title": "Building-management interface panel \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2642.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2643",
+    "title": "Building-management interface panel \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2643.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2644",
+    "title": "Building-management interface panel \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2644.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2645",
+    "title": "Building-management interface panel \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2645.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2646",
+    "title": "Building-management interface panel \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2646.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2647",
+    "title": "Building-management interface panel \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2647.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2648",
+    "title": "Building-management interface panel \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2648.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2649",
+    "title": "Building-management interface panel \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2649.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2650",
+    "title": "Building-management interface panel \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2650.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2651",
+    "title": "Building-management interface panel \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2651.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2652",
+    "title": "Building-management interface panel \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2652.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2653",
+    "title": "Building-management interface panel \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2653.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2654",
+    "title": "Building-management interface panel \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2654.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2655",
+    "title": "Building-management interface panel \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2655.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2656",
+    "title": "Building-management interface panel \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2656.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2657",
+    "title": "Building-management interface panel \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2657.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2658",
+    "title": "Building-management interface panel \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2658.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2659",
+    "title": "Building-management interface panel \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2659.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2660",
+    "title": "Building-management interface panel \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2660.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2661",
+    "title": "Building-management interface panel \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2661.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2662",
+    "title": "Building-management interface panel \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2662.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2663",
+    "title": "Building-management interface panel \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2663.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2664",
+    "title": "Building-management interface panel \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2664.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2665",
+    "title": "Building-management interface panel \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2665.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2666",
+    "title": "Building-management interface panel \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2666.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2667",
+    "title": "Building-management interface panel \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2667.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2668",
+    "title": "Building-management interface panel \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2668.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2669",
+    "title": "Building-management interface panel \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2669.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2670",
+    "title": "Building-management interface panel \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Building-management interface panel",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2670.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2671",
+    "title": "Leak-detection monitoring cabinet \u2014 Local manual baseline",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Local manual baseline",
+    "path": "projects/low-voltage-security/ENG-2671.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2672",
+    "title": "Leak-detection monitoring cabinet \u2014 Remote supervisory operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Remote supervisory operation",
+    "path": "projects/low-voltage-security/ENG-2672.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2673",
+    "title": "Leak-detection monitoring cabinet \u2014 Scheduled operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Scheduled operation",
+    "path": "projects/low-voltage-security/ENG-2673.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2674",
+    "title": "Leak-detection monitoring cabinet \u2014 Demand-controlled enable",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Demand-controlled enable",
+    "path": "projects/low-voltage-security/ENG-2674.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2675",
+    "title": "Leak-detection monitoring cabinet \u2014 Supply undervoltage supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Supply undervoltage supervision",
+    "path": "projects/low-voltage-security/ENG-2675.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2676",
+    "title": "Leak-detection monitoring cabinet \u2014 Phase and supply-quality supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Phase and supply-quality supervision",
+    "path": "projects/low-voltage-security/ENG-2676.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2677",
+    "title": "Leak-detection monitoring cabinet \u2014 Individual branch metering",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Individual branch metering",
+    "path": "projects/low-voltage-security/ENG-2677.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2678",
+    "title": "Leak-detection monitoring cabinet \u2014 Whole-system energy reporting",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Whole-system energy reporting",
+    "path": "projects/low-voltage-security/ENG-2678.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2679",
+    "title": "Leak-detection monitoring cabinet \u2014 Two-zone operation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Two-zone operation",
+    "path": "projects/low-voltage-security/ENG-2679.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2680",
+    "title": "Leak-detection monitoring cabinet \u2014 Three-stage load sequencing",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Three-stage load sequencing",
+    "path": "projects/low-voltage-security/ENG-2680.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2681",
+    "title": "Leak-detection monitoring cabinet \u2014 Priority load shedding",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Priority load shedding",
+    "path": "projects/low-voltage-security/ENG-2681.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2682",
+    "title": "Leak-detection monitoring cabinet \u2014 Buffered control power",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Buffered control power",
+    "path": "projects/low-voltage-security/ENG-2682.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2683",
+    "title": "Leak-detection monitoring cabinet \u2014 Redundant control-power inputs",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Redundant control-power inputs",
+    "path": "projects/low-voltage-security/ENG-2683.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2684",
+    "title": "Leak-detection monitoring cabinet \u2014 Environmental temperature supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Environmental temperature supervision",
+    "path": "projects/low-voltage-security/ENG-2684.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2685",
+    "title": "Leak-detection monitoring cabinet \u2014 Condensation management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Condensation management",
+    "path": "projects/low-voltage-security/ENG-2685.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2686",
+    "title": "Leak-detection monitoring cabinet \u2014 Door and enclosure supervision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Door and enclosure supervision",
+    "path": "projects/low-voltage-security/ENG-2686.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2687",
+    "title": "Leak-detection monitoring cabinet \u2014 Maintenance test mode",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Maintenance test mode",
+    "path": "projects/low-voltage-security/ENG-2687.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2688",
+    "title": "Leak-detection monitoring cabinet \u2014 Remote alarm annunciation",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Remote alarm annunciation",
+    "path": "projects/low-voltage-security/ENG-2688.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2689",
+    "title": "Leak-detection monitoring cabinet \u2014 First-out fault capture",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "First-out fault capture",
+    "path": "projects/low-voltage-security/ENG-2689.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2690",
+    "title": "Leak-detection monitoring cabinet \u2014 Event and operating-hour logging",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Event and operating-hour logging",
+    "path": "projects/low-voltage-security/ENG-2690.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2691",
+    "title": "Leak-detection monitoring cabinet \u2014 Ethernet supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Ethernet supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2691.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2692",
+    "title": "Leak-detection monitoring cabinet \u2014 Serial supervisory gateway",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Serial supervisory gateway",
+    "path": "projects/low-voltage-security/ENG-2692.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2693",
+    "title": "Leak-detection monitoring cabinet \u2014 Hardwired permissive chain",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Hardwired permissive chain",
+    "path": "projects/low-voltage-security/ENG-2693.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2694",
+    "title": "Leak-detection monitoring cabinet \u2014 Controlled shutdown interface",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Controlled shutdown interface",
+    "path": "projects/low-voltage-security/ENG-2694.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2695",
+    "title": "Leak-detection monitoring cabinet \u2014 Commissioning simulation terminals",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Commissioning simulation terminals",
+    "path": "projects/low-voltage-security/ENG-2695.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2696",
+    "title": "Leak-detection monitoring cabinet \u2014 Modular field connections",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Modular field connections",
+    "path": "projects/low-voltage-security/ENG-2696.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2697",
+    "title": "Leak-detection monitoring cabinet \u2014 Distributed field enclosure",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Distributed field enclosure",
+    "path": "projects/low-voltage-security/ENG-2697.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2698",
+    "title": "Leak-detection monitoring cabinet \u2014 Future expansion provision",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Future expansion provision",
+    "path": "projects/low-voltage-security/ENG-2698.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2699",
+    "title": "Leak-detection monitoring cabinet \u2014 Supply restoration management",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Supply restoration management",
+    "path": "projects/low-voltage-security/ENG-2699.md",
+    "sheetCount": 30,
+    "status": "planned"
+  },
+  {
+    "id": "ENG-2700",
+    "title": "Leak-detection monitoring cabinet \u2014 Integrated diagnostics package",
+    "domain": "low-voltage-security",
+    "baseSystem": "Leak-detection monitoring cabinet",
+    "variant": "Integrated diagnostics package",
+    "path": "projects/low-voltage-security/ENG-2700.md",
+    "sheetCount": 30,
+    "status": "planned"
+  }
+]
