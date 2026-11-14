@@ -1,18 +1,20 @@
-# CURRENT OWNER DIRECTION — 2026-11-13
+# ACTIVE OWNER GOAL — FUNCTIONAL ENGINEERING WORKSPACE (2026-11-14)
 
-Use AdigunAiAutoCad's actual interface files verbatim, replacing the previous Eplan shell. This supersedes screenshot matching and React-shell adaptation instructions below. Do not change the reference repository. No backup of the rejected interface is wanted. Preserve engineering/domain/backend source; integration with the copied frontend is deferred by the owner. Source blobs: index.html b642d87654a6bc2a0ed578b1cfd6b7e6d889060f; cad-engine.js 01067625647720103f495680d98685d94b048059. Verify exact hashes in source and release output. Do not imply preserved Eplan engineering modules are connected to the copied frontend.
+The owner has approved continuing components, wiring and editable project examples, followed by testing, merge and deployment. This is the current goal for this project. It supersedes all earlier screenshot matching, exact source-copy hashes, UI rebuild, and stop-after-branding instructions.
 
-## CURRENT OWNER-APPROVED GOAL — UI-001 (2026-11-12)
+## LOCKED INTERFACE — MANDATORY
 
-**FIRST DELIVERABLE: Project A must visually match Project B's compact CAD workstation.** This supersedes prior shell/ribbon screenshot guidance, not the original engineering feature requirements.
+- Preserve the approved AdigunEplanAI interface layout, CSS, geometry, header, toolbars, sidebars, status bar and menu structure. Do not rebuild, redesign, replace or restore an older shell.
+- Implement engineering functions through existing controls and menus only. Use Electrical → Symbol Library for components, existing wire tools for wiring, existing project controls for new/open/example projects, and existing inspectors for properties/checks.
+- Functional content within existing panels/dialogs may be connected or populated as necessary. Do not add top-level menus or navigation. Ask only if a requirement genuinely needs a new UI surface.
+- AdigunAiAutoCad is read-only reference material. Only adigunEplanAI is writable.
+- Preserve existing engineering/domain/backend logic. Generic schematic symbols must not be misrepresented as manufacturer-verified parts or simulated/certified designs.
 
-- **Only writable product:** `HephzibahBehulahHQ/adigunEplanAI` (Project A). **DO NOT MODIFY** `HephzibahBehulahHQ/AdigunAiAutoCad` (Project B): read-only visual reference.
-- **Before code:** read [Project B interface transformation and next-agent handoff](docs/PROJECT_B_INTERFACE_TRANSFORMATION.md), the [master pursuing goal](AdidunEplanAI%20Master%20PlanGoals), and the actual Project B reference `index.html` / pursuing goal.
-- **Scope now:** replace only the shell visuals and relevant interactions: slim header/document tabs, compact icon bar, 32–44px left/right icon rails, true overlay menus, large white editable Project A schematic canvas, thin status bar. Preserve all native project models/editors and the full master goal.
-- **Current WIP:** `codex/project-b-interface-first`, draft PR #39. Validate and fix this existing branch; **do not restart from scratch**. Initial CI failed formatting; verify the latest CI after the one-time Prettier correction and resolve any subsequent errors.
-- **Ship and STOP:** Playwright visual/interaction checks, native engineering save/reopen regression, `npm run check`, CI and production checks → approved merge/deploy/verify → stop for explicit owner visual approval. Do not implement unrelated engineering features in this phase.
-- Do not describe an unapproved PR, mocked example, UI screenshot, or failed build as completed/deployed.
-- **No new permissions to bypass safety policy or existing repo approvals.**
+## CURRENT EXECUTION AND HANDOFF
+
+Read docs/ACTIVE_ENGINEERING_GOAL.md before changes. Continue from current remote main and actual worktree, preserving unrelated local work. Do not revive the paused obsolete screenshot goal. The goal tool currently refuses to replace that unfinished goal; this does not block authorized engineering work and is not grounds to falsely mark the old goal complete.
+
+Required outcome: an engineer can create a named project, place/edit components, connect identifiable terminals, move/rotate components without losing connections, inspect connectivity, save/reopen without data loss, and open/edit connected examples. Validate each workflow, verify locked styles/menu structure, pass CI, merge and deploy, and inspect the live result. Report limitations honestly. Maintain the progress and handoff record so another agent does not repeat completed work or reverse this direction.
 
 # AdigunEplanAI agent guidance
 
