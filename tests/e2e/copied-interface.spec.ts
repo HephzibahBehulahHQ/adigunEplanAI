@@ -373,3 +373,45 @@ test("empty active sheet retains its definition through save and reopen", async 
   expect(reopened.data.sheets).toEqual(saved.data.sheets);
   expect(reopened.data.project).toBe("Empty sheets regression");
 });
+
+test("Project Explorer exposes searchable examples and opens an editable copy", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-panel="symbols"]').click();
+  await expect(page.locator("#projectPanel")).toBeHidden();
+  await page.locator('[data-panel="project"]').click();
+  await expect(page.locator("#projectPanel")).toBeVisible();
+  await expect(page.locator("#symbolsPanel")).toBeHidden();
+  const examples = page.locator("#projectTree [data-project-example]");
+  await expect(examples).toHaveCount(6);
+  await expect(examples.first()).toBeVisible();
+  await page.locator("#projectSearch").fill("PLC digital input");
+  const plc = page.locator('[data-project-example="hardware-plc-input"]');
+  await expect(plc).toBeVisible();
+  await expect(page.locator('[data-project-example="indicator"]')).toBeHidden();
+  await plc.press("Enter");
+  await expect(page.locator("#projectTemplate")).toHaveValue(
+    "hardware-plc-input",
+  );
+  await expect(page.locator("#newProjectName")).toHaveValue(
+    "PLC digital input bench",
+  );
+  await page.locator("#createProject").click();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(13);
+  await page.locator('[data-inspector="Electrical checks"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "Connected nets4",
+  );
+  const saved = await saveDrawing(page, "explorer-example");
+  expect(
+    saved.data.objects.filter(
+      (object: { kind: string }) => object.kind === "wire",
+    ),
+  ).toHaveLength(6);
+  await page.locator('[data-panel="project"]').click();
+  await expect(page.locator("#projectSearch")).toHaveValue("");
+  await expect(
+    page.locator('[data-project-example="indicator"]'),
+  ).toBeVisible();
+});
