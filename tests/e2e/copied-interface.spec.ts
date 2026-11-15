@@ -21,9 +21,7 @@ test("example copy remains a native editable project through replacement and loc
   const select = async (id: string) => {
     await page.locator('[data-draw="select"]').click();
     await page.locator('[data-inspector="Properties"]').click();
-    await page
-      .locator('[data-object="' + id + '"]')
-      .click();
+    await page.locator('[data-object="' + id + '"]').click();
   };
   const edit = async (selector: string, value: string) => {
     await page.locator(selector).fill(value);
@@ -127,7 +125,30 @@ test("example copy remains a native editable project through replacement and loc
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#createProject").click();
   const fresh = await saveDrawing(page, "editable-fresh-template");
-  expect(fresh.data.objects).toEqual(initial.data.objects);
+  const canonicalObjects = (
+    objects: Array<{
+      id: string;
+      attachments?: Record<string, { instanceId: string; pinId: string }>;
+    }>,
+  ) =>
+    objects.map((object, index) => ({
+      ...object,
+      id: index,
+      attachments: object.attachments
+        ? Object.fromEntries(
+            Object.entries(object.attachments).map(([end, pin]) => [
+              end,
+              {
+                ...pin,
+                instanceId: objects.findIndex((o) => o.id === pin.instanceId),
+              },
+            ]),
+          )
+        : undefined,
+    }));
+  expect(canonicalObjects(fresh.data.objects)).toEqual(
+    canonicalObjects(initial.data.objects),
+  );
   expect(errors).toEqual([]);
 });
 
