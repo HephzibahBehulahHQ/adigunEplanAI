@@ -1702,3 +1702,127 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
   ).project;
   assert.deepEqual(plain(reopened.objects), plain(project.objects));
 });
+
+test("panel device links follow canonical edits without duplicating devices", () => {
+  const project = engine.createExample("eng0601");
+  const device = project.objects.find((o) => o.ref === "K1");
+  const placement = { deviceId: device.id };
+  const before = plain(engine.billOfMaterials(project.objects));
+  const resolved = engine.resolvePanelDevice(project, placement);
+  assert.equal(resolved.instance, device);
+  assert.equal(resolved.definition, engine.component(device.componentId));
+  assert.deepEqual(plain(engine.billOfMaterials(project.objects)), before);
+  device.ref = "K101";
+  assert.equal(engine.resolvePanelDevice(project, placement).ref, "K101");
+  device.ref = "K1"; // Cross-sheet display labels are managed by the editor rename operation.
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.equal(engine.resolvePanelDevice(reopened, placement).ref, "K1");
+  const restored = reopened.objects.find((o) => o.id === device.id);
+  restored.componentId = "rittal-1059000";
+  assert.equal(
+    engine.resolvePanelDevice(reopened, placement).definition,
+    engine.component("rittal-1059000"),
+  );
+  reopened.objects = reopened.objects.filter((o) => o.id !== device.id);
+  assert.throws(
+    () => engine.resolvePanelDevice(reopened, placement),
+    /missing/,
+  );
+  assert.throws(
+    () => engine.resolvePanelDevice(project, {}),
+    /stable device ID/,
+  );
+  project.objects.push({ ...device });
+  assert.throws(
+    () => engine.resolvePanelDevice(project, placement),
+    /ambiguous/,
+  );
+});
+
+test("panel footprint geometry uses manufacturer dimensions and stable device links", () => {
+  const project = engine.createExample("eng0601");
+  const device = project.objects.find((o) => o.ref === "F1");
+  const placement = engine.createPanelPlacement(
+    project,
+    device.id,
+    "eng0601-a3-0",
+    200,
+    240,
+    0.5,
+  );
+  const before = plain(engine.billOfMaterials(project.objects));
+  project.objects.push(placement);
+  let geometry = engine.panelPlacementGeometry(project, placement);
+  assert.equal(geometry.width, 22.5);
+  assert.equal(geometry.height, 48.5);
+  assert.equal(geometry.footprint.depthMm, 97);
+  assert.ok(Object.isFrozen(geometry.footprint));
+  placement.x += 40;
+  placement.rotation = 90;
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  const saved = reopened.objects.find((o) => o.id === placement.id);
+  geometry = engine.panelPlacementGeometry(reopened, saved);
+  assert.equal(geometry.x, 240);
+  assert.equal(geometry.rotation, 90);
+  assert.deepEqual(plain(engine.billOfMaterials(reopened.objects)), before);
+  reopened.objects.find((o) => o.id === device.id).componentId =
+    "rittal-1059000";
+  assert.throws(
+    () => engine.panelPlacementGeometry(reopened, saved),
+    /replacement/,
+  );
+  assert.throws(
+    () => engine.createPanelPlacement(project, device.id, "missing", 0, 0, 1),
+    /sheet/,
+  );
+  assert.throws(
+    () =>
+      engine.createPanelPlacement(project, device.id, "eng0601-a3-0", 0, 0, 0),
+    /scale/,
+  );
+});
+
+test("panel placement imports reject malformed geometry but retain reviewable missing devices", () => {
+  const project = engine.createExample("eng0601");
+  const device = project.objects.find((o) => o.ref === "F1");
+  const placement = engine.createPanelPlacement(
+    project,
+    device.id,
+    "eng0601-a3-0",
+    200,
+    240,
+    0.5,
+  );
+  project.objects.push(placement);
+  for (const change of [
+    { scale: 0 },
+    { x: NaN },
+    { rotation: 45 },
+    { deviceId: "" },
+  ]) {
+    const candidate = { ...placement, ...change };
+    const copy = {
+      ...project,
+      objects: project.objects.map((o) =>
+        o.id === placement.id ? candidate : o,
+      ),
+    };
+    assert.throws(() => engine.serializeProject(copy), /Panel placement/);
+  }
+  placement.deviceId = "deleted-device";
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.equal(
+    reopened.objects.find((o) => o.id === placement.id).deviceId,
+    "deleted-device",
+  );
+  assert.throws(
+    () => engine.panelPlacementGeometry(reopened, placement),
+    /missing/,
+  );
+});
