@@ -214,11 +214,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 9);
+  assert.equal(project.sheets.length, 10);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 9 },
+      { length: 10 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -234,10 +234,10 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 6);
+  assert.equal(project.crossSheetConnections.length, 13);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
-  assert.equal(powerReport.globalNetCount, 13);
+  assert.equal(powerReport.globalNetCount, 20);
   for (let n = 1; n <= 3; n++) {
     const net = powerReport.globalNets.find((net) =>
       net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
@@ -247,7 +247,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 25);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 41);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
@@ -863,4 +863,76 @@ test("deleting a sheet preserves the remaining branches of shared cross-page pot
   assert.equal(kept[0].endpoints[1].connector.targetSheetId, "b");
   assert.equal(links[0].endpoints.length, 3);
   assert.equal(engine.removeSheetConnections(kept, "b").length, 0);
+});
+
+test("control permissives and seal-in retain distinct terminal-bound nets through editing", () => {
+  const project = engine.createExample("eng0601");
+  const expected = [
+    ["S0:contact-22", "Q2:AUX:no-23"],
+    ["Q2:AUX:no-24", "F2:aux-95"],
+    ["F2:aux-96", "B1:terminal-11"],
+    ["B1:terminal-12", "S1:contact-13", "K1:aux-13"],
+    ["S1:contact-14", "K1:aux-14", "K1:coil-a1"],
+    ["X3:2:connection-2", "K1:coil-a2"],
+  ];
+  const check = (drawing) => {
+    const report = engine.analyzeProject(drawing);
+    assert.equal(report.valid, true);
+    const found = expected.map((pins) => {
+      const net = report.globalNets.find((n) =>
+        n.pins.some((p) => p.ref + ":" + p.pinId === pins[0]),
+      );
+      assert.ok(net, pins[0]);
+      for (const pin of pins)
+        assert.ok(
+          net.pins.some((p) => p.ref + ":" + p.pinId === pin),
+          pin,
+        );
+      assert.ok(!net.pins.some((p) => p.ref === "M1" || p.ref === "XPE:1"));
+      return net;
+    });
+    assert.equal(
+      new Set(found).size,
+      expected.length,
+      "switch contacts must not become permanent shorts",
+    );
+    for (const ref of ["K1", "F2", "B1", "Q2:AUX"])
+      assert.equal(drawing.objects.filter((o) => o.ref === ref).length, 1);
+  };
+  check(project);
+  const auxiliary = project.objects.find((o) => o.ref === "Q2:AUX");
+  auxiliary.x += 30;
+  auxiliary.rotation = 90;
+  auxiliary.stroke = "#ff6600";
+  engine.synchronizeWireAttachments(project.objects);
+  const reopened = engine.parseProject(engine.serializeProject(project));
+  assert.equal(reopened.valid, true);
+  check(reopened.project);
+  assert.deepEqual(
+    plain(reopened.project.crossSheetConnections),
+    plain(project.crossSheetConnections),
+  );
+  assert.equal(
+    reopened.project.objects.find((o) => o.id === auxiliary.id).stroke,
+    "#ff6600",
+  );
+  assert.deepEqual(
+    plain(engine.component(auxiliary.componentId).symbol.internalConnections),
+    [],
+  );
+});
+
+test("isolator auxiliary uses the manufacturer-marked NO 23/24 and NC 11/12", () => {
+  const part = engine.component("siemens-3ld9200-5b");
+  assert.deepEqual(
+    plain(part.symbol.pins.map((pin) => [pin.id, pin.localNumber])),
+    [
+      ["no-23", "23"],
+      ["no-24", "24"],
+      ["nc-11", "11"],
+      ["nc-12", "12"],
+    ],
+  );
+  assert.equal(part.specifications.ratedDC13At24V.value, 4);
+  assert.deepEqual(plain(part.symbol.internalConnections), []);
 });
