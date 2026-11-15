@@ -477,11 +477,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 16);
+  assert.equal(project.sheets.length, 17);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 16 },
+      { length: 17 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -497,7 +497,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 31);
+  assert.equal(project.crossSheetConnections.length, 36);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
   assert.equal(powerReport.globalNetCount, 27);
@@ -510,7 +510,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 81);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 90);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
@@ -1131,10 +1131,16 @@ test("deleting a sheet preserves the remaining branches of shared cross-page pot
 test("control permissives and seal-in retain distinct terminal-bound nets through editing", () => {
   const project = engine.createExample("eng0601");
   const expected = [
-    ["S0:contact-22", "Q2:AUX:no-23"],
-    ["Q2:AUX:no-24", "F2:aux-95"],
-    ["F2:aux-96", "B1:terminal-11"],
-    ["B1:terminal-12", "S1:contact-13", "K1:aux-13"],
+    ["S0:contact-22", "X5:1:connection-1", "X5:1:connection-2", "Q2:AUX:no-23"],
+    ["Q2:AUX:no-24", "X5:2:connection-1", "X5:2:connection-2", "F2:aux-95"],
+    ["F2:aux-96", "X5:3:connection-1", "X5:3:connection-2", "B1:terminal-11"],
+    [
+      "B1:terminal-12",
+      "X5:4:connection-1",
+      "X5:4:connection-2",
+      "S1:contact-13",
+      "K1:aux-13",
+    ],
     ["S1:contact-14", "K1:aux-14", "K1:coil-a1"],
     ["X3:2:connection-2", "K1:coil-a2"],
   ];
