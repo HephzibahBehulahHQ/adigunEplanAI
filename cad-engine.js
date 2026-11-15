@@ -1443,7 +1443,7 @@ function createPumpStarterDocumentation(name) {
     wire(9,'pressure-start',pin(pressure,'terminal-12'),pin(start,'contact-13'),'24V-05');
     continuation('hold-feed',pressure,'terminal-12',{x:620,y:470},k1,'aux-13',{x:620,y:180},'24V-05 · B1:12 → K1:13','right','right');
     continuation('hold-output',k1,'aux-14',{x:620,y:380},start,'contact-14',{x:980,y:430},'24V-06 · K1:14 → S1:14','right','left');
-    continuation('coil-command',start,'contact-14',{x:980,y:350},k1,'coil-a1',{x:200,y:450},'24V-06 · S1:14 → K1:A1','left','left');
+    continuation('coil-command',start,'contact-14',{x:980,y:350},k1,'coil-a1',{x:200,y:220},'24V-06 · S1:14 → K1:A1','left','left');
     continuation('coil-return',negative,'connection-2',{x:260,y:520},k1,'coil-a2',{x:260,y:550},'0V · X3:2 → K1:A2','right','right');
     k1.properties.comment='Same physical K1: power poles on this sheet; coil and NO seal-in connected to local control. No actuation simulation or approval.';
     f2.properties.comment='95/96 healthy control path connected; 97/98 spare. Overload setting/reset and short-circuit coordination remain unverified.';
