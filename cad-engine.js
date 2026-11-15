@@ -1449,8 +1449,8 @@ function createPumpStarterDocumentation(name) {
     ['L1','L2','L3'].forEach(function(phase,index){
       const n=index+1,x=350+index*50;
       const source=part(6,'phoenix-contact-3004362','X1:'+n,100,[160,340,440][index],0,'Supply interface '+phase+'. Feeds F1 on the feeder sheet. Upstream common isolation and cable design remain outstanding.');
-      continuation('feeder-input-'+n,source,'connection-2',{x:180,y:[160,340,440][index]},f1,'line-l'+n,{x:x,y:180-index*30},phase+' · X1:'+n+' → F1','right','left');
-      continuation('feeder-output-'+n,f1,'load-t'+n,{x:x,y:480-index*40},k1,'power-l'+n,{x:x,y:150-index*30},phase+' · F1 → K1','right','left');
+      continuation('feeder-input-'+n,source,'connection-2',{x:180,y:[160,340,440][index]},f1,'line-l'+n,{x:x,y:180-index*30},'FEED-'+phase,'right','left');
+      continuation('feeder-output-'+n,f1,'load-t'+n,{x:x,y:480-index*40},k1,'power-l'+n,{x:x,y:150-index*30},'PROT-'+phase,'right','left');
       text(6,'supply-label-'+n,65,[130,310,410][index],phase,12,70);
       const outgoing={x:x,y:480-index*40},incoming={x:x,y:180-index*40};
       const a=wire(6,'k1-out-'+n,pin(k1,'power-t'+n),outgoing,'K1-T'+n);
