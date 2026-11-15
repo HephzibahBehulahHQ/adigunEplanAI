@@ -1772,3 +1772,38 @@ test("electrical support wires to relay terminals and retains bindings after edi
     path: test.info().outputPath("support-electrical-wiring.png"),
   });
 });
+
+test("ENG-0601 A4 reports open as native editable sheets and survive local reopen", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("A4 report verification");
+  await page.locator("#createProject").click();
+  const original = await saveDrawing(page, "a4-source");
+  const reports = original.data.sheets.filter(
+    (s: { sectionId: string }) => s.sectionId === "A4",
+  );
+  expect(reports).toHaveLength(7);
+  for (const sheet of reports) {
+    await page
+      .locator('[data-sheet="' + sheet.id + '"]')
+      .first()
+      .click();
+    await expect(page.locator("#userDrawings .drawing-object")).not.toHaveCount(
+      0,
+    );
+    await page.screenshot({ path: test.info().outputPath(sheet.id + ".png") });
+  }
+  const saved = await saveDrawing(page, "a4-reports");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "a4-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(reopened.data.sheets).toEqual(saved.data.sheets);
+  expect(reopened.data.crossSheetConnections).toEqual(
+    saved.data.crossSheetConnections,
+  );
+});

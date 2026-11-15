@@ -554,13 +554,14 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 20);
+  assert.equal(project.sheets.length, 27);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 20 },
+      { length: 27 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : "A3/") + String(i).padStart(3, "0"),
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 20 ? "A3/" : "A4/") +
+        String(i).padStart(3, "0"),
     ),
   );
   for (const sheet of project.sheets.filter((s) => s.sectionId === "A1")) {
@@ -572,7 +573,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
   }
   assert.match(
     project.objects.map((o) => o.text).join("\n"),
-    /planned \/ not yet created/,
+    /All listed sheets exist/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
   assert.equal(project.crossSheetConnections.length, 37);
@@ -1685,7 +1686,10 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
   assert.ok(rows.every((row) => row.y < 520));
   const withoutLayout = {
     ...project,
-    sheets: project.sheets.filter((s) => s.id !== sheet.id),
+    sheets: engine.numberProjectSheets(
+      project.sheets.filter((s) => s.id !== sheet.id),
+      project.sections,
+    ),
     objects: project.objects.filter((o) => o.sheetId !== sheet.id),
   };
   assert.deepEqual(
@@ -2077,5 +2081,54 @@ test("wire lanes share routing, branch geometry, length and native persistence",
   assert.throws(
     () => engine.wireRoute({ ...wire, route: { axis: "y", coordinate: NaN } }),
     /finite/,
+  );
+});
+
+test("A4 native registers match canonical devices and remain editable after reopen", () => {
+  const project = engine.createExample("eng0601");
+  const sheets = project.sheets.filter((s) => s.sectionId === "A4");
+  assert.equal(sheets.length, 7);
+  assert.equal(sheets[0].number, "A4/020");
+  assert.equal(sheets.at(-1).number, "A4/026");
+  const reportObjects = project.objects.filter((o) =>
+    sheets.some((s) => s.id === o.sheetId),
+  );
+  assert.ok(reportObjects.every((o) => o.kind === "text" && !o.locked));
+  for (const row of engine.billOfMaterials(project.objects).rows) {
+    const text = reportObjects.find(
+      (o) => o.id === "eng0601-bom-" + row.componentId,
+    );
+    assert.ok(
+      text.text.includes(
+        row.quantity + " × " + row.manufacturer + " · " + row.partNumber,
+      ),
+    );
+    for (const ref of row.references) assert.ok(text.text.includes(ref));
+  }
+  for (const device of project.objects.filter(
+    (o) => o.kind === "component-instance" && /^X/.test(o.ref),
+  )) {
+    const text = reportObjects.find(
+      (o) => o.id === "eng0601-terminal-register-" + device.id,
+    );
+    assert.ok(text.text.includes(device.ref));
+    for (const pin of engine.component(device.componentId).symbol.pins)
+      assert.ok(text.text.includes(pin.localNumber + ":"));
+  }
+  assert.ok(reportObjects.some((o) => o.text.includes("NOT PERFORMED")));
+  assert.ok(reportObjects.every((o) => o.y <= 545));
+  reportObjects.find((o) => o.text.includes("NOT PERFORMED")).text =
+    "Owner review note; testing remains unperformed.";
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(restored.objects), plain(project.objects));
+  assert.deepEqual(
+    plain(restored.crossSheetConnections),
+    plain(project.crossSheetConnections),
+  );
+  const fresh = engine.createExample("eng0601");
+  assert.ok(
+    fresh.objects.some((o) => o.text && o.text.includes("NOT PERFORMED")),
   );
 });
