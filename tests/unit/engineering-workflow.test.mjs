@@ -554,11 +554,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 18);
+  assert.equal(project.sheets.length, 19);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 18 },
+      { length: 19 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -1449,4 +1449,49 @@ test("pilot-light instances preserve coil and trip nets through editing and loca
     .objects.find((o) => o.ref === "H1");
   assert.equal(fresh.componentId, "schneider-electric-xb5avb3");
   assert.equal(fresh.properties.legend, "K1 COIL VOLTAGE");
+});
+
+test("continuation register covers every real pair and remains editable on reopen", () => {
+  const project = engine.createExample("eng0601");
+  const sheet = project.sheets.find((s) => s.id === "eng0601-a2-12");
+  assert.equal(sheet.number, "A2/018");
+  const rows = project.objects.filter((o) =>
+    o.id.startsWith("eng0601-continuation-row-"),
+  );
+  assert.equal(rows.length, project.crossSheetConnections.length);
+  project.crossSheetConnections.forEach((link, index) => {
+    for (const endpoint of link.endpoints) {
+      const wire = project.objects.find((o) => o.id === endpoint.wireId);
+      const attachment = Object.values(wire.attachments)[0];
+      const device = project.objects.find(
+        (o) => o.id === attachment.instanceId,
+      );
+      const pin = engine
+        .worldPins(device)
+        .find((p) => p.id === attachment.pinId);
+      const page = project.sheets.find((s) => s.id === endpoint.sheetId);
+      assert.ok(
+        rows[index].text.includes(`${page.number} ${device.ref}:${pin.number}`),
+      );
+    }
+    assert.equal(rows[index].kind, "text");
+    assert.ok(!rows[index].text.includes("undefined"));
+    assert.ok(rows[index].y < 540);
+  });
+  rows[0].text += " | reviewed locally";
+  rows[0].stroke = "#aa2244";
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(restored.objects), plain(project.objects));
+  assert.deepEqual(
+    plain(restored.crossSheetConnections),
+    plain(project.crossSheetConnections),
+  );
+  assert.ok(
+    !engine
+      .createExample("eng0601")
+      .objects.find((o) => o.id === rows[0].id)
+      .text.includes("reviewed locally"),
+  );
 });

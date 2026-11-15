@@ -1358,7 +1358,7 @@ function removeDrawingObjects(objects,ids){
     return prefix+number;
   }
 function createPumpStarterDocumentation(name) {
-    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection','Coil-voltage and overload-trip indication','Operating sequence and interlocks','Motor feeder short-circuit protection','Supply isolation and distribution','Field terminal connections','Field control terminal interfaces','Earthing and bonding'];
+    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection','Coil-voltage and overload-trip indication','Operating sequence and interlocks','Motor feeder short-circuit protection','Supply isolation and distribution','Field terminal connections','Field control terminal interfaces','Earthing and bonding','Cross-sheet connection register'];
     const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-'+(index<6?'a1-'+index:'a2-'+(index-6)),sectionId:index<6?'A1':'A2',name:title,number:(index<6?'A1/':'A2/')+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
     const objects=[];
     function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
@@ -1376,7 +1376,7 @@ function createPumpStarterDocumentation(name) {
       'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
       'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
       'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: six A1 documents and eleven connected A2 circuit sheets and one terminal report; A3/A4 remain empty.',
+      'Current delivery: six A1 documents and eleven connected A2 circuit sheets and two editable reports; A3/A4 remain empty.',
       'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
     ]);
     rows(1,[
@@ -1400,14 +1400,14 @@ function createPumpStarterDocumentation(name) {
       '009 Local stop, permissives and seal-in','010 Auxiliary supply and control protection','011 Coil-voltage and trip indication',
       '012 Operating sequence and interlocks','013 Motor feeder short-circuit protection','014 Supply isolation and distribution',
       '015 Field terminal connections','016 Field control terminal interfaces','017 Earthing and bonding',
-      '018 Cable and continuation schedule','019 Protection and cable calculations','020 Panel general arrangement',
+      '018 Cross-sheet connection register','019 Protection and cable calculations','020 Panel general arrangement',
       '021 Mounting plate and DIN rails','022 Door layout and operator devices','023 Terminal-strip layout',
       '024 Cable entry and routing','025 Assembly and installation','026 Final bill of materials',
       '027 Final connection reports','028 Inspection and commissioning','029 Handover and unresolved items'
     ];
     register.forEach(function(line,index){
       const section=index<6?'A1':index<20?'A2':index<26?'A3':'A4';
-      const status=index<18?'P01 / authored development':'planned / not yet created';
+      const status=index<19?'P01 / authored development':'planned / not yet created';
       text(2,'register-'+index,index<15?60:620,120+(index%15)*25,section+'/'+line+' | '+status,11,510);
     });
     text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
@@ -1680,10 +1680,24 @@ function createPumpStarterDocumentation(name) {
     text(15,'terminal-report-basis',60,105,'NATIVE NET SNAPSHOT — generated from terminal identities and paired continuations at example creation.',12,1070);
     terminalRows.forEach(function(value,index){if(!value)return;text(15,'terminal-report-'+index,index<16?60:620,145+(index%16)*23,value,11,510);});
     text(15,'terminal-report-scope',60,510,'Editable report snapshot: after rewiring, use Electrical checks to inspect current connectivity.\nRows list connected equipment, not cable cores or terminal order. PE rail paths are on A2/017.\nField control interfaces are on A2/016. Cable selection and physical rail/accessory design remain pending.',11,1070);
-    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and eleven connected A2 circuit sheets and one terminal report. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
+    text(18,'continuation-basis',60,105,'TERMINAL-BOUND CONTINUATIONS — editable snapshot at example creation; not a physical cable/core schedule.',12,1070);
+    powerLinks.forEach(function(link,index){
+      const ends=link.endpoints.map(function(endpoint){
+        const segment=objects.find(function(o){return o.id===endpoint.wireId;});
+        const binding=Object.values(segment.attachments||{})[0];
+        const device=binding&&objects.find(function(o){return o.id===binding.instanceId;});
+        const terminal=device&&worldPins(device).find(function(p){return p.id===binding.pinId;});
+        const page=sheets.find(function(p){return p.id===endpoint.sheetId;});
+        if(!device||!terminal||!page)throw new Error('Unresolved continuation register endpoint: '+link.id);
+        return page.number+' '+device.ref+':'+terminal.number;
+      });
+      text(18,'continuation-row-'+index,index<19?60:620,145+(index%19)*21,ends.join(' → '),10,510);
+    });
+    text(18,'continuation-scope',60,560,'Each row records one paired continuation. Same-sheet wires are omitted.\nRAIL is a mounting-foot interface, not a conductor clamp.\nAfter rewiring, inspect Electrical checks; this snapshot does not auto-refresh.\nCable products, cores, lengths and installation calculations remain unselected.',10,610);
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and eleven connected A2 circuit sheets and two editable reports. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
   }
   function projectExamples() {
-    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and eleven connected A2 circuit sheets and one terminal report including motor feeder protection, field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and eleven connected A2 circuit sheets and two editable reports including motor feeder protection, field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
