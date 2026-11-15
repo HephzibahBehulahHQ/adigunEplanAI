@@ -346,7 +346,10 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
           ),
         };
       });
-    expect(layout).toEqual({ outside: 0, overlaps: false });
+    expect(layout, "Authored paper check index " + i).toEqual({
+      outside: 0,
+      overlaps: false,
+    });
   }
   await expect(page.locator("#userDrawings")).toContainText(
     "NATIVE NET SNAPSHOT",

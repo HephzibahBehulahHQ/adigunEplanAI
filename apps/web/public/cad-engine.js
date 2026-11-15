@@ -1466,7 +1466,7 @@ function createPumpStarterDocumentation(name) {
       'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
       'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
       'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: six A1 documents and eleven connected A2 circuit sheets and two editable reports; A3 enclosure basis is authored; detailed placement remains unfinished; A4 development reports are authored.',
+      'Current delivery: A1 basis, A2 circuits/reports, A3 enclosure basis and A4 development records. Detailed installation remains unfinished.',
       'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
     ]);
     rows(1,[
