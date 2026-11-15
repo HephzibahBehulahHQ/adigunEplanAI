@@ -1927,6 +1927,7 @@ test("terminal bodies can be added through existing Properties and reopened", as
       .locator('#userDrawings [data-object="' + device.id + '"]')
       .dblclick();
     await expect(page.locator("#rightPanelTitle")).toHaveText("Properties");
+    await expect(page.locator("#rightPanel")).toHaveClass(/open/);
     await page.screenshot({
       path:
         "test-results/terminal-" +
