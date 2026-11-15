@@ -936,3 +936,29 @@ test("isolator auxiliary uses the manufacturer-marked NO 23/24 and NC 11/12", ()
   assert.equal(part.specifications.ratedDC13At24V.value, 4);
   assert.deepEqual(plain(part.symbol.internalConnections), []);
 });
+
+test("contactor coil feed does not visually pass through its return terminal", () => {
+  const project = engine.createExample("eng0601");
+  const k1 = project.objects.find((o) => o.ref === "K1");
+  const pins = engine.worldPins(k1);
+  for (const [wireId, opposite] of [
+    ["coil-command-to", "coil-a2"],
+    ["coil-return-to", "coil-a1"],
+  ]) {
+    const wire = project.objects.find((o) => o.id === "eng0601-wire-" + wireId);
+    const pin = pins.find((p) => p.id === opposite);
+    const horizontal =
+      pin.y === wire.y1 &&
+      pin.x >= Math.min(wire.x1, wire.x2) &&
+      pin.x <= Math.max(wire.x1, wire.x2);
+    const vertical =
+      pin.x === wire.x2 &&
+      pin.y >= Math.min(wire.y1, wire.y2) &&
+      pin.y <= Math.max(wire.y1, wire.y2);
+    assert.equal(
+      horizontal || vertical,
+      false,
+      wireId + " must not cross " + opposite,
+    );
+  }
+});
