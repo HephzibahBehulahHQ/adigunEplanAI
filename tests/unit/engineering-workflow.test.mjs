@@ -8,6 +8,72 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("title block shared metadata and sheet overrides survive native roundtrip with fixed identities", () => {
+  const sections = engine.defaultProjectSections();
+  const sheets = engine.numberProjectSheets(
+    [
+      {
+        id: "overview",
+        name: "Overview",
+        sectionId: "A1",
+        customName: true,
+        metadata: { revision: "02", checkedBy: "" },
+      },
+      {
+        id: "power",
+        name: "Power",
+        sectionId: "A2",
+        customName: true,
+        metadata: { drawingNumber: "D-006" },
+      },
+    ],
+    sections,
+  );
+  const project = {
+    project: "Pump starter",
+    sections,
+    sheets,
+    activeSheet: null,
+    objects: [],
+    metadata: {
+      manager: "Project manager",
+      checkedBy: "Pending review",
+      corporateIdentity: "Override attempt",
+      softwareIdentity: "Override attempt",
+    },
+  };
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  const first = engine.titleBlockValues(
+    restored.project,
+    restored.project.sheets[0],
+  );
+  const second = engine.titleBlockValues(
+    restored.project,
+    restored.project.sheets[1],
+  );
+  assert.equal(first.corporateIdentity, "Hephzibah Behulah");
+  assert.equal(first.softwareIdentity, "AdigunEplanAI");
+  assert.equal(first.manager, second.manager);
+  assert.equal(first.checkedBy, "");
+  assert.equal(second.checkedBy, "Pending review");
+  assert.equal(first.revision, "02");
+  assert.equal(second.revision, "");
+  assert.equal(first.sheetReference, "A1/Overview");
+  assert.equal(second.drawingNumber, "D-006");
+  for (const [width, height] of [
+    [1200, 760],
+    [760, 1200],
+    [600, 400],
+  ]) {
+    const b = engine.titleBlockBounds(width, height, 26);
+    assert.equal(b.x + b.width, width - 26);
+    assert.equal(b.y + b.height, height - 26);
+    assert.ok(b.x >= 26 && b.y >= 26);
+  }
+  assert.throws(() => engine.titleBlockBounds(100, 100));
+});
+
 test("CPU 1212C transistor outputs use the DC/DC/DC connector table and preserve physical attachments", () => {
   const id = "siemens-6es7212-1ae40-0xb0";
   const part = engine.component(id);
