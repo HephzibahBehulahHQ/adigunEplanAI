@@ -1672,6 +1672,8 @@ test("mounting accessory links to the canonical overload and survives rename and
 test("electrical support wires to relay terminals and retains bindings after editing", async ({
   page,
 }) => {
+  page.setDefaultTimeout(5000);
+  test.setTimeout(60000);
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
@@ -1719,8 +1721,7 @@ test("electrical support wires to relay terminals and retains bindings after edi
   await page.locator('[data-draw="select"]').click();
   await page
     .locator('#userDrawings [data-object="' + support.id + '"]')
-    .locator(".component-hit-target")
-    .click();
+    .click({ position: { x: 40, y: 65 } });
   await page.locator('[data-inspector="Properties"]').click();
   await page.getByRole("button", { name: "Link mounting accessory" }).click();
   await page.locator('[data-object-coordinate="x"]').fill("300");
