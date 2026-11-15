@@ -419,7 +419,7 @@
     drawing.style.cursor='default';
     renderObjects();
     persist();
-    notify(item.name+' '+ref+(item.family==='eplan-original'?' placed from the original Eplan schematic library.':' placed with verified pins and part data.'));
+    notify(item.name+' '+ref+(item.family==='eplan-original'?' placed from the original Eplan schematic library.':item.family==='terminal-accessory'?' placed as a mechanical accessory; no electrical terminals.':' placed with verified pins and part data.'));
     return true;
   }
   function cancelComponentPlacement(){

@@ -2055,6 +2055,9 @@ test("terminal accessories insert through the existing library as editable mecha
     await page.mouse.click(point.x, point.y);
   }
   expect(errors).toEqual([]);
+  await expect(page.locator("#statusText")).toContainText(
+    "no electrical terminals",
+  );
   await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(4);
   await page.screenshot({
