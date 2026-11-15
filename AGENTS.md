@@ -1,3 +1,7 @@
+# EDITABLE EXAMPLES — OWNER REQUIREMENT (2026-11-15)
+
+Every example must instantiate an independent native project using the same document model, editor and persistence as user projects. Never flatten or lock template objects. Verify component selection, movement, rotation, duplication, replacement, deletion, instance names/tags/settings/colours, connection edits, sheet/project/title-block edits, local rename/save/reopen, and preserved electrical relationships. Keep template source unchanged. Verified manufacturer definitions remain immutable; instance settings and replacement parts must not overwrite or falsify them. Use existing menus and Properties; keep the approved interface locked. Do not call an example complete until this workflow is verified.
+
 # EMPTY STARTUP — OWNER CORRECTION (2026-11-14)
 
 Opening or refreshing the website starts with no active project, an empty project tree, no sheet tabs and no drawing content. A1–A4 are created only by New Project or loading an example. Examples populate the sidebar but their drawing opens only when the user selects a sheet. Do not restore the legacy Z0010000 sample or auto-create a project at startup. PR #75 fixes startup initialization; this was not a saved-user-data cache problem. Preserve user project files and content-versioned script loading.

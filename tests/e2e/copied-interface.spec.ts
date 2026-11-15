@@ -3,6 +3,155 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+test("example copy remains a native editable project through replacement and local reopen", async ({
+  page,
+}) => {
+  test.setTimeout(90000);
+  page.setDefaultTimeout(8000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("My editable pump project");
+  await page.locator("#createProject").click();
+  const initial = await saveDrawing(page, "editable-original");
+  const component = (ref: string) =>
+    initial.data.objects.find((o: { ref: string }) => o.ref === ref);
+  const select = async (id: string) => {
+    await page.locator('[data-draw="select"]').click();
+    await page.locator('[data-inspector="Properties"]').click();
+    await page.locator('[data-object="' + id + '"]').click();
+  };
+  const edit = async (selector: string, value: string) => {
+    await page.locator(selector).fill(value);
+    await page.locator(selector).press("Tab");
+  };
+  await page.locator('[data-sheet="eng0601-a2-0"]').first().click();
+  const k1 = component("K1"),
+    x1 = component("X1:1");
+  await select(k1.id);
+  await edit('[data-component-property="ref"]', "KM-PUMP");
+  await edit("[data-component-displayname]", "Pump contactor");
+  await edit('[data-component-property="comment"]', "Workshop copy reviewed");
+  await edit('[data-object-coordinate="x"]', "430");
+  await page.locator("[data-rotate-object]").click();
+  await page.locator('[data-action="palette"]').click();
+  await page.locator('[data-color="#164eac"]').click();
+  await page.keyboard.press("Escape");
+  await select(x1.id);
+  await page
+    .getByLabel("Replacement component", { exact: true })
+    .selectOption("phoenix-contact-3044076");
+  await page.locator("[data-replace-component]").click();
+  await page
+    .locator('[data-object="' + x1.id + '"]')
+    .click({ button: "right" });
+  await page.locator('[data-object-command="duplicate"]').click();
+  const duplicated = await saveDrawing(page, "editable-duplicated");
+  expect(duplicated.data.objects.length).toBe(initial.data.objects.length + 1);
+  const copy = duplicated.data.objects.find(
+    (o: { id: string }) =>
+      !initial.data.objects.some(
+        (original: { id: string }) => original.id === o.id,
+      ),
+  );
+  await select(copy.id);
+  await page.locator("[data-delete-object]").click();
+  const deleted = await saveDrawing(page, "editable-copy-deleted");
+  expect(deleted.data.objects.length).toBe(initial.data.objects.length);
+  await page.locator('[data-sheet="eng0601-a2-1"]').first().click();
+  const f2 = component("F2");
+  await select(f2.id);
+  await edit('[data-component-property="overloadSettingA"]', "15.2");
+  const wire = initial.data.objects.find(
+    (o: {
+      kind: string;
+      sheetId: string;
+      attachments?: { end?: { instanceId: string } };
+    }) =>
+      o.kind === "wire" &&
+      o.sheetId === f2.sheetId &&
+      o.attachments?.end?.instanceId === f2.id,
+  );
+  const point = await sheetPoint(page, wire.x1, (wire.y1 + wire.y2) / 2);
+  await page.mouse.click(point.x, point.y);
+  await edit("[data-wire-label]", "L1 workshop");
+  await page.getByLabel("end terminal", { exact: true }).selectOption("");
+  await page
+    .getByLabel("end terminal", { exact: true })
+    .selectOption(f2.id + "|" + wire.attachments.end.pinId);
+  await edit("[data-connection-label]", "L1 checked continuation");
+  const saved = await saveDrawing(page, "editable-modified");
+  const editedK1 = saved.data.objects.find(
+    (o: { id: string }) => o.id === k1.id,
+  );
+  expect(editedK1).toMatchObject({
+    ref: "KM-PUMP",
+    displayName: "Pump contactor",
+    x: 430,
+    rotation: 90,
+    stroke: "#164eac",
+    properties: { comment: "Workshop copy reviewed" },
+  });
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === x1.id).componentId,
+  ).toBe("phoenix-contact-3044076");
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === f2.id).properties
+      .overloadSettingA,
+  ).toBe(15.2);
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === wire.id),
+  ).toMatchObject({
+    conductorId: "L1 workshop",
+    attachments: wire.attachments,
+  });
+  expect(
+    saved.data.crossSheetConnections.some(
+      (c: { name: string }) => c.name === "L1 checked continuation",
+    ),
+  ).toBe(true);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "editable-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(reopened.data.crossSheetConnections).toEqual(
+    saved.data.crossSheetConnections,
+  );
+  expect(reopened.data.sheets).toEqual(saved.data.sheets);
+  expect(reopened.data.project).toBe("My editable pump project");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#createProject").click();
+  const fresh = await saveDrawing(page, "editable-fresh-template");
+  const canonicalObjects = (
+    objects: Array<{
+      id: string;
+      attachments?: Record<string, { instanceId: string; pinId: string }>;
+    }>,
+  ) =>
+    objects.map((object, index) => ({
+      ...object,
+      id: index,
+      attachments: object.attachments
+        ? Object.fromEntries(
+            Object.entries(object.attachments).map(([end, pin]) => [
+              end,
+              {
+                ...pin,
+                instanceId: objects.findIndex((o) => o.id === pin.instanceId),
+              },
+            ]),
+          )
+        : undefined,
+    }));
+  expect(canonicalObjects(fresh.data.objects)).toEqual(
+    canonicalObjects(initial.data.objects),
+  );
+  expect(errors).toEqual([]);
+});
+
 test("manufacturer pressure switch inserts through existing library and preserves its terminal interface", async ({
   page,
 }) => {
@@ -35,7 +184,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(8);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(9);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 6; i++) {
     await page
@@ -72,7 +221,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     expect(layout).toEqual({ outside: 0, overlaps: false });
   }
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(8);
+  expect(saved.data.sheets).toHaveLength(9);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -96,6 +245,11 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     "PANEL POWER SEGMENT",
   );
   await page.screenshot({ path: test.info().outputPath("eng0601-power.png") });
+  await page.locator('[data-sheet="eng0601-a2-2"]').first().click();
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(13);
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-field-motor.png"),
+  });
   await page.reload();
   await page.locator("#openFile").setInputFiles({
     name: "eng0601.json",
