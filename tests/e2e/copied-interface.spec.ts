@@ -1905,6 +1905,9 @@ test("terminal bodies can be added through existing Properties and reopened", as
   page,
 }) => {
   test.setTimeout(60000);
+  page.setDefaultTimeout(5000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
@@ -1924,6 +1927,19 @@ test("terminal bodies can be added through existing Properties and reopened", as
       .locator('#userDrawings [data-object="' + device.id + '"]')
       .dblclick();
     await expect(page.locator("#rightPanelTitle")).toHaveText("Properties");
+    await page.screenshot({
+      path:
+        "test-results/terminal-" +
+        device.ref.replace(/:/g, "-") +
+        "-properties.png",
+    });
+    expect(errors).toEqual([]);
+    await expect(page.locator("#selectionDetails")).toContainText(
+      "Verified component",
+    );
+    await expect(page.locator('[data-component-property="ref"]')).toHaveValue(
+      device.ref,
+    );
     await page
       .getByRole("button", { name: "Add linked panel placement" })
       .click();
