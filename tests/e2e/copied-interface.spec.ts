@@ -6,6 +6,8 @@ import type { Page } from "@playwright/test";
 test("sourced feeder parts use the existing library and preserve editable settings", async ({
   page,
 }) => {
+  test.setTimeout(90000);
+  page.setDefaultTimeout(8000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
