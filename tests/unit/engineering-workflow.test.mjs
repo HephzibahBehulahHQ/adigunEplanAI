@@ -8,6 +8,43 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("ENG-0601 has authored A1 documents without fabricated circuits or blank future sheets", () => {
+  const project = engine.createExample("eng0601");
+  assert.equal(engine.validateProject(project).valid, true);
+  assert.deepEqual(plain(project.sections.map((s) => s.id)), [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+  ]);
+  assert.equal(project.activeSheet, null);
+  assert.equal(project.sheets.length, 6);
+  assert.deepEqual(
+    plain(project.sheets.map((s) => s.number)),
+    Array.from({ length: 6 }, (_, i) => "A1/" + String(i).padStart(3, "0")),
+  );
+  for (const sheet of project.sheets) {
+    const content = project.objects.filter((o) => o.sheetId === sheet.id);
+    assert.ok(content.length >= 12);
+    assert.ok(
+      content.every((o) => o.kind === "text" && o.y < 574 && !o.locked),
+    );
+  }
+  assert.match(
+    project.objects.map((o) => o.text).join("\n"),
+    /planned \/ not yet created/,
+  );
+  assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
+  assert.equal(project.crossSheetConnections.length, 0);
+  project.objects[1].text = "Engineer edited this note";
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.deepEqual(plain(restored.project), plain(project));
+  assert.notEqual(
+    engine.createExample("eng0601").objects[1].text,
+    project.objects[1].text,
+  );
+});
+
 test("sheet deletion retains unresolved continuation evidence through saving", () => {
   const links = [
     {
@@ -177,10 +214,10 @@ test("project import rejects malformed attachment data and duplicate identities"
 });
 
 test("examples are independent editable projects with complete terminal attachments", () => {
-  assert.equal(engine.projectExamples().length, 6);
+  assert.equal(engine.projectExamples().length, 7);
   for (const example of engine
     .projectExamples()
-    .filter((item) => !item.hardware)) {
+    .filter((item) => ["indicator", "relay"].includes(item.id))) {
     const project = engine.createExample(example.id, "Workshop project");
     assert.equal(project.project, "Workshop project");
     assert.equal(engine.validateProject(project).valid, true);
