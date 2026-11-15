@@ -1,6 +1,6 @@
 # ENG-0601 — native indication circuit increment
 
-Status: local implementation; release checks pending. The overall project is not complete: A3/A4 and remaining coordinated design documentation are still outstanding.
+Status: merged and deployed in PR #88, commit 0c4044d048ff71e3b2f23cbe3148e5d55a838cb6. The overall project is not complete: A3/A4 and remaining coordinated design documentation are still outstanding.
 
 Adds A2/011 with native editable H1/H2 instances, four terminal-based cross-sheet connections and a shared return wire. No interface CSS/layout changes.
 
@@ -22,3 +22,11 @@ Conservative nominal load bookkeeping: 0.1875 A K1 coil + two 0.018 A lamps + 0.
 Regression checks cover distinct coil/trip/supply/return nets, component movement and rotation with attachment synchronization, legend/stroke edits, serialization/reopening and same-terminal green-to-red part replacement. The untouched factory creates a fresh green H1 with its original legend. Manufacturer lens colour changes only by replacing the actual part, never by changing the drawing stroke.
 
 12 authored sheets, 20 cross-sheet links and 62 wires; future sheets remain uncreated rather than empty placeholders.
+
+## Release verification
+
+- Local full checks: 383 tests passed, types, lint, formatting, licences and build passed.
+- Final-head CI runs 43669061637 and 43669057957 passed; 16 browser tests passed against development and production builds, including lamp-legend editing, file save/reopen and exact object/cross-reference equality.
+- Main CI 43669177911 and Pages deployment 43669177688 passed.
+- Live build-info sourceCommit matches the merge commit above.
+- Live visual inspection remains pending: browser control timed out twice. Do not claim deployed layout was visually reviewed or overlap-free from this increment's automated results.
