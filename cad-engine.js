@@ -746,7 +746,45 @@
   const uk5TerminalDefinition=screwTerminalDefinition('3004362','UK 5 N',800,32,4,0.2,6,4,6.2,42.5,47,54.5,'https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-uk-5-n-3004362');
   const ut25TerminalDefinition=screwTerminalDefinition('3044076','UT 2,5',1000,24,2.5,0.14,4,4,5.2,47.7,47.5,55,'https://www.phoenixcontact.com/en-us/products/feed-through-terminal-block-ut-25-3044076');
 
-  const COMPONENTS = Object.freeze({ [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+const xmlbPressureSwitchDefinition = deepFreeze({
+    schemaVersion: COMPONENT_SCHEMA_VERSION, id: 'telemecanique-xmlb004a2s11',
+    manufacturer: 'Telemecanique Sensors', manufacturerPartNumber: 'XMLB004A2S11',
+    model: 'XMLB004A2S11', name: 'Mechanical pressure switch · adjustable 4 bar',
+    family: 'pressure-switch', referencePrefix: 'B', category: 'Electrical · Verified pressure switch',
+    symbol: { id: 'pressure.xmlb004a2s11.4-terminal.v1', view: 'schematic', unit: 'mm', width: 180, height: 100,
+      representation: { text: 'P', symbolType: 'Manufacturer terminal interface; contact actuation not simulated' },
+      pins: [
+        {id:'terminal-13',localNumber:'13',name:'Terminal 13',x:-45,y:-50,electricalType:'passive',connectionType:'screw'},
+        {id:'terminal-14',localNumber:'14',name:'Terminal 14',x:-45,y:50,electricalType:'passive',connectionType:'screw'},
+        {id:'terminal-11',localNumber:'11',name:'Terminal 11',x:45,y:-50,electricalType:'passive',connectionType:'screw'},
+        {id:'terminal-12',localNumber:'12',name:'Terminal 12',x:45,y:50,electricalType:'passive',connectionType:'screw'}
+      ],
+      internalConnections: [],
+      numberingNote: 'Manufacturer diagram shows four terminals: 13/14 left, 11/12 right. This terminal-interface symbol does not infer common links, pressure-dependent continuity or contact state. Coordinates are schematic, not physical. Class I enclosure bonding must be engineered separately; no unidentified earth terminal is invented.'
+    },
+    specifications: {
+      pressureRating:{value:4,unit:'bar'},risingSwitchPoint:{minimum:0.25,maximum:4,unit:'bar'},
+      fallingSwitchPoint:{minimum:0.05,maximum:3.75,unit:'bar'},
+      contactComposition:{value:'1 C/O; four-terminal block'},
+      fluidConnection:{value:'G 1/4 female'},controlledFluids:{value:'Air, fresh water, hydraulic oil; 0–70 °C'},
+      ingressProtection:{value:'IP66'},electricalProtectionClass:{value:'Class I'},
+      ratedAC15At120V:{value:3,unit:'A'},ratedAC15At240V:{value:1.5,unit:'A'},ratedDC13At250V:{value:0.1,unit:'A'},
+      ratingLimitation:{value:'No 24 V DC utilisation rating inferred from the published 250 V DC value.'},
+      dimensions:{width:{value:35,unit:'mm'},height:{value:158,unit:'mm'},depth:{value:77.5,unit:'mm'}},
+      selectionLimitation:{value:'Threshold differential, pressure direction, contact continuity, load compatibility and enclosure bonding must be verified for the application.'}
+    },
+    instanceProperties: {
+      processPoint:{type:'string',default:'',maximumLength:60},
+      thresholdDesignNote:{type:'string',default:'Unselected: verify rising/falling setpoints and differential against the manufacturer curves.',maximumLength:160},
+      marking:{type:'string',default:'',maximumLength:40},position:{type:'string',default:'',maximumLength:24},
+      comment:{type:'string',default:'Terminal interface only; pressure switching is not simulated.',maximumLength:160}
+    },
+    sources:[
+      {publisher:'Telemecanique Sensors',title:'XMLB004A2S11 product data sheet',url:'https://downloads.telemecaniquesensors.com/dam/datasheets/en/XMLB004A2S11_EN.pdf',documentRevision:'2024-07-30, pages 1–5',revisionNote:'Product identity, pressure ranges, published utilisation ratings, four-terminal block, Class I and body dimensions. Ratings are not an application approval.',retrievedAt:'2026-11-15'},
+      {publisher:'Telemecanique Sensors',title:'XMLB004A2S11 terminal model',url:'https://telemecaniquesensors.com/sites/default/files/bsl/epds/contents/194552-bc94onykhv/G-SE-0043466.1.gif',documentRevision:'Manufacturer product wiring image, inspected 2026-11-15',revisionNote:'Terminal labels 13/14 and 11/12 visually verified. No three-terminal generic changeover mapping substituted.',retrievedAt:'2026-11-15'}
+    ]
+  });
+  const COMPONENTS = Object.freeze({ [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;

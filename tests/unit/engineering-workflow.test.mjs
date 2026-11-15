@@ -8,6 +8,64 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("XMLB004A2S11 retains four manufacturer terminals without inventing switching continuity", () => {
+  const id = "telemecanique-xmlb004a2s11";
+  const def = engine.component(id);
+  assert.deepEqual(plain(def.symbol.pins.map((p) => p.localNumber)), [
+    "13",
+    "14",
+    "11",
+    "12",
+  ]);
+  assert.equal(def.specifications.ratedDC13At250V.value, 0.1);
+  assert.equal(def.specifications.dimensions.width.value, 35);
+  assert.equal(def.specifications.dimensions.height.value, 158);
+  assert.equal(def.specifications.dimensions.depth.value, 77.5);
+  assert.deepEqual(plain(def.symbol.internalConnections), []);
+  const device = engine.createInstance(id, 400, 300, "B1");
+  device.sheetId = "pressure";
+  device.properties.processPoint = "Pump discharge";
+  const pin = engine.worldPins(device).find((p) => p.id === "terminal-13");
+  const start = { x: pin.x, y: 100 };
+  const wire = engine.attachWire(
+    {
+      id: "pressure-wire",
+      kind: "wire",
+      sheetId: "pressure",
+      x: start.x,
+      y: start.y,
+      x1: start.x,
+      y1: start.y,
+      x2: pin.x,
+      y2: pin.y,
+    },
+    start,
+    { ...pin, attachment: { instanceId: device.id, pinId: pin.id } },
+  );
+  device.rotation = 90;
+  engine.synchronizeWireAttachments([device, wire]);
+  const rotated = engine.worldPins(device).find((p) => p.id === "terminal-13");
+  assert.equal(wire.x2, rotated.x);
+  assert.equal(wire.y2, rotated.y);
+  const project = {
+    project: "Pressure interface",
+    activeSheet: "pressure",
+    sheets: [{ id: "pressure", name: "Pressure", number: "A2/000" }],
+    objects: [device, wire],
+    crossSheetConnections: [],
+  };
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  assert.equal(
+    restored.project.objects[1].attachments.end.pinId,
+    "terminal-13",
+  );
+  assert.equal(
+    restored.project.objects[0].properties.processPoint,
+    "Pump discharge",
+  );
+});
+
 test("ENG-0601 has authored A1 documents without fabricated circuits or blank future sheets", () => {
   const project = engine.createExample("eng0601");
   assert.equal(engine.validateProject(project).valid, true);
