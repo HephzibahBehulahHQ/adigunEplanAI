@@ -265,6 +265,36 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       });
     expect(layout).toEqual({ outside: 0, overlaps: false });
   }
+  const tabs = await page
+    .locator("#sheetTabs .document-tab[data-sheet]")
+    .evaluateAll((nodes) =>
+      nodes.map((node) => {
+        const title = node.querySelector(
+          "[data-sheet-tab-title]",
+        ) as HTMLElement;
+        const close = node.querySelector(".tab-close") as HTMLElement;
+        const bounds = node.getBoundingClientRect(),
+          text = title.getBoundingClientRect(),
+          button = close.getBoundingClientRect();
+        return {
+          contained:
+            text.left >= bounds.left &&
+            text.right <= button.left &&
+            button.right <= bounds.right,
+          overflow: getComputedStyle(title).overflow,
+          fullTitle: node.getAttribute("title") === title.textContent?.trim(),
+          height: Math.round(bounds.height),
+        };
+      }),
+    );
+  expect(tabs).toHaveLength(6);
+  for (const tab of tabs)
+    expect(tab).toEqual({
+      contained: true,
+      overflow: "hidden",
+      fullTitle: true,
+      height: 27,
+    });
   const saved = await saveDrawing(page, "eng0601");
   expect(saved.data.sheets).toHaveLength(12);
   expect(saved.data.sections).toHaveLength(4);
