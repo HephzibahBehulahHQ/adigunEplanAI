@@ -7,6 +7,7 @@ test("example copy remains a native editable project through replacement and loc
   page,
 }) => {
   test.setTimeout(90000);
+  page.setDefaultTimeout(8000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
