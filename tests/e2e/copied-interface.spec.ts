@@ -296,7 +296,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(17);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(18);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -374,7 +374,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(17);
+  expect(saved.data.sheets).toHaveLength(18);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -444,10 +444,26 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     .press("Enter");
   await expect(page.locator("#userDrawings")).toContainText("AUXILIARY SUPPLY");
   await page.locator('[data-sheet="eng0601-a2-2"]').first().click();
-  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(17);
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(18);
   await page.screenshot({
     path: test.info().outputPath("eng0601-field-motor.png"),
   });
+  await page.locator('[data-sheet="eng0601-a2-11"]').first().click();
+  await expect(page.locator("#userDrawings")).toContainText(
+    "EXPLICIT PE PATHS",
+  );
+  await expect(
+    page.locator('#userDrawings [data-terminal="RAIL"]'),
+  ).toHaveCount(1);
+  await expect(page.locator(".cross-sheet-connector")).toHaveCount(2);
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-bonding.png"),
+  });
+  await page
+    .locator(".cross-sheet-connector")
+    .filter({ hasText: "PE-RAIL-AUX" })
+    .press("Enter");
+  await expect(page.locator("#userDrawings")).toContainText("AUXILIARY SUPPLY");
   await page.locator('[data-sheet="eng0601-a2-3"]').first().click();
   await expect(page.locator("#userDrawings")).toContainText("S0 · STOP (NC)");
   await expect(page.locator(".cross-sheet-connector")).toHaveCount(12);

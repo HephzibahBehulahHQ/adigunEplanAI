@@ -769,6 +769,16 @@
     instanceProperties: { terminalStrip: { type: 'string', default: '', maximumLength: 40 }, position: { type: 'string', default: '', maximumLength: 24 }, marking: { type: 'string', default: '', maximumLength: 40 }, comment: { type: 'string', default: '', maximumLength: 160 } },
     sources: [{ publisher: 'Phoenix Contact', title: 'PT 16 N-PE · Protective conductor terminal block · Item 3212147', url: 'https://www.phoenixcontact.com/en-nl/products/ground-terminal-pt-16-n-pe-3212147', documentRevision: 'Live manufacturer product data · retrieved 2026-11-12', revisionNote: 'Manufacturer specifies two push-in connections, 16 mm² rated cross-section, 0.5–25 mm² conductor range, IEC 60947-7-2, green-yellow color and a grounding foot. It does not number the connection points.' , retrievedAt: '2026-11-12' }]
   });
+  const phoenixPeRailViewDefinition=deepFreeze(Object.assign({},phoenixProtectiveEarthTerminalDefinition,{
+    id:'phoenix-contact-3212147-rail-view',name:'PT 16 N-PE · explicit grounding-foot schematic view',
+    symbol:Object.assign({},phoenixProtectiveEarthTerminalDefinition.symbol,{
+      id:'terminal.phoenix.pt16npe.rail-view.v1',height:80,
+      pins:phoenixProtectiveEarthTerminalDefinition.symbol.pins.concat([{id:'rail-foot',localNumber:'RAIL',name:'Grounding foot · mounting interface, not a wire terminal',x:0,y:40,electricalType:'passive',connectionType:'grounding-foot'}]),
+      internalConnections:[['connection-1','connection-2'],['connection-1','rail-foot']],
+      numberingNote:'Two manufacturer wire connections plus an explicitly modeled conductive grounding foot. 1/2 and RAIL are model-local labels, not manufacturer numbering. RAIL is a mounting interface, not a third conductor clamp. Rail continuity and current capacity require installation verification; unrelated terminals are not automatically bonded.'
+    }),
+    sources:phoenixProtectiveEarthTerminalDefinition.sources.concat([{publisher:'Phoenix Contact',title:'PT 16 N-PE connection data — grounding foot and rail capacity',url:'https://www.phoenixcontact.com/en-nl/products/ground-terminal-pt-16-n-pe-3212147',documentRevision:'Live product data reviewed 2026-11-15',revisionNote:'Grounding foot: Yes; two push-in connections; manufacturer instructs observing DIN-rail current capacity. Explicit rail-foot schematic endpoint is a model representation, not an additional wire terminal.',retrievedAt:'2026-11-15'}])
+  }));
   function screwTerminalDefinition(part, model, voltage, current, section, minimum, maximum, flexibleMaximum, width, height, depth7, depth15, url) {
     return deepFreeze(Object.assign({}, terminalDefinition, {
       id:'phoenix-contact-'+part,manufacturerPartNumber:part,model:model,name:model+' screw feed-through terminal block',
@@ -907,7 +917,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     instanceProperties:{position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Common isolation candidate; neutral timing and protection require verification.',maximumLength:160}},
     sources:[{publisher:'Siemens',title:'3LD2244-1TL51 data sheet and terminal diagram',url:'https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3LD22441TL51',documentRevision:'2026-11-10, pages 1 and 5',revisionNote:'Exact identity, four poles, 32 A Iu, floor mounting with door coupling and manufacturer terminal labels. Schematic coordinates are not physical mounting dimensions.',retrievedAt:'2026-11-15'}]
   });
-  const COMPONENTS = Object.freeze({[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+  const COMPONENTS = Object.freeze({[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;
@@ -1348,7 +1358,7 @@ function removeDrawingObjects(objects,ids){
     return prefix+number;
   }
 function createPumpStarterDocumentation(name) {
-    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection','Coil-voltage and overload-trip indication','Operating sequence and interlocks','Motor feeder short-circuit protection','Supply isolation and distribution','Field terminal connections','Field control terminal interfaces'];
+    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection','Coil-voltage and overload-trip indication','Operating sequence and interlocks','Motor feeder short-circuit protection','Supply isolation and distribution','Field terminal connections','Field control terminal interfaces','Earthing and bonding'];
     const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-'+(index<6?'a1-'+index:'a2-'+(index-6)),sectionId:index<6?'A1':'A2',name:title,number:(index<6?'A1/':'A2/')+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
     const objects=[];
     function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
@@ -1366,7 +1376,7 @@ function createPumpStarterDocumentation(name) {
       'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
       'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
       'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: six A1 documents and ten connected A2 circuit sheets and one terminal report; A3/A4 remain empty.',
+      'Current delivery: six A1 documents and eleven connected A2 circuit sheets and one terminal report; A3/A4 remain empty.',
       'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
     ]);
     rows(1,[
@@ -1397,7 +1407,7 @@ function createPumpStarterDocumentation(name) {
     ];
     register.forEach(function(line,index){
       const section=index<6?'A1':index<20?'A2':index<26?'A3':'A4';
-      const status=index<17?'P01 / authored development':'planned / not yet created';
+      const status=index<18?'P01 / authored development':'planned / not yet created';
       text(2,'register-'+index,index<15?60:620,120+(index%15)*25,section+'/'+line+' | '+status,11,510);
     });
     text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
@@ -1488,7 +1498,7 @@ function createPumpStarterDocumentation(name) {
 
     const q2=part(8,'siemens-3ld2203-0tk51','Q2',400,250,0,'Field maintenance isolator candidate. OFF-lockable front-mounted part; field enclosure, accessories and protection require verification.'),
       m1=part(8,'sew-eurodrive-drn132m4-delta-board','M1',400,450,0,'Field pump motor candidate. 400 V delta schematic; exact motor build, mechanical duty and installation approval unresolved.'),
-      pe=part(8,'phoenix-contact-3212147','XPE:1',200,530,0,'Panel PE interface shown at the field boundary; rail, enclosure and door bonding remain to be completed.');
+      pe=part(8,'phoenix-contact-3212147-rail-view','XPE:1',200,530,0,'Panel PE interface shown at the field boundary; rail, enclosure and door bonding remain to be completed.');
     for(let n=1;n<=3;n++){
       const x=300+n*50,terminal=objects.find(function(o){return o.ref==='X2:'+n;}),out={x:x,y:650-(n-1)*40},input={x:x,y:180-(n-1)*40};
       terminal.properties.comment='Panel outgoing phase terminal to field Q2; cable sizing and enclosure selection remain unresolved.';
@@ -1505,7 +1515,7 @@ function createPumpStarterDocumentation(name) {
     }
     const earth=wire(8,'motor-pe',pin(pe,'connection-2'),pin(m1,'protective-earth'),'PE');
     earth.stroke='#178743';earth.conductorColor='green/yellow';
-    text(8,'pe-label',75,580,'PE boundary → M1 frame\nGreen/yellow; never switched.\nVerify PE sizing and upstream bonding.',12,540);
+    text(8,'pe-label',75,620,'PE boundary → M1 frame\nGreen/yellow; never switched.\nVerify PE sizing and upstream bonding.',12,540);
     text(8,'field-notes',680,120,
       'FIELD MOTOR SEGMENT — DEVELOPMENT\n\nQ2: Siemens 3LD2203-0TK51.\nOFF-position locking; three poles; no auxiliary contacts.\n22 A AC-23 at 400 V; 32 A uninterrupted current.\nFront-mounted part: field housing is not yet selected.\n\nM1: SEW DRN132M4 candidate, 7.5 kW / 15.2 A.\n400 V delta: U1–W2, V1–U2 and W1–V2 bridges.\nThis view is schematic, not a physical mounting drawing.\n\nW2 and W3 identify phase circuits, not selected cables.\nLengths, core sizes, grouping and voltage drop are pending.\nPE bypasses Q2; green/yellow identification is explicit.\nNo neutral is used in the motor power circuit.\n\nLock out, secure against reclosure and verify isolation.\nControl restart inhibition and complete protection remain\nunresolved. Do not energise this development design.',13,460);
     objects.find(function(o){return o.id==='eng0601-overload-notes';}).text=
@@ -1563,7 +1573,7 @@ function createPumpStarterDocumentation(name) {
       f4=part(10,'phoenix-contact-2908262','F4',800,250,0,'Design setting 1 A; factory setting is 4 A. Program and verify physically. IN− is self supply only; return load directly to PSU.'),
       acL=part(10,'phoenix-contact-3004362','X4:L',150,180,0,'230 V AC line from the same installation, downstream of main isolation. Upstream supply sheet remains unfinished.'),
       acN=part(10,'phoenix-contact-3004362','X4:N',150,290,0,'Neutral for 230 V auxiliary supply. Never connect this directly to the DC return.'),
-      auxPE=part(10,'phoenix-contact-3212147','XPE:2',150,350,0,'Unswitched protective-earth connection to PSU; same installation PE as the motor. Rail/bonding installation remains to document.');
+      auxPE=part(10,'phoenix-contact-3212147-rail-view','XPE:2',150,350,0,'Unswitched protective-earth connection to PSU; same installation PE as the motor. Rail/bonding installation remains to document.');
     f4.properties.channelCurrentA=1;
     wire(10,'aux-ac-line',pin(acL,'connection-2'),pin(f3,'terminal-top'),'L-AUX');
     wire(10,'aux-ac-protected',pin(f3,'terminal-bottom'),pin(ps1,'line-l'),'L-PS1');
@@ -1573,8 +1583,15 @@ function createPumpStarterDocumentation(name) {
     wire(10,'aux-self-return',pin(f4,'negative-3.1'),pin(ps1,'output-negative'),'0V-SELF');
     continuation('aux-control-positive',f4,'output-2.1',{x:1040,y:430},positive,'connection-1',{x:60,y:300},'24V-01 · F4:2.1 → X3:1','left','right');
     continuation('aux-control-return',ps1,'output-negative',{x:640,y:500},negative,'connection-1',{x:60,y:580},'0V · PS1:− → X3:2','left','right');
-    continuation('aux-earth',pe,'connection-1',{x:60,y:530},auxPE,'connection-1',{x:60,y:500},'PE · XPE:1 → XPE:2','right','right');
-    for(const o of objects.filter(function(o){return o.id==='eng0601-wire-aux-earth-from'||o.id==='eng0601-wire-aux-earth-to';})){o.stroke='#178743';o.conductorColor='green/yellow';}
+    const incomingPE=part(17,'phoenix-contact-3212147-rail-view','XPE:0',350,250,0,'Incoming site PE boundary at connection 1; grounding foot feeds the documented rail PE paths. Verify rail assembly, current capacity and protective continuity.');
+    continuation('pe-rail-motor',incomingPE,'rail-foot',{x:350,y:440},pe,'rail-foot',{x:60,y:570},'PE-RAIL-M','right','right');
+    continuation('pe-rail-aux',incomingPE,'rail-foot',{x:500,y:350},auxPE,'rail-foot',{x:60,y:420},'PE-RAIL-AUX','right','right');
+    text(17,'pe-boundary',60,110,'SITE PE BOUNDARY — XPE:0 connection 1; separate from all switched phases, neutral and DC return.',12,1070);
+    text(17,'pe-rail-notes',650,170,'EXPLICIT PE PATHS — ENGINEERING DEVELOPMENT\nXPE:0/1/2 are panel protective-conductor terminals.\nRAIL denotes each terminal grounding foot, not a clamp.\nGreen rail paths document conductive mounting continuity.\nThey are not two wires inserted in one conductor clamp.\nXPE:1 connection 2 supplies the motor PE terminal.\nXPE:2 connection 2 supplies the power-supply PE terminal.\nUnused conductor clamps remain available, not bridged.',12,480);
+    text(17,'pe-release-checks',60,520,'INSTALLATION CHECKS STILL REQUIRED\nSelect and verify conductive rail, supports, connections and fault-current capacity.\nProvide enclosure, mounting-plate and door bonding when their hardware is selected.\nVerify protective continuity physically; no test result or installation approval is claimed.',12,630);
+    pe.properties.comment='Panel PE terminal: motor conductor at connection 2; explicit grounding-foot path to XPE:0. Verify conductive rail and assembly.';
+    auxPE.properties.comment='Panel PE terminal: PSU conductor at connection 2; explicit grounding-foot path to XPE:0. Verify conductive rail and assembly.';
+    for(const o of objects.filter(function(o){return o.id.startsWith('eng0601-wire-pe-rail-');})){o.stroke='#178743';}
     positive.properties.comment='Protected 24 V from F4 output 2.1 via paired continuation. Same physical control interface.';
     negative.properties.comment='Load return directly to PS1 negative output, not through F4 self-supply terminals. No N/PE bond is implied.';
     text(10,'aux-assumption',60,105,'DESIGN ASSUMPTION: 230 V AC L/N/PE auxiliary feed; upstream main isolation and final cable checks outstanding.',12,1080);
@@ -1653,7 +1670,7 @@ function createPumpStarterDocumentation(name) {
       terminalRows.push(ref+' | '+page.number+' | '+device.componentId);
       const nets=terminalReport.globalNets.filter(function(net){return net.pins.some(function(p){return p.ref===ref;});});
       nets.forEach(function(net){
-        net.pins.filter(function(p){return p.ref!==ref;}).forEach(function(p){
+        net.pins.filter(function(p){return p.ref!==ref&&!p.ref.startsWith('XPE:');}).forEach(function(p){
           const targetPage=sheets.find(function(s){return s.id===p.sheetId;});
           terminalRows.push('  Connected net: '+p.ref+' / '+p.number+' | '+targetPage.number);
         });
@@ -1662,11 +1679,11 @@ function createPumpStarterDocumentation(name) {
     });
     text(15,'terminal-report-basis',60,105,'NATIVE NET SNAPSHOT — generated from terminal identities and paired continuations at example creation.',12,1070);
     terminalRows.forEach(function(value,index){if(!value)return;text(15,'terminal-report-'+index,index<16?60:620,145+(index%16)*23,value,11,510);});
-    text(15,'terminal-report-scope',60,510,'Editable report snapshot: after rewiring, use Electrical checks to inspect current connectivity.\nRows describe electrical nets, not cable cores or physical terminal order. PE remains unswitched.\nField control interfaces are on A2/016. Cable selection and physical rail/accessory design remain pending.',11,1070);
-    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and ten connected A2 circuit sheets and one terminal report. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
+    text(15,'terminal-report-scope',60,510,'Editable report snapshot: after rewiring, use Electrical checks to inspect current connectivity.\nRows list connected equipment, not cable cores or terminal order. PE rail paths are on A2/017.\nField control interfaces are on A2/016. Cable selection and physical rail/accessory design remain pending.',11,1070);
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and eleven connected A2 circuit sheets and one terminal report. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
   }
   function projectExamples() {
-    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and ten connected A2 circuit sheets and one terminal report including motor feeder protection, field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and eleven connected A2 circuit sheets and one terminal report including motor feeder protection, field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
