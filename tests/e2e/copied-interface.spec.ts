@@ -1591,3 +1591,65 @@ test("linked panel placement preserves its canonical device on local reopen", as
     path: test.info().outputPath("linked-panel-placement.png"),
   });
 });
+
+test("mounting accessory links to the canonical overload and survives rename and reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("Accessory verification");
+  await page.locator("#createProject").click();
+  await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  await page.locator("#symbolSearch").fill("3ru2926");
+  await page.locator('[data-insert="siemens-3ru2926-3aa01"]').click();
+  const point = await sheetPoint(page, 350, 250);
+  await page.mouse.click(point.x, point.y);
+  await page.locator('[data-draw="select"]').click();
+  await page.locator("#userDrawings .drawing-object").last().click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByRole("button", { name: "Link mounting accessory" }).click();
+  await expect(page.locator("#selectionDetails")).toContainText(
+    "Assembly device: F2",
+  );
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
+  const saved = await saveDrawing(page, "accessory-linked");
+  const relay = saved.data.objects.find(
+    (o: Record<string, unknown>) => o.ref === "F2",
+  );
+  const accessory = saved.data.objects.find(
+    (o: Record<string, unknown>) => o.componentId === "siemens-3ru2926-3aa01",
+  );
+  expect(accessory.assemblyFor).toBe(relay.id);
+  await page
+    .locator('[data-sheet="' + relay.sheetId + '"]')
+    .first()
+    .click();
+  await page.locator('#userDrawings [data-object="' + relay.id + '"]').click();
+  await page.locator('[data-component-property="ref"]').fill("F20");
+  await page.locator('[data-component-property="ref"]').press("Tab");
+  await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
+  await page
+    .locator('#userDrawings [data-object="' + accessory.id + '"]')
+    .click();
+  await expect(page.locator("#selectionDetails")).toContainText(
+    "Assembly device: F20",
+  );
+  const edited = await saveDrawing(page, "accessory-renamed");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(edited.path);
+  await page
+    .locator('#userDrawings [data-object="' + accessory.id + '"]')
+    .click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#selectionDetails")).toContainText(
+    "Assembly device: F20",
+  );
+  const reopened = await saveDrawing(page, "accessory-reopened");
+  expect(reopened.data.objects).toEqual(edited.data.objects);
+  await page.screenshot({
+    path: test.info().outputPath("overload-mounting-accessory.png"),
+  });
+});

@@ -1850,3 +1850,73 @@ test("contactor panel footprint retains the archived manufacturer edition and cl
   assert.ok(Object.isFrozen(geometry.footprint.clearancesMm.groundedParts));
   assert.match(geometry.footprint.note, /archived/);
 });
+
+test("overload mounting accessory links to one canonical relay and roundtrips independently", () => {
+  const project = engine.createExample("eng0601");
+  const relay = project.objects.find((o) => o.ref === "F2");
+  const accessory = engine.createInstance(
+    "siemens-3ru2926-3aa01",
+    360,
+    240,
+    "ACC1",
+  );
+  accessory.sheetId = "eng0601-a3-0";
+  project.objects.push(accessory);
+  project.objects = engine.linkAssemblyAccessory(
+    project,
+    accessory.id,
+    relay.id,
+  );
+  const linked = project.objects.find((o) => o.id === accessory.id);
+  assert.equal(linked.assemblyFor, relay.id);
+  const bom = engine.billOfMaterials(project.objects);
+  assert.equal(bom.valid, true);
+  assert.equal(
+    bom.rows.find((r) => r.componentId === accessory.componentId).quantity,
+    1,
+  );
+  assert.equal(
+    bom.rows.find((r) => r.componentId === relay.componentId).quantity,
+    1,
+  );
+  assert.equal(engine.worldPins(linked).length, 0);
+  assert.match(
+    engine.component(linked.componentId).symbol.numberingNote,
+    /not modelled/,
+  );
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.equal(
+    restored.objects.find((o) => o.id === accessory.id).assemblyFor,
+    relay.id,
+  );
+  assert.equal(
+    restored.objects.filter((o) => o.componentId === relay.componentId).length,
+    1,
+  );
+  assert.deepEqual(
+    plain(restored.crossSheetConnections),
+    plain(project.crossSheetConnections),
+  );
+  assert.throws(
+    () =>
+      engine.linkAssemblyAccessory(
+        project,
+        accessory.id,
+        project.objects.find((o) => o.ref === "K1").id,
+      ),
+    /compatibility/,
+  );
+  assert.throws(
+    () => engine.linkAssemblyAccessory(project, accessory.id, accessory.id),
+    /distinct/,
+  );
+  assert.equal(
+    engine.validateInstance({ ...linked, assemblyFor: "" }).valid,
+    false,
+  );
+  assert.ok(
+    Object.isFrozen(engine.component(linked.componentId).specifications),
+  );
+});
