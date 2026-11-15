@@ -1427,7 +1427,7 @@ function createPumpStarterDocumentation(name) {
       start=part(9,'schneider-electric-xb5aa31','S1',800,350,0,'Momentary start NO 13/14. Released healthy button assumed; this is not monitored-reset or stuck-button protection.'),
       pressure=part(9,'telemecanique-xmlb004a2s11','B1',500,350,0,'Field discharge-pressure cutout. 11/12 control path; verify contact action and setpoints during commissioning.'),
       positive=part(9,'phoenix-contact-3004362','X3:1',130,180,0,'24 V DC control-source boundary. Source and circuit protection remain to be designed.'),
-      negative=part(9,'phoenix-contact-3004362','X3:2',130,580,0,'0 V return boundary. No neutral/PE bond is implied.');
+      negative=part(9,'phoenix-contact-3004362','X3:2',130,520,0,'0 V return boundary. No neutral/PE bond is implied.');
     pressure.properties.risingPressureBar=2;pressure.properties.fallingPressureBar=1;
     pressure.properties.processPoint='Pump discharge';
     pressure.properties.thresholdDesignNote='Educational assumption: stop at 2 bar rising, allow reset below 1 bar. Verify process suitability, contact action and differential before use.';
@@ -1444,7 +1444,7 @@ function createPumpStarterDocumentation(name) {
     continuation('hold-feed',pressure,'terminal-12',{x:620,y:470},k1,'aux-13',{x:620,y:180},'24V-05 · B1:12 → K1:13','right','right');
     continuation('hold-output',k1,'aux-14',{x:620,y:380},start,'contact-14',{x:980,y:430},'24V-06 · K1:14 → S1:14','right','left');
     continuation('coil-command',start,'contact-14',{x:980,y:350},k1,'coil-a1',{x:200,y:450},'24V-06 · S1:14 → K1:A1','left','left');
-    continuation('coil-return',negative,'connection-2',{x:260,y:580},k1,'coil-a2',{x:260,y:550},'0V · X3:2 → K1:A2','right','right');
+    continuation('coil-return',negative,'connection-2',{x:260,y:520},k1,'coil-a2',{x:260,y:550},'0V · X3:2 → K1:A2','right','right');
     k1.properties.comment='Same physical K1: power poles on this sheet; coil and NO seal-in connected to local control. No actuation simulation or approval.';
     f2.properties.comment='95/96 healthy control path connected; 97/98 spare. Overload setting/reset and short-circuit coordination remain unverified.';
     text(9,'control-source',60,110,'24 V DC SOURCE BOUNDARY — protection and supply design pending',13,1050);
