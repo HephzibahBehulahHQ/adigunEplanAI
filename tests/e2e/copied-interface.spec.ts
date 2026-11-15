@@ -1609,6 +1609,20 @@ test("mounting accessory links to the canonical overload and survives rename and
   await page.mouse.click(point.x, point.y);
   await page.locator('[data-draw="select"]').click();
   await page.locator("#userDrawings .drawing-object").last().click();
+  await expect(
+    page
+      .locator("#userDrawings .drawing-object")
+      .last()
+      .locator("rect")
+      .first(),
+  ).toHaveAttribute("width", "22.5");
+  await expect(
+    page
+      .locator("#userDrawings .drawing-object")
+      .last()
+      .locator("rect")
+      .first(),
+  ).toHaveAttribute("height", "48.5");
   await page.locator('[data-inspector="Properties"]').click();
   await page.getByRole("button", { name: "Link mounting accessory" }).click();
   await expect(page.locator("#selectionDetails")).toContainText(
