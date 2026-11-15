@@ -98,6 +98,17 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
   assert.equal(project.crossSheetConnections.length, 3);
   assert.equal(engine.analyzeProject(project).valid, true);
+  const powerReport = engine.analyzeProject(project);
+  assert.equal(powerReport.globalNetCount, 9);
+  for (let n = 1; n <= 3; n++) {
+    const net = powerReport.globalNets.find((net) =>
+      net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
+    );
+    assert.deepEqual(
+      plain(net.pins.map((pin) => pin.ref + ":" + pin.pinId).sort()),
+      ["F2:line-l" + n, "K1:power-t" + n],
+    );
+  }
   assert.equal(project.objects.filter((o) => o.kind === "wire").length, 12);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
@@ -477,13 +488,16 @@ test("missing terminals and sheet mismatches are diagnosed, not silently reconne
 
 test("bound example nets remain identical through component rotation and movement", () => {
   const signature = (objects) =>
-    engine
-      .analyze(objects)
-      .nets.map((net) =>
-        net.pins
-          .map((pin) => pin.instanceId + ":" + pin.pinId)
-          .sort()
-          .join("|"),
+    [...new Set(objects.map((object) => object.sheetId))]
+      .flatMap((sheetId) =>
+        engine
+          .analyze(objects.filter((object) => object.sheetId === sheetId))
+          .nets.map((net) =>
+            net.pins
+              .map((pin) => pin.instanceId + ":" + pin.pinId)
+              .sort()
+              .join("|"),
+          ),
       )
       .sort();
   for (const example of engine.projectExamples()) {

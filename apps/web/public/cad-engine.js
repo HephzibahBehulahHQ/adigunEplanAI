@@ -1015,6 +1015,7 @@ const xmlbPressureSwitchDefinition = deepFreeze({
         }
         if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
         objectIds.add(object.id);
+        if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
         if (object.kind === 'wire' && object.attachments !== undefined) {
           const endpoints = object.attachments;
           if (!endpoints || typeof endpoints !== 'object' || Array.isArray(endpoints)) errors.push('Wire attachments must be an endpoint map.');
@@ -1315,6 +1316,7 @@ function createPumpStarterDocumentation(name) {
       const outgoing={x:x,y:480-index*40},incoming={x:x,y:180-index*40};
       const a=wire(6,'k1-out-'+n,pin(k1,'power-t'+n),outgoing,'K1-T'+n);
       const b=wire(7,'f2-in-'+n,incoming,pin(f2,'line-l'+n),'K1-T'+n);
+      a.continuationEnds=['end'];b.continuationEnds=['start'];
       powerLinks.push({id:'eng0601-k1-f2-'+n,name:'K1:'+String(n*2)+'/T'+n+' → F2:'+String(n*2-1)+'/L'+n,endpoints:[
         {sheetId:sheets[6].id,wireId:a.id,point:outgoing,connector:{targetSheetId:sheets[7].id,targetRef:'F2',direction:'right'}},
         {sheetId:sheets[7].id,wireId:b.id,point:incoming,connector:{targetSheetId:sheets[6].id,targetRef:'K1',direction:'left'}}
@@ -1412,7 +1414,7 @@ function createPumpStarterDocumentation(name) {
         errors.push({ code: 'zero-length-wire', objectId: object.id || null, message: 'A wire has zero length.' });
         return;
       }
-      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments, attachments: object.attachments });
+      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments, attachments: object.attachments, continuationEnds: Array.isArray(object.continuationEnds)?object.continuationEnds:[] });
     });
 
     source.forEach(function (object) {
@@ -1444,7 +1446,7 @@ function createPumpStarterDocumentation(name) {
     pins.forEach(function (pin) { pin.node = addNode(); });
 
     // Explicit terminal bindings own connectivity; only free endpoints may form geometric branches.
-    const junctionPoints = function (wire) { return wire.attachments ? ['start','end'].filter(function (end) { return !wire.attachments[end]; }).map(function (end) { return wire[end]; }) : wire.points; };
+    const junctionPoints = function (wire) { return wire.attachments ? ['start','end'].filter(function (end) { return !wire.attachments[end]&&!wire.continuationEnds.includes(end); }).map(function (end) { return wire[end]; }) : wire.points; };
     for (let i = 0; i < wires.length; i += 1) {
       for (let j = i + 1; j < wires.length; j += 1) {
         const touches = junctionPoints(wires[i]).some(function (point) {
@@ -1460,7 +1462,7 @@ function createPumpStarterDocumentation(name) {
       const attachedWires = wires.filter(function (wire) {
         if (wire.attachments) return ['start','end'].some(function (end) {
           const attachment = wire.attachments[end];
-          return attachment ? attachment.instanceId === pin.instanceId && attachment.pinId === pin.pinId : Math.abs(wire[end].x-pin.point.x)<=EPSILON && Math.abs(wire[end].y-pin.point.y)<=EPSILON;
+          return attachment ? attachment.instanceId === pin.instanceId && attachment.pinId === pin.pinId : !wire.continuationEnds.includes(end)&&Math.abs(wire[end].x-pin.point.x)<=EPSILON && Math.abs(wire[end].y-pin.point.y)<=EPSILON;
         });
         return wire.segments.some(function (segment) { return pointOnSegment(pin.point, segment); });
       });
