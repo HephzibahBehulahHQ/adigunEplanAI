@@ -1,0 +1,7 @@
+# Native cable/core assignments — local increment
+
+After PR97, native wire objects accept validated cable {tag, core} assignments. Existing wire Properties exposes cable/core fields and apply/clear buttons; no CSS/layout/menu changes. assignWireCable propagates assignment or clearing across directly paired continuation segments, preserves attachments and topology, and leaves unrelated objects unchanged. Labels are instance design data, not manufacturer specifications; no physical product or sizing is implied.
+
+36 focused tests passed: paired-segment propagation, save/reopen, same nets, clearing, invalid values and template independence. Browser workflow extended to assign and export a core. Full checks and CI/browser visual verification remain pending; not published. Browser automation timed out twice this turn; do not repeat blindly. PR97 live build is verified but UI navigation remains pending. PR97 main CI handle 43682514995 was still running at initial poll.
+
+Files for next reviewed publication: apps/web/public/cad-engine.js + root mirror; apps/web/index.html + root raw mirror; tests/unit/engineering-workflow.test.mjs; tests/e2e/copied-interface.spec.ts; this note. Preserve LF and locked style checksum. Physical cable product library, cross-core conflict diagnostics, dimensional route/length data and actual ENG0601 assignments still require work. Do not treat this metadata increment as a completed cable design.

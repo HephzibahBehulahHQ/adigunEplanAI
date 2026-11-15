@@ -1150,6 +1150,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
         objectIds.add(object.id);
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
+        if(object.kind==='wire'&&object.cable!==undefined){const c=object.cable;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).some(function(k){return !['tag','core'].includes(k);})||['tag','core'].some(function(k){return typeof c[k]!=='string'||!c[k].trim()||c[k].length>64;}))errors.push('Wire cable assignment requires a cable tag and core identifier (1–64 characters).');}
         if (object.kind === 'wire' && object.attachments !== undefined) {
           const endpoints = object.attachments;
           if (!endpoints || typeof endpoints !== 'object' || Array.isArray(endpoints)) errors.push('Wire attachments must be an endpoint map.');
@@ -1262,6 +1263,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const blockWidth=Math.min(474,width-2*margin),blockHeight=160;
     if(blockWidth<200||height-2*margin<blockHeight)throw new Error('Drawing margins leave no room for the title block.');
     return {x:width-margin-blockWidth,y:height-margin-blockHeight,width:blockWidth,height:blockHeight};
+  }
+  function assignWireCable(project, wireId, assignment) {
+    if(!project||!Array.isArray(project.objects))throw new Error('A native project is required.');
+    const wire=project.objects.find(function(o){return o.id===wireId&&o.kind==='wire';});
+    if(!wire)throw new Error('Select a wire before assigning a cable core.');
+    let cable=null;
+    if(assignment!==null){
+      if(!assignment||typeof assignment.tag!=='string'||typeof assignment.core!=='string')throw new Error('Cable tag and core identifier are required.');
+      cable={tag:assignment.tag.trim(),core:assignment.core.trim()};
+      if(!cable.tag||!cable.core||cable.tag.length>64||cable.core.length>64)throw new Error('Cable tag and core must contain 1–64 characters.');
+    }
+    const ids=new Set([wireId]);let changed=true;
+    while(changed){changed=false;(project.crossSheetConnections||[]).forEach(function(link){if(link.endpoints.some(function(e){return ids.has(e.wireId);}))link.endpoints.forEach(function(e){if(!ids.has(e.wireId)){ids.add(e.wireId);changed=true;}});});}
+    return project.objects.map(function(o){if(!ids.has(o.id))return o;const copy=Object.assign({},o);if(cable)copy.cable=Object.assign({},cable);else delete copy.cable;return copy;});
   }
   function serializeProject(project) {
     const payload = Object.assign({}, project, {
@@ -2205,6 +2220,7 @@ function createPumpStarterDocumentation(name) {
     titleBlockBounds: titleBlockBounds,
     titleBlockProjectFields: Object.freeze(titleBlockProjectFields),
     titleBlockSheetFields: Object.freeze(titleBlockSheetFields),
+    assignWireCable: assignWireCable,
     serializeProject: serializeProject,
     parseProject: parseProject,
     analyze: analyze,
