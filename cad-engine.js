@@ -758,6 +758,7 @@
   });
   const phoenixProtectiveEarthTerminalDefinition = deepFreeze({
     schemaVersion: COMPONENT_SCHEMA_VERSION, id: 'phoenix-contact-3212147', manufacturer: 'Phoenix Contact', manufacturerPartNumber: '3212147',
+    panelFootprint: { widthMm:12.2,heightMm:75.4,depthMm:52.6,source:'https://www.phoenixcontact.com/us/products/3212147/pdf',note:'Manufacturer dimensions; depth on NS 35/7.5. Body envelope only: end covers, end clamps, conductor access and mounting clearances are separate. Reviewed 2026-11-15.' },
     model: 'PT 16 N-PE', name: 'Protective-conductor terminal block', family: 'protective-earth-terminal', referencePrefix: 'X', category: 'Electrical · Verified protective-earth terminal',
     symbol: { id: 'terminal.phoenix.pt16npe.2-connection.v1', view: 'schematic', unit: 'mm', width: 70, height: 36, pins: [
       { id: 'connection-1', localNumber: '1', name: 'PE connection 1 · model-local index', x: -35, y: 0, electricalType: 'passive', connectionType: 'push-in' },
@@ -785,6 +786,7 @@
   function screwTerminalDefinition(part, model, voltage, current, section, minimum, maximum, flexibleMaximum, width, height, depth7, depth15, url) {
     return deepFreeze(Object.assign({}, terminalDefinition, {
       id:'phoenix-contact-'+part,manufacturerPartNumber:part,model:model,name:model+' screw feed-through terminal block',
+      panelFootprint:{widthMm:width,heightMm:height,depthMm:depth7,source:url,note:'Manufacturer dimensions; depth on NS 35/7.5. Body envelope only: end covers, end clamps, conductor access and mounting clearances are separate. Reviewed 2026-11-15.'},
       symbol:Object.assign({},terminalDefinition.symbol,{id:'terminal.phoenix.'+part+'.v1',pins:terminalDefinition.symbol.pins.map(function(pin){return Object.assign({},pin,{connectionType:'screw'});})}),
       specifications:{nominalVoltage:{value:voltage,unit:'V'},nominalCurrent:{value:current,unit:'A'},ratedCrossSection:{value:section,unit:'mm²'},rigidConductorRange:{minimum:minimum,maximum:maximum,unit:'mm²'},flexibleConductorRange:{minimum:minimum,maximum:flexibleMaximum,unit:'mm²'},connectionCount:{value:2,unit:'connections'},connectionMethod:{value:'Screw connection'},productStandard:{value:'IEC 60947-7-1'},mountingRails:{value:part==='3004362'?['NS 35/7.5','NS 35/15','NS 32']:['NS 35/7.5','NS 35/15']},dimensions:{width:{value:width,unit:'mm'},height:{value:height,unit:'mm'},depthOnNS35_7_5:{value:depth7,unit:'mm'},depthOnNS35_15:{value:depth15,unit:'mm'}},color:{value:'Gray (RAL 7042)'}},
       sources:[{publisher:'Phoenix Contact',title:model+' · Feed-through terminal block · '+part,url:url,documentRevision:'Live manufacturer product record',revisionNote:'Two screw connections at one potential. Connection IDs 1 and 2 are model-local, not manufacturer terminal numbers. Ratings are nominal IEC data; approvals and conductor preparation have separate limits. Symbol coordinates are schematic, not physical.',retrievedAt:'2026-11-14'}]
