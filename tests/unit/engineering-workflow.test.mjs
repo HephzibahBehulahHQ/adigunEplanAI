@@ -8,6 +8,83 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("incoming PE bonds explicit mounting feet without doubling conductor clamps", () => {
+  const project = engine.createExample("eng0601");
+  const terminals = project.objects.filter((o) =>
+    ["XPE:0", "XPE:1", "XPE:2"].includes(o.ref),
+  );
+  assert.equal(terminals.length, 3);
+  for (const terminal of terminals) {
+    assert.equal(terminal.componentId, "phoenix-contact-3212147-rail-view");
+    for (const pinId of ["connection-1", "connection-2"]) {
+      const ends = project.objects
+        .filter((o) => o.kind === "wire")
+        .flatMap((o) => Object.values(o.attachments || {}));
+      assert.ok(
+        ends.filter(
+          (end) => end.instanceId === terminal.id && end.pinId === pinId,
+        ).length <= 1,
+      );
+    }
+  }
+  const check = (copy) => {
+    const report = engine.analyzeProject(copy);
+    const net = report.globalNets.find((n) =>
+      n.pins.some((p) => p.ref === "XPE:0"),
+    );
+    for (const ref of ["XPE:0", "XPE:1", "XPE:2"])
+      assert.ok(net.pins.some((p) => p.ref === ref && p.pinId === "rail-foot"));
+    assert.ok(
+      net.pins.some((p) => p.ref === "M1" && p.pinId === "protective-earth"),
+    );
+    assert.ok(net.pins.some((p) => p.ref === "PS1" && p.pinId === "line-pe"));
+    assert.ok(
+      net.pins.every(
+        (p) =>
+          p.ref.startsWith("XPE:") ||
+          (p.ref === "M1" && p.pinId === "protective-earth") ||
+          (p.ref === "PS1" && p.pinId === "line-pe"),
+      ),
+    );
+  };
+  check(project);
+  terminals[0].rotation = 90;
+  terminals[0].x += 30;
+  engine.synchronizeWireAttachments(project.objects);
+  check(engine.parseProject(engine.serializeProject(project)).project);
+});
+
+test("explicit PE rail view distinguishes grounding foot from two conductor clamps", () => {
+  const original = engine.component("phoenix-contact-3212147");
+  const view = engine.component("phoenix-contact-3212147-rail-view");
+  assert.equal(original.symbol.pins.length, 2);
+  assert.equal(view.manufacturerPartNumber, original.manufacturerPartNumber);
+  assert.equal(view.specifications.connectionCount.value, 2);
+  assert.equal(view.symbol.pins.length, 3);
+  assert.equal(
+    view.symbol.pins.find((p) => p.id === "rail-foot").connectionType,
+    "grounding-foot",
+  );
+  assert.deepEqual(plain(view.symbol.internalConnections), [
+    ["connection-1", "connection-2"],
+    ["connection-1", "rail-foot"],
+  ]);
+  assert.ok(Object.isFrozen(view.symbol));
+  const instance = engine.createInstance(view.id, 300, 300, "XPE:0");
+  instance.sheetId = "bonding";
+  instance.rotation = 90;
+  const project = {
+    project: "Bonding view",
+    sheets: [{ id: "bonding", name: "Bonding", number: "A2/017" }],
+    objects: [instance],
+    crossSheetConnections: [],
+  };
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  assert.equal(restored.project.objects[0].componentId, view.id);
+  assert.equal(engine.worldPins(restored.project.objects[0]).length, 3);
+});
+
 test("field terminal report is editable native text derived from connected device terminals", () => {
   const project = engine.createExample("eng0601");
   const sheet = project.sheets.find((s) => s.number === "A2/015");
@@ -16,7 +93,7 @@ test("field terminal report is editable native text derived from connected devic
   const content = rows.map((o) => o.text).join("\n");
   for (const target of ["F2 / 2/T1", "Q2 / 1L1", "M1 / PE", "PS1 / PE"])
     assert.ok(content.includes(target));
-  assert.match(content, /not cable cores or physical terminal order/);
+  assert.match(content, /not cable cores or terminal order/);
   rows[0].text = "My field connections";
   const reopened = engine.parseProject(engine.serializeProject(project));
   assert.equal(reopened.valid, true);
@@ -398,7 +475,7 @@ test("field motor delta bridges and unswitched PE stay distinct", () => {
   assert.ok(
     pe.pins.every(
       (pin) =>
-        ["M1", "XPE:1", "XPE:2"].includes(pin.ref) ||
+        ["M1", "XPE:0", "XPE:1", "XPE:2"].includes(pin.ref) ||
         (pin.ref === "PS1" && pin.pinId === "line-pe"),
     ),
   );
@@ -477,11 +554,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 17);
+  assert.equal(project.sheets.length, 18);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 17 },
+      { length: 18 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -497,7 +574,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 36);
+  assert.equal(project.crossSheetConnections.length, 37);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
   assert.equal(powerReport.globalNetCount, 27);
@@ -510,7 +587,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 90);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 92);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
