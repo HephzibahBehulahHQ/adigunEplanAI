@@ -3,6 +3,29 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+test("manufacturer pressure switch inserts through existing library and preserves its terminal interface", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  await page.locator("#symbolSearch").fill("XMLB004A2S11");
+  await page.locator('[data-insert="telemecanique-xmlb004a2s11"]').click();
+  const point = await sheetPoint(page, 400, 300);
+  await page.mouse.click(point.x, point.y);
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(4);
+  const saved = await saveDrawing(page, "xmlb-pressure");
+  expect(saved.data.objects[0].componentId).toBe("telemecanique-xmlb004a2s11");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(4);
+  const reopened = await saveDrawing(page, "xmlb-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
+
 test("ENG-0601 opens authored paper documents without overlaps and roundtrips edits", async ({
   page,
 }) => {
