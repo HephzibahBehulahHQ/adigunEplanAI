@@ -1473,3 +1473,62 @@ test("Rittal enclosure inserts as editable mechanical data without electrical pi
   const reopened = await saveDrawing(page, "enclosure-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
+
+test("linked panel placement preserves its canonical device on local reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("Linked panel verification");
+  await page.locator("#createProject").click();
+  const initial = await saveDrawing(page, "panel-source");
+  const device = initial.data.objects.find(
+    (o: Record<string, unknown>) => o.ref === "F1",
+  );
+  expect(device).toBeTruthy();
+  await page
+    .locator('[data-sheet="' + device.sheetId + '"]')
+    .first()
+    .click();
+  await page.locator('[data-draw="select"]').click();
+  await page.locator('#userDrawings [data-object="' + device.id + '"]').click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page
+    .getByRole("button", { name: "Add linked panel placement" })
+    .click();
+  await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
+  const saved = await saveDrawing(page, "panel-linked");
+  const placement = saved.data.objects.find(
+    (o: Record<string, unknown>) => o.kind === "panel-placement",
+  );
+  expect(placement.deviceId).toBe(device.id);
+  expect(
+    saved.data.objects.filter(
+      (o: Record<string, unknown>) => o.kind === "component-instance",
+    ).length,
+  ).toBe(
+    initial.data.objects.filter(
+      (o: Record<string, unknown>) => o.kind === "component-instance",
+    ).length,
+  );
+  await page
+    .locator('#userDrawings [data-object="' + placement.id + '"]')
+    .click();
+  await page.locator('[data-object-coordinate="x"]').fill("250");
+  await page.locator('[data-object-coordinate="x"]').press("Tab");
+  await page.locator('[data-rotate-object="' + placement.id + '"]').click();
+  const edited = await saveDrawing(page, "panel-edited");
+  expect(
+    edited.data.objects.find(
+      (o: Record<string, unknown>) => o.id === placement.id,
+    ),
+  ).toMatchObject({ x: 250, rotation: 90, deviceId: device.id });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(edited.path);
+  const reopened = await saveDrawing(page, "panel-reopened");
+  expect(reopened.data.objects).toEqual(edited.data.objects);
+  await page.screenshot({
+    path: test.info().outputPath("linked-panel-placement.png"),
+  });
+});

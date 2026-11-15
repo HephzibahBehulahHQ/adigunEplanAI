@@ -612,6 +612,7 @@
     ]
   }));
   const feederMagneticBreakerDefinition = deepFreeze(Object.assign({}, motorProtectionBreakerDefinition, {
+    panelFootprint: { widthMm:45, heightMm:97, depthMm:97, source:'https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RV2321-4BC10', edition:'2026-11-12', page:3, note:'Body envelope only; mounting holes and clearance envelopes are not represented.' },
     id: 'siemens-3rv2321-4bc10', manufacturerPartNumber: '3RV2321-4BC10', model: 'SIRIUS 3RV2321-4BC10',
     name: 'Starter-combination magnetic circuit breaker · 20 A', family: 'magnetic-starter-breaker', category: 'Electrical · Verified magnetic-only starter breaker',
     symbol: Object.assign({}, motorProtectionBreakerDefinition.symbol, {
@@ -1119,6 +1120,33 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     else{const index=result.map(function(sheet){return sheet.sectionId;}).lastIndexOf(destination);result.splice(index<0?result.length:index+1,0,moved);}
     return numberProjectSheets(result,sections);
   }
+  // Panel views refer to canonical electrical instances; they never own a second device.
+  function resolvePanelDevice(project, placement) {
+    if (!placement || typeof placement.deviceId !== 'string' || !placement.deviceId) throw new Error('Panel placement requires a stable device ID.');
+    const matches = (project.objects || []).filter(function (object) { return object.kind === 'component-instance' && object.id === placement.deviceId; });
+    if (matches.length !== 1) throw new Error('Panel device is missing or ambiguous: ' + placement.deviceId + '.');
+    const instance = matches[0];
+    const definition = component(instance.componentId);
+    if (!definition) throw new Error('Panel device has an unknown component: ' + instance.componentId + '.');
+    return { instance: instance, definition: definition, sheetId: instance.sheetId, ref: instance.ref };
+  }
+
+  function createPanelPlacement(project, deviceId, sheetId, x, y, scale) {
+    const resolved=resolvePanelDevice(project,{deviceId:deviceId}), footprint=resolved.definition.panelFootprint;
+    if (!footprint) throw new Error('No verified panel footprint for ' + resolved.definition.model + '.');
+    if (!(project.sheets||[]).some(function(sheet){return sheet.id===sheetId;})) throw new Error('Unknown panel sheet.');
+    if (![x,y,scale].every(finite)||scale<=0) throw new Error('Panel position and positive scale are required.');
+    return {id:'panel-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),kind:'panel-placement',deviceId:deviceId,footprintComponentId:resolved.instance.componentId,sheetId:sheetId,x:x,y:y,scale:scale,rotation:0};
+  }
+  function panelPlacementGeometry(project, placement) {
+    const resolved=resolvePanelDevice(project,placement);
+    if (resolved.instance.componentId!==placement.footprintComponentId) throw new Error('Panel footprint requires review after component replacement.');
+    const footprint=resolved.definition.panelFootprint;
+    if (!footprint) throw new Error('Panel device has no verified footprint.');
+    if (![placement.x,placement.y,placement.scale].every(finite)||placement.scale<=0||![0,90,180,270].includes(placement.rotation===undefined?0:placement.rotation)) throw new Error('Invalid panel placement geometry.');
+    return {x:placement.x,y:placement.y,width:footprint.widthMm*placement.scale,height:footprint.heightMm*placement.scale,rotation:placement.rotation||0,ref:resolved.ref,footprint:footprint};
+  }
+
   function validateProject(project) {
     const errors = [];
     if (!project || typeof project !== 'object') return { valid: false, errors: ['Project must be a JSON object.'] };
@@ -1175,6 +1203,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             const target=endpoints[end];
             if (!['start','end'].includes(end) || !target || typeof target.instanceId !== 'string' || !target.instanceId || typeof target.pinId !== 'string' || !target.pinId) errors.push('Wire has an invalid terminal attachment.');
           });
+        }
+        if (object.kind === 'panel-placement') {
+          if(typeof object.deviceId!=='string'||!object.deviceId||typeof object.footprintComponentId!=='string'||!object.footprintComponentId||![object.x,object.y,object.scale].every(finite)||object.scale<=0||![0,90,180,270].includes(object.rotation===undefined?0:object.rotation))errors.push('Panel placement '+object.id+' has invalid identity or geometry.');
         }
         if (object.kind === 'component-instance') {
           const validation = validateInstance(object);
@@ -2227,6 +2258,9 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    createPanelPlacement: createPanelPlacement,
+    panelPlacementGeometry: panelPlacementGeometry,
+    resolvePanelDevice: resolvePanelDevice,
     sheetDeletionDiagnostics: sheetDeletionDiagnostics,
     removeSheetConnections: removeSheetConnections,
     moveProjectSheet: moveProjectSheet,
