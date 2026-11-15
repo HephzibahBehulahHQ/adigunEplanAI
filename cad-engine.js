@@ -944,7 +944,16 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     instanceProperties:{location:{type:'string',default:'',maximumLength:80},comment:{type:'string',default:'Verify assembly, electrical terminal mapping and delivered revision.',maximumLength:160}},
     sources:[{publisher:'Siemens',title:'3RU2926-3AA01 product data sheet',url:'https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2926-3AA01',documentRevision:'2025-10-29',revisionNote:'Page 1/3; support body dimensions, not a complete assembly.',retrievedAt:'2026-11-15'}]
   });
-  const COMPONENTS = Object.freeze({[overloadSupportDefinition.id]:overloadSupportDefinition,[rittalEnclosureDefinition.id]:rittalEnclosureDefinition,[lappFourCoreCableDefinition.id]:lappFourCoreCableDefinition,[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+  const overloadSupportElectricalDefinition=deepFreeze(Object.assign({},overloadSupportDefinition,{
+    id:'siemens-3ru2926-3aa01-electrical',name:'S0 overload support · three isolated electrical paths',family:'terminal-support',category:'Electrical · Manufacturer-identified mounting support',
+    symbol:{id:'support.3ru2926.electrical.v1',view:'schematic',unit:'mm',width:190,height:110,
+      pins:['l1','l2','l3'].flatMap(function(phase,index){return [{id:'line-'+phase,localNumber:['1/L1','3/L2','5/L3'][index],name:'Manufacturer-labelled incoming screw terminal',x:-85,y:-24+index*24,electricalType:'passive',connectionType:'screw-terminal'},{id:'mate-'+phase,localNumber:'MATE '+phase.toUpperCase(),name:'Model-local interface to relay input '+['1/L1','3/L2','5/L3'][index],x:85,y:-24+index*24,electricalType:'passive',connectionType:'assembly-interface'}];}),
+      internalConnections:['l1','l2','l3'].map(function(phase){return ['line-'+phase,'mate-'+phase];}),
+      numberingNote:'Incoming 1/L1, 3/L2, 5/L3 are manufacturer labels. MATE L1/L2/L3 identify model-local relay mating interfaces, not extra manufacturer screw terminals. Three isolated conductive paths follow the source graphic. Coordinates are schematic. Assembly association alone does not create electrical connections.'},
+    specifications:Object.assign({},overloadSupportDefinition.specifications,{mainConnection:{value:'Three isolated screw-terminal paths; relay-side MATE IDs are model-local'},assemblyNote:{value:'Explicitly connect each mating interface to its corresponding relay input. No automatic electrical link is implied by the mechanical association.'}}),
+    sources:overloadSupportDefinition.sources.concat([{publisher:'Siemens',title:'3RU2926-3AA01 connection graphic, page 3/3',url:'https://docs.rs-online.com/c473/0900766b814bb84d.pdf',documentRevision:'2024-09-23',revisionNote:'Manufacturer datasheet hosted by RS; connection graphic visually verified. Mating-side IDs are model-local.',retrievedAt:'2026-11-15'}])
+  }));
+  const COMPONENTS = Object.freeze({[overloadSupportElectricalDefinition.id]:overloadSupportElectricalDefinition,[overloadSupportDefinition.id]:overloadSupportDefinition,[rittalEnclosureDefinition.id]:rittalEnclosureDefinition,[lappFourCoreCableDefinition.id]:lappFourCoreCableDefinition,[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;
@@ -1211,6 +1220,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
         objectIds.add(object.id);
+        if(object.kind==='wire'){try{wireRoute(object);}catch(error){errors.push(error.message);}}
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
         if(object.kind==='wire'&&object.cable!==undefined){const c=object.cable;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).some(function(k){return !['tag','core'].includes(k);})||['tag','core'].some(function(k){return typeof c[k]!=='string'||!c[k].trim()||c[k].length>64;}))errors.push('Wire cable assignment requires a cable tag and core identifier (1–64 characters).');}
         if (object.kind === 'wire' && object.attachments !== undefined) {
@@ -1842,6 +1852,13 @@ function createPumpStarterDocumentation(name) {
     return parseProject(serializeProject(project)).project;
   }
 
+  function wireRoute(wire) {
+    const start={x:wire.x1,y:wire.y1},end={x:wire.x2,y:wire.y2},route=wire.route;
+    if(route!==undefined&&(!route||!['x','y'].includes(route.axis)||!finite(route.coordinate)))throw new Error('Wire route requires an x/y axis and finite coordinate.');
+    if(!route)return [start,{x:end.x,y:start.y},end];
+    return route.axis==='y'?[start,{x:start.x,y:route.coordinate},{x:end.x,y:route.coordinate},end]:[start,{x:route.coordinate,y:start.y},{x:route.coordinate,y:end.y},end];
+  }
+  function wireRouteLength(wire){const points=wireRoute(wire);return points.slice(1).reduce(function(sum,p,i){return sum+Math.abs(p.x-points[i].x)+Math.abs(p.y-points[i].y);},0);}
   function analyze(objects) {
     const source = Array.isArray(objects) ? objects : [];
     const wires = [];
@@ -1858,16 +1875,16 @@ function createPumpStarterDocumentation(name) {
         return;
       }
       const start = { x: object.x1, y: object.y1 };
-      const bend = { x: object.x2, y: object.y1 };
+      let points;try{points=wireRoute(object);}catch(error){errors.push({code:'invalid-route',objectId:object.id,message:error.message});return;}
       const end = { x: object.x2, y: object.y2 };
-      const segments = [[start, bend], [bend, end]]
+      const segments = points.slice(1).map(function(point,i){return [points[i],point];})
         .filter(function (pair) { return Math.abs(pair[0].x - pair[1].x) > EPSILON || Math.abs(pair[0].y - pair[1].y) > EPSILON; })
         .map(function (pair) { return { a: pair[0], b: pair[1] }; });
       if (!segments.length) {
         errors.push({ code: 'zero-length-wire', objectId: object.id || null, message: 'A wire has zero length.' });
         return;
       }
-      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments, attachments: object.attachments, continuationEnds: (Array.isArray(object.continuationEnds)?object.continuationEnds:[]).concat(Array.isArray(object.detachedEnds)?object.detachedEnds:[]) });
+      wires.push({ id: object.id || 'wire-' + (index + 1), points: points, start: start, end: end, segments: segments, attachments: object.attachments, continuationEnds: (Array.isArray(object.continuationEnds)?object.continuationEnds:[]).concat(Array.isArray(object.detachedEnds)?object.detachedEnds:[]) });
     });
 
     source.forEach(function (object) {
@@ -2240,10 +2257,12 @@ function createPumpStarterDocumentation(name) {
         netId: net ? net.id : '',
         startX: wire.x1,
         startY: wire.y1,
-        bendX: wire.x2,
+        bendX: wireRoute(wire)[1].x,
+        routePoints: wireRoute(wire),
+        routePath: wireRoute(wire).map(function(p){return p.x+':'+p.y;}).join(' → '),
         endX: wire.x2,
         endY: wire.y2,
-        lengthMm: Number((Math.abs(wire.x2 - wire.x1) + Math.abs(wire.y2 - wire.y1)).toFixed(6)),
+        lengthMm: Number(wireRouteLength(wire).toFixed(6)),
         startPinRefs: refsAt(wire.x1, wire.y1),
         endPinRefs: refsAt(wire.x2, wire.y2),
         netPinRefs: netPins
@@ -2258,7 +2277,7 @@ function createPumpStarterDocumentation(name) {
     const columns = [
       ['Wire ID', 'wireId'], ['Net ID', 'netId'], ['Start X (mm)', 'startX'],
       ['Start Y (mm)', 'startY'], ['Bend X (mm)', 'bendX'], ['End X (mm)', 'endX'],
-      ['End Y (mm)', 'endY'], ['Route length (mm)', 'lengthMm'],
+      ['End Y (mm)', 'endY'], ['Route length (mm)', 'lengthMm'], ['Route points (mm)', 'routePath'],
       ['Start pin references', 'startPinRefs'], ['End pin references', 'endPinRefs'],
       ['Connected pin references on net', 'netPinRefs']
     ];
@@ -2319,6 +2338,8 @@ function createPumpStarterDocumentation(name) {
     crossSheetConnectors: crossSheetConnectors,
     billOfMaterials: billOfMaterials,
     billOfMaterialsCsv: billOfMaterialsCsv,
+    wireRoute: wireRoute,
+    wireRouteLength: wireRouteLength,
     wireList: wireList,
     wireListCsv: wireListCsv
   });

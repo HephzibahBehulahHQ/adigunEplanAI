@@ -1920,3 +1920,162 @@ test("overload mounting accessory links to one canonical relay and roundtrips in
     Object.isFrozen(engine.component(linked.componentId).specifications),
   );
 });
+
+test("support electrical view keeps the three manufacturer-labelled inputs isolated", () => {
+  const support = engine.createInstance(
+    "siemens-3ru2926-3aa01-electrical",
+    200,
+    200,
+    "ACC1",
+  );
+  const def = engine.component(support.componentId);
+  assert.deepEqual(
+    plain(
+      def.symbol.pins
+        .filter((p) => p.id.startsWith("line-"))
+        .map((p) => p.localNumber),
+    ),
+    ["1/L1", "3/L2", "5/L3"],
+  );
+  assert.match(def.symbol.numberingNote, /model-local/);
+  const wires = engine
+    .worldPins(support)
+    .filter((p) => p.id.startsWith("line-"))
+    .map((p, i) => ({
+      kind: "wire",
+      id: "lead-" + i,
+      x1: p.x - 30,
+      y1: p.y,
+      x2: p.x,
+      y2: p.y,
+      attachments: { end: { instanceId: support.id, pinId: p.id } },
+    }));
+  const report = engine.analyze([support, ...wires]);
+  assert.equal(report.nets.length, 3);
+  for (const net of report.nets) {
+    const ids = net.pins.map((p) => p.pinId).sort();
+    assert.equal(ids.length, 2);
+    const phase = ids[0].slice(-2);
+    assert.deepEqual(plain(ids), ["line-" + phase, "mate-" + phase]);
+  }
+  for (const phase of ["l1", "l2", "l3"]) {
+    assert.ok(
+      def.symbol.internalConnections.some(
+        (pair) => pair[0] === "line-" + phase && pair[1] === "mate-" + phase,
+      ),
+    );
+  }
+  assert.equal(engine.component("siemens-3ru2926-3aa01").symbol.pins.length, 0);
+});
+
+test("support-to-overload terminal bindings survive rotations, moves and project reopen", () => {
+  const project = engine.createExample("eng0601");
+  const sheetId = project.sheets.find((s) => s.sectionId === "A2").id;
+  const support = engine.createInstance(
+    "siemens-3ru2926-3aa01-electrical",
+    250,
+    220,
+    "ACC1",
+  );
+  const relay = engine.createInstance("siemens-3ru2126-4bb0", 600, 400, "F2");
+  support.sheetId = relay.sheetId = sheetId;
+  const wires = ["l1", "l2", "l3"].map((phase) => {
+    const a = engine.worldPins(support).find((p) => p.id === "mate-" + phase);
+    const b = engine.worldPins(relay).find((p) => p.id === "line-" + phase);
+    return {
+      id: "assembly-" + phase,
+      kind: "wire",
+      sheetId,
+      x1: a.x,
+      y1: a.y,
+      x2: b.x,
+      y2: b.y,
+      attachments: {
+        start: { instanceId: support.id, pinId: a.id },
+        end: { instanceId: relay.id, pinId: b.id },
+      },
+    };
+  });
+  project.objects = [support, relay, ...wires];
+  project.crossSheetConnections = [];
+  project.objects = engine.linkAssemblyAccessory(project, support.id, relay.id);
+  const check = (objects) => {
+    assert.deepEqual(plain(engine.synchronizeWireAttachments(objects)), []);
+    const report = engine.analyze(objects);
+    assert.equal(report.nets.length, 3);
+    for (const phase of ["l1", "l2", "l3"]) {
+      const net = report.nets.find((n) =>
+        n.pins.some((p) => p.ref === "ACC1" && p.pinId === "line-" + phase),
+      );
+      assert.ok(
+        net.pins.some((p) => p.ref === "F2" && p.pinId === "line-" + phase),
+      );
+      assert.ok(
+        net.pins.some((p) => p.ref === "ACC1" && p.pinId === "mate-" + phase),
+      );
+      assert.equal(net.pins.filter((p) => p.ref === "ACC1").length, 2);
+    }
+  };
+  for (let turn = 0; turn < 4; turn++) {
+    engine.rotateInstance(project.objects[0], 90);
+    engine.moveInstance(relay, relay.x + 20, relay.y - 10);
+    check(project.objects);
+  }
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  check(restored.objects);
+  assert.equal(restored.objects[0].assemblyFor, relay.id);
+  assert.deepEqual(
+    plain(
+      restored.objects
+        .filter((o) => o.kind === "wire")
+        .map((w) => w.attachments),
+    ),
+    plain(wires.map((w) => w.attachments)),
+  );
+});
+
+test("wire lanes share routing, branch geometry, length and native persistence", () => {
+  const wire = {
+    id: "routed",
+    kind: "wire",
+    x1: 0,
+    y1: 0,
+    x2: 100,
+    y2: 10,
+    route: { axis: "y", coordinate: 40 },
+  };
+  assert.deepEqual(plain(engine.wireRoute(wire)), [
+    { x: 0, y: 0 },
+    { x: 0, y: 40 },
+    { x: 100, y: 40 },
+    { x: 100, y: 10 },
+  ]);
+  assert.equal(engine.wireRouteLength(wire), 170);
+  assert.equal(engine.wireList([wire]).rows[0].lengthMm, 170);
+  const branch = { id: "branch", kind: "wire", x1: 50, y1: 40, x2: 50, y2: 70 };
+  assert.equal(engine.analyze([wire, branch]).nets.length, 1);
+  const oldElbowBranch = { ...branch, y1: 0, y2: -20 };
+  assert.equal(engine.analyze([wire, oldElbowBranch]).nets.length, 2);
+  const restored = engine.parseProject(
+    engine.serializeProject({ project: "Routes", sheets: [], objects: [wire] }),
+  ).project;
+  assert.deepEqual(plain(restored.objects[0].route), wire.route);
+  assert.equal(engine.wireRouteLength(restored.objects[0]), 170);
+  const vertical = { ...wire, route: { axis: "x", coordinate: 150 } };
+  assert.equal(engine.wireRouteLength(vertical), 210);
+  assert.throws(
+    () =>
+      engine.serializeProject({
+        project: "Bad route",
+        sheets: [],
+        objects: [{ ...wire, route: { axis: "z", coordinate: 40 } }],
+      }),
+    /route/,
+  );
+  assert.throws(
+    () => engine.wireRoute({ ...wire, route: { axis: "y", coordinate: NaN } }),
+    /finite/,
+  );
+});
