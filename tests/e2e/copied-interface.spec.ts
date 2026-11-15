@@ -1668,3 +1668,80 @@ test("mounting accessory links to the canonical overload and survives rename and
     path: test.info().outputPath("overload-mounting-accessory.png"),
   });
 });
+
+test("electrical support wires to relay terminals and retains bindings after editing", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Support wiring verification");
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  for (const [id, x, y] of [
+    ["siemens-3ru2926-3aa01-electrical", 250, 220],
+    ["siemens-3ru2126-4bb0", 600, 400],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(id);
+    await page.locator('[data-insert="' + id + '"]').click();
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  }
+  await page.locator('[data-draw="wire"]').click();
+  for (let i = 0; i < 3; i++) {
+    const a = await sheetPoint(page, 335, 196 + i * 24);
+    const b = await sheetPoint(page, 550 + i * 50, 310);
+    await page.mouse.move(a.x, a.y);
+    await page.mouse.down();
+    await page.mouse.move(b.x, b.y);
+    await page.mouse.up();
+  }
+  const wired = await saveDrawing(page, "support-wired");
+  const support = wired.data.objects.find(
+    (o: Record<string, unknown>) =>
+      o.componentId === "siemens-3ru2926-3aa01-electrical",
+  );
+  const relay = wired.data.objects.find(
+    (o: Record<string, unknown>) => o.componentId === "siemens-3ru2126-4bb0",
+  );
+  const wires = wired.data.objects.filter(
+    (o: Record<string, unknown>) => o.kind === "wire",
+  );
+  expect(wires).toHaveLength(3);
+  for (let i = 0; i < 3; i++) {
+    expect(wires[i].attachments).toEqual({
+      start: { instanceId: support.id, pinId: "mate-l" + (i + 1) },
+      end: { instanceId: relay.id, pinId: "line-l" + (i + 1) },
+    });
+  }
+  await page.locator('[data-draw="select"]').click();
+  await page
+    .locator('#userDrawings [data-object="' + support.id + '"]')
+    .locator(".component-hit-target")
+    .click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByRole("button", { name: "Link mounting accessory" }).click();
+  await page.locator('[data-object-coordinate="x"]').fill("300");
+  await page.locator('[data-object-coordinate="x"]').press("Tab");
+  await page.locator('[data-rotate-object="' + support.id + '"]').click();
+  const edited = await saveDrawing(page, "support-edited");
+  expect(
+    edited.data.objects.find(
+      (o: Record<string, unknown>) => o.id === support.id,
+    ),
+  ).toMatchObject({ x: 300, rotation: 90, assemblyFor: relay.id });
+  expect(
+    edited.data.objects
+      .filter((o: Record<string, unknown>) => o.kind === "wire")
+      .map((w: { attachments: unknown }) => w.attachments),
+  ).toEqual(wires.map((w: { attachments: unknown }) => w.attachments));
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(edited.path);
+  const reopened = await saveDrawing(page, "support-reopened");
+  expect(reopened.data.objects).toEqual(edited.data.objects);
+  await page.screenshot({
+    path: test.info().outputPath("support-electrical-wiring.png"),
+  });
+});
