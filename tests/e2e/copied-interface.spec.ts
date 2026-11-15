@@ -35,7 +35,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(6);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(8);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 6; i++) {
     await page
@@ -72,12 +72,25 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     expect(layout).toEqual({ outside: 0, overlaps: false });
   }
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(6);
+  expect(saved.data.sheets).toHaveLength(8);
   expect(saved.data.sections).toHaveLength(4);
   expect(
-    saved.data.objects.every((o: { kind: string }) => o.kind === "text"),
+    saved.data.objects
+      .filter((o: { sheetId: string }) => o.sheetId.includes("-a1-"))
+      .every((o: { kind: string }) => o.kind === "text"),
   ).toBe(true);
   saved.data.objects[1].text = "Reviewed project scope";
+  await page.locator('[data-sheet="eng0601-a2-0"]').first().click();
+  await expect(page.locator(".cross-sheet-connector")).toHaveCount(3);
+  await page.locator(".cross-sheet-connector").first().press("Enter");
+  await expect(page.locator("#userDrawings")).toContainText(
+    "PANEL OVERLOAD SEGMENT",
+  );
+  await page.locator(".cross-sheet-connector").first().press("Enter");
+  await expect(page.locator("#userDrawings")).toContainText(
+    "PANEL POWER SEGMENT",
+  );
+  await page.screenshot({ path: test.info().outputPath("eng0601-power.png") });
   await page.reload();
   await page.locator("#openFile").setInputFiles({
     name: "eng0601.json",
