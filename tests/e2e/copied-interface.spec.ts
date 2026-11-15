@@ -1494,6 +1494,14 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page.locator('[data-draw="select"]').click();
   await page.locator('#userDrawings [data-object="' + device.id + '"]').click();
   await page.locator('[data-inspector="Properties"]').click();
+  const panelSheet = initial.data.sheets.find(
+    (sheet: { id: string }) => sheet.id === "eng0601-a3-0",
+  );
+  await expect(
+    page
+      .getByRole("combobox", { name: "Panel placement sheet" })
+      .locator("option"),
+  ).toHaveText([panelSheet.number + " · " + panelSheet.name]);
   await page
     .getByRole("button", { name: "Add linked panel placement" })
     .click();
@@ -1727,6 +1735,19 @@ test("electrical support wires to relay terminals and retains bindings after edi
   await page.locator('[data-object-coordinate="x"]').fill("300");
   await page.locator('[data-object-coordinate="x"]').press("Tab");
   await page.locator('[data-rotate-object="' + support.id + '"]').click();
+  for (let i = 0; i < wires.length; i++) {
+    const wirePoint = await sheetPoint(page, 550 + i * 50, 307.5);
+    await page.mouse.click(wirePoint.x, wirePoint.y);
+    await page
+      .getByRole("combobox", { name: "Wire route axis" })
+      .selectOption("y");
+    await page
+      .getByRole("spinbutton", { name: "Wire lane coordinate" })
+      .fill(String(335 + i * 20));
+    await page
+      .getByRole("spinbutton", { name: "Wire lane coordinate" })
+      .press("Tab");
+  }
   const edited = await saveDrawing(page, "support-edited");
   expect(
     edited.data.objects.find(
@@ -1738,6 +1759,11 @@ test("electrical support wires to relay terminals and retains bindings after edi
       .filter((o: Record<string, unknown>) => o.kind === "wire")
       .map((w: { attachments: unknown }) => w.attachments),
   ).toEqual(wires.map((w: { attachments: unknown }) => w.attachments));
+  expect(
+    edited.data.objects
+      .filter((o: { kind: string }) => o.kind === "wire")
+      .map((w: { route: unknown }) => w.route),
+  ).toEqual([335, 355, 375].map((coordinate) => ({ axis: "y", coordinate })));
   await page.reload();
   await page.locator("#openFile").setInputFiles(edited.path);
   const reopened = await saveDrawing(page, "support-reopened");
