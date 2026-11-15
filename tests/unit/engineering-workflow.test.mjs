@@ -1545,3 +1545,48 @@ test("cable core assignments follow paired segments without changing electrical 
     !engine.createExample("eng0601").objects.find((o) => o.id === wireId).cable,
   );
 });
+
+test("electrical checks reject disconnected reuse and inconsistent continuation core assignments", () => {
+  const project = engine.createExample("eng0601");
+  const phase1 = project.crossSheetConnections[0];
+  project.objects = engine.assignWireCable(
+    project,
+    phase1.endpoints[0].wireId,
+    { tag: "W2", core: "1" },
+  );
+  const report = engine.analyzeProject(project);
+  assert.equal(report.valid, true);
+  const assignedNet = report.globalNets.find((n) =>
+    n.wireIds.includes(
+      phase1.endpoints[0].sheetId + ":" + phase1.endpoints[0].wireId,
+    ),
+  );
+  const other = project.crossSheetConnections.find(
+    (link) =>
+      !assignedNet.wireIds.includes(
+        link.endpoints[0].sheetId + ":" + link.endpoints[0].wireId,
+      ),
+  );
+  project.objects = engine.assignWireCable(project, other.endpoints[0].wireId, {
+    tag: "W2",
+    core: "1",
+  });
+  assert.equal(engine.analyzeProject(project).valid, false);
+  assert.match(
+    engine.analyzeProject(project).cableIssues.join(" "),
+    /disconnected electrical nets/,
+  );
+  project.objects = engine.assignWireCable(project, other.endpoints[0].wireId, {
+    tag: "W2",
+    core: "2",
+  });
+  assert.equal(engine.analyzeProject(project).valid, true);
+  delete project.objects.find((o) => o.id === other.endpoints[1].wireId).cable;
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.match(
+    engine.analyzeProject(reopened).cableIssues.join(" "),
+    /inconsistent cable\/core/,
+  );
+});
