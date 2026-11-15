@@ -1015,6 +1015,7 @@ const xmlbPressureSwitchDefinition = deepFreeze({
         }
         if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
         objectIds.add(object.id);
+        if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
         if (object.kind === 'wire' && object.attachments !== undefined) {
           const endpoints = object.attachments;
           if (!endpoints || typeof endpoints !== 'object' || Array.isArray(endpoints)) errors.push('Wire attachments must be an endpoint map.');
@@ -1197,8 +1198,8 @@ const xmlbPressureSwitchDefinition = deepFreeze({
     return prefix+number;
   }
 function createPumpStarterDocumentation(name) {
-    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations'];
-    const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-a1-'+index,sectionId:'A1',name:title,number:'A1/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
+    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface'];
+    const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-'+(index<6?'a1-'+index:'a2-'+(index-6)),sectionId:index<6?'A1':'A2',name:title,number:(index<6?'A1/':'A2/')+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
     const objects=[];
     function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
     function rows(page,lines){lines.forEach(function(line,index){text(page,'p'+page+'-r'+index,60,125+index*24,line,13,1070);});}
@@ -1215,7 +1216,7 @@ function createPumpStarterDocumentation(name) {
       'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
       'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
       'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: six editable A1 documents. A2/A3/A4 remain empty until their actual content is authored.',
+      'Current delivery: six A1 documents and two connected A2 power-segment sheets; A3/A4 remain empty.',
       'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
     ]);
     rows(1,[
@@ -1235,7 +1236,7 @@ function createPumpStarterDocumentation(name) {
     const register=[
       '000 Project overview','001 Title and revision','002 Contents and drawing register',
       '003 Equipment and device register','004 Symbols, terms and potentials','005 Design basis and calculations',
-      '006 Supply boundary and isolation','007 Protection and supply distribution','008 Motor contactor circuit',
+      '006 Supply interface and contactor','007 Overload and outgoing motor interface','008 Motor circuit / isolation',
       '009 Overload relay circuit','010 Pressure permissive','011 Local isolator',
       '012 Control and auxiliary power','013 Local manual controls','014 Feedback and fault response',
       '015 Field terminal connections','016 Cable and conductor schedule','017 Earthing and bonding',
@@ -1246,7 +1247,7 @@ function createPumpStarterDocumentation(name) {
     ];
     register.forEach(function(line,index){
       const section=index<6?'A1':index<20?'A2':index<26?'A3':'A4';
-      const status=index<6?'P01 / authored':'planned / not yet created';
+      const status=index<8?'P01 / authored development':'planned / not yet created';
       text(2,'register-'+index,index<15?60:620,120+(index%15)*25,section+'/'+line+' | '+status,11,510);
     });
     text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
@@ -1300,10 +1301,38 @@ function createPumpStarterDocumentation(name) {
       'Primary sources: manufacturer URLs attached to the existing K1/F2/M1 library records; retain exact revisions.',
       'Release hold: verify the above, complete A2–A4, independently review, then record actual commissioning.'
     ]);
-    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:[],metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six authored A1 sheets. Electrical circuits and installation documentation are not yet released.'}})).project;
+
+    const powerLinks=[];
+    function part(page,id,ref,x,y,rotation,comment){const obj=createInstance(id,x,y,ref);obj.sheetId=sheets[page].id;obj.rotation=rotation||0;obj.properties.comment=comment;objects.push(obj);return obj;}
+    function pin(obj,id){const p=worldPins(obj).find(function(p){return p.id===id;});if(!p)throw new Error('Unknown project terminal '+id);return Object.assign({},p,{attachment:{instanceId:obj.id,pinId:id}});}
+    function wire(page,id,a,b,label){const w=attachWire({id:'eng0601-wire-'+id,kind:'wire',sheetId:sheets[page].id,x:a.x,y:a.y,x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'#3c4853',rotation:0,conductorId:label},a,b);objects.push(w);return w;}
+    const k1=part(6,'siemens-3rt2026-2kb40','K1',400,280,0,'Panel contactor. Coil and auxiliary control circuits are not yet authored; do not energise.'),
+      f2=part(7,'siemens-3ru2126-4ab0','F2',400,300,0,'Panel overload relay. Proposed 15.2 A motor; setting, reset and short-circuit coordination remain unverified.');
+    ['L1','L2','L3'].forEach(function(phase,index){
+      const n=index+1,x=350+index*50;
+      const source=part(6,'phoenix-contact-3004362','X1:'+n,x,135,90,'Supply interface '+phase+'. Upstream isolation, short-circuit protection and cable sizing not yet selected.');
+      wire(6,'supply-'+n,pin(source,'connection-2'),pin(k1,'power-l'+n),phase);
+      text(6,'supply-label-'+n,x-12,85,phase,12,70);
+      const outgoing={x:x,y:480-index*40},incoming={x:x,y:180-index*40};
+      const a=wire(6,'k1-out-'+n,pin(k1,'power-t'+n),outgoing,'K1-T'+n);
+      const b=wire(7,'f2-in-'+n,incoming,pin(f2,'line-l'+n),'K1-T'+n);
+      a.continuationEnds=['end'];b.continuationEnds=['start'];
+      powerLinks.push({id:'eng0601-k1-f2-'+n,name:'K1:'+String(n*2)+'/T'+n+' → F2:'+String(n*2-1)+'/L'+n,endpoints:[
+        {sheetId:sheets[6].id,wireId:a.id,point:outgoing,connector:{targetSheetId:sheets[7].id,targetRef:'F2',direction:'right'}},
+        {sheetId:sheets[7].id,wireId:b.id,point:incoming,connector:{targetSheetId:sheets[6].id,targetRef:'K1',direction:'left'}}
+      ]});
+      const load=part(7,'phoenix-contact-3004362','X2:'+n,x,480,90,'Outgoing motor circuit interface. Field maintenance isolator, motor, cable and PE route are not yet drawn.');
+      wire(7,'f2-load-'+n,pin(f2,'load-t'+n),pin(load,'connection-1'),'F2-T'+n);
+      text(7,'load-label-'+n,x-12,545,'T'+n,12,70);
+    });
+    text(6,'power-notes',680,120,
+      'PANEL POWER SEGMENT — DEVELOPMENT\n\nX1:1 / :2 / :3 are supply interfaces.\nUpstream isolation and protection remain unresolved.\n\nK1: Siemens 3RT2026-2KB40\nMain poles: 1/L1–2/T1, 3/L2–4/T2, 5/L3–6/T3.\nCoil and auxiliary contacts await the control design.\n\nK1-T1/T2/T3 continue to F2 on the next sheet.\nClick a continuation to open its matching sheet.\n\nNo neutral or PE connection is inferred.\nThe protective-earth system must be drawn separately.\n\nNo installation release: fault level, cable sizing,\ncoordination and maintenance isolation are outstanding.',13,460);
+    text(7,'overload-notes',680,120,
+      'PANEL OVERLOAD SEGMENT — DEVELOPMENT\n\nF2: Siemens 3RU2126-4AB0, 11–16 A, Class 10.\nThree incoming conductors originate at K1.\n95/96 and 97/98 await the control/trip circuits.\n\nX2:1 / :2 / :3 are outgoing circuit interfaces.\nThey do not represent the motor or field isolator.\nMotor, delta links, cable/core IDs and PE remain to draw.\n\nNo overload setting is claimed as approved.\nA 15.2 A candidate motor is within the adjustment range;\nthis alone does not verify protection coordination.\n\nPhysical separation here is documentation only.\nFinal A3 layout must follow mounting instructions.\nOpen boundary and unused-control terminals are intentional.',13,460);
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and two connected A2 power-segment sheets. Control, motor/PE, isolation, protection coordination and installation remain incomplete.'}})).project;
   }
   function projectExamples() {
-    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six editable A1 design documents in one A1–A4 project. A2–A4 circuits, layouts and reports remain in development; not installation-approved.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and two connected A2 power sheets. Control, motor/PE, isolation, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
@@ -1385,7 +1414,7 @@ function createPumpStarterDocumentation(name) {
         errors.push({ code: 'zero-length-wire', objectId: object.id || null, message: 'A wire has zero length.' });
         return;
       }
-      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments, attachments: object.attachments });
+      wires.push({ id: object.id || 'wire-' + (index + 1), points: [start, bend, end], start: start, end: end, segments: segments, attachments: object.attachments, continuationEnds: Array.isArray(object.continuationEnds)?object.continuationEnds:[] });
     });
 
     source.forEach(function (object) {
@@ -1417,7 +1446,7 @@ function createPumpStarterDocumentation(name) {
     pins.forEach(function (pin) { pin.node = addNode(); });
 
     // Explicit terminal bindings own connectivity; only free endpoints may form geometric branches.
-    const junctionPoints = function (wire) { return wire.attachments ? ['start','end'].filter(function (end) { return !wire.attachments[end]; }).map(function (end) { return wire[end]; }) : wire.points; };
+    const junctionPoints = function (wire) { return wire.attachments ? ['start','end'].filter(function (end) { return !wire.attachments[end]&&!wire.continuationEnds.includes(end); }).map(function (end) { return wire[end]; }) : wire.points; };
     for (let i = 0; i < wires.length; i += 1) {
       for (let j = i + 1; j < wires.length; j += 1) {
         const touches = junctionPoints(wires[i]).some(function (point) {
@@ -1433,7 +1462,7 @@ function createPumpStarterDocumentation(name) {
       const attachedWires = wires.filter(function (wire) {
         if (wire.attachments) return ['start','end'].some(function (end) {
           const attachment = wire.attachments[end];
-          return attachment ? attachment.instanceId === pin.instanceId && attachment.pinId === pin.pinId : Math.abs(wire[end].x-pin.point.x)<=EPSILON && Math.abs(wire[end].y-pin.point.y)<=EPSILON;
+          return attachment ? attachment.instanceId === pin.instanceId && attachment.pinId === pin.pinId : !wire.continuationEnds.includes(end)&&Math.abs(wire[end].x-pin.point.x)<=EPSILON && Math.abs(wire[end].y-pin.point.y)<=EPSILON;
         });
         return wire.segments.some(function (segment) { return pointOnSegment(pin.point, segment); });
       });

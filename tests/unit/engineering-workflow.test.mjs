@@ -76,12 +76,15 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 6);
+  assert.equal(project.sheets.length, 8);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
-    Array.from({ length: 6 }, (_, i) => "A1/" + String(i).padStart(3, "0")),
+    Array.from(
+      { length: 8 },
+      (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
+    ),
   );
-  for (const sheet of project.sheets) {
+  for (const sheet of project.sheets.filter((s) => s.sectionId === "A1")) {
     const content = project.objects.filter((o) => o.sheetId === sheet.id);
     assert.ok(content.length >= 12);
     assert.ok(
@@ -93,7 +96,31 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 0);
+  assert.equal(project.crossSheetConnections.length, 3);
+  assert.equal(engine.analyzeProject(project).valid, true);
+  const powerReport = engine.analyzeProject(project);
+  assert.equal(powerReport.globalNetCount, 9);
+  for (let n = 1; n <= 3; n++) {
+    const net = powerReport.globalNets.find((net) =>
+      net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
+    );
+    assert.deepEqual(
+      plain(net.pins.map((pin) => pin.ref + ":" + pin.pinId).sort()),
+      ["F2:line-l" + n, "K1:power-t" + n],
+    );
+  }
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 12);
+  for (const link of project.crossSheetConnections) {
+    assert.equal(link.endpoints.length, 2);
+    assert.equal(
+      link.endpoints[0].connector.targetSheetId,
+      link.endpoints[1].sheetId,
+    );
+    assert.equal(
+      link.endpoints[1].connector.targetSheetId,
+      link.endpoints[0].sheetId,
+    );
+  }
   project.objects[1].text = "Engineer edited this note";
   const restored = engine.parseProject(engine.serializeProject(project));
   assert.deepEqual(plain(restored.project), plain(project));
@@ -461,13 +488,16 @@ test("missing terminals and sheet mismatches are diagnosed, not silently reconne
 
 test("bound example nets remain identical through component rotation and movement", () => {
   const signature = (objects) =>
-    engine
-      .analyze(objects)
-      .nets.map((net) =>
-        net.pins
-          .map((pin) => pin.instanceId + ":" + pin.pinId)
-          .sort()
-          .join("|"),
+    [...new Set(objects.map((object) => object.sheetId))]
+      .flatMap((sheetId) =>
+        engine
+          .analyze(objects.filter((object) => object.sheetId === sheetId))
+          .nets.map((net) =>
+            net.pins
+              .map((pin) => pin.instanceId + ":" + pin.pinId)
+              .sort()
+              .join("|"),
+          ),
       )
       .sort();
   for (const example of engine.projectExamples()) {
