@@ -1954,8 +1954,10 @@ test("terminal bodies can be added through existing Properties and reopened", as
   const saved = await saveDrawing(page, "terminal-views");
   for (const device of devices) {
     const placement = saved.data.objects.find(
-      (o: { kind: string; deviceId?: string }) =>
-        o.kind === "panel-placement" && o.deviceId === device.id,
+      (o: { kind: string; deviceId?: string; sheetId: string }) =>
+        o.kind === "panel-placement" &&
+        o.deviceId === device.id &&
+        o.sheetId === "eng0601-a3-0",
     );
     expect(placement).toMatchObject({
       footprintComponentId: device.componentId,
