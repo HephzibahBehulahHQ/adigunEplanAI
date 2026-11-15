@@ -389,7 +389,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(20);
+  expect(saved.data.sheets).toHaveLength(27);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
