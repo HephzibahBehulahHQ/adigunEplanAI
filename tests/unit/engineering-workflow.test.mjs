@@ -138,7 +138,13 @@ test("field motor delta bridges and unswitched PE stay distinct", () => {
       (pin) => pin.ref === "M1" && pin.pinId === "protective-earth",
     ),
   );
-  assert.ok(pe.pins.every((pin) => ["M1", "XPE:1"].includes(pin.ref)));
+  assert.ok(
+    pe.pins.every(
+      (pin) =>
+        ["M1", "XPE:1", "XPE:2"].includes(pin.ref) ||
+        (pin.ref === "PS1" && pin.pinId === "line-pe"),
+    ),
+  );
   assert.equal(
     project.objects.find((o) => o.id === "eng0601-wire-motor-pe")
       .conductorColor,
@@ -214,11 +220,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 10);
+  assert.equal(project.sheets.length, 11);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 10 },
+      { length: 11 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -234,10 +240,10 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 13);
+  assert.equal(project.crossSheetConnections.length, 16);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
-  assert.equal(powerReport.globalNetCount, 20);
+  assert.equal(powerReport.globalNetCount, 24);
   for (let n = 1; n <= 3; n++) {
     const net = powerReport.globalNets.find((net) =>
       net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
@@ -247,7 +253,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 41);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 53);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
@@ -961,4 +967,82 @@ test("contactor coil feed does not visually pass through its return terminal", (
       wireId + " must not cross " + opposite,
     );
   }
+});
+
+test("PTCB preserves manufacturer settings and physically separate input/output bridge shafts", () => {
+  const id = "phoenix-contact-2908262",
+    definition = JSON.stringify(engine.component(id));
+  const instance = engine.createInstance(id, 500, 300, "F4");
+  assert.equal(instance.properties.channelCurrentA, 4);
+  for (const value of [1, 4, 8]) {
+    instance.properties.channelCurrentA = value;
+    assert.equal(engine.validateInstance(instance).valid, true);
+  }
+  for (const value of [0, 1.5, 9]) {
+    instance.properties.channelCurrentA = value;
+    assert.equal(engine.validateInstance(instance).valid, false);
+  }
+  assert.equal(JSON.stringify(engine.component(id)), definition);
+  assert.deepEqual(plain(engine.component(id).symbol.internalConnections), [
+    ["input-1.1", "bridge-1.2"],
+    ["output-2.1", "bridge-2.2"],
+    ["negative-3.1", "negative-3.2"],
+  ]);
+});
+
+test("auxiliary supply preserves AC/DC/PE separation and bypasses PTCB for load return", () => {
+  const project = engine.createExample("eng0601");
+  const check = (p) => {
+    const report = engine.analyzeProject(p);
+    assert.equal(report.valid, true);
+    const net = (ref, pinId) =>
+      report.globalNets.find((n) =>
+        n.pins.some((pin) => pin.ref === ref && pin.pinId === pinId),
+      );
+    const positive = net("PS1", "output-positive"),
+      negative = net("PS1", "output-negative"),
+      protectedOutput = net("F4", "output-2.1");
+    assert.equal(
+      new Set([
+        positive,
+        negative,
+        protectedOutput,
+        net("PS1", "line-l"),
+        net("PS1", "line-n"),
+        net("PS1", "line-pe"),
+      ]).size,
+      6,
+    );
+    assert.ok(
+      protectedOutput.pins.some(
+        (p) => p.ref === "S0" && p.pinId === "contact-21",
+      ),
+    );
+    assert.ok(
+      negative.pins.some((p) => p.ref === "K1" && p.pinId === "coil-a2"),
+    );
+    const loadLink = p.crossSheetConnections.find(
+      (c) => c.id === "eng0601-control-aux-control-return",
+    );
+    const loadWire = p.objects.find(
+      (o) => o.id === loadLink.endpoints[0].wireId,
+    );
+    const supply = p.objects.find((o) => o.ref === "PS1");
+    assert.equal(
+      loadWire.attachments.start.instanceId,
+      supply.id,
+      "load return must terminate at PSU, not F4 self-supply input",
+    );
+    assert.equal(loadWire.attachments.start.pinId, "output-negative");
+    assert.equal(
+      p.objects.find((o) => o.ref === "F4").properties.channelCurrentA,
+      1,
+    );
+  };
+  check(project);
+  const psu = project.objects.find((o) => o.ref === "PS1");
+  psu.x += 30;
+  psu.rotation = 90;
+  engine.synchronizeWireAttachments(project.objects);
+  check(engine.parseProject(engine.serializeProject(project)).project);
 });
