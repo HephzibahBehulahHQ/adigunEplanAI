@@ -2380,3 +2380,68 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     plain(project.crossSheetConnections),
   );
 });
+
+test("terminal accessories retain sourced dimensions without fabricated electrical pins", () => {
+  const project = engine.createExample("eng0601");
+  const before = engine.analyzeProject(project).globalNetCount;
+  for (const [part, dimensions] of [
+    ["3003020", [1.8, 42.5, 35.9]],
+    ["3047028", [2.2, 47, 39.8]],
+    ["3212060", [2.2, 75.4, 45.6]],
+    ["3022276", [5.2, 48.6, 35.3]],
+  ]) {
+    const definition = engine.component("phoenix-contact-" + part);
+    assert.equal(definition.family, "terminal-accessory");
+    assert.equal(definition.symbol.pins.length, 0);
+    assert.equal(definition.symbol.internalConnections.length, 0);
+    assert.deepEqual(
+      [
+        definition.panelFootprint.widthMm,
+        definition.panelFootprint.heightMm,
+        definition.panelFootprint.depthMm,
+      ],
+      dimensions,
+    );
+    assert.ok(Object.isFrozen(definition.specifications));
+    const accessory = engine.createInstance(
+      definition.id,
+      100,
+      100,
+      "ACC-" + part,
+    );
+    accessory.sheetId = "eng0601-a3-1";
+    project.objects.push(accessory);
+  }
+  const cover = project.objects.find(
+    (o) => o.componentId === "phoenix-contact-3047028",
+  );
+  const terminal = project.objects.find((o) => o.ref === "X5:1");
+  project.objects = engine.linkAssemblyAccessory(
+    project,
+    cover.id,
+    terminal.id,
+  );
+  assert.throws(() =>
+    engine.linkAssemblyAccessory(
+      project,
+      cover.id,
+      project.objects.find((o) => o.ref === "X1:1").id,
+    ),
+  );
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.equal(
+    reopened.objects.find((o) => o.id === cover.id).assemblyFor,
+    terminal.id,
+  );
+  assert.equal(engine.analyzeProject(reopened).globalNetCount, before);
+  for (const part of ["3003020", "3047028", "3212060", "3022276"]) {
+    assert.equal(
+      engine
+        .billOfMaterials(reopened.objects)
+        .rows.find((r) => r.componentId === "phoenix-contact-" + part).quantity,
+      1,
+    );
+  }
+});

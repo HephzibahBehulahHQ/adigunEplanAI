@@ -2030,3 +2030,45 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
     saved.data.crossSheetConnections,
   );
 });
+
+test("terminal accessories insert through the existing library as editable mechanical parts", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Terminal accessories");
+  await page.locator("#createProject").click();
+  await addSectionSheet(page, "A3");
+  for (const [index, part] of [
+    "3003020",
+    "3047028",
+    "3212060",
+    "3022276",
+  ].entries()) {
+    await page.locator('[data-module="Electrical"]').click();
+    await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+    await page.locator("#symbolSearch").fill(part);
+    await page.locator('[data-insert="phoenix-contact-' + part + '"]').click();
+    const point = await sheetPoint(page, 200 + index * 250, 250);
+    await page.mouse.click(point.x, point.y);
+  }
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(4);
+  await page.screenshot({
+    path: "test-results/terminal-accessory-library.png",
+  });
+  await page.locator('[data-draw="select"]').click();
+  await page.locator("#userDrawings .drawing-object").last().dblclick();
+  await expect(page.locator("#selectionDetails")).toContainText("CLIPFIX 35-5");
+  await page.locator('[data-component-property="ref"]').fill("ACC-END");
+  await page.locator('[data-component-property="ref"]').press("Tab");
+  const saved = await saveDrawing(page, "terminal-accessories");
+  expect(
+    saved.data.objects.find((o: { ref?: string }) => o.ref === "ACC-END")
+      .componentId,
+  ).toBe("phoenix-contact-3022276");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "terminal-accessories-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
