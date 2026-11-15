@@ -1539,7 +1539,7 @@ function createPumpStarterDocumentation(name) {
     continuation('isolator-overload',fieldControl[1],'connection-1',{x:220,y:280},f2,'aux-95',{x:600,y:250},'24V-03 · X5:2 → F2:95','left','right');
     continuation('overload-pressure',f2,'aux-96',{x:600,y:360},fieldControl[2],'connection-1',{x:220,y:380},'24V-04 · F2:96 → X5:3','right','right');
     continuation('pressure-start',fieldControl[3],'connection-1',{x:340,y:550},start,'contact-13',{x:700,y:530},'24V-05-START','left','right');
-    continuation('hold-feed',fieldControl[3],'connection-1',{x:220,y:480},k1,'aux-13',{x:620,y:180},'24V-05 · X5:4 → K1:13','right','right');
+    continuation('hold-feed',fieldControl[3],'connection-1',{x:220,y:480},k1,'aux-13',{x:620,y:180},'24V-05-HOLD','right','right');
     continuation('hold-output',k1,'aux-14',{x:620,y:380},start,'contact-14',{x:980,y:430},'24V-06 · K1:14 → S1:14','right','left');
     continuation('coil-command',start,'contact-14',{x:980,y:350},k1,'coil-a1',{x:200,y:220},'24V-06 · S1:14 → K1:A1','left','left');
     continuation('coil-return',negative,'connection-2',{x:260,y:520},k1,'coil-a2',{x:260,y:550},'0V · X3:2 → K1:A2','right','right');
