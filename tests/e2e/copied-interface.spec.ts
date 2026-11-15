@@ -207,12 +207,20 @@ test("example copy remains a native editable project through replacement and loc
   const canonicalObjects = (
     objects: Array<{
       id: string;
+      deviceId?: string;
       attachments?: Record<string, { instanceId: string; pinId: string }>;
     }>,
   ) =>
     objects.map((object, index) => ({
       ...object,
       id: index,
+      deviceId: object.deviceId
+        ? (() => {
+            const target = objects.findIndex((o) => o.id === object.deviceId);
+            expect(target).toBeGreaterThanOrEqual(0);
+            return target;
+          })()
+        : undefined,
       attachments: object.attachments
         ? Object.fromEntries(
             Object.entries(object.attachments).map(([end, pin]) => [
