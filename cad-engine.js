@@ -899,6 +899,15 @@
     if(sheets.some(function(sheet){return !order.has(sheet.sectionId);}))throw new Error('Every sheet must belong to a project section.');
     return sheets.slice().sort(function(a,b){return order.get(a.sectionId)-order.get(b.sectionId);}).map(function(sheet,index){return Object.assign({},sheet,{number:sheet.sectionId+'/'+String(index).padStart(3,'0')});});
   }
+  function sheetDeletionDiagnostics(connections,sheet){
+    return connections.filter(function(connection){return connection.endpoints.some(function(endpoint){return endpoint.sheetId===sheet.id;});}).map(function(connection){
+      return {id:'deleted-sheet:'+sheet.id+':'+connection.id,code:'deleted-sheet-continuation',
+        connectionId:connection.id,connectionName:connection.name||connection.id,
+        deletedSheetId:sheet.id,deletedSheetNumber:sheet.number||'',deletedSheetName:sheet.name||'',
+        endpoints:JSON.parse(JSON.stringify(connection.endpoints)),
+        message:'Connection '+(connection.name||connection.id)+' lost sheet '+(sheet.number||sheet.id)+' '+(sheet.name||'')+'. Review and repair the affected continuation; it was not reassigned.'};
+    });
+  }
   function removeSheetConnections(connections,sheetId){
     return connections.map(function(connection){
       const endpoints=connection.endpoints.filter(function(endpoint){return endpoint.sheetId!==sheetId;}).map(function(endpoint){
@@ -924,6 +933,7 @@
   function validateProject(project) {
     const errors = [];
     if (!project || typeof project !== 'object') return { valid: false, errors: ['Project must be a JSON object.'] };
+    if(project.connectionIssues!==undefined&&(!Array.isArray(project.connectionIssues)||project.connectionIssues.some(function(issue){return !issue||typeof issue.id!=='string'||typeof issue.code!=='string'||typeof issue.message!=='string'||!Array.isArray(issue.endpoints);})))errors.push('Project connection diagnostics are malformed.');
     if (project.format !== PROJECT_FORMAT) errors.push('Unsupported Adigun project format.');
     if (![1, PROJECT_VERSION].includes(project.version)) errors.push('Unsupported project version.');
     if (!Array.isArray(project.objects) || !Array.isArray(project.sheets)) errors.push('Project objects and sheets must be arrays.');
@@ -1439,9 +1449,11 @@
     }).sort(function (x, y) { return x.localNetIds[0].localeCompare(y.localNetIds[0]); })
       .map(function (group, index) { return Object.assign({ id: 'global-net-' + (index + 1) }, group); });
     const localOpenEndpointCount = reports.reduce(function (sum, sheet) { return sum + sheet.analysis.openEndpointCount; }, 0);
+    const unresolvedContinuations=project.connectionIssues||[];
     return {
-      valid: true,
-      errors: [],
+      valid: unresolvedContinuations.length===0,
+      errors: unresolvedContinuations.map(function(issue){return issue.message;}),
+      unresolvedContinuations: unresolvedContinuations,
       sheetCount: reports.length,
       wireCount: reports.reduce(function (sum, sheet) { return sum + sheet.analysis.wireCount; }, 0),
       componentCount: reports.reduce(function (sum, sheet) { return sum + sheet.analysis.componentCount; }, 0),
@@ -1620,6 +1632,7 @@
   }
 
   root.AdigunCADEngine = Object.freeze({
+    sheetDeletionDiagnostics: sheetDeletionDiagnostics,
     removeSheetConnections: removeSheetConnections,
     moveProjectSheet: moveProjectSheet,
     defaultProjectSections: defaultProjectSections,
