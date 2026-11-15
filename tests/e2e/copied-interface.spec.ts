@@ -86,6 +86,11 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await expect(page.locator("#userDrawings")).toContainText(
     "PANEL OVERLOAD SEGMENT",
   );
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(10);
+  for (const terminal of ["95", "96", "97", "98"])
+    await expect(
+      page.locator('#userDrawings [data-terminal="' + terminal + '"]'),
+    ).toBeVisible();
   await page.locator(".cross-sheet-connector").first().press("Enter");
   await expect(page.locator("#userDrawings")).toContainText(
     "PANEL POWER SEGMENT",
