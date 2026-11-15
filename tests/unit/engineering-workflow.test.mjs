@@ -554,13 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 27);
+  assert.equal(project.sheets.length, 29);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 27 },
+      { length: 29 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 20 ? "A3/" : "A4/") +
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 22 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
     ),
   );
@@ -2088,8 +2088,8 @@ test("A4 native registers match canonical devices and remain editable after reop
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
   assert.equal(sheets.length, 7);
-  assert.equal(sheets[0].number, "A4/020");
-  assert.equal(sheets.at(-1).number, "A4/026");
+  assert.equal(sheets[0].number, "A4/022");
+  assert.equal(sheets.at(-1).number, "A4/028");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2136,7 +2136,7 @@ test("A4 native registers match canonical devices and remain editable after reop
 test("ENG-0601 opens with linked protection and supply body envelopes inside the A3 plate", () => {
   const project = engine.createExample("eng0601");
   const placements = project.objects.filter(
-    (o) => o.kind === "panel-placement",
+    (o) => o.kind === "panel-placement" && o.sheetId === "eng0601-a3-0",
   );
   assert.equal(placements.length, 5);
   const geometries = placements.map((placement) => {
@@ -2180,7 +2180,11 @@ test("ENG-0601 opens with linked protection and supply body envelopes inside the
     engine.serializeProject(project),
   ).project;
   assert.deepEqual(
-    plain(restored.objects.filter((o) => o.kind === "panel-placement")),
+    plain(
+      restored.objects.filter(
+        (o) => o.kind === "panel-placement" && o.sheetId === "eng0601-a3-0",
+      ),
+    ),
     plain(placements),
   );
 });
@@ -2203,7 +2207,10 @@ test("PS1 panel view keeps body dimensions separate from convection clearance", 
   assert.equal(footprint.mountingEnvelope.heightMm, 180);
   assert.ok(Object.isFrozen(footprint));
   const placement = project.objects.find(
-    (o) => o.kind === "panel-placement" && o.deviceId === ps1.id,
+    (o) =>
+      o.kind === "panel-placement" &&
+      o.sheetId === "eng0601-a3-0" &&
+      o.deviceId === ps1.id,
   );
   const geometry = engine.panelPlacementGeometry(project, placement);
   assert.equal(geometry.height, 40);
@@ -2217,7 +2224,10 @@ test("PS1 panel view keeps body dimensions separate from convection clearance", 
     footprint.clearancesMm.bottom * placement.scale;
   assert.ok(top >= 350 - 775 * 0.25 && bottom <= 350 + 775 * 0.25);
   for (const other of project.objects.filter(
-    (o) => o.kind === "panel-placement" && o.id !== placement.id,
+    (o) =>
+      o.kind === "panel-placement" &&
+      o.sheetId === "eng0601-a3-0" &&
+      o.id !== placement.id,
   )) {
     const box = engine.panelPlacementGeometry(project, other);
     assert.ok(
@@ -2254,7 +2264,7 @@ test("control protection panel views use sourced axes without overlapping other 
     );
   }
   const boxes = project.objects
-    .filter((o) => o.kind === "panel-placement")
+    .filter((o) => o.kind === "panel-placement" && o.sheetId === "eng0601-a3-0")
     .map((o) => ({
       ...engine.panelPlacementGeometry(project, o),
       x: o.x,
@@ -2328,4 +2338,45 @@ test("terminal panel views preserve canonical connections and survive local reop
     assert.ok(engine.resolvePanelDevice(reopened, placement));
     assert.ok(engine.panelPlacementGeometry(reopened, placement));
   }
+});
+
+test("A3 terminal detail sheets cover each canonical terminal once without overlapping bodies", () => {
+  const project = engine.createExample("eng0601");
+  const terminals = project.objects.filter(
+    (o) => o.kind === "component-instance" && /^X/.test(o.ref),
+  );
+  const views = project.objects.filter(
+    (o) =>
+      o.kind === "panel-placement" &&
+      ["eng0601-a3-1", "eng0601-a3-2"].includes(o.sheetId),
+  );
+  assert.equal(terminals.length, 17);
+  assert.equal(views.length, terminals.length);
+  assert.deepEqual(
+    views.map((o) => o.deviceId).sort(),
+    terminals.map((o) => o.id).sort(),
+  );
+  for (const view of views) {
+    const box = engine.panelPlacementGeometry(project, view);
+    assert.equal(view.scale, 5);
+    assert.ok(view.x - box.width / 2 >= 60 && view.x + box.width / 2 <= 1174);
+    assert.ok(view.y - box.height / 2 >= 150 && view.y + box.height / 2 < 550);
+    for (const other of views.filter(
+      (o) => o.sheetId === view.sheetId && o.id !== view.id,
+    )) {
+      const next = engine.panelPlacementGeometry(project, other);
+      assert.ok(
+        Math.abs(view.x - other.x) + 1e-8 >= (box.width + next.width) / 2,
+      );
+    }
+  }
+  assert.equal(engine.analyzeProject(project).globalNetCount, 27);
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(restored.objects), plain(project.objects));
+  assert.deepEqual(
+    plain(restored.crossSheetConnections),
+    plain(project.crossSheetConnections),
+  );
 });
