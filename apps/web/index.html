@@ -502,7 +502,12 @@
     return '<label class="property-row"><span>Conductor label</span><input data-wire-label="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.conductorId||'')+'"></label>'+fields+references
       +'<label class="property-row"><span>Continue from</span><select aria-label="Continue from" data-continuation-origin><option value="end">End</option><option value="start">Start</option></select></label>'
       +'<label class="property-row"><span>Continue to</span><select aria-label="Continue to" data-continuation-target><option value="">Choose another sheet wire</option>'+targets+'</select></label>'
-      +'<button class="command-item" data-add-continuation="'+escapeHtml(obj.id)+'">Connect across sheets</button>';
+      +'<button class="command-item" data-add-continuation="'+escapeHtml(obj.id)+'">Connect across sheets</button>'
+      +'<label class="property-row"><span>Cable tag</span><input aria-label="Cable tag" data-cable-tag maxlength="64" value="'+escapeHtml(obj.cable?obj.cable.tag:'')+'"></label>'
+      +'<label class="property-row"><span>Core identifier</span><input aria-label="Core identifier" data-cable-core maxlength="64" value="'+escapeHtml(obj.cable?obj.cable.core:'')+'"></label>'
+      +'<button class="command-item" data-assign-cable="'+escapeHtml(obj.id)+'">Apply cable/core to continuation</button>'
+      +'<button class="command-item" data-clear-cable="'+escapeHtml(obj.id)+'">Clear cable/core assignment</button>'
+      +'<div class="property-row">Assignment only: product, length and sizing are not verified.</div>';
   }
   $('#inspectorContent').addEventListener('change',function(event){
     const field=event.target,wire=state.objects.find(function(o){return o.id===(field.dataset.wireObject||field.dataset.wireLabel);});
@@ -512,6 +517,12 @@
     if(field.dataset.wireEnd){const end=field.dataset.wireEnd,old={x:wire[end==='start'?'x1':'x2'],y:wire[end==='start'?'y1':'y2']},parts=field.value.split('|'),device=state.objects.find(function(o){return o.id===parts[0];}),pin=device&&window.AdigunCADEngine.worldPins(device).find(function(p){return p.id===parts[1];});if(field.value&&!pin)return;pushUndo();wire.attachments=wire.attachments||{};if(pin){wire.attachments[end]={instanceId:device.id,pinId:pin.id};wire.detachedEnds=(wire.detachedEnds||[]).filter(function(e){return e!==end;});}else{delete wire.attachments[end];wire.detachedEnds=Array.from(new Set((wire.detachedEnds||[]).concat(end)));}window.AdigunCADEngine.synchronizeWireAttachments(state.objects);(state.crossSheetConnections||[]).forEach(function(link){link.endpoints.forEach(function(e){if(e.sheetId===state.sheet&&e.wireId===wire.id&&e.point.x===old.x&&e.point.y===old.y)e.point={x:wire[end==='start'?'x1':'x2'],y:wire[end==='start'?'y1':'y2']};});});renderObjects();persist();}
   });
   $('#inspectorContent').addEventListener('click',function(event){
+    const cableButton=event.target.closest('[data-assign-cable],[data-clear-cable]');
+    if(cableButton){
+      const id=cableButton.dataset.assignCable||cableButton.dataset.clearCable,all=collectProjectObjects();let result;
+      try{result=window.AdigunCADEngine.assignWireCable({objects:all,crossSheetConnections:state.crossSheetConnections},id,cableButton.dataset.clearCable?null:{tag:$('[data-cable-tag]').value,core:$('[data-cable-core]').value});}catch(error){notify(error.message);return;}
+      pushUndo();result.forEach(function(updated){const stored=(state.sheetObjects[updated.sheetId]||[]).find(function(o){return o.id===updated.id;});if(stored){if(updated.cable)stored.cable=updated.cable;else delete stored.cable;}});persist();refreshSelectedProperties();notify('Cable/core assignment updated across paired continuations.');return;
+    }
     const button=event.target.closest('[data-add-continuation]');if(!button)return;
     const wire=state.objects.find(function(o){return o.id===button.dataset.addContinuation;}),selection=$('[data-continuation-target]').value.split('|'),origin=$('[data-continuation-origin]').value,all=collectProjectObjects(),target=all.find(function(o){return o.id===selection[1]&&o.sheetId===selection[0];});
     if(!wire||!target){notify('Choose a wire on another sheet.');return;}

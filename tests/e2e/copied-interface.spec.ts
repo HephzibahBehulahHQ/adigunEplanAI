@@ -144,12 +144,24 @@ test("example copy remains a native editable project through replacement and loc
   const point = await sheetPoint(page, wire.x1, (wire.y1 + wire.y2) / 2);
   await page.mouse.click(point.x, point.y);
   await edit("[data-wire-label]", "L1 workshop");
+  await page.getByLabel("Cable tag", { exact: true }).fill("W-TEST");
+  await page.getByLabel("Core identifier", { exact: true }).fill("1");
+  await page.locator("[data-assign-cable]").click();
+  await expect(page.getByLabel("Cable tag", { exact: true })).toHaveValue(
+    "W-TEST",
+  );
+  await page.screenshot({
+    path: test.info().outputPath("native-cable-properties.png"),
+  });
   await page.getByLabel("end terminal", { exact: true }).selectOption("");
   await page
     .getByLabel("end terminal", { exact: true })
     .selectOption(f2.id + "|" + wire.attachments.end.pinId);
   await edit("[data-connection-label]", "L1 checked continuation");
   const saved = await saveDrawing(page, "editable-modified");
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === wire.id).cable,
+  ).toEqual({ tag: "W-TEST", core: "1" });
   const editedK1 = saved.data.objects.find(
     (o: { id: string }) => o.id === k1.id,
   );

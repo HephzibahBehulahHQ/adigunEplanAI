@@ -1495,3 +1495,53 @@ test("continuation register covers every real pair and remains editable on reope
       .text.includes("reviewed locally"),
   );
 });
+
+test("cable core assignments follow paired segments without changing electrical topology", () => {
+  const project = engine.createExample("eng0601");
+  const original = engine.serializeProject(project);
+  const pair = project.crossSheetConnections[0];
+  const wireId = pair.endpoints[0].wireId;
+  project.objects = engine.assignWireCable(project, wireId, {
+    tag: " W2 ",
+    core: " 1 ",
+  });
+  for (const endpoint of pair.endpoints) {
+    assert.deepEqual(
+      plain(project.objects.find((o) => o.id === endpoint.wireId).cable),
+      { tag: "W2", core: "1" },
+    );
+  }
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(restored.objects), plain(project.objects));
+  assert.deepEqual(
+    plain(engine.analyzeProject(restored).globalNets),
+    plain(
+      engine.analyzeProject(engine.parseProject(original).project).globalNets,
+    ),
+  );
+  restored.objects = engine.assignWireCable(
+    restored,
+    pair.endpoints[1].wireId,
+    null,
+  );
+  assert.equal(engine.serializeProject(restored), original);
+  assert.throws(
+    () => engine.assignWireCable(project, wireId, { tag: "W2", core: "" }),
+    /1–64/,
+  );
+  assert.throws(
+    () => engine.assignWireCable(project, "missing", { tag: "W2", core: "1" }),
+    /Select a wire/,
+  );
+  project.objects.find((o) => o.id === wireId).cable = {
+    tag: "W2",
+    core: "1",
+    manufacturerRating: "invented",
+  };
+  assert.throws(() => engine.serializeProject(project), /cable assignment/);
+  assert.ok(
+    !engine.createExample("eng0601").objects.find((o) => o.id === wireId).cable,
+  );
+});
