@@ -296,7 +296,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(13);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(14);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 7; i++) {
     await page
@@ -363,7 +363,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(13);
+  expect(saved.data.sheets).toHaveLength(14);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -374,8 +374,21 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     (o: { id: string }) => o.id === "eng0601-p0-r0",
   ).text = "Reviewed project scope";
   await page.locator('[data-sheet="eng0601-a2-0"]').first().click();
-  await expect(page.locator(".cross-sheet-connector")).toHaveCount(7);
+  await expect(page.locator(".cross-sheet-connector")).toHaveCount(13);
   await page.locator(".cross-sheet-connector").first().press("Enter");
+  await expect(page.locator("#userDrawings")).toContainText("MOTOR FEEDER");
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(6);
+  await expect(page.locator(".cross-sheet-connector")).toHaveCount(6);
+  await page.screenshot({ path: test.info().outputPath("eng0601-feeder.png") });
+  await page.locator(".cross-sheet-connector").first().press("Enter");
+  await expect(page.locator("#userDrawings")).toContainText(
+    "PANEL POWER SEGMENT",
+  );
+  await page
+    .locator(".cross-sheet-connector")
+    .filter({ hasText: /F2/ })
+    .first()
+    .press("Enter");
   await expect(page.locator("#userDrawings")).toContainText(
     "PANEL OVERLOAD SEGMENT",
   );
