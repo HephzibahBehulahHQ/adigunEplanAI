@@ -1859,7 +1859,7 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   );
 });
 
-test("ENG-0601 A3 opens with three editable linked device placements", async ({
+test("ENG-0601 A3 opens with five editable linked device placements", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -1872,11 +1872,26 @@ test("ENG-0601 A3 opens with three editable linked device placements", async ({
   const placements = saved.data.objects.filter(
     (o: { kind: string }) => o.kind === "panel-placement",
   );
-  expect(placements).toHaveLength(3);
+  expect(placements).toHaveLength(5);
   for (const placement of placements)
     await expect(
       page.locator('#userDrawings [data-object="' + placement.id + '"]'),
     ).toBeVisible();
+  for (const placement of placements) {
+    const device = saved.data.objects.find(
+      (o: { id: string }) => o.id === placement.deviceId,
+    );
+    if (["F3", "F4"].includes(device.ref)) {
+      const clear = await page
+        .locator('#userDrawings [data-object="' + placement.id + '"]')
+        .evaluate((node) => {
+          const body = node.querySelector("rect")!.getBBox();
+          const label = node.querySelector("text")!.getBBox();
+          return label.y + label.height < body.y;
+        });
+      expect(clear).toBe(true);
+    }
+  }
   await page.screenshot({
     path: test.info().outputPath("eng0601-a3-proposed-layout.png"),
   });
