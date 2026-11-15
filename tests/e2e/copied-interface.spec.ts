@@ -22,7 +22,7 @@ test("example copy remains a native editable project through replacement and loc
     await page.locator('[data-draw="select"]').click();
     await page.locator('[data-inspector="Properties"]').click();
     await page
-      .locator('[data-object="' + id + '"] .component-hit-target')
+      .locator('[data-object="' + id + '"]')
       .click();
   };
   const edit = async (selector: string, value: string) => {
@@ -47,7 +47,7 @@ test("example copy remains a native editable project through replacement and loc
     .selectOption("phoenix-contact-3044076");
   await page.locator("[data-replace-component]").click();
   await page
-    .locator('[data-object="' + x1.id + '"] .component-hit-target')
+    .locator('[data-object="' + x1.id + '"]')
     .click({ button: "right" });
   await page.locator('[data-object-command="duplicate-selection"]').click();
   const duplicated = await saveDrawing(page, "editable-duplicated");
