@@ -2133,18 +2133,18 @@ test("A4 native registers match canonical devices and remain editable after reop
   );
 });
 
-test("ENG-0601 opens with linked F1 and K1 body envelopes inside the A3 plate", () => {
+test("ENG-0601 opens with linked F1, K1 and PS1 body envelopes inside the A3 plate", () => {
   const project = engine.createExample("eng0601");
   const placements = project.objects.filter(
     (o) => o.kind === "panel-placement",
   );
-  assert.equal(placements.length, 2);
+  assert.equal(placements.length, 3);
   const geometries = placements.map((placement) => {
     assert.equal(placement.sheetId, "eng0601-a3-0");
     assert.equal(placement.scale, 0.5);
     const geometry = engine.panelPlacementGeometry(project, placement);
     const resolved = engine.resolvePanelDevice(project, placement);
-    assert.ok(["F1", "K1"].includes(resolved.ref));
+    assert.ok(["F1", "K1", "PS1"].includes(resolved.ref));
     assert.equal(
       geometry.width,
       resolved.definition.panelFootprint.widthMm * 0.5,
@@ -2183,4 +2183,52 @@ test("ENG-0601 opens with linked F1 and K1 body envelopes inside the A3 plate", 
     plain(restored.objects.filter((o) => o.kind === "panel-placement")),
     plain(placements),
   );
+});
+
+test("PS1 panel view keeps body dimensions separate from convection clearance", () => {
+  const project = engine.createExample("eng0601");
+  const ps1 = project.objects.find((o) => o.ref === "PS1");
+  const definition = engine.component(ps1.componentId);
+  const footprint = definition.panelFootprint;
+  assert.deepEqual(
+    [footprint.widthMm, footprint.heightMm, footprint.depthMm],
+    [45, 80, 100],
+  );
+  assert.deepEqual(plain(footprint.clearancesMm), {
+    top: 50,
+    bottom: 50,
+    left: 0,
+    right: 0,
+  });
+  assert.equal(footprint.mountingEnvelope.heightMm, 180);
+  assert.ok(Object.isFrozen(footprint));
+  const placement = project.objects.find(
+    (o) => o.kind === "panel-placement" && o.deviceId === ps1.id,
+  );
+  const geometry = engine.panelPlacementGeometry(project, placement);
+  assert.equal(geometry.height, 40);
+  const top =
+    placement.y -
+    geometry.height / 2 -
+    footprint.clearancesMm.top * placement.scale;
+  const bottom =
+    placement.y +
+    geometry.height / 2 +
+    footprint.clearancesMm.bottom * placement.scale;
+  assert.ok(top >= 350 - 775 * 0.25 && bottom <= 350 + 775 * 0.25);
+  for (const other of project.objects.filter(
+    (o) => o.kind === "panel-placement" && o.id !== placement.id,
+  )) {
+    const box = engine.panelPlacementGeometry(project, other);
+    assert.ok(
+      Math.abs(other.x - placement.x) > (box.width + geometry.width) / 2,
+    );
+  }
+  assert.equal(
+    engine
+      .billOfMaterials(project.objects)
+      .rows.find((r) => r.componentId === ps1.componentId).quantity,
+    1,
+  );
+  assert.equal(engine.analyzeProject(project).globalNetCount, 27);
 });
