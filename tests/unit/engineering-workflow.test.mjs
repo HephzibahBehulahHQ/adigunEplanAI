@@ -8,6 +8,106 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("32 A feeder contactor replacement preserves bound terminals and manufacturer data", () => {
+  const original = engine.createExample("eng0601");
+  const k1 = original.objects.find((o) => o.ref === "K1");
+  const originalDefinition = JSON.stringify(engine.component(k1.componentId));
+  const id = "siemens-3rt2027-2kb40";
+  const changed = engine.replaceComponent(original.objects, k1.id, id);
+  const replacement = changed.objects.find((o) => o.id === k1.id);
+  assert.equal(replacement.componentId, id);
+  assert.deepEqual(
+    plain(changed.objects.filter((o) => o.kind === "wire")),
+    plain(original.objects.filter((o) => o.kind === "wire")),
+  );
+  const reopened = engine.parseProject(
+    engine.serializeProject({ ...original, objects: changed.objects }),
+  );
+  assert.equal(reopened.valid, true);
+  assert.equal(
+    reopened.project.objects.find((o) => o.id === k1.id).componentId,
+    id,
+  );
+  assert.equal(engine.component(id).specifications.ac3RatedCurrent.value, 32);
+  assert.equal(engine.component(id).specifications.coilHoldingPower.value, 4.5);
+  assert.equal(
+    JSON.stringify(engine.component(k1.componentId)),
+    originalDefinition,
+  );
+  assert.equal(
+    original.objects.find((o) => o.id === k1.id).componentId,
+    "siemens-3rt2026-2kb40",
+  );
+});
+
+test("magnetic starter breaker never inherits thermal overload settings or internal shorts", () => {
+  const definition = engine.component("siemens-3rv2321-4bc10");
+  assert.equal(
+    definition.specifications.thermalOverloadProtection.value,
+    false,
+  );
+  assert.equal(definition.instanceProperties.overloadSettingA, undefined);
+  assert.equal(definition.specifications.overloadTripClass, undefined);
+  assert.equal(
+    definition.specifications.instantaneousShortCircuitRelease.value,
+    260,
+  );
+  assert.equal(definition.symbol.pins.length, 6);
+  assert.deepEqual(plain(definition.symbol.internalConnections), []);
+  const device = engine.createInstance(definition.id, 300, 250, "Q1");
+  assert.equal(engine.validateInstance(device).valid, true);
+  assert.equal(device.properties.overloadSettingA, undefined);
+  const project = {
+    project: "Magnetic feeder",
+    sheets: [{ id: "feeder", name: "Feeder", number: "A2/000" }],
+    objects: [{ ...device, sheetId: "feeder" }],
+    crossSheetConnections: [],
+  };
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  assert.equal(restored.project.objects[0].componentId, definition.id);
+  assert.equal(
+    restored.project.objects[0].properties.overloadSettingA,
+    undefined,
+  );
+});
+
+test("14–20 A feeder overload keeps independent settings and native terminal identities", () => {
+  const id = "siemens-3ru2126-4bb0";
+  const definition = JSON.stringify(engine.component(id));
+  const device = engine.createInstance(id, 300, 250, "F2");
+  assert.equal(device.properties.overloadSettingA, null);
+  for (const value of [14, 15.2, 20]) {
+    device.properties.overloadSettingA = value;
+    assert.equal(engine.validateInstance(device).valid, true);
+  }
+  for (const value of [13.9, 20.1]) {
+    device.properties.overloadSettingA = value;
+    assert.equal(engine.validateInstance(device).valid, false);
+  }
+  device.properties.overloadSettingA = 15.2;
+  const project = {
+    project: "Feeder relay settings",
+    sheets: [{ id: "feeder", name: "Feeder", number: "A2/000" }],
+    objects: [{ ...device, sheetId: "feeder" }],
+    crossSheetConnections: [],
+  };
+  const restored = engine.parseProject(engine.serializeProject(project));
+  assert.equal(restored.valid, true);
+  assert.equal(restored.project.objects[0].properties.overloadSettingA, 15.2);
+  assert.equal(restored.project.objects[0].componentId, id);
+  assert.deepEqual(
+    plain(engine.component(id).symbol.pins),
+    plain(engine.component("siemens-3ru2126-4ab0").symbol.pins),
+  );
+  assert.equal(
+    engine.component("siemens-3ru2126-4ab0").specifications
+      .adjustableOverloadRelease.maximum,
+    16,
+  );
+  assert.equal(JSON.stringify(engine.component(id)), definition);
+});
+
 test("pressure design settings retain manufacturer ranges and reject inverted thresholds", () => {
   const id = "telemecanique-xmlb004a2s11",
     definition = JSON.stringify(engine.component(id));

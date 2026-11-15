@@ -1,5 +1,27 @@
 # ENG-0601 — feeder research handoff (2026-11-15)
 
+## Current decision evidence — fuseless route
+
+The 16 A breaker combination must not be selected merely because its overload relay dial reaches 16 A. Siemens configuration manual A8E56203880102A/RS-AB/006 (09/2017), 400 V Class 10 tables, pages 31 and 34, limits the corresponding IE3/IE4 setting to 14 A. The example motor's 15.2 A exceeds that limit.
+
+Page 34 lists a type-2 candidate: 3RV2321-4BC10 + 3RT2027-1AP00 + 3RU2126-4BB0, with IE3/IE4 setting range 14–17 A. Page 35 permits other control voltages and spring terminals, but prohibits assembled combinations of three. Preserve this mounting constraint in A3. Proposed 24 V DC spring-terminal contactor variant: 3RT2027-2KB40. This remains a candidate pending complete installation design; do not change existing user instances or manufacturer records.
+
+Manual source: https://cache.industry.siemens.com/dl/files/188/39714188/att_1317160/v1/manual_load_feeder_configuration_en-US.pdf?download=true
+
+Already inspected local evidence: work/siemens-full-feeder.pdf; work/siemens-feeder-table-031.png; work/siemens-feeder-details-034.png; work/siemens-feeder-details-035.png.
+
+Exact part evidence retrieved 2026-11-15:
+
+- Siemens 3RT2027-2KB40 data sheet dated 2021-01-21: 32 A AC-3 at 400 V, 15 kW, 24 V DC, 1 NO + 1 NC, spring terminals, S0; coil closing and holding power each 4.5 W. Manufacturer-authored PDF mirror: https://media.distributordatasolutions.com/siemenscomplete/2021q1/documents/140fbadef58253c91d9bfa905f73b01c016bbca8.pdf
+- Siemens 3RU2126-4BB0 data sheet dated 2026-01-27: thermal overload, 14–20 A, Class 10, S0, screw terminals, contactor mounting, manual/automatic reset. https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2126-4BB0
+- Siemens 3RV2321-4BC10 data sheet dated 2026-11-12: 20 A starter-combination breaker, magnetic instantaneous release 260 A; explicitly NO thermal overload protection. At 400 V, Icu 55 kA and Ics 25 kA. No built-in auxiliary contacts. Main terminals 1/L1–2/T1, 3/L2–4/T2, 5/L3–6/T3. https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RV2321-4BC10
+
+Do not copy thermal-overload instance settings into this magnetic-only breaker. Do not equate the manual table's conditional combination rating with the individual breaker's Icu or the installation's prospective fault current. Resolve the table rating conditions before asserting a system short-circuit rating. Add the three exact parts as separate immutable library definitions; then update only newly generated example copies, coordinated device reports and references. Existing saved projects must retain their parts and settings.
+
+Remaining implementation: verified symbols/terminal mappings, feeder topology and source assumptions, shared isolation including auxiliary supply, cable/disconnection checks, then coordinated A3/A4. No new parts or feeder drawing have been deployed by this research note.
+
+Release-state correction: PR #90 subsequently deployed 13 native sheets and completed live review of the sequence and separated pilot labels. Historical pending-review statements below describe earlier turns, not the current release.
+
 Not implemented or selected for installation. Current native project still lacks the complete main supply/protection design.
 
 ## Verified table evidence
@@ -31,3 +53,9 @@ Browser control timed out this turn; live visual review of the indication releas
 PR #89 merged as 5c36248eae71aa3455d726f6318cee28e9dce3f0. Premerge CI 43670083286 / 43670080120 passed with 383 tests and 16 browser tests against each development/production build. Regression opens six named sheets and proves title/close-button containment with the existing 27 px tab height. Existing stylesheet unchanged. Pages deployment 43670212287 succeeded; live build-info matched the merge commit. Main CI 43670212290 must be checked if not yet recorded as successful in the next handoff. Live browser inspection remains unavailable; do not claim manual visual review.
 
 Owner screenshot question answered: both screenshots contain the same auxiliary circuit; the earlier verification screenshot has Properties open, the owner's has it closed and includes the newer indication sheet. There is no withheld more-detailed native project version behind that difference.
+
+Native implementation progress: added siemens-3ru2126-4bb0 as a separate library definition using the verified S0 terminal diagram, 14–20 A setting limits and source provenance. Original 11–16 A definition remains unchanged. Mirrored runtime files updated. All 26 engineering-workflow tests pass, including out-of-range rejection and native persistence. Full npm check running in exec session 42078; latest stage lint. Not merged/deployed; remaining two feeder parts and circuit integration still pending.
+
+Next native increment: added siemens-3rv2321-4bc10 magnetic-only definition, six verified main terminals, 260 A release, separate 400 V Icu/Ics values, no thermal setting or assumed internal continuity. Existing Properties and schematic renderer support its family without stylesheet changes. All 27 focused tests pass. Previous overload-only full npm check passed (session 42078 complete). New full check is running in session 32935, log work/feeder-breaker-check.log. No merge/deployment yet; add contactor and coordinated circuit before release, with browser coverage for both new component families.
+
+Release candidate: all three parts are now native library definitions; the new contactor's exact terminal diagram was visually verified on page 8 of the cached manufacturer PDF. Twenty-eight focused tests pass, including compatible contactor replacement with unchanged wire attachments and persistence. Existing example topology is deliberately unchanged in this library increment. Browser placement/property/save-reopen regression added. Final CI and deployment remain pending; earlier running-session notes above are historical.
