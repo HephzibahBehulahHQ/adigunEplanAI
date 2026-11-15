@@ -1352,3 +1352,34 @@ test("projects above the former sheet limit preserve connections, order and addi
     0,
   );
 });
+
+test("Electrical checks exposes persisted inconsistent cable core assignments", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#createProject").click();
+  const saved = await saveDrawing(page, "cable-diagnostic-fixture");
+  const pair = saved.data.crossSheetConnections[0];
+  pair.endpoints.forEach((endpoint: { wireId: string }, index: number) => {
+    saved.data.objects.find(
+      (o: { id: string }) => o.id === endpoint.wireId,
+    ).cable = { tag: "W-CHECK", core: String(index + 1) };
+  });
+  await page.locator("#openFile").setInputFiles({
+    name: "cable-conflict.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(saved.data)),
+  });
+  await page.locator('[data-sheet="eng0601-a2-0"]').first().click();
+  await page.locator('[data-inspector="Electrical checks"]').click();
+  await expect(page.locator("[data-project-electrical-issues]")).toContainText(
+    "inconsistent cable/core assignments",
+  );
+  await page.screenshot({
+    path: test.info().outputPath("cable-diagnostic-findings.png"),
+  });
+  const restored = await saveDrawing(page, "cable-conflict-reopened");
+  expect(restored.data.objects).toEqual(saved.data.objects);
+});

@@ -2004,10 +2004,24 @@ function createPumpStarterDocumentation(name) {
     }).sort(function (x, y) { return x.localNetIds[0].localeCompare(y.localNetIds[0]); })
       .map(function (group, index) { return Object.assign({ id: 'global-net-' + (index + 1) }, group); });
     const localOpenEndpointCount = reports.reduce(function (sum, sheet) { return sum + sheet.analysis.openEndpointCount; }, 0);
+    const cableIssues=[],coreNets=new Map();
+    (project.objects||[]).filter(function(o){return o.kind==='wire'&&o.cable;}).forEach(function(wire){
+      const net=globalNets.find(function(n){return n.wireIds.includes(wire.sheetId+':'+wire.id);});
+      if(!net)return;
+      const key=JSON.stringify([wire.cable.tag,wire.cable.core]);
+      if(!coreNets.has(key))coreNets.set(key,{tag:wire.cable.tag,core:wire.cable.core,nets:new Set()});
+      coreNets.get(key).nets.add(net.id);
+    });
+    coreNets.forEach(function(core){if(core.nets.size>1)cableIssues.push('Cable '+core.tag+' core '+core.core+' is assigned to disconnected electrical nets.');});
+    (project.crossSheetConnections||[]).forEach(function(link){
+      const assignments=link.endpoints.map(function(e){const wire=project.objects.find(function(o){return o.id===e.wireId;});return wire&&wire.cable?JSON.stringify([wire.cable.tag,wire.cable.core]):'';});
+      if(new Set(assignments).size>1)cableIssues.push('Continuation '+link.name+' has inconsistent cable/core assignments.');
+    });
     const unresolvedContinuations=project.connectionIssues||[];
     return {
-      valid: unresolvedContinuations.length===0,
-      errors: unresolvedContinuations.map(function(issue){return issue.message;}),
+      valid: unresolvedContinuations.length===0&&cableIssues.length===0,
+      errors: unresolvedContinuations.map(function(issue){return issue.message;}).concat(cableIssues),
+      cableIssues: cableIssues,
       unresolvedContinuations: unresolvedContinuations,
       sheetCount: reports.length,
       wireCount: reports.reduce(function (sum, sheet) { return sum + sheet.analysis.wireCount; }, 0),

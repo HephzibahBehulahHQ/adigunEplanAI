@@ -717,6 +717,9 @@
     if(name==='Electrical checks'){
       const report=window.AdigunCADEngine.analyze(state.objects);
       const wireReport=window.AdigunCADEngine.wireList(state.objects);
+      let projectFindings=[];
+      if(state.projectName){try{const engine=window.AdigunCADEngine,project=engine.parseProject(engine.serializeProject({project:state.projectName,sheets:projectSheets(),objects:collectProjectObjects(),crossSheetConnections:state.crossSheetConnections||[]})).project;projectFindings=engine.analyzeProject(project).errors||[];}catch(error){projectFindings=[error.message];}}
+
       const findings=[];
       if(report.openEndpointCount)findings.push(report.openEndpointCount+' open wire endpoints.');
       if(report.unconnectedPinCount)findings.push(report.unconnectedPinCount+' component pins are not connected to a wire.');
@@ -745,7 +748,7 @@
         +'<div class="property-row"><span>Connected nets</span><strong>'+report.netCount+'</strong></div>'
         +'<div class="property-row"><span>Open endpoints</span><strong>'+report.openEndpointCount+'</strong></div>'
         +'<div class="property-row"><span>Geometry errors</span><strong>'+report.geometryErrorCount+'</strong></div>'
-        +((state.connectionIssues||[]).length?'<div class="notice" data-continuation-issues><b>Unresolved project continuations</b><br>'+(state.connectionIssues||[]).map(function(issue){return escapeHtml(issue.message);}).join('<br>')+'</div>':'')+details+'<p class="notice">This report checks defined component terminals and authored wire geometry only. It does not evaluate electrical suitability, standards compliance, or safety.</p></div>'
+        +((state.connectionIssues||[]).length?'<div class="notice" data-continuation-issues><b>Unresolved project continuations</b><br>'+(state.connectionIssues||[]).map(function(issue){return escapeHtml(issue.message);}).join('<br>')+'</div>':'')+(projectFindings.length?'<div class="notice" data-project-electrical-issues><b>Project connection findings</b><br>'+projectFindings.map(escapeHtml).join('<br>')+'</div>':'')+details+'<p class="notice">This report checks defined component terminals and authored wire geometry only. It does not evaluate electrical suitability, standards compliance, or safety.</p></div>'
         +'<div class="inspector-block"><div class="inspector-title">Wire list · authored model geometry</div>'
         +(wireRows||'<p class="notice">No authored wire segments are available in the project model.</p>')
         +wireErrors
