@@ -56,13 +56,11 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   ).toBe(true);
   saved.data.objects[1].text = "Reviewed project scope";
   await page.reload();
-  await page
-    .locator("#openFile")
-    .setInputFiles({
-      name: "eng0601.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(saved.data)),
-    });
+  await page.locator("#openFile").setInputFiles({
+    name: "eng0601.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(saved.data)),
+  });
   await page.locator('[data-sheet="eng0601-a1-0"]').first().click();
   await expect(page.locator("#userDrawings")).toContainText(
     "Reviewed project scope",
