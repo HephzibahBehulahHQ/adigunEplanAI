@@ -813,11 +813,11 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   const isolatorAuxiliaryDefinition=deepFreeze({
     schemaVersion:COMPONENT_SCHEMA_VERSION,id:'siemens-3ld9200-5b',manufacturer:'Siemens',manufacturerPartNumber:'3LD9200-5B',model:'SENTRON 3LD9200-5B',name:'Front-mounted isolator auxiliary switch · 1 NO + 1 NC',family:'isolator-auxiliary',referencePrefix:'Q',category:'Electrical · Verified isolator accessory',
     symbol:{id:'auxiliary.3ld9200-5b.v1',view:'schematic',unit:'mm',width:160,height:100,pins:[
-      {id:'no-13',localNumber:'13',name:'Normally-open input',x:-60,y:-20,electricalType:'passive',connectionType:'screw'},
-      {id:'no-14',localNumber:'14',name:'Normally-open output',x:60,y:-20,electricalType:'passive',connectionType:'screw'},
-      {id:'nc-21',localNumber:'21',name:'Normally-closed input',x:-60,y:20,electricalType:'passive',connectionType:'screw'},
-      {id:'nc-22',localNumber:'22',name:'Normally-closed output',x:60,y:20,electricalType:'passive',connectionType:'screw'}
-    ],internalConnections:[],numberingNote:'13/14 NO and 21/22 NC follow the Siemens product marking. NO closes after and opens before the main switch; NC has the opposite sequence. Requires compatible mechanical mounting. Coordinates are schematic; switching and mechanical coupling are not simulated.'},
+      {id:'no-23',localNumber:'23',name:'Normally-open input',x:-60,y:-20,electricalType:'passive',connectionType:'screw'},
+      {id:'no-24',localNumber:'24',name:'Normally-open output',x:60,y:-20,electricalType:'passive',connectionType:'screw'},
+      {id:'nc-11',localNumber:'11',name:'Normally-closed input',x:-60,y:20,electricalType:'passive',connectionType:'screw'},
+      {id:'nc-12',localNumber:'12',name:'Normally-closed output',x:60,y:20,electricalType:'passive',connectionType:'screw'}
+    ],internalConnections:[],numberingNote:'23/24 NO and 11/12 NC follow the Siemens product marking. NO closes after and opens before the main switch; NC has the opposite sequence. Requires compatible mechanical mounting. Coordinates are schematic; switching and mechanical coupling are not simulated.'},
     specifications:{contactComposition:{value:'1 NO + 1 NC'},ratedDC13At24V:{value:4,unit:'A'},ratedAC15At230V:{value:3,unit:'A'},mounting:{value:'3LD2 front mounting; compatible with 3LD22 per LV10 selection table'},noSequence:{value:'Lagging switch-on; leading switch-off'},ncSequence:{value:'Leading switch-on; lagging switch-off'},screwTorque:{minimum:0.8,maximum:1.2,unit:'N·m'}},
     instanceProperties:{position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Verify mechanical mounting and control function; not a standalone safety function.',maximumLength:160}},
     sources:[{publisher:'Siemens',title:'3LD9200-5B product datasheet',url:'https://www.mouser.lt/datasheet/3/5917/6/3LD92005B_datasheet_en.pdf',documentRevision:'Siemens datasheet 4/7/2026, 3 pages; manufacturer document hosted by Mouser.',revisionNote:'Exact identity, contact marking, 4 A DC-13 at 24 V, contact sequence and terminal torque. Not installation approval.',retrievedAt:'2026-11-15'},{publisher:'Siemens',title:'LV10 04/2022 switch disconnectors · auxiliary-switch selection',url:'https://cache.industry.siemens.com/dl/files/643/109750643/att_1104557/v1/08_SwitchDisconnectors_LV10_042022_EN_202205241458164260.pdf',documentRevision:'04/2022',revisionNote:'3LD9200-5B front-mount accessory listed for 3LD22 32 A.',retrievedAt:'2026-11-15'}]
@@ -1330,7 +1330,7 @@ function createPumpStarterDocumentation(name) {
       'X1 / X2 / X3 / XPE | Panel | power / control / PE terminal strips | current, accessories and order codes unresolved.',
       'Cables W1 supply, W2 motor, W3 pressure: route, lengths, installation methods and core sizes unresolved.',
       'K1, F2, M1, PS1 and S0/S1 candidates already exist in the component library; no generic substitutions.',
-      'Q2:AUX | Field | Siemens 3LD9200-5B | mechanically mounted on Q2; 13/14 in hold circuit.',
+      'Q2:AUX | Field | Siemens 3LD9200-5B | mechanically mounted on Q2; 23/24 in hold circuit.',
       'A4 BOM must be generated from final instantiated devices, not this provisional candidate register.'
     ]);
     rows(4,[
@@ -1422,7 +1422,7 @@ function createPumpStarterDocumentation(name) {
     for(let n=1;n<=3;n++){const label=objects.find(function(o){return o.id==='eng0601-load-label-'+n;});label.x-=20;}
 
 
-    const auxiliary=part(8,'siemens-3ld9200-5b','Q2:AUX',150,350,0,'Mechanically mounted to Q2. NO 13/14 interrupts the hold circuit before the motor poles open; verify assembly and sequence.'),
+    const auxiliary=part(8,'siemens-3ld9200-5b','Q2:AUX',150,350,0,'Mechanically mounted to Q2. NO 23/24 interrupts the hold circuit before the motor poles open; verify assembly and sequence.'),
       stop=part(9,'schneider-electric-xb5aa42','S0',250,200,0,'Local stop NC 21/22. Ordinary control only; not an emergency-stop safety circuit.'),
       start=part(9,'schneider-electric-xb5aa31','S1',800,350,0,'Momentary start NO 13/14. Released healthy button assumed; this is not monitored-reset or stuck-button protection.'),
       pressure=part(9,'telemecanique-xmlb004a2s11','B1',500,350,0,'Field discharge-pressure cutout. 11/12 control path; verify contact action and setpoints during commissioning.'),
@@ -1437,8 +1437,8 @@ function createPumpStarterDocumentation(name) {
       powerLinks.push({id:'eng0601-control-'+id,name:label,endpoints:[{sheetId:from.sheetId,wireId:a.id,point:fromPoint,connector:{targetSheetId:to.sheetId,targetRef:to.ref,targetInstanceId:to.id,direction:fromDirection||'right'}},{sheetId:to.sheetId,wireId:b.id,point:toPoint,connector:{targetSheetId:from.sheetId,targetRef:from.ref,targetInstanceId:from.id,direction:toDirection||'left'}}]});
     }
     wire(9,'control-positive',pin(positive,'connection-2'),pin(stop,'contact-21'),'24V-01');
-    continuation('stop-isolator',stop,'contact-22',{x:400,y:200},auxiliary,'no-13',{x:60,y:270},'24V-02 · S0:22 → Q2:AUX:13','right','right');
-    continuation('isolator-overload',auxiliary,'no-14',{x:280,y:330},f2,'aux-95',{x:600,y:250},'24V-03 · Q2:AUX:14 → F2:95','left','right');
+    continuation('stop-isolator',stop,'contact-22',{x:400,y:200},auxiliary,'no-23',{x:60,y:270},'24V-02 · S0:22 → Q2:AUX:23','right','right');
+    continuation('isolator-overload',auxiliary,'no-24',{x:280,y:330},f2,'aux-95',{x:600,y:250},'24V-03 · Q2:AUX:24 → F2:95','left','right');
     continuation('overload-pressure',f2,'aux-96',{x:600,y:360},pressure,'terminal-11',{x:620,y:250},'24V-04 · F2:96 → B1:11','right','right');
     wire(9,'pressure-start',pin(pressure,'terminal-12'),pin(start,'contact-13'),'24V-05');
     continuation('hold-feed',pressure,'terminal-12',{x:620,y:470},k1,'aux-13',{x:620,y:180},'24V-05 · B1:12 → K1:13','right','right');

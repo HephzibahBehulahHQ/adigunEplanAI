@@ -868,8 +868,8 @@ test("deleting a sheet preserves the remaining branches of shared cross-page pot
 test("control permissives and seal-in retain distinct terminal-bound nets through editing", () => {
   const project = engine.createExample("eng0601");
   const expected = [
-    ["S0:contact-22", "Q2:AUX:no-13"],
-    ["Q2:AUX:no-14", "F2:aux-95"],
+    ["S0:contact-22", "Q2:AUX:no-23"],
+    ["Q2:AUX:no-24", "F2:aux-95"],
     ["F2:aux-96", "B1:terminal-11"],
     ["B1:terminal-12", "S1:contact-13", "K1:aux-13"],
     ["S1:contact-14", "K1:aux-14", "K1:coil-a1"],
@@ -920,4 +920,19 @@ test("control permissives and seal-in retain distinct terminal-bound nets throug
     plain(engine.component(auxiliary.componentId).symbol.internalConnections),
     [],
   );
+});
+
+test("isolator auxiliary uses the manufacturer-marked NO 23/24 and NC 11/12", () => {
+  const part = engine.component("siemens-3ld9200-5b");
+  assert.deepEqual(
+    plain(part.symbol.pins.map((pin) => [pin.id, pin.localNumber])),
+    [
+      ["no-23", "23"],
+      ["no-24", "24"],
+      ["nc-11", "11"],
+      ["nc-12", "12"],
+    ],
+  );
+  assert.equal(part.specifications.ratedDC13At24V.value, 4);
+  assert.deepEqual(plain(part.symbol.internalConnections), []);
 });
