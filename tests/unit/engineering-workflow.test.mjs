@@ -8,6 +8,47 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("sheet deletion retains unresolved continuation evidence through saving", () => {
+  const links = [
+    {
+      id: "potential-24v",
+      name: "+24V",
+      endpoints: [
+        { sheetId: "supply", wireId: "w1", point: { x: 100, y: 100 } },
+        { sheetId: "control", wireId: "w2", point: { x: 200, y: 100 } },
+      ],
+    },
+  ];
+  const issues = engine.sheetDeletionDiagnostics(links, {
+    id: "supply",
+    number: "A2/006",
+    name: "Supply",
+  });
+  assert.equal(issues.length, 1);
+  assert.equal(issues[0].deletedSheetId, "supply");
+  assert.equal(issues[0].connectionName, "+24V");
+  assert.deepEqual(plain(issues[0].endpoints), links[0].endpoints);
+  assert.deepEqual(plain(engine.removeSheetConnections(links, "supply")), []);
+  const payload = {
+    project: "Deletion audit",
+    objects: [],
+    sheets: [{ id: "control", name: "Control", number: "A2/006" }],
+    activeSheet: "control",
+    crossSheetConnections: [],
+    connectionIssues: issues,
+  };
+  const parsed = engine.parseProject(engine.serializeProject(payload));
+  assert.equal(parsed.valid, true);
+  const report = engine.analyzeProject(parsed.project);
+  assert.equal(report.valid, false);
+  assert.match(report.errors[0], /lost sheet A2\/006 Supply/);
+  assert.equal(report.unresolvedContinuations[0].deletedSheetId, "supply");
+  assert.equal(report.crossSheetConnectionCount, 0);
+  assert.throws(() =>
+    engine.serializeProject({ ...payload, connectionIssues: [null] }),
+  );
+});
+
 test("title block shared metadata and sheet overrides survive native roundtrip with fixed identities", () => {
   const sections = engine.defaultProjectSections();
   const sheets = engine.numberProjectSheets(

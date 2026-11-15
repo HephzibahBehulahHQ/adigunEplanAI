@@ -738,4 +738,27 @@ test("projects above the former sheet limit preserve connections, order and addi
   expect(restored.data.crossSheetConnections).toEqual(
     saved.data.crossSheetConnections,
   );
+  await page
+    .locator('#projectTree [data-sheet="page-0"]')
+    .click({ button: "right" });
+  page.once("dialog", (dialog) => dialog.accept());
+  await page
+    .getByRole("menuitem", { name: "Delete sheet", exact: true })
+    .click();
+  await page.locator('[data-inspector="Electrical checks"]').click();
+  await expect(page.locator("[data-continuation-issues]")).toContainText(
+    "TEST-POTENTIAL",
+  );
+  const deleted = await saveDrawing(page, "deleted-continuation");
+  expect(deleted.data.connectionIssues[0].deletedSheetId).toBe("page-0");
+  expect(deleted.data.crossSheetConnections).toEqual([]);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(deleted.path);
+  await page.locator('[data-inspector="Electrical checks"]').click();
+  await expect(page.locator("[data-continuation-issues]")).toContainText(
+    "lost sheet",
+  );
+  await expect(page.locator('#projectTree [data-sheet="page-0"]')).toHaveCount(
+    0,
+  );
 });
