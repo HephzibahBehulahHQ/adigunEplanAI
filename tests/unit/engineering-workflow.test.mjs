@@ -8,6 +8,29 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("field terminal report is editable native text derived from connected device terminals", () => {
+  const project = engine.createExample("eng0601");
+  const sheet = project.sheets.find((s) => s.number === "A2/015");
+  const rows = project.objects.filter((o) => o.sheetId === sheet.id);
+  assert.ok(rows.every((o) => o.kind === "text" && !o.locked));
+  const content = rows.map((o) => o.text).join("\n");
+  for (const target of ["F2 / 2/T1", "Q2 / 1L1", "M1 / PE", "PS1 / PE"])
+    assert.ok(content.includes(target));
+  assert.match(content, /not cable cores or physical terminal order/);
+  rows[0].text = "My field connections";
+  const reopened = engine.parseProject(engine.serializeProject(project));
+  assert.equal(reopened.valid, true);
+  assert.equal(
+    reopened.project.objects.find((o) => o.id === rows[0].id).text,
+    "My field connections",
+  );
+  assert.notEqual(
+    engine.createExample("eng0601").objects.find((o) => o.id === rows[0].id)
+      .text,
+    rows[0].text,
+  );
+});
+
 test("common isolation keeps neutral separate from phase, PE and DC return after editing", () => {
   const project = engine.createExample("eng0601");
   const q1 = project.objects.find((o) => o.ref === "Q1");
@@ -454,11 +477,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 15);
+  assert.equal(project.sheets.length, 16);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 15 },
+      { length: 16 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
