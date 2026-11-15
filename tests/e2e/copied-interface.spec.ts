@@ -1428,3 +1428,40 @@ test("LAPP cable inserts through the existing library and preserves editable rou
   const reopened = await saveDrawing(page, "lapp-cable-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
+
+test("Rittal enclosure inserts as editable mechanical data without electrical pins", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Enclosure verification");
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  await page.locator("#symbolSearch").fill("rittal-1059000");
+  await page.locator('[data-insert="rittal-1059000"]').click();
+  const point = await sheetPoint(page, 400, 350);
+  await page.mouse.click(point.x, point.y);
+  await page.locator('[data-draw="select"]').click();
+  await page.locator("#userDrawings .drawing-object").last().click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page
+    .locator('[data-component-property="location"]')
+    .fill("Indoor starter cabinet");
+  await page.locator('[data-component-property="location"]').press("Tab");
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
+  await expect(page.locator("#userDrawings")).toContainText("545 × 775 mm");
+  await page.screenshot({
+    path: test.info().outputPath("rittal-enclosure-library.png"),
+  });
+  const saved = await saveDrawing(page, "enclosure-edited");
+  expect(saved.data.objects[0]).toMatchObject({
+    componentId: "rittal-1059000",
+    properties: { location: "Indoor starter cabinet" },
+  });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "enclosure-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
