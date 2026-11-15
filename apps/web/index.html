@@ -595,7 +595,7 @@
   }
 
   function componentInstanceFields(obj,def){
-    const labels={overloadSettingA:'Overload setting (A)',delaySeconds:'Transition time (s)',processPoint:'Process point',thresholdDesignNote:'Threshold design note',terminalStrip:'Terminal strip',position:'Position',marking:'Marking',comment:'Comment',sensingTarget:'Sensing target',signalConfigurationNote:'Signal configuration note'};
+    const labels={overloadSettingA:'Overload setting (A)',delaySeconds:'Transition time (s)',processPoint:'Process point',risingPressureBar:'Rising pressure (bar)',fallingPressureBar:'Falling pressure (bar)',thresholdDesignNote:'Threshold design note',terminalStrip:'Terminal strip',position:'Position',marking:'Marking',comment:'Comment',sensingTarget:'Sensing target',signalConfigurationNote:'Signal configuration note'};
     return '<label class="property-row"><span>Component label</span><input data-component-displayname="'+escapeHtml(obj.id)+'" maxlength="80" value="'+escapeHtml(obj.displayName||'')+'"></label>'+Object.keys(def.instanceProperties).map(function(name){const rule=def.instanceProperties[name],value=obj.properties[name];return '<label class="property-row"><span>'+escapeHtml(labels[name]||name)+'</span><input class="component-edit" data-component-property="'+escapeHtml(name)+'" data-component-object="'+escapeHtml(obj.id)+'" '+(rule.type==='number'?'type="number" step="any" min="'+rule.minimum+'" max="'+rule.maximum+'"':'maxlength="'+rule.maximumLength+'"')+' value="'+escapeHtml(value==null?'':value)+'"></label>';}).join('')
       +'<label class="property-row"><span>Replacement component</span><select aria-label="Replacement component" data-replacement-for="'+escapeHtml(obj.id)+'">'+window.AdigunCADEngine.catalog().map(function(item){return '<option value="'+escapeHtml(item.id)+'"'+(item.id===obj.componentId?' selected':'')+'>'+escapeHtml(item.name)+'</option>';}).join('')+'</select></label>'
       +'<button class="command-item" data-replace-component="'+escapeHtml(obj.id)+'">Replace selected component</button>';
@@ -619,11 +619,12 @@
     const name=field.dataset.componentProperty;
     let nextValue,currentValue;
     if(name==='ref'){nextValue=field.value.slice(0,32);currentValue=obj.ref;}
-    else if(Object.prototype.hasOwnProperty.call(obj.properties,name)){
+    else if(Object.prototype.hasOwnProperty.call(window.AdigunCADEngine.component(obj.componentId).instanceProperties,name)){
       const rule=window.AdigunCADEngine.component(obj.componentId).instanceProperties[name];
       if(rule.type==='number'){nextValue=field.value===''?null:field.valueAsNumber;if(nextValue!==null&&(!Number.isFinite(nextValue)||nextValue<rule.minimum||nextValue>rule.maximum)){field.setCustomValidity('Enter a setting from '+rule.minimum+' to '+rule.maximum+' '+'in the units shown'+'.');return;}field.setCustomValidity('');}else nextValue=field.value.slice(0,rule.maximumLength);currentValue=obj.properties[name];
     }else return;
     if(Object.is(currentValue,nextValue))return;
+    if(name!=='ref'){const candidate=Object.assign({},obj,{properties:Object.assign({},obj.properties,{[name]:nextValue})}),validation=window.AdigunCADEngine.validateInstance(candidate);if(!validation.valid){field.setCustomValidity(validation.errors.join(' '));field.reportValidity();return;}field.setCustomValidity('');}
     if(!activeComponentEdit||activeComponentEdit.field!==field)activeComponentEdit={field:field,snapshot:JSON.stringify(state.objects),historyRecorded:false};
     if(!activeComponentEdit.historyRecorded){pushUndo(activeComponentEdit.snapshot);activeComponentEdit.historyRecorded=true;}
     if(name==='ref'){(state.crossSheetConnections||[]).forEach(function(link){link.endpoints.forEach(function(endpoint){const c=endpoint.connector;if(c&&c.targetSheetId===state.sheet&&c.targetRef===obj.ref&&!c.targetInstanceId)c.targetInstanceId=obj.id;});});obj.ref=nextValue;}

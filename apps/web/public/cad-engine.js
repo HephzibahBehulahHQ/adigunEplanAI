@@ -775,12 +775,14 @@ const xmlbPressureSwitchDefinition = deepFreeze({
     },
     instanceProperties: {
       processPoint:{type:'string',default:'',maximumLength:60},
+      risingPressureBar:{type:'number',default:null,minimum:0.25,maximum:4,step:'any'},
+      fallingPressureBar:{type:'number',default:null,minimum:0.05,maximum:3.75,step:'any'},
       thresholdDesignNote:{type:'string',default:'Unselected: verify rising/falling setpoints and differential against the manufacturer curves.',maximumLength:160},
       marking:{type:'string',default:'',maximumLength:40},position:{type:'string',default:'',maximumLength:24},
       comment:{type:'string',default:'Terminal interface only; pressure switching is not simulated.',maximumLength:160}
     },
     sources:[
-      {publisher:'Telemecanique Sensors',title:'XMLB004A2S11 product data sheet',url:'https://downloads.telemecaniquesensors.com/dam/datasheets/en/XMLB004A2S11_EN.pdf',documentRevision:'2024-07-30, pages 1–5',revisionNote:'Product identity, pressure ranges, published utilisation ratings, four-terminal block, Class I and body dimensions. Ratings are not an application approval.',retrievedAt:'2026-11-15'},
+      {publisher:'Telemecanique Sensors',title:'XMLB004A2S11 product data sheet',url:'https://downloads.telemecaniquesensors.com/dam/datasheets/en/XMLB004A2S11_EN.pdf',documentRevision:'2024-07-30, pages 1–6; operating curves on page 6',revisionNote:'Product identity, pressure ranges, published utilisation ratings, four-terminal block, Class I and body dimensions. Ratings are not an application approval.',retrievedAt:'2026-11-15'},
       {publisher:'Telemecanique Sensors',title:'XMLB004A2S11 terminal model',url:'https://telemecaniquesensors.com/sites/default/files/bsl/epds/contents/194552-bc94onykhv/G-SE-0043466.1.gif',documentRevision:'Manufacturer product wiring image, inspected 2026-11-15',revisionNote:'Terminal labels 13/14 and 11/12 visually verified. No three-terminal generic changeover mapping substituted.',retrievedAt:'2026-11-15'}
     ]
   });
@@ -915,6 +917,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       Object.keys(instance.properties).forEach(function (name) {
         if (!Object.prototype.hasOwnProperty.call(def.instanceProperties, name)) errors.push('Unknown editable component property "' + name + '".');
       });
+      if(def.family==='pressure-switch' && finite(instance.properties.risingPressureBar) && finite(instance.properties.fallingPressureBar) && instance.properties.fallingPressureBar>=instance.properties.risingPressureBar)errors.push('Falling pressure must be lower than rising pressure. Verify the selected differential against the manufacturer operating curves; range validation alone does not establish suitability.');
     }
     return { valid: errors.length === 0, errors: errors, definition: def };
   }

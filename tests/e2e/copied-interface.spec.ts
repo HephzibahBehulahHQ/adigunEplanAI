@@ -173,6 +173,51 @@ test("manufacturer pressure switch inserts through existing library and preserve
   await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(4);
   const reopened = await saveDrawing(page, "xmlb-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
+  delete reopened.data.objects[0].properties.risingPressureBar;
+  delete reopened.data.objects[0].properties.fallingPressureBar;
+  await page.locator("#openFile").setInputFiles({
+    name: "legacy-pressure.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(reopened.data)),
+  });
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.locator("#userDrawings .drawing-object").first().click();
+  await page.locator('[data-component-property="risingPressureBar"]').fill("2");
+  await page
+    .locator('[data-component-property="risingPressureBar"]')
+    .press("Tab");
+  await page
+    .locator('[data-component-property="fallingPressureBar"]')
+    .fill("1");
+  await page
+    .locator('[data-component-property="fallingPressureBar"]')
+    .press("Tab");
+  const configured = await saveDrawing(page, "pressure-configured");
+  expect(configured.data.objects[0].properties).toMatchObject({
+    risingPressureBar: 2,
+    fallingPressureBar: 1,
+  });
+  await page
+    .locator('[data-component-property="fallingPressureBar"]')
+    .fill("3");
+  expect(
+    await page
+      .locator('[data-component-property="fallingPressureBar"]')
+      .evaluate((field: HTMLInputElement) => field.validationMessage),
+  ).toContain("Falling pressure must be lower");
+  await page
+    .locator('[data-component-property="fallingPressureBar"]')
+    .fill("1");
+  await page
+    .locator('[data-component-property="fallingPressureBar"]')
+    .press("Tab");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(configured.path);
+  const configuredAgain = await saveDrawing(
+    page,
+    "pressure-configured-reopened",
+  );
+  expect(configuredAgain.data.objects).toEqual(configured.data.objects);
 });
 
 test("ENG-0601 opens authored paper documents without overlaps and roundtrips edits", async ({

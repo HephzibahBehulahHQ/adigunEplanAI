@@ -8,6 +8,52 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("pressure design settings retain manufacturer ranges and reject inverted thresholds", () => {
+  const id = "telemecanique-xmlb004a2s11",
+    definition = JSON.stringify(engine.component(id));
+  const device = engine.createInstance(id, 300, 250, "B1");
+  assert.equal(device.properties.risingPressureBar, null);
+  device.properties.risingPressureBar = 2;
+  device.properties.fallingPressureBar = 1;
+  assert.equal(engine.validateInstance(device).valid, true);
+  const project = {
+    project: "Pressure settings review",
+    sheets: [{ id: "pressure", name: "Pressure interface", number: "A2/010" }],
+    objects: [{ ...device, sheetId: "pressure" }],
+    crossSheetConnections: [],
+  };
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(
+    plain(reopened.objects[0].properties),
+    plain(device.properties),
+  );
+  for (const [high, low] of [
+    [2, 2],
+    [1, 2],
+    [4.1, 1],
+    [2, 0.01],
+  ]) {
+    device.properties.risingPressureBar = high;
+    device.properties.fallingPressureBar = low;
+    assert.equal(engine.validateInstance(device).valid, false);
+  }
+  delete device.properties.risingPressureBar;
+  delete device.properties.fallingPressureBar;
+  assert.equal(
+    engine.validateInstance(device).valid,
+    true,
+    "legacy native instances remain readable",
+  );
+  assert.equal(JSON.stringify(engine.component(id)), definition);
+  assert.equal(
+    engine.component(id).symbol.internalConnections.length,
+    0,
+    "settings do not invent pressure-dependent electrical continuity",
+  );
+});
+
 test("editable copies replace and remove components without changing templates or manufacturer records", () => {
   const original = engine.createExample("eng0601"),
     copy = engine.parseProject(engine.serializeProject(original)).project;
