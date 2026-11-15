@@ -1383,3 +1383,48 @@ test("Electrical checks exposes persisted inconsistent cable core assignments", 
   const restored = await saveDrawing(page, "cable-conflict-reopened");
   expect(restored.data.objects).toEqual(saved.data.objects);
 });
+
+test("LAPP cable inserts through the existing library and preserves editable route", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Cable library verification");
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  await page.locator("#symbolSearch").fill("lapp-1119504");
+  await page.locator('[data-insert="lapp-1119504"]').click();
+  const point = await sheetPoint(page, 400, 300);
+  await page.mouse.click(point.x, point.y);
+  await page.locator('[data-draw="select"]').click();
+  await page.locator("#userDrawings .drawing-object").last().click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page
+    .locator('[data-component-property="route"]')
+    .fill("Panel to field isolator");
+  await page.locator('[data-component-property="route"]').press("Tab");
+  await page
+    .locator('[data-component-property="lengthAssumption"]')
+    .fill("20 m educational assumption; not measured");
+  await page
+    .locator('[data-component-property="lengthAssumption"]')
+    .press("Tab");
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(8);
+  await page.screenshot({
+    path: test.info().outputPath("lapp-cable-library.png"),
+  });
+  const saved = await saveDrawing(page, "lapp-cable-edited");
+  expect(saved.data.objects[0]).toMatchObject({
+    componentId: "lapp-1119504",
+    properties: {
+      route: "Panel to field isolator",
+      lengthAssumption: "20 m educational assumption; not measured",
+    },
+  });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "lapp-cable-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
