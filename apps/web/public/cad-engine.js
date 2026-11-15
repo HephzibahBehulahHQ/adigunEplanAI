@@ -738,6 +738,7 @@
   const siemensSitopPsuDefinition = deepFreeze({
     schemaVersion: COMPONENT_SCHEMA_VERSION, id: 'siemens-sitop-psu100c-6ep1332-5ba00', manufacturer: 'Siemens', manufacturerPartNumber: '6EP1332-5BA00',
     model: 'SITOP PSU100C · 24 V/2.5 A', name: 'Single-phase AC/DC power supply', family: 'power-supply-ac-dc', referencePrefix: 'PS', category: 'Power · Verified supply',
+    panelFootprint: {widthMm:45,heightMm:80,depthMm:100,source:'https://tableeditor.cicservice.siemens.com/teddatasheet/?caller=documentservice&format=PDF&language=en&mlfbs=6EP1332-5BA00',edition:'2026-11-08',page:3,clearancesMm:{top:50,bottom:50,left:0,right:0},mountingEnvelope:{widthMm:45,heightMm:180},note:'Body envelope only; allow 50 mm above and below for convection. 180 mm is installation height including clearance, not body height. DIN rail 35 x 7.5/15; verify orientation, derating and actual assembly.'},
     symbol: { id: 'power.siemens.sitop-psu100c.v1', view: 'schematic', unit: 'mm', width: 180, height: 160, pins: [
       { id: 'line-l', localNumber: 'L', name: 'Line input L', x: -90, y: -30, electricalType: 'passive', connectionType: 'screw terminal' },
       { id: 'line-n', localNumber: 'N', name: 'Line input N', x: -90, y: 0, electricalType: 'passive', connectionType: 'screw terminal' },
@@ -753,7 +754,7 @@
       connectionSystem: { value: 'Screw terminal' }, mounting: { value: 'EN 60715 35 × 7.5/15 mm rail' }, degreeOfProtection: { value: 'IP20' }
     },
     instanceProperties: { marking: { type: 'string', default: '', maximumLength: 40 }, position: { type: 'string', default: '', maximumLength: 24 }, comment: { type: 'string', default: '', maximumLength: 160 } },
-    sources: [{ publisher: 'Siemens', title: 'SITOP PSU100C operating instructions · 6EP1332-5BA00', url: 'https://support.industry.siemens.com/cs/attachments/65647808/PSU100C_Handbuch_englisch_en-US.pdf', documentRevision: 'C98130-A7599-A1-2-762937 · 06/2013', revisionNote: 'Manufacturer sections 2.2 and 6.1–6.7 identify L/N/PE line input, + and − DC output, 85–264 V AC / 110–300 V DC input ranges, 24 V/2.5 A output and two physical − output screw terminals. Schematic coordinates are not physical geometry.', retrievedAt: '2026-11-12' }]
+    sources: [{publisher:'Siemens',title:'6EP1332-5BA00 data sheet · mechanical data',url:'https://tableeditor.cicservice.siemens.com/teddatasheet/?caller=documentservice&format=PDF&language=en&mlfbs=6EP1332-5BA00',documentRevision:'2026-11-08 · page 3/5',revisionNote:'45 x 80 x 100 mm body; 45 x 180 mm installation envelope; top/bottom 50 mm and side 0 mm spacing; EN 60715 35 x 7.5/15 rail.',retrievedAt:'2026-11-15'}, { publisher: 'Siemens', title: 'SITOP PSU100C operating instructions · 6EP1332-5BA00', url: 'https://support.industry.siemens.com/cs/attachments/65647808/PSU100C_Handbuch_englisch_en-US.pdf', documentRevision: 'C98130-A7599-A1-2-762937 · 06/2013', revisionNote: 'Manufacturer sections 2.2 and 6.1–6.7 identify L/N/PE line input, + and − DC output, 85–264 V AC / 110–300 V DC input ranges, 24 V/2.5 A output and two physical − output screw terminals. Schematic coordinates are not physical geometry.', retrievedAt: '2026-11-12' }]
   });
   const phoenixProtectiveEarthTerminalDefinition = deepFreeze({
     schemaVersion: COMPONENT_SCHEMA_VERSION, id: 'phoenix-contact-3212147', manufacturer: 'Phoenix Contact', manufacturerPartNumber: '3212147',
@@ -1772,12 +1773,13 @@ function createPumpStarterDocumentation(name) {
     const panelProject={objects:objects,sheets:sheets};
     objects.push(createPanelPlacement(panelProject,f1.id,sheets[19].id,220,240,0.5));
     objects.push(createPanelPlacement(panelProject,k1.id,sheets[19].id,300,240,0.5));
+    objects.push(createPanelPlacement(panelProject,ps1.id,sheets[19].id,380,240,0.5));
     text(19,'panel-inventory-heading',650,125,'PANEL DEVICE REGISTER — existing A2 identities',12,460);
     const externalRefs=new Set(['M1','Q2','Q2:AUX','B1']);
     const panelDevices=objects.filter(function(o){return o.kind==='component-instance'&&o.id!==enclosure.id&&!externalRefs.has(o.ref);});
     panelDevices.forEach(function(device,index){const definition=component(device.componentId);text(19,'panel-inventory-'+index,650,150+index*13,device.ref+' · '+definition.model,10,460);});
     text(19,'external-boundary',650,525,'EXTERNAL: M1 motor; Q2 field isolator + auxiliary; B1 pressure device.\nDo not place field equipment inside this cabinet by default.',11,460);
-    text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size, not verified mounting offsets or drill coordinates.\nF1 and K1: linked manufacturer body envelopes at 1:2; positions are proposed, not drill coordinates.\nOther footprints, rails, ducts, clearance verification, thermal load and bonding remain to be designed.\nThe device register is an editable snapshot of A2 instances; no duplicate devices are created.',11,620);
+    text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size, not verified mounting offsets or drill coordinates.\nF1, K1 and PS1: linked body envelopes at 1:2; proposed positions, not drill coordinates.\nOther footprints, rails, ducts, clearance verification, thermal load and bonding remain to be designed.\nThe device register is an editable snapshot of A2 instances; no duplicate devices are created.',11,620);
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-20),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
     const bom=billOfMaterials(objects);
