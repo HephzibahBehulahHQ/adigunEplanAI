@@ -47,7 +47,7 @@ test("example copy remains a native editable project through replacement and loc
   await page
     .locator('[data-object="' + x1.id + '"]')
     .click({ button: "right" });
-  await page.locator('[data-object-command="duplicate-selection"]').click();
+  await page.locator('[data-object-command="duplicate"]').click();
   const duplicated = await saveDrawing(page, "editable-duplicated");
   expect(duplicated.data.objects.length).toBe(initial.data.objects.length + 1);
   const copy = duplicated.data.objects.find(
