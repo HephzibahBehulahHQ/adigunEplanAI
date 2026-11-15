@@ -846,7 +846,17 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     instanceProperties:{channelCurrentA:{type:'number',default:4,minimum:1,maximum:8,integer:true},position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Set channel current on the physical device. Verify source reserve and load return routing.',maximumLength:160}},
     sources:[{publisher:'Phoenix Contact',title:'PTCB E1 24DC/1-8A NO · 2908262',url:'https://www.phoenixcontact.com/en-us/products/device-circuit-breakers-ptcb-e1-24dc1-8a-no-2908262',documentRevision:'Current manufacturer product data',revisionNote:'Identity, adjustable integer settings, factory 4 A, voltage range and IN− self-supply-only restriction.',retrievedAt:'2026-11-15'},{publisher:'Phoenix Contact',title:'PTCB device circuit breaker application note',url:'https://assets.phoenixcontact.com/file/ebbfcb23-6830-4184-bc8d-c99191d07722/media/original?Application_Note-ptcb_108344_en_02.pdf=',documentRevision:'108344_en_02 · 13 pages',revisionNote:'Visually checked pages 4–5, 8, 10–11: connection/bridge assignments, operating settings, trip curve and dimensions. Actual protection coordination requires project verification.',retrievedAt:'2026-11-15'}]
   });
-  const COMPONENTS = Object.freeze({[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+
+  function pilotLightDefinition(part,colour,url,revision){return deepFreeze({
+    schemaVersion:COMPONENT_SCHEMA_VERSION,id:'schneider-electric-'+part.toLowerCase(),manufacturer:'Schneider Electric',manufacturerPartNumber:part,model:'Harmony XB5 '+part,name:colour+' 24 V pilot light',family:'pilot-light',referencePrefix:'H',category:'Electrical · Verified indication',
+    symbol:{id:'indication.'+part.toLowerCase()+'.v1',view:'schematic',unit:'mm',width:120,height:100,pins:[{id:'terminal-x1',localNumber:'X1',name:'Pilot-light terminal X1',x:-60,y:0,electricalType:'passive',connectionType:'screw clamp'},{id:'terminal-x2',localNumber:'X2',name:'Pilot-light terminal X2',x:60,y:0,electricalType:'passive',connectionType:'screw clamp'}],internalConnections:[],numberingNote:'X1/X2 follow the exact product datasheet. Lamp load is not a zero-ohm bridge. Coordinates are schematic; illumination and electrical load are not simulated. Drawing stroke colour does not change the manufacturer lens colour.'},
+    specifications:{ratedSupply:{value:'24 V AC/DC, 50/60 Hz'},dcSupplyRange:{minimum:19.2,maximum:30,unit:'V DC'},currentConsumption:{value:18,unit:'mA'},lensColour:{value:colour},signalling:{value:'Steady; integral LED'},nominalMountingDiameter:{value:22,unit:'mm'},dimensions:{width:{value:30,unit:'mm'},height:{value:42,unit:'mm'},depth:{value:54,unit:'mm'}}},
+    instanceProperties:{legend:{type:'string',default:'',maximumLength:60},position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Verify actual installation and indication function; no simulated illumination.',maximumLength:160}},
+    sources:[{publisher:'Schneider Electric',title:part+' product datasheet',url:url,documentRevision:revision,revisionNote:'Exact identity, lens colour, X1/X2 terminals, 24 V AC/DC, 18 mA and nominal dimensions. Finished cut-out tolerances require the installation drawing.',retrievedAt:'2026-11-15'}]
+  });}
+  const greenPilotDefinition=pilotLightDefinition('XB5AVB3','Green','https://cdn-reichelt.de/documents/datenblatt/C300/XB5AVB3_DB-EN.pdf','4 October 2022 · 5 pages; manufacturer document hosted by Reichelt');
+  const redPilotDefinition=pilotLightDefinition('XB5AVB4','Red','https://www.mouser.com/datasheet/2/357/Schneider-Electric-1565323.pdf','Manufacturer datasheet hosted by Mouser; printed product pages 1–3 plus distributor page; undated');
+  const COMPONENTS = Object.freeze({[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;
@@ -1287,7 +1297,7 @@ function removeDrawingObjects(objects,ids){
     return prefix+number;
   }
 function createPumpStarterDocumentation(name) {
-    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection'];
+    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection','Coil-voltage and overload-trip indication'];
     const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-'+(index<6?'a1-'+index:'a2-'+(index-6)),sectionId:index<6?'A1':'A2',name:title,number:(index<6?'A1/':'A2/')+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
     const objects=[];
     function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
@@ -1305,7 +1315,7 @@ function createPumpStarterDocumentation(name) {
       'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
       'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
       'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: six A1 documents and five connected A2 development sheets; A3/A4 remain empty.',
+      'Current delivery: six A1 documents and six connected A2 development sheets; A3/A4 remain empty.',
       'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
     ]);
     rows(1,[
@@ -1326,7 +1336,7 @@ function createPumpStarterDocumentation(name) {
       '000 Project overview','001 Title and revision','002 Contents and drawing register',
       '003 Equipment and device register','004 Symbols, terms and potentials','005 Design basis and calculations',
       '006 Supply interface and contactor','007 Overload and outgoing motor interface','008 Motor circuit / isolation',
-      '009 Local stop, permissives and seal-in','010 Auxiliary supply and control protection','011 Local isolator',
+      '009 Local stop, permissives and seal-in','010 Auxiliary supply and control protection','011 Coil-voltage and trip indication',
       '012 Control and auxiliary power','013 Local manual controls','014 Feedback and fault response',
       '015 Field terminal connections','016 Cable and conductor schedule','017 Earthing and bonding',
       '018 Continuation register','019 Operating sequence and interlocks','020 Panel general arrangement',
@@ -1336,7 +1346,7 @@ function createPumpStarterDocumentation(name) {
     ];
     register.forEach(function(line,index){
       const section=index<6?'A1':index<20?'A2':index<26?'A3':'A4';
-      const status=index<11?'P01 / authored development':'planned / not yet created';
+      const status=index<12?'P01 / authored development':'planned / not yet created';
       text(2,'register-'+index,index<15?60:620,120+(index%15)*25,section+'/'+line+' | '+status,11,510);
     });
     text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
@@ -1350,7 +1360,7 @@ function createPumpStarterDocumentation(name) {
       'B1 | Field | pressure permissive | Telemecanique XMLB004A2S11 | terminal/rating suitability unresolved.',
       'Q1 | Panel main isolation | unresolved. Q2 | Field maintenance | Siemens 3LD2203-0TK51 candidate; enclosure unresolved.',
       'F1 motor protection unresolved. F3 Siemens 5SY4110-7 C10; F4 Phoenix 2908262 set to 1 A; verify coordination.',
-      'H1 | Panel door | contactor energised indication | exact lamp and auxiliary contact arrangement unresolved.',
+      'H1 / H2 | Panel door | coil voltage / F2 trip contact | Schneider XB5AVB3 green / XB5AVB4 red.',
       'X1 / X2 / X3 / X4 / XPE | Panel | power / control / PE terminal strips | current, accessories and order codes unresolved.',
       'Cables W1 supply, W2 motor, W3 pressure: route, lengths, installation methods and core sizes unresolved.',
       'K1, F2, M1, PS1 and S0/S1 candidates already exist in the component library; no generic substitutions.',
@@ -1371,7 +1381,7 @@ function createPumpStarterDocumentation(name) {
       'An off-page continuation requires a matching net, stable endpoint, terminal, cable/core and destination.',
       'Drawing crossings do not imply a junction. A junction must have explicit connectivity in the native model.',
       'Block diagrams describe functions only. Physical layouts must distinguish panel equipment from field devices.',
-      'Indicator H1 will indicate contactor energisation, not proof of flow, motor rotation or safe isolation.'
+      'H1 indicates K1 coil voltage only; H2 indicates the F2 trip contact. Neither proves motor operation or isolation.'
     ]);
     rows(5,[
       'Design assumptions (educational basis, not site measurements): Germany; 400 V, 50 Hz, three-phase supply.',
@@ -1509,10 +1519,27 @@ function createPumpStarterDocumentation(name) {
     text(10,'aux-pe-note',60,560,'PE is continuous and unswitched.\nNo automatic N–0V or PE–0V bond.\nDetermine secondary earthing in the final design.',11,560);
     objects.find(function(o){return o.id==='eng0601-control-source';}).text='24 V DC FROM PS1 / F4 — paired supply references; verify final protection and commissioning';
     objects.find(function(o){return o.id==='eng0601-control-notes';}).text=objects.find(function(o){return o.id==='eng0601-control-notes';}).text.replace('Indicator, supply protection and checks remain unfinished.','Indicator and final protection checks remain unfinished.');
-    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and five connected A2 development sheets. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
+
+    const h1=part(11,'schneider-electric-xb5avb3','H1',500,220,0,'Panel door. Parallel to K1 coil voltage; not proof of contact closure, motor rotation or flow.'),
+      h2=part(11,'schneider-electric-xb5avb4','H2',500,400,0,'Panel door. Powered through F2 97/98 trip contact; dark lamp is not proof that overload or supply is healthy.');
+    h1.properties.legend='K1 COIL VOLTAGE';h2.properties.legend='F2 TRIP CONTACT';
+    continuation('h1-command',start,'contact-14',{x:920,y:520},h1,'terminal-x1',{x:300,y:220},'24V-06 · H1:X1','left','right');
+    continuation('trip-feed',f2,'aux-97',{x:550,y:400},positive,'connection-2',{x:180,y:410},'24V-01 · F2:97','right','right');
+    continuation('trip-indication',f2,'aux-98',{x:520,y:450},h2,'terminal-x1',{x:300,y:400},'TRIP · H2:X1','right','right');
+    continuation('indication-return',h1,'terminal-x2',{x:650,y:520},negative,'connection-2',{x:260,y:620},'0V · H1/H2 return','right','right');
+    wire(11,'h2-return',pin(h2,'terminal-x2'),pin(h1,'terminal-x2'),'0V');
+    text(11,'h1-title',300,150,'H1 · K1 coil-voltage indication',15,650);
+    text(11,'h2-title',300,330,'H2 · F2 overload-trip contact',15,650);
+    text(11,'h1-notes',700,180,'GREEN LENS — XB5AVB3\nVoltage is taken from the K1 coil-command net.\nLamp on does not prove main contacts closed,\nmotor rotation, hydraulic flow or safe isolation.',12,430);
+    text(11,'h2-notes',700,360,'RED LENS — XB5AVB4\nF2 97/98 supplies the lamp after a trip.\nIndication requires the protected 24 V supply.\nVerify physical contact action and reset mode.\nDark is not a healthy-state guarantee.',12,430);
+    text(11,'indication-load',60,580,'Each pilot light: manufacturer 18 mA at rated supply.\nConservative nominal sum: K1 0.1875 A + two lights 0.036 A + F4 self demand 0.012 A = 0.2355 A.\nThis is not a fault-current, startup, cable-sizing or protection-coordination calculation.',11,630);
+    f2.properties.comment='95/96 in control hold chain; 97/98 feeds H2 trip indication. Verify overload setting, reset mode and short-circuit coordination.';
+    objects.find(function(o){return o.id==='eng0601-overload-notes';}).text=objects.find(function(o){return o.id==='eng0601-overload-notes';}).text.replace('97/98 is reserved for trip indication.','97/98 supplies the H2 trip indicator.');
+    objects.find(function(o){return o.id==='eng0601-control-notes';}).text=objects.find(function(o){return o.id==='eng0601-control-notes';}).text.replace('Indicator and final protection checks remain unfinished.','H1/H2 are on the indication sheet; final checks remain.');
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and six connected A2 development sheets. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
   }
   function projectExamples() {
-    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and five connected A2 development sheets including field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and six connected A2 development sheets including field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},

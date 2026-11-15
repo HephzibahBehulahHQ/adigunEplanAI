@@ -229,7 +229,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(11);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(12);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 6; i++) {
     await page
@@ -266,7 +266,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     expect(layout).toEqual({ outside: 0, overlaps: false });
   }
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(11);
+  expect(saved.data.sheets).toHaveLength(12);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -297,7 +297,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   });
   await page.locator('[data-sheet="eng0601-a2-3"]').first().click();
   await expect(page.locator("#userDrawings")).toContainText("S0 · STOP (NC)");
-  await expect(page.locator(".cross-sheet-connector")).toHaveCount(8);
+  await expect(page.locator(".cross-sheet-connector")).toHaveCount(11);
   await page.screenshot({
     path: test.info().outputPath("eng0601-control.png"),
   });
@@ -319,6 +319,35 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   ).toBe(2);
   await page.screenshot({
     path: test.info().outputPath("eng0601-auxiliary.png"),
+  });
+  await page.locator('[data-sheet="eng0601-a2-5"]').first().click();
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(4);
+  const lamp = saved.data.objects.find((o: { ref: string }) => o.ref === "H1");
+  await page.locator('.drawing-object[data-object="' + lamp.id + '"]').click();
+  await page.getByLabel("Legend", { exact: true }).fill("MY CONTROL VOLTAGE");
+  await page.getByLabel("Legend", { exact: true }).press("Tab");
+  const editedIndication = await saveDrawing(page, "indication-edited");
+  expect(
+    editedIndication.data.objects.find((o: { ref: string }) => o.ref === "H1")
+      .properties.legend,
+  ).toBe("MY CONTROL VOLTAGE");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(editedIndication.path);
+  await page.locator('[data-sheet="eng0601-a2-5"]').first().click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.locator('.drawing-object[data-object="' + lamp.id + '"]').click();
+  await expect(page.getByLabel("Legend", { exact: true })).toHaveValue(
+    "MY CONTROL VOLTAGE",
+  );
+  const reopenedIndication = await saveDrawing(page, "indication-reopened");
+  expect(reopenedIndication.data.objects).toEqual(
+    editedIndication.data.objects,
+  );
+  expect(reopenedIndication.data.crossSheetConnections).toEqual(
+    editedIndication.data.crossSheetConnections,
+  );
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-indication.png"),
   });
   await page.reload();
   await page.locator("#openFile").setInputFiles({
