@@ -2132,3 +2132,55 @@ test("A4 native registers match canonical devices and remain editable after reop
     fresh.objects.some((o) => o.text && o.text.includes("NOT PERFORMED")),
   );
 });
+
+test("ENG-0601 opens with linked F1 and K1 body envelopes inside the A3 plate", () => {
+  const project = engine.createExample("eng0601");
+  const placements = project.objects.filter(
+    (o) => o.kind === "panel-placement",
+  );
+  assert.equal(placements.length, 2);
+  const geometries = placements.map((placement) => {
+    assert.equal(placement.sheetId, "eng0601-a3-0");
+    assert.equal(placement.scale, 0.5);
+    const geometry = engine.panelPlacementGeometry(project, placement);
+    const resolved = engine.resolvePanelDevice(project, placement);
+    assert.ok(["F1", "K1"].includes(resolved.ref));
+    assert.equal(
+      geometry.width,
+      resolved.definition.panelFootprint.widthMm * 0.5,
+    );
+    assert.equal(
+      geometry.height,
+      resolved.definition.panelFootprint.heightMm * 0.5,
+    );
+    assert.ok(placement.x - geometry.width / 2 > 300 - 545 * 0.25);
+    assert.ok(placement.x + geometry.width / 2 < 300 + 545 * 0.25);
+    assert.ok(placement.y - geometry.height / 2 > 350 - 775 * 0.25);
+    assert.ok(placement.y + geometry.height / 2 < 350 + 775 * 0.25);
+    return { ...geometry, x: placement.x, y: placement.y };
+  });
+  assert.ok(
+    Math.abs(geometries[0].x - geometries[1].x) >
+      (geometries[0].width + geometries[1].width) / 2,
+  );
+  const withoutViews = project.objects.filter(
+    (o) => o.kind !== "panel-placement",
+  );
+  assert.deepEqual(
+    plain(engine.billOfMaterials(project.objects)),
+    plain(engine.billOfMaterials(withoutViews)),
+  );
+  const first = engine.resolvePanelDevice(project, placements[0]).instance;
+  first.ref = "F1-reviewed";
+  assert.equal(
+    engine.resolvePanelDevice(project, placements[0]).ref,
+    "F1-reviewed",
+  );
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(
+    plain(restored.objects.filter((o) => o.kind === "panel-placement")),
+    plain(placements),
+  );
+});

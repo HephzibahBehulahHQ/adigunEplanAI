@@ -1769,12 +1769,15 @@ function createPumpStarterDocumentation(name) {
     text(18,'continuation-scope',60,560,'Each row records one paired continuation. Same-sheet wires are omitted.\nRAIL is a mounting-foot interface, not a conductor clamp.\nAfter rewiring, inspect Electrical checks; this snapshot does not auto-refresh.\nCable products, cores, lengths and installation calculations remain unselected.',10,610);
     const enclosure=part(19,'rittal-1059000','ENC1',300,350,0,'Educational enclosure choice; final assembly thermal, clearance and bonding verification remains required.');
     enclosure.properties.location='Indoor starter/control cabinet';
+    const panelProject={objects:objects,sheets:sheets};
+    objects.push(createPanelPlacement(panelProject,f1.id,sheets[19].id,220,240,0.5));
+    objects.push(createPanelPlacement(panelProject,k1.id,sheets[19].id,300,240,0.5));
     text(19,'panel-inventory-heading',650,125,'PANEL DEVICE REGISTER — existing A2 identities',12,460);
     const externalRefs=new Set(['M1','Q2','Q2:AUX','B1']);
     const panelDevices=objects.filter(function(o){return o.kind==='component-instance'&&o.id!==enclosure.id&&!externalRefs.has(o.ref);});
     panelDevices.forEach(function(device,index){const definition=component(device.componentId);text(19,'panel-inventory-'+index,650,150+index*13,device.ref+' · '+definition.model,10,460);});
     text(19,'external-boundary',650,525,'EXTERNAL: M1 motor; Q2 field isolator + auxiliary; B1 pressure device.\nDo not place field equipment inside this cabinet by default.',11,460);
-    text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size, not verified mounting offsets or drill coordinates.\nDevice footprints, rails, ducts, clearances, thermal load and bonding remain to be designed.\nThe device register is an editable snapshot of A2 instances; no duplicate devices are created.',11,620);
+    text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size, not verified mounting offsets or drill coordinates.\nF1 and K1: linked manufacturer body envelopes at 1:2; positions are proposed, not drill coordinates.\nOther footprints, rails, ducts, clearance verification, thermal load and bonding remain to be designed.\nThe device register is an editable snapshot of A2 instances; no duplicate devices are created.',11,620);
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-20),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
     const bom=billOfMaterials(objects);

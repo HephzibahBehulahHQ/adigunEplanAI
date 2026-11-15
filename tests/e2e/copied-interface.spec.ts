@@ -207,12 +207,20 @@ test("example copy remains a native editable project through replacement and loc
   const canonicalObjects = (
     objects: Array<{
       id: string;
+      deviceId?: string;
       attachments?: Record<string, { instanceId: string; pinId: string }>;
     }>,
   ) =>
     objects.map((object, index) => ({
       ...object,
       id: index,
+      deviceId: object.deviceId
+        ? (() => {
+            const target = objects.findIndex((o) => o.id === object.deviceId);
+            expect(target).toBeGreaterThanOrEqual(0);
+            return target;
+          })()
+        : undefined,
       attachments: object.attachments
         ? Object.fromEntries(
             Object.entries(object.attachments).map(([end, pin]) => [
@@ -1486,6 +1494,18 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page.locator("#newProjectName").fill("Linked panel verification");
   await page.locator("#createProject").click();
   const initial = await saveDrawing(page, "panel-source");
+  await page.locator("#openFile").setInputFiles({
+    name: "panel-without-views.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        ...initial.data,
+        objects: initial.data.objects.filter(
+          (o: { kind: string }) => o.kind !== "panel-placement",
+        ),
+      }),
+    ),
+  });
   const device = initial.data.objects.find(
     (o: Record<string, unknown>) => o.ref === "F1",
   );
@@ -1837,4 +1857,31 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   expect(reopened.data.crossSheetConnections).toEqual(
     saved.data.crossSheetConnections,
   );
+});
+
+test("ENG-0601 A3 opens with two editable linked device placements", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#createProject").click();
+  await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
+  const saved = await saveDrawing(page, "a3-default-layout");
+  const placements = saved.data.objects.filter(
+    (o: { kind: string }) => o.kind === "panel-placement",
+  );
+  expect(placements).toHaveLength(2);
+  for (const placement of placements)
+    await expect(
+      page.locator('#userDrawings [data-object="' + placement.id + '"]'),
+    ).toBeVisible();
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-a3-proposed-layout.png"),
+  });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "a3-default-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
 });
