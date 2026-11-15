@@ -1515,7 +1515,7 @@ function createPumpStarterDocumentation(name) {
     }
     const earth=wire(8,'motor-pe',pin(pe,'connection-2'),pin(m1,'protective-earth'),'PE');
     earth.stroke='#178743';earth.conductorColor='green/yellow';
-    text(8,'pe-label',75,580,'PE boundary → M1 frame\nGreen/yellow; never switched.\nVerify PE sizing and upstream bonding.',12,540);
+    text(8,'pe-label',75,620,'PE boundary → M1 frame\nGreen/yellow; never switched.\nVerify PE sizing and upstream bonding.',12,540);
     text(8,'field-notes',680,120,
       'FIELD MOTOR SEGMENT — DEVELOPMENT\n\nQ2: Siemens 3LD2203-0TK51.\nOFF-position locking; three poles; no auxiliary contacts.\n22 A AC-23 at 400 V; 32 A uninterrupted current.\nFront-mounted part: field housing is not yet selected.\n\nM1: SEW DRN132M4 candidate, 7.5 kW / 15.2 A.\n400 V delta: U1–W2, V1–U2 and W1–V2 bridges.\nThis view is schematic, not a physical mounting drawing.\n\nW2 and W3 identify phase circuits, not selected cables.\nLengths, core sizes, grouping and voltage drop are pending.\nPE bypasses Q2; green/yellow identification is explicit.\nNo neutral is used in the motor power circuit.\n\nLock out, secure against reclosure and verify isolation.\nControl restart inhibition and complete protection remain\nunresolved. Do not energise this development design.',13,460);
     objects.find(function(o){return o.id==='eng0601-overload-notes';}).text=
