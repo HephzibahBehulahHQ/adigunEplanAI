@@ -3,6 +3,73 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+test("sourced feeder parts use the existing library and preserve editable settings", async ({
+  page,
+}) => {
+  test.setTimeout(90000);
+  page.setDefaultTimeout(8000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Feeder component review");
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const parts = [
+    "siemens-3rt2027-2kb40",
+    "siemens-3ru2126-4bb0",
+    "siemens-3rv2321-4bc10",
+  ];
+  for (const [index, id] of parts.entries()) {
+    if (await page.locator("#closeRightPanel").isVisible())
+      await page.locator("#closeRightPanel").click();
+    await page.locator('[data-module="Electrical"]').click();
+    await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+    await page.locator("#symbolSearch").fill(id);
+    await page.locator('[data-insert="' + id + '"]').click();
+    await page
+      .locator("#drawing")
+      .click({ position: { x: 240 + index * 210, y: 260 } });
+    await page.locator('[data-draw="select"]').click();
+    await page.locator("#userDrawings .drawing-object").last().click();
+    await page.locator('[data-inspector="Properties"]').click();
+    if (id === "siemens-3ru2126-4bb0") {
+      await page
+        .locator('[data-component-property="overloadSettingA"]')
+        .fill("15.2");
+      await page
+        .locator('[data-component-property="overloadSettingA"]')
+        .press("Tab");
+    }
+    if (id === "siemens-3rv2321-4bc10") {
+      await expect(
+        page.locator('[data-component-property="overloadSettingA"]'),
+      ).toHaveCount(0);
+      await expect(
+        page.getByText("None — separate overload relay required", {
+          exact: true,
+        }),
+      ).toBeVisible();
+    }
+  }
+  const saved = await saveDrawing(page, "feeder-parts");
+  expect(
+    saved.data.objects
+      .filter((o: { kind: string }) => o.kind === "component-instance")
+      .map((o: { componentId: string }) => o.componentId),
+  ).toEqual(parts);
+  expect(
+    saved.data.objects.find(
+      (o: { componentId: string }) => o.componentId === parts[1],
+    ).properties.overloadSettingA,
+  ).toBe(15.2);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "feeder-parts-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(errors).toEqual([]);
+});
+
 test("example copy remains a native editable project through replacement and local reopen", async ({
   page,
 }) => {
