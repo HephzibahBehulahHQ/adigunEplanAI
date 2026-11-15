@@ -568,6 +568,7 @@
       if(existing.some(function(o){return o.deviceId===button.dataset.createPanelPlacement;})){notify('This device already has a placement on that sheet. Select the sheet to edit it.');return;}
       const placement=window.AdigunCADEngine.createPanelPlacement(project,button.dataset.createPanelPlacement,target.value,200+(existing.length%6)*45,230+Math.floor(existing.length/6)*90,.5);
       pushUndo();if(target.value===state.sheet)state.objects.push(placement);else(state.sheetObjects[target.value]||(state.sheetObjects[target.value]=[])).push(placement);
+      if(target.value===state.sheet)renderObjects();
       persist();notify('Linked panel placement added. Select its A3 sheet to position it and verify clearances.');
     }catch(error){notify(error.message);}
   });
