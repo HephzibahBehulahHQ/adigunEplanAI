@@ -1524,8 +1524,36 @@ test("linked panel placement preserves its canonical device on local reopen", as
     footprintComponentId: "siemens-3rt2027-2kb40",
     scale: 0.5,
   });
-  expect(saved.data.crossSheetConnections).toEqual(
-    initial.data.crossSheetConnections,
+  const normalizeConnections = (data: typeof saved.data) =>
+    data.crossSheetConnections.map(
+      (link: {
+        endpoints: {
+          wireId: string;
+          sheetId: string;
+          wireEnd?: string;
+          point: { x: number; y: number };
+        }[];
+      }) => ({
+        ...link,
+        endpoints: link.endpoints.map((endpoint) => {
+          const wire = data.objects.find(
+            (o: Record<string, unknown>) =>
+              o.id === endpoint.wireId && o.sheetId === endpoint.sheetId,
+          );
+          expect(wire).toBeTruthy();
+          const atStart =
+            endpoint.point.x === wire.x1 && endpoint.point.y === wire.y1;
+          const atEnd =
+            endpoint.point.x === wire.x2 && endpoint.point.y === wire.y2;
+          expect(atStart || atEnd).toBe(true);
+          const wireEnd = atStart ? "start" : "end";
+          if (endpoint.wireEnd) expect(endpoint.wireEnd).toBe(wireEnd);
+          return { ...endpoint, wireEnd };
+        }),
+      }),
+    );
+  expect(normalizeConnections(saved.data)).toEqual(
+    normalizeConnections(initial.data),
   );
   expect(
     saved.data.objects.filter(
