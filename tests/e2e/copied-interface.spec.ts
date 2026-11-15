@@ -2034,6 +2034,8 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
 test("terminal accessories insert through the existing library as editable mechanical parts", async ({
   page,
 }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Terminal accessories");
@@ -2052,6 +2054,7 @@ test("terminal accessories insert through the existing library as editable mecha
     const point = await sheetPoint(page, 200 + index * 250, 250);
     await page.mouse.click(point.x, point.y);
   }
+  expect(errors).toEqual([]);
   await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(4);
   await page.screenshot({
