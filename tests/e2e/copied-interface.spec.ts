@@ -1877,6 +1877,21 @@ test("ENG-0601 A3 opens with five editable linked device placements", async ({
     await expect(
       page.locator('#userDrawings [data-object="' + placement.id + '"]'),
     ).toBeVisible();
+  for (const placement of placements) {
+    const device = saved.data.objects.find(
+      (o: { id: string }) => o.id === placement.deviceId,
+    );
+    if (["F3", "F4"].includes(device.ref)) {
+      const clear = await page
+        .locator('#userDrawings [data-object="' + placement.id + '"]')
+        .evaluate((node) => {
+          const body = node.querySelector("rect")!.getBBox();
+          const label = node.querySelector("text")!.getBBox();
+          return label.y + label.height < body.y;
+        });
+      expect(clear).toBe(true);
+    }
+  }
   await page.screenshot({
     path: test.info().outputPath("eng0601-a3-proposed-layout.png"),
   });
