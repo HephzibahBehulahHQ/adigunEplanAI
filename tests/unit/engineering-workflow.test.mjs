@@ -2276,3 +2276,56 @@ test("control protection panel views use sourced axes without overlapping other 
   assert.equal(dimensions.depthIncludingRail.value, 55.6);
   assert.equal(engine.analyzeProject(project).globalNetCount, 27);
 });
+
+test("terminal panel views preserve canonical connections and survive local reopen", () => {
+  const project = engine.createExample("eng0601");
+  const originalNets = engine.analyzeProject(project).globalNetCount;
+  const originalBom = JSON.stringify(engine.billOfMaterials(project.objects));
+  for (const [ref, width, height, depth] of [
+    ["X1:1", 6.2, 42.5, 47],
+    ["X5:1", 5.2, 47.7, 47.5],
+    ["XPE:1", 12.2, 75.4, 52.6],
+  ]) {
+    const device = project.objects.find((o) => o.ref === ref);
+    const definition = engine.component(device.componentId);
+    assert.ok(Object.isFrozen(definition.panelFootprint));
+    assert.deepEqual(
+      [
+        definition.panelFootprint.widthMm,
+        definition.panelFootprint.heightMm,
+        definition.panelFootprint.depthMm,
+      ],
+      [width, height, depth],
+    );
+    assert.match(definition.panelFootprint.note, /NS 35\/7.5/);
+    const placement = engine.createPanelPlacement(
+      project,
+      device.id,
+      "eng0601-a3-0",
+      200,
+      500,
+      0.5,
+    );
+    project.objects.push(placement);
+    const geometry = engine.panelPlacementGeometry(project, placement);
+    assert.equal(geometry.width, width * 0.5);
+    assert.equal(geometry.height, height * 0.5);
+    device.ref = ref + "-renamed";
+    assert.equal(engine.resolvePanelDevice(project, placement).ref, device.ref);
+    device.ref = ref;
+  }
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.equal(engine.analyzeProject(reopened).globalNetCount, originalNets);
+  assert.equal(
+    JSON.stringify(engine.billOfMaterials(reopened.objects)),
+    originalBom,
+  );
+  for (const placement of reopened.objects.filter(
+    (o) => o.kind === "panel-placement",
+  )) {
+    assert.ok(engine.resolvePanelDevice(reopened, placement));
+    assert.ok(engine.panelPlacementGeometry(reopened, placement));
+  }
+});

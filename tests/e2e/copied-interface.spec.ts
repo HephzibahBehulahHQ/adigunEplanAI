@@ -1900,3 +1900,54 @@ test("ENG-0601 A3 opens with five editable linked device placements", async ({
   const reopened = await saveDrawing(page, "a3-default-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
+
+test("terminal bodies can be added through existing Properties and reopened", async ({
+  page,
+}) => {
+  test.setTimeout(60000);
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("Terminal placement verification");
+  await page.locator("#createProject").click();
+  const initial = await saveDrawing(page, "terminal-source");
+  const devices = ["X1:1", "X5:1", "XPE:1"].map((ref) =>
+    initial.data.objects.find((o: { ref?: string }) => o.ref === ref),
+  );
+  for (const device of devices) {
+    await page
+      .locator('[data-sheet="' + device.sheetId + '"]')
+      .first()
+      .click();
+    await page.locator('[data-draw="select"]').click();
+    await page
+      .locator('#userDrawings [data-object="' + device.id + '"]')
+      .dblclick();
+    await expect(page.locator("#rightPanelTitle")).toHaveText("Properties");
+    await page
+      .getByRole("button", { name: "Add linked panel placement" })
+      .click();
+  }
+  await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
+  const saved = await saveDrawing(page, "terminal-views");
+  for (const device of devices) {
+    const placement = saved.data.objects.find(
+      (o: { kind: string; deviceId?: string }) =>
+        o.kind === "panel-placement" && o.deviceId === device.id,
+    );
+    expect(placement).toMatchObject({
+      footprintComponentId: device.componentId,
+      scale: 0.5,
+    });
+    await expect(
+      page.locator('#userDrawings [data-object="' + placement.id + '"]'),
+    ).toBeVisible();
+  }
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "terminal-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(reopened.data.crossSheetConnections).toEqual(
+    saved.data.crossSheetConnections,
+  );
+});
