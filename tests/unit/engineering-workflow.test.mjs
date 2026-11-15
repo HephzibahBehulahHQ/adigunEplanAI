@@ -1631,3 +1631,28 @@ test("LAPP cable exposes four isolated editable core paths without invented rati
   assert.equal(JSON.stringify(definition), original);
   assert.equal(engine.worldPins(reopened.objects[0]).length, 8);
 });
+
+test("enclosure is a native mechanical component without invented electrical terminals", () => {
+  const definition = engine.component("rittal-1059000");
+  assert.equal(definition.specifications.dimensions.width.value, 600);
+  assert.equal(definition.specifications.dimensions.height.value, 800);
+  assert.equal(definition.specifications.mountingPlate.width.value, 545);
+  const original = JSON.stringify(definition);
+  const instance = engine.createInstance("rittal-1059000", 400, 350, "ENC1");
+  assert.deepEqual(plain(engine.worldPins(instance)), []);
+  assert.equal(engine.validateInstance(instance).valid, true);
+  instance.properties.location = "Starter panel, indoors";
+  engine.moveInstance(instance, 450, 350);
+  engine.rotateInstance(instance, 90);
+  const project = {
+    project: "Panel assembly",
+    sheets: [],
+    objects: [instance],
+  };
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(reopened.objects), plain(project.objects));
+  assert.equal(JSON.stringify(definition), original);
+  assert.equal(engine.analyze([instance]).componentPinCount, 0);
+});
