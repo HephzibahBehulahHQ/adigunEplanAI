@@ -2133,18 +2133,18 @@ test("A4 native registers match canonical devices and remain editable after reop
   );
 });
 
-test("ENG-0601 opens with linked F1, K1 and PS1 body envelopes inside the A3 plate", () => {
+test("ENG-0601 opens with linked protection and supply body envelopes inside the A3 plate", () => {
   const project = engine.createExample("eng0601");
   const placements = project.objects.filter(
     (o) => o.kind === "panel-placement",
   );
-  assert.equal(placements.length, 3);
+  assert.equal(placements.length, 5);
   const geometries = placements.map((placement) => {
     assert.equal(placement.sheetId, "eng0601-a3-0");
     assert.equal(placement.scale, 0.5);
     const geometry = engine.panelPlacementGeometry(project, placement);
     const resolved = engine.resolvePanelDevice(project, placement);
-    assert.ok(["F1", "K1", "PS1"].includes(resolved.ref));
+    assert.ok(["F1", "K1", "PS1", "F3", "F4"].includes(resolved.ref));
     assert.equal(
       geometry.width,
       resolved.definition.panelFootprint.widthMm * 0.5,
@@ -2230,5 +2230,49 @@ test("PS1 panel view keeps body dimensions separate from convection clearance", 
       .rows.find((r) => r.componentId === ps1.componentId).quantity,
     1,
   );
+  assert.equal(engine.analyzeProject(project).globalNetCount, 27);
+});
+
+test("control protection panel views use sourced axes without overlapping other devices", () => {
+  const project = engine.createExample("eng0601");
+  for (const [ref, dimensions] of [
+    ["F3", [18, 90, 76]],
+    ["F4", [6.2, 105.8, 55.6]],
+  ]) {
+    const device = project.objects.find((o) => o.ref === ref);
+    const footprint = engine.component(device.componentId).panelFootprint;
+    assert.deepEqual(
+      [footprint.widthMm, footprint.heightMm, footprint.depthMm],
+      dimensions,
+    );
+    assert.ok(footprint.source.startsWith("https://"));
+    assert.equal(
+      engine
+        .billOfMaterials(project.objects)
+        .rows.find((r) => r.componentId === device.componentId).quantity,
+      1,
+    );
+  }
+  const boxes = project.objects
+    .filter((o) => o.kind === "panel-placement")
+    .map((o) => ({
+      ...engine.panelPlacementGeometry(project, o),
+      x: o.x,
+      y: o.y,
+    }));
+  boxes.forEach((a, i) =>
+    boxes
+      .slice(i + 1)
+      .forEach((b) =>
+        assert.ok(
+          Math.abs(a.x - b.x) >= (a.width + b.width) / 2 ||
+            Math.abs(a.y - b.y) >= (a.height + b.height) / 2,
+        ),
+      ),
+  );
+  const dimensions = engine.component("phoenix-contact-2908262").specifications
+    .dimensions;
+  assert.equal(dimensions.height.value, 105.8);
+  assert.equal(dimensions.depthIncludingRail.value, 55.6);
   assert.equal(engine.analyzeProject(project).globalNetCount, 27);
 });
