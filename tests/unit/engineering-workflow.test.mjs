@@ -8,6 +8,98 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("editable copies replace and remove components without changing templates or manufacturer records", () => {
+  const original = engine.createExample("eng0601"),
+    copy = engine.parseProject(engine.serializeProject(original)).project;
+  const terminal = copy.objects.find((o) => o.ref === "X1:1"),
+    originalDefinition = JSON.stringify(engine.component(terminal.componentId));
+  const changed = engine.replaceComponent(
+    copy.objects,
+    terminal.id,
+    "phoenix-contact-3044076",
+  );
+  const replacement = changed.objects.find((o) => o.id === terminal.id);
+  assert.equal(replacement.ref, "X1:1");
+  assert.equal(replacement.componentId, "phoenix-contact-3044076");
+  assert.equal(
+    copy.objects.find((o) => o.id === terminal.id).componentId,
+    "phoenix-contact-3004362",
+  );
+  assert.equal(
+    JSON.stringify(engine.component(terminal.componentId)),
+    originalDefinition,
+  );
+  const bound = changed.objects.find(
+    (o) =>
+      o.kind === "wire" && o.attachments?.start?.instanceId === terminal.id,
+  );
+  assert.equal(bound.attachments.start.pinId, "connection-2");
+  assert.throws(
+    () =>
+      engine.replaceComponent(
+        changed.objects,
+        terminal.id,
+        "telemecanique-xmlb004a2s11",
+      ),
+    /cannot preserve connected terminal/,
+  );
+  const removed = engine.removeDrawingObjects(changed.objects, [terminal.id]);
+  assert.equal(removed.detached.length, 1);
+  assert.equal(
+    removed.objects.find((o) => o.id === bound.id).attachments.start,
+    undefined,
+  );
+  assert.deepEqual(
+    plain(removed.objects.find((o) => o.id === bound.id).detachedEnds),
+    ["start"],
+  );
+  copy.objects = removed.objects;
+  assert.equal(engine.parseProject(engine.serializeProject(copy)).valid, true);
+  const fresh = engine.createExample("eng0601");
+  assert.equal(
+    fresh.objects.find((o) => o.ref === "X1:1").componentId,
+    "phoenix-contact-3004362",
+  );
+  assert.ok(fresh.objects.every((o) => !o.locked));
+});
+test("field motor delta bridges and unswitched PE stay distinct", () => {
+  const project = engine.createExample("eng0601"),
+    report = engine.analyzeProject(project);
+  assert.equal(report.valid, true);
+  for (const [phase, start, end] of [
+    [1, "winding-u1", "winding-w2"],
+    [2, "winding-v1", "winding-u2"],
+    [3, "winding-w1", "winding-v2"],
+  ]) {
+    const net = report.globalNets.find((net) =>
+      net.pins.some(
+        (pin) => pin.ref === "Q2" && pin.pinId === "load-t" + phase,
+      ),
+    );
+    assert.deepEqual(
+      plain(
+        net.pins
+          .filter((pin) => pin.ref === "M1")
+          .map((pin) => pin.pinId)
+          .sort(),
+      ),
+      [start, end].sort(),
+    );
+    assert.ok(!net.pins.some((pin) => pin.pinId === "protective-earth"));
+  }
+  const pe = report.globalNets.find((net) =>
+    net.pins.some(
+      (pin) => pin.ref === "M1" && pin.pinId === "protective-earth",
+    ),
+  );
+  assert.ok(pe.pins.every((pin) => ["M1", "XPE:1"].includes(pin.ref)));
+  assert.equal(
+    project.objects.find((o) => o.id === "eng0601-wire-motor-pe")
+      .conductorColor,
+    "green/yellow",
+  );
+});
+
 test("XMLB004A2S11 retains four manufacturer terminals without inventing switching continuity", () => {
   const id = "telemecanique-xmlb004a2s11";
   const def = engine.component(id);
@@ -76,11 +168,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 8);
+  assert.equal(project.sheets.length, 9);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 8 },
+      { length: 9 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -96,10 +188,10 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 3);
+  assert.equal(project.crossSheetConnections.length, 6);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
-  assert.equal(powerReport.globalNetCount, 9);
+  assert.equal(powerReport.globalNetCount, 13);
   for (let n = 1; n <= 3; n++) {
     const net = powerReport.globalNets.find((net) =>
       net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
@@ -109,7 +201,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 12);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 25);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
