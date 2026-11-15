@@ -308,7 +308,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(19);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(20);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -386,7 +386,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(19);
+  expect(saved.data.sheets).toHaveLength(20);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -485,6 +485,14 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   );
   await page.screenshot({
     path: test.info().outputPath("eng0601-continuation-register.png"),
+  });
+  await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
+  await expect(page.locator("#userDrawings")).toContainText(
+    "EXTERNAL: M1 motor; Q2 field isolator",
+  );
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-enclosure-basis.png"),
   });
   await page.locator('[data-sheet="eng0601-a2-3"]').first().click();
   await expect(page.locator("#userDrawings")).toContainText("S0 · STOP (NC)");

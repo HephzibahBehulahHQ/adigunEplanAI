@@ -554,12 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 19);
+  assert.equal(project.sheets.length, 20);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 19 },
-      (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
+      { length: 20 },
+      (_, i) =>
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : "A3/") + String(i).padStart(3, "0"),
     ),
   );
   for (const sheet of project.sheets.filter((s) => s.sectionId === "A1")) {
@@ -1655,4 +1656,49 @@ test("enclosure is a native mechanical component without invented electrical ter
   assert.deepEqual(plain(reopened.objects), plain(project.objects));
   assert.equal(JSON.stringify(definition), original);
   assert.equal(engine.analyze([instance]).componentPinCount, 0);
+});
+
+test("A3 enclosure basis preserves A2 devices and separates field equipment", () => {
+  const project = engine.createExample("eng0601");
+  const sheet = project.sheets.find((s) => s.id === "eng0601-a3-0");
+  assert.equal(sheet.number, "A3/019");
+  const contents = project.objects.filter((o) => o.sheetId === sheet.id);
+  const equipment = contents.filter((o) => o.kind === "component-instance");
+  assert.equal(equipment.length, 1);
+  assert.equal(equipment[0].componentId, "rittal-1059000");
+  assert.equal(equipment[0].ref, "ENC1");
+  const rows = contents.filter((o) =>
+    /^eng0601-panel-inventory-\d+$/.test(o.id),
+  );
+  const external = new Set(["M1", "Q2", "Q2:AUX", "B1"]);
+  const internal = project.objects.filter(
+    (o) =>
+      o.kind === "component-instance" &&
+      o.sheetId !== sheet.id &&
+      !external.has(o.ref),
+  );
+  assert.equal(rows.length, internal.length);
+  for (const device of internal)
+    assert.ok(rows.some((row) => row.text.startsWith(device.ref + " · ")));
+  for (const ref of external)
+    assert.ok(!rows.some((row) => row.text.startsWith(ref + " · ")));
+  assert.ok(rows.every((row) => row.y < 520));
+  const withoutLayout = {
+    ...project,
+    sheets: project.sheets.filter((s) => s.id !== sheet.id),
+    objects: project.objects.filter((o) => o.sheetId !== sheet.id),
+  };
+  assert.deepEqual(
+    plain(engine.analyzeProject(project).globalNets),
+    plain(engine.analyzeProject(withoutLayout).globalNets),
+  );
+  const refs = project.objects
+    .filter((o) => o.kind === "component-instance")
+    .map((o) => o.ref);
+  assert.equal(new Set(refs).size, refs.length);
+  equipment[0].properties.location = "My workshop cabinet";
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(reopened.objects), plain(project.objects));
 });
