@@ -21,6 +21,8 @@ test("sourced feeder parts use the existing library and preserve editable settin
     "siemens-3rv2321-4bc10",
   ];
   for (const [index, id] of parts.entries()) {
+    if (await page.locator("#closeRightPanel").isVisible())
+      await page.locator("#closeRightPanel").click();
     await page.locator('[data-module="Electrical"]').click();
     await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
     await page.locator("#symbolSearch").fill(id);
@@ -29,8 +31,8 @@ test("sourced feeder parts use the existing library and preserve editable settin
       .locator("#drawing")
       .click({ position: { x: 240 + index * 210, y: 260 } });
     await page.locator('[data-draw="select"]').click();
-    await page.locator('[data-inspector="Properties"]').click();
     await page.locator("#userDrawings .drawing-object").last().click();
+    await page.locator('[data-inspector="Properties"]').click();
     if (id === "siemens-3ru2126-4bb0") {
       await page
         .locator('[data-component-property="overloadSettingA"]')
