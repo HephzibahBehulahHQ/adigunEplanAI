@@ -316,7 +316,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(27);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(29);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -397,7 +397,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(27);
+  expect(saved.data.sheets).toHaveLength(29);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -1517,14 +1517,18 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page.locator('[data-draw="select"]').click();
   await page.locator('#userDrawings [data-object="' + device.id + '"]').click();
   await page.locator('[data-inspector="Properties"]').click();
-  const panelSheet = initial.data.sheets.find(
-    (sheet: { id: string }) => sheet.id === "eng0601-a3-0",
-  );
   await expect(
     page
       .getByRole("combobox", { name: "Panel placement sheet" })
       .locator("option"),
-  ).toHaveText([panelSheet.number + " · " + panelSheet.name]);
+  ).toHaveText(
+    initial.data.sheets
+      .filter((sheet: { sectionId: string }) => sheet.sectionId === "A3")
+      .map(
+        (sheet: { number: string; name: string }) =>
+          sheet.number + " · " + sheet.name,
+      ),
+  );
   await page
     .getByRole("button", { name: "Add linked panel placement" })
     .click();
@@ -1870,7 +1874,8 @@ test("ENG-0601 A3 opens with five editable linked device placements", async ({
   await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
   const saved = await saveDrawing(page, "a3-default-layout");
   const placements = saved.data.objects.filter(
-    (o: { kind: string }) => o.kind === "panel-placement",
+    (o: { kind: string; sheetId: string }) =>
+      o.kind === "panel-placement" && o.sheetId === "eng0601-a3-0",
   );
   expect(placements).toHaveLength(5);
   for (const placement of placements)
@@ -1964,6 +1969,61 @@ test("terminal bodies can be added through existing Properties and reopened", as
   await page.locator("#openFile").setInputFiles(saved.path);
   const reopened = await saveDrawing(page, "terminal-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(reopened.data.crossSheetConnections).toEqual(
+    saved.data.crossSheetConnections,
+  );
+});
+
+test("A3 terminal detail sheets render linked bodies and retain native edits", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#createProject").click();
+  const initial = await saveDrawing(page, "terminal-detail-source");
+  for (const id of ["eng0601-a3-1", "eng0601-a3-2"]) {
+    await page
+      .locator('[data-sheet="' + id + '"]')
+      .first()
+      .click();
+    const views = initial.data.objects.filter(
+      (o: { kind: string; sheetId: string }) =>
+        o.kind === "panel-placement" && o.sheetId === id,
+    );
+    for (const view of views) {
+      const body = page.locator(
+        '#userDrawings [data-object="' + view.id + '"]',
+      );
+      await expect(body).toBeVisible();
+      const device = initial.data.objects.find(
+        (o: { id: string }) => o.id === view.deviceId,
+      );
+      await expect(body).toContainText(device.ref);
+    }
+    await page.screenshot({
+      path: "test-results/" + id + "-terminal-arrangement.png",
+    });
+  }
+  const moved = initial.data.objects.find(
+    (o: { kind: string; sheetId: string }) =>
+      o.kind === "panel-placement" && o.sheetId === "eng0601-a3-2",
+  );
+  await page.locator('[data-draw="select"]').click();
+  await page
+    .locator('#userDrawings [data-object="' + moved.id + '"]')
+    .dblclick();
+  await page.locator('[data-object-coordinate="y"]').fill("350");
+  await page.locator('[data-object-coordinate="y"]').press("Tab");
+  const saved = await saveDrawing(page, "terminal-detail-saved");
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === moved.id),
+  ).toMatchObject({ y: 350, deviceId: moved.deviceId });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "terminal-detail-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(reopened.data.sheets).toEqual(saved.data.sheets);
   expect(reopened.data.crossSheetConnections).toEqual(
     saved.data.crossSheetConnections,
   );
