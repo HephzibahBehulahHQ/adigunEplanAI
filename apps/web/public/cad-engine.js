@@ -1448,10 +1448,10 @@ function createPumpStarterDocumentation(name) {
     text(13,'feeder-source',60,550,'Source: Siemens A8E56203880102A/RS-AB/006, 09/2017, pp. 34–35.\nAll six continuations are paired native electrical links. Main isolation must also account for the auxiliary supply.',11,1070);
     ['L1','L2','L3'].forEach(function(phase,index){
       const n=index+1,x=350+index*50;
-      const source=part(6,'phoenix-contact-3004362','X1:'+n,100,200+index*100,0,'Supply interface '+phase+'. Feeds F1 on the feeder sheet. Upstream common isolation and cable design remain outstanding.');
-      continuation('feeder-input-'+n,source,'connection-2',{x:220,y:200+index*100},f1,'line-l'+n,{x:x,y:180-index*30},phase+' · X1:'+n+' → F1','right','left');
+      const source=part(6,'phoenix-contact-3004362','X1:'+n,100,[160,340,440][index],0,'Supply interface '+phase+'. Feeds F1 on the feeder sheet. Upstream common isolation and cable design remain outstanding.');
+      continuation('feeder-input-'+n,source,'connection-2',{x:180,y:[160,340,440][index]},f1,'line-l'+n,{x:x,y:180-index*30},phase+' · X1:'+n+' → F1','right','left');
       continuation('feeder-output-'+n,f1,'load-t'+n,{x:x,y:480-index*40},k1,'power-l'+n,{x:x,y:150-index*30},phase+' · F1 → K1','right','left');
-      text(6,'supply-label-'+n,65,170+index*100,phase,12,70);
+      text(6,'supply-label-'+n,65,[130,310,410][index],phase,12,70);
       const outgoing={x:x,y:480-index*40},incoming={x:x,y:180-index*40};
       const a=wire(6,'k1-out-'+n,pin(k1,'power-t'+n),outgoing,'K1-T'+n);
       const b=wire(7,'f2-in-'+n,incoming,pin(f2,'line-l'+n),'K1-T'+n);
