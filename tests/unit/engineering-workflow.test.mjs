@@ -11,6 +11,7 @@ const plain = (value) => JSON.parse(JSON.stringify(value));
 test("32 A feeder contactor replacement preserves bound terminals and manufacturer data", () => {
   const original = engine.createExample("eng0601");
   const k1 = original.objects.find((o) => o.ref === "K1");
+  k1.componentId = "siemens-3rt2026-2kb40"; // Legacy saved-project replacement fixture.
   const originalDefinition = JSON.stringify(engine.component(k1.componentId));
   const id = "siemens-3rt2027-2kb40";
   const changed = engine.replaceComponent(original.objects, k1.id, id);
@@ -200,6 +201,24 @@ test("editable copies replace and remove components without changing templates o
     ["start"],
   );
   copy.objects = removed.objects;
+  assert.throws(
+    () => engine.serializeProject(copy),
+    /off-page connector target/,
+  );
+  // Object-only removal leaves project-level reference cleanup to its caller.
+  for (const link of copy.crossSheetConnections)
+    for (const endpoint of link.endpoints)
+      if (endpoint.connector?.targetInstanceId === terminal.id)
+        delete endpoint.connector;
+  copy.connectionIssues = [
+    {
+      id: "removed-input-terminal",
+      code: "deleted-object-connections",
+      message: "X1:1 removed; review explicitly detached feeder input.",
+      endpoints: [],
+      detached: removed.detached,
+    },
+  ];
   assert.equal(engine.parseProject(engine.serializeProject(copy)).valid, true);
   const fresh = engine.createExample("eng0601");
   assert.equal(
@@ -208,6 +227,45 @@ test("editable copies replace and remove components without changing templates o
   );
   assert.ok(fresh.objects.every((o) => !o.locked));
 });
+test("feeder separates input phases and preserves paired protection links through editing", () => {
+  const project = engine.createExample("eng0601");
+  const f1 = project.objects.find((o) => o.ref === "F1");
+  const f2 = project.objects.find((o) => o.ref === "F2");
+  assert.equal(f1.componentId, "siemens-3rv2321-4bc10");
+  assert.equal(f2.componentId, "siemens-3ru2126-4bb0");
+  assert.equal(f2.properties.overloadSettingA, 15.2);
+  const inspect = (drawing) => {
+    const report = engine.analyzeProject(drawing);
+    assert.equal(report.valid, true);
+    for (let n = 1; n <= 3; n++) {
+      const upstream = report.globalNets.find((net) =>
+        net.pins.some((p) => p.ref === "F1" && p.pinId === "line-l" + n),
+      );
+      const downstream = report.globalNets.find((net) =>
+        net.pins.some((p) => p.ref === "F1" && p.pinId === "load-t" + n),
+      );
+      assert.notEqual(upstream, downstream);
+      assert.deepEqual(
+        plain(upstream.pins.map((p) => p.ref + ":" + p.pinId).sort()),
+        [
+          "F1:line-l" + n,
+          "X1:" + n + ":connection-1",
+          "X1:" + n + ":connection-2",
+        ],
+      );
+      assert.deepEqual(
+        plain(downstream.pins.map((p) => p.ref + ":" + p.pinId).sort()),
+        ["F1:load-t" + n, "K1:power-l" + n],
+      );
+    }
+  };
+  inspect(project);
+  f1.x += 25;
+  f1.rotation = 90;
+  engine.synchronizeWireAttachments(project.objects);
+  inspect(engine.parseProject(engine.serializeProject(project)).project);
+});
+
 test("field motor delta bridges and unswitched PE stay distinct", () => {
   const project = engine.createExample("eng0601"),
     report = engine.analyzeProject(project);
@@ -320,11 +378,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 13);
+  assert.equal(project.sheets.length, 14);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 13 },
+      { length: 14 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -340,10 +398,10 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 20);
+  assert.equal(project.crossSheetConnections.length, 26);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
-  assert.equal(powerReport.globalNetCount, 25);
+  assert.equal(powerReport.globalNetCount, 28);
   for (let n = 1; n <= 3; n++) {
     const net = powerReport.globalNets.find((net) =>
       net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
@@ -353,7 +411,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 62);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 71);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
