@@ -822,7 +822,31 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     instanceProperties:{position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Verify mechanical mounting and control function; not a standalone safety function.',maximumLength:160}},
     sources:[{publisher:'Siemens',title:'3LD9200-5B product datasheet',url:'https://www.mouser.lt/datasheet/3/5917/6/3LD92005B_datasheet_en.pdf',documentRevision:'Siemens datasheet 4/7/2026, 3 pages; manufacturer document hosted by Mouser.',revisionNote:'Exact identity, contact marking, 4 A DC-13 at 24 V, contact sequence and terminal torque. Not installation approval.',retrievedAt:'2026-11-15'},{publisher:'Siemens',title:'LV10 04/2022 switch disconnectors · auxiliary-switch selection',url:'https://cache.industry.siemens.com/dl/files/643/109750643/att_1104557/v1/08_SwitchDisconnectors_LV10_042022_EN_202205241458164260.pdf',documentRevision:'04/2022',revisionNote:'3LD9200-5B front-mount accessory listed for 3LD22 32 A.',retrievedAt:'2026-11-15'}]
   });
-  const COMPONENTS = Object.freeze({[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+
+  const auxiliaryMcbDefinition=deepFreeze({
+    schemaVersion:COMPONENT_SCHEMA_VERSION,id:'siemens-5sy4110-7',manufacturer:'Siemens',manufacturerPartNumber:'5SY4110-7',model:'SENTRON 5SY4110-7',name:'Single-pole miniature circuit breaker · C10',family:'miniature-circuit-breaker',referencePrefix:'F',category:'Electrical · Verified auxiliary protection',
+    symbol:{id:'breaker.5sy4110-7.v1',view:'schematic',unit:'mm',width:100,height:100,pins:[{id:'terminal-top',localNumber:'TOP',name:'Top terminal · model-local designation',x:-50,y:0,electricalType:'passive',connectionType:'screw'},{id:'terminal-bottom',localNumber:'BOTTOM',name:'Bottom terminal · model-local designation',x:50,y:0,electricalType:'passive',connectionType:'screw'}],internalConnections:[],numberingNote:'Source verifies combined top and bottom terminals. TOP/BOTTOM are model-local physical-side identifiers, not claimed manufacturer terminal numbers. Coordinates are schematic; tripping is not simulated.'},
+    specifications:{ratedCurrent:{value:10,unit:'A'},trippingCharacteristic:{value:'C'},poleCount:{value:1},ratedVoltage:{value:'230/400 V AC'},breakingCapacityEN60898:{value:10,unit:'kA'},neutralSwitching:{value:false}},
+    instanceProperties:{position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Verify fault level, cable protection and ambient derating.',maximumLength:160}},
+    sources:[{publisher:'Siemens',title:'5SY4110-7 manufacturer data sheet',url:'https://cdn-reichelt.de/documents/datenblatt/D710/LS_4110_7_DB_EN.pdf',documentRevision:'12.05.2015 · 5 pages; Siemens document hosted by Reichelt',revisionNote:'Exact C10 single-pole identity, EN 60898 breaking capacity and top/bottom terminal construction. TOP/BOTTOM labels are explicitly model-local.',retrievedAt:'2026-11-15'}]
+  });
+  const ptcbDefinition=deepFreeze({
+    schemaVersion:COMPONENT_SCHEMA_VERSION,id:'phoenix-contact-2908262',manufacturer:'Phoenix Contact',manufacturerPartNumber:'2908262',model:'PTCB E1 24DC/1-8A NO',name:'Adjustable electronic DC circuit breaker',family:'electronic-circuit-breaker',referencePrefix:'F',category:'Electrical · Verified auxiliary protection',
+    symbol:{id:'protection.ptcb.2908262.v1',view:'schematic',unit:'mm',width:220,height:180,pins:[
+      {id:'input-1.1',localNumber:'1.1',name:'IN+ terminal',x:-110,y:-55,electricalType:'passive',connectionType:'push-in'},
+      {id:'bridge-1.2',localNumber:'1.2',name:'IN+ bridge shaft',x:-110,y:-20,electricalType:'passive',connectionType:'plug-in bridge'},
+      {id:'negative-3.1',localNumber:'3.1',name:'IN− self supply only',x:-110,y:35,electricalType:'passive',connectionType:'push-in'},
+      {id:'negative-3.2',localNumber:'3.2',name:'IN− self supply only',x:-110,y:70,electricalType:'passive',connectionType:'push-in'},
+      {id:'output-2.1',localNumber:'2.1',name:'Protected OUT+ terminal',x:110,y:-55,electricalType:'passive',connectionType:'push-in'},
+      {id:'bridge-2.2',localNumber:'2.2',name:'Protected OUT+ bridge shaft',x:110,y:-20,electricalType:'passive',connectionType:'plug-in bridge'},
+      {id:'signal-13',localNumber:'13',name:'Remote indication NO',x:110,y:35,electricalType:'passive',connectionType:'push-in'},
+      {id:'signal-14',localNumber:'14',name:'Remote indication NO',x:110,y:70,electricalType:'passive',connectionType:'push-in'}
+    ],internalConnections:[['input-1.1','bridge-1.2'],['output-2.1','bridge-2.2'],['negative-3.1','negative-3.2']],numberingNote:'Manufacturer connection assignments retained, including separate input/output bridge shafts. IN− powers electronics only; never route load return through it. Protected input/output and NO signal are not permanently bridged; switching/tripping is not simulated.'},
+    specifications:{operatingVoltage:{minimum:18,maximum:30,unit:'V DC'},ratedVoltage:{value:24,unit:'V DC'},channelSettings:{value:[1,2,3,4,5,6,7,8],unit:'A'},factorySetting:{value:4,unit:'A'},quiescentCurrentTypical:{value:12,unit:'mA'},signalContact:{value:'NO, 0–30 V DC, 100 mA'},isolation:{value:'No electrical isolation'},dimensions:{width:{value:6.2,unit:'mm'},length:{value:105.8,unit:'mm'},height:{value:55.6,unit:'mm'}}},
+    instanceProperties:{channelCurrentA:{type:'number',default:4,minimum:1,maximum:8,integer:true},position:{type:'string',default:'',maximumLength:24},marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'Set channel current on the physical device. Verify source reserve and load return routing.',maximumLength:160}},
+    sources:[{publisher:'Phoenix Contact',title:'PTCB E1 24DC/1-8A NO · 2908262',url:'https://www.phoenixcontact.com/en-us/products/device-circuit-breakers-ptcb-e1-24dc1-8a-no-2908262',documentRevision:'Current manufacturer product data',revisionNote:'Identity, adjustable integer settings, factory 4 A, voltage range and IN− self-supply-only restriction.',retrievedAt:'2026-11-15'},{publisher:'Phoenix Contact',title:'PTCB device circuit breaker application note',url:'https://assets.phoenixcontact.com/file/ebbfcb23-6830-4184-bc8d-c99191d07722/media/original?Application_Note-ptcb_108344_en_02.pdf=',documentRevision:'108344_en_02 · 13 pages',revisionNote:'Visually checked pages 4–5, 8, 10–11: connection/bridge assignments, operating settings, trip curve and dimensions. Actual protection coordination requires project verification.',retrievedAt:'2026-11-15'}]
+  });
+  const COMPONENTS = Object.freeze({[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;
@@ -920,7 +944,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         const value = instance.properties[name];
         const rule = def.instanceProperties[name];
         const invalidNumber = rule.type === 'number' && value !== undefined && value !== null &&
-          (!finite(value) || value < rule.minimum || value > rule.maximum);
+          (!finite(value) || value < rule.minimum || value > rule.maximum || rule.integer && !Number.isInteger(value));
         const invalidString = rule.type !== 'number' && value !== undefined &&
           (typeof value !== 'string' || value.length > rule.maximumLength);
         if (invalidNumber || invalidString) {
@@ -1249,7 +1273,7 @@ function removeDrawingObjects(objects,ids){
     target.componentId=replacementId;target.properties={};
     Object.keys(replacement.instanceProperties).forEach(function(name){
       const rule=replacement.instanceProperties[name],value=original.properties[name];
-      const compatible=rule.type==='number'?(value===null||finite(value)&&value>=rule.minimum&&value<=rule.maximum):typeof value==='string'&&value.length<=rule.maximumLength;
+      const compatible=rule.type==='number'?(value===null||finite(value)&&value>=rule.minimum&&value<=rule.maximum&&(!rule.integer||Number.isInteger(value))):typeof value==='string'&&value.length<=rule.maximumLength;
       target.properties[name]=compatible?value:rule.default;
       if(value!==undefined&&!compatible)reset.push(name);
     });
@@ -1263,7 +1287,7 @@ function removeDrawingObjects(objects,ids){
     return prefix+number;
   }
 function createPumpStarterDocumentation(name) {
-    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in'];
+    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations','Supply interface and contactor','Overload and outgoing motor interface','Field isolation and delta motor','Local stop, permissives and seal-in','Auxiliary supply and control protection'];
     const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-'+(index<6?'a1-'+index:'a2-'+(index-6)),sectionId:index<6?'A1':'A2',name:title,number:(index<6?'A1/':'A2/')+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
     const objects=[];
     function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
@@ -1281,7 +1305,7 @@ function createPumpStarterDocumentation(name) {
       'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
       'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
       'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: six A1 documents and four connected A2 development sheets; A3/A4 remain empty.',
+      'Current delivery: six A1 documents and five connected A2 development sheets; A3/A4 remain empty.',
       'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
     ]);
     rows(1,[
@@ -1302,7 +1326,7 @@ function createPumpStarterDocumentation(name) {
       '000 Project overview','001 Title and revision','002 Contents and drawing register',
       '003 Equipment and device register','004 Symbols, terms and potentials','005 Design basis and calculations',
       '006 Supply interface and contactor','007 Overload and outgoing motor interface','008 Motor circuit / isolation',
-      '009 Local stop, permissives and seal-in','010 Pressure permissive','011 Local isolator',
+      '009 Local stop, permissives and seal-in','010 Auxiliary supply and control protection','011 Local isolator',
       '012 Control and auxiliary power','013 Local manual controls','014 Feedback and fault response',
       '015 Field terminal connections','016 Cable and conductor schedule','017 Earthing and bonding',
       '018 Continuation register','019 Operating sequence and interlocks','020 Panel general arrangement',
@@ -1312,7 +1336,7 @@ function createPumpStarterDocumentation(name) {
     ];
     register.forEach(function(line,index){
       const section=index<6?'A1':index<20?'A2':index<26?'A3':'A4';
-      const status=index<10?'P01 / authored development':'planned / not yet created';
+      const status=index<11?'P01 / authored development':'planned / not yet created';
       text(2,'register-'+index,index<15?60:620,120+(index%15)*25,section+'/'+line+' | '+status,11,510);
     });
     text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
@@ -1325,9 +1349,9 @@ function createPumpStarterDocumentation(name) {
       'S0 / S1 | Panel door | stop NC / start NO | Schneider XB5AA42 / XB5AA31 | candidates.',
       'B1 | Field | pressure permissive | Telemecanique XMLB004A2S11 | terminal/rating suitability unresolved.',
       'Q1 | Panel main isolation | unresolved. Q2 | Field maintenance | Siemens 3LD2203-0TK51 candidate; enclosure unresolved.',
-      'F1 / F3 | Panel | motor branch / auxiliary circuit protection | selection and coordination unresolved.',
+      'F1 motor protection unresolved. F3 Siemens 5SY4110-7 C10; F4 Phoenix 2908262 set to 1 A; verify coordination.',
       'H1 | Panel door | contactor energised indication | exact lamp and auxiliary contact arrangement unresolved.',
-      'X1 / X2 / X3 / XPE | Panel | power / control / PE terminal strips | current, accessories and order codes unresolved.',
+      'X1 / X2 / X3 / X4 / XPE | Panel | power / control / PE terminal strips | current, accessories and order codes unresolved.',
       'Cables W1 supply, W2 motor, W3 pressure: route, lengths, installation methods and core sizes unresolved.',
       'K1, F2, M1, PS1 and S0/S1 candidates already exist in the component library; no generic substitutions.',
       'Q2:AUX | Field | Siemens 3LD9200-5B | mechanically mounted on Q2; 23/24 in hold circuit.',
@@ -1459,10 +1483,36 @@ function createPumpStarterDocumentation(name) {
     if(powerNote){powerNote.x=680;powerNote.y=470;powerNote.fontSize=12;powerNote.text='PANEL POWER SEGMENT — DEVELOPMENT\nK1 coil and seal-in refer to local control.\nMain isolation/protection remain to select.\nVerify coordination and cable sizing.\nDo not energise this development design.';}
     const overloadNote=objects.find(function(o){return o.id==='eng0601-overload-notes';});
     overloadNote.x=680;overloadNote.y=430;overloadNote.fontSize=12;overloadNote.text='PANEL OVERLOAD SEGMENT — DEVELOPMENT\nF2 95/96 is in the control hold chain.\n97/98 is reserved for trip indication.\nX2 phases continue to field Q2.\nSetting, reset and coordination need verification.\nNo installation approval is claimed.';
-    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and four connected A2 development sheets. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
+
+    const ps1=part(10,'siemens-sitop-psu100c-6ep1332-5ba00','PS1',550,290,0,'230 V AC design assumption; 24 V / 2.5 A. Verify derating, source reserve, input protection and commissioning.'),
+      f3=part(10,'siemens-5sy4110-7','F3',330,180,0,'C10 follows PSU input recommendation. Fault level, cable protection and upstream isolation require final checks.'),
+      f4=part(10,'phoenix-contact-2908262','F4',800,250,0,'Design setting 1 A; factory setting is 4 A. Program and verify physically. IN− is self supply only; return load directly to PSU.'),
+      acL=part(10,'phoenix-contact-3004362','X4:L',150,180,0,'230 V AC line from the same installation, downstream of main isolation. Upstream supply sheet remains unfinished.'),
+      acN=part(10,'phoenix-contact-3004362','X4:N',150,290,0,'Neutral for 230 V auxiliary supply. Never connect this directly to the DC return.'),
+      auxPE=part(10,'phoenix-contact-3212147','XPE:2',150,350,0,'Unswitched protective-earth connection to PSU; same installation PE as the motor. Rail/bonding installation remains to document.');
+    f4.properties.channelCurrentA=1;
+    wire(10,'aux-ac-line',pin(acL,'connection-2'),pin(f3,'terminal-top'),'L-AUX');
+    wire(10,'aux-ac-protected',pin(f3,'terminal-bottom'),pin(ps1,'line-l'),'L-PS1');
+    const neutralWire=wire(10,'aux-neutral',pin(acN,'connection-2'),pin(ps1,'line-n'),'N');neutralWire.stroke='#1672b8';neutralWire.conductorColor='blue';
+    const psEarth=wire(10,'aux-pe',pin(auxPE,'connection-2'),pin(ps1,'line-pe'),'PE');psEarth.stroke='#178743';psEarth.conductorColor='green/yellow';
+    wire(10,'aux-positive',pin(f4,'input-1.1'),pin(ps1,'output-positive'),'24V-RAW');
+    wire(10,'aux-self-return',pin(f4,'negative-3.1'),pin(ps1,'output-negative'),'0V-SELF');
+    continuation('aux-control-positive',f4,'output-2.1',{x:1040,y:430},positive,'connection-1',{x:60,y:300},'24V-01 · F4:2.1 → X3:1','left','right');
+    continuation('aux-control-return',ps1,'output-negative',{x:640,y:500},negative,'connection-1',{x:60,y:580},'0V · PS1:− → X3:2','left','right');
+    continuation('aux-earth',pe,'connection-1',{x:60,y:530},auxPE,'connection-1',{x:60,y:500},'PE · XPE:1 → XPE:2','right','right');
+    for(const o of objects.filter(function(o){return o.id==='eng0601-wire-aux-earth-from'||o.id==='eng0601-wire-aux-earth-to';})){o.stroke='#178743';o.conductorColor='green/yellow';}
+    positive.properties.comment='Protected 24 V from F4 output 2.1 via paired continuation. Same physical control interface.';
+    negative.properties.comment='Load return directly to PS1 negative output, not through F4 self-supply terminals. No N/PE bond is implied.';
+    text(10,'aux-assumption',60,105,'DESIGN ASSUMPTION: 230 V AC L/N/PE auxiliary feed; upstream main isolation and final cable checks outstanding.',12,1080);
+    text(10,'aux-line-label',110,135,'L · AC input',12,150);text(10,'aux-neutral-label',80,260,'N',12,70);
+    text(10,'aux-notes',700,470,'AUXILIARY SUPPLY — DEVELOPMENT\nPS1: 24 V / 2.5 A; F4 design setting 1 A.\nK1 nominal coil: 4.5 W / 24 V = 0.1875 A.\nF4 self demand: typically 12 mA.\nVerify fault reserve, cables and protection.\nIN− must never carry the load return.',11,450);
+    text(10,'aux-pe-note',60,560,'PE is continuous and unswitched.\nNo automatic N–0V or PE–0V bond.\nDetermine secondary earthing in the final design.',11,560);
+    objects.find(function(o){return o.id==='eng0601-control-source';}).text='24 V DC FROM PS1 / F4 — paired supply references; verify final protection and commissioning';
+    objects.find(function(o){return o.id==='eng0601-control-notes';}).text=objects.find(function(o){return o.id==='eng0601-control-notes';}).text.replace('Indicator, supply protection and checks remain unfinished.','Indicator and final protection checks remain unfinished.');
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and five connected A2 development sheets. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
   }
   function projectExamples() {
-    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and four connected A2 development sheets including field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and five connected A2 development sheets including field isolation, delta motor terminals and PE. Control, complete bonding, protection coordination and A3–A4 remain incomplete; not installation-approved.'},
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},

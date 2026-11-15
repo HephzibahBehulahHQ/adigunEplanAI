@@ -229,7 +229,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(10);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(11);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 6; i++) {
     await page
@@ -266,7 +266,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     expect(layout).toEqual({ outside: 0, overlaps: false });
   }
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(10);
+  expect(saved.data.sheets).toHaveLength(11);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -297,9 +297,28 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   });
   await page.locator('[data-sheet="eng0601-a2-3"]').first().click();
   await expect(page.locator("#userDrawings")).toContainText("S0 · STOP (NC)");
-  await expect(page.locator(".cross-sheet-connector")).toHaveCount(6);
+  await expect(page.locator(".cross-sheet-connector")).toHaveCount(8);
   await page.screenshot({
     path: test.info().outputPath("eng0601-control.png"),
+  });
+  await page.locator('[data-sheet="eng0601-a2-4"]').first().click();
+  await expect(page.locator("#userDrawings")).toContainText("AUXILIARY SUPPLY");
+  const protector = saved.data.objects.find(
+    (o: { ref: string }) => o.ref === "F4",
+  );
+  await page.locator('[data-inspector="Properties"]').click();
+  await page
+    .locator('.drawing-object[data-object="' + protector.id + '"]')
+    .click();
+  await page.getByLabel("Channel current (A)", { exact: true }).fill("2");
+  await page.getByLabel("Channel current (A)", { exact: true }).press("Tab");
+  const editedSupply = await saveDrawing(page, "auxiliary-edited");
+  expect(
+    editedSupply.data.objects.find((o: { ref: string }) => o.ref === "F4")
+      .properties.channelCurrentA,
+  ).toBe(2);
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-auxiliary.png"),
   });
   await page.reload();
   await page.locator("#openFile").setInputFiles({
