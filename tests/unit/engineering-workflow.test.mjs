@@ -220,11 +220,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 11);
+  assert.equal(project.sheets.length, 12);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 11 },
+      { length: 12 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -240,10 +240,10 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 16);
+  assert.equal(project.crossSheetConnections.length, 20);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
-  assert.equal(powerReport.globalNetCount, 24);
+  assert.equal(powerReport.globalNetCount, 25);
   for (let n = 1; n <= 3; n++) {
     const net = powerReport.globalNets.find((net) =>
       net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
@@ -253,7 +253,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 53);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 62);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
@@ -1045,4 +1045,68 @@ test("auxiliary supply preserves AC/DC/PE separation and bypasses PTCB for load 
   psu.rotation = 90;
   engine.synchronizeWireAttachments(project.objects);
   check(engine.parseProject(engine.serializeProject(project)).project);
+});
+test("pilot-light instances preserve coil and trip nets through editing and local roundtrip", () => {
+  const p = engine.createExample("eng0601");
+  const definition = JSON.stringify(
+    engine.component("schneider-electric-xb5avb3"),
+  );
+  const check = (project) => {
+    const report = engine.analyzeProject(project);
+    assert.equal(report.valid, true);
+    const net = (ref, pinId) =>
+      report.globalNets.find((n) =>
+        n.pins.some((pin) => pin.ref === ref && pin.pinId === pinId),
+      );
+    assert.equal(net("H1", "terminal-x1"), net("K1", "coil-a1"));
+    assert.equal(net("H2", "terminal-x1"), net("F2", "aux-98"));
+    assert.equal(net("F2", "aux-97"), net("F4", "output-2.1"));
+    assert.equal(net("H1", "terminal-x2"), net("PS1", "output-negative"));
+    assert.equal(net("H2", "terminal-x2"), net("PS1", "output-negative"));
+    assert.equal(
+      new Set([
+        net("H1", "terminal-x1"),
+        net("H2", "terminal-x1"),
+        net("H1", "terminal-x2"),
+        net("F2", "aux-97"),
+      ]).size,
+      4,
+    );
+  };
+  check(p);
+  const h1 = p.objects.find((o) => o.ref === "H1");
+  h1.properties.legend = "CONTROL VOLTAGE";
+  h1.stroke = "#9944aa";
+  h1.x += 40;
+  h1.rotation = 90;
+  engine.synchronizeWireAttachments(p.objects);
+  p.project = "My editable pump project";
+  const reopened = engine.parseProject(engine.serializeProject(p)).project;
+  check(reopened);
+  assert.deepEqual(plain(reopened.objects), plain(p.objects));
+  assert.deepEqual(
+    plain(reopened.crossSheetConnections),
+    plain(p.crossSheetConnections),
+  );
+  const replacement = engine.replaceComponent(
+    reopened.objects,
+    h1.id,
+    "schneider-electric-xb5avb4",
+  );
+  reopened.objects = replacement.objects;
+  check(reopened);
+  assert.equal(
+    engine.component(reopened.objects.find((o) => o.id === h1.id).componentId)
+      .specifications.lensColour.value,
+    "Red",
+  );
+  assert.equal(
+    JSON.stringify(engine.component("schneider-electric-xb5avb3")),
+    definition,
+  );
+  const fresh = engine
+    .createExample("eng0601")
+    .objects.find((o) => o.ref === "H1");
+  assert.equal(fresh.componentId, "schneider-electric-xb5avb3");
+  assert.equal(fresh.properties.legend, "K1 COIL VOLTAGE");
 });
