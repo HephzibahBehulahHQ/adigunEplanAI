@@ -1623,6 +1623,7 @@ test("mounting accessory links to the canonical overload and survives rename and
     (o: Record<string, unknown>) => o.componentId === "siemens-3ru2926-3aa01",
   );
   expect(accessory.assemblyFor).toBe(relay.id);
+  await page.locator('[data-panel="project"]').click();
   await page
     .locator('[data-sheet="' + relay.sheetId + '"]')
     .first()
