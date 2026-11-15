@@ -354,6 +354,29 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   });
   await page.locator('[data-sheet="eng0601-a2-5"]').first().click();
   await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(4);
+  const lampTextOverlaps = await page
+    .locator("#userDrawings .drawing-object")
+    .evaluateAll((nodes) =>
+      nodes
+        .filter((node) => node.querySelector("[data-terminal]"))
+        .some((node) => {
+          const boxes = Array.from(node.querySelectorAll("text")).map((text) =>
+            text.getBBox(),
+          );
+          return boxes.some((a, i) =>
+            boxes
+              .slice(i + 1)
+              .some(
+                (b) =>
+                  a.x < b.x + b.width &&
+                  a.x + a.width > b.x &&
+                  a.y < b.y + b.height &&
+                  a.y + a.height > b.y,
+              ),
+          );
+        }),
+    );
+  expect(lampTextOverlaps).toBe(false);
   const lamp = saved.data.objects.find((o: { ref: string }) => o.ref === "H1");
   await page.locator('.drawing-object[data-object="' + lamp.id + '"]').click();
   await page.getByLabel("Legend", { exact: true }).fill("MY CONTROL VOLTAGE");
