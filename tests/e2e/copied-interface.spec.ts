@@ -365,7 +365,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
         };
       }),
     );
-  expect(tabs).toHaveLength(7);
+  expect(tabs).toHaveLength(8);
   for (const tab of tabs)
     expect(tab).toEqual({
       contained: true,
