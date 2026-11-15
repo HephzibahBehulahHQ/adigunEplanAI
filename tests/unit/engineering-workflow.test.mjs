@@ -1826,3 +1826,27 @@ test("panel placement imports reject malformed geometry but retain reviewable mi
     /missing/,
   );
 });
+
+test("contactor panel footprint retains the archived manufacturer edition and clearance categories", () => {
+  const project = engine.createExample("eng0601");
+  const device = project.objects.find((o) => o.ref === "K1");
+  const placement = engine.createPanelPlacement(
+    project,
+    device.id,
+    "eng0601-a3-0",
+    300,
+    230,
+    0.5,
+  );
+  const geometry = engine.panelPlacementGeometry(project, placement);
+  assert.equal(geometry.width, 22.5);
+  assert.equal(geometry.height, 51);
+  assert.equal(geometry.footprint.depthMm, 107);
+  assert.equal(geometry.footprint.edition, "2021-01-21");
+  assert.equal(geometry.footprint.page, 5);
+  assert.equal(geometry.footprint.clearancesMm.sideBySide.side, 0);
+  assert.equal(geometry.footprint.clearancesMm.groundedParts.side, 6);
+  assert.equal(geometry.footprint.clearancesMm.liveParts.front, 10);
+  assert.ok(Object.isFrozen(geometry.footprint.clearancesMm.groundedParts));
+  assert.match(geometry.footprint.note, /archived/);
+});

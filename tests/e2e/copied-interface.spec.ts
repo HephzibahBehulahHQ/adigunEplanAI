@@ -1497,12 +1497,69 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page
     .getByRole("button", { name: "Add linked panel placement" })
     .click();
+  const contactor = initial.data.objects.find(
+    (o: Record<string, unknown>) => o.ref === "K1",
+  );
+  await page
+    .locator('[data-sheet="' + contactor.sheetId + '"]')
+    .first()
+    .click();
+  await page
+    .locator('#userDrawings [data-object="' + contactor.id + '"]')
+    .click();
+  await page
+    .getByRole("button", { name: "Add linked panel placement" })
+    .click();
   await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
   const saved = await saveDrawing(page, "panel-linked");
   const placement = saved.data.objects.find(
     (o: Record<string, unknown>) => o.kind === "panel-placement",
   );
   expect(placement.deviceId).toBe(device.id);
+  const contactorView = saved.data.objects.find(
+    (o: Record<string, unknown>) =>
+      o.kind === "panel-placement" && o.deviceId === contactor.id,
+  );
+  expect(contactorView).toMatchObject({
+    footprintComponentId: "siemens-3rt2027-2kb40",
+    scale: 0.5,
+  });
+  const normalizeConnections = (data: typeof saved.data) =>
+    data.crossSheetConnections.map(
+      (link: {
+        endpoints: {
+          wireId: string;
+          sheetId: string;
+          wireEnd?: string;
+          point: { x: number; y: number };
+        }[];
+      }) => ({
+        ...link,
+        endpoints: link.endpoints.map((endpoint) => {
+          const wire = data.objects.find(
+            (o: Record<string, unknown>) =>
+              o.id === endpoint.wireId && o.sheetId === endpoint.sheetId,
+          );
+          expect(wire).toBeTruthy();
+          const atStart =
+            endpoint.point.x === wire.x1 && endpoint.point.y === wire.y1;
+          const atEnd =
+            endpoint.point.x === wire.x2 && endpoint.point.y === wire.y2;
+          expect(atStart || atEnd).toBe(true);
+          const wireEnd = atStart ? "start" : "end";
+          if (endpoint.wireEnd) expect(endpoint.wireEnd).toBe(wireEnd);
+          return { ...endpoint, wireEnd };
+        }),
+      }),
+    );
+  expect(normalizeConnections(saved.data)).toEqual(
+    normalizeConnections(initial.data),
+  );
+  expect(
+    saved.data.objects.filter(
+      (o: Record<string, unknown>) => o.kind === "panel-placement",
+    ),
+  ).toHaveLength(2);
   expect(
     saved.data.objects.filter(
       (o: Record<string, unknown>) => o.kind === "component-instance",
@@ -1515,15 +1572,17 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page
     .locator('#userDrawings [data-object="' + placement.id + '"]')
     .click();
-  await page.locator('[data-object-coordinate="x"]').fill("250");
+  await page.locator('[data-object-coordinate="x"]').fill("200");
   await page.locator('[data-object-coordinate="x"]').press("Tab");
+  await page.locator('[data-object-coordinate="y"]').fill("330");
+  await page.locator('[data-object-coordinate="y"]').press("Tab");
   await page.locator('[data-rotate-object="' + placement.id + '"]').click();
   const edited = await saveDrawing(page, "panel-edited");
   expect(
     edited.data.objects.find(
       (o: Record<string, unknown>) => o.id === placement.id,
     ),
-  ).toMatchObject({ x: 250, rotation: 90, deviceId: device.id });
+  ).toMatchObject({ x: 200, y: 330, rotation: 90, deviceId: device.id });
   await page.reload();
   await page.locator("#openFile").setInputFiles(edited.path);
   const reopened = await saveDrawing(page, "panel-reopened");
