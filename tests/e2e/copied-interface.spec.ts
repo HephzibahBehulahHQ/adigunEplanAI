@@ -1486,20 +1486,18 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page.locator("#newProjectName").fill("Linked panel verification");
   await page.locator("#createProject").click();
   const initial = await saveDrawing(page, "panel-source");
-  await page
-    .locator("#openFile")
-    .setInputFiles({
-      name: "panel-without-views.adigun.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(
-        JSON.stringify({
-          ...initial.data,
-          objects: initial.data.objects.filter(
-            (o: { kind: string }) => o.kind !== "panel-placement",
-          ),
-        }),
-      ),
-    });
+  await page.locator("#openFile").setInputFiles({
+    name: "panel-without-views.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        ...initial.data,
+        objects: initial.data.objects.filter(
+          (o: { kind: string }) => o.kind !== "panel-placement",
+        ),
+      }),
+    ),
+  });
   const device = initial.data.objects.find(
     (o: Record<string, unknown>) => o.ref === "F1",
   );
