@@ -308,7 +308,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(20);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(27);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -346,7 +346,10 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
           ),
         };
       });
-    expect(layout).toEqual({ outside: 0, overlaps: false });
+    expect(layout, "Authored paper check index " + i).toEqual({
+      outside: 0,
+      overlaps: false,
+    });
   }
   await expect(page.locator("#userDrawings")).toContainText(
     "NATIVE NET SNAPSHOT",
@@ -386,7 +389,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(20);
+  expect(saved.data.sheets).toHaveLength(27);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -1771,4 +1774,67 @@ test("electrical support wires to relay terminals and retains bindings after edi
   await page.screenshot({
     path: test.info().outputPath("support-electrical-wiring.png"),
   });
+});
+
+test("ENG-0601 A4 reports open as native editable sheets and survive local reopen", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("A4 report verification");
+  await page.locator("#createProject").click();
+  const original = await saveDrawing(page, "a4-source");
+  const reports = original.data.sheets.filter(
+    (s: { sectionId: string }) => s.sectionId === "A4",
+  );
+  expect(reports).toHaveLength(7);
+  for (const sheet of reports) {
+    await page
+      .locator('[data-sheet="' + sheet.id + '"]')
+      .first()
+      .click();
+    await expect(page.locator("#userDrawings .drawing-object")).not.toHaveCount(
+      0,
+    );
+    const layout = await page
+      .locator("#userDrawings .drawing-object")
+      .evaluateAll((nodes) => {
+        const boxes = nodes.map((node) =>
+          (node as SVGGraphicsElement).getBBox(),
+        );
+        return {
+          outside: boxes.filter(
+            (b) =>
+              b.x < 26 ||
+              b.y < 25 ||
+              b.x + b.width > 1174 ||
+              b.y + b.height > 574,
+          ).length,
+          overlaps: boxes.some((a, i) =>
+            boxes
+              .slice(i + 1)
+              .some(
+                (b) =>
+                  a.x < b.x + b.width &&
+                  a.x + a.width > b.x &&
+                  a.y < b.y + b.height &&
+                  a.y + a.height > b.y,
+              ),
+          ),
+        };
+      });
+    expect(layout).toEqual({ outside: 0, overlaps: false });
+    await page.screenshot({ path: test.info().outputPath(sheet.id + ".png") });
+  }
+  const saved = await saveDrawing(page, "a4-reports");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "a4-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(reopened.data.sheets).toEqual(saved.data.sheets);
+  expect(reopened.data.crossSheetConnections).toEqual(
+    saved.data.crossSheetConnections,
+  );
 });
