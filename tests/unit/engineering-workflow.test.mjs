@@ -8,6 +8,78 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("common isolation keeps neutral separate from phase, PE and DC return after editing", () => {
+  const project = engine.createExample("eng0601");
+  const q1 = project.objects.find((o) => o.ref === "Q1");
+  const inspect = (copy) => {
+    const report = engine.analyzeProject(copy);
+    assert.equal(report.valid, true);
+    const neutral = report.globalNets.find((n) =>
+      n.pins.some((p) => p.ref === "Q1" && p.pinId === "load-n"),
+    );
+    assert.deepEqual(
+      plain(neutral.pins.map((p) => p.ref + ":" + p.pinId).sort()),
+      ["PS1:line-n", "Q1:load-n", "X4:N:connection-1", "X4:N:connection-2"],
+    );
+    for (const net of report.globalNets) {
+      if (net.pins.some((p) => p.ref === "Q1" && p.pinId.startsWith("line-")))
+        assert.equal(net.pins.length, 1);
+    }
+  };
+  inspect(project);
+  q1.x += 100;
+  q1.rotation = 90;
+  engine.synchronizeWireAttachments(project.objects);
+  inspect(engine.parseProject(engine.serializeProject(project)).project);
+  assert.equal(
+    engine.createExample("eng0601").objects.find((o) => o.ref === "Q1")
+      .rotation,
+    0,
+  );
+});
+
+test("four-pole main isolator retains distinct neutral identities without internal shorts", () => {
+  const definition = engine.component("siemens-3ld2244-1tl51");
+  assert.equal(definition.symbol.pins.length, 8);
+  assert.equal(new Set(definition.symbol.pins.map((p) => p.id)).size, 8);
+  assert.deepEqual(
+    plain(
+      definition.symbol.pins
+        .filter((p) => p.localNumber === "N")
+        .map((p) => p.id),
+    ),
+    ["line-n", "load-n"],
+  );
+  assert.equal(
+    definition.symbol.pins.some((p) => p.localNumber === "PE"),
+    false,
+  );
+  assert.deepEqual(plain(definition.symbol.internalConnections), []);
+  assert.equal(Object.isFrozen(definition.specifications), true);
+  const source = JSON.stringify(definition);
+  const instance = engine.createInstance(definition.id, 400, 250, "Q1");
+  instance.sheetId = "isolation";
+  instance.rotation = 90;
+  instance.properties.comment = "Editable independent instance";
+  assert.equal(engine.validateInstance(instance).valid, true);
+  const result = engine.parseProject(
+    engine.serializeProject({
+      project: "Main isolation",
+      sheets: [{ id: "isolation", name: "Main isolation", number: "A2/014" }],
+      objects: [instance],
+      crossSheetConnections: [],
+    }),
+  );
+  assert.equal(result.valid, true);
+  assert.equal(result.project.objects[0].rotation, 90);
+  assert.equal(
+    result.project.objects[0].properties.comment,
+    "Editable independent instance",
+  );
+  assert.equal(JSON.stringify(definition), source);
+  assert.equal(engine.component("siemens-3ld2203-0tk51").symbol.pins.length, 6);
+});
+
 test("32 A feeder contactor replacement preserves bound terminals and manufacturer data", () => {
   const original = engine.createExample("eng0601");
   const k1 = original.objects.find((o) => o.ref === "K1");
@@ -191,7 +263,7 @@ test("editable copies replace and remove components without changing templates o
     /cannot preserve connected terminal/,
   );
   const removed = engine.removeDrawingObjects(changed.objects, [terminal.id]);
-  assert.equal(removed.detached.length, 1);
+  assert.equal(removed.detached.length, 2);
   assert.equal(
     removed.objects.find((o) => o.id === bound.id).attachments.start,
     undefined,
@@ -249,9 +321,13 @@ test("feeder separates input phases and preserves paired protection links throug
         plain(upstream.pins.map((p) => p.ref + ":" + p.pinId).sort()),
         [
           "F1:line-l" + n,
+          "Q1:load-t" + n,
           "X1:" + n + ":connection-1",
           "X1:" + n + ":connection-2",
-        ],
+          ...(n === 1
+            ? ["F3:terminal-top", "X4:L:connection-1", "X4:L:connection-2"]
+            : []),
+        ].sort(),
       );
       assert.deepEqual(
         plain(downstream.pins.map((p) => p.ref + ":" + p.pinId).sort()),
@@ -378,11 +454,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 14);
+  assert.equal(project.sheets.length, 15);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 14 },
+      { length: 15 },
       (_, i) => (i < 6 ? "A1/" : "A2/") + String(i).padStart(3, "0"),
     ),
   );
@@ -398,10 +474,10 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     /planned \/ not yet created/,
   );
   assert.match(project.objects.map((o) => o.text).join("\n"), /not approved/);
-  assert.equal(project.crossSheetConnections.length, 26);
+  assert.equal(project.crossSheetConnections.length, 31);
   assert.equal(engine.analyzeProject(project).valid, true);
   const powerReport = engine.analyzeProject(project);
-  assert.equal(powerReport.globalNetCount, 28);
+  assert.equal(powerReport.globalNetCount, 27);
   for (let n = 1; n <= 3; n++) {
     const net = powerReport.globalNets.find((net) =>
       net.pins.some((pin) => pin.ref === "K1" && pin.pinId === "power-t" + n),
@@ -411,7 +487,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 71);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 81);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
