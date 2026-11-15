@@ -1613,14 +1613,14 @@ test("mounting accessory links to the canonical overload and survives rename and
     page
       .locator("#userDrawings .drawing-object")
       .last()
-      .locator("rect")
+      .locator("rect:not(.component-hit-target)")
       .first(),
   ).toHaveAttribute("width", "22.5");
   await expect(
     page
       .locator("#userDrawings .drawing-object")
       .last()
-      .locator("rect")
+      .locator("rect:not(.component-hit-target)")
       .first(),
   ).toHaveAttribute("height", "48.5");
   await page.locator('[data-inspector="Properties"]').click();
