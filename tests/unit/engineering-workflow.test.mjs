@@ -1590,3 +1590,44 @@ test("electrical checks reject disconnected reuse and inconsistent continuation 
     /inconsistent cable\/core/,
   );
 });
+
+test("LAPP cable exposes four isolated editable core paths without invented ratings", () => {
+  const definition = engine.component("lapp-1119504");
+  assert.equal(definition.manufacturerPartNumber, "1119504");
+  assert.equal(definition.specifications.crossSection.value, 4);
+  assert.equal(definition.symbol.pins.length, 8);
+  assert.equal(definition.symbol.internalConnections.length, 4);
+  assert.equal(definition.specifications.nominalCurrent, undefined);
+  const original = JSON.stringify(definition);
+  const instance = engine.createInstance("lapp-1119504", 300, 300, "W2");
+  assert.equal(engine.validateInstance(instance).valid, true);
+  const leads = engine
+    .worldPins(instance)
+    .filter((p) => p.id.startsWith("a-"))
+    .map((p, i) => ({
+      id: "lead-" + i,
+      kind: "wire",
+      x1: p.x - 20,
+      y1: p.y,
+      x2: p.x,
+      y2: p.y,
+    }));
+  const report = engine.analyze([instance, ...leads]);
+  assert.equal(report.nets.length, 4);
+  for (const net of report.nets) {
+    assert.equal(net.pins.length, 2);
+    const cores = new Set(net.pins.map((p) => p.pinId.slice(2)));
+    assert.equal(cores.size, 1);
+  }
+  instance.properties.route = "Panel to field isolator";
+  instance.properties.lengthAssumption =
+    "Educational route assumption: 20 m; not measured";
+  instance.rotation = 90;
+  const project = { project: "Cable edit", sheets: [], objects: [instance] };
+  const reopened = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(reopened.objects), plain(project.objects));
+  assert.equal(JSON.stringify(definition), original);
+  assert.equal(engine.worldPins(reopened.objects[0]).length, 8);
+});

@@ -1,0 +1,7 @@
+# LAPP four-core cable library increment — local, unpublished
+
+Primary source: https://www.lapp.com/en/be/oelflex-classic-110/p/1119504, reviewed 2026-11-15. Verified 1119504 / OLFLEX CLASSIC 110 4G4: four 4mm² cores including PE, numbered identification, PVC, U0/U 300/500V; fixed installation / occasional movement without tensile strain, dry/damp spaces. No installation ampacity, bend radius, fault withstand, length or route claimed.
+
+Added lapp-1119504 component to existing catalog, family multicore-cable. Eight model-local A/B core endpoints, four isolated internal core paths; schematic coordinates not physical routing. Editable route, lengthAssumption and comment; manufacturer definition frozen. Existing renderer draws four core paths and cable body with dedicated reference placement. No CSS/menu/layout changes. Not inserted into ENG0601 yet: field enclosure PE bypass/termination must be coordinated first.
+
+38 focused tests pass including isolated paths with attached leads, rotated edit/save/reopen and unchanged manufacturer definition. Initial test fixture errors fixed (createInstance positional signature; analyzer requires wired pins; project sheets array required). Full check and browser insertion/visual review pending. Local source is ahead of PR99; do not publish earlier diagFiles store for this change. Files: engine mirrors, HTML mirrors, unit tests; browser test still needed.
