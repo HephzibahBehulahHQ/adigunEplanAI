@@ -1,0 +1,7 @@
+# ENG-0601 first A3 sheet — local unpublished
+
+Added A3/019 (eng0601-a3-0) Enclosure dimensions and installation boundary, taking fresh example to20 native sheets with continuous numbering. ENC1 is the sole new component, Rittal1059000, located indoors. Existing A2 devices are listed by current ref/model as editable text, not duplicated electrical instances. Field M1/Q2/Q2:AUX/B1 excluded from panel register and explicitly listed as external. Source-backed 1:2 enclosure/plate outlines; panel device footprints, rails, ducts, clearances, thermal checks and bonding remain outstanding. No approval claim.
+
+39 focused tests passed after fixing generated multiline string escaping. Panel register:28 device rows +heading; final rowy501, external note525, left notes620. Need new focused test for A3 identity/no duplicate devices and unchanged electrical nets, browser screenshot coverage, reconcile stale descriptions and A1 planned register (calculation page allocation changed). Full check NOT run for this increment. Keep planned calculations requirement even though old planned019 is now authored A3/019; no empty filler sheets.
+
+PR101 library-only merged after both CI checks and enclosure screenshot review (artifact14155396604). Local work includes A3integration ahead of release; do not publish old rittalFiles store. Publish fresh engine mirrors, unit/e2e tests and docs against newmain after validation. Existing HTML remains PR101 version. Work helper add-enclosure-basis-sheet.cjs and fix-enclosure-basis-strings.cjs are not release files.
