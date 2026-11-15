@@ -1158,8 +1158,115 @@
     let number=1;while(occupied.has(prefix+number))number++;
     return prefix+number;
   }
+function createPumpStarterDocumentation(name) {
+    const titles=['Project overview','Title and revision','Contents and drawing register','Equipment and device register','Symbols, terms and potentials','Design basis and calculations'];
+    const sections=defaultProjectSections(),sheets=titles.map(function(title,index){return {id:'eng0601-a1-'+index,sectionId:'A1',name:title,number:'A1/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development'}};});
+    const objects=[];
+    function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
+    function rows(page,lines){lines.forEach(function(line,index){text(page,'p'+page+'-r'+index,60,125+index*24,line,13,1070);});}
+    titles.forEach(function(title,index){text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);});
+    rows(0,[
+      'Direct-on-line pump starter | Local manual baseline',
+      'Purpose: one locally started pump motor, pressure permissive, stop control and operating indication.',
+      'Power path: site supply → panel isolation/protection → K1 contactor → F2 overload → Q2 field isolator → M1.',
+      'Control path: protected 24 V DC → stop → overload healthy → pressure permissive → start / K1 hold → K1 coil.',
+      'These arrows describe functional dependencies. They are not electrical connections or terminal assignments.',
+      'Start requires a deliberate local command. Stop, overload trip, loss of permissive or power drops K1.',
+      'Power restoration alone must not restart the motor. Resetting an overload must not issue a start command.',
+      'Panel scope: protection, starter, control supply, terminals, operator controls and indication.',
+      'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
+      'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
+      'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
+      'Current delivery: six editable A1 documents. A2/A3/A4 remain empty until their actual content is authored.',
+      'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
+    ]);
+    rows(1,[
+      'Project identifier: ENG-0601',
+      'Project: Direct-on-line pump starter — Local manual baseline',
+      'Repository owner: HephzibahBehulahHQ | Product: AdigunEplanAI',
+      'Prepared by: Codex | Checked by: not appointed | Approved by: not approved',
+      'Revision P01 | 2026-11-15 | Purpose: design development and educational review',
+      'P01 change: establish scope, drawing register, candidate devices, terminology and design assumptions.',
+      'Source brief: catalogue motor-control/ENG-0601.md; one coordinated project, four sections.',
+      'Do not use these development documents as installation instructions or an energisation permit.',
+      'Manufacturer data and engineering assumptions are labelled separately in the design basis.',
+      'No physical test results, commissioning signatures or approval dates have been supplied or invented.',
+      'Next issue: verified device selection and complete terminal-bound A2 circuits, followed by A3/A4.',
+      'Revision record is editable project text; append subsequent changes without deleting this issue history.'
+    ]);
+    const register=[
+      '000 Project overview','001 Title and revision','002 Contents and drawing register',
+      '003 Equipment and device register','004 Symbols, terms and potentials','005 Design basis and calculations',
+      '006 Supply boundary and isolation','007 Protection and supply distribution','008 Motor contactor circuit',
+      '009 Overload relay circuit','010 Pressure permissive','011 Local isolator',
+      '012 Control and auxiliary power','013 Local manual controls','014 Feedback and fault response',
+      '015 Field terminal connections','016 Cable and conductor schedule','017 Earthing and bonding',
+      '018 Continuation register','019 Operating sequence and interlocks','020 Panel general arrangement',
+      '021 Mounting plate and DIN rails','022 Door layout and operator devices','023 Terminal-strip layout',
+      '024 Cable entry and routing','025 Assembly and installation','026 Final bill of materials',
+      '027 Final connection reports','028 Inspection and commissioning','029 Handover and unresolved items'
+    ];
+    register.forEach(function(line,index){
+      const section=index<6?'A1':index<20?'A2':index<26?'A3':'A4';
+      const status=index<6?'P01 / authored':'planned / not yet created';
+      text(2,'register-'+index,index<15?60:620,120+(index%15)*25,section+'/'+line+' | '+status,11,510);
+    });
+    text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
+    rows(3,[
+      'Tags below are reserved once per physical device. Candidate order codes are not procurement approval.',
+      'K1 | Panel | motor contactor | Siemens 3RT2026-2KB40 | candidate, 24 V DC coil; S0.',
+      'F2 | Panel | thermal overload | Siemens 3RU2126-4AB0 | candidate, 11–16 A / Class 10.',
+      'M1 | Field | pump drive | SEW-EURODRIVE DRN132M4 | candidate motor family; exact build to be selected.',
+      'PS1 | Panel | auxiliary supply | Siemens 6EP1332-5BA00 | candidate; input and load budget to verify.',
+      'S1 / S2 | Panel door | stop NC / start NO | Schneider XB5AA42 / XB5AA31 | candidates.',
+      'B1 | Field | pressure permissive | Telemecanique XMLB004A2S11 | terminal/rating suitability unresolved.',
+      'Q1 / Q2 | Panel / field | main isolation / maintenance isolation | exact order codes unresolved.',
+      'F1 / F3 | Panel | motor branch / auxiliary circuit protection | selection and coordination unresolved.',
+      'H1 | Panel door | contactor energised indication | exact lamp and auxiliary contact arrangement unresolved.',
+      'X1 / X2 / XPE | Panel | power / control / PE terminal strips | current, accessories and order codes unresolved.',
+      'Cables W1 supply, W2 motor, W3 pressure: route, lengths, installation methods and core sizes unresolved.',
+      'K1, F2, M1, PS1 and S1/S2 candidates already exist in the component library; no generic substitutions.',
+      'Add missing parts only with source-backed order codes, real terminal maps and editable instance properties.',
+      'A4 BOM must be generated from final instantiated devices, not this provisional candidate register.'
+    ]);
+    rows(4,[
+      'K = contactor; F = protective device; M = motor; S = operator switch; B = process sensor.',
+      'Q = isolating/switching device; H = indication; PS = power supply; X = terminals; W = cable.',
+      'A1–A4 identify documentation sections, not four projects or electrical potentials.',
+      'L1/L2/L3 are three-phase conductors. N is neutral only where the final supply circuit actually uses it.',
+      '+24V and 0V identify the proposed control supply. 0V is not automatically PE, FE or neutral.',
+      'PE is protective earth: continuous, unswitched and identified green/yellow. Do not bridge N to PE here.',
+      'FE is functional earth where explicitly required by the selected device; it does not replace PE.',
+      'Colour is not a substitute for a conductor identifier. Use blue for N where applicable; no universal red rule.',
+      'Contacts are documented de-energised and unactuated; pressure contact state needs its source diagram.',
+      'Pin labels must be the device manufacturer labels. Internal software IDs stay stable through renaming.',
+      'An off-page continuation requires a matching net, stable endpoint, terminal, cable/core and destination.',
+      'Drawing crossings do not imply a junction. A junction must have explicit connectivity in the native model.',
+      'Block diagrams describe functions only. Physical layouts must distinguish panel equipment from field devices.',
+      'Indicator H1 will indicate contactor energisation, not proof of flow, motor rotation or safe isolation.'
+    ]);
+    rows(5,[
+      'Design assumptions (educational basis, not site measurements): Germany; 400 V, 50 Hz, three-phase supply.',
+      'Proposed supply arrangement: TN-S at the panel boundary. Confirm site PE/N separation before release.',
+      'Environment assumed: indoor panel, non-hazardous area, 25 °C ambient; actual IP/thermal needs unresolved.',
+      'Proposed motor duty: one 7.5 kW pump drive. Hydraulic duty point and mechanical coupling remain unresolved.',
+      'Manufacturer candidate M1: DRN132M4, 15.2 A at 400 V / 50 Hz, power factor 0.78, 1468 rpm.',
+      'Published standard winding voltage: 400 V delta / 690 V star. Proposed 400 V operation uses delta.',
+      'Input-power sanity check: sqrt(3) × 400 × 15.2 × 0.78 / 1000 = 8.21 kW; 7.5 / 8.21 ≈ 91.3%.',
+      'This check is not a motor efficiency certification, starting-current calculation or protective-device sizing.',
+      'F2 candidate range 11–16 A includes 15.2 A. Final setting/reset mode and starting time require verification.',
+      'K1 candidate 25 A AC-3 exceeds 15.2 A. This alone does not prove short-circuit or overload coordination.',
+      'Proposed controls: 24 V DC; verify PSU loading, inrush, contact utilisation and suppression compatibility.',
+      'Unresolved: prospective fault current, upstream protection, voltage drop, cable methods/lengths and grouping.',
+      'Unresolved: pressure trip/reset thresholds, safe failure response, isolator auxiliary contacts and restart risk.',
+      'Primary sources: manufacturer URLs attached to the existing K1/F2/M1 library records; retain exact revisions.',
+      'Release hold: verify the above, complete A2–A4, independently review, then record actual commissioning.'
+    ]);
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:[],metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six authored A1 sheets. Electrical circuits and installation documentation are not yet released.'}})).project;
+  }
   function projectExamples() {
-    return [{id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six editable A1 design documents in one A1–A4 project. A2–A4 circuits, layouts and reports remain in development; not installation-approved.'},
+      {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
       {id:'hardware-relay',hardware:true,name:'24 V momentary relay control',description:'Phoenix Contact relay and terminals with Schneider start/stop buttons. External supply/load boundaries; no seal-in or safety function.'},
@@ -1200,6 +1307,7 @@
   }
 
   function createExample(id, name) {
+    if(id==='eng0601')return createPumpStarterDocumentation(name);
     const example=projectExamples().find(function(item){return item.id===id;});
     if(!example)throw new Error('Unknown project example.');
     if(example.hardware)return createHardwareExample(example,name);

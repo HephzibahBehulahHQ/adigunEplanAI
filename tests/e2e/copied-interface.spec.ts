@@ -3,6 +3,73 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+test("ENG-0601 opens authored paper documents without overlaps and roundtrips edits", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#newProjectName").fill("ENG-0601 development");
+  await page.locator("#createProject").click();
+  await expect(page.locator("[data-project-section]")).toHaveCount(4);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(6);
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+  for (let i = 0; i < 6; i++) {
+    await page
+      .locator('[data-sheet="eng0601-a1-' + i + '"]')
+      .first()
+      .click();
+    const layout = await page
+      .locator("#userDrawings .drawing-object")
+      .evaluateAll((nodes) => {
+        const boxes = nodes.map((node) =>
+          (node as SVGGraphicsElement).getBBox(),
+        );
+        return {
+          outside: boxes.filter(
+            (b) =>
+              b.x < 26 ||
+              b.y < 25 ||
+              b.x + b.width > 1174 ||
+              b.y + b.height > 560,
+          ).length,
+          overlaps: boxes.some((a, i) =>
+            boxes
+              .slice(i + 1)
+              .some(
+                (b) =>
+                  a.x < b.x + b.width &&
+                  a.x + a.width > b.x &&
+                  a.y < b.y + b.height &&
+                  a.y + a.height > b.y,
+              ),
+          ),
+        };
+      });
+    expect(layout).toEqual({ outside: 0, overlaps: false });
+  }
+  const saved = await saveDrawing(page, "eng0601");
+  expect(saved.data.sheets).toHaveLength(6);
+  expect(saved.data.sections).toHaveLength(4);
+  expect(
+    saved.data.objects.every((o: { kind: string }) => o.kind === "text"),
+  ).toBe(true);
+  saved.data.objects[1].text = "Reviewed project scope";
+  await page.reload();
+  await page.locator("#openFile").setInputFiles({
+    name: "eng0601.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(saved.data)),
+  });
+  await page.locator('[data-sheet="eng0601-a1-0"]').first().click();
+  await expect(page.locator("#userDrawings")).toContainText(
+    "Reviewed project scope",
+  );
+  await page.screenshot({
+    path: test.info().outputPath("eng0601-overview.png"),
+  });
+});
+
 test("title block edits propagate shared fields and retain sheet overrides", async ({
   page,
 }) => {
@@ -529,7 +596,7 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   await expect(page.locator("#projectPanel")).toBeVisible();
   await expect(page.locator("#symbolsPanel")).toBeHidden();
   const examples = page.locator("#projectTree [data-project-example]");
-  await expect(examples).toHaveCount(6);
+  await expect(examples).toHaveCount(7);
   await expect(examples.first()).toBeVisible();
   await page.locator("#projectSearch").fill("PLC digital input");
   const plc = page.locator('[data-project-example="hardware-plc-input"]');
