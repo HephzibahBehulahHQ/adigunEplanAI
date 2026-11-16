@@ -11,3 +11,7 @@ Validation: local full repository checks passed; final focused model suite 43 pa
 Release verification: PR #103 merged as 147f93c19e93619ce44681e522b2cbe4099bfd5f. Final CI 43700527107 and 43700523263 passed. Earlier revision screenshot inspected at work/panel-review/copied-interface-linked-pa-390f7-ical-device-on-local-reopen/linked-panel-placement.png: moved/rotated F1 view remains inside the enclosure, clear of register and title block. Deployment verification pending.
 
 Pages run 43700700026 succeeded. Production build-info confirms 147f93c19e93619ce44681e522b2cbe4099bfd5f; live HTML contains placement action, renderer and same-sheet refresh. Interactive production browser check remains pending; browser workflow was verified in CI.
+
+PR #104 merged as 9d8231a0889e4ff368039603ff0ce9cb9ed0dfc8. Final CI 43701483362 and 43701478781 passed. Local full checks and 44 focused tests passed. Browser screenshot at work/contactor-final-review/copied-interface-linked-pa-390f7-ical-device-on-local-reopen/linked-panel-placement.png reviewed: two separated views within enclosure. Browser checks canonical device count, normalized electrical endpoints, move/rotate and reopen. Deployment verification pending.
+
+Pages 43701669954 succeeded; live build-info confirms 9d8231a0889e4ff368039603ff0ce9cb9ed0dfc8 and live engine contains the K1 footprint and archived edition. Interactive live-browser verification remains pending; CI browser workflow passed.

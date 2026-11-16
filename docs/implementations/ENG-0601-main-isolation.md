@@ -1,5 +1,7 @@
 # ENG-0601 common supply isolation — design record
 
+Publication checkpoint: PR #93, branch `codex/pump-common-isolation`, head `8e520364ba96f8be8e8a5604f695315317fcd618`. CI runs 43677510737 and 43677489248 observed in progress. Local full check passed (389 tests). Browser test now checks eight visible Q1 terminal markers, two N labels, five continuation graphics and ISO-N navigation; power-sheet continuation count is 16. Review CI screenshots before merging. No deployment of this increment yet.
+
 Status: native component and A2/014 integrated locally; not deployed. Preserve PR #92's native documents and the fixed interface.
 
 Integration checkpoint: 15 authored sheets, 31 paired continuations, 81 wires and 27 global nets. Q1 L1 feeds both F1's upstream interface and F3's auxiliary input; Q1 N feeds only PS1 through X4:N. Neutral remains separate from PE and DC return. Five new paired links preserve existing sheet IDs. Thirty-one focused tests pass, including moved/rotated Q1 persistence and independent template copies. Browser expected sheet counts updated. Still required: rendered screenshot review of the new sheet and changed continuation positions, browser interaction coverage for Q1, reconcile remaining A1/device/assumption prose, full check, exact-head CI, merge and deployment. Supply boundary inputs are explicitly external; upstream site protection and neutral sequencing remain unresolved. Do not claim a completed project.
@@ -29,3 +31,9 @@ Neutral early-make/late-break timing remains unverified for this exact assembly.
 ## Acceptance checks still required
 
 Eight unique endpoints with the correct displayed labels; no PE switching; separate incoming/outgoing nets; continuity of each isolated output to its intended load; stable neutral identity after move/rotate/rename/save/reopen; compatible replacement behavior; visible terminal markers and nonoverlapping labels; unchanged stylesheet and interface structure. Run native tests, browser workflow and screenshot review before merge/deployment. This record is not installation approval.
+
+CI review checkpoint: original browser run passed 16/17; only stylesheet checksum failed due to CRLF conversion. Restored LF without changing CSS. Local checksum equals e74748cfcb584a2be56e86f0aa52d959947718daf9ed4caaf773191ebfd96b29. Corrected-head runs 43677659888 / 43677656272 active. Visually reviewed CI main-isolation and power screenshots in work/main-supply-review; eight terminals and five separate continuation routes visible, no observed new overlaps. No merge yet.
+
+PR #93 merged as 7024e5b12a7f210a1a0bf0ad55462997765b0c9e after corrected-head CI 43677659888 and 43677656272 both succeeded. Main deployment/live verification still pending.
+
+LIVE VERIFIED: build-info sourceCommit 7024e5b12a7f210a1a0bf0ad55462997765b0c9e. Empty startup confirmed; fresh named example contains A2/014 with eight terminal markers and five continuation graphics. ISO-N opens A2/010 X4:N. Screenshot work/live-main-isolation.png. Remaining project scope: field terminals/cables, full bonding and design checks, coordinated A3 layouts and A4 reports.

@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "d49521b4a92af9f18dc2c69b386840217ca46462",
+  "sourceTree": "18c51846814080ad9351180ab90a66baafcfbf24",
+  "version": "0.1.0",
+  "stage": "development",
+  "milestone": "UI-001 compact CAD runtime",
+  "workflowRun": "local-validation",
+  "assets": {
+    "eplan-symbols.js": "b4de6e1cf0ce8ef10f34a3e2a41976729ef124c0fc5cbfc70edbd78806b566c9",
+    "cad-engine.js": "4f4110d8eadd11574944e975f17ee98f1f153147c1cae2f0500c1e6c67be2e96",
+    "index.html": "7825c5dead43c83283895da7b8efc76fdf17bbbeaf1dce72b6813527892ecc2a",
+    "THIRD_PARTY_NOTICES.txt": "11b4543fb0744edc996484e109998486cf12a5cf23769b620c289005112926e0"
+  },
+  "artifactDigest": "0355e2a1434b2c1154c8285be03ca9e0b45ec106eb660cf52e8ce2ec429a0960",
+  "artifactDigestAlgorithm": "SHA-256 of canonical build-info JSON excluding digest fields"
+}

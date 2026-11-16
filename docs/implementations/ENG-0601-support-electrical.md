@@ -29,3 +29,13 @@ Added optional wire.route {axis: x|y, coordinate: finite mm} through existing wi
 Added a focused test for routed branch connectivity, avoiding the old elbow location, exact route lengths, invalid route rejection and save/reopen. 48 focused tests pass. Updated the support browser workflow to set separate Y lanes 335/355/375 after rotation and assert stored routes before save/reopen. Browser verification and screenshot review are still required; do not claim overlap resolution until rendered evidence is checked.
 
 Full check is currently running in exec session 71383, output work/wire-route-check.log. Earlier published PR106 head remains 5291986a58fe5834d1024835764906b7a905108f; all route changes and the panel sheet name fix are local only. Publish apps/web/public/cad-engine.js and root mirror, apps/web/index.html and raw-source root mirror, both changed tests, and this implementation note using the existing Git-data workflow, after required checks. Never commit unrelated stale checkout changes.
+
+## Published routing verification
+
+Full local check completed exit 0 (session 71383), including 48 focused engineering tests. Published selected source/test files plus this note to PR #106 at cf32adfe2c530344c33da9af394166bfd384592b. Browser CI and the separated-wire screenshot are pending for this exact commit. Do not merge based on the earlier 5291986 CI result: it predates routing and the panel-sheet-name correction.
+
+## PR106 merged — deployment verification pending
+
+PR #106 merged as 8e36b430c5a0cf6a91d96720229265c3a0fd19e6. Final head cf32adfe2c530344c33da9af394166bfd384592b passed both CI runs 43706391379/43706386173. Artifact 14157514750 was reviewed at work/routing-final/copied-interface-electrica-142f9-ains-bindings-after-editing/support-electrical-wiring.png: separated user-authored lanes replace the prior coincident segments. This verifies the editor workflow, not a completed installation drawing or automatic obstacle avoidance. Pages/live SHA verification is next. Complete ENG-0601 A3/A4 remains outstanding.
+
+Pages run 43706610241 completed successfully. Production build-info reports 8e36b430c5a0cf6a91d96720229265c3a0fd19e6; fetched live HTML contains Wire route axis and live engine contains shared wireRoute and the electrical support definition. Browser workflow was verified in CI; interactive production browser use was not performed in this increment. Next integrate one canonical support assembly into ENG-0601 and coordinate its A3/report entries without duplicate material instances.

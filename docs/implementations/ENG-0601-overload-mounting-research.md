@@ -29,3 +29,14 @@ Section 10.2, printed page 84, explicitly permits 3RU21 individual installation 
 Visually inspected page 153 (work/overload-drawing-153.png). Figure C-6 labels the standalone 3RU2126-4.B1 assembly, front envelope W45 H97 mm. The side drawing includes separate 5 mm, 90 mm and 62 mm dimensions; preserve their reference planes before encoding depth. Figure C-5 is the contactor-mounted arrangement (H152) and must not be substituted for the standalone arrangement or automatically assigned to the selected spring-terminal K1.
 
 Next implementation: add 3RU2926-3AA01 as a source-backed accessory in the existing library/BOM, associate it with F2 via a stable assembly relation, and model the verified front envelope without duplicating F2's electrical identity. Accessory screw connections must be represented honestly; do not fabricate terminal numbers from a mechanical illustration. Verify the assembly's external terminal mapping and mounting orientation before wiring/placement claims. Current-release verification remains required for installation.
+
+## Terminal-label evidence found — 2026-11-15
+
+Exact support data sheet page 3/3 (edition 2025-10-29) labels 1/L1, 3/L2 and 5/L3:
+https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2926-3AA01
+The hyphenless URL returns a later 2025-12-05 edition with the same labels; retain exact edition/source per model.
+
+The standalone 3RU2126-4BB1 data sheet page 5/5 (2025-12-05) gives main inputs 1/L1, 3/L2, 5/L3, outputs 2/T1, 4/T2, 6/T3, and auxiliary 95/96 and 97/98:
+https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2126-4BB1
+
+This indexed manufacturer evidence removes the need to invent input labels. Still inspect the actual circuit/connection graphic before introducing internal mating-contact mapping. Do not rename the existing B0 relay as B1 or rewrite its manufacturer data: an explicitly modelled accessory assembly or an actual part replacement must preserve truthful identities. PR #105 remains mechanical-only; electrical terminals are not added by this research note.

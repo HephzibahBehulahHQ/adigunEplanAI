@@ -15,3 +15,9 @@ Manufacturer dimension tables reviewed 2026-11-15:
 These are body envelopes, not complete terminal-strip assemblies. End covers, clamps, conductor bending space, rail bonding/capacity and installation clearances remain separate design work. No automatic terminal placement is added to ENG-0601 in this increment.
 
 Regression coverage creates linked views for all three installed types, changes a canonical device reference, saves/reopens the native project and verifies geometry, stable device references, unchanged material quantities and electrical net count.
+
+## Release verification
+
+PR111 merged as 2a9d21c98c11ece6022c40b9ceec42d9da044c66. Final CI 43712720443/43712716272 and local npm run check passed. Browser regression exposed a real component double-click issue: canvas redraw/pointer capture prevented native double-click from opening Properties. Stable-object repeated-click handling fixes it without shell/style changes. Browser tests now assert the panel opens and all three terminal views can be created and saved/reopened. Reviewed UK 5 N and PE Properties screenshots from artifact 14161146687.
+
+Pages run 43713001697 succeeded. Production build-info matches the merge, production HTML includes the click handler, and executing downloaded production engine creates/reopens all three terminal views with 27 nets unchanged. This is CI browser verification plus deployed-source/runtime verification, not an interactive production-browser session. Automatic terminal-strip placement, rails, covers/clamps and completed A3 engineering remain outstanding; the overall goal stays active.

@@ -7,11 +7,14 @@ PR #76 merged as 8d151ad02f35f9c52a198a57856466d6ab80c5e3. Existing T tool creat
 Final premerge CI 43653067722 / 43653062454 passed (370 unit/tooling tests, 12 browser tests including writing, formatting, sheet switching, save/reopen and restored editing). Main CI 43653213729 and Pages 43653213725 passed. Live A1 typing, formatting and double-click editing verified; screenshot work/live-paper-editor.jpg. No complete coordinated example project is claimed by this change.
 
 
+
 ## Sidebar document management — shipped 2026-11-14
 
 PR #72 merged as 9bb407703a13fb61fc096f32e16bd6cbceb5dffd. A1–A4 remain defaults, with additional sections via the root +. Section + creates documents without opening them. Inline rename, folder collapse, drag/drop ordering and cross-section moves retain stable sheet IDs and custom names. Canvas tabs are views: closing never deletes. Only explicit sidebar Delete removes documents; shared cross-page potentials retain their remaining branches. Save/reopen preserves sections, order, contents, connections and open views. Removed the former 200-sheet import/creation cap and object truncation.
 
 Final premerge CI runs 43648428074 and 43648423881 passed, including 11 browser regressions and a 208-sheet roundtrip. Local focused engineering tests: 12 passed; full checks passed before the final connection-deletion fix, which final CI covers. Pages run 43648579087 succeeded. Live verification confirmed four default folders, repeated + creation without tabs, A5 creation, inline A1/Power rename and close/reopen retaining all four documents. Evidence: work/live-sidebar-management.jpg. Static shell/CSS preserved. AGENTS.md records the owner’s sidebar/document/view rules. No coordinated DOL example is claimed complete by this change.
+
+
 
 
 ## Default A1–A4 template — owner requirement, shipped 2026-11-14
@@ -22,11 +25,15 @@ Validation: 368 local unit/tooling tests; nine browser tests in development and 
 
 Next requested work remains a coordinated educational project, not six independent bench circuits. Selected master topic: Direct-on-line starter, MASTER_SPECIFICATION.md section 14.3, line 961; acceptance requirements in section 14.12. The owner clarified that the 3 kVA inverter was a structural illustration, not a mandated topic. Choose coherent researched equipment and clearly distinguish educational assumptions from verified manufacturer facts; do not ask the owner to do the research. No complete A1–A4 DOL example has been claimed or delivered yet. Preserve this new default project workflow while building it.
 
+
+
 ## Explorer discoverability correction — 2026-11-14
 
 The owner could not find examples through Project Explorer. PR #58 (8b007d26ce2bf40d18b34b06bc7ee08b275bdd0c) exposes all six templates as searchable rows at the top of the existing explorer. Activate a row, then use the existing Create from selected example button. Clicking a row alone does not replace current work. Panel navigation now honors hidden state despite flex styles, and returning to Explorer clears stale search filters and scrolls to the examples. No new menu or CSS was added.
 
 Premerge CI 43641726225 and 43641722773 passed with nine browser tests; local checks passed with 367 unit/tooling tests. Pages 43641854901 succeeded. Live verification showed all six rows and opened the PLC input example with 13 drawing objects through Explorer. Screenshot: work/live-project-examples.jpg. Retain this route in future changes; examples must not be discoverable only inside New Project. These are six examples, not a large catalog.
+
+
 
 ## Current state — supersedes older pending-run notes below
 

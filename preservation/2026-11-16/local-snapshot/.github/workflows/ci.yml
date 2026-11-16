@@ -1,0 +1,37 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - name: Verify hosted BOT Worker bundle
+        if: ${{ hashFiles('apps/bot-worker/wrangler.toml') != '' }}
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: npm exec --yes --package=wrangler@4.158.0 -- wrangler deploy --config apps/bot-worker/wrangler.toml --dry-run --outdir "$RUNNER_TEMP/bot-worker-bundle"
+      # GitHub's Ubuntu runner already has Chromium's shared libraries. Avoid
+      # apt dependency installation here: transient Ubuntu mirror DNS failures
+      # otherwise block browser verification before Playwright can start.
+      - run: npm exec playwright -- install chromium
+      - run: npm run test:e2e
+      - run: npm run test:e2e:production
+      - name: Preserve rendered interface evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: interface-evidence-${{ github.run_id }}
+          path: test-results/**/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - run: npm audit --omit=dev --audit-level=high
