@@ -1992,6 +1992,13 @@ function createPumpStarterDocumentation(name) {
     text(railPage,'rail-duct-gap',410,595,'DRAWN DUCT-TO-SERVICE GAPS · power '+ductGaps[0]+' mm / control '+ductGaps[1]+' mm. Check delivered assembly fit separately.',11,680);
     text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut around the listed slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
     text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nACC-F2: proposed support centre (432.5, 490). Verify the complete F2 assembly envelope and clearance.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
+    const peDevices=new Map([pe,fieldPE,m1,auxPE,ps1].map(function(device){return [device.id,device];}));
+    function bondingPath(segment){
+      return ['start','end'].map(function(end){
+        const attachment=segment.attachments[end],device=peDevices.get(attachment.instanceId);
+        return device.ref+':'+pin(device,attachment.pinId).number;
+      }).join(' → ');
+    }
     const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');
     rows(bondingPage,[
       'BONDING DATUM: incoming PE → XPE:0 connection 1; XPE:0/1/2 share the dedicated XPE rail.',
@@ -2004,7 +2011,9 @@ function createPumpStarterDocumentation(name) {
       'Verify the XPE rail and mounting feet against required fault duty. Do not rely on rail mounting screws as the sole cabinet bond.',
       'Check each strap and conductor size, connection hardware and torque against actual protective duty and instructions.',
       'Verify continuity from incoming PE to each exposed part and record results. Keep N and 0 V separate from PE.',
-      'This is a physical bonding schedule. Schematic PE paths and existing terminal identities remain on A2/017.'
+      'MODELED PE PATHS · See the A2 protective-earth and field motor sheets for rail continuations.',
+      'Field: '+bondingPath(fieldEarth)+' (W2 PE); '+bondingPath(motorEarth)+' (W3 PE).',
+      'Auxiliary: '+bondingPath(psEarth)+'. Site and assembly bonds above require separate evidence.'
     ]);
     const doorPage=developmentSheet('A3','eng0601-a3-door','Door operator and indication layout');
     const doorSheet=sheets[doorPage].id;
