@@ -1,5 +1,10 @@
 # Active engineering goal — 2026-11-14
 
+The owner confirmed on 2026-11-21 that ENG-0601 is an app example and
+no physical pump was built. Validate the editable A1–A4 model, reports
+and live editor workflows for example acceptance. A4/039 retains the
+evidence requirements for anyone who later adapts the design to a real site.
+
 The A3 field isolator drawing includes the editable Q2 mounting detail
 from the [Siemens exact-part dimension drawing](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3LD2203-0TK51),
 visually checked against the Siemens drawing dated 23 March 2022, page 4.

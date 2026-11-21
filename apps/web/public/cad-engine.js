@@ -2063,7 +2063,7 @@ function createPumpStarterDocumentation(name) {
       'Confirm F2 setting against the motor nameplate, starting duty and manufacturer instructions.',
       'Under an authorised procedure: verify stop, pressure permissive, overload trip and indication behaviour.',
       'With S1 released, verify K1 stays off after power or permissive restoration until a new start command.',
-      'RELEASE HOLD: held or welded S1 can re-command K1. Resolve restart prevention through the machinery risk review.',
+      'INSTALLATION HOLD: held or welded S1 can re-command K1. Resolve this before using the design on equipment.',
       'Verify Q2 isolation and sources. At 23/24 verify opening before and closing after the main poles.',
       'Record test method, acceptance criterion, actual value, date, instrument, tester and independent review.',
       'No measured result, signature, successful test or installation approval is implied by this document.'
@@ -2132,7 +2132,7 @@ function createPumpStarterDocumentation(name) {
       'Use the feeder acceptance worksheet for separate ampacity, disconnection, fault-duty and thermal checks.'
     ]);
     const handover=a4Sheet('Handover and unresolved design register');rows(handover,[
-      'RELEASE STATUS: ENGINEERING DEVELOPMENT — NOT APPROVED FOR INSTALLATION.',
+      'EDUCATIONAL APP EXAMPLE · Engineering development, not approved for installation.',
       'Deliverable: one native editable project; A1 basis, A2 circuits, A3 enclosure basis and A4 report snapshots.',
       'Cable/core status: W2–W5 working cores and W2/W3 PE are mapped. Product selection and cable sizing remain open.',
       'Supply assumptions: Germany, 400/230 V TN-S, indoor 25 °C; confirm actual site conditions.',
@@ -2141,13 +2141,13 @@ function createPumpStarterDocumentation(name) {
       'Outstanding: verify proposed rails, service zones and bond hardware. Complete duct design and enclosure thermal checks.',
       'Outstanding: motor/pump selection, pressure thresholds and machinery risk review of held or welded S1 restart.',
       'Outstanding: verify mounting and terminal-strip fit, cable entry and field installation details on the actual build.',
-      'Outstanding: independent engineering review, physical inspection, commissioning and owner acceptance.',
+      'For a future installation, obtain independent engineering review, inspection, commissioning and owner approval.',
       'Keep manufacturer records distinct from editable design assumptions; approve replacements separately.',
-      'Before handover: update report snapshots and revisions to match the final native circuit and layout.',
+      'After edits, run Electrical checks and compare the cable core export with the A4 report snapshots.',
       'Save a named local copy, reopen it, and confirm sheets, component identities and cross-sheet links.'
     ]);
-    const evidencePage=a4Sheet('Release evidence register');
-    text(evidencePage,'release-evidence-scope',60,105,'OPEN · Enter evidence from the actual installation. Reference the signed record for each item.',12,1060);
+    const evidencePage=a4Sheet('Future installation evidence');
+    text(evidencePage,'release-evidence-scope',60,105,'This example has no physical installation. Use these fields only if adapting the design for a real site.',12,1060);
     [
       ['01 Supply and protection','Supply, earthing, maximum and minimum fault duty, upstream settings and coordination.'],
       ['02 Feeder calculations','Actual W1–W3 lengths and installation. Ampacity, start/run drop, disconnection and withstand.'],
@@ -2160,7 +2160,7 @@ function createPumpStarterDocumentation(name) {
     ].forEach(function(entry,index){
       const y=140+index*49;
       text(evidencePage,'release-evidence-task-'+index,60,y,entry.join(' · '),11,1060);
-      text(evidencePage,'release-evidence-record-'+index,60,y+18,'OPEN | Record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
+      text(evidencePage,'release-evidence-record-'+index,60,y+18,'Future site record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
     });
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
     const registerRows=Math.ceil(sheets.length/2);
@@ -2169,7 +2169,7 @@ function createPumpStarterDocumentation(name) {
     return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'Native A1–A4 pump-starter project with connected circuit sheets, terminal rail mounting, protective bonding and feeder acceptance documentation. Final assembly depends on site inputs and verification.'}})).project;
   }
   function projectExamples() {
-    return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and eleven connected A2 circuit sheets and two editable reports including motor feeder protection, field isolation, delta motor terminals and PE. A3 enclosure dimensions are included; detailed placement, cable calculations and installation verification remain incomplete; not installation-approved.'},
+    return [{id:'eng0601',name:'ENG-0601 · Pump starter example',description:'Editable A1–A4 educational project with a connected motor feeder and controls, cabinet and terminal layouts, and engineering reports. Physical installation requires separate site design and verification.'},
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
