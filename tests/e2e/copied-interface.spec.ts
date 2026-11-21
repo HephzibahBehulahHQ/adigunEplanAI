@@ -2569,10 +2569,33 @@ for (const template of [
         path: test.info().outputPath("eng0601-component-properties.png"),
       });
     }
-    await page.locator('[data-draw="wire"]').click();
-    await clickAt(200, 320);
-    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(3);
-    await clickAt(380, 320);
+    if (template) {
+      await expect(page.locator('[data-draw="select"]')).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+      const source = await sheetPoint(page, 200, 320);
+      const destination = await sheetPoint(page, 380, 320);
+      await page.mouse.move(source.x, source.y);
+      await page.mouse.down();
+      await page.mouse.move(destination.x, destination.y, { steps: 8 });
+      await expect(
+        page.locator("[data-terminal-wire-preview]"),
+      ).toHaveAttribute("d", /M200 320 L380 320/);
+      if (template === "eng0601") {
+        await page.screenshot({
+          path: test.info().outputPath("eng0601-terminal-drag.png"),
+        });
+      }
+      await page.mouse.up();
+    } else {
+      await page.locator('[data-draw="wire"]').click();
+      await clickAt(200, 320);
+      await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
+        3,
+      );
+      await clickAt(380, 320);
+    }
     await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(4);
     await page.locator('[data-draw="select"]').click();
     await clickAt(285, 320);
