@@ -2091,11 +2091,16 @@ function createPumpStarterDocumentation(name) {
         cable.get(core).push(device.ref+':'+terminal.number);
       });
     });
-    text(feederReview,'feeder-core-heading',60,400,'FIELD WORKING CORES · snapshot derived from native wire attachments',11,1060);
+    const incomingLinePins=worldPins(q1).filter(function(pin){return /^line-(l[1-3]|n)$/.test(pin.id);});
+    const incomingEarthPin=worldPins(incomingPE).find(function(pin){return pin.id==='connection-1';});
+    const w1Terminals=incomingLinePins.map(function(pin){return q1.ref+':'+pin.number;});
+    w1Terminals.push(incomingPE.ref+':'+incomingEarthPin.number+' (PE)');
+    text(feederReview,'feeder-core-heading',60,400,'W1 SITE TERMINALS AND FIELD WORKING CORES · editable snapshot',11,1060);
+    text(feederReview,'feeder-cable-W1',60,424,'W1 | Site supply → '+w1Terminals.join('   /   ')+' | Confirm cable and core identification on site.',11,1060);
     Array.from(cableEndpoints).sort(function(a,b){return a[0].localeCompare(b[0]);}).forEach(function(entry,index){
       const [tag,cores]=entry;
       const labels=Array.from(cores,function(core){return core[0]+' '+core[1].join(' → ');});
-      text(feederReview,'feeder-cable-'+tag,60,424+index*23,tag+' | '+labels.join('   /   '),11,1060);
+      text(feederReview,'feeder-cable-'+tag,60,447+index*23,tag+' | '+labels.join('   /   '),11,1060);
     });
     const dropPage=a4Sheet('Motor feeder voltage-drop study');
     const nominalVoltage=400,motorCurrent=15.2,startRatio=7.8;
