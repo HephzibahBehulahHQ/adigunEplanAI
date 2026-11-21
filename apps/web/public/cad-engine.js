@@ -2016,6 +2016,29 @@ function createPumpStarterDocumentation(name) {
       const labels=Array.from(cores,function(core){return core[0]+' '+core[1].join(' → ');});
       text(feederReview,'feeder-cable-'+tag,60,424+index*23,tag+' | '+labels.join('   /   '),11,1060);
     });
+    const dropPage=a4Sheet('Motor feeder voltage-drop study');
+    const nominalVoltage=400,motorCurrent=15.2,startRatio=7.8;
+    const startingCurrent=motorCurrent*startRatio;
+    const conductorTemperature=70,copperCoefficient=0.00393,resistanceAt20=4.95,reactance=0.08;
+    const hotResistance=resistanceAt20*(1+copperCoefficient*(conductorTemperature-20));
+    const runPowerFactor=0.78,startPowerFactor=0.35;
+    function feederDrop(current,powerFactor,lengthM){
+      return Math.sqrt(3)*current*lengthM/1000*(hotResistance*powerFactor+reactance*Math.sqrt(1-powerFactor*powerFactor));
+    }
+    rows(dropPage,[
+      'WORKED STUDY · W2 + W3 only. Candidate LAPP 1120360, 4G4 bare copper Class 5. No measured route is assumed.',
+      'SEW 400 V candidate data: Iₙ '+motorCurrent+' A, running power factor '+runPowerFactor+', Iₐ/Iₙ '+startRatio+' → starting current '+startingCurrent.toFixed(2)+' A.',
+      'Illustrative inputs: conductor '+conductorTemperature+' °C; starting power factor '+startPowerFactor+'; reactance '+reactance+' Ω/km.',
+      'Use '+resistanceAt20+' Ω/km at 20 °C and α = '+copperCoefficient+' /°C → '+hotResistance.toFixed(3)+' Ω/km at '+conductorTemperature+' °C.',
+      'ΔU = √3 × I × L × (R cosφ + X sinφ). L is combined one-way W2 + W3 length in km.',
+      ...[20,40,60].map(function(length){
+        const run=feederDrop(motorCurrent,runPowerFactor,length),start=feederDrop(startingCurrent,startPowerFactor,length);
+        return length+' m scenario: run '+run.toFixed(2)+' V ('+(run/nominalVoltage*100).toFixed(2)+'%); start '+start.toFixed(2)+' V ('+(start/nominalVoltage*100).toFixed(2)+'%).';
+      }),
+      'The study excludes W1, upstream impedance, switchgear and joints. Starting current is an estimate at nameplate voltage.',
+      'Replace all scenario inputs with verified values. Check minimum motor voltage and acceleration time under actual load.',
+      'Use the feeder acceptance worksheet for separate ampacity, disconnection, fault-duty and thermal checks.'
+    ]);
     const handover=a4Sheet('Handover and unresolved design register');rows(handover,[
       'RELEASE STATUS: ENGINEERING DEVELOPMENT — NOT APPROVED FOR INSTALLATION.',
       'Deliverable: one native editable project; A1 basis, A2 circuits, A3 enclosure basis and A4 report snapshots.',

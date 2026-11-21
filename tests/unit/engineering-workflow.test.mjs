@@ -554,11 +554,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 37);
+  assert.equal(project.sheets.length, 38);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 37 },
+      { length: 38 },
       (_, i) =>
         (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 28 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
@@ -2103,12 +2103,23 @@ test("wire lanes share routing, branch geometry, length and native persistence",
 test("A4 native registers match canonical devices and remain editable after reopen", () => {
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
-  assert.equal(sheets.length, 9);
+  assert.equal(sheets.length, 10);
   assert.equal(sheets[0].number, "A4/028");
-  assert.equal(sheets.at(-1).number, "A4/036");
+  assert.equal(sheets.at(-1).number, "A4/037");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
+  const dropSheet = sheets.find(
+    (sheet) => sheet.name === "Motor feeder voltage-drop study",
+  );
+  const dropRows = reportObjects
+    .filter((o) => o.sheetId === dropSheet.id)
+    .map((o) => o.text)
+    .join("\n");
+  assert.match(dropRows, /starting current 118\.56 A/);
+  assert.match(dropRows, /20 m scenario: run 2\.46 V .*start 8\.82 V/);
+  assert.match(dropRows, /40 m scenario: run 4\.92 V .*start 17\.64 V/);
+  assert.match(dropRows, /60 m scenario: run 7\.38 V .*start 26\.46 V/);
   assert.ok(reportObjects.every((o) => o.kind === "text" && !o.locked));
   for (const row of engine.billOfMaterials(project.objects).rows) {
     const text = reportObjects.find(
