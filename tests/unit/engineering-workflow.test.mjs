@@ -1780,6 +1780,24 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
   assert.equal(fieldViews.length, 2);
   assert.equal(engine.resolvePanelDevice(project, fieldViews[0]).ref, "Q2");
   assert.equal(engine.resolvePanelDevice(project, fieldViews[1]).ref, "XPEF:1");
+  const centre = project.objects.find(
+    (o) => o.id === "eng0601-q2-cutout-centre",
+  );
+  assert.equal(centre.x2 - centre.x, 5);
+  const holes = project.objects.filter(
+    (o) =>
+      o.kind === "circle" &&
+      o.id.startsWith("eng0601-q2-cutout-") &&
+      o !== centre,
+  );
+  assert.equal(holes.length, 4);
+  assert.equal(new Set(holes.map((o) => `${o.x},${o.y}`)).size, 4);
+  for (const hole of holes) {
+    assert.equal(hole.sheetId, fieldEnclosure.sheetId);
+    assert.equal(hole.x2 - hole.x, 2.5);
+    assert.equal(Math.abs(hole.x - centre.x), 24);
+    assert.equal(Math.abs(hole.y - centre.y), 24);
+  }
   assert.equal(
     engine.panelPlacementGeometry(project, fieldViews[0]).width,
     33.5,

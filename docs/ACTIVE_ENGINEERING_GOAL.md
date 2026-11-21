@@ -1,5 +1,11 @@
 # Active engineering goal — 2026-11-14
 
+The A3 field isolator drawing includes the editable Q2 mounting detail
+from the [Siemens exact-part dimension drawing](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3LD2203-0TK51),
+visually checked against the Siemens drawing dated 23 March 2022, page 4.
+The 1:1 detail gives the relative hole positions. Verify the delivered
+template and door fit before transferring to final fabrication coordinates.
+
 ## ENG-0601 feeder starting screen
 
 The A4 voltage-drop study compares the candidate 118.56 A starting current
