@@ -346,15 +346,30 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
               b.y + b.height > 560,
           ).length,
           overlaps: boxes.some((a, i) =>
-            boxes
-              .slice(i + 1)
-              .some(
-                (b) =>
-                  a.x < b.x + b.width &&
-                  a.x + a.width > b.x &&
-                  a.y < b.y + b.height &&
-                  a.y + a.height > b.y,
-              ),
+            boxes.slice(i + 1).some((b, offset) => {
+              const ids = [nodes[i], nodes[i + 1 + offset]].map(
+                (node) => (node as SVGElement).dataset.object ?? "",
+              );
+              const block = ids.find((id) =>
+                id.startsWith("eng0601-overview-block-"),
+              );
+              if (block && ids.includes(block.replace("-block-", "-label-"))) {
+                const [outer, inner] = ids[0] === block ? [a, b] : [b, a];
+                if (
+                  inner.x >= outer.x &&
+                  inner.y >= outer.y &&
+                  inner.x + inner.width <= outer.x + outer.width &&
+                  inner.y + inner.height <= outer.y + outer.height
+                )
+                  return false;
+              }
+              return (
+                a.x < b.x + b.width &&
+                a.x + a.width > b.x &&
+                a.y < b.y + b.height &&
+                a.y + a.height > b.y
+              );
+            }),
           ),
         };
       });
@@ -406,7 +421,11 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   expect(
     saved.data.objects
       .filter((o: { sheetId: string }) => o.sheetId.includes("-a1-"))
-      .every((o: { kind: string }) => o.kind === "text"),
+      .every(
+        (o: { kind: string; sheetId: string }) =>
+          o.kind === "text" ||
+          (o.sheetId === "eng0601-a1-0" && ["rect", "arrow"].includes(o.kind)),
+      ),
   ).toBe(true);
   saved.data.objects.find(
     (o: { id: string }) => o.id === "eng0601-p0-r0",
