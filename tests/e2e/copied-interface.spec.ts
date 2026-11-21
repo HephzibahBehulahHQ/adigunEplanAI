@@ -208,18 +208,21 @@ test("example copy remains a native editable project through replacement and loc
     objects: Array<{
       id: string;
       deviceId?: string;
+      assemblyFor?: string;
       attachments?: Record<string, { instanceId: string; pinId: string }>;
     }>,
-  ) =>
-    objects.map((object, index) => ({
+  ) => {
+    const targetIndex = (id: string) => {
+      const index = objects.findIndex((object) => object.id === id);
+      expect(index).toBeGreaterThanOrEqual(0);
+      return index;
+    };
+    return objects.map((object, index) => ({
       ...object,
       id: index,
-      deviceId: object.deviceId
-        ? (() => {
-            const target = objects.findIndex((o) => o.id === object.deviceId);
-            expect(target).toBeGreaterThanOrEqual(0);
-            return target;
-          })()
+      deviceId: object.deviceId ? targetIndex(object.deviceId) : undefined,
+      assemblyFor: object.assemblyFor
+        ? targetIndex(object.assemblyFor)
         : undefined,
       attachments: object.attachments
         ? Object.fromEntries(
@@ -227,12 +230,13 @@ test("example copy remains a native editable project through replacement and loc
               end,
               {
                 ...pin,
-                instanceId: objects.findIndex((o) => o.id === pin.instanceId),
+                instanceId: targetIndex(pin.instanceId),
               },
             ]),
           )
         : undefined,
     }));
+  };
   expect(canonicalObjects(fresh.data.objects)).toEqual(
     canonicalObjects(initial.data.objects),
   );
