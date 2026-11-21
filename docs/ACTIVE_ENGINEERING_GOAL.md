@@ -38,6 +38,15 @@ separation remain subject to the installed cable design.
 
 ## ENG-0601 release evidence
 
+The A3 terminal accessory sheet identifies the UK 5 N terminal (3004362)
+and its D-UK 4/10 end cover (3003020). Page 31 of the
+[Phoenix Contact UK 5 N datasheet](https://www.ilecsys.co.uk/sites/default/files/2025/02/01/phoenix-contact-3004362-en.pdf#page=31)
+lists this 1.8 mm cover under accessories. The
+[0801733 DIN rail record](https://www.phoenixcontact.com/en-us/products/din-rail-ns-35-75-perf-2000mm-0801733)
+specifies 15 × 6.2 mm slots at 25 mm spacing. Delivered fit, fastener
+clearance, conductor access, and protective bonding still require
+evidence for any future installation.
+
 A4/039 is an editable evidence register linked by topic to the feeder
 worksheet, rail and bonding drawings, commissioning plan and handover
 register. It starts with eight open records. Supply and fault data, route

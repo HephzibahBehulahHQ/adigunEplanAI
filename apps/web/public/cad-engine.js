@@ -1935,7 +1935,7 @@ function createPumpStarterDocumentation(name) {
       text(index,'terminal-layout-limit-'+index,60,570,'Dashed space reserves one matching terminal beyond the current end stop. Reposition the end stop and cover if used.\nNo spare terminal is fitted. See Terminal rail mounting for plate datums and slot centres.',11,1050);
     });
     text(sheets.length-1,'accessory-register-heading',60,65,'ENG-0601 | Terminal accessory instances',22);
-    text(sheets.length-1,'accessory-register-basis',60,105,'Editable part instances and their references. Linked 5:1 body views are on the preceding A3 sheets.',11);
+    text(sheets.length-1,'accessory-register-basis',60,105,'Editable accessories. Linked 5:1 body views are on the preceding A3 sheets.\nUK 5 N (3004362): Phoenix Contact lists end cover D-UK 4/10 (3003020), 1.8 mm wide.',11);
     function developmentSheet(section,id,title){
       const index=sheets.length;
       sheets.push({id:id,sectionId:section,name:title,number:section+'/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development — not approved'}});
