@@ -1231,10 +1231,10 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
 }) => {
   await page.goto("/");
   await page.locator('[data-panel="symbols"]').click();
-  await expect(page.locator("#projectPanel")).toBeHidden();
+  await expect(page.locator("#projectPanel")).toBeVisible();
   await page.locator('[data-panel="project"]').click();
   await expect(page.locator("#projectPanel")).toBeVisible();
-  await expect(page.locator("#symbolsPanel")).toBeHidden();
+  await expect(page.locator("#symbolsPanel")).toBeVisible();
   const examples = page.locator("#projectTree [data-project-example]");
   await expect(examples).toHaveCount(7);
   await expect(examples.first()).toBeVisible();
