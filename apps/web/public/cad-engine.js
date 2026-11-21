@@ -2737,6 +2737,31 @@ function createPumpStarterDocumentation(name) {
       ['Reference X','x'], ['Reference Y','y'], ['Attached terminals','terminals'], ['Cable','tag'], ['Core','core']], rows);
   }
 
+  function terminalRegisterCsv(project) {
+    const sheets = new Map(project.sheets.map(function(sheet) { return [sheet.id, sheet.number || sheet.name]; }));
+    const assignments = new Map();
+    project.objects.filter(function(object) { return object.kind === 'wire'; }).forEach(function(wire) {
+      Object.entries(wire.attachments || {}).forEach(function(entry) {
+        const [end,binding] = entry;
+        const key = JSON.stringify([binding.instanceId,binding.pinId]);
+        if (!assignments.has(key)) assignments.set(key,[]);
+        assignments.get(key).push({wire:wire.id, end:end, conductor:wire.conductorId, cable:wire.cable?.tag, core:wire.cable?.core});
+      });
+    });
+    const rows = project.objects.filter(function(object) { return object.kind === 'component-instance'; }).flatMap(function(device) {
+      return worldPins(device).flatMap(function(pin) {
+        const key = JSON.stringify([device.id,pin.id]);
+        const terminal = {sheet:sheets.get(device.sheetId), ref:device.ref, terminal:pin.number, pin:pin.id};
+        return (assignments.get(key) || [{}]).map(function(assignment) {
+          return Object.assign({},terminal,assignment,{status:assignment.wire?'Attached':'Unwired'});
+        });
+      });
+    });
+    return reportCsv([['Sheet','sheet'], ['Device','ref'], ['Terminal','terminal'], ['Pin ID','pin'],
+      ['Status','status'], ['Wire ID','wire'], ['Wire end','end'], ['Conductor','conductor'],
+      ['Cable tag','cable'], ['Core','core']],rows);
+  }
+
   function wireListCsv(objects) {
     const report = wireList(objects);
     if (!report.valid) throw new Error('Wire list export blocked: ' + report.errors.join(' '));
@@ -2801,7 +2826,8 @@ function createPumpStarterDocumentation(name) {
     wireListCsv: wireListCsv,
     cableCoreRegister: cableCoreRegister,
     cableCoreRegisterCsv: cableCoreRegisterCsv,
-    continuationRegisterCsv: continuationRegisterCsv
+    continuationRegisterCsv: continuationRegisterCsv,
+    terminalRegisterCsv: terminalRegisterCsv
   });
 })(typeof window !== 'undefined' ? window : globalThis);
 
