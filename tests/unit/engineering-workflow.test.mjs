@@ -2190,13 +2190,16 @@ test("project cable export follows the current core assignments and continuation
   const rows = engine.cableCoreRegister(project);
   const pe = rows.filter((row) => row.tag === "W2" && row.core === "PE");
   assert.equal(pe.length, 1);
-  assert.ok([pe[0].start, pe[0].end].some((name) => name.startsWith("XPEF:1:")));
+  assert.ok(
+    [pe[0].start, pe[0].end].some((name) => name.startsWith("XPEF:1:")),
+  );
   const phase = rows.filter((row) => row.tag === "W2" && row.core === "1");
   assert.equal(phase.length, 2);
   assert.deepEqual(phase[0].links, phase[1].links);
   assert.ok(phase[0].links.length);
   project.objects = engine.assignWireCable(project, phase[0].wireId, {
-    tag: "W2-REVISED", core: "1",
+    tag: "W2-REVISED",
+    core: "1",
   });
   const revised = engine.cableCoreRegister(project);
   assert.equal(revised.filter((row) => row.tag === "W2-REVISED").length, 2);
