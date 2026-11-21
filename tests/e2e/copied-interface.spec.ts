@@ -2906,3 +2906,28 @@ test("drafts across the full viewport with a signed, pointer-centered camera", a
     .toBeLessThan(0.001);
   expect(await line.innerHTML()).toBe(geometry);
 });
+
+test("free drafting sheets save their print-frame visibility independently", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Free drafting" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  const frame = page.locator("#customSheetFrame");
+  await expect(frame).toBeHidden();
+  await page.locator('[data-inspector="Properties"]').click();
+  const setting = page.getByRole("checkbox", { name: "Show print frame" });
+  await expect(setting).not.toBeChecked();
+  await setting.check();
+  await expect(frame).toBeVisible();
+  await setting.uncheck();
+  await expect(frame).toBeHidden();
+  const saved = await saveDrawing(page, "free-drafting-frame");
+  expect(saved.data.sheets[0].showPrintFrame).toBe(false);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(frame).toBeHidden();
+});
