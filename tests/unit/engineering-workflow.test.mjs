@@ -2583,14 +2583,25 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
           sum + engine.component(device.componentId).panelFootprint.widthMm,
         0,
       );
-    assert.equal((rail.x2 - rail.x) / 5, 58);
-    assert.ok(58 - bodyWidth >= 8);
+    const railLength = (rail.x2 - rail.x) / 5;
+    assert.equal(railLength, strip === "XPE" ? 83 : 58);
+    const spare = project.objects.find(
+      (o) => o.id === "eng0601-rail-spare-" + strip,
+    );
+    const spareWidth = (spare.x2 - spare.x) / 5;
+    assert.ok(
+      Math.abs(
+        spareWidth - (strip === "XPE" ? 12.2 : strip === "X5" ? 5.2 : 6.2),
+      ) < 1e-9,
+    );
+    assert.ok(spare.x >= rail.x && spare.x2 <= rail.x2);
+    assert.ok(railLength - bodyWidth - spareWidth >= 8);
     const slots = project.objects.filter((o) =>
       o.id.startsWith("eng0601-rail-slot-" + strip + "-"),
     );
-    assert.equal(slots.length, 2);
-    assert.equal((slots[1].x - slots[0].x) / 0.5, 25);
-    for (const slot of slots) {
+    assert.equal(slots.length, strip === "XPE" ? 3 : 2);
+    for (const [index, slot] of slots.entries()) {
+      if (index) assert.equal((slot.x - slots[index - 1].x) / 0.5, 25);
       assert.equal((slot.x2 - slot.x) / 0.5, 15);
       assert.ok(Math.abs((slot.y2 - slot.y) / 0.5 - 6.2) < 1e-9);
     }

@@ -1891,21 +1891,26 @@ function createPumpStarterDocumentation(name) {
           arranged.push(endCover);
         }
         arranged.push(rightBracket);
-        const width=arranged.reduce(function(total,o){return total+component(o.componentId).panelFootprint.widthMm*5;},0);
+        const spareWidth=component(lastTerminal.componentId).panelFootprint.widthMm;
+        const width=arranged.reduce(function(total,o){return total+component(o.componentId).panelFootprint.widthMm*5;},spareWidth*5);
         const center=220+column*330;
-        // Two complete slots with 1 mm nominal margin to each adjacent unused slot.
-        const railLength=58;
+        // Keep the cut centred around complete slots with the same margin at each cut end.
+        const slotCount=Math.max(2,1+Math.ceil((width/5+8-33)/25));
+        const railLength=33+(slotCount-1)*25;
+        const slotOffsets=Array.from({length:slotCount},function(_,slot){return (slot-(slotCount-1)/2)*25;});
         if(width/5+8>railLength)throw new Error('Terminal bodies exceed the planned rail span for '+strip+'.');
         const bodyHeight=Math.max(...arranged.map(function(device){return component(device.componentId).panelFootprint.heightMm;}));
-        railSegments.push({strip:strip,length:railLength,bodyHeight:bodyHeight,x:105+column*165,y:350+pageOffset*330});
+        railSegments.push({strip:strip,length:railLength,slotOffsets:slotOffsets,bodyHeight:bodyHeight,x:105+column*165,y:350+pageOffset*330});
         const railHalfLength=railLength*2.5;
         objects.push({id:'eng0601-terminal-rail-'+strip,sheetId:id,kind:'rect',x:center-railHalfLength,y:252.5,x2:center+railHalfLength,y2:427.5,stroke:'#6b7280',fill:'#e5e7eb'});
         let left=center-width/2;
         text(index,'terminal-strip-'+strip,130+column*330,135,strip+' — '+devices.length+' terminals'+(cover?'':' | cover pending'),12,290);
         arranged.forEach(function(device){const footprint=component(device.componentId).panelFootprint;objects.push(createPanelPlacement(panelProject,device.id,id,left+footprint.widthMm*2.5,340,5));left+=footprint.widthMm*5;});
+        objects.push({id:'eng0601-rail-spare-'+strip,sheetId:id,kind:'rect',x:left,y:252.5,x2:left+spareWidth*5,y2:427.5,stroke:'#64748b',lineType:'dashed',fill:'none'});
+        text(index,'rail-spare-label-'+strip,130+column*330,523,'Spare rail space: '+spareWidth+' mm',10,290);
         text(index,'terminal-rail-size-'+strip,130+column*330,547,'NS 35/7.5 · proposed '+railLength+' mm segment',10,290);
       });
-      text(index,'terminal-layout-limit-'+index,60,570,'The UK, UT and PE covers link to the final terminal in each strip. See Terminal rail mounting for plate datums and slot centres.\nBody envelopes are at drawing scale. Check orientation, bend radii and tool access on the actual assembly.',11,1050);
+      text(index,'terminal-layout-limit-'+index,60,570,'Dashed space reserves one matching terminal beyond the current end stop. Reposition the end stop and cover if used.\nNo spare terminal is fitted. See Terminal rail mounting for plate datums and slot centres.',11,1050);
     });
     text(sheets.length-1,'accessory-register-heading',60,65,'ENG-0601 | Terminal accessory instances',22);
     text(sheets.length-1,'accessory-register-basis',60,105,'Editable part instances and their references. Linked 5:1 body views are on the preceding A3 sheets.',11);
@@ -1951,11 +1956,11 @@ function createPumpStarterDocumentation(name) {
       const halfWidth=rail.length*plate.scale/2,halfAccess=(rail.bodyHeight/2+50)*plate.scale;
       railRectangle('rail-access-'+rail.strip,cx-halfWidth-7.5,cy-halfAccess,halfWidth*2+15,halfAccess*2,'#eef4f8');
       railRectangle('rail-segment-'+rail.strip,cx-halfWidth,cy-8.75,halfWidth*2,17.5,'#cbd5e1');
-      [-12.5,12.5].forEach(function(offset,slot){railRectangle('rail-slot-'+rail.strip+'-'+slot,cx+(offset-7.5)*plate.scale,cy-1.55,15*plate.scale,3.1,'#ffffff');});
+      rail.slotOffsets.forEach(function(offset,slot){railRectangle('rail-slot-'+rail.strip+'-'+slot,cx+(offset-7.5)*plate.scale,cy-1.55,15*plate.scale,3.1,'#ffffff');});
       text(railPage,'rail-plate-label-'+rail.strip,cx-halfWidth,cy-13,rail.strip,9,45);
-      text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+(rail.x-12.5)+' / '+(rail.x+12.5)+' at y '+rail.y,12,680);
+      text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+rail.slotOffsets.map(function(offset){return rail.x+offset;}).join(' / ')+' at y '+rail.y,12,680);
     });
-    text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut between two slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
+    text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut around the listed slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
     text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nACC-F2: proposed support centre (432.5, 490). Verify the complete F2 assembly envelope and clearance.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
     const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');
     rows(bondingPage,[
