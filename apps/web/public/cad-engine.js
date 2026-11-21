@@ -2113,10 +2113,12 @@ function createPumpStarterDocumentation(name) {
       'Record test method, acceptance criterion, actual value, date, instrument, tester and independent review.',
       'No measured result, signature, successful test or installation approval is implied by this document.'
     ]);
+    const feederMotor=component(m1.componentId).specifications,feederBreaker=component(f1.componentId).specifications;
+    const nominalVoltage=400,motorCurrent=feederMotor.ratedLineCurrentAt400V50Hz.value;
     const feederReview=a4Sheet('Motor feeder acceptance worksheet');rows(feederReview,[
       'PATH: supply → Q1 → X1 → F1 → K1 → F2 → X2 → Q2 → M1. Auxiliary F3 branches after Q1.',
-      'DESIGN BASIS: 400 V three-phase; M1 15.2 A candidate. F2 15.2 A proposal; confirm duty and nameplate.',
-      'F1 data at 400 V: 55 kA Icu / 25 kA Ics. Individual breaker ratings are separate from starter coordination.',
+      'DESIGN BASIS: '+nominalVoltage+' V three-phase; M1 '+motorCurrent+' A candidate. F2 '+f2.properties.overloadSettingA+' A proposal; confirm duty and nameplate.',
+      'F1 data at '+nominalVoltage+' V: '+feederBreaker.icuAt400V.value+' kA Icu / '+feederBreaker.icsAt400V.value+' kA Ics. Individual breaker ratings are separate from starter coordination.',
       'Supply inputs: maximum prospective fault current ___ kA; minimum earth fault current ___ A; method/date ___.',
       'Upstream device and settings ___; maximum fault duty at Q1, F1 and auxiliary branch ___; evidence ___.',
       'Compare maximum duty with exact switchgear and Siemens combination conditions, including upstream limits.',
@@ -2151,12 +2153,12 @@ function createPumpStarterDocumentation(name) {
       text(feederReview,'feeder-cable-'+tag,60,447+index*23,tag+' | '+labels.join('   /   '),11,1060);
     });
     const dropPage=a4Sheet('Motor feeder voltage-drop study');
-    const nominalVoltage=400,motorCurrent=15.2,startRatio=7.8;
+    const startRatio=7.8;
     const startingCurrent=motorCurrent*startRatio;
-    const nominalPickup=component(f1.componentId).specifications.instantaneousShortCircuitRelease.value;
+    const nominalPickup=feederBreaker.instantaneousShortCircuitRelease.value;
     const conductorTemperature=70,copperCoefficient=0.00393,resistanceAt20=4.95,reactance=0.08;
     const hotResistance=resistanceAt20*(1+copperCoefficient*(conductorTemperature-20));
-    const runPowerFactor=0.78,startPowerFactor=0.35;
+    const runPowerFactor=feederMotor.powerFactor.value,startPowerFactor=0.35;
     function feederDrop(current,powerFactor,lengthM){
       return Math.sqrt(3)*current*lengthM/1000*(hotResistance*powerFactor+reactance*Math.sqrt(1-powerFactor*powerFactor));
     }
