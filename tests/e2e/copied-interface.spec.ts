@@ -2487,107 +2487,149 @@ test("every published component renders from a valid native project and reopens 
   expect(errors).toEqual([]);
 });
 
-test("pick, drop, wire, recolor, reroute and reconnect from the existing canvas", async ({
-  page,
-}) => {
-  test.setTimeout(60000);
-  page.setDefaultTimeout(7500);
-  await page.goto("/");
-  await page.locator('[data-action="new"]').first().click();
-  await page.locator("#createProject").click();
-  await addSectionSheet(page);
-  await page.locator('[data-module="Electrical"]').click();
-  await page.getByRole("menuitem", { name: "Symbol Library" }).click();
-  const clickAt = async (x: number, y: number) => {
-    const point = await sheetPoint(page, x, y);
-    await page.mouse.click(point.x, point.y);
-  };
-  const drag = async (
-    from: { x: number; y: number },
-    to: { x: number; y: number },
-  ) => {
-    await page.mouse.move(from.x, from.y);
+for (const template of [
+  "",
+  "eng0601",
+  "indicator",
+  "relay",
+  "hardware-plc-input",
+  "hardware-relay",
+  "hardware-sensor",
+  "hardware-sitop",
+]) {
+  test(`pick, drop, wire, recolor, reroute and reconnect from the existing canvas [${template || "blank"}]`, async ({
+    page,
+  }) => {
+    test.setTimeout(60000);
+    page.setDefaultTimeout(7500);
+    await page.goto("/");
+    await page.locator('[data-action="new"]').first().click();
+    if (template) await page.locator("#projectTemplate").selectOption(template);
+    await page.locator("#createProject").click();
+    await addSectionSheet(page);
+    await page.locator('[data-module="Electrical"]').click();
+    await page.getByRole("menuitem", { name: "Symbol Library" }).click();
+    const clickAt = async (x: number, y: number) => {
+      const point = await sheetPoint(page, x, y);
+      await page.mouse.click(point.x, point.y);
+    };
+    const drag = async (
+      from: { x: number; y: number },
+      to: { x: number; y: number },
+    ) => {
+      await page.mouse.move(from.x, from.y);
+      await page.mouse.down();
+      await page.mouse.move(to.x, to.y, { steps: 8 });
+      await page.mouse.up();
+    };
+    const labelPart = async (label: string) => {
+      await expect(page.locator("#rightPanelTitle")).toHaveText("Properties");
+      const field = page.getByLabel("Component label", { exact: true });
+      await expect(field).toBeVisible();
+      await field.fill(label);
+      await field.press("Tab");
+      await expect(
+        page.locator("#userDrawings .selected-object"),
+      ).toContainText(label);
+    };
+    await page.locator("#symbolSearch").fill("eplan-terminal");
+    await page.locator('[data-insert="eplan-terminal"]').click();
+    const previewPoint = await sheetPoint(page, 200, 320);
+    await page.mouse.move(previewPoint.x, previewPoint.y);
+    await expect(page.locator('#drawing [opacity="0.55"]')).toBeVisible();
+    await clickAt(200, 320);
+    await expect(page.locator("#userDrawings .selected-object")).toHaveCount(1);
+    await labelPart("Bench input");
+    await page.locator("#symbolSearch").fill("eplan-resistor");
+    await page.locator('[data-insert="eplan-resistor"]').click();
+    await clickAt(200, 320);
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+    await clickAt(390, 320);
+    await labelPart("Bench resistor");
+    await page.locator("#symbolSearch").fill("eplan-terminal");
+    const point = await sheetPoint(page, 650, 440);
+    const card = await page
+      .locator('[data-insert="eplan-terminal"]')
+      .boundingBox();
+    expect(card).toBeTruthy();
+    await page.mouse.move(
+      card!.x + card!.width / 2,
+      card!.y + card!.height / 2,
+    );
     await page.mouse.down();
-    await page.mouse.move(to.x, to.y, { steps: 8 });
+    await page.mouse.move(point.x - 4, point.y, { steps: 10 });
+    await page.mouse.move(point.x, point.y, { steps: 3 });
     await page.mouse.up();
-  };
-  await page.locator("#symbolSearch").fill("eplan-terminal");
-  await page.locator('[data-insert="eplan-terminal"]').click();
-  const previewPoint = await sheetPoint(page, 200, 320);
-  await page.mouse.move(previewPoint.x, previewPoint.y);
-  await expect(page.locator('#drawing [opacity="0.55"]')).toBeVisible();
-  await clickAt(200, 320);
-  await expect(page.locator("#userDrawings .selected-object")).toHaveCount(1);
-  await page.locator("#symbolSearch").fill("eplan-resistor");
-  await page.locator('[data-insert="eplan-resistor"]').click();
-  await clickAt(200, 320);
-  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
-  await clickAt(390, 320);
-  await page.locator("#symbolSearch").fill("eplan-terminal");
-  const point = await sheetPoint(page, 650, 440);
-  const card = await page
-    .locator('[data-insert="eplan-terminal"]')
-    .boundingBox();
-  expect(card).toBeTruthy();
-  await page.mouse.move(card!.x + card!.width / 2, card!.y + card!.height / 2);
-  await page.mouse.down();
-  await page.mouse.move(point.x - 4, point.y, { steps: 10 });
-  await page.mouse.move(point.x, point.y, { steps: 3 });
-  await page.mouse.up();
-  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(3);
-  await page.locator('[data-draw="wire"]').click();
-  await drag(
-    await sheetPoint(page, 200, 320),
-    await sheetPoint(page, 380, 320),
-  );
-  await page.locator('[data-draw="select"]').click();
-  await page.locator('[data-inspector="Properties"]').click();
-  await clickAt(285, 320);
-  const color = page.locator(
-    'input[type="color"][data-drawing-style="stroke"]',
-  );
-  await color.fill("#d94024");
-  await page
-    .getByRole("combobox", { name: "Wire route axis" })
-    .selectOption("y");
-  const lane = page.getByRole("spinbutton", { name: "Wire lane coordinate" });
-  await lane.fill("365");
-  await lane.press("Tab");
-  const handle = await page
-    .locator('[data-wire-end-handle="end"]')
-    .boundingBox();
-  expect(handle).toBeTruthy();
-  await drag(
-    { x: handle!.x + handle!.width / 2, y: handle!.y + handle!.height / 2 },
-    await sheetPoint(page, 650, 440),
-  );
-  const beforeMove = await saveDrawing(page, "workshop-before-move");
-  const terminal = beforeMove.data.objects
-    .filter((o: { kind: string }) => o.kind === "component-instance")
-    .at(-1);
-  const wire = beforeMove.data.objects.find(
-    (o: { kind: string }) => o.kind === "wire",
-  );
-  expect(wire).toMatchObject({
-    stroke: "#d94024",
-    route: { axis: "y", coordinate: 365 },
-    attachments: { end: { instanceId: terminal.id, pinId: "1" } },
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(3);
+    await labelPart("Bench output");
+    if (template === "eng0601") {
+      await page.screenshot({
+        path: test.info().outputPath("eng0601-component-properties.png"),
+      });
+    }
+    await page.locator('[data-draw="wire"]').click();
+    await clickAt(200, 320);
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(3);
+    await clickAt(380, 320);
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(4);
+    await page.locator('[data-draw="select"]').click();
+    await clickAt(285, 320);
+    const color = page.locator(
+      'input[type="color"][data-drawing-style="stroke"]',
+    );
+    await color.fill("#d94024");
+    await page
+      .getByRole("combobox", { name: "Wire route axis" })
+      .selectOption("y");
+    const lane = page.getByRole("spinbutton", { name: "Wire lane coordinate" });
+    await lane.fill("365");
+    await lane.press("Tab");
+    const handle = await page
+      .locator('[data-wire-end-handle="end"]')
+      .boundingBox();
+    expect(handle).toBeTruthy();
+    await drag(
+      { x: handle!.x + handle!.width / 2, y: handle!.y + handle!.height / 2 },
+      await sheetPoint(page, 650, 440),
+    );
+    if (template === "eng0601") {
+      await page.screenshot({
+        path: test.info().outputPath("eng0601-reconnected-wire.png"),
+      });
+    }
+    const beforeMove = await saveDrawing(page, "workshop-before-move");
+    const terminal = beforeMove.data.objects.find(
+      (o: { displayName?: string }) => o.displayName === "Bench output",
+    );
+    const wire = beforeMove.data.objects.find(
+      (o: { kind: string; sheetId: string }) =>
+        o.kind === "wire" && o.sheetId === terminal.sheetId,
+    );
+    expect(wire).toMatchObject({
+      stroke: "#d94024",
+      route: { axis: "y", coordinate: 365 },
+      attachments: { end: { instanceId: terminal.id, pinId: "1" } },
+    });
+    await drag(
+      await sheetPoint(page, 646, 437),
+      await sheetPoint(page, 659.7, 449.3),
+    );
+    const saved = await saveDrawing(page, "workshop-complete");
+    const moved = saved.data.objects.find(
+      (o: { id: string }) => o.id === terminal.id,
+    );
+    expect(Math.abs(moved.x - 663.7)).toBeLessThan(1);
+    expect(moved.x % 2.5).not.toBe(0);
+    expect(
+      saved.data.objects.find((o: { id: string }) => o.id === wire.id),
+    ).toMatchObject({
+      x2: moved.x,
+      y2: moved.y,
+      attachments: wire.attachments,
+    });
+    await page.reload();
+    await page.locator("#openFile").setInputFiles(saved.path);
+    const reopened = await saveDrawing(page, "workshop-reopened");
+    expect(reopened.data.objects).toEqual(saved.data.objects);
   });
-  await drag(
-    await sheetPoint(page, 646, 437),
-    await sheetPoint(page, 659.7, 449.3),
-  );
-  const saved = await saveDrawing(page, "workshop-complete");
-  const moved = saved.data.objects.find(
-    (o: { id: string }) => o.id === terminal.id,
-  );
-  expect(Math.abs(moved.x - 663.7)).toBeLessThan(1);
-  expect(moved.x % 2.5).not.toBe(0);
-  expect(
-    saved.data.objects.find((o: { id: string }) => o.id === wire.id),
-  ).toMatchObject({ x2: moved.x, y2: moved.y, attachments: wire.attachments });
-  await page.reload();
-  await page.locator("#openFile").setInputFiles(saved.path);
-  const reopened = await saveDrawing(page, "workshop-reopened");
-  expect(reopened.data.objects).toEqual(saved.data.objects);
-});
+}
