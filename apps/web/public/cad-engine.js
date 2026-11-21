@@ -1921,6 +1921,39 @@ function createPumpStarterDocumentation(name) {
     });
     text(doorPage,'door-mounting',420,305,'HARMONY XB5: nominal finished tolerance Ø22.3 to Ø22.7 mm.\nSource clearance for screw-clamp mounting: 30 mm horizontal and 40 mm vertical.\nDrawing proposes 150 mm horizontal and 100 mm vertical centre spacing within that group.\nQ1: reserve central handle opening. Verify shaft centre, engagement, travel and exact mounting template.',11,710);
     text(doorPage,'door-interface',420,411,'Check door skin, stiffeners, locks, behind-door depth and harness travel before drilling.\nRoute the flexible door PE bond as shown in the Protective bonding schedule.\nVerify seals and installed enclosure protection after cut-outs. These are project layout coordinates.\nH1 indicates coil command; H2 indicates overload trip. S0 is the ordinary stop.',11,710);
+    const entryPage=developmentSheet('A3','eng0601-a3-cable-entry','Cable entry and routing plan');
+    const entrySheet=sheets[entryPage].id;
+    const entryOrigin={x:80,y:155},entryScale=0.75;
+    objects.push({id:'eng0601-entry-envelope',sheetId:entrySheet,kind:'rect',x:entryOrigin.x,y:entryOrigin.y,x2:entryOrigin.x+436*entryScale,y2:entryOrigin.y+221*entryScale,stroke:'#64748b',fill:'none'});
+    text(entryPage,'entry-datum',80,130,'AX SIZE 7 ENVELOPE · VIEW FROM INSIDE · REAR AT TOP',10,360);
+    const entries=[
+      {tag:'W1',x:75,y:68,duty:'Incoming L1/L2/L3/N/PE',candidate:'Select to suit source and upstream protection'},
+      {tag:'W2',x:165,y:68,duty:'X2 to Q2 · 3 phases + PE allowance',candidate:'LAPP 1120360 · 4G4 · nominal OD 13.8 mm'},
+      {tag:'W4',x:275,y:151,duty:'X5 to B1 · two working cores + PE allowance',candidate:'LAPP 1120307 · 3G1.5 · nominal OD 10.1 mm'},
+      {tag:'W5',x:365,y:151,duty:'X5 to Q2:AUX · two working cores',candidate:'Select after separate route and Q2 enclosure checks'}
+    ];
+    entries.forEach(function(entry,index){
+      const x=entryOrigin.x+entry.x*entryScale,y=entryOrigin.y+entry.y*entryScale;
+      objects.push({id:'eng0601-entry-zone-'+entry.tag,sheetId:entrySheet,kind:'rect',x:x-18,y:y-12,x2:x+18,y2:y+12,stroke:'#64748b',fill:entry.y<100?'#eef4f8':'#fef3c7'});
+      text(entryPage,'entry-tag-'+entry.tag,x-7,y+3,entry.tag,10,30);
+      text(entryPage,'entry-route-'+entry.tag,445,132+index*42,entry.tag+' · '+entry.duty+'\n'+entry.candidate,11,700);
+    });
+    text(entryPage,'entry-enclosure',80,350,'436 × 221 mm replacement plate envelope.\nRectangles indicate route reservations, not membrane locations.\nW3 runs from Q2 to the motor outside ENC1.',10,340);
+    text(entryPage,'entry-membrane',445,318,'Rittal SZ 2567.300 candidate: size 7 with 10–15 mm membranes among other ranges.\nCheck the delivered jacket diameters, retention, strain relief and sealing before choosing actual entries.\nLAPP candidates are unshielded. If substituted with shielded cables, document EMC termination separately.',11,700);
+    text(entryPage,'entry-bend',445,391,'Keep incoming and motor power routes separate from the field-control route.\nFor fixed routing, allow at least 55.2 mm for the 13.8 mm candidate and 40.4 mm for the 10.1 mm candidate.\nCheck actual cable bend radii and reserve jacket bends before the terminal service spaces.\nPreserve PE continuity through Q2 and to B1. Confirm actual PE terminations at the field equipment.',11,700);
+    const assemblyPage=developmentSheet('A3','eng0601-a3-assembly','Assembly and installation review');
+    rows(assemblyPage,[
+      '1. Check device revisions, W1 site supply and fault data, and the proposed panel and field boundaries.',
+      '2. Trial fit ENC1 plate, rail segments, ducts, Q1 shaft and door components with the enclosure de-energised.',
+      '3. Check the cabinet back clearance, hinge motion, label visibility and tool access before releasing cut-outs.',
+      '4. Prepare cable entries and strain relief, then route power and control separately. Keep service zones clear.',
+      '5. Review rail feet, separate bonds and the door strap against the A3 protective bonding schedule.',
+      '6. Verify conductor and ferrule fit at Q1, F1, K1, F2, X1–XPE, Q2, B1 and M1 before termination.',
+      '7. Use the exact product instructions for torque and strip lengths. Record revision and verified values.',
+      '8. Check enclosure heat dissipation, device losses, duty and derating against measured ambient conditions.',
+      '9. Confirm ratings after all entries and devices are fitted, then complete the A4 inspection plan.',
+      '10. Record departures from the design and update the native project before independent review.'
+    ]);
     const a4Start=sheets.length;
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-a4Start),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
@@ -2000,7 +2033,7 @@ function createPumpStarterDocumentation(name) {
     ]);
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
     const registerRows=Math.ceil(sheets.length/2);
-    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*23,sheet.number+' '+sheet.name,10,510);});
+    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*20,sheet.number+' '+sheet.name,10,510);});
     objects.find(function(o){return o.id==='eng0601-dependencies';}).text='All listed sheets exist. A4 reports are editable development snapshots; review them after design changes.';
     return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'Native A1–A4 pump-starter project with connected circuit sheets, terminal rail mounting, protective bonding and feeder acceptance documentation. Final assembly depends on site inputs and verification.'}})).project;
   }

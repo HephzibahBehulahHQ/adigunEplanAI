@@ -554,13 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 35);
+  assert.equal(project.sheets.length, 37);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 35 },
+      { length: 37 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 26 ? "A3/" : "A4/") +
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 28 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
     ),
   );
@@ -2104,8 +2104,8 @@ test("A4 native registers match canonical devices and remain editable after reop
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
   assert.equal(sheets.length, 9);
-  assert.equal(sheets[0].number, "A4/026");
-  assert.equal(sheets.at(-1).number, "A4/034");
+  assert.equal(sheets[0].number, "A4/028");
+  assert.equal(sheets.at(-1).number, "A4/036");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2446,6 +2446,24 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     assert.ok(hole.x - 6 > door.x && hole.x + 6 < door.x2);
     assert.ok(hole.y - 6 > door.y && hole.y + 6 < door.y2);
   }
+  const entry = project.objects.find((o) => o.id === "eng0601-entry-envelope");
+  const entryZones = project.objects.filter((o) =>
+    o.id.startsWith("eng0601-entry-zone-"),
+  );
+  assert.equal((entry.x2 - entry.x) / 0.75, 436);
+  assert.equal((entry.y2 - entry.y) / 0.75, 221);
+  assert.deepEqual(
+    Array.from(entryZones, (o) => o.id.replace("eng0601-entry-zone-", "")),
+    ["W1", "W2", "W4", "W5"],
+  );
+  for (const zone of entryZones) {
+    assert.ok(zone.x > entry.x && zone.x2 < entry.x2);
+    assert.ok(zone.y > entry.y && zone.y2 < entry.y2);
+  }
+  assert.ok(
+    Math.max(...entryZones.slice(0, 2).map((o) => o.x2)) <
+      Math.min(...entryZones.slice(2).map((o) => o.x)),
+  );
   const zones = project.objects.filter((o) =>
     o.id.startsWith("eng0601-rail-access-"),
   );
