@@ -2500,10 +2500,23 @@ function createPumpStarterDocumentation(name) {
       if(new Set(assignments).size>1)cableIssues.push('Continuation '+link.name+' has inconsistent cable/core assignments.');
     });
     const unresolvedContinuations=project.connectionIssues||[];
+    const references=new Map(),referenceIssues=[];
+    const sheetLabels=new Map(reports.map(function(sheet){return [sheet.id,sheet.number||sheet.name];}));
+    objects.filter(function(object){return object.kind==='component-instance';}).forEach(function(device){
+      const key=device.ref.trim().toUpperCase();
+      if(!references.has(key))references.set(key,[]);
+      references.get(key).push(device);
+    });
+    references.forEach(function(devices,key){
+      if(devices.length<2)return;
+      const locations=devices.map(function(device){return sheetLabels.get(device.sheetId)||'Main sheet';});
+      referenceIssues.push('Duplicate device reference '+key+' ('+locations.join(', ')+').');
+    });
     return {
-      valid: unresolvedContinuations.length===0&&cableIssues.length===0,
-      errors: unresolvedContinuations.map(function(issue){return issue.message;}).concat(cableIssues),
+      valid: unresolvedContinuations.length===0&&cableIssues.length===0&&referenceIssues.length===0,
+      errors: unresolvedContinuations.map(function(issue){return issue.message;}).concat(cableIssues,referenceIssues),
       cableIssues: cableIssues,
+      referenceIssues: referenceIssues,
       unresolvedContinuations: unresolvedContinuations,
       sheetCount: reports.length,
       wireCount: reports.reduce(function (sum, sheet) { return sum + sheet.analysis.wireCount; }, 0),

@@ -2104,6 +2104,21 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   expect(reopened.data.crossSheetConnections).toEqual(
     saved.data.crossSheetConnections,
   );
+  const duplicate = reopened.data.objects.find(
+    (o: { ref?: string }) => o.ref === "F4",
+  );
+  duplicate.ref = "f3";
+  await page.locator("#openFile").setInputFiles({
+    name: "duplicate-tag.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(reopened.data)),
+  });
+  await page
+    .getByRole("button", { name: "Electrical checks", exact: true })
+    .click();
+  await expect(page.locator("[data-project-electrical-issues]")).toContainText(
+    "Duplicate device reference F3",
+  );
 });
 
 test("ENG-0601 A3 opens with five editable linked device placements", async ({
