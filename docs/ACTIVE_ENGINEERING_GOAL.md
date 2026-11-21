@@ -17,22 +17,24 @@ evidence requirements for anyone who later adapts the design to a real site.
 ### Deployed example audit — 2026-11-21
 
 Audited the native project downloaded from live revision
-`6e7249b6385436c4b2fc29b54b8695c362b27e1d` (PR #165). The download
-contains 40 sheets across A1–A4 (6, 13, 10, 11), 54 components, 93
+`efa25c303175016b438c7d2a3a675a2b49cdebdb` (PR #152). The download
+contains 41 sheets across A1–A4 (6, 13, 10, 12), 54 components, 93
 wires, and 37 paired continuations. Project analysis found zero unmatched
 endpoints, geometry errors, missing attachments, cable issues, or reference
 issues. The eight A4 evidence entries list the relevant drawing numbers.
 
-Four live Chromium checks passed. They cover the selected A1/A2 layouts,
-A3 linked component placement, all 11 A4 reports and their native
-save/reopen workflow, and terminal wiring with manual bends.
+Five live Chromium checks passed. They cover the selected A1/A2 layouts,
+A3 linked component placement, all 12 A4 reports and their native
+save/reopen workflow, terminal wiring with manual bends, and the approved
+interface. A separate live check edited an A4/040 schedule note and verified
+that it survived native save/reopen. A4/040 lists W1–W5. Route lengths and
+installation methods remain unspecified for the example.
 
 The held or welded S1 restart scenario remains explicitly open on the
 commissioning sheet. The model checks establish drawing and connectivity
 consistency. A physical adaptation still requires an independent restart
 review, site feeder data, delivered fit, protective bonding continuity,
-and commissioning records. The separate cable-route schedule is in
-paused PR #152 and was outside this deployed snapshot.
+and commissioning records.
 
 The A3 field isolator drawing includes the editable Q2 mounting detail
 from the [Siemens exact-part dimension drawing](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3LD2203-0TK51),
