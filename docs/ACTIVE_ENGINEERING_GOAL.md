@@ -1,5 +1,13 @@
 # Active engineering goal — 2026-11-14
 
+## ENG-0601 feeder starting screen
+
+The A4 voltage-drop study compares the candidate 118.56 A starting current
+with the F1 nominal instantaneous response of 260 A from the
+[Siemens F1 data sheet](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RV2321-4BC10).
+The worksheet calls for the actual current trace, the trip band and the
+minimum site fault current before accepting the application.
+
 ## ENG-0601 mounting plate routing
 
 The A3 terminal rail mounting drawing reserves separate 20 mm power and

@@ -2089,6 +2089,7 @@ function createPumpStarterDocumentation(name) {
     const dropPage=a4Sheet('Motor feeder voltage-drop study');
     const nominalVoltage=400,motorCurrent=15.2,startRatio=7.8;
     const startingCurrent=motorCurrent*startRatio;
+    const nominalPickup=component(f1.componentId).specifications.instantaneousShortCircuitRelease.value;
     const conductorTemperature=70,copperCoefficient=0.00393,resistanceAt20=4.95,reactance=0.08;
     const hotResistance=resistanceAt20*(1+copperCoefficient*(conductorTemperature-20));
     const runPowerFactor=0.78,startPowerFactor=0.35;
@@ -2106,6 +2107,8 @@ function createPumpStarterDocumentation(name) {
         return length+' m scenario: run '+run.toFixed(2)+' V ('+(run/nominalVoltage*100).toFixed(2)+'%); start '+start.toFixed(2)+' V ('+(start/nominalVoltage*100).toFixed(2)+'%).';
       }),
       'The study excludes W1, upstream impedance, switchgear and joints. Starting current is an estimate at nameplate voltage.',
+      'F1 nominal instantaneous pickup: '+nominalPickup+' A (Siemens data). Estimated M1 starting current is '+(startingCurrent/nominalPickup*100).toFixed(1)+'% of nominal pickup.',
+      'Obtain the F1 trip band and actual motor starting current trace. Check inrush, start duration and minimum fault current.',
       'Replace all scenario inputs with verified values. Check minimum motor voltage and acceleration time under actual load.',
       'Use the feeder acceptance worksheet for separate ampacity, disconnection, fault-duty and thermal checks.'
     ]);

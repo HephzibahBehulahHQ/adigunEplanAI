@@ -2224,6 +2224,7 @@ test("A4 native registers match canonical devices and remain editable after reop
     .map((o) => o.text)
     .join("\n");
   assert.match(dropRows, /starting current 118\.56 A/);
+  assert.match(dropRows, /260 A .*45\.6% of nominal pickup/);
   assert.match(dropRows, /20 m scenario: run 2\.46 V .*start 8\.82 V/);
   assert.match(dropRows, /40 m scenario: run 4\.92 V .*start 17\.64 V/);
   assert.match(dropRows, /60 m scenario: run 7\.38 V .*start 26\.46 V/);
