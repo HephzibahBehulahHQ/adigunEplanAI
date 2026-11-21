@@ -471,7 +471,13 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
     .press("Enter");
   await expect(page.locator("#userDrawings")).toContainText("AUXILIARY SUPPLY");
   await page.locator('[data-sheet="eng0601-a2-2"]').first().click();
-  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(18);
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(22);
+  await expect(
+    page.locator('#userDrawings [aria-label^="XPEF:1"] [data-terminal]'),
+  ).toHaveCount(2);
+  await expect(page.locator("#userDrawings")).toContainText(
+    "W2:PE and W3:PE stay unswitched",
+  );
   await page.screenshot({
     path: test.info().outputPath("eng0601-field-motor.png"),
   });
@@ -865,6 +871,7 @@ test("new project wires attach to terminals, follow edits, undo and reopen", asy
 test("existing New Project dialog opens both connected editable examples", async ({
   page,
 }) => {
+  test.setTimeout(60000);
   page.setDefaultTimeout(6000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
@@ -900,10 +907,40 @@ test("existing New Project dialog opens both connected editable examples", async
     expect(
       saved.data.objects.filter((o: { kind: string }) => o.kind === "wire"),
     ).toHaveLength(4);
+    const existing = saved.data.objects.find(
+      (o: { kind: string }) => o.kind === "wire",
+    );
+    const middle = await sheetPoint(
+      page,
+      (existing.x1 + existing.x2) / 2,
+      existing.y1,
+    );
+    await page.mouse.click(middle.x, middle.y);
+    await page.locator('[data-delete-object="' + existing.id + '"]').click();
+    await page.locator('[data-draw="wire"]').click();
+    const start = await sheetPoint(page, existing.x1, existing.y1);
+    const end = await sheetPoint(page, existing.x2, existing.y2);
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(end.x, end.y);
+    await page.mouse.up();
+    const rewired = await saveDrawing(page, id + "-rewired");
+    const wires = rewired.data.objects.filter(
+      (o: { kind: string }) => o.kind === "wire",
+    );
+    expect(wires).toHaveLength(4);
+    expect(
+      wires.find(
+        (o: { id: string }) =>
+          !saved.data.objects.some(
+            (previous: { id: string }) => previous.id === o.id,
+          ),
+      ).attachments,
+    ).toEqual(existing.attachments);
     await page.reload();
-    await page.locator("#openFile").setInputFiles(saved.path);
+    await page.locator("#openFile").setInputFiles(rewired.path);
     const reopened = await saveDrawing(page, id + "-reopened");
-    expect(reopened.data.objects).toEqual(saved.data.objects);
+    expect(reopened.data.objects).toEqual(rewired.data.objects);
     await page.locator('[data-inspector="Electrical checks"]').click();
     await expect(page.locator("#inspectorContent")).toContainText(
       "No wire geometry issues found",

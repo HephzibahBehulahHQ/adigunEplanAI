@@ -1657,11 +1657,15 @@ function createPumpStarterDocumentation(name) {
       wire(8,'q2-m1-'+n,pin(q2,'load-t'+n),pin(m1,'winding-'+phase+'1'),'W3:'+n).cable={tag:'W3',core:String(n)};
       wire(8,'delta-'+n,pin(m1,'winding-'+phase+'1'),pin(m1,'winding-'+other+'2'),'M1 bridge '+n);
     }
-    const earth=wire(8,'motor-pe',pin(pe,'connection-2'),pin(m1,'protective-earth'),'PE');
-    earth.stroke='#178743';earth.conductorColor='green/yellow';
-    text(8,'pe-label',75,620,'PE boundary → M1 frame\nGreen/yellow; never switched.\nVerify PE sizing and upstream bonding.',12,540);
+    const fieldPE=part(8,'phoenix-contact-3212147','XPEF:1',335,540,0,'Proposed ENC2 PE terminal. W2 PE enters clamp 1 and W3 PE leaves clamp 2. Check its rail bond and actual conductor fit.');
+    const fieldEarth=wire(8,'isolator-pe',pin(pe,'connection-2'),pin(fieldPE,'connection-1'),'W2:PE');
+    const motorEarth=wire(8,'motor-pe',pin(fieldPE,'connection-2'),pin(m1,'protective-earth'),'W3:PE');
+    fieldEarth.cable={tag:'W2',core:'PE'};
+    motorEarth.cable={tag:'W3',core:'PE'};
+    for(const earth of [fieldEarth,motorEarth]){earth.stroke='#178743';earth.conductorColor='green/yellow';}
+    text(8,'pe-label',75,620,'XPE:1 → XPEF:1 → M1 frame\nW2:PE and W3:PE stay unswitched.\nVerify conductor sizing and ENC2 bonds.',12,540);
     text(8,'field-notes',680,120,
-      'FIELD MOTOR SEGMENT — DEVELOPMENT\n\nQ2: Siemens 3LD2203-0TK51.\nOFF-position locking; three poles; no auxiliary contacts.\n22 A AC-23 at 400 V; 32 A uninterrupted current.\nFront-mounted part: field housing is not yet selected.\n\nM1: SEW DRN132M4 candidate, 7.5 kW / 15.2 A.\n400 V delta: U1–W2, V1–U2 and W1–V2 bridges.\nThis view is schematic, not a physical mounting drawing.\n\nW2 and W3 identify phase circuits, not selected cables.\nLengths, core sizes, grouping and voltage drop are pending.\nPE bypasses Q2; green/yellow identification is explicit.\nNo neutral is used in the motor power circuit.\n\nLock out, secure against reclosure and verify isolation.\nControl restart inhibition and complete protection remain\nunresolved. Do not energise this development design.',13,460);
+      'FIELD MOTOR SEGMENT — DEVELOPMENT\n\nQ2: Siemens 3LD2203-0TK51.\nOFF-position locking; three poles; no auxiliary contacts.\n22 A AC-23 at 400 V; 32 A uninterrupted current.\nFront-mounted part: see proposed ENC2 field housing.\n\nM1: SEW DRN132M4 candidate, 7.5 kW / 15.2 A.\n400 V delta: U1–W2, V1–U2 and W1–V2 bridges.\nThis view is schematic, not a physical mounting drawing.\n\nW2 and W3 define phase and PE core assignments.\nLengths, core sizes, grouping and voltage drop are pending.\nPE bypasses Q2; green/yellow identification is explicit.\nNo neutral is used in the motor power circuit.\n\nLock out, secure against reclosure and verify isolation.\nControl restart inhibition and complete protection remain\nunresolved. Do not energise this development design.',13,460);
     objects.find(function(o){return o.id==='eng0601-overload-notes';}).text=
       'PANEL OVERLOAD SEGMENT — DEVELOPMENT\n\nF2: Siemens 3RU2126-4BB0, 14–20 A, Class 10.\nIncoming phases originate at K1.\n95/96 and 97/98 await the control/trip circuits.\n\nX2:1 / :2 / :3 continue via W2:1 / :2 / :3 to Q2.\nUse the paired references to open the field motor sheet.\n\nNo overload setting is claimed as approved.\nThe 15.2 A candidate motor is within the adjustment range;\nthis alone does not verify protection coordination.\n\nPhysical separation here is documentation only.\nFinal A3 layout must follow mounting instructions.\nUnused-control terminals are intentional pending design.';
     for(let n=1;n<=3;n++){const label=objects.find(function(o){return o.id==='eng0601-load-label-'+n;});label.x-=20;}
@@ -1732,7 +1736,7 @@ function createPumpStarterDocumentation(name) {
     continuation('pe-rail-motor',incomingPE,'rail-foot',{x:350,y:440},pe,'rail-foot',{x:60,y:570},'PE-RAIL-M','right','right');
     continuation('pe-rail-aux',incomingPE,'rail-foot',{x:500,y:350},auxPE,'rail-foot',{x:60,y:420},'PE-RAIL-AUX','right','right');
     text(17,'pe-boundary',60,110,'SITE PE BOUNDARY — XPE:0 connection 1; separate from all switched phases, neutral and DC return.',12,1070);
-    text(17,'pe-rail-notes',650,170,'EXPLICIT PE PATHS — ENGINEERING DEVELOPMENT\nXPE:0/1/2 are panel protective-conductor terminals.\nRAIL denotes each terminal grounding foot, not a clamp.\nGreen rail paths document conductive mounting continuity.\nThey are not two wires inserted in one conductor clamp.\nXPE:1 connection 2 supplies the motor PE terminal.\nXPE:2 connection 2 supplies the power-supply PE terminal.\nUnused conductor clamps remain available, not bridged.',12,480);
+    text(17,'pe-rail-notes',650,170,'EXPLICIT PE PATHS — ENGINEERING DEVELOPMENT\nXPE:0/1/2 are panel protective-conductor terminals.\nRAIL denotes each terminal grounding foot, not a clamp.\nGreen rail paths document conductive mounting continuity.\nThey are not two wires inserted in one conductor clamp.\nXPE:1 connection 2 supplies M1 PE via XPEF:1 in ENC2.\nXPE:2 connection 2 supplies the power-supply PE terminal.\nUnused conductor clamps remain available, not bridged.',12,480);
     text(17,'pe-release-checks',60,520,'INSTALLATION: see A3 Protective bonding schedule.\nReserve XPE:0 connection 2 for the separate cabinet PE distribution bond.\nVerify rail and strap fault duty and protective continuity on the actual assembly.\nNo physical test result or installation approval is claimed.',12,630);
     pe.properties.comment='Panel PE terminal: motor conductor at connection 2; explicit grounding-foot path to XPE:0. Verify conductive rail and assembly.';
     auxPE.properties.comment='Panel PE terminal: PSU conductor at connection 2; explicit grounding-foot path to XPE:0. Verify conductive rail and assembly.';
@@ -1849,7 +1853,7 @@ function createPumpStarterDocumentation(name) {
     objects.push(createPanelPlacement(panelProject,f3.id,sheets[19].id,220,420,0.5));
     objects.push(createPanelPlacement(panelProject,f4.id,sheets[19].id,300,420,0.5));
     text(19,'panel-inventory-heading',650,125,'PANEL DEVICE REGISTER — existing A2 identities',12,460);
-    const externalRefs=new Set(['M1','Q2','Q2:AUX','B1','ENC2']);
+    const externalRefs=new Set(['M1','Q2','Q2:AUX','B1','ENC2','XPEF:1']);
     const panelDevices=objects.filter(function(o){return o.kind==='component-instance'&&o.id!==enclosure.id&&!externalRefs.has(o.ref);});
     panelDevices.forEach(function(device,index){const definition=component(device.componentId);text(19,'panel-inventory-'+index,650,150+index*13,device.ref+' · '+definition.model,10,460);});
     text(19,'external-boundary',650,525,'EXTERNAL: M1 motor; ENC2 with Q2 and its auxiliary; B1 pressure device.\nSee the Field isolator enclosure sheet for the separate enclosure.',11,460);
@@ -2009,8 +2013,9 @@ function createPumpStarterDocumentation(name) {
     const fieldBox=part(fieldPage,rittalFieldEnclosureDefinition.id,'ENC2',245,295,0,'Proposed wall-mounted Q2 enclosure. Confirm the environment, four-hole cut-out and protective bonding.');
     fieldBox.properties.location='Field maintenance isolator';
     objects.push(createPanelPlacement(panelProject,q2.id,sheets[fieldPage].id,fieldBox.x,fieldBox.y-28,0.5));
+    objects.push(createPanelPlacement(panelProject,fieldPE.id,sheets[fieldPage].id,fieldBox.x,fieldBox.y+43,0.5));
     text(fieldPage,'field-box-fit',440,128,'ENC2 · Rittal AX 1033.000 · 300 × 300 × 210 mm external.\n250 × 275 mm mounting plate, 1.5 mm door and size 1 gland plate.\nQ2 · Siemens 3LD2203-0TK51 · 67 × 83 × 93 mm overall envelope.\nLinked view shows Q2 at the proposed door position. Keep Q2:AUX with the isolator.',12,700);
-    text(fieldPage,'field-box-cable',440,236,'Use W2 as the panel feed, W3 as the motor exit and W5 for the Q2 auxiliary contacts.\nReserve a separate path for PE through the enclosure and a flexible door bond.\nTrial fit the switch, auxiliary block, gland retention, cable bends and access with the door closed.',12,700);
+    text(fieldPage,'field-box-cable',440,236,'Use W2 as the panel feed, W3 as the motor exit and W5 for the Q2 auxiliary contacts.\nXPEF:1 accepts W2 PE at clamp 1 and W3 PE at clamp 2; PE bypasses Q2.\nVerify the XPEF rail connection and provide separate enclosure, plate and flexible door bonds.\nTrial fit the switch, auxiliary block, gland retention, cable bends and access with the door closed.',12,700);
     text(fieldPage,'field-box-review',440,326,'Use the exact four-hole mounting pattern from the delivered Siemens instructions.\nVerify actuator travel, OFF locking and auxiliary timing before commissioning.\nIP66 is the bare enclosure rating. Verify the installed unit for the actual site.',12,700);
     const a4Start=sheets.length;
     // Native editable A4 snapshots generated from this same project's canonical objects.
@@ -2100,7 +2105,7 @@ function createPumpStarterDocumentation(name) {
     const handover=a4Sheet('Handover and unresolved design register');rows(handover,[
       'RELEASE STATUS: ENGINEERING DEVELOPMENT — NOT APPROVED FOR INSTALLATION.',
       'Deliverable: one native editable project; A1 basis, A2 circuits, A3 enclosure basis and A4 report snapshots.',
-      'Cable/core status: W2–W5 working cores are mapped. Product selection, PE routing and cable sizing remain open.',
+      'Cable/core status: W2–W5 working cores and W2/W3 PE are mapped. Product selection and cable sizing remain open.',
       'Supply assumptions: Germany, 400/230 V TN-S, indoor 25 °C; confirm actual site conditions.',
       'Outstanding: prospective fault current, upstream protection and complete source-isolation verification.',
       'Outstanding: cable installation methods, grouping, voltage drop, protective conductor and fault checks.',
@@ -2449,7 +2454,7 @@ function createPumpStarterDocumentation(name) {
       openEndpointCount: localOpenEndpointCount - linkedOpenEndpointKeys.size,
       geometryErrorCount: reports.reduce(function (sum, sheet) { return sum + sheet.analysis.geometryErrorCount; }, 0),
       sheets: reports,
-      scope: 'Sheet-local nets are joined only at exact, validated open endpoints; connector graphics are not yet rendered.'
+      scope: 'Paired cross-sheet connectors join validated sheet-local endpoints; only unmatched ends count as open in the project.'
     };
   }
 
