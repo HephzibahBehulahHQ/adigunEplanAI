@@ -1649,6 +1649,27 @@ test("LAPP cable exposes four isolated editable core paths without invented rati
   assert.equal(engine.worldPins(reopened.objects[0]).length, 8);
 });
 
+test("LAPP motor and field-control articles retain the exact core and bend data", () => {
+  for (const [part, count, section, diameter, radius] of [
+    ["1120360", 4, 4, 13.8, 55.2],
+    ["1120307", 3, 1.5, 10.1, 40.4],
+  ]) {
+    const definition = engine.component("lapp-" + part);
+    const instance = engine.createInstance(definition.id, 300, 300, "W1");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(definition.symbol.pins.length, count * 2);
+    assert.equal(definition.symbol.internalConnections.length, count);
+    assert.equal(definition.specifications.crossSection.value, section);
+    assert.equal(definition.specifications.outerDiameter.value, diameter);
+    assert.equal(definition.specifications.fixedBendRadius.value, radius);
+    assert.equal(definition.specifications.ratedVoltage.value, "600/1000");
+    assert.equal(definition.specifications.nominalCurrent, undefined);
+    for (const [a, b] of definition.symbol.internalConnections) {
+      assert.equal(a.slice(2), b.slice(2));
+    }
+  }
+});
+
 test("enclosure is a native mechanical component without invented electrical terminals", () => {
   const definition = engine.component("rittal-1059000");
   assert.equal(definition.specifications.dimensions.width.value, 600);

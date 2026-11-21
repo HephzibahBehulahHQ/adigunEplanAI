@@ -1463,6 +1463,66 @@ test("LAPP cable inserts through the existing library and preserves editable rou
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
 
+test("sourced LAPP motor and control cables expose only their real cores and keep wire attachments", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  for (const [id, x, pins] of [
+    ["1120360", 330, 8],
+    ["1120307", 680, 6],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(id);
+    await page.locator('[data-insert="lapp-' + id + '"]').click();
+    const point = await sheetPoint(page, x, 300);
+    await page.mouse.click(point.x, point.y);
+    await expect(
+      page
+        .locator("#userDrawings .drawing-object")
+        .last()
+        .locator("[data-terminal]"),
+    ).toHaveCount(pins);
+  }
+  const [a, b] = await Promise.all([
+    sheetPoint(page, 420, 264),
+    sheetPoint(page, 590, 276),
+  ]);
+  await page.locator('[data-draw="wire"]').click();
+  await page.mouse.move(a.x, a.y);
+  await page.mouse.down();
+  await page.mouse.move(b.x, b.y);
+  await page.mouse.up();
+  const initial = await saveDrawing(page, "sourced-cables");
+  const cable = initial.data.objects.find(
+    (o: { componentId?: string }) => o.componentId === "lapp-1120307",
+  );
+  const wire = initial.data.objects.find(
+    (o: { kind: string }) => o.kind === "wire",
+  );
+  expect(wire.attachments.start.pinId).toBe("b-1");
+  expect(wire.attachments.end).toMatchObject({
+    instanceId: cable.id,
+    pinId: "a-1",
+  });
+  await page.locator('[data-draw="select"]').click();
+  const pick = await sheetPoint(page, 680, 309);
+  await page.mouse.dblclick(pick.x, pick.y);
+  await page.locator('[data-object-coordinate="x"]').fill("740");
+  await page.locator('[data-object-coordinate="x"]').press("Tab");
+  const edited = await saveDrawing(page, "sourced-cables-moved");
+  expect(
+    edited.data.objects.find((o: { id: string }) => o.id === wire.id),
+  ).toMatchObject({ x2: 650, attachments: wire.attachments });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(edited.path);
+  const reopened = await saveDrawing(page, "sourced-cables-reopened");
+  expect(reopened.data.objects).toEqual(edited.data.objects);
+});
+
 test("Rittal enclosure inserts as editable mechanical data without electrical pins", async ({
   page,
 }) => {
