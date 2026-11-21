@@ -2241,7 +2241,7 @@ test("A4 native registers match canonical devices and remain editable after reop
   assert.equal(sheets.length, 11);
   assert.equal(sheets[0].number, "A4/029");
   assert.equal(sheets.at(-1).number, "A4/039");
-  assert.equal(sheets.at(-1).name, "Release evidence register");
+  assert.equal(sheets.at(-1).name, "Future installation evidence");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2290,12 +2290,14 @@ test("A4 native registers match canonical devices and remain editable after reop
     .map((o) => o.text)
     .join("\n");
   assert.match(commissioningRows, /With S1 released/);
-  assert.match(commissioningRows, /RELEASE HOLD: held or welded S1/);
+  assert.match(commissioningRows, /INSTALLATION HOLD: held or welded S1/);
   const evidenceRecords = reportObjects.filter((o) =>
     o.id.startsWith("eng0601-release-evidence-record-"),
   );
   assert.equal(evidenceRecords.length, 8);
-  assert.ok(evidenceRecords.every((o) => o.text.startsWith("OPEN |")));
+  assert.ok(
+    evidenceRecords.every((o) => o.text.startsWith("Future site record")),
+  );
   evidenceRecords[0].text = "OPEN | Review record attached, acceptance pending";
   assert.ok(reportObjects.every((o) => o.y <= 545));
   reportObjects.find((o) => o.text.includes("NOT PERFORMED")).text =
