@@ -9,6 +9,12 @@ measurements, assembly inspections, continuity and functional test results,
 as-built records and signed approvals must come from the actual installation.
 Editing the register does not change project approval status.
 
+Electrical checks exports the current project cable core register across all
+sheets. The CSV lists assigned wire segments, exact terminal attachments and
+shared continuation IDs. Use it to reconcile the editable A4 snapshots
+after rewiring. The export records model assignments and carries no installed
+lengths or measured results.
+
 ## Locked control and native component audit — 2026-11-21
 
 The placement and wire workflow follows the behavior of AdigunSimulator's

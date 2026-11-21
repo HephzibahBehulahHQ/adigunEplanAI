@@ -2616,6 +2616,45 @@ function createPumpStarterDocumentation(name) {
     return { valid: true, errors: [], rows: rows };
   }
 
+  function cableCoreRegister(project) {
+    const sheets = new Map(project.sheets.map(function(sheet) { return [sheet.id, sheet.number || sheet.name]; }));
+    const devices = new Map(project.objects.filter(function(o) { return o.kind === 'component-instance'; }).map(function(o) {
+      return [o.id, {ref:o.ref, pins:new Map(worldPins(o).map(function(pin) { return [pin.id, pin.number]; }))}];
+    }));
+    const links = new Map();
+    (project.crossSheetConnections || []).forEach(function(link) {
+      link.endpoints.forEach(function(endpoint) { links.set(endpoint.wireId, (links.get(endpoint.wireId) || []).concat(link.id)); });
+    });
+    return project.objects.filter(function(o) { return o.kind === 'wire' && o.cable; }).map(function(wire) {
+      function terminal(end) {
+        const binding = (wire.attachments || {})[end];
+        if (!binding) return (wire.continuationEnds || []).includes(end) ? 'Continuation' : 'No terminal attachment';
+        const device = devices.get(binding.instanceId);
+        return device && device.pins.has(binding.pinId) ? device.ref + ':' + device.pins.get(binding.pinId) : 'Unresolved terminal';
+      }
+      return {tag:wire.cable.tag, core:wire.cable.core, sheet:sheets.get(wire.sheetId), wireId:wire.id,
+        start:terminal('start'), end:terminal('end'), links:links.get(wire.id) || []};
+    }).sort(function(a,b) { return a.tag.localeCompare(b.tag) || a.core.localeCompare(b.core) || a.wireId.localeCompare(b.wireId); });
+  }
+
+  function reportCsv(columns, rows) {
+    function cell(value) {
+      let text = Array.isArray(value) ? value.join('; ') : String(value == null ? '' : value);
+      if (/^[=+\-@\t\r]/.test(text)) text = "'" + text;
+      return '"' + text.replace(/"/g, '""') + '"';
+    }
+    const lines = [columns.map(function(column) { return cell(column[0]); }).join(',')];
+    rows.forEach(function(row) {
+      lines.push(columns.map(function(column) { return cell(row[column[1]]); }).join(','));
+    });
+    return '\uFEFF' + lines.join('\r\n') + '\r\n';
+  }
+
+  function cableCoreRegisterCsv(project) {
+    return reportCsv([['Cable tag','tag'], ['Core','core'], ['Sheet','sheet'], ['Wire ID','wireId'],
+      ['Start terminal','start'], ['End terminal','end'], ['Continuation IDs','links']], cableCoreRegister(project));
+  }
+
   function wireListCsv(objects) {
     const report = wireList(objects);
     if (!report.valid) throw new Error('Wire list export blocked: ' + report.errors.join(' '));
@@ -2626,16 +2665,7 @@ function createPumpStarterDocumentation(name) {
       ['Start pin references', 'startPinRefs'], ['End pin references', 'endPinRefs'],
       ['Connected pin references on net', 'netPinRefs']
     ];
-    function cell(value) {
-      let text = Array.isArray(value) ? value.join('; ') : String(value == null ? '' : value);
-      if (/^[=+\-@\t\r]/.test(text)) text = "'" + text;
-      return '"' + text.replace(/"/g, '""') + '"';
-    }
-    const lines = [columns.map(function (column) { return cell(column[0]); }).join(',')];
-    report.rows.forEach(function (row) {
-      lines.push(columns.map(function (column) { return cell(row[column[1]]); }).join(','));
-    });
-    return '\uFEFF' + lines.join('\r\n') + '\r\n';
+    return reportCsv(columns, report.rows);
   }
 
   root.AdigunCADEngine = Object.freeze({
@@ -2686,7 +2716,9 @@ function createPumpStarterDocumentation(name) {
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
     wireList: wireList,
-    wireListCsv: wireListCsv
+    wireListCsv: wireListCsv,
+    cableCoreRegister: cableCoreRegister,
+    cableCoreRegisterCsv: cableCoreRegisterCsv
   });
 })(typeof window !== 'undefined' ? window : globalThis);
 
