@@ -18,8 +18,10 @@ installed envelope for the selected 3RU2126-4BB0 with that support still needs
 an exact assembly drawing or measurement. Confirm the selected separately
 wired arrangement against Siemens' starter coordination conditions before
 using the planned arrangement for release. Keep F2 in the native circuit and
-defer its mounting footprint and drill coordinates until those checks have
-evidence.
+defer the complete assembly envelope and drill coordinates until those checks
+have evidence. The example's A3 rail sheet includes the separately dimensioned
+ACC-F2 support at a proposed plate centre of (432.5, 490) mm. It references
+the existing F2 instance and adds one support to the BOM.
 
 Primary source: https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2126-4BB0
 

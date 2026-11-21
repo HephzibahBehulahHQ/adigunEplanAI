@@ -1775,6 +1775,7 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
       o.kind === "component-instance" &&
       o.sheetId !== sheet.id &&
       o.sheetId !== "eng0601-a3-accessories" &&
+      o.sheetId !== "eng0601-a3-rail-mounting" &&
       !external.has(o.ref),
   );
   assert.equal(rows.length, internal.length);
@@ -1988,14 +1989,9 @@ test("contactor panel footprint retains the archived manufacturer edition and cl
 test("overload mounting accessory links to one canonical relay and roundtrips independently", () => {
   const project = engine.createExample("eng0601");
   const relay = project.objects.find((o) => o.ref === "F2");
-  const accessory = engine.createInstance(
-    "siemens-3ru2926-3aa01",
-    360,
-    240,
-    "ACC1",
-  );
-  accessory.sheetId = "eng0601-a3-0";
-  project.objects.push(accessory);
+  const accessory = project.objects.find((o) => o.ref === "ACC-F2");
+  assert.equal(accessory.sheetId, "eng0601-a3-rail-mounting");
+  assert.equal(accessory.assemblyFor, relay.id);
   project.objects = engine.linkAssemblyAccessory(
     project,
     accessory.id,
@@ -2648,6 +2644,19 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     assert.equal((duct.y2 - duct.y) / 0.5, 700);
   }
   zones.push(...ducts);
+  const support = project.objects.find((o) => o.ref === "ACC-F2");
+  const dimensions = engine.component(support.componentId).specifications
+    .dimensions;
+  const halfWidth = dimensions.width.value / 4;
+  const halfHeight = dimensions.height.value / 4;
+  for (const zone of zones) {
+    assert.ok(
+      support.x + halfWidth <= zone.x ||
+        support.x - halfWidth >= zone.x2 ||
+        support.y + halfHeight <= zone.y ||
+        support.y - halfHeight >= zone.y2,
+    );
+  }
   const cabinet = project.objects.find((o) => o.ref === "ENC1");
   const bodies = project.objects.filter(
     (o) => o.kind === "panel-placement" && o.sheetId === cabinet.sheetId,

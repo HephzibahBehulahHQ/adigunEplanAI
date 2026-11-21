@@ -1876,7 +1876,8 @@ test("mounting accessory links to the canonical overload and survives rename and
     (o: Record<string, unknown>) => o.ref === "F2",
   );
   const accessory = saved.data.objects.find(
-    (o: Record<string, unknown>) => o.componentId === "siemens-3ru2926-3aa01",
+    (o: Record<string, unknown>) =>
+      o.componentId === "siemens-3ru2926-3aa01" && o.sheetId === "eng0601-a3-0",
   );
   expect(accessory.assemblyFor).toBe(relay.id);
   await page.locator('[data-panel="project"]').click();
@@ -2263,6 +2264,7 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
       .click();
     await expect(page.locator("#userDrawings")).toContainText(content);
     if (id === "eng0601-a3-rail-mounting") {
+      await expect(page.locator("#userDrawings")).toContainText("ACC-F2");
       const railViews = initial.data.objects.filter(
         (o: { kind: string; sheetId: string }) =>
           o.kind === "panel-placement" && o.sheetId === id,
