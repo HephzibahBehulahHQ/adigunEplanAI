@@ -554,13 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 29);
+  assert.equal(project.sheets.length, 31);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 29 },
+      { length: 31 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 22 ? "A3/" : "A4/") +
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 23 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
     ),
   );
@@ -1676,6 +1676,7 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
     (o) =>
       o.kind === "component-instance" &&
       o.sheetId !== sheet.id &&
+      o.sheetId !== "eng0601-a3-accessories" &&
       !external.has(o.ref),
   );
   assert.equal(rows.length, internal.length);
@@ -2087,9 +2088,9 @@ test("wire lanes share routing, branch geometry, length and native persistence",
 test("A4 native registers match canonical devices and remain editable after reopen", () => {
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
-  assert.equal(sheets.length, 7);
-  assert.equal(sheets[0].number, "A4/022");
-  assert.equal(sheets.at(-1).number, "A4/028");
+  assert.equal(sheets.length, 8);
+  assert.equal(sheets[0].number, "A4/023");
+  assert.equal(sheets.at(-1).number, "A4/030");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2351,11 +2352,54 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
       ["eng0601-a3-1", "eng0601-a3-2"].includes(o.sheetId),
   );
   assert.equal(terminals.length, 17);
-  assert.equal(views.length, terminals.length);
-  assert.deepEqual(
-    views.map((o) => o.deviceId).sort(),
-    terminals.map((o) => o.id).sort(),
+  const accessories = project.objects.filter(
+    (o) =>
+      o.kind === "component-instance" && o.sheetId === "eng0601-a3-accessories",
   );
+  assert.equal(accessories.length, 14);
+  assert.equal(views.length, terminals.length + accessories.length);
+  assert.deepEqual(
+    Array.from(views, (o) => o.deviceId).sort(),
+    [...terminals, ...accessories].map((o) => o.id).sort(),
+  );
+  assert.equal(
+    accessories.filter((o) => o.componentId === "phoenix-contact-3022276")
+      .length,
+    12,
+  );
+  for (const [part, strip] of [
+    ["3047028", "X5"],
+    ["3212060", "XPE"],
+  ]) {
+    const cover = accessories.find(
+      (o) => o.componentId === "phoenix-contact-" + part,
+    );
+    const finalTerminal = terminals
+      .filter((o) => o.ref.startsWith(strip + ":"))
+      .sort((a, b) => a.ref.localeCompare(b.ref, undefined, { numeric: true }))
+      .at(-1);
+    assert.equal(cover.assemblyFor, finalTerminal.id);
+  }
+  const rails = project.objects.filter(
+    (o) => o.kind === "rect" && o.id.startsWith("eng0601-terminal-rail-"),
+  );
+  assert.equal(rails.length, 6);
+  for (const rail of rails) {
+    assert.equal((rail.y2 - rail.y) / 5, 35);
+    const strip = rail.id.replace("eng0601-terminal-rail-", "");
+    const bodyWidth = [...terminals, ...accessories]
+      .filter(
+        (device) =>
+          device.ref.split(":")[0] === strip ||
+          device.properties.location === "Terminal strip " + strip,
+      )
+      .reduce(
+        (sum, device) =>
+          sum + engine.component(device.componentId).panelFootprint.widthMm,
+        0,
+      );
+    assert.equal((rail.x2 - rail.x) / 5, Math.ceil((bodyWidth + 10) / 5) * 5);
+  }
   for (const view of views) {
     const box = engine.panelPlacementGeometry(project, view);
     assert.equal(view.scale, 5);
@@ -2383,6 +2427,7 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
 
 test("terminal accessories retain sourced dimensions without fabricated electrical pins", () => {
   const project = engine.createExample("eng0601");
+  const baseline = engine.billOfMaterials(project.objects).rows;
   const before = engine.analyzeProject(project).globalNetCount;
   for (const [part, dimensions] of [
     ["3003020", [1.8, 42.5, 35.9]],
@@ -2412,9 +2457,7 @@ test("terminal accessories retain sourced dimensions without fabricated electric
     accessory.sheetId = "eng0601-a3-1";
     project.objects.push(accessory);
   }
-  const cover = project.objects.find(
-    (o) => o.componentId === "phoenix-contact-3047028",
-  );
+  const cover = project.objects.find((o) => o.ref === "ACC-3047028");
   const terminal = project.objects.find((o) => o.ref === "X5:1");
   project.objects = engine.linkAssemblyAccessory(
     project,
@@ -2441,7 +2484,9 @@ test("terminal accessories retain sourced dimensions without fabricated electric
       engine
         .billOfMaterials(reopened.objects)
         .rows.find((r) => r.componentId === "phoenix-contact-" + part).quantity,
-      1,
+      1 +
+        (baseline.find((r) => r.componentId === "phoenix-contact-" + part)
+          ?.quantity ?? 0),
     );
   }
 });
