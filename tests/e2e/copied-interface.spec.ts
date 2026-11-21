@@ -320,7 +320,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(34);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(35);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -401,7 +401,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(34);
+  expect(saved.data.sheets).toHaveLength(35);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -2014,6 +2014,7 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
   for (const [id, content] of [
     ["eng0601-a3-rail-mounting", "FASTENER LOCATIONS"],
     ["eng0601-a3-bonding", "dedicated cabinet PE distribution point"],
+    ["eng0601-a3-door", "MAIN ISOLATOR"],
   ]) {
     await page
       .locator('[data-sheet="' + id + '"]')

@@ -554,13 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 34);
+  assert.equal(project.sheets.length, 35);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 34 },
+      { length: 35 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 25 ? "A3/" : "A4/") +
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 26 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
     ),
   );
@@ -2104,8 +2104,8 @@ test("A4 native registers match canonical devices and remain editable after reop
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
   assert.equal(sheets.length, 9);
-  assert.equal(sheets[0].number, "A4/025");
-  assert.equal(sheets.at(-1).number, "A4/033");
+  assert.equal(sheets[0].number, "A4/026");
+  assert.equal(sheets.at(-1).number, "A4/034");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2432,6 +2432,20 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     }
   }
   const plate = project.objects.find((o) => o.id === "eng0601-rail-plate");
+  const door = project.objects.find((o) => o.id === "eng0601-door-envelope");
+  const doorHoles = project.objects.filter((o) =>
+    o.id.startsWith("eng0601-door-cutout-"),
+  );
+  assert.deepEqual(
+    Array.from(doorHoles, (o) => o.id.replace("eng0601-door-cutout-", "")),
+    ["H1", "H2", "S0", "S1", "Q1"],
+  );
+  for (const hole of doorHoles) {
+    assert.equal(hole.kind, "circle");
+    assert.equal((hole.x2 - hole.x) * 4, 22.5);
+    assert.ok(hole.x - 6 > door.x && hole.x + 6 < door.x2);
+    assert.ok(hole.y - 6 > door.y && hole.y + 6 < door.y2);
+  }
   const zones = project.objects.filter((o) =>
     o.id.startsWith("eng0601-rail-access-"),
   );
