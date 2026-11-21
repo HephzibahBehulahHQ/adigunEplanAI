@@ -1267,6 +1267,13 @@ test("control permissives and seal-in retain distinct terminal-bound nets throug
   };
   check(project);
   const auxiliary = project.objects.find((o) => o.ref === "Q2:AUX");
+  const isolator = project.objects.find((o) => o.ref === "Q2");
+  assert.equal(auxiliary.assemblyFor, isolator.id);
+  assert.ok(
+    engine
+      .component(auxiliary.componentId)
+      .supportedComponentIds.includes(isolator.componentId),
+  );
   auxiliary.x += 30;
   auxiliary.rotation = 90;
   auxiliary.stroke = "#ff6600";
@@ -1274,6 +1281,10 @@ test("control permissives and seal-in retain distinct terminal-bound nets throug
   const reopened = engine.parseProject(engine.serializeProject(project));
   assert.equal(reopened.valid, true);
   check(reopened.project);
+  assert.equal(
+    reopened.project.objects.find((o) => o.id === auxiliary.id).assemblyFor,
+    isolator.id,
+  );
   assert.deepEqual(
     plain(reopened.project.crossSheetConnections),
     plain(project.crossSheetConnections),

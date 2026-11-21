@@ -861,6 +861,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }));
 
   const isolatorAuxiliaryDefinition=deepFreeze({
+    supportedComponentIds:['siemens-3ld2203-0tk51'],
     schemaVersion:COMPONENT_SCHEMA_VERSION,id:'siemens-3ld9200-5b',manufacturer:'Siemens',manufacturerPartNumber:'3LD9200-5B',model:'SENTRON 3LD9200-5B',name:'Front-mounted isolator auxiliary switch · 1 NO + 1 NC',family:'isolator-auxiliary',referencePrefix:'Q',category:'Electrical · Verified isolator accessory',
     symbol:{id:'auxiliary.3ld9200-5b.v1',view:'schematic',unit:'mm',width:160,height:100,pins:[
       {id:'no-23',localNumber:'23',name:'Normally-open input',x:-60,y:-20,electricalType:'passive',connectionType:'screw'},
@@ -1677,6 +1678,7 @@ function createPumpStarterDocumentation(name) {
       pressure=part(9,'telemecanique-xmlb004a2s11','B1',500,350,0,'Field discharge-pressure cutout. 11/12 control path; verify contact action and setpoints during commissioning.'),
       positive=part(9,'phoenix-contact-3004362','X3:1',130,180,0,'24 V DC control-source boundary. Source and circuit protection remain to be designed.'),
       negative=part(9,'phoenix-contact-3004362','X3:2',130,520,0,'0 V return boundary. No neutral/PE bond is implied.');
+    auxiliary.assemblyFor=q2.id;
     pressure.properties.risingPressureBar=2;pressure.properties.fallingPressureBar=1;
     pressure.properties.processPoint='Pump discharge';
     pressure.properties.thresholdDesignNote='Educational assumption: stop at 2 bar rising, allow reset below 1 bar. Verify process suitability, contact action and differential before use.';
@@ -2061,7 +2063,7 @@ function createPumpStarterDocumentation(name) {
       'Confirm F2 setting against the motor nameplate, starting duty and manufacturer instructions.',
       'Under an authorised procedure: verify stop, pressure permissive, overload trip and indication behaviour.',
       'Verify loss and restoration of power cannot cause an uncommanded restart.',
-      'Verify Q2 isolation and auxiliary interlocking; confirm all sources and backfeeds are accounted for.',
+      'Verify Q2 isolation and sources. At 23/24 verify opening before and closing after the main poles.',
       'Record test method, acceptance criterion, actual value, date, instrument, tester and independent review.',
       'No measured result, signature, successful test or installation approval is implied by this document.'
     ]);
