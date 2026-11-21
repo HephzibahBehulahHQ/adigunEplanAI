@@ -2075,6 +2075,10 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
     (s: { sectionId: string }) => s.sectionId === "A4",
   );
   expect(reports).toHaveLength(11);
+  const handover = reports.find(
+    (s: { name: string }) =>
+      s.name === "Handover and unresolved design register",
+  );
   for (const sheet of reports) {
     await page
       .locator('[data-sheet="' + sheet.id + '"]')
@@ -2111,6 +2115,11 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
         };
       });
     expect(layout).toEqual({ outside: 0, overlaps: false });
+    if (sheet.id === handover.id) {
+      await expect(page.locator("#userDrawings")).toContainText(
+        "EDITOR PRACTICE",
+      );
+    }
     await page.screenshot({ path: test.info().outputPath(sheet.id + ".png") });
   }
   const saved = await saveDrawing(page, "a4-reports");

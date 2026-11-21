@@ -2157,7 +2157,7 @@ function createPumpStarterDocumentation(name) {
     const handover=a4Sheet('Handover and unresolved design register');rows(handover,[
       'EDUCATIONAL APP EXAMPLE · Engineering development, not approved for installation.',
       'Deliverable: one native editable project; A1 basis, A2 circuits, A3 enclosure basis and A4 report snapshots.',
-      'Cable/core status: W2–W5 working cores and W2/W3 PE are mapped. Product selection and cable sizing remain open.',
+      'W1 supply terminals and W2–W5 working cores are mapped. See the feeder worksheet for cable design inputs.',
       'Supply assumptions: Germany, 400/230 V TN-S, indoor 25 °C; confirm actual site conditions.',
       'Outstanding: prospective fault current, upstream protection and complete source-isolation verification.',
       'Outstanding: cable installation methods, grouping, voltage drop, protective conductor and fault checks.',
@@ -2169,6 +2169,13 @@ function createPumpStarterDocumentation(name) {
       'After edits, run Electrical checks and compare the cable core export with the A4 report snapshots.',
       'Save a named local copy, reopen it, and confirm sheets, component identities and cross-sheet links.'
     ]);
+    text(handover,'handover-practice-heading',60,455,'EDITOR PRACTICE · Use a separate copy of the example',14,1060);
+    text(handover,'handover-practice',60,482,
+      '1. Follow the 24 V path from F4 through S0, Q2:AUX, F2 and B1 to the S1 start and K1 hold paths.\n'+
+      '2. Find Q1 and Q2 on the drawings. Explain why a stop command and the H1 lamp do not prove isolation.\n'+
+      '3. In the copy, recolor a wire. Check that its terminal assignments are unchanged, then save and reopen.\n'+
+      '4. Review Electrical checks and export the terminal register to compare the saved circuit with the A4 snapshot.',
+      11,1060);
     const evidencePage=a4Sheet('Future installation evidence');
     text(evidencePage,'release-evidence-scope',60,105,'This example has no physical installation. Use these fields only if adapting the design for a real site.',12,1060);
     [
