@@ -1900,6 +1900,27 @@ function createPumpStarterDocumentation(name) {
       'Verify continuity from incoming PE to each exposed part and record results. Keep N and 0 V separate from PE.',
       'This is a physical bonding schedule. Schematic PE paths and existing terminal identities remain on A2/017.'
     ]);
+    const doorPage=developmentSheet('A3','eng0601-a3-door','Door operator and indication layout');
+    const doorSheet=sheets[doorPage].id;
+    const doorOrigin={x:80,y:122},doorScale=0.5;
+    const enclosureSize=rittalEnclosureDefinition.specifications.dimensions;
+    objects.push({id:'eng0601-door-envelope',sheetId:doorSheet,kind:'rect',x:doorOrigin.x,y:doorOrigin.y,x2:doorOrigin.x+enclosureSize.width.value*doorScale,y2:doorOrigin.y+enclosureSize.height.value*doorScale,stroke:'#64748b',fill:'none'});
+    text(doorPage,'door-datum',80,110,'1:2 · ENCLOSURE FRONT ENVELOPE · DATUM AT UPPER LEFT',10,330);
+    const doorDevices=[
+      {device:h1,x:225,y:180,label:'COIL COMMAND',color:'#178743'},
+      {device:h2,x:375,y:180,label:'OVERLOAD TRIP',color:'#b91c1c'},
+      {device:stop,x:225,y:280,label:'STOP',color:'#b91c1c'},
+      {device:start,x:375,y:280,label:'START',color:'#178743'},
+      {device:q1,x:300,y:440,label:'MAIN ISOLATOR',color:'#183c50'}
+    ];
+    doorDevices.forEach(function(item,index){
+      const ref=item.device.ref,x=doorOrigin.x+item.x*doorScale,y=doorOrigin.y+item.y*doorScale;
+      objects.push({id:'eng0601-door-cutout-'+ref,sheetId:doorSheet,kind:'circle',x:x,y:y,x2:x+22.5*doorScale/2,y2:y,stroke:item.color,fill:'none'});
+      text(doorPage,'door-label-'+ref,x-6,y+23,ref,10,32);
+      text(doorPage,'door-register-'+ref,420,140+index*30,ref+' '+item.label+' · '+component(item.device.componentId).manufacturerPartNumber+' · ('+item.x+', '+item.y+') mm · Ø22.5 '+(item.device===q1?'central mounting':'recommended finished hole'),12,710);
+    });
+    text(doorPage,'door-mounting',420,305,'HARMONY XB5: nominal finished tolerance Ø22.3 to Ø22.7 mm.\nSource clearance for screw-clamp mounting: 30 mm horizontal and 40 mm vertical.\nDrawing proposes 150 mm horizontal and 100 mm vertical centre spacing within that group.\nQ1: reserve central handle opening. Verify shaft centre, engagement, travel and exact mounting template.',11,710);
+    text(doorPage,'door-interface',420,411,'Check door skin, stiffeners, locks, behind-door depth and harness travel before drilling.\nRoute the flexible door PE bond as shown in the Protective bonding schedule.\nVerify seals and installed enclosure protection after cut-outs. These are project layout coordinates.\nH1 indicates coil command; H2 indicates overload trip. S0 is the ordinary stop.',11,710);
     const a4Start=sheets.length;
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-a4Start),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
