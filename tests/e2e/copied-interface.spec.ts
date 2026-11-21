@@ -2842,3 +2842,53 @@ for (const template of [
     expect(reopened.data.objects).toEqual(saved.data.objects);
   });
 }
+
+test("drafts across the full viewport with a signed, pointer-centered camera", async ({ page }) => {
+  await page.setViewportSize({ width: 1750, height: 700 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const drawing = page.locator("#drawing");
+  const stage = page.locator("#canvasStage");
+  await expect.poll(async () => {
+    const canvas = await drawing.boundingBox();
+    const available = await stage.boundingBox();
+    return Math.abs(canvas!.width - available!.width) +
+      Math.abs(canvas!.height - available!.height);
+  }).toBeLessThan(2);
+
+  const start = await sheetPoint(page, -65, 250);
+  const end = await sheetPoint(page, -25, 320);
+  const box = (await drawing.boundingBox())!;
+  expect(start.x).toBeGreaterThan(box.x);
+  await page.locator('[data-draw="line"]').click();
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const line = page.locator("#userDrawings [data-object]");
+  await expect(line).toHaveCount(1);
+  const geometry = await line.innerHTML();
+
+  const anchor = await sheetPoint(page, 200, 300);
+  await page.mouse.move(anchor.x, anchor.y);
+  await page.mouse.wheel(0, -200);
+  await expect(page.locator("#zoomValue")).not.toHaveText("100%");
+  const zoomed = await sheetPoint(page, 200, 300);
+  expect(Math.abs(zoomed.x - anchor.x)).toBeLessThan(0.5);
+  expect(Math.abs(zoomed.y - anchor.y)).toBeLessThan(0.5);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(anchor.x + 85, anchor.y + 45);
+  await page.mouse.up({ button: "middle" });
+  const panned = await sheetPoint(page, 200, 300);
+  expect(Math.abs(panned.x - zoomed.x - 85)).toBeLessThan(0.5);
+  expect(Math.abs(panned.y - zoomed.y - 45)).toBeLessThan(0.5);
+
+  await page.setViewportSize({ width: 1250, height: 900 });
+  await expect.poll(async () => drawing.evaluate((svg: SVGSVGElement) => {
+    const view = svg.viewBox.baseVal;
+    return Math.abs(view.width / view.height - svg.clientWidth / svg.clientHeight);
+  })).toBeLessThan(0.001);
+  expect(await line.innerHTML()).toBe(geometry);
+});
