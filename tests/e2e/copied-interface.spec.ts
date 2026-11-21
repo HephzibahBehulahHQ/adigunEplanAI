@@ -3164,3 +3164,42 @@ test("full SVG keeps off-frame geometry and PDF honors physical paper size", asy
   expect(Math.abs(Number(pageBox![2]) - (297 * 72) / 25.4)).toBeLessThan(2);
   expect(text.match(/\/Type\s*\/Page\b/g)).toHaveLength(1);
 });
+
+test("drag redraws connected geometry only and can return exactly to its origin", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("eplan-terminal");
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const x of [200, 420, 650]) {
+    await page.locator('[data-insert="eplan-terminal"]').click();
+    await clickAt(x, 320);
+  }
+  await clickAt(200, 320);
+  await clickAt(420, 320);
+  const parts = page.locator("#userDrawings g[data-object]");
+  const first = parts.first();
+  const third = parts.last();
+  const wire = page.locator('#userDrawings path[data-layer="connections"]');
+  const original = await first.getAttribute("transform");
+  const route = await wire.getAttribute("d");
+  const start = await sheetPoint(page, 195, 317);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  const untouched = (await third.elementHandle())!;
+  await page.mouse.move(start.x + 65, start.y + 35, { steps: 6 });
+  await expect(first).not.toHaveAttribute("transform", original!);
+  await expect(wire).not.toHaveAttribute("d", route!);
+  expect(await untouched.evaluate((element) => element.isConnected)).toBe(true);
+  await page.mouse.move(start.x, start.y, { steps: 6 });
+  await page.mouse.up();
+  await expect(first).toHaveAttribute("transform", original!);
+  await expect(wire).toHaveAttribute("d", route!);
+});
