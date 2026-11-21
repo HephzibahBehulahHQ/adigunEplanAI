@@ -1553,7 +1553,7 @@ function createPumpStarterDocumentation(name) {
       'Next issue: cable/protection calculations, coordinated device footprints, installation details and final verification of A4.',
       'Revision record is editable project text; append subsequent changes without deleting this issue history.'
     ]);
-    text(2,'dependencies',60,535,'Dependencies: A1 basis → A2 circuits → A3 installation → A4 derived reports. Planned references are not live links.',12);
+    text(2,'dependencies',60,535,'All listed sheets exist. Paired A2 references use the project sheet numbers shown after ↔.\nA1 defines the design basis. A3 uses the A2 device identities. A4 reports derive from A2 and A3.',11);
     rows(3,[
       'Tags below are reserved once per physical device. Candidate order codes are not procurement approval.',
       'K1 | Panel | motor contactor | Siemens 3RT2027-2KB40 | 32 A AC-3; 24 V DC coil; S0.',
@@ -2186,9 +2186,22 @@ function createPumpStarterDocumentation(name) {
       text(evidencePage,'release-evidence-record-'+index,60,y+18,'Future site record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
     });
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
+    const dependencies=new Map(sheets.map(function(sheet){return [sheet.id,new Set()];}));
+    const sheetNumbers=new Map(sheets.map(function(sheet){return [sheet.id,sheet.number];}));
+    powerLinks.forEach(function(link){
+      const linkedSheets=new Set(link.endpoints.map(function(endpoint){return endpoint.sheetId;}));
+      linkedSheets.forEach(function(from){
+        linkedSheets.forEach(function(to){
+          if(from!==to)dependencies.get(from).add(sheetNumbers.get(to).split('/')[1]);
+        });
+      });
+    });
     const registerRows=Math.ceil(sheets.length/2);
-    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*20,sheet.number+' '+sheet.name,10,510);});
-    objects.find(function(o){return o.id==='eng0601-dependencies';}).text='All listed sheets exist. A4 reports are editable development snapshots; review them after design changes.';
+    sheets.forEach(function(sheet,index){
+      const linked=Array.from(dependencies.get(sheet.id)).sort();
+      const entry=sheet.number+' · '+sheet.metadata.revision+' · '+sheet.name+(linked.length?' ↔ '+linked.join(', '):'');
+      text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*20,entry,10,510);
+    });
     return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'Native A1–A4 pump-starter project with connected circuit sheets, terminal rail mounting, protective bonding and feeder acceptance documentation. Final assembly depends on site inputs and verification.'}})).project;
   }
   function projectExamples() {
