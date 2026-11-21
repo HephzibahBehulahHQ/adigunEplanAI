@@ -2616,6 +2616,15 @@ test("terminal clicks auto-route and manual bends survive moving both connected 
   await page.mouse.down();
   await page.mouse.move(firstBend.x, firstBend.y, { steps: 8 });
   await page.mouse.up();
+  await page.keyboard.down("Space");
+  await page.mouse.down();
+  await page.mouse.move(firstBend.x + 45, firstBend.y + 30);
+  await page.mouse.up();
+  await page.keyboard.up("Space");
+  const pannedBend = await sheetPoint(page, 480, 240);
+  expect(Math.abs(pannedBend.x - firstBend.x - 45)).toBeLessThan(1);
+  expect(Math.abs(pannedBend.y - firstBend.y - 30)).toBeLessThan(1);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(1);
   await clickAt(550, 395);
   await clickAt(590, 375);
   await clickAt(630, 440);
@@ -2959,4 +2968,32 @@ test("component placement accounts for the rendered PLC reference label", async 
   await page.mouse.click(clear.x, clear.y);
   await expect(components).toHaveCount(2);
   await expect(components.last()).toContainText("A2");
+});
+
+test("fit drawing centers signed geometry and the origin command centers zero", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1750, height: 700 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-draw="line"]').click();
+  const a = await sheetPoint(page, -100, 180);
+  const b = await sheetPoint(page, -25, 260);
+  await page.mouse.move(a.x, a.y);
+  await page.mouse.down();
+  await page.mouse.move(b.x, b.y);
+  await page.mouse.up();
+  await page.locator('[data-action="fit"]').first().click();
+  const canvas = (await page.locator("#drawing").boundingBox())!;
+  const middle = await sheetPoint(page, -62.5, 220);
+  expect(Math.abs(middle.x - canvas.x - canvas.width / 2)).toBeLessThan(8);
+  expect(Math.abs(middle.y - canvas.y - canvas.height / 2)).toBeLessThan(8);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Go to drawing origin");
+  await page.getByRole("button", { name: "Go to drawing origin" }).click();
+  const origin = await sheetPoint(page, 0, 0);
+  expect(Math.abs(origin.x - canvas.x - canvas.width / 2)).toBeLessThan(1);
+  expect(Math.abs(origin.y - canvas.y - canvas.height / 2)).toBeLessThan(1);
 });
