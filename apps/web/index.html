@@ -19,6 +19,7 @@
   .workspace.inspector-open .editor{grid-template-columns:minmax(0,1fr)}.workspace.inspector-open .editor-tabs{grid-column:1}.workspace.inspector-open .canvas-stage{grid-column:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,270px);grid-template-rows:minmax(0,1fr);align-items:stretch;justify-items:stretch}.workspace.inspector-open .drawing-wrap{grid-column:1;grid-row:1;justify-self:center;align-self:center}.workspace.inspector-open .rightpanel{position:relative;inset:auto;width:auto;min-width:0;grid-column:2;grid-row:1;z-index:1;backdrop-filter:none;box-shadow:none;border-top:0;border-bottom:0}.workspace.inspector-open .rightpanel.open{display:grid}@media(max-width:850px){.workspace.inspector-open .canvas-stage{grid-template-columns:minmax(0,1fr) minmax(200px,230px)}}@media(max-width:640px){.workspace.inspector-open .canvas-stage{grid-template-columns:minmax(0,1fr) 0}.workspace.inspector-open .rightpanel.open{display:none}}
   </style>
   <style id="cad-viewport-styles">
+    [data-component-placement-preview], [data-component-placement-preview] * { pointer-events: none !important; }
     #drawingWrap.frame-hidden #customSheetFrame { display: none !important; }
     @media screen {
       .workspace .canvas-stage { padding: 0; }
@@ -395,7 +396,45 @@
   function duplicateObject(id){copyObject(id);pasteObject();}
   function copyObject(id){const ids=state.selectedObjectIds.includes(id)&&state.selectedObjectIds.length>1?state.selectedObjectIds:[id],selected=ids.map(function(objectId){return state.objects.find(function(obj){return obj.id===objectId;});}).filter(Boolean);if(!selected.length)return;state.clipboardObject=JSON.parse(JSON.stringify(selected));notify(selected.length+' object'+(selected.length===1?'':'s')+' copied.');}
   function cutObject(id){copyObject(id);if(state.selectedObjectIds.includes(id)&&state.selectedObjectIds.length>1)deleteSelection();else deleteObject(id);notify('Selection cut to clipboard.');}
-  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});pushUndo();state.objects.push.apply(state.objects,copies);state.selectedObjectIds=copies.map(function(obj){return obj.id;});state.selected=state.selectedObjectIds[state.selectedObjectIds.length-1]||null;renderObjects();persist();refreshSelectedProperties();notify(copies.length+' object'+(copies.length===1?'':'s')+' pasted 50 mm right and down.');}
+  function clearComponentPastePosition(copy){
+    const item=symbolCatalog.find(entry=>entry.componentId===copy.componentId);
+    if(!item)return null;
+    const glyph=buildCatalogGlyph(copy,item,state.strokeColor,1.8);
+    glyph.setAttribute('visibility','hidden');
+    drawing.append(glyph);
+    const bounds=renderedFootprint(glyph);
+    glyph.remove();
+    const enclosure=item.family==='mechanical-enclosure';
+    const objects=new Map(state.objects.map(object=>[object.id,object]));
+    const obstacles=Array.from(userDrawings.children).filter(node=>{
+      if(node.classList.contains('cross-sheet-connector'))return state.layerVisibility.connections!==false;
+      const object=objects.get(node.dataset.object);
+      return object?.kind==='component-instance'&&drawingObjectVisible(object)&&
+        (window.AdigunCADEngine.component(object.componentId)?.family==='mechanical-enclosure')===enclosure;
+    }).map(renderedFootprint);
+    const viewport=drawing.viewBox.baseVal;
+    for(let radius=0;radius<=6;radius++){
+      for(let row=-radius;row<=radius;row++){
+        for(let column=-radius;column<=radius;column++){
+          if(Math.max(Math.abs(row),Math.abs(column))!==radius)continue;
+          const dx=column*50,dy=row*50;
+          const moved={left:bounds.left+dx,right:bounds.right+dx,top:bounds.top+dy,bottom:bounds.bottom+dy};
+          if(moved.left<viewport.x||moved.top<viewport.y||
+            moved.right>viewport.x+viewport.width||moved.bottom>viewport.y+viewport.height)continue;
+          if(!obstacles.some(other=>footprintsOverlap(moved,other)))return {x:copy.x+dx,y:copy.y+dy};
+        }
+      }
+    }
+    return null;
+  }
+  function footprintsOverlap(first,second){
+    return first.left<second.right&&first.right>second.left&&first.top<second.bottom&&first.bottom>second.top;
+  }
+  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
+    const position=clearComponentPastePosition(copies[0]);
+    if(!position){notify('No clear space for this component in the current view. Zoom out or pan to open space.');return;}
+    Object.assign(copies[0],position);
+  }pushUndo();state.objects.push.apply(state.objects,copies);state.selectedObjectIds=copies.map(function(obj){return obj.id;});state.selected=state.selectedObjectIds[state.selectedObjectIds.length-1]||null;renderObjects();persist();refreshSelectedProperties();notify(copies.length+' object'+(copies.length===1?'':'s')+' pasted.');}
   function changeObjectOrder(id,front){const index=state.objects.findIndex(function(obj){return obj.id===id;});if(index<0)return;pushUndo();const obj=state.objects.splice(index,1)[0];if(front)state.objects.push(obj);else state.objects.unshift(obj);renderObjects();persist();notify(front?'Object brought to front.':'Object sent to back.');}
   function stepObjectOrder(id,direction){const index=state.objects.findIndex(function(obj){return obj.id===id;}),target=index+direction;if(index<0)return;if((direction!==1&&direction!==-1)||target<0||target>=state.objects.length){notify(direction>0?'Object is already at the front.':'Object is already at the back.');return;}pushUndo();if(!window.AdigunCADEngine.reorderObject(state.objects,id,direction))return;renderObjects();persist();notify(direction>0?'Object brought forward.':'Object sent backward.');}
   function toggleObjectLock(id){const obj=state.objects.find(function(item){return item.id===id;});if(!obj)return;pushUndo();obj.locked=!obj.locked;renderObjects();persist();notify(obj.locked?'Object locked.':'Object unlocked.');}
@@ -446,30 +485,55 @@
     if(!item)return;
     const location=snapObjectPoint(point);
     if(!placementPreview){
-      const count=state.objects.filter(o=>o.kind==='component-instance'&&o.componentId===item.componentId).length+1;
-      placementPreview=buildCatalogGlyph({id:'placement-preview',x:location.x,y:location.y,ref:item.tag+count},item,'#164eac',1.8);
+      const ref=window.AdigunCADEngine.nextReference(collectProjectObjects(),item.tag);
+      const preview=window.AdigunCADEngine.createInstance(item.componentId,location.x,location.y,ref);
+      placementPreview=buildCatalogGlyph(preview,item,state.strokeColor,1.8);
       placementPreview.removeAttribute('data-object');
       placementPreview.setAttribute('opacity','0.55');
-      placementPreview.setAttribute('pointer-events','none');
+      placementPreview.dataset.componentPlacementPreview='';
       drawing.append(placementPreview);
     }else placementPreview.setAttribute('transform','translate('+location.x+' '+location.y+')');
-    placementPreview.setAttribute('stroke',componentPlacementBlocked(item,location)?'#b91c1c':state.strokeColor);
+    const blocked=componentPlacementBlocked(item);
+    placementPreview.setAttribute('stroke',blocked?'#b91c1c':state.strokeColor);
+    return blocked;
   }
-  function componentPlacementBlocked(item,point){
-    const bounds=objectBounds({kind:'component-instance',componentId:item.componentId,x:point.x,y:point.y,rotation:0});
-    return bounds&&state.objects.some(function(object){
-      if(object.kind!=='component-instance'||!drawingObjectVisible(object))return false;
-      const definition=window.AdigunCADEngine.component(object.componentId);
-      if((item.family==='mechanical-enclosure')!==(definition?.family==='mechanical-enclosure'))return false;
-      const other=objectBounds(object);
-      return other&&bounds.left<other.right&&bounds.right>other.left&&bounds.top<other.bottom&&bounds.bottom>other.top;
-    });
+  function renderedFootprint(glyph){
+    const box=glyph.getBBox();
+    const matrix=drawing.getScreenCTM().inverse().multiply(glyph.getScreenCTM());
+    const corners=[
+      new DOMPoint(box.x,box.y),new DOMPoint(box.x+box.width,box.y),
+      new DOMPoint(box.x,box.y+box.height),new DOMPoint(box.x+box.width,box.y+box.height)
+    ].map(point=>point.matrixTransform(matrix));
+    return {
+      left:Math.min(...corners.map(point=>point.x)),
+      right:Math.max(...corners.map(point=>point.x)),
+      top:Math.min(...corners.map(point=>point.y)),
+      bottom:Math.max(...corners.map(point=>point.y))
+    };
+  }
+  function componentPlacementBlocked(item){
+    if(!placementFootprints){
+      const glyphs=new Map(Array.from(userDrawings.querySelectorAll('[data-object]'),glyph=>[glyph.dataset.object,glyph]));
+      placementFootprints=[];
+      for(const object of state.objects){
+        if(object.kind!=='component-instance'||!drawingObjectVisible(object))continue;
+        const glyph=glyphs.get(object.id);
+        const definition=window.AdigunCADEngine.component(object.componentId);
+        if(glyph)placementFootprints.push({bounds:renderedFootprint(glyph),enclosure:definition?.family==='mechanical-enclosure'});
+      }
+    }
+    const bounds=renderedFootprint(placementPreview);
+    return placementFootprints.some(({bounds:other,enclosure})=>
+      enclosure===(item.family==='mechanical-enclosure')&&
+      footprintsOverlap(bounds,other)
+    );
   }
   function finishComponentPlacement(point,allowOverlap=false){
     const item=symbolCatalog.find(x=>x.id===state.pendingComponentId);
     if(!item)return false;
     const location=snapObjectPoint(point);
-    if(!allowOverlap&&componentPlacementBlocked(item,location)){notify('Choose clear sheet space, or hold Shift to place an intentional overlap.');return false;}
+    const blocked=updatePlacementPreview(point);
+    if(!allowOverlap&&blocked){notify('Choose clear sheet space, or hold Shift to place an intentional overlap.');return false;}
     const ref=window.AdigunCADEngine.nextReference(collectProjectObjects(),item.tag);
     state.pendingComponentId=null;
     if(placementPreview){placementPreview.remove();placementPreview=null;}
@@ -518,7 +582,7 @@
   function updateObjectResize(point){if(!resizeDrag)return;const drag=resizeDrag,objects=JSON.parse(drag.snapshot),obj=objects.find(function(item){return item.id===drag.id;});if(!obj){state.objects=JSON.parse(drag.lastValid);return;}const next=snapObjectPoint(point);if(!resizeDrawingGeometry(obj,drag.corner,next,objects)){state.objects=JSON.parse(drag.lastValid);return;}state.objects=objects;drag.lastValid=JSON.stringify(objects);drag.moved=drag.lastValid!==drag.snapshot;renderObjects();}
   function finishObjectResize(event){if(!resizeDrag)return;const drag=resizeDrag;updateObjectResize(svgPoint(event));resizeDrag=null;drawing.style.cursor='default';if(drag.moved&&drag.lastValid!==drag.snapshot){pushUndo(drag.snapshot);persist();refreshSelectedProperties();notify('Drawing object resized. Undo is available.');}else{state.objects=JSON.parse(drag.snapshot);renderObjects();}}
   function synchronizeActiveConnections(){const endpoints=(state.crossSheetConnections||[]).flatMap(function(link){return link.endpoints;}).filter(function(e){return e.sheetId===state.sheet;});endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&!e.wireEnd){if(e.point.x===wire.x1&&e.point.y===wire.y1)e.wireEnd='start';else if(e.point.x===wire.x2&&e.point.y===wire.y2)e.wireEnd='end';}});window.AdigunCADEngine.synchronizeWireAttachments(state.objects);endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&['start','end'].includes(e.wireEnd))e.point={x:wire[e.wireEnd==='start'?'x1':'x2'],y:wire[e.wireEnd==='start'?'y1':'y2']};});}
-  function renderObjects(){synchronizeActiveConnections();userDrawings.replaceChildren();for(const obj of drawingPaintOrder()){let el;const stroke=obj.stroke||'#164eac',fill=obj.fill||'none',width=obj.strokeWidth||(obj.kind==='component-instance'&&window.AdigunCADEngine.component(obj.componentId)?.generic?0.5:1.8);if(['wire','line','arrow','curve','freehand'].includes(obj.kind)){el=document.createElementNS('http://www.w3.org/2000/svg','path');let d;if(obj.kind==='wire')d=window.AdigunCADEngine.wireRoute(obj).map(function(p,i){return (i?'L':'M')+p.x+' '+p.y;}).join(' ');else if(obj.kind==='curve'){const cx=(obj.x1+obj.x2)/2,cy=Math.min(obj.y1,obj.y2)-Math.max(22,Math.abs(obj.x2-obj.x1)*.22);d=`M${obj.x1} ${obj.y1} Q${cx} ${cy} ${obj.x2} ${obj.y2}`;}else if(obj.kind==='freehand')d=(obj.points||[]).map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');else if(obj.kind==='arrow'){const a=Math.atan2(obj.y2-obj.y1,obj.x2-obj.x1),len=10,p1={x:obj.x2-len*Math.cos(a-Math.PI/6),y:obj.y2-len*Math.sin(a-Math.PI/6)},p2={x:obj.x2-len*Math.cos(a+Math.PI/6),y:obj.y2-len*Math.sin(a+Math.PI/6)};d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}M${p1.x} ${p1.y}L${obj.x2} ${obj.y2}L${p2.x} ${p2.y}`;}else d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}`;el.setAttribute('d',d);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);el.setAttribute('fill','none');el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  function renderObjects(){placementFootprints=null;synchronizeActiveConnections();userDrawings.replaceChildren();for(const obj of drawingPaintOrder()){let el;const stroke=obj.stroke||'#164eac',fill=obj.fill||'none',width=obj.strokeWidth||(obj.kind==='component-instance'&&window.AdigunCADEngine.component(obj.componentId)?.generic?0.5:1.8);if(['wire','line','arrow','curve','freehand'].includes(obj.kind)){el=document.createElementNS('http://www.w3.org/2000/svg','path');let d;if(obj.kind==='wire')d=window.AdigunCADEngine.wireRoute(obj).map(function(p,i){return (i?'L':'M')+p.x+' '+p.y;}).join(' ');else if(obj.kind==='curve'){const cx=(obj.x1+obj.x2)/2,cy=Math.min(obj.y1,obj.y2)-Math.max(22,Math.abs(obj.x2-obj.x1)*.22);d=`M${obj.x1} ${obj.y1} Q${cx} ${cy} ${obj.x2} ${obj.y2}`;}else if(obj.kind==='freehand')d=(obj.points||[]).map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');else if(obj.kind==='arrow'){const a=Math.atan2(obj.y2-obj.y1,obj.x2-obj.x1),len=10,p1={x:obj.x2-len*Math.cos(a-Math.PI/6),y:obj.y2-len*Math.sin(a-Math.PI/6)},p2={x:obj.x2-len*Math.cos(a+Math.PI/6),y:obj.y2-len*Math.sin(a+Math.PI/6)};d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}M${p1.x} ${p1.y}L${obj.x2} ${obj.y2}L${p2.x} ${p2.y}`;}else d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}`;el.setAttribute('d',d);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);el.setAttribute('fill','none');el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
         else if(obj.kind==='panel-placement'){
           el=document.createElementNS('http://www.w3.org/2000/svg','g');
           el.setAttribute('class','drawing-object '+(state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''));
@@ -842,7 +906,7 @@
     persist();
   });
 
-  let drawStart=null,freehandPoints=null,placementPreview=null,objectDrag=null,resizeDrag=null,selectionBox=null,wireEndDrag=null,wireDraft=null,terminalDrag=null;
+  let drawStart=null,freehandPoints=null,placementPreview=null,placementFootprints=null,objectDrag=null,resizeDrag=null,selectionBox=null,wireEndDrag=null,wireDraft=null,terminalDrag=null;
   function terminalDragPoint(event,overWire=false){
     const matrix=drawing.getScreenCTM(),scale=Math.hypot(matrix.a,matrix.b);
     return terminalAt(svgPoint(event),Math.min(overWire?1.75:4,4/scale));
@@ -1089,7 +1153,7 @@
     setTimeout(function(){URL.revokeObjectURL(url);},1000);
     notify('Register exported for all project sheets.');
   }
-  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview]').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame){if(wrap.classList.contains('frame-hidden'))frame.remove();else frame.style.display='block';}}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
+  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview],[data-component-placement-preview]').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame){if(wrap.classList.contains('frame-hidden'))frame.remove();else frame.style.display='block';}}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
   function selectPanel(id){
     if(id==='layers'){openInspector('Layers and visibility');return;}
     workspace.classList.remove('left-sidebar-closed');
