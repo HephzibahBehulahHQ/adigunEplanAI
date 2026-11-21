@@ -2,6 +2,17 @@
 
 ## Locked control and native component audit — 2026-11-21
 
+The placement and wire workflow follows the behavior of AdigunSimulator's
+[component placement](https://github.com/HephzibahBehulahHQ/AdigunSimulator/blob/main/js/component-placement.mjs)
+and [schematic wire editor](https://github.com/HephzibahBehulahHQ/AdigunSimulator/blob/main/js/schematic-wire-ui.mjs).
+Pick a part and click its preview position, or drag directly from the existing
+Symbol Library. Placement selects the new native part and rejects occupied body
+space unless Shift is held. Component drags use precise pointer coordinates;
+holding Shift applies the active grid snap. The existing Properties inspector
+offers a stroke color picker and route controls. Selected wire endpoint handles
+drag to actual terminals, with their hit targets offset from attached parts.
+The endpoint dropdowns remain available for keyboard editing.
+
 The shipped editor starts at `apps/web/index.html` and uses the native project
 validator and connectivity engine in `apps/web/public/cad-engine.js`. The
 README describes capabilities across the repository. Verify availability from
