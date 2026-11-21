@@ -2227,7 +2227,7 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
     });
   }
   for (const [id, content] of [
-    ["eng0601-a3-rail-mounting", "FASTENER LOCATIONS"],
+    ["eng0601-a3-rail-mounting", "DUCT RESERVATIONS"],
     ["eng0601-a3-bonding", "dedicated cabinet PE distribution point"],
     ["eng0601-a3-door", "MAIN ISOLATOR"],
     ["eng0601-a3-cable-entry", "436 × 221 mm"],

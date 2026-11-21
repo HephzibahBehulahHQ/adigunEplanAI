@@ -1,5 +1,13 @@
 # Active engineering goal — 2026-11-14
 
+## ENG-0601 mounting plate routing
+
+The A3 terminal rail mounting drawing reserves separate 20 mm power and
+control duct corridors with coordinates from the same plate datum as
+the rails. The reservations clear the terminal service areas and PS1
+convection zone. Duct section, branch transitions, fill, and final
+separation remain subject to the installed cable design.
+
 ## ENG-0601 release evidence
 
 A4/039 is an editable evidence register linked by topic to the feeder
