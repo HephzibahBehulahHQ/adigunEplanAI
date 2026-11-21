@@ -958,16 +958,16 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     specifications:Object.assign({},overloadSupportDefinition.specifications,{mainConnection:{value:'Three isolated screw-terminal paths; relay-side MATE IDs are model-local'},assemblyNote:{value:'Explicitly connect each mating interface to its corresponding relay input. No automatic electrical link is implied by the mechanical association.'}}),
     sources:overloadSupportDefinition.sources.concat([{publisher:'Siemens',title:'3RU2926-3AA01 connection graphic, page 3/3',url:'https://docs.rs-online.com/c473/0900766b814bb84d.pdf',documentRevision:'2024-09-23',revisionNote:'Manufacturer datasheet hosted by RS; connection graphic visually verified. Mating-side IDs are model-local.',retrievedAt:'2026-11-15'}])
   }));
-  function terminalAccessoryDefinition(part,model,name,width,height,depth,url,supported,compatibilityUrl){
+  function terminalAccessoryDefinition(part,model,name,width,height,depth,url,supported,compatibilityUrl,compatibilitySource){
     return deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id:'phoenix-contact-'+part,manufacturer:'Phoenix Contact',manufacturerPartNumber:part,model:model,name:name,family:'terminal-accessory',referencePrefix:'ACC',category:'Panel · Manufacturer-identified terminal accessories',supportedComponentIds:supported,
       symbol:{id:'accessory.phoenix.'+part+'.body.v1',view:'panel',unit:'mm',width:150,height:120,pins:[],internalConnections:[],numberingNote:'Mechanical body envelope at 1:1; no conductor terminals or electrical connections. Mounting orientation and installed assembly must be checked separately.'},
       panelFootprint:{widthMm:width,heightMm:height,depthMm:depth,source:url,note:'Manufacturer body dimensions, excluding rail. Envelope only; not a drilling template.'},
       specifications:{dimensions:{width:{value:width,unit:'mm'},height:{value:height,unit:'mm'},depth:{value:depth,unit:'mm'}},color:{value:'Gray (RAL 7042)'},function:{value:name},electricalConnection:{value:'None; mechanical accessory'},compatibility:{value:supported.length?'Supported device IDs listed in component definition':'No verified device-specific assembly link recorded'}},
       instanceProperties:{location:{type:'string',default:'',maximumLength:80},comment:{type:'string',default:'Verify installation orientation, rail and complete assembly.',maximumLength:160}},
-      sources:[{publisher:'Phoenix Contact',title:model+' product dimensions',url:url,documentRevision:'Manufacturer product record reviewed 2026-11-15',revisionNote:'Nominal body dimensions, not a detailed mounting drawing.',retrievedAt:'2026-11-15'}].concat(compatibilityUrl?[{publisher:'Phoenix Contact',title:'Terminal manufacturer accessory listing',url:compatibilityUrl,documentRevision:'Manufacturer accessory record reviewed 2026-11-15',revisionNote:'Accessory listing establishes the supported terminal family.',retrievedAt:'2026-11-15'}]:[])
+      sources:[{publisher:'Phoenix Contact',title:model+' product dimensions',url:url,documentRevision:'Manufacturer product record reviewed 2026-11-15',revisionNote:'Nominal body dimensions, not a detailed mounting drawing.',retrievedAt:'2026-11-15'}].concat(compatibilityUrl?[Object.assign({publisher:'Phoenix Contact',title:'Terminal manufacturer accessory listing',url:compatibilityUrl,documentRevision:'Manufacturer accessory record reviewed 2026-11-15',revisionNote:'Accessory listing establishes the supported terminal family.',retrievedAt:'2026-11-15'},compatibilitySource)]:[])
     });
   }
-  const ukCoverDefinition=terminalAccessoryDefinition('3003020','D-UK 4/10','Terminal end cover',1.8,42.5,35.9,'https://www.phoenixcontact.com/en-us/products/end-cover-d-uk-410-3003020?type=pdf',[],null);
+  const ukCoverDefinition=terminalAccessoryDefinition('3003020','D-UK 4/10','Terminal end cover',1.8,42.5,35.9,'https://www.phoenixcontact.com/en-us/products/end-cover-d-uk-410-3003020?type=pdf',['phoenix-contact-3004362'],'https://www.ilecsys.co.uk/sites/default/files/2025/02/01/phoenix-contact-3004362-en.pdf',{documentRevision:'2025-02-01, page 3',revisionNote:'Manufacturer datasheet for 3004362 lists D-UK 4/10, article 3003020.',retrievedAt:'2026-11-21'});
   const utCoverDefinition=terminalAccessoryDefinition('3047028','D-UT 2,5/10','Terminal end cover',2.2,47,39.8,'https://www.phoenixcontact.com/en-gb/products/end-cover-d-ut-2510-3047028?type=pdf',['phoenix-contact-3044076'],'https://www.phoenixcontact.com/de-de/produkte/durchgangsklemme-ut-25-3044076?type=pdf');
   const peCoverDefinition=terminalAccessoryDefinition('3212060','D-PT 16 N','Terminal end cover',2.2,75.4,45.6,'https://www.phoenixcontact.com/en-us/products/end-cover-d-pt-16-n-3212060',['phoenix-contact-3212147','phoenix-contact-3212147-rail-view'],'https://www.phoenixcontact.com/us/products/3212147/pdf');
   const terminalEndBracketDefinition=terminalAccessoryDefinition('3022276','CLIPFIX 35-5','End bracket for NS 35/7.5 or NS 35/15',5.2,48.6,35.3,'https://www.phoenixcontact.com/en-us/products/end-block-clipfix-35-5-3022276?type=pdf',[],null);
@@ -1514,7 +1514,7 @@ function createPumpStarterDocumentation(name) {
       'Q1 | Panel | Siemens 3LD2244-1TL51, four poles. Q2 | Field | 3LD2203-0TK51; enclosure unresolved.',
       'F3 Siemens 5SY4110-7 C10; F4 Phoenix 2908262 set to 1 A. Verify upstream and branch coordination.',
       'H1 / H2 | Panel door | coil voltage / F2 trip contact | Schneider XB5AVB3 green / XB5AVB4 red.',
-      'X1 / X2 / X3 / X4 / X5 / XPE | Panel | power / control / PE terminal strips | current, accessories and order codes unresolved.',
+      'X1–X5 / XPE | Panel terminals with sourced covers and brackets. See A3 layouts and the A4 material register.',
       'Cables W1 supply, W2 motor, W3 pressure: route, lengths, installation methods and core sizes unresolved.',
       'K1, F2, M1, PS1 and S0/S1 candidates already exist in the component library; no generic substitutions.',
       'Q2:AUX | Field | Siemens 3LD9200-5B | mechanically mounted on Q2; 23/24 in hold circuit.',
@@ -1679,7 +1679,7 @@ function createPumpStarterDocumentation(name) {
     continuation('pe-rail-aux',incomingPE,'rail-foot',{x:500,y:350},auxPE,'rail-foot',{x:60,y:420},'PE-RAIL-AUX','right','right');
     text(17,'pe-boundary',60,110,'SITE PE BOUNDARY — XPE:0 connection 1; separate from all switched phases, neutral and DC return.',12,1070);
     text(17,'pe-rail-notes',650,170,'EXPLICIT PE PATHS — ENGINEERING DEVELOPMENT\nXPE:0/1/2 are panel protective-conductor terminals.\nRAIL denotes each terminal grounding foot, not a clamp.\nGreen rail paths document conductive mounting continuity.\nThey are not two wires inserted in one conductor clamp.\nXPE:1 connection 2 supplies the motor PE terminal.\nXPE:2 connection 2 supplies the power-supply PE terminal.\nUnused conductor clamps remain available, not bridged.',12,480);
-    text(17,'pe-release-checks',60,520,'INSTALLATION CHECKS STILL REQUIRED\nSelect and verify conductive rail, supports, connections and fault-current capacity.\nProvide enclosure, mounting-plate and door bonding when their hardware is selected.\nVerify protective continuity physically; no test result or installation approval is claimed.',12,630);
+    text(17,'pe-release-checks',60,520,'INSTALLATION: see A3 Protective bonding schedule.\nReserve XPE:0 connection 2 for the separate cabinet PE distribution bond.\nVerify rail and strap fault duty and protective continuity on the actual assembly.\nNo physical test result or installation approval is claimed.',12,630);
     pe.properties.comment='Panel PE terminal: motor conductor at connection 2; explicit grounding-foot path to XPE:0. Verify conductive rail and assembly.';
     auxPE.properties.comment='Panel PE terminal: PSU conductor at connection 2; explicit grounding-foot path to XPE:0. Verify conductive rail and assembly.';
     for(const o of objects.filter(function(o){return o.id.startsWith('eng0601-wire-pe-rail-');})){o.stroke='#178743';}
@@ -1798,9 +1798,10 @@ function createPumpStarterDocumentation(name) {
     const panelDevices=objects.filter(function(o){return o.kind==='component-instance'&&o.id!==enclosure.id&&!externalRefs.has(o.ref);});
     panelDevices.forEach(function(device,index){const definition=component(device.componentId);text(19,'panel-inventory-'+index,650,150+index*13,device.ref+' · '+definition.model,10,460);});
     text(19,'external-boundary',650,525,'EXTERNAL: M1 motor; Q2 field isolator + auxiliary; B1 pressure device.\nDo not place field equipment inside this cabinet by default.',11,460);
-    text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size, not verified mounting offsets or drill coordinates.\nF1, K1, PS1, F3 and F4: linked body envelopes at 1:2; proposed positions, not drill coordinates.\nOther footprints, rails, ducts, clearance verification, thermal load and bonding remain to be designed.\nThe device register is an editable snapshot of A2 instances; no duplicate devices are created.',11,620);
+    text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size. See the separate A3 terminal rail mounting and protective bonding sheets.\nF1, K1, PS1, F3 and F4: linked body envelopes at 1:2; proposed positions only.\nRemaining device footprints, ducts and enclosure thermal load require engineering.\nThe device register is an editable snapshot of A2 instances.',11,620);
     let accessoryCount=0;
-    const coverByTerminal=new Map([[utCoverDefinition.supportedComponentIds[0],utCoverDefinition],...peCoverDefinition.supportedComponentIds.map(function(id){return [id,peCoverDefinition];})]);
+    const coverByTerminal=new Map([ukCoverDefinition,utCoverDefinition,peCoverDefinition].flatMap(function(cover){return cover.supportedComponentIds.map(function(id){return [id,cover];});}));
+    const railSegments=[];
     const terminalDetailStart=sheets.length;
     const accessorySheet=terminalDetailStart+2;
     sheets[accessorySheet]={id:'eng0601-a3-accessories',sectionId:'A3',name:'Terminal accessory instances',number:'A3/'+String(accessorySheet).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development detail — not installation approved'}};
@@ -1831,7 +1832,11 @@ function createPumpStarterDocumentation(name) {
         arranged.push(rightBracket);
         const width=arranged.reduce(function(total,o){return total+component(o.componentId).panelFootprint.widthMm*5;},0);
         const center=220+column*330;
-        const railLength=Math.ceil((width/5+10)/5)*5;
+        // Two complete slots with 1 mm nominal margin to each adjacent unused slot.
+        const railLength=58;
+        if(width/5+8>railLength)throw new Error('Terminal bodies exceed the planned rail span for '+strip+'.');
+        const bodyHeight=Math.max(...arranged.map(function(device){return component(device.componentId).panelFootprint.heightMm;}));
+        railSegments.push({strip:strip,length:railLength,bodyHeight:bodyHeight,x:105+column*165,y:350+pageOffset*330});
         const railHalfLength=railLength*2.5;
         objects.push({id:'eng0601-terminal-rail-'+strip,sheetId:id,kind:'rect',x:center-railHalfLength,y:252.5,x2:center+railHalfLength,y2:427.5,stroke:'#6b7280',fill:'#e5e7eb'});
         let left=center-width/2;
@@ -1839,10 +1844,58 @@ function createPumpStarterDocumentation(name) {
         arranged.forEach(function(device){const footprint=component(device.componentId).panelFootprint;objects.push(createPanelPlacement(panelProject,device.id,id,left+footprint.widthMm*2.5,340,5));left+=footprint.widthMm*5;});
         text(index,'terminal-rail-size-'+strip,130+column*330,547,'NS 35/7.5 · proposed '+railLength+' mm segment',10,290);
       });
-      text(index,'terminal-layout-limit-'+index,60,570,'Rail outlines use nominal 35 mm width. Segment lengths include proposed end allowance; verify slot locations and cut lengths.\nUT and PE covers link to the final terminal in each strip. UK cover, cabinet location, wire access, drilling and bonding remain open.',11,1050);
+      text(index,'terminal-layout-limit-'+index,60,570,'The UK, UT and PE covers link to the final terminal in each strip. See Terminal rail mounting for plate datums and slot centres.\nBody envelopes are at drawing scale. Check orientation, bend radii and tool access on the actual assembly.',11,1050);
     });
     text(sheets.length-1,'accessory-register-heading',60,65,'ENG-0601 | Terminal accessory instances',22);
     text(sheets.length-1,'accessory-register-basis',60,105,'Editable part instances and their references. Linked 5:1 body views are on the preceding A3 sheets.',11);
+    function developmentSheet(section,id,title){
+      const index=sheets.length;
+      sheets.push({id:id,sectionId:section,name:title,number:section+'/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development — not approved'}});
+      text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);
+      return index;
+    }
+    const railPage=developmentSheet('A3','eng0601-a3-rail-mounting','Terminal rail mounting and access');
+    function railRectangle(id,x,y,width,height,fill){
+      objects.push({id:'eng0601-'+id,sheetId:sheets[railPage].id,kind:'rect',x:x,y:y,x2:x+width,y2:y+height,stroke:'#64748b',fill:fill});
+    }
+    const plate={x:80,y:125,scale:0.5};
+    const plateSize=rittalEnclosureDefinition.specifications.mountingPlate;
+    railRectangle('rail-plate',plate.x,plate.y,plateSize.width.value*plate.scale,plateSize.height.value*plate.scale,'none');
+    const psPlacement=objects.find(function(o){return o.kind==='panel-placement'&&o.deviceId===ps1.id;});
+    const psGeometry=panelPlacementGeometry(panelProject,psPlacement);
+    const psCenter={x:plate.x+psGeometry.x-enclosure.x+plateSize.width.value*plate.scale/2,y:plate.y+psGeometry.y-enclosure.y+plateSize.height.value*plate.scale/2};
+    const psClearance=psGeometry.footprint.clearancesMm;
+    const psZoneTop=psCenter.y-psGeometry.height/2-psClearance.top*plate.scale;
+    const psZoneHeight=psGeometry.height+(psClearance.top+psClearance.bottom)*plate.scale;
+    railRectangle('rail-ps1-zone',psCenter.x-psGeometry.width/2,psZoneTop,psGeometry.width,psZoneHeight,'#fef3c7');
+    text(railPage,'rail-ps1-label',psCenter.x-27,psZoneTop-5,'PS1 convection',9,100);
+    text(railPage,'rail-datum',80,112,'0,0 · PLATE FRONT / TOP LEFT · 1:2',11,300);
+    text(railPage,'rail-table-heading',410,110,'CENTRES AND FASTENER LOCATIONS · mm from plate datum',13,680);
+    railSegments.forEach(function(rail,index){
+      const cx=plate.x+rail.x*plate.scale,cy=plate.y+rail.y*plate.scale;
+      const halfWidth=rail.length*plate.scale/2,halfAccess=(rail.bodyHeight/2+50)*plate.scale;
+      railRectangle('rail-access-'+rail.strip,cx-halfWidth-7.5,cy-halfAccess,halfWidth*2+15,halfAccess*2,'#eef4f8');
+      railRectangle('rail-segment-'+rail.strip,cx-halfWidth,cy-8.75,halfWidth*2,17.5,'#cbd5e1');
+      [-12.5,12.5].forEach(function(offset,slot){railRectangle('rail-slot-'+rail.strip+'-'+slot,cx+(offset-7.5)*plate.scale,cy-1.55,15*plate.scale,3.1,'#ffffff');});
+      text(railPage,'rail-plate-label-'+rail.strip,cx-halfWidth,cy-13,rail.strip,9,45);
+      text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+(rail.x-12.5)+' / '+(rail.x+12.5)+' at y '+rail.y,12,680);
+    });
+    text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut between two slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
+    text(railPage,'rail-mount-status',410,451,'Fit the removable plate before drilling. Check fastener projection, door travel and installed depth.\nCut dimensions are a design proposal. Measure the actual plate and rail stock before releasing the layout.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
+    const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');
+    rows(bondingPage,[
+      'BONDING DATUM: incoming PE → XPE:0 connection 1; XPE:0/1/2 share the dedicated XPE rail.',
+      'XPE:0 connection 2 → dedicated cabinet PE distribution point. Use one conductor per clamp.',
+      'PE distribution → ENC1 enclosure stud; use the Rittal designated earthing point and assembly hardware.',
+      'Enclosure stud → door M8 earthing point via flexible AX strap. Hinges are not the bonding path.',
+      'Enclosure stud → removable mounting plate earthing point via separate AX strap.',
+      'PE distribution → metal X1–X5 support rails as required by the assembly bonding design.',
+      'Rittal SZ 2564000 (M8, 170 mm, 4 mm²) is a catalog candidate; confirm door travel and duty.',
+      'Verify the XPE rail and mounting feet against required fault duty. Do not rely on rail mounting screws as the sole cabinet bond.',
+      'Check each strap and conductor size, connection hardware and torque against actual protective duty and instructions.',
+      'Verify continuity from incoming PE to each exposed part and record results. Keep N and 0 V separate from PE.',
+      'This is a physical bonding schedule. Schematic PE paths and existing terminal identities remain on A2/017.'
+    ]);
     const a4Start=sheets.length;
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-a4Start),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
@@ -1873,6 +1926,19 @@ function createPumpStarterDocumentation(name) {
       'Record test method, acceptance criterion, actual value, date, instrument, tester and independent review.',
       'No measured result, signature, successful test or installation approval is implied by this document.'
     ]);
+    const feederReview=a4Sheet('Motor feeder acceptance worksheet');rows(feederReview,[
+      'PATH: supply → Q1 → X1 → F1 → K1 → F2 → X2 → Q2 → M1. Auxiliary F3 branches after Q1.',
+      'DESIGN BASIS: 400 V three-phase; M1 15.2 A candidate. F2 15.2 A proposal; confirm duty and nameplate.',
+      'F1 data at 400 V: 55 kA Icu / 25 kA Ics. Individual breaker ratings are separate from starter coordination.',
+      'Supply inputs: maximum prospective fault current ___ kA; minimum earth fault current ___ A; method/date ___.',
+      'Upstream device and settings ___; maximum fault duty at Q1, F1 and auxiliary branch ___; evidence ___.',
+      'Compare maximum duty with exact switchgear and Siemens combination conditions, including upstream limits.',
+      'Record W1 and W2 routes, lengths, core sizes, installation methods, grouping and ambient temperature.',
+      'Verify effective ampacity, start/run voltage drop, minimum-fault disconnection and conductor thermal withstand.',
+      'Check F2 setting, start duration and overload class; verify selectivity and auxiliary branch protection.',
+      'Confirm supply and neutral switching requirements for Q1. Confirm PE continuity using the A3 bond schedule.',
+      'REVIEW: pending site inputs and independent review. Record evidence, reviewer and acceptance date ___.',
+    ]);
     const handover=a4Sheet('Handover and unresolved design register');rows(handover,[
       'RELEASE STATUS: ENGINEERING DEVELOPMENT — NOT APPROVED FOR INSTALLATION.',
       'Deliverable: one native editable project; A1 basis, A2 circuits, A3 enclosure basis and A4 report snapshots.',
@@ -1880,9 +1946,9 @@ function createPumpStarterDocumentation(name) {
       'Supply assumptions: Germany, 400/230 V TN-S, indoor 25 °C; confirm actual site conditions.',
       'Outstanding: prospective fault current, upstream protection and complete source-isolation verification.',
       'Outstanding: cable installation methods, grouping, voltage drop, protective conductor and fault checks.',
-      'Outstanding: physical support assembly, rail/duct selections, clearances, enclosure thermal and bonding design.',
+      'Outstanding: verify proposed rails, service zones and bond hardware. Complete duct design and enclosure thermal checks.',
       'Outstanding: motor/pump selection confirmation, pressure thresholds and machinery risk assessment.',
-      'Outstanding: complete mounting, terminal-strip arrangement, cable entry and field installation instructions.',
+      'Outstanding: verify mounting and terminal-strip fit, cable entry and field installation details on the actual build.',
       'Outstanding: independent engineering review, physical inspection, commissioning and owner acceptance.',
       'Keep manufacturer records distinct from editable design assumptions; approve replacements separately.',
       'Before handover: update report snapshots and revisions to match the final native circuit and layout.',
@@ -1890,9 +1956,9 @@ function createPumpStarterDocumentation(name) {
     ]);
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
     const registerRows=Math.ceil(sheets.length/2);
-    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*25,sheet.number+' '+sheet.name,10,510);});
+    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*23,sheet.number+' '+sheet.name,10,510);});
     objects.find(function(o){return o.id==='eng0601-dependencies';}).text='All listed sheets exist. A4 reports are editable development snapshots; review them after design changes.';
-    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and eleven connected A2 circuit sheets and two editable reports, plus an A3 enclosure basis and A4 development reports. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
+    return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'Native A1–A4 pump-starter project with connected circuit sheets, terminal rail mounting, protective bonding and feeder acceptance documentation. Final assembly depends on site inputs and verification.'}})).project;
   }
   function projectExamples() {
     return [{id:'eng0601',name:'ENG-0601 · Pump starter (development)',description:'Six A1 documents and eleven connected A2 circuit sheets and two editable reports including motor feeder protection, field isolation, delta motor terminals and PE. A3 enclosure dimensions are included; detailed placement, cable calculations and installation verification remain incomplete; not installation-approved.'},

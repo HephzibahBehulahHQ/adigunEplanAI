@@ -554,13 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 31);
+  assert.equal(project.sheets.length, 34);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 31 },
+      { length: 34 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 23 ? "A3/" : "A4/") +
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 25 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
     ),
   );
@@ -2088,9 +2088,9 @@ test("wire lanes share routing, branch geometry, length and native persistence",
 test("A4 native registers match canonical devices and remain editable after reopen", () => {
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
-  assert.equal(sheets.length, 8);
-  assert.equal(sheets[0].number, "A4/023");
-  assert.equal(sheets.at(-1).number, "A4/030");
+  assert.equal(sheets.length, 9);
+  assert.equal(sheets[0].number, "A4/025");
+  assert.equal(sheets.at(-1).number, "A4/033");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2356,7 +2356,7 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     (o) =>
       o.kind === "component-instance" && o.sheetId === "eng0601-a3-accessories",
   );
-  assert.equal(accessories.length, 14);
+  assert.equal(accessories.length, 18);
   assert.equal(views.length, terminals.length + accessories.length);
   assert.deepEqual(
     Array.from(views, (o) => o.deviceId).sort(),
@@ -2368,11 +2368,17 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     12,
   );
   for (const [part, strip] of [
+    ["3003020", "X1"],
+    ["3003020", "X2"],
+    ["3003020", "X3"],
+    ["3003020", "X4"],
     ["3047028", "X5"],
     ["3212060", "XPE"],
   ]) {
     const cover = accessories.find(
-      (o) => o.componentId === "phoenix-contact-" + part,
+      (o) =>
+        o.componentId === "phoenix-contact-" + part &&
+        o.ref === "ACC-" + strip + "-C",
     );
     const finalTerminal = terminals
       .filter((o) => o.ref.startsWith(strip + ":"))
@@ -2398,7 +2404,41 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
           sum + engine.component(device.componentId).panelFootprint.widthMm,
         0,
       );
-    assert.equal((rail.x2 - rail.x) / 5, Math.ceil((bodyWidth + 10) / 5) * 5);
+    assert.equal((rail.x2 - rail.x) / 5, 58);
+    assert.ok(58 - bodyWidth >= 8);
+    const slots = project.objects.filter((o) =>
+      o.id.startsWith("eng0601-rail-slot-" + strip + "-"),
+    );
+    assert.equal(slots.length, 2);
+    assert.equal((slots[1].x - slots[0].x) / 0.5, 25);
+    for (const slot of slots) {
+      assert.equal((slot.x2 - slot.x) / 0.5, 15);
+      assert.ok(Math.abs((slot.y2 - slot.y) / 0.5 - 6.2) < 1e-9);
+    }
+  }
+  const plate = project.objects.find((o) => o.id === "eng0601-rail-plate");
+  const zones = project.objects.filter((o) =>
+    o.id.startsWith("eng0601-rail-access-"),
+  );
+  assert.equal(zones.length, 6);
+  const ps1Zone = project.objects.find((o) => o.id === "eng0601-rail-ps1-zone");
+  assert.equal((ps1Zone.y2 - ps1Zone.y) / 0.5, 180);
+  zones.push(ps1Zone);
+  for (const [index, zone] of zones.entries()) {
+    assert.ok(
+      zone.x >= plate.x &&
+        zone.y >= plate.y &&
+        zone.x2 <= plate.x2 &&
+        zone.y2 <= plate.y2,
+    );
+    for (const next of zones.slice(index + 1)) {
+      assert.ok(
+        zone.x2 <= next.x ||
+          next.x2 <= zone.x ||
+          zone.y2 <= next.y ||
+          next.y2 <= zone.y,
+      );
+    }
   }
   for (const view of views) {
     const box = engine.panelPlacementGeometry(project, view);
