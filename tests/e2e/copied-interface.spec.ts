@@ -2616,6 +2616,15 @@ test("terminal clicks auto-route and manual bends survive moving both connected 
   await page.mouse.down();
   await page.mouse.move(firstBend.x, firstBend.y, { steps: 8 });
   await page.mouse.up();
+  await page.keyboard.down("Space");
+  await page.mouse.down();
+  await page.mouse.move(firstBend.x + 45, firstBend.y + 30);
+  await page.mouse.up();
+  await page.keyboard.up("Space");
+  const pannedBend = await sheetPoint(page, 480, 240);
+  expect(Math.abs(pannedBend.x - firstBend.x - 45)).toBeLessThan(1);
+  expect(Math.abs(pannedBend.y - firstBend.y - 30)).toBeLessThan(1);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(1);
   await clickAt(550, 395);
   await clickAt(590, 375);
   await clickAt(630, 440);
@@ -2792,6 +2801,9 @@ for (const template of [
       'input[type="color"][data-drawing-style="stroke"]',
     );
     await color.fill("#d94024");
+    await expect(
+      page.locator('#userDrawings [data-layer="connections"]'),
+    ).toHaveAttribute("stroke", "#d94024");
     await page
       .getByRole("combobox", { name: "Wire route axis" })
       .selectOption("y");
@@ -2858,6 +2870,14 @@ test("drafts across the full viewport with a signed, pointer-centered camera", a
   await addSectionSheet(page);
   const drawing = page.locator("#drawing");
   const stage = page.locator("#canvasStage");
+  const footer = page.locator(".canvas-status");
+  await expect
+    .poll(async () => {
+      const area = (await stage.boundingBox())!,
+        status = (await footer.boundingBox())!;
+      return Math.abs(status.y - area.y - area.height);
+    })
+    .toBeLessThan(2);
   await expect
     .poll(async () => {
       const canvas = await drawing.boundingBox();
@@ -2959,4 +2979,247 @@ test("component placement accounts for the rendered PLC reference label", async 
   await page.mouse.click(clear.x, clear.y);
   await expect(components).toHaveCount(2);
   await expect(components.last()).toContainText("A2");
+});
+
+test("fit drawing centers signed geometry and the origin command centers zero", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1750, height: 700 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-draw="line"]').click();
+  const a = await sheetPoint(page, -100, 180);
+  const b = await sheetPoint(page, -25, 260);
+  await page.mouse.move(a.x, a.y);
+  await page.mouse.down();
+  await page.mouse.move(b.x, b.y);
+  await page.mouse.up();
+  await page.locator('[data-action="fit"]').first().click();
+  const canvas = (await page.locator("#drawing").boundingBox())!;
+  const middle = await sheetPoint(page, -62.5, 220);
+  expect(Math.abs(middle.x - canvas.x - canvas.width / 2)).toBeLessThan(8);
+  expect(Math.abs(middle.y - canvas.y - canvas.height / 2)).toBeLessThan(8);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Go to drawing origin");
+  await page.locator("#commandSearch").press("Enter");
+  const origin = await sheetPoint(page, 0, 0);
+  expect(Math.abs(origin.x - canvas.x - canvas.width / 2)).toBeLessThan(1);
+  expect(Math.abs(origin.y - canvas.y - canvas.height / 2)).toBeLessThan(1);
+});
+
+test("physical grid, cursor units and snap spacing persist independently", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page, "A3");
+  await page.locator('[data-inspector="Properties"]').click();
+  const minor = page.getByLabel("Minor grid", { exact: true });
+  const major = page.getByLabel("Major grid", { exact: true });
+  const snap = page.getByLabel("Snap interval", { exact: true });
+  await expect(minor).toHaveValue("2.5");
+  await expect(major).toHaveValue("10");
+  await snap.fill("12.7");
+  await snap.press("Tab");
+  await page.getByLabel("Display units").selectOption("in");
+  await expect(snap).toHaveValue("0.5");
+  await expect(minor).toHaveValue("0.098425197");
+  await page.locator('[data-draw="line"]').click();
+  const start = await sheetPoint(page, 131, 205);
+  const end = await sheetPoint(page, 258, 260);
+  await page.mouse.move(start.x, start.y);
+  await expect(page.locator("#coordinates")).toContainText("5.000");
+  await expect(page.locator("#coordinates")).toContainText("in · snap");
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const saved = await saveDrawing(page, "physical-grid-units");
+  expect(saved.data.sheets[0].drafting).toEqual({
+    units: "in",
+    minor: 2.5,
+    major: 10,
+    snap: 12.7,
+  });
+  expect(saved.data.objects[0].x).toBeCloseTo(127);
+  await page.locator('[data-draw="select"]').click();
+  const midpoint = await sheetPoint(page, 190.5, 228.6);
+  await page.mouse.click(midpoint.x, midpoint.y);
+  const coordinate = page.getByLabel("X (in)", { exact: true });
+  await expect(coordinate).toHaveValue("5");
+  await coordinate.fill("6");
+  await coordinate.press("Tab");
+  const moved = await saveDrawing(page, "inch-position");
+  expect(moved.data.objects[0].x).toBeCloseTo(152.4);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings [data-object]")).toHaveCount(1);
+});
+
+test("rulers create saved guides with exact coordinates, visibility and locking", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1550, height: 850 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const horizontalRuler = page.getByLabel("Horizontal ruler");
+  const top = (await horizontalRuler.boundingBox())!;
+  const drop = await sheetPoint(page, 450, 275);
+  await page.mouse.move(drop.x, top.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(drop.x, drop.y, { steps: 5 });
+  await page.mouse.up();
+  const guides = page.locator("#editorGuides [data-drafting-guide]");
+  await expect(guides).toHaveCount(1);
+  expect(Number(await guides.first().getAttribute("y1"))).toBeCloseTo(275, 0);
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("Rulers and guides", { exact: true }).click();
+  await page.getByRole("button", { name: "Add vertical guide" }).click();
+  const vertical = page.getByLabel("Vertical guide 2");
+  await vertical.fill("-125");
+  await vertical.press("Tab");
+  await expect(guides.last()).toHaveAttribute("x1", "-125");
+  const row = page.locator("[data-guide-id]").last();
+  await row.getByLabel("Lock").check();
+  await expect(vertical).toBeDisabled();
+  await row.getByLabel("Hide").check();
+  await expect(guides).toHaveCount(1);
+  const saved = await saveDrawing(page, "drafting-guides");
+  expect(saved.data.sheets[0].guides[1]).toMatchObject({
+    axis: "x",
+    position: -125,
+    locked: true,
+    hidden: true,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(guides).toHaveCount(1);
+});
+
+test("full SVG keeps off-frame geometry and PDF honors physical paper size", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1750, height: 700 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-draw="line"]').click();
+  const start = await sheetPoint(page, -100, 190);
+  const end = await sheetPoint(page, -25, 280);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const insideA = await sheetPoint(page, 260, 230);
+  const insideB = await sheetPoint(page, 690, 480);
+  await page.mouse.move(insideA.x, insideA.y);
+  await page.mouse.down();
+  await page.mouse.move(insideB.x, insideB.y);
+  await page.mouse.up();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export drawing as SVG" }).click();
+  const svgFile = await download;
+  const svgPath = test.info().outputPath("off-frame.svg");
+  await svgFile.saveAs(svgPath);
+  const svg = fs.readFileSync(svgPath, "utf8");
+  expect(svg).toContain('d="M-100 190L-25 280"');
+  expect(svg).not.toContain('id="editorGuides"');
+  expect(svg).not.toContain('id="viewportGrid"');
+  expect(svg).toContain('d="M260 230L690 480"');
+  await page.locator('[data-draw="select"]').click();
+  const selected = await sheetPoint(page, -62.5, 235);
+  await page.mouse.click(selected.x, selected.y);
+  await expect(page.locator("#userDrawings .selected-object")).toHaveCount(1);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export selection as SVG");
+  const selectedDownload = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export selection as SVG" }).click();
+  const selectionFile = await selectedDownload;
+  const selectionPath = test.info().outputPath("selected-vector.svg");
+  await selectionFile.saveAs(selectionPath);
+  const selection = fs.readFileSync(selectionPath, "utf8");
+  expect(selection).toContain('d="M-100 190L-25 280"');
+  expect(selection).not.toContain('d="M260 230L690 480"');
+  expect(selection).not.toContain('id="customSheetFrame"');
+  if (!(await page.locator("#closeRightPanel").isVisible()))
+    await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("Print layout", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Paper format", exact: true })
+    .selectOption("A4");
+  await page
+    .getByRole("combobox", { name: "Orientation", exact: true })
+    .selectOption("portrait");
+  const margin = page.getByLabel("Page margin (mm)", { exact: true });
+  await margin.fill("12");
+  await margin.press("Tab");
+  const saved = await saveDrawing(page, "a4-print-layout");
+  expect(saved.data.sheets[0].paper).toMatchObject({
+    format: "A4",
+    orientation: "portrait",
+    margin: 12,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#paperBoundary")).toBeVisible();
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export print frame as SVG");
+  const clipping = page.waitForEvent("dialog").then(async (dialog) => {
+    const message = dialog.message();
+    await dialog.dismiss();
+    return message;
+  });
+  await page.getByRole("button", { name: "Export print frame as SVG" }).click();
+  expect(await clipping).toMatch(/clips some visible drawing geometry/);
+  const pdf = await page.pdf({
+    path: test.info().outputPath("a4-print-layout.pdf"),
+    preferCSSPageSize: true,
+  });
+  const text = pdf.toString("latin1");
+  const pageBox = text.match(/\/MediaBox\s*\[0 0 ([\d.]+) ([\d.]+)\]/);
+  expect(pageBox).not.toBeNull();
+  expect(Math.abs(Number(pageBox![1]) - (210 * 72) / 25.4)).toBeLessThan(2);
+  expect(Math.abs(Number(pageBox![2]) - (297 * 72) / 25.4)).toBeLessThan(2);
+  expect(text.match(/\/Type\s*\/Page\b/g)).toHaveLength(1);
+});
+
+test("drag redraws connected geometry only and can return exactly to its origin", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("eplan-terminal");
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const x of [200, 420, 650]) {
+    await page.locator('[data-insert="eplan-terminal"]').click();
+    await clickAt(x, 320);
+  }
+  await clickAt(200, 320);
+  await clickAt(420, 320);
+  const parts = page.locator("#userDrawings g[data-object]");
+  const first = parts.first();
+  const third = parts.last();
+  const wire = page.locator('#userDrawings path[data-layer="connections"]');
+  const original = await first.getAttribute("transform");
+  const route = await wire.getAttribute("d");
+  const start = await sheetPoint(page, 195, 317);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  const untouched = (await third.elementHandle())!;
+  await page.mouse.move(start.x + 65, start.y + 35, { steps: 6 });
+  await expect(first).not.toHaveAttribute("transform", original!);
+  await expect(wire).not.toHaveAttribute("d", route!);
+  expect(await untouched.evaluate((element) => element.isConnected)).toBe(true);
+  await page.mouse.move(start.x, start.y, { steps: 6 });
+  await page.mouse.up();
+  await expect(first).toHaveAttribute("transform", original!);
+  await expect(wire).toHaveAttribute("d", route!);
 });

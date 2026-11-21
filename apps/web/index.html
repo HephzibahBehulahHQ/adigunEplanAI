@@ -18,10 +18,25 @@
   .module-menu{position:absolute;z-index:200;top:calc(100% + 1px);left:0;width:min(260px,calc(100vw - 16px));max-height:calc(100dvh - 48px);overflow-y:auto;overscroll-behavior:contain;padding:8px;border:1px solid #34465c;border-top:2px solid var(--cyan);border-radius:5px;background:#111c2d;color:#e9f2fa;box-shadow:0 14px 34px #02061799}.module-menu[hidden]{display:none}.module-menu-head{font-size:12px;font-weight:700;padding:3px 5px 8px;border-bottom:1px solid #28384d;margin-bottom:6px}.module-menu-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:2px}.module-menu-actions button{display:flex;align-items:center;width:100%;min-height:34px;gap:8px;padding:6px 8px;text-align:left;border-radius:4px;color:#d7e6f2;background:#142136}.module-menu-actions button:hover,.module-menu-actions button:focus-visible{background:#203148;color:white}.module-menu-actions button:before{content:'›';color:var(--gold);font-size:17px}.module-menu-note{margin-top:6px;padding:6px 7px;border-left:2px solid var(--gold);background:#0d1727;color:#acbac9;font-size:10px;line-height:1.35}
   .workspace.inspector-open .editor{grid-template-columns:minmax(0,1fr)}.workspace.inspector-open .editor-tabs{grid-column:1}.workspace.inspector-open .canvas-stage{grid-column:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,270px);grid-template-rows:minmax(0,1fr);align-items:stretch;justify-items:stretch}.workspace.inspector-open .drawing-wrap{grid-column:1;grid-row:1;justify-self:center;align-self:center}.workspace.inspector-open .rightpanel{position:relative;inset:auto;width:auto;min-width:0;grid-column:2;grid-row:1;z-index:1;backdrop-filter:none;box-shadow:none;border-top:0;border-bottom:0}.workspace.inspector-open .rightpanel.open{display:grid}@media(max-width:850px){.workspace.inspector-open .canvas-stage{grid-template-columns:minmax(0,1fr) minmax(200px,230px)}}@media(max-width:640px){.workspace.inspector-open .canvas-stage{grid-template-columns:minmax(0,1fr) 0}.workspace.inspector-open .rightpanel.open{display:none}}
   </style>
+  <style id="cad-print-page"></style>
   <style id="cad-viewport-styles">
+    #cadPrintOutput { display: none; }
+    @media print {
+      body[data-cad-print] > :not(#cadPrintOutput) { display: none !important; }
+      body[data-cad-print] #cadPrintOutput, #cadPrintOutput > svg { display: block; }
+      body[data-cad-print] { margin: 0; padding: 0; }
+    }
     [data-component-placement-preview], [data-component-placement-preview] * { pointer-events: none !important; }
     #drawingWrap.frame-hidden #customSheetFrame { display: none !important; }
+    .cad-ruler { position: absolute; z-index: 2; touch-action: none; background: #142235; }
+    .cad-ruler[hidden] { display: none; }
+    .cad-ruler[data-ruler-axis="y"] { top: 0; left: 0; width: 100%; height: 22px; cursor: ns-resize; }
+    .cad-ruler[data-ruler-axis="x"] { top: 0; left: 0; height: 100%; width: 22px; cursor: ew-resize; }
+    @media print { .cad-ruler, #editorGuides { display: none !important; } }
     @media screen {
+      #drawingWrap { position: relative; }
+      .workspace .editor { grid-template-rows: auto minmax(0, 1fr); }
+      #commandList .command-item[hidden] { display: none; }
       .workspace .canvas-stage { padding: 0; }
       .workspace .canvas-stage .drawing-wrap { width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; }
     }
@@ -80,7 +95,7 @@
     <section class="editor" aria-label="Electrical drawing editor">
       <div class="editor-tabs" id="sheetTabs" role="tablist" aria-label="Open drawing sheets"><button class="document-tab" role="tab" data-sheet="power" aria-selected="false">A1/010 · Power supply <span class="tab-close" role="button" tabindex="0" data-close-sheet="power" aria-label="Close Power supply tab">×</span></button><button class="document-tab" role="tab" data-sheet="control" aria-selected="true">A1/020 · Control circuit <span class="tab-close" role="button" tabindex="0" data-close-sheet="control" aria-label="Close Control circuit tab">×</span></button><button class="document-tab" role="tab" data-sheet="plc" aria-selected="false">A2/030 · PLC / I/O <span class="tab-close" role="button" tabindex="0" data-close-sheet="plc" aria-label="Close PLC / I/O tab">×</span></button><button class="document-tab add-sheet" id="newSheet" aria-label="Add sheet">+</button></div>
       <div class="canvas-stage" id="canvasStage"><span class="mobile-note">Viewer · rotate device for drawing detail</span><div class="drawing-wrap" id="drawingWrap"><svg class="drawing" id="drawing" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample electrical control cabinet schematic with PLC, relay, sensor and terminal connections" viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid meet">
-        <defs><pattern id="paperGrid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" class="gridline" fill="none"/></pattern></defs><rect id="viewportGrid" width="1200" height="760" fill="url(#paperGrid)"/><g id="sheetDesign"><g id="customSheetFrame" style="display:none"><rect x="26" y="25" width="1148" height="710" fill="none" stroke="#17212f" stroke-width="1.5"/><path d="M26 675H1174M26 675V735M890 675V735M1000 675V735M1080 675V735" fill="none" stroke="#17212f" stroke-width="1.2"/><text x="42" y="710" fill="#17212f" font-size="19" font-weight="700">HB Elektroniker</text><text x="415" y="701" fill="#17212f" font-size="13" font-weight="700" id="customSheetName">New drawing sheet</text><text x="415" y="721" fill="#17212f" font-size="11" id="customSheetNumber">A3/201</text><text x="910" y="710" fill="#17212f" font-size="12">AdigunEplanAI</text></g>
+        <defs><pattern id="paperGrid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" class="gridline" fill="none"/></pattern><pattern id="minorPaperGrid" width="2.5" height="2.5" patternUnits="userSpaceOnUse"><path class="gridline" d="M2.5 0H0V2.5" opacity=".5" fill="none"/></pattern></defs><rect id="viewportMinorGrid" width="1200" height="760" fill="url(#minorPaperGrid)" display="none" pointer-events="none"/><rect id="viewportGrid" width="1200" height="760" fill="url(#paperGrid)"/><rect id="paperBoundary" aria-hidden="true" pointer-events="none" fill="none" stroke="#64748b" stroke-dasharray="5 4" vector-effect="non-scaling-stroke" display="none"/><g id="sheetDesign"><g id="customSheetFrame" style="display:none"><rect x="26" y="25" width="1148" height="710" fill="none" stroke="#17212f" stroke-width="1.5"/><path d="M26 675H1174M26 675V735M890 675V735M1000 675V735M1080 675V735" fill="none" stroke="#17212f" stroke-width="1.2"/><text x="42" y="710" fill="#17212f" font-size="19" font-weight="700">HB Elektroniker</text><text x="415" y="701" fill="#17212f" font-size="13" font-weight="700" id="customSheetName">New drawing sheet</text><text x="415" y="721" fill="#17212f" font-size="11" id="customSheetNumber">A3/201</text><text x="910" y="710" fill="#17212f" font-size="12">AdigunEplanAI</text></g>
         <rect x="26" y="25" width="1148" height="710" class="sheet-border"/><path d="M98 25v14M170 25v14M242 25v14M314 25v14M386 25v14M458 25v14M530 25v14M602 25v14M674 25v14M746 25v14M818 25v14M890 25v14M962 25v14M1034 25v14M1106 25v14M98 721v14M170 721v14M242 721v14M314 721v14M386 721v14M458 721v14M530 721v14M602 721v14M674 721v14M746 721v14M818 721v14M890 721v14M962 721v14M1034 721v14M1106 721v14" class="construction"/>
         <g class="small green"><text x="92" y="20">1</text><text x="164" y="20">2</text><text x="236" y="20">3</text><text x="308" y="20">4</text><text x="380" y="20">5</text><text x="452" y="20">6</text><text x="524" y="20">7</text><text x="596" y="20">8</text><text x="668" y="20">9</text><text x="736" y="20">10</text><text x="808" y="20">11</text><text x="880" y="20">12</text><text x="952" y="20">13</text><text x="1024" y="20">14</text><text x="1096" y="20">15</text></g>
         <g class="medium green"><text x="42" y="70">L1 / 24V+</text><text x="42" y="87">L2 / 0V</text><text x="42" y="104">PE / 2K</text><text x="1092" y="70">24V+ / 10.0</text><text x="1092" y="87">0V / 10.0</text></g>
@@ -98,14 +113,14 @@
         <path d="M906 538h61v-32h104" class="wire-dark"/><path d="M906 554h83v32h82" class="wire-dark"/><text x="989" y="494" class="small green">DE.2 / 14.4</text><text x="989" y="601" class="small green">DE.4 / 13.2</text>
         <path d="M120 640H770" class="construction"/><g class="accent"><text x="153" y="626">SENSOR INPUT · I0.0</text><text x="577" y="626">DRIVE ENABLE · Q0.2</text></g><path d="M184 466H230V619H153M884 466H812V619H770" stroke="#b122a7" stroke-width="1.3" stroke-dasharray="4 3" fill="none"/>
         <g transform="translate(783 654)"><rect width="365" height="64" fill="#fbfcfd" stroke="#8795a3" stroke-width=".8"/><path d="M0 37H365M230 0v64M296 0v64" stroke="#a8b3be" stroke-width=".8"/><text x="9" y="14" class="medium" font-weight="700">HB ELEKTRONIKER · ENGINEERING DOCUMENT</text><text x="9" y="29" class="small">Project: Control cabinet · 24 V DC field controls</text><text x="9" y="53" class="small">SHEET A1/020 · CONTROL CIRCUIT</text><text x="239" y="15" class="tiny">REVISION</text><text x="239" y="31" class="medium">A</text><text x="305" y="15" class="tiny">SCALE</text><text x="305" y="31" class="medium">NTS</text><text x="305" y="53" class="tiny">SAMPLE PROJECT</text></g>
-        <g id="userDrawings" aria-label="User drawing objects"></g></g></svg></div>
+        <g id="userDrawings" aria-label="User drawing objects"></g></g><g id="editorGuides" aria-hidden="true" pointer-events="none"></g></svg><canvas class="cad-ruler" data-ruler-axis="y" aria-label="Horizontal ruler" hidden></canvas><canvas class="cad-ruler" data-ruler-axis="x" aria-label="Vertical ruler" hidden></canvas></div>
       <aside class="rightpanel" id="rightPanel" aria-label="Inspector panel"><div class="panel-head"><span id="rightPanelTitle">Properties</span><span class="grow"></span><button id="closeRightPanel" aria-label="Close panel">×</button></div><div class="inspector-content" id="inspectorContent"><div class="inspector-block"><div class="inspector-title">Current sheet</div><div class="property-row"><span>Designation</span><strong id="sheetDesignation">A1/020</strong></div><div class="property-row"><span>Function</span><strong>Control circuit</strong></div><div class="property-row"><span>Format</span><strong>A3 landscape</strong></div><div class="property-row"><span>Units</span><strong>mm</strong></div></div><div class="inspector-block" id="selectionDetails"><div class="inspector-title">Selection</div><div class="empty-selection">Select an electrical object on the sheet to inspect its drawing designation.</div></div><div class="inspector-block"><div class="inspector-title">Workspace</div><div class="property-row"><span>Grid spacing</span><strong>2.50 mm</strong></div><div class="property-row"><span>Snap</span><strong>Enabled</strong></div><div class="property-row"><span>Save mode</span><strong>Browser local storage</strong></div></div></div></aside>
       <button class="floating-bot" data-action="assistant" aria-label="Adigun BOT service status"><svg><use href="#i-bot"/></svg></button><div class="toast" id="toast" role="status" aria-live="polite"></div>
       <input class="sr-only" type="file" id="openFile" accept=".svg,image/svg+xml,.json,application/json" aria-label="Open project or SVG drawing">
     </section>
     <aside class="rail right" aria-label="Inspector tools"><button data-tip="Properties" aria-label="Properties" aria-pressed="false" data-inspector="Properties"><svg><use href="#i-list"/></svg></button><button data-tip="Electrical checks" aria-label="Electrical checks" aria-pressed="false" data-inspector="Electrical checks"><svg><use href="#i-check"/></svg></button><button data-tip="Layers and visibility" aria-label="Layers and visibility" aria-pressed="false" data-inspector="Layers and visibility"><svg><use href="#i-layers"/></svg></button><button data-tip="Bill of materials" aria-label="Bill of materials" aria-pressed="false" data-inspector="Bill of materials"><svg><use href="#i-file"/></svg></button><div class="rail-spacer"></div><button data-tip="Adigun BOT service status" aria-label="Adigun BOT service status" data-action="assistant"><svg><use href="#i-bot"/></svg></button></aside>
   </div>
-  <footer class="canvas-status"><span class="ready-dot" aria-hidden="true"></span><span id="statusText">Ready · browser-local workspace</span><span class="grow"></span><span class="desktop-only" id="coordinates">X: 420.250&nbsp; Y: 118.750</span><span class="status-chip desktop-only">Grid: 2.50 mm</span><button class="status-chip toggle" data-toggle="snap" aria-pressed="true">Snap</button><button class="status-chip toggle" data-toggle="ortho" aria-pressed="false">ORTHO</button><button class="status-chip toggle" data-toggle="osnap" aria-pressed="true">OSNAP</button><button class="status-chip" id="zoomValue" aria-label="Current zoom" aria-haspopup="true" aria-expanded="false" title="Choose zoom level">100%</button><div id="zoomMenu" class="zoom-menu" hidden role="menu" aria-label="Zoom presets"><button data-zoom-preset="10">10%</button><button data-zoom-preset="20">20%</button><button data-zoom-preset="50">50%</button><button data-zoom-preset="100">100%</button><button data-zoom-preset="150">150%</button><button data-zoom-preset="250">250%</button><button data-zoom-preset="fit">Fit sheet</button></div><span class="desktop-only">A3 · mm</span></footer>
+  <footer class="canvas-status"><span class="ready-dot" aria-hidden="true"></span><span id="statusText">Ready · browser-local workspace</span><span class="grow"></span><span class="desktop-only" id="coordinates"></span><span class="status-chip desktop-only" id="gridStatus"></span><button class="status-chip toggle" data-toggle="snap" aria-pressed="true">Snap</button><button class="status-chip toggle" data-toggle="ortho" aria-pressed="false">ORTHO</button><button class="status-chip toggle" data-toggle="osnap" aria-pressed="true">OSNAP</button><button class="status-chip" id="zoomValue" aria-label="Current zoom" aria-haspopup="true" aria-expanded="false" title="Choose zoom level">100%</button><div id="zoomMenu" class="zoom-menu" hidden role="menu" aria-label="Zoom presets"><button data-zoom-preset="10">10%</button><button data-zoom-preset="20">20%</button><button data-zoom-preset="50">50%</button><button data-zoom-preset="100">100%</button><button data-zoom-preset="150">150%</button><button data-zoom-preset="250">250%</button><button data-zoom-preset="fit">Fit sheet</button></div><span class="desktop-only" id="sheetStatus"></span></footer>
 </main>
 <dialog id="commands" aria-label="Command palette"><div class="dialog-head"><span>Command palette</span><span class="grow"></span><button id="closeCommands" aria-label="Close command palette">Esc</button></div><div class="dialog-body"><input class="palette-search" id="commandSearch" placeholder="Type a command…" aria-label="Search commands"><div class="command-list" id="commandList"></div></div><div class="dialog-footer">Use ↑ ↓ to move · Enter to run · Esc to close</div></dialog>
 <dialog id="symbolsDialog" aria-label="Insert electrical symbol"><div class="dialog-head"><span>Insert symbol</span><span class="grow"></span><button id="closeSymbols" aria-label="Close symbol picker">×</button></div><div class="dialog-body" id="symbolsDialogList"></div></dialog>
@@ -131,31 +146,40 @@
   const symbolNames={terminal:'Terminal · 2-pin',relay:'Relay coil · K',contact:'NO contact · 13 / 14',breaker:'Protective switch',sensor:'Sensor · 3-wire',motor:'Three-phase motor',plc:'PLC I/O module · 8-point',ground:'Protective earth'};
   const symbolCatalog=window.AdigunCADEngine.catalog();
   for(const symbol of symbolCatalog)symbolNames[symbol.id]=symbol.name;
-  const menuCommands=[['Save project locally','save','Ctrl S'],['Open SVG drawing','open','Ctrl O'],['Export current sheet as SVG','export-svg',''],['Print drawing','print','Ctrl P'],['Fit drawing to view','fit','F'],['Toggle dark drawing paper','theme',''],['Toggle compact canvas','maximize',''],['Insert electrical symbol','symbol-picker','S'],['Show object properties','inspector',''],['Adigun BOT service status','assistant','']];
+  const menuCommands=[['Save project locally','save','Ctrl S'],['Open SVG drawing','open','Ctrl O'],['Export complete drawing as SVG','export-svg',''],['Export selection as SVG','export-selection-svg',''],['Export print frame as SVG','export-frame-svg',''],['Print drawing','print','Ctrl P'],['Fit drawing to view','fit','F'],['Fit selection','fit-selection',''],['Fit print frame','fit-frame',''],['Go to drawing origin','go-to-origin',''],['Toggle dark drawing paper','theme',''],['Toggle compact canvas','maximize',''],['Insert electrical symbol','symbol-picker','S'],['Show object properties','inspector',''],['Adigun BOT service status','assistant','']];
   function notify(message){toast.textContent=message;toast.classList.add('show');clearTimeout(notify.timer);notify.timer=setTimeout(()=>toast.classList.remove('show'),2600);status.textContent=message;}
   function persist(){if(!initializing)dirty=true;}
   function setZoom(value){state.zoom=Math.max(10,Math.min(500,Math.round(value/5)*5));$('#zoomValue').textContent=`${state.zoom}%`;const scale=100/state.zoom;const w=1200*scale,h=760*scale,cx=state.view.x+state.view.w/2,cy=state.view.y+state.view.h/2;state.view={x:cx-w/2,y:cy-h/2,w,h};applyView();persist();}
   function setDrawingViewport(svg,{x,y,w,h}){
     svg.setAttribute("viewBox",[x,y,w,h].join(" "));
-    const grid=svg.querySelector("#viewportGrid");
-    grid.setAttribute("x",x);
-    grid.setAttribute("y",y);
-    grid.setAttribute("width",w);
-    grid.setAttribute("height",h);
+    for(const grid of svg.querySelectorAll("#viewportGrid, #viewportMinorGrid")){
+      grid.setAttribute("x",x);
+      grid.setAttribute("y",y);
+      grid.setAttribute("width",w);
+      grid.setAttribute("height",h);
+    }
   }
   function applyView(){
     const {x,y,w,h}=state.view;
+    if(w>0)state.zoom=120000/w;
     const width=drawing.clientWidth,height=drawing.clientHeight;
     if(width&&height){
       const scale=Math.min(width/w,height/h);
       const visibleWidth=width/scale,visibleHeight=height/scale;
       setDrawingViewport(drawing,{x:x+(w-visibleWidth)/2,y:y+(h-visibleHeight)/2,w:visibleWidth,h:visibleHeight});
+      updateDrawingGrid(scale);
+      renderRulers(scale);
+      renderGuides();
+      renderPrintBoundary();
     }
-    $("#zoomValue").textContent=state.zoom+"%";
+    $("#zoomValue").textContent=Number(state.zoom.toPrecision(4))+"%";
   }
   new ResizeObserver(applyView).observe(drawing);
-  window.addEventListener("beforeprint",()=>setDrawingViewport(drawing,state.view));
-  window.addEventListener("afterprint",applyView);
+  window.addEventListener('beforeprint',preparePrintOutput);
+  window.addEventListener('afterprint',()=>{
+    delete document.body.dataset.cadPrint;
+    $('#cadPrintOutput')?.remove();
+  });
   let sheetIdSequence=0;
   let legacyProjectRows=[];
   function sheetLabel(id){const meta=state.sheets.find(function(sheet){return sheet.id===id;});const base=meta?[meta.number,meta.name]:(sheetNames[id]||[id,id]),override=state.sheetLabels[id];return override?[base[0],override]:base;}
@@ -215,7 +239,9 @@
   }
   function addSheet(name,showPrintFrame=true){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
     const safeName=String(name||'Sheet').trim().slice(0,80)||'Sheet',id='custom-'+Date.now()+'-'+(++sheetIdSequence);
-    const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
+    const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};
+    if(state.activeSection==='A3'&&showPrintFrame)sheet.drafting={units:'mm',minor:2.5,major:10,snap:2.5};
+    if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
     state.sheets.push(sheet);state.sheetObjects[id]=[];state.sheetViews[id]={x:0,y:0,w:1200,h:760};
     renderCustomSheetNavigation();notify(sheetLabel(id)[0]+' created. Select it in the sidebar to open.');persist();return id;
   }
@@ -265,15 +291,145 @@
   function refreshSelectedProperties(){if($('#rightPanelTitle').textContent!=='Properties'||!state.selected)return;const selected=state.objects.find(function(obj){return obj.id===state.selected;});if(selected)showObject(selected);}
   function undo(){if(!state.undo.length)return;state.redo.push(drawingHistorySnapshot());restoreDrawingHistory(state.undo.pop());renderObjects();refreshSelectedProperties();updateHistoryButtons();persist();notify('Drawing command undone.');}
   function redo(){if(!state.redo.length)return;state.undo.push(drawingHistorySnapshot());restoreDrawingHistory(state.redo.pop());renderObjects();refreshSelectedProperties();updateHistoryButtons();persist();notify('Drawing command restored.');}
+  const defaultDrafting={units:'du',minor:10,major:10,snap:2.5};
+  function draftingSettings(){
+    return state.sheets.find(sheet=>sheet.id===state.sheet)?.drafting||defaultDrafting;
+  }
+  let guideDraft=null;
+  function activeDraftingSheet(){return state.sheets.find(sheet=>sheet.id===state.sheet);}
+  function renderRulers(scale){
+    const sheet=activeDraftingSheet(),units=draftingSettings().units,conversion=units==='in'?25.4:1;
+    const visible=Boolean(sheet&&sheet.rulersVisible!==false),view=drawing.viewBox.baseVal;
+    const target=74/scale/conversion;
+    const power=10**Math.floor(Math.log10(target));
+    const step=(target<=power?1:target<=2*power?2:target<=5*power?5:10)*power;
+    const dpi=Math.min(window.devicePixelRatio||1,2);
+    for(const ruler of $$('.cad-ruler')){
+      ruler.hidden=!visible;
+      if(!visible)continue;
+      const horizontal=ruler.dataset.rulerAxis==='y';
+      const width=ruler.clientWidth,height=ruler.clientHeight;
+      if(!width||!height)continue;
+      const pixelWidth=Math.round(width*dpi),pixelHeight=Math.round(height*dpi);
+      if(ruler.width!==pixelWidth)ruler.width=pixelWidth;
+      if(ruler.height!==pixelHeight)ruler.height=pixelHeight;
+      const context=ruler.getContext('2d');
+      context.setTransform(dpi,0,0,dpi,0,0);
+      context.clearRect(0,0,width,height);
+      context.fillStyle='#c3d4e6';
+      context.strokeStyle='#7f97b0';
+      context.font='10px system-ui';
+      const start=(horizontal?view.x:view.y)/conversion,length=horizontal?width:height;
+      const first=Math.ceil(start/step)*step;
+      const ticks=Math.min(100,Math.ceil(length/(step*conversion*scale))+1);
+      for(let index=0;index<ticks;index++){
+        const coord=first+index*step,pixel=(coord-start)*conversion*scale;
+        if(pixel>=length)break;
+        if(pixel<25)continue;
+        context.beginPath();
+        context.moveTo(horizontal?pixel:width-7,horizontal?height-7:pixel);
+        context.lineTo(horizontal?pixel:width,horizontal?height:pixel);
+        context.stroke();
+        const label=String(Number(coord.toPrecision(8)));
+        if(horizontal)context.fillText(label,pixel+3,11);
+        else{
+          context.save();
+          context.translate(11,pixel+4);
+          context.rotate(Math.PI/2);
+          context.fillText(label,0,0);
+          context.restore();
+        }
+      }
+      context.fillText(units,3,12);
+    }
+  }
+  function renderGuides(){
+    const layer=$('#editorGuides'),view=drawing.viewBox.baseVal;
+    const guides=[...(activeDraftingSheet()?.guides||[]),...(guideDraft?[guideDraft]:[])];
+    layer.replaceChildren();
+    for(const guide of guides){
+      if(guide.hidden)continue;
+      const vertical=guide.axis==='x';
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.dataset.draftingGuide=guide.id||'preview';
+      line.setAttribute('x1',vertical?guide.position:view.x);
+      line.setAttribute('x2',vertical?guide.position:view.x+view.width);
+      line.setAttribute('y1',vertical?view.y:guide.position);
+      line.setAttribute('y2',vertical?view.y+view.height:guide.position);
+      line.setAttribute('stroke','#1683a0');
+      line.setAttribute('stroke-opacity',guide.locked?'.7':'.9');
+      line.setAttribute('stroke-dasharray',guide.locked?'none':'5 4');
+      line.setAttribute('vector-effect','non-scaling-stroke');
+      layer.append(line);
+    }
+  }
+  function addDraftingGuide(axis,position){
+    const sheet=activeDraftingSheet();
+    if(!sheet||!Number.isFinite(position))return;
+    (sheet.guides||=[]).push({id:crypto.randomUUID(),axis,position,locked:false,hidden:false});
+    renderGuides();refreshFrameControl();persist();
+  }
+  for(const ruler of $$('.cad-ruler')){
+    const axis=ruler.dataset.rulerAxis;
+    ruler.addEventListener('pointerdown',event=>{
+      if(event.button!==0||!activeDraftingSheet())return;
+      event.preventDefault();
+      ruler.setPointerCapture(event.pointerId);
+      guideDraft={axis,position:svgPoint(event)[axis]};
+      renderGuides();
+    });
+    ruler.addEventListener('pointermove',event=>{
+      if(!guideDraft||!ruler.hasPointerCapture(event.pointerId))return;
+      guideDraft.position=svgPoint(event)[axis];
+      renderGuides();
+    });
+    ruler.addEventListener('pointerup',event=>{
+      if(!guideDraft)return;
+      guideDraft=null;
+      const bounds=drawing.getBoundingClientRect();
+      if(event.clientX>bounds.left+22&&event.clientX<bounds.right&&event.clientY>bounds.top+22&&event.clientY<bounds.bottom){
+        addDraftingGuide(axis,svgPoint(event)[axis]);
+      }else renderGuides();
+    });
+    ruler.addEventListener('pointercancel',()=>{guideDraft=null;renderGuides();});
+  }
+  function updateDrawingGrid(scale){
+    const {minor,major}=draftingSettings();
+    const spacing=major*Math.max(1,2**Math.ceil(Math.log2(8/(major*scale))));
+    const grid=$('#paperGrid'),minorGrid=$('#minorPaperGrid');
+    for(const key of ['width','height']){
+      grid.setAttribute(key,spacing);
+      minorGrid.setAttribute(key,minor);
+    }
+    grid.querySelector('path').setAttribute('d','M'+spacing+' 0H0V'+spacing);
+    minorGrid.querySelector('path').setAttribute('d','M'+minor+' 0H0V'+minor);
+    const showMinor=state.grid&&minor<major&&minor*scale>=6;
+    $('#viewportMinorGrid').setAttribute('display',showMinor?'inline':'none');
+    const units=draftingSettings().units,sheet=activeDraftingSheet();
+    const gridLabel=state.grid?'Grid: '+displayCoordinate(showMinor?minor:spacing)+' '+units:'Grid off';
+    $('#gridStatus').textContent=gridLabel;
+    $('#sheetStatus').textContent=sheet?(sheet.showPrintFrame===false?'Free drafting':printSettings().format)+' · '+units:'';
+  }
+  function unitFactor(){return draftingSettings().units==='in'?25.4:1;}
+  function displayCoordinate(value){
+    return Number((Number(value)/unitFactor()).toPrecision(12));
+  }
+  function coordinateField(obj,axis){
+    const units=draftingSettings().units,label=axis.toUpperCase()+' ('+units+')';
+    return '<label class="property-row"><span>'+label+'</span><input type="number" step="any" data-object-coordinate="'+axis+'" data-object-id="'+escapeHtml(obj.id)+'" value="'+displayCoordinate(obj[axis])+'"></label>';
+  }
+  function showCursorPoint(point,raw=point){
+    const {units}=draftingSettings(),factor=unitFactor();
+    const snap=point.attachment?' · terminal':Math.hypot(point.x-raw.x,point.y-raw.y)>1e-6?' · snap':'';
+    $('#coordinates').textContent='X: '+(point.x/factor).toFixed(3)+'  Y: '+(point.y/factor).toFixed(3)+' '+units+snap;
+  }
   function snapDrawingPoint(point){
     if(state.osnap){
-      const bounds=drawing.getBoundingClientRect();
-      const tolerance=Math.max(2.5,Math.min(30,12*state.view.w/Math.max(1,bounds.width)));
+      const tolerance=Math.max(2.5,Math.min(30,12*drawing.getScreenCTM().inverse().a));
       const nearest=terminalAt(point,tolerance);
       if(nearest)return nearest;
     }
-    if(state.snap){const grid=2.5;return{x:Math.round(point.x/grid)*grid,y:Math.round(point.y/grid)*grid};}
-    return point;
+    return snapObjectPoint(point);
   }
   function terminalAt(point,tolerance){
     let target=null,best=tolerance;
@@ -290,8 +446,27 @@
     return target;
   }
   function svgPoint(evt){const p=drawing.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;return p.matrixTransform(drawing.getScreenCTM().inverse());}
-  function snapObjectPoint(point){return state.snap?{x:Math.round(point.x/2.5)*2.5,y:Math.round(point.y/2.5)*2.5}:point;}
-  function makeObj(kind,x,y,extra={}){const id=`obj-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;return{id,kind,x:Math.round(x/5)*5,y:Math.round(y/5)*5,rotation:0,...extra};}
+  function snapToGuides(point,fallback=point){
+    const sheet=activeDraftingSheet();
+    if(!sheet?.snapToGuides)return fallback;
+    const tolerance=7*drawing.getScreenCTM().inverse().a;
+    const nearest={x:tolerance,y:tolerance};
+    const result={x:fallback.x,y:fallback.y};
+    for(const guide of sheet.guides||[]){
+      if(guide.hidden)continue;
+      const distance=Math.abs(guide.position-point[guide.axis]);
+      if(distance<nearest[guide.axis]){
+        nearest[guide.axis]=distance;
+        result[guide.axis]=guide.position;
+      }
+    }
+    return result;
+  }
+  function snapObjectPoint(point){
+    const step=draftingSettings().snap;
+    return snapToGuides(point,state.snap?{x:Math.round(point.x/step)*step,y:Math.round(point.y/step)*step}:point);
+  }
+  function makeObj(kind,x,y,extra={}){const id=`obj-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;return{id,kind,x,y,rotation:0,...extra};}
 
   function remapConnectedWireEnds(oldPins,newPins,objects=state.objects){
     objects.filter(function(candidate){return candidate.kind==='wire';}).forEach(function(wire){
@@ -344,8 +519,8 @@
   function updateObjectCoordinate(id,axis,value){
     const obj=state.objects.find(function(item){return item.id===id;});
     if(!obj||!['x','y'].includes(axis))return;
-    const next=Number(value);
-    if(!Number.isFinite(next))return;
+    const next=Number(value)*unitFactor();
+    if(value===''||!Number.isFinite(next))return;
     const current=Number(obj[axis])||0,delta=next-current;
     if(Math.abs(delta)<1e-9)return;
     const snapshot=JSON.stringify(state.objects);translateObjectGeometry(obj,axis==='x'?delta:0,axis==='y'?delta:0);
@@ -388,9 +563,69 @@
     if(!state.selectedObjectIds.includes(obj.id)){const ids=obj.groupId?state.objects.filter(function(item){return item.groupId===obj.groupId;}).map(function(item){return item.id;}):[obj.id];setSelection(ids,true);}
     if(state.selectedObjectIds.some(function(id){const item=state.objects.find(function(entry){return entry.id===id;});return item&&item.locked;})){notify('Unlock every selected object before moving the selection.');return;}
     state.selected=obj.id;
-    objectDrag={id:obj.id,ids:state.selectedObjectIds.slice(),snapshot:JSON.stringify(state.objects),pointerStart:point,origin:{x:Number(obj.x)||0,y:Number(obj.y)||0},moved:false};
+    const ids=new Set(state.selectedObjectIds),connectionIds=new Set();
+    const wires=state.objects.filter(item=>item.kind==='wire');
+    for(const wire of wires){
+      const attached=Object.values(wire.attachments||{}).map(pin=>pin.instanceId);
+      if(ids.has(wire.id)||attached.some(id=>ids.has(id))){
+        connectionIds.add(wire.id);
+        for(const id of attached)connectionIds.add(id);
+      }
+    }
+    objectDrag={id:obj.id,ids:[...ids],selected:ids,connectionIds,
+      elements:new Map(Array.from(userDrawings.querySelectorAll('[data-object]'),element=>[element.dataset.object,element])),
+      wireGeometry:new Map(wires.map(wire=>[wire.id,JSON.stringify(wire)])),
+      snapshot:JSON.stringify(state.objects),pointerStart:point,origin:{x:Number(obj.x)||0,y:Number(obj.y)||0},moved:false,dx:0,dy:0};
     drawing.style.cursor='grabbing';drawing.setPointerCapture(pointerId);
     showObject(obj);
+  }
+  function updateDraggedDrawing(point,snap){
+    const drag=objectDrag;
+    const proposed={x:drag.origin.x+point.x-drag.pointerStart.x,y:drag.origin.y+point.y-drag.pointerStart.y};
+    const location=snap?snapObjectPoint(proposed):proposed;
+    const dx=location.x-drag.origin.x,dy=location.y-drag.origin.y;
+    if(Math.abs(dx-drag.dx)<=1e-6&&Math.abs(dy-drag.dy)<=1e-6)return;
+    drag.dx=dx;
+    drag.dy=dy;
+    drag.moved=true;
+    state.objects=JSON.parse(drag.snapshot);
+    translateObjectSet(drag.ids,dx,dy);
+    const engine=window.AdigunCADEngine;
+    if(drag.connectionIds.size)engine.synchronizeWireAttachments(state.objects.filter(obj=>drag.connectionIds.has(obj.id)));
+
+    const changedWires=new Map();
+    for(const obj of state.objects){
+      let changed=drag.selected.has(obj.id);
+      if(obj.kind==='wire'){
+        const geometry=JSON.stringify(obj);
+        if(geometry!==drag.wireGeometry.get(obj.id)){
+          changedWires.set(obj.id,obj);
+          drag.wireGeometry.set(obj.id,geometry);
+          changed=true;
+        }
+      }
+      if(!changed)continue;
+      const existing=drag.elements.get(obj.id),replacement=renderDrawingObject(obj);
+      if(existing&&replacement){existing.replaceWith(replacement);drag.elements.set(obj.id,replacement);}
+    }
+    let movedCrossReference=false;
+    for(const link of state.crossSheetConnections||[]){
+      for(const endpoint of link.endpoints){
+        if(endpoint.sheetId!==state.sheet)continue;
+        const wire=changedWires.get(endpoint.wireId);
+        if(!wire||!endpoint.wireEnd)continue;
+        endpoint.point=endpoint.wireEnd==='start'?{x:wire.x1,y:wire.y1}:{x:wire.x2,y:wire.y2};
+        movedCrossReference=true;
+      }
+    }
+    if(movedCrossReference)renderCrossSheetConnectors();
+    placementFootprints=null;
+    renderResizeHandles();
+    const obj=state.objects.find(item=>item.id===drag.id);
+    for(const field of $$('#selectionDetails [data-object-coordinate]')){
+      const value=obj[field.dataset.objectCoordinate];
+      if(Number.isFinite(value))field.value=displayCoordinate(value);
+    }
   }
   function deleteObject(id){const index=state.objects.findIndex(function(obj){return obj.id===id;});if(index<0)return;pushUndo();removeSelectedDrawingObjects([id]);if(state.selected===id)state.selected=null;state.selectedObjectIds=state.selectedObjectIds.filter(function(selectedId){return selectedId!==id;});renderObjects();persist();refreshSelectedProperties();notify('Drawing object deleted. Undo is available.');}
   function duplicateObject(id){copyObject(id);pasteObject();}
@@ -497,6 +732,46 @@
     placementPreview.setAttribute('stroke',blocked?'#b91c1c':state.strokeColor);
     return blocked;
   }
+  function fitDrawingView(mode){
+    let nodes;
+    if(mode==='fit-frame'){
+      const frame=$('#customSheetFrame');
+      if(!state.sheet||getComputedStyle(frame).display==='none'){notify('The active sheet has no visible print frame.');return;}
+      const view=printWorldBounds(printSettings());
+      fitWorldBounds({left:view.x,right:view.x+view.w,top:view.y,bottom:view.y+view.h});
+      notify('Print frame fitted to view.');
+      return;
+    }else if(mode==='fit-selection'){
+      const selected=new Set(state.selectedObjectIds);
+      nodes=Array.from(userDrawings.children).filter(node=>selected.has(node.dataset.object)&&getComputedStyle(node).display!=='none');
+      if(!nodes.length){notify('Select visible drawing objects to fit.');return;}
+    }else{
+      nodes=Array.from(userDrawings.children).filter(node=>(node.dataset.object||node.classList.contains('cross-sheet-connector'))&&getComputedStyle(node).display!=='none');
+    }
+    if(!nodes.length){
+      state.zoom=100;
+      state.view={x:0,y:0,w:1200,h:760};
+    }else{
+      const bounds=nodes.map(renderedFootprint).reduce((a,b)=>({
+        left:Math.min(a.left,b.left),right:Math.max(a.right,b.right),
+        top:Math.min(a.top,b.top),bottom:Math.max(a.bottom,b.bottom)
+      }));
+      fitWorldBounds(bounds);
+    }
+    if(!nodes.length){applyView();persist();}
+    notify(mode==='fit-selection'?'Selection fitted to view.':'Drawing fitted to view.');
+  }
+  function fitWorldBounds(bounds){
+    const width=drawing.clientWidth,height=drawing.clientHeight;
+    if(!width||!height)return;
+    const base=Math.min(width/1200,height/760);
+    const scale=Math.min(width/Math.max(30,(bounds.right-bounds.left)*1.15),height/Math.max(30,(bounds.bottom-bounds.top)*1.15));
+    state.zoom=Math.min(500,100*scale/base);
+    const w=120000/state.zoom,h=76000/state.zoom;
+    state.view={x:(bounds.left+bounds.right-w)/2,y:(bounds.top+bounds.bottom-h)/2,w,h};
+    applyView();
+    persist();
+  }
   function renderedFootprint(glyph){
     const box=glyph.getBBox();
     const matrix=drawing.getScreenCTM().inverse().multiply(glyph.getScreenCTM());
@@ -582,7 +857,18 @@
   function updateObjectResize(point){if(!resizeDrag)return;const drag=resizeDrag,objects=JSON.parse(drag.snapshot),obj=objects.find(function(item){return item.id===drag.id;});if(!obj){state.objects=JSON.parse(drag.lastValid);return;}const next=snapObjectPoint(point);if(!resizeDrawingGeometry(obj,drag.corner,next,objects)){state.objects=JSON.parse(drag.lastValid);return;}state.objects=objects;drag.lastValid=JSON.stringify(objects);drag.moved=drag.lastValid!==drag.snapshot;renderObjects();}
   function finishObjectResize(event){if(!resizeDrag)return;const drag=resizeDrag;updateObjectResize(svgPoint(event));resizeDrag=null;drawing.style.cursor='default';if(drag.moved&&drag.lastValid!==drag.snapshot){pushUndo(drag.snapshot);persist();refreshSelectedProperties();notify('Drawing object resized. Undo is available.');}else{state.objects=JSON.parse(drag.snapshot);renderObjects();}}
   function synchronizeActiveConnections(){const endpoints=(state.crossSheetConnections||[]).flatMap(function(link){return link.endpoints;}).filter(function(e){return e.sheetId===state.sheet;});endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&!e.wireEnd){if(e.point.x===wire.x1&&e.point.y===wire.y1)e.wireEnd='start';else if(e.point.x===wire.x2&&e.point.y===wire.y2)e.wireEnd='end';}});window.AdigunCADEngine.synchronizeWireAttachments(state.objects);endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&['start','end'].includes(e.wireEnd))e.point={x:wire[e.wireEnd==='start'?'x1':'x2'],y:wire[e.wireEnd==='start'?'y1':'y2']};});}
-  function renderObjects(){placementFootprints=null;synchronizeActiveConnections();userDrawings.replaceChildren();for(const obj of drawingPaintOrder()){let el;const stroke=obj.stroke||'#164eac',fill=obj.fill||'none',width=obj.strokeWidth||(obj.kind==='component-instance'&&window.AdigunCADEngine.component(obj.componentId)?.generic?0.5:1.8);if(['wire','line','arrow','curve','freehand'].includes(obj.kind)){el=document.createElementNS('http://www.w3.org/2000/svg','path');let d;if(obj.kind==='wire')d=window.AdigunCADEngine.wireRoute(obj).map(function(p,i){return (i?'L':'M')+p.x+' '+p.y;}).join(' ');else if(obj.kind==='curve'){const cx=(obj.x1+obj.x2)/2,cy=Math.min(obj.y1,obj.y2)-Math.max(22,Math.abs(obj.x2-obj.x1)*.22);d=`M${obj.x1} ${obj.y1} Q${cx} ${cy} ${obj.x2} ${obj.y2}`;}else if(obj.kind==='freehand')d=(obj.points||[]).map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');else if(obj.kind==='arrow'){const a=Math.atan2(obj.y2-obj.y1,obj.x2-obj.x1),len=10,p1={x:obj.x2-len*Math.cos(a-Math.PI/6),y:obj.y2-len*Math.sin(a-Math.PI/6)},p2={x:obj.x2-len*Math.cos(a+Math.PI/6),y:obj.y2-len*Math.sin(a+Math.PI/6)};d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}M${p1.x} ${p1.y}L${obj.x2} ${obj.y2}L${p2.x} ${p2.y}`;}else d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}`;el.setAttribute('d',d);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);el.setAttribute('fill','none');el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  function renderObjects(){
+    placementFootprints=null;
+    synchronizeActiveConnections();
+    userDrawings.replaceChildren();
+    for(const obj of drawingPaintOrder()){
+      const element=renderDrawingObject(obj);
+      if(element)userDrawings.append(element);
+    }
+    renderCrossSheetConnectors();
+    renderResizeHandles();
+  }
+  function renderDrawingObject(obj){let el;const stroke=obj.stroke||'#164eac',fill=obj.fill||'none',width=obj.strokeWidth||(obj.kind==='component-instance'&&window.AdigunCADEngine.component(obj.componentId)?.generic?0.5:1.8);if(['wire','line','arrow','curve','freehand'].includes(obj.kind)){el=document.createElementNS('http://www.w3.org/2000/svg','path');let d;if(obj.kind==='wire')d=window.AdigunCADEngine.wireRoute(obj).map(function(p,i){return (i?'L':'M')+p.x+' '+p.y;}).join(' ');else if(obj.kind==='curve'){const cx=(obj.x1+obj.x2)/2,cy=Math.min(obj.y1,obj.y2)-Math.max(22,Math.abs(obj.x2-obj.x1)*.22);d=`M${obj.x1} ${obj.y1} Q${cx} ${cy} ${obj.x2} ${obj.y2}`;}else if(obj.kind==='freehand')d=(obj.points||[]).map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');else if(obj.kind==='arrow'){const a=Math.atan2(obj.y2-obj.y1,obj.x2-obj.x1),len=10,p1={x:obj.x2-len*Math.cos(a-Math.PI/6),y:obj.y2-len*Math.sin(a-Math.PI/6)},p2={x:obj.x2-len*Math.cos(a+Math.PI/6),y:obj.y2-len*Math.sin(a+Math.PI/6)};d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}M${p1.x} ${p1.y}L${obj.x2} ${obj.y2}L${p2.x} ${p2.y}`;}else d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}`;el.setAttribute('d',d);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);el.setAttribute('fill','none');el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
         else if(obj.kind==='panel-placement'){
           el=document.createElementNS('http://www.w3.org/2000/svg','g');
           el.setAttribute('class','drawing-object '+(state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''));
@@ -595,10 +881,10 @@
         }
         else if(obj.kind==='rect'||obj.kind==='ellipse'||obj.kind==='triangle'){const x=Math.min(obj.x,obj.x2),y=Math.min(obj.y,obj.y2),w=Math.max(2,Math.abs(obj.x2-obj.x)),h=Math.max(2,Math.abs(obj.y2-obj.y));if(obj.kind==='triangle'){el=document.createElementNS('http://www.w3.org/2000/svg','polygon');el.setAttribute('points',`${x+w/2},${y} ${x+w},${y+h} ${x},${y+h}`);}else{el=document.createElementNS('http://www.w3.org/2000/svg',obj.kind);if(obj.kind==='rect'){el.setAttribute('x',x);el.setAttribute('y',y);el.setAttribute('width',w);el.setAttribute('height',h);}else{el.setAttribute('cx',(x+x+w)/2);el.setAttribute('cy',(y+y+h)/2);el.setAttribute('rx',w/2);el.setAttribute('ry',h/2);}}el.setAttribute('fill',fill);el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);}
         else if(obj.kind==='circle'){el=document.createElementNS('http://www.w3.org/2000/svg','circle');el.setAttribute('cx',obj.x);el.setAttribute('cy',obj.y);el.setAttribute('r',Math.max(2,Math.hypot(obj.x2-obj.x,obj.y2-obj.y)));el.setAttribute('fill',fill);el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);}
-        else if(obj.kind==='component-instance'){const validation=window.AdigunCADEngine.validateInstance(obj);if(!validation.valid)continue;const item=symbolCatalog.find(x=>x.componentId===obj.componentId);if(!item)continue;el=buildCatalogGlyph(obj,item,stroke,width);const description=componentHoverDescription(obj,validation.definition),title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=description;el.insertBefore(title,el.firstChild);el.setAttribute('aria-label',description);}
+        else if(obj.kind==='component-instance'){const validation=window.AdigunCADEngine.validateInstance(obj);if(!validation.valid)return null;const item=symbolCatalog.find(x=>x.componentId===obj.componentId);if(!item)return null;el=buildCatalogGlyph(obj,item,stroke,width);const description=componentHoverDescription(obj,validation.definition),title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=description;el.insertBefore(title,el.firstChild);el.setAttribute('aria-label',description);}
         else if(obj.kind==='text'){el=document.createElementNS('http://www.w3.org/2000/svg','text');el.setAttribute('pointer-events','bounding-box');const size=Number(obj.fontSize)||12;el.setAttribute('x',obj.x);el.setAttribute('y',obj.y);el.setAttribute('font-size',size);el.setAttribute('font-family',obj.fontFamily||'Arial');el.setAttribute('font-weight',obj.bold?'700':'400');el.setAttribute('font-style',obj.italic?'italic':'normal');el.setAttribute('text-decoration',obj.underline?'underline':'none');el.setAttribute('text-anchor',obj.align||'start');el.setAttribute('fill',stroke);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);sheetTextLines(obj).forEach(function(line,index){const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x',obj.x);span.setAttribute('dy',index?size*1.4:0);span.textContent=line||' ';el.append(span);});}
         else {el=document.createElementNS('http://www.w3.org/2000/svg','g');el.setAttribute('transform',`translate(${obj.x} ${obj.y}) rotate(${obj.rotation||0})`);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);const shape=document.createElementNS('http://www.w3.org/2000/svg',obj.kind==='motor'?'circle':'rect');if(obj.kind==='motor'){shape.setAttribute('cx','0');shape.setAttribute('cy','0');shape.setAttribute('r','18');}else{shape.setAttribute('x','-21');shape.setAttribute('y','-14');shape.setAttribute('width','42');shape.setAttribute('height','28');}shape.setAttribute('fill','#fff');shape.setAttribute('stroke',stroke);shape.setAttribute('stroke-width','1.5');el.append(shape);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x','0');t.setAttribute('y','4');t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.setAttribute('fill',stroke);t.textContent=({terminal:'X1',relay:'K2',contact:'13/14',breaker:'F2',sensor:'B2',motor:'M2',plc:'I1',ground:'PE'})[obj.kind]||'DEV';el.append(t);}
-        if(obj.rotation&&obj.kind!=='component-instance'){const center=objectCenter(obj);el.setAttribute('transform','rotate('+obj.rotation+' '+center.x+' '+center.y+')');}if(obj.strokeWidth)el.setAttribute('stroke-width',width);if(obj.lineType==='dashed')el.setAttribute('stroke-dasharray',(width*4)+' '+(width*2));if(obj.lineType==='dotted'){el.setAttribute('stroke-dasharray',width+' '+(width*2));el.setAttribute('stroke-linecap','round');}el.dataset.object=obj.id;el.dataset.layer=drawingLayerForObject(obj);el.addEventListener('click',e=>{if(state.tool==='select'){e.stopPropagation();const current=state.objects.find(function(item){return item.id===obj.id;});if(current){state.selected=current.id;if(current.kind!=='text')renderObjects();showObject(current);}}});el.addEventListener('dblclick',e=>handleObjectDoubleClick(e,obj.id));if(!drawingObjectVisible(obj))el.style.display='none';if(obj.locked)el.dataset.locked='true';if(obj.flipX||obj.flipY){const center=objectCenter(obj);el.setAttribute('transform',`translate(${obj.flipX?center.x*2:0} ${obj.flipY?center.y*2:0}) scale(${obj.flipX?-1:1} ${obj.flipY?-1:1})`);}userDrawings.append(el);}renderCrossSheetConnectors();renderResizeHandles();}
+        if(obj.rotation&&obj.kind!=='component-instance'){const center=objectCenter(obj);el.setAttribute('transform','rotate('+obj.rotation+' '+center.x+' '+center.y+')');}if(obj.strokeWidth)el.setAttribute('stroke-width',width);if(obj.lineType==='dashed')el.setAttribute('stroke-dasharray',(width*4)+' '+(width*2));if(obj.lineType==='dotted'){el.setAttribute('stroke-dasharray',width+' '+(width*2));el.setAttribute('stroke-linecap','round');}el.dataset.object=obj.id;el.dataset.layer=drawingLayerForObject(obj);el.addEventListener('click',e=>{if(state.tool==='select'){e.stopPropagation();const current=state.objects.find(function(item){return item.id===obj.id;});if(current){state.selected=current.id;if(current.kind!=='text')renderObjects();showObject(current);}}});el.addEventListener('dblclick',e=>handleObjectDoubleClick(e,obj.id));if(!drawingObjectVisible(obj))el.style.display='none';if(obj.locked)el.dataset.locked='true';if(obj.flipX||obj.flipY){const center=objectCenter(obj);el.setAttribute('transform',`translate(${obj.flipX?center.x*2:0} ${obj.flipY?center.y*2:0}) scale(${obj.flipX?-1:1} ${obj.flipY?-1:1})`);}return el;}
 
   function renderCrossSheetConnectors(){
     $$('#userDrawings .cross-sheet-connector').forEach(function(node){node.remove();});
@@ -643,7 +929,7 @@
       +['bold','italic','underline'].map(function(key){return field(key[0].toUpperCase()+key.slice(1),key,'<input aria-label="Text '+key+'" type="checkbox" DATA'+(obj[key]?' checked':'')+'>');}).join('')
       +field('Colour','stroke','<input aria-label="Text colour" type="color" DATA value="'+escapeHtml(obj.stroke||'#164eac')+'">');
   }
-  drawing.addEventListener('dblclick',function(event){if(event.target.closest('#sheetTextEditor')||state.tool!=='select')return;if(state.sheet){const p=svgPoint(event),b=window.AdigunCADEngine.titleBlockBounds(1200,760,26);if(p.x>=b.x&&p.x<=b.x+b.width&&p.y>=b.y&&p.y<=b.y+b.height){event.preventDefault();editTitleBlock();return;}}const obj=state.objects.find(function(item){return item.id===state.selected&&item.kind==='text';});if(!obj)return;const el=Array.from(userDrawings.querySelectorAll('[data-object]')).find(function(item){return item.dataset.object===obj.id;});if(!el)return;const box=el.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)return;event.preventDefault();openInspector('Properties');editSheetText(obj);});
+  drawing.addEventListener('dblclick',function(event){if(event.target.closest('#sheetTextEditor')||state.tool!=='select')return;if(state.sheet){const p=svgPoint(event),b=titleBlockGeometry().bounds;if(p.x>=b.x&&p.x<=b.x+b.width&&p.y>=b.y&&p.y<=b.y+b.height){event.preventDefault();editTitleBlock();return;}}const obj=state.objects.find(function(item){return item.id===state.selected&&item.kind==='text';});if(!obj)return;const el=Array.from(userDrawings.querySelectorAll('[data-object]')).find(function(item){return item.dataset.object===obj.id;});if(!el)return;const box=el.getBoundingClientRect();if(event.clientX<box.left||event.clientX>box.right||event.clientY<box.top||event.clientY>box.bottom)return;event.preventDefault();openInspector('Properties');editSheetText(obj);});
   function editSheetText(obj){
     if(obj.locked)return;
     const previous=$('#sheetTextEditor');if(previous)previous.querySelector('textarea').blur();
@@ -774,7 +1060,7 @@
     if(!allowed[property]){showObject(obj);notify('Enter a valid drawing style.');return;}
     if(obj[property]===value)return;
     pushUndo();obj[property]=value;
-    if(property==='stroke')$('[data-drawing-style="stroke"]').forEach(function(input){if(input.dataset.objectId===obj.id)input.value=value;});
+    if(property==='stroke')$$('[data-drawing-style="stroke"]').forEach(function(input){if(input.dataset.objectId===obj.id)input.value=value;});
     if(state.layerVisibility[drawingLayerForObject(obj)]===false){setSelection(state.selectedObjectIds.filter(function(id){return id!==obj.id;}),false);openInspector('Properties');}
     renderObjects();persist();
   });
@@ -797,8 +1083,8 @@
     if(!def || def.generic){
       host.innerHTML='<div class="inspector-title">Drawing object · '+escapeHtml(def?def.name:(symbolNames[obj.symbolId]||symbolNames[obj.kind]||obj.kind))+'</div>'+panelPlacementInfo(obj)+drawOrderField(obj)+drawingStyleFields(obj)
         +(def&&def.generic?'<label class="property-row"><span>Reference</span><input class="component-edit" data-component-property="ref" data-component-object="'+escapeHtml(obj.id)+'" maxlength="32" value="'+escapeHtml(obj.ref)+'"></label>'+componentInstanceFields(obj,def):'')
-        +'<label class="property-row"><span>X (mm)</span><input type="number" step="2.5" data-object-coordinate="x" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.x)+'"></label>'
-        +'<label class="property-row"><span>Y (mm)</span><input type="number" step="2.5" data-object-coordinate="y" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.y)+'"></label>'
+        +coordinateField(obj,'x')
+        +coordinateField(obj,'y')
         +(obj.kind==='text'?textFormattingFields(obj):'')
         +(obj.kind==='wire'?wireConnectionFields(obj):'')
         +'<div class="property-row"><span>Rotation</span><strong>'+escapeHtml((obj.rotation||0)+'°')+'</strong></div>'
@@ -844,8 +1130,8 @@
       +'<div class="property-row"><span>External terminals</span><strong>'+escapeHtml(def.symbol.pins.length+' · '+pinSummary)+'</strong></div>'
       +'<div class="property-row"><span>Rotation</span><strong>'+escapeHtml(obj.rotation+'°')+'</strong></div>'
       +(def&&def.generic?'<div class="notice">Original Eplan '+escapeHtml(def.connectionClass)+' symbol. Manufacturer part not assigned. Pins: '+escapeHtml(def.symbol.pins.map(function(p){return p.id;}).join(', '))+'</div>':'')
-        +'<label class="property-row"><span>X (mm)</span><input type="number" step="2.5" data-object-coordinate="x" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.x)+'"></label>'
-      +'<label class="property-row"><span>Y (mm)</span><input type="number" step="2.5" data-object-coordinate="y" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.y)+'"></label>'
+        +coordinateField(obj,'x')
+      +coordinateField(obj,'y')
       +'<button class="command-item" data-rotate-object="'+escapeHtml(obj.id)+'"><span>↻</span><span>Rotate 90° clockwise</span></button>'
       +'<label class="property-row"><span>Reference</span><input class="component-edit" data-component-property="ref" data-component-object="'+escapeHtml(obj.id)+'" maxlength="32" value="'+escapeHtml(obj.ref)+'"></label>'
       +componentInstanceFields(obj,def)
@@ -913,7 +1199,7 @@
   }
   function wireDestination(event){
     const matrix=drawing.getScreenCTM(),scale=Math.hypot(matrix.a,matrix.b),point=svgPoint(event);
-    return terminalAt(point,Math.min(24,9/scale))||point;
+    return terminalAt(point,Math.min(24,9/scale))||snapToGuides(point);
   }
   function beginTerminalDrag(event,start){
     const preview=document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -1062,12 +1348,133 @@
   $('#projectTree').addEventListener('dragend',clearSheetDropHints);
   $('#projectTree').addEventListener('drop',function(event){clearSheetDropHints();const target=event.target.closest('[data-generated-sheet],[data-section-header]');if(!target)return;const source=event.dataTransfer.getData('text/adigun-sheet');if(!source)return;event.preventDefault();if(state.sections){const after=event.clientY>target.getBoundingClientRect().top+target.getBoundingClientRect().height/2;state.sheets=window.AdigunCADEngine.moveProjectSheet(state.sheets,state.sections,source,target.dataset.sheet||null,after?'after':'before',target.dataset.sectionHeader);renderCustomSheetNavigation();persist();}else if(target.dataset.sheet)reorderSheetBefore(source,target.dataset.sheet);});
 
-  drawing.addEventListener('pointerdown',e=>{if(!state.sheet){notify('Select a sheet in the sidebar, or use a section + to create one before drawing.');return;}if(e.button===0&&!objectContextMenu.hidden)closeObjectContextMenu();if(e.button===2){const hit=e.target.closest&&e.target.closest('[data-object]'),obj=hit&&state.objects.find(function(item){return item.id===hit.dataset.object;});e.preventDefault();if(obj)openObjectContextMenu(obj,e);else openCanvasContextMenu(e);return;}if(state.pendingMoveObjectId){if(e.button===0){e.preventDefault();finishObjectMove(state.pendingMoveObjectId,svgPoint(e));}return;}if(e.button===1||e.altKey||state.tool==='pan'){state.pan={x:e.clientX,y:e.clientY,view:{...state.view},unitsPerPixel:drawing.getScreenCTM().inverse().a};drawing.style.cursor='grabbing';drawing.setPointerCapture(e.pointerId);return;}if(e.button===0&&wireDraft){wireDraft.pressed=true;drawing.setPointerCapture(e.pointerId);e.preventDefault();return;}if(e.button===0&&state.tool==='select'){const handle=e.target.closest&&e.target.closest('[data-resize-handle]');if(handle){const obj=state.objects.find(function(item){return item.id===handle.dataset.resizeObject;});if(obj&&state.selectedObjectIds.length===1){e.preventDefault();beginObjectResize(obj,handle,e.pointerId);return;}}}if(state.pendingComponentId){if(e.button===0){e.preventDefault();finishComponentPlacement(svgPoint(e),e.shiftKey);}return;}if(state.tool==='select'){const hit=e.target.closest&&e.target.closest('[data-object]'),obj=hit&&state.objects.find(function(item){return item.id===hit.dataset.object;});const pin=e.button===0&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey?terminalDragPoint(e,obj?.kind==='wire'):null;if(pin&&(!obj||obj.kind==='wire'||obj.id===pin.attachment.instanceId)){beginTerminalDrag(e,pin);return;}if(obj){e.preventDefault();if(e.shiftKey||e.ctrlKey||e.metaKey){toggleSelection(obj.id);return;}if(!state.selectedObjectIds.includes(obj.id)){const ids=obj.groupId?state.objects.filter(function(item){return item.groupId===obj.groupId;}).map(function(item){return item.id;}):[obj.id];setSelection(ids,obj.kind==='text'?false:true);}if(obj.locked){state.selected=obj.id;showObject(obj);notify('Object is locked. Right-click to unlock it.');}else beginObjectDrag(obj,svgPoint(e),e.pointerId);}else{e.preventDefault();beginSelectionBox(e);return;}return;}drawStart=state.tool==='freehand'?svgPoint(e):snapDrawingPoint(svgPoint(e));if(state.tool==='freehand')freehandPoints=[drawStart];drawing.setPointerCapture(e.pointerId);});
+  let spacePan=false;
+  document.addEventListener('keydown',event=>{
+    if(event.code!=='Space'||!drawing.matches(':hover')||event.target.closest('input, textarea, select, dialog, [contenteditable]'))return;
+    event.preventDefault();
+    spacePan=true;
+  });
+  document.addEventListener('keyup',event=>{if(event.code==='Space')spacePan=false;});
+  window.addEventListener('blur',()=>{spacePan=false;});
+  drawing.addEventListener('pointerdown',e=>{if(!state.sheet){notify('Select a sheet in the sidebar, or use a section + to create one before drawing.');return;}if(e.button===0&&!objectContextMenu.hidden)closeObjectContextMenu();if(e.button===2){const hit=e.target.closest&&e.target.closest('[data-object]'),obj=hit&&state.objects.find(function(item){return item.id===hit.dataset.object;});e.preventDefault();if(obj)openObjectContextMenu(obj,e);else openCanvasContextMenu(e);return;}if(e.button===1||e.altKey||spacePan||state.tool==='pan'){e.preventDefault();state.pan={x:e.clientX,y:e.clientY,view:{...state.view},unitsPerPixel:drawing.getScreenCTM().inverse().a};drawing.style.cursor='grabbing';drawing.setPointerCapture(e.pointerId);return;}if(state.pendingMoveObjectId){if(e.button===0){e.preventDefault();finishObjectMove(state.pendingMoveObjectId,svgPoint(e));}return;}if(e.button===0&&wireDraft){wireDraft.pressed=true;drawing.setPointerCapture(e.pointerId);e.preventDefault();return;}if(e.button===0&&state.tool==='select'){const handle=e.target.closest&&e.target.closest('[data-resize-handle]');if(handle){const obj=state.objects.find(function(item){return item.id===handle.dataset.resizeObject;});if(obj&&state.selectedObjectIds.length===1){e.preventDefault();beginObjectResize(obj,handle,e.pointerId);return;}}}if(state.pendingComponentId){if(e.button===0){e.preventDefault();finishComponentPlacement(svgPoint(e),e.shiftKey);}return;}if(state.tool==='select'){const hit=e.target.closest&&e.target.closest('[data-object]'),obj=hit&&state.objects.find(function(item){return item.id===hit.dataset.object;});const pin=e.button===0&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey?terminalDragPoint(e,obj?.kind==='wire'):null;if(pin&&(!obj||obj.kind==='wire'||obj.id===pin.attachment.instanceId)){beginTerminalDrag(e,pin);return;}if(obj){e.preventDefault();if(e.shiftKey||e.ctrlKey||e.metaKey){toggleSelection(obj.id);return;}if(!state.selectedObjectIds.includes(obj.id)){const ids=obj.groupId?state.objects.filter(function(item){return item.groupId===obj.groupId;}).map(function(item){return item.id;}):[obj.id];setSelection(ids,obj.kind==='text'?false:true);}if(obj.locked){state.selected=obj.id;showObject(obj);notify('Object is locked. Right-click to unlock it.');}else beginObjectDrag(obj,svgPoint(e),e.pointerId);}else{e.preventDefault();beginSelectionBox(e);return;}return;}drawStart=state.tool==='freehand'?svgPoint(e):snapDrawingPoint(svgPoint(e));if(state.tool==='freehand')freehandPoints=[drawStart];drawing.setPointerCapture(e.pointerId);});
   drawing.addEventListener('pointerup',e=>{if(state.pan){state.pan=null;drawing.style.cursor=state.tool==='pan'?'grab':'crosshair';return;}if(terminalDrag){finishTerminalDrag(e);return;}if(wireDraft?.pressed){wireDraft.pressed=false;finishWireDraft(e);return;}if(wireEndDrag){const drag=wireEndDrag;wireEndDrag=null;drag.preview.remove();if(Math.hypot(e.clientX-drag.clientX,e.clientY-drag.clientY)>2)editWireEndpoint(drag.wire,drag.end,snapDrawingPoint(svgPoint(e)));return;}if(resizeDrag){finishObjectResize(e);return;}if(objectDrag){const drag=objectDrag;objectDrag=null;drawing.style.cursor='default';finishObjectClick(e,drag);if(drag.moved&&JSON.stringify(state.objects)!==drag.snapshot){pushUndo(drag.snapshot);persist();refreshSelectedProperties();notify('Object moved. Connected component pins and wire ends were preserved.');}return;}if(selectionBox){finishSelectionBox(e);return;}if(!drawStart)return;const end=state.tool==='freehand'?svgPoint(e):snapDrawingPoint(svgPoint(e)),a=drawStart;drawStart=null;if(state.tool==='wire'){finishWireGesture(a,end);return;}let obj;if(state.tool==='freehand'){freehandPoints.push(end);if(freehandPoints.length<2){freehandPoints=null;return;}pushUndo();obj=makeObj('freehand',a.x,a.y,{points:freehandPoints.map(p=>({x:p.x,y:p.y})),stroke:state.strokeColor,fill:'none'});freehandPoints=null;}else if(['line','arrow','curve'].includes(state.tool)){pushUndo();obj=makeStyledObject(state.tool,a,end);}else if(['rect','circle','ellipse','triangle'].includes(state.tool)){pushUndo();obj=makeStyledObject(state.tool,a,end);}else if(state.tool==='text'){pushUndo();obj=makeObj('text',a.x,a.y,{text:'',fontSize:16,fontFamily:'Arial',stroke:state.strokeColor});}else if(state.tool==='symbol'){openSymbolPicker();return;}if(obj){state.objects.push(obj);renderObjects();persist();if(obj.kind==='text'){setTool('select');state.selected=obj.id;openInspector('Properties');showObject(obj);editSheetText(obj);}notify(`${obj.kind} added to ${sheetNames[state.sheet]?.[0]||'the active sheet'}.`);}});
-  drawing.addEventListener('pointermove',e=>{if(state.pan){const dx=(e.clientX-state.pan.x)*state.pan.unitsPerPixel,dy=(e.clientY-state.pan.y)*state.pan.unitsPerPixel;state.view.x=state.pan.view.x-dx;state.view.y=state.pan.view.y-dy;applyView();return;}if(terminalDrag){updateTerminalDrag(e);return;}if(wireEndDrag){previewWireEnd(svgPoint(e));return;}if(resizeDrag){updateObjectResize(svgPoint(e));}else if(objectDrag){const current=svgPoint(e),proposed={x:objectDrag.origin.x+current.x-objectDrag.pointerStart.x,y:objectDrag.origin.y+current.y-objectDrag.pointerStart.y},location=e.shiftKey?snapObjectPoint(proposed):proposed,dx=location.x-objectDrag.origin.x,dy=location.y-objectDrag.origin.y;if(Math.abs(dx)>1e-6||Math.abs(dy)>1e-6){state.objects=JSON.parse(objectDrag.snapshot);translateObjectSet(objectDrag.ids||[objectDrag.id],dx,dy);objectDrag.moved=true;renderObjects();const moved=state.objects.find(function(item){return item.id===objectDrag.id;});showObject(moved);}}else if(selectionBox){updateSelectionBox(svgPoint(e));}else if(state.pendingComponentId){updatePlacementPreview(svgPoint(e));}else if(wireDraft){updateWireDraft(wireDestination(e));}else if(freehandPoints&&drawStart){const p=svgPoint(e),last=freehandPoints[freehandPoints.length-1];if(Math.hypot(p.x-last.x,p.y-last.y)>2)freehandPoints.push(p);}else{if(state.tool==='select'){const hit=e.target.closest('[data-object]'),overWire=hit&&state.objects.some(function(obj){return obj.id===hit.dataset.object&&obj.kind==='wire';}),pin=terminalDragPoint(e,overWire);drawing.style.cursor=pin&&(!hit||hit.dataset.object===pin.attachment.instanceId||overWire)?'crosshair':'default';}const p=svgPoint(e);$('#coordinates').textContent=`X: ${(p.x/4).toFixed(3)}  Y: ${(p.y/4).toFixed(3)}`;}});
-  drawing.addEventListener('pointercancel',()=>{drawStart=null;cancelTerminalDrag();cancelWireDraft();if(wireEndDrag){wireEndDrag.preview.remove();wireEndDrag=null;}cancelSelectionBox();if(resizeDrag){state.objects=JSON.parse(resizeDrag.snapshot);resizeDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(objectDrag){state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(state.pendingComponentId)cancelComponentPlacement();});
-  drawing.addEventListener('wheel',e=>{e.preventDefault();const shift=e.shiftKey,deltaX=e.deltaX||(shift?e.deltaY:0),deltaY=shift?0:e.deltaY;if(deltaX!==0||shift){const unitsPerPixel=drawing.getScreenCTM().inverse().a;state.view.x+=deltaX*unitsPerPixel;state.view.y+=deltaY*unitsPerPixel;applyView();persist();return;}const anchor=svgPoint(e),oldView=state.view,requestedZoom=state.zoom*Math.pow(1.1,-e.deltaY/100),nextZoom=Math.max(10,Math.min(500,Math.round(requestedZoom/5)*5));if(nextZoom===state.zoom)return;const nextWidth=1200*100/nextZoom,nextHeight=760*100/nextZoom;state.zoom=nextZoom;state.view={x:anchor.x-(anchor.x-oldView.x)/oldView.w*nextWidth,y:anchor.y-(anchor.y-oldView.y)/oldView.h*nextHeight,w:nextWidth,h:nextHeight};applyView();persist();},{passive:false});
+  drawing.addEventListener('pointermove',e=>{if(state.pan){const dx=(e.clientX-state.pan.x)*state.pan.unitsPerPixel,dy=(e.clientY-state.pan.y)*state.pan.unitsPerPixel;state.view.x=state.pan.view.x-dx;state.view.y=state.pan.view.y-dy;applyView();return;}if(terminalDrag){updateTerminalDrag(e);return;}if(wireEndDrag){previewWireEnd(svgPoint(e));return;}if(resizeDrag){updateObjectResize(svgPoint(e));}else if(objectDrag){updateDraggedDrawing(svgPoint(e),e.shiftKey);}else if(selectionBox){updateSelectionBox(svgPoint(e));}else if(state.pendingComponentId){const point=svgPoint(e);updatePlacementPreview(point);showCursorPoint(snapObjectPoint(point),point);}else if(wireDraft){const point=wireDestination(e);updateWireDraft(point);showCursorPoint(point,svgPoint(e));}else if(freehandPoints&&drawStart){const p=svgPoint(e),last=freehandPoints[freehandPoints.length-1];if(Math.hypot(p.x-last.x,p.y-last.y)>2)freehandPoints.push(p);}else{if(state.tool==='select'){const hit=e.target.closest('[data-object]'),overWire=hit&&state.objects.some(function(obj){return obj.id===hit.dataset.object&&obj.kind==='wire';}),pin=terminalDragPoint(e,overWire);drawing.style.cursor=pin&&(!hit||hit.dataset.object===pin.attachment.instanceId||overWire)?'crosshair':'default';}const p=svgPoint(e);showCursorPoint(state.tool==='select'||state.tool==='freehand'?p:snapDrawingPoint(p),p);}});
+  drawing.addEventListener('pointercancel',()=>{if(state.pan){state.pan=null;drawing.style.cursor=state.tool==='pan'?'grab':'crosshair';return;}drawStart=null;cancelTerminalDrag();cancelWireDraft();if(wireEndDrag){wireEndDrag.preview.remove();wireEndDrag=null;}cancelSelectionBox();if(resizeDrag){state.objects=JSON.parse(resizeDrag.snapshot);resizeDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(objectDrag){state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(state.pendingComponentId)cancelComponentPlacement();});
+  drawing.addEventListener('wheel',e=>{e.preventDefault();const shift=e.shiftKey,deltaX=e.deltaX||(shift?e.deltaY:0),deltaY=shift?0:e.deltaY;if(deltaX!==0||shift){const unitsPerPixel=drawing.getScreenCTM().inverse().a;state.view.x+=deltaX*unitsPerPixel;state.view.y+=deltaY*unitsPerPixel;applyView();persist();return;}const anchor=svgPoint(e),oldView=state.view,requestedZoom=state.zoom*Math.pow(1.1,-e.deltaY/100),nextZoom=Math.max(Math.min(10,state.zoom),Math.min(500,Math.round(requestedZoom/5)*5));if(nextZoom===state.zoom)return;const nextWidth=1200*100/nextZoom,nextHeight=760*100/nextZoom;state.zoom=nextZoom;state.view={x:anchor.x-(anchor.x-oldView.x)/oldView.w*nextWidth,y:anchor.y-(anchor.y-oldView.y)/oldView.h*nextHeight,w:nextWidth,h:nextHeight};applyView();persist();},{passive:false});
 
+  function refreshDraftingControls(block,sheet){
+    const units=Array.from(block.querySelectorAll('.property-row')).find(row=>row.firstElementChild?.textContent==='Units');
+    if(!units)return;
+    const settings=draftingSettings();
+    units.lastElementChild.textContent=settings.units==='du'?'Drafting units':settings.units;
+    let group=block.querySelector('[data-drafting-controls]');
+    if(!group){
+      group=document.createElement('div');
+      group.dataset.draftingControls='';
+      group.innerHTML='<label class="property-row"><span>Display units</span><select data-drafting-value="units"><option value="du">Drafting units</option><option value="mm">Millimeters</option><option value="in">Inches</option></select></label><label class="property-row"><span>Minor grid</span><input type="number" min="0.00001" step="any" data-drafting-value="minor"></label><label class="property-row"><span>Major grid</span><input type="number" min="0.00001" step="any" data-drafting-value="major"></label><label class="property-row"><span>Snap interval</span><input type="number" min="0.00001" step="any" data-drafting-value="snap"></label>';
+      block.append(group);
+    }
+    group.hidden=!sheet;
+    for(const field of group.querySelectorAll('[data-drafting-value]')){
+      const key=field.dataset.draftingValue;
+      field.value=key==='units'?settings.units:Number((settings[key]/(settings.units==='in'?25.4:1)).toPrecision(8));
+    }
+  }
+  function refreshGuideControls(block,sheet){
+    let controls=block.querySelector('[data-guide-controls]');
+    const open=controls?.open;
+    if(!controls){
+      controls=document.createElement('details');
+      controls.dataset.guideControls='';
+      block.append(controls);
+    }
+    controls.hidden=!sheet;
+    if(!sheet)return;
+    controls.innerHTML='<summary>Rulers and guides</summary><label class="property-row"><span>Show rulers</span><input type="checkbox" data-ruler-visibility></label><label class="property-row"><span>Snap to guides</span><input type="checkbox" data-guide-snapping></label><button type="button" data-add-guide="y">Add horizontal guide</button> <button type="button" data-add-guide="x">Add vertical guide</button>';
+    controls.open=Boolean(open);
+    controls.querySelector('[data-ruler-visibility]').checked=sheet.rulersVisible!==false;
+    controls.querySelector('[data-guide-snapping]').checked=Boolean(sheet.snapToGuides);
+    const factor=draftingSettings().units==='in'?25.4:1;
+    (sheet.guides||[]).forEach((guide,index)=>{
+      const row=document.createElement('div');
+      row.dataset.guideId=guide.id;
+      row.innerHTML='<label class="property-row"><span></span><input type="number" step="any" data-guide-position></label><label>Lock <input type="checkbox" data-guide-locked></label> <label>Hide <input type="checkbox" data-guide-hidden></label> <button type="button" data-delete-guide>Delete</button>';
+      row.querySelector('span').textContent=(guide.axis==='x'?'Vertical':'Horizontal')+' guide '+(index+1);
+      const position=row.querySelector('[data-guide-position]');
+      position.value=Number((guide.position/factor).toPrecision(12));
+      position.disabled=guide.locked;
+      row.querySelector('[data-guide-locked]').checked=guide.locked;
+      row.querySelector('[data-guide-hidden]').checked=guide.hidden;
+      controls.append(row);
+    });
+  }
+  $('#inspectorContent').addEventListener('click',event=>{
+    const add=event.target.closest('[data-add-guide]');
+    if(add){
+      const axis=add.dataset.addGuide;
+      addDraftingGuide(axis,state.view[axis]+(axis==='x'?state.view.w:state.view.h)/2);
+      return;
+    }
+    const remove=event.target.closest('[data-delete-guide]');
+    if(remove){
+      const sheet=activeDraftingSheet(),id=remove.closest('[data-guide-id]').dataset.guideId;
+      sheet.guides=sheet.guides.filter(guide=>guide.id!==id);
+      renderGuides();refreshFrameControl();persist();
+    }
+  });
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target,sheet=activeDraftingSheet();
+    if(!sheet||!field.closest('[data-guide-controls]'))return;
+    if(field.matches('[data-ruler-visibility]'))sheet.rulersVisible=field.checked;
+    else if(field.matches('[data-guide-snapping]'))sheet.snapToGuides=field.checked;
+    else{
+      const guide=sheet.guides.find(item=>item.id===field.closest('[data-guide-id]')?.dataset.guideId);
+      if(!guide)return;
+      if(field.matches('[data-guide-position]')&&!guide.locked&&field.value!==''){
+        const position=Number(field.value)*(draftingSettings().units==='in'?25.4:1);
+        if(Number.isFinite(position))guide.position=position;
+      }
+      if(field.matches('[data-guide-hidden]'))guide.hidden=field.checked;
+      if(field.matches('[data-guide-locked]'))guide.locked=field.checked;
+    }
+    refreshFrameControl();applyView();persist();
+  });
+  function refreshPrintControls(block,sheet){
+    let group=block.querySelector('[data-print-settings]');
+    if(!group){
+      group=document.createElement('details');
+      group.dataset.printSettings='';
+      group.innerHTML='<summary>Print layout</summary><label class="property-row"><span>Paper format</span><select data-paper-setting="format"><option>A0</option><option>A1</option><option>A2</option><option>A3</option><option>A4</option><option>Custom</option></select></label><label class="property-row"><span>Orientation</span><select data-paper-setting="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label><label class="property-row"><span>Custom width (mm)</span><input type="number" data-paper-setting="customWidth" min="20" max="5000" step="any"></label><label class="property-row"><span>Custom height (mm)</span><input type="number" data-paper-setting="customHeight" min="20" max="5000" step="any"></label><label class="property-row"><span>Page margin (mm)</span><input type="number" data-paper-setting="margin" min="0" step="any"></label><label class="property-row"><span>Scale 1:n (0 fits frame)</span><input type="number" data-paper-setting="scale" min="0" max="10000" step="any"></label>';
+      block.append(group);
+    }
+    const settings=printSettings();
+    const format=Array.from(block.querySelectorAll('.property-row')).find(row=>row.firstElementChild?.textContent==='Format');
+    if(format)format.lastElementChild.textContent=settings.format+' '+settings.orientation;
+    group.hidden=!sheet;
+    for(const field of group.querySelectorAll('[data-paper-setting]')){
+      const key=field.dataset.paperSetting;
+      field.value=settings[key];
+      if(key==='customWidth'||key==='customHeight')field.disabled=settings.format!=='Custom';
+    }
+  }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target,key=field.dataset.paperSetting;
+    if(!key)return;
+    const sheet=activeDraftingSheet();
+    if(!sheet)return;
+    const settings={...(sheet.paper||defaultPaper)};
+    const value=field.value;
+    if(key==='format'||key==='orientation')settings[key]=value;
+    else if(value!==''&&Number.isFinite(Number(value)))settings[key]=Number(value);
+    const dimensions=paperSizes[settings.format]||[settings.customWidth,settings.customHeight];
+    if(dimensions.every(mm=>mm>=20&&mm<=5000)&&settings.margin>=0&&settings.margin<Math.min(...dimensions)/2&&settings.scale>=0&&settings.scale<=10000){
+      sheet.paper=settings;
+      renderProjectTitleBlock();
+      applyView();
+      persist();
+    }
+    refreshFrameControl();
+  });
   function refreshFrameControl(){
     const sheet=state.sheets.find(item=>item.id===state.sheet);
     wrap.classList.toggle('frame-hidden',sheet?.showPrintFrame===false);
@@ -1087,15 +1494,30 @@
     }
     field.closest('label').hidden=!sheet;
     field.checked=sheet?.showPrintFrame!==false;
+    refreshDraftingControls(block,sheet);
+    refreshGuideControls(block,sheet);
+    refreshPrintControls(block,sheet);
+  }
+  function titleBlockGeometry(){
+    if(!activeDraftingSheet()?.paper){
+      return {frame:{x:26,y:25,w:1148,h:709},bounds:window.AdigunCADEngine.titleBlockBounds(1200,760,26),factor:1};
+    }
+    const paper=printSettings(),view=printWorldBounds(paper);
+    const worldPerMm=view.w/(paper.width-2*paper.margin);
+    const inset=Math.min(4*worldPerMm,.06*Math.min(view.w,view.h));
+    const frame={x:view.x+inset,y:view.y+inset,w:view.w-2*inset,h:view.h-2*inset};
+    const factor=Math.min(worldPerMm*.22,frame.w*.65/474,frame.h*.35/160);
+    const width=474*factor,height=160*factor;
+    return {frame,bounds:{x:frame.x+frame.w-width,y:frame.y+frame.h-height,width,height},factor};
   }
   function renderProjectTitleBlock(){
     if(!state.sheet)return;
     const sheet=projectSheets().find(function(item){return item.id===state.sheet;});if(!sheet)return;
     const frame=$('#customSheetFrame');if(!frame)return;frame.replaceChildren();
-    const ns='http://www.w3.org/2000/svg',values=window.AdigunCADEngine.titleBlockValues({project:state.projectName,metadata:state.metadata},sheet),bounds=window.AdigunCADEngine.titleBlockBounds(1200,760,26);
+    const ns='http://www.w3.org/2000/svg',values=window.AdigunCADEngine.titleBlockValues({project:state.projectName,metadata:state.metadata},sheet),geometry=titleBlockGeometry(),{bounds,factor}=geometry;
     function node(tag,attrs,text){const n=document.createElementNS(ns,tag);Object.keys(attrs).forEach(function(key){n.setAttribute(key,attrs[key]);});if(text!==undefined)n.textContent=text;frame.append(n);return n;}
-    node('rect',{x:26,y:25,width:1148,height:709,fill:'none',stroke:'#17212f','stroke-width':1.5});
-    node('rect',{x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height,fill:'#fff',stroke:'#17212f','stroke-width':1});
+    node('rect',{x:geometry.frame.x,y:geometry.frame.y,width:geometry.frame.w,height:geometry.frame.h,fill:'none',stroke:'#17212f','stroke-width':1.5*factor});
+    node('rect',{x:bounds.x,y:bounds.y,width:bounds.width,height:bounds.height,fill:'#fff',stroke:'#17212f','stroke-width':factor});
     const rows=[
       values.corporateIdentity+' · '+values.softwareIdentity,
       'Project: '+values.projectTitle,
@@ -1106,7 +1528,7 @@
       'Drawn: '+values.drawnBy+' · Checked: '+values.checkedBy+' · Approved: '+values.approvedBy,
       'Date: '+values.drawingDate+' · Status: '+values.issueStatus, 'Notes: '+values.notes
     ];
-    rows.forEach(function(line,index){const t=node('text',{x:bounds.x+8,y:bounds.y+15+index*17,fill:'#17212f','font-size':10,'font-family':'Arial','font-weight':index?400:700},line);if(line.length>80){t.setAttribute('textLength',bounds.width-16);t.setAttribute('lengthAdjust','spacingAndGlyphs');}});
+    rows.forEach(function(line,index){const t=node('text',{x:bounds.x+8*factor,y:bounds.y+(15+index*17)*factor,fill:'#17212f','font-size':10*factor,'font-family':'Arial','font-weight':index?400:700},line);if(line.length>80){t.setAttribute('textLength',bounds.width-16*factor);t.setAttribute('lengthAdjust','spacingAndGlyphs');}});
     frame.setAttribute('aria-label','Project title block');frame.style.cursor='pointer';
   }
   function editTitleBlock(){
@@ -1121,9 +1543,24 @@
     const note=document.createElement('p');note.className='notice';note.textContent='Hephzibah Behulah · AdigunEplanAI. Rename the sheet in the sidebar. Blank checked/approved fields do not imply review.';host.append(note);
   }
   $('#customSheetFrame').addEventListener('dblclick',function(event){event.stopPropagation();editTitleBlock();});
-  $('#inspectorContent').addEventListener('change',function(event){if(event.target.matches('[data-show-print-frame]')){
+  $('#inspectorContent').addEventListener('change',function(event){if(event.target.matches('[data-drafting-value]')){
       const sheet=state.sheets.find(item=>item.id===state.sheet);
-      if(sheet){sheet.showPrintFrame=event.target.checked;refreshFrameControl();persist();}
+      if(!sheet)return;
+      const settings={...draftingSettings()};
+      const key=event.target.dataset.draftingValue,value=event.target.value;
+      if(key==='units')settings.units=value;
+      else{
+        const number=Number(value)*(settings.units==='in'?25.4:1);
+        if(!Number.isFinite(number)||number<1e-5||number>1e6){refreshFrameControl();return;}
+        settings[key]=number;
+      }
+      sheet.drafting=settings;
+      refreshFrameControl();refreshSelectedProperties();applyView();persist();
+      return;
+    }
+    if(event.target.matches('[data-show-print-frame]')){
+      const sheet=state.sheets.find(item=>item.id===state.sheet);
+      if(sheet){sheet.showPrintFrame=event.target.checked;refreshFrameControl();applyView();persist();}
       return;
     }const field=event.target.closest('[data-title-key]');if(!field)return;const sheet=state.sheets.find(function(item){return item.id===state.sheet;});if(!sheet)return;const key=field.dataset.titleKey,value=field.value.trim();if(field.dataset.titleScope==='project'){if(key==='projectTitle'){if(!value)return;state.projectName=value;renderCustomSheetNavigation();}else{state.metadata=state.metadata||{};state.metadata[key]=value;}}else{sheet.metadata=sheet.metadata||{};sheet.metadata[key]=value;}renderProjectTitleBlock();persist();});
 
@@ -1153,7 +1590,129 @@
     setTimeout(function(){URL.revokeObjectURL(url);},1000);
     notify('Register exported for all project sheets.');
   }
-  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview],[data-component-placement-preview]').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame){if(wrap.classList.contains('frame-hidden'))frame.remove();else frame.style.display='block';}}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
+  const paperSizes={A0:[841,1189],A1:[594,841],A2:[420,594],A3:[297,420],A4:[210,297]};
+  const defaultPaper={format:'A3',orientation:'landscape',customWidth:420,customHeight:297,margin:10,scale:0};
+  function printSettings(){
+    const settings=activeDraftingSheet()?.paper||defaultPaper;
+    const dimensions=paperSizes[settings.format]||[settings.customWidth,settings.customHeight];
+    const short=Math.min(...dimensions),long=Math.max(...dimensions);
+    return {...settings,width:settings.orientation==='portrait'?short:long,height:settings.orientation==='portrait'?long:short};
+  }
+  function printWorldBounds(settings){
+    const availableWidth=settings.width-2*settings.margin,availableHeight=settings.height-2*settings.margin;
+    const unitsPerMm=settings.scale||Math.max(1200/availableWidth,760/availableHeight);
+    const w=availableWidth*unitsPerMm,h=availableHeight*unitsPerMm;
+    return {x:600-w/2,y:380-h/2,w,h};
+  }
+  function renderPrintBoundary(){
+    const sheet=activeDraftingSheet(),outline=$('#paperBoundary');
+    const visible=Boolean(sheet?.paper&&sheet.showPrintFrame!==false);
+    outline.setAttribute('display',visible?'inline':'none');
+    if(!visible)return;
+    const {x,y,w,h}=printWorldBounds(printSettings());
+    for(const [name,value] of Object.entries({x,y,width:w,height:h}))outline.setAttribute(name,value);
+  }
+  function exportContentBounds(nodes){
+    return nodes.map(renderedFootprint).reduce((a,b)=>({
+      left:Math.min(a.left,b.left),right:Math.max(a.right,b.right),
+      top:Math.min(a.top,b.top),bottom:Math.max(a.bottom,b.bottom)
+    }));
+  }
+  function visibleExportNodes(mode){
+    const selected=new Set(state.selectedObjectIds),isSelection=mode==='export-selection-svg';
+    const nodes=Array.from(userDrawings.children).filter(node=>{
+      const content=isSelection?selected.has(node.dataset.object):node.dataset.object||node.classList.contains('cross-sheet-connector');
+      return content&&getComputedStyle(node).display!=='none'&&getComputedStyle(node).visibility!=='hidden';
+    });
+    if(isSelection)return nodes;
+    for(const node of design.children){
+      if(node!==userDrawings&&getComputedStyle(node).display!=='none'&&getComputedStyle(node).visibility!=='hidden')nodes.push(node);
+    }
+    return nodes;
+  }
+  function prepareExportDrawing(mode){
+    const frameOnly=mode==='export-frame-svg',selectionOnly=mode==='export-selection-svg';
+    const settings=printSettings(),nodes=visibleExportNodes(mode),visible=new Set(nodes);
+    if(!frameOnly&&!nodes.length)return null;
+    const frame=$('#customSheetFrame');
+    const bounds=nodes.length?exportContentBounds(nodes):null;
+    const padding=5;
+    const view=frameOnly?printWorldBounds(settings):{
+      x:bounds.left-padding,y:bounds.top-padding,w:bounds.right-bounds.left+2*padding,h:bounds.bottom-bounds.top+2*padding
+    };
+    const clone=drawing.cloneNode(true),sourceNodes=[...drawing.querySelectorAll('*')],copyNodes=[...clone.querySelectorAll('*')];
+    const copies=new Map(sourceNodes.map((source,index)=>[source,copyNodes[index]]));
+    const styleProperties=['fill','stroke','stroke-width','stroke-dasharray','stroke-linecap','stroke-linejoin','font-family','font-size','font-weight','opacity','visibility'];
+    sourceNodes.forEach((source,index)=>{
+      if(!source.closest('#sheetDesign')||source.closest('.resize-controls'))return;
+      const computed=getComputedStyle(source),copy=copyNodes[index];
+      for(const property of styleProperties)copy.style.setProperty(property,computed.getPropertyValue(property));
+      copy.classList.remove('selected-object');
+    });
+    const designCopy=clone.querySelector('#sheetDesign'),objectCopy=designCopy.querySelector('#userDrawings');
+    Array.from(userDrawings.children).forEach(source=>{
+      if(!visible.has(source))copies.get(source).remove();
+    });
+    Array.from(design.children).forEach(source=>{
+      if(source===userDrawings)return;
+      const copy=copies.get(source);
+      if(source===frame&&(frameOnly||visible.has(source))){copy.style.display='block';return;}
+      if(visible.has(source))return;
+      copy.remove();
+    });
+    for(const child of [...clone.children]){
+      if(child!==designCopy&&child.tagName!=='defs')child.remove();
+    }
+    clone.querySelectorAll('#paperGrid,#minorPaperGrid').forEach(pattern=>pattern.remove());
+    objectCopy.removeAttribute('aria-label');
+    clone.removeAttribute('style');
+    clone.removeAttribute('id');
+    clone.removeAttribute('class');
+    clone.removeAttribute('role');
+    clone.removeAttribute('aria-label');
+    clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
+    clone.setAttribute('viewBox',[view.x,view.y,view.w,view.h].join(' '));
+    clone.setAttribute('width',frameOnly?(settings.width-2*settings.margin)+'mm':view.w);
+    clone.setAttribute('height',frameOnly?(settings.height-2*settings.margin)+'mm':view.h);
+    return {clone,settings};
+  }
+  function confirmFrameClipping(){
+    const nodes=visibleExportNodes('export-frame-svg');
+    if(!nodes.length)return true;
+    const bounds=exportContentBounds(nodes),view=printWorldBounds(printSettings());
+    if(bounds.left>=view.x-.1&&bounds.top>=view.y-.1&&bounds.right<=view.x+view.w+.1&&bounds.bottom<=view.y+view.h+.1)return true;
+    return window.confirm('The print frame clips some visible drawing geometry. Continue with the frame only?');
+  }
+  function exportSvg(mode='export-svg'){
+    if(!state.sheet){notify('Open a drawing sheet before exporting.');return;}
+    if(mode==='export-frame-svg'&&!confirmFrameClipping())return;
+    const output=prepareExportDrawing(mode);
+    if(!output){notify(mode==='export-selection-svg'?'Select visible drawing objects to export.':'There is no visible drawing content to export.');return;}
+    const xml=new XMLSerializer().serializeToString(output.clone);
+    const blob=new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n',xml],{type:'image/svg+xml'});
+    const link=document.createElement('a');
+    link.href=URL.createObjectURL(blob);
+    const sheet=activeDraftingSheet(),scope=mode==='export-frame-svg'?'frame':mode==='export-selection-svg'?'selection':'drawing';
+    link.download=(sheet?.number||state.sheet).replace(/[\\/]/g,'-')+'-'+scope+'.svg';
+    link.click();
+    setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+    notify('SVG exported.');
+  }
+  function preparePrintOutput(){
+    if(!state.sheet)return;
+    const {clone,settings}=prepareExportDrawing('export-frame-svg');
+    $('#cadPrintOutput')?.remove();
+    const output=document.createElement('div');
+    output.id='cadPrintOutput';
+    output.append(clone);
+    document.body.append(output);
+    $('#cad-print-page').textContent='@page { size: '+settings.width+'mm '+settings.height+'mm; margin: '+settings.margin+'mm; }';
+    document.body.dataset.cadPrint='';
+  }
+  function printDrawing(){
+    if(!state.sheet){notify('Open a drawing sheet before printing.');return;}
+    if(confirmFrameClipping())window.print();
+  }
   function selectPanel(id){
     if(id==='layers'){openInspector('Layers and visibility');return;}
     workspace.classList.remove('left-sidebar-closed');
@@ -1241,7 +1800,7 @@
   function openAssistant(){openInspector('Adigun BOT');$('#inspectorContent').innerHTML='<div class="inspector-block"><div class="inspector-title">Adigun BOT · connection status</div><div class="assistant-state"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#73e6f4" stroke-width="1.6"><use href="#i-bot"/></svg><span><b>AI service not connected</b><br>This workspace is running locally. Connect a secured product API to enable cited, project-aware engineering assistance.</span></div><p class="notice">Manual drawing, local saving and SVG export are available without an AI provider. No suggestion or edit has been generated.</p></div>';}
   function openSymbolPicker(){const box=$('#symbolsDialogList');box.replaceChildren();const search=document.createElement('input');search.className='palette-search';search.placeholder='Search engineering symbols';search.setAttribute('aria-label','Search component library');const category=document.createElement('select');category.className='palette-search';category.setAttribute('aria-label','Filter symbol discipline');const all=document.createElement('option');all.value='';all.textContent='All disciplines';category.append(all);for(const name of [...new Set(symbolCatalog.map(x=>x.category))]){const option=document.createElement('option');option.value=name;option.textContent=name;category.append(option);}const list=document.createElement('div');list.className='command-list';box.append(search,category,list);const render=function(){const q=search.value.trim().toLowerCase();list.replaceChildren();for(const item of symbolCatalog){if(category.value&&item.category!==category.value)continue;if(q&&!(item.name+' '+item.category+' '+item.id).toLowerCase().includes(q))continue;const b=document.createElement('button');b.className='command-item';const glyph=document.createElement('span');glyph.textContent=item.tag;glyph.style.color='#22d3ee';const label=document.createElement('span');label.textContent=item.name;b.append(glyph,label);b.addEventListener('click',function(){insertCatalogSymbol(item.id);$('#symbolsDialog').close();});list.append(b);}};search.addEventListener('input',render);category.addEventListener('change',render);render();$('#symbolsDialog').showModal();search.focus();}
   function createPalette(){const list=$('#commandList');list.replaceChildren();for(const [name,action,key]of menuCommands){const b=document.createElement('button');b.className='command-item';b.dataset.search=name.toLowerCase();b.innerHTML=`<span>⌘</span><span>${name}</span>${key?`<kbd>${key}</kbd>`:''}`;b.addEventListener('click',()=>{if(action==='symbol-picker')openSymbolPicker();else if(action==='inspector')openInspector('Properties');else if(action==='maximize')workspace.classList.toggle('maximized');else runAction(action);$('#commands').close();});list.append(b);}}
-  function runAction(action){switch(action){case'save':saveLocal();break;case'open':$('#openFile').click();break;case'print':window.print();break;case'undo':undo();break;case'redo':redo();break;case'fit':state.zoom=100;state.view={x:0,y:0,w:1200,h:760};applyView();persist();notify('Sheet fitted to view.');break;case'zoom-in':setZoom(state.zoom+10);break;case'zoom-out':setZoom(state.zoom-10);break;case'theme':state.theme=state.theme==='light'?'dark':'light';wrap.classList.toggle('dark-paper',state.theme==='dark');$('#drawing').style.background=state.theme==='dark'?'#17202a':'#fff';persist();notify(`Drawing paper set to ${state.theme} mode.`);break;case'maximize':workspace.classList.toggle('maximized');break;case'export-svg':exportSvg();break;case'assistant':openAssistant();break;case'symbol-picker':openSymbolPicker();break;case'settings':openInspector('Workspace settings');break;case'new':$('#projectTemplate').value='';$('#projectTemplate').dispatchEvent(new Event('change'));$('#newProjectName').value='New Project';$('#newProjectDialog').showModal();break;case'palette':toggleColorPalette();break;case'fill-toggle':state.fillEnabled=!state.fillEnabled;if(state.selected){const obj=state.objects.find(o=>o.id===state.selected);if(obj&&['rect','circle','ellipse','triangle'].includes(obj.kind))obj.fill=state.fillEnabled?state.fillColor:'none';}$('#fillEnabledTool').setAttribute('aria-pressed',String(state.fillEnabled));$('#paletteFillEnabled').checked=state.fillEnabled;renderObjects();persist();notify(state.fillEnabled?'Shape fill enabled.':'Shape fill disabled.');break;}}
+  function runAction(action){switch(action){case'save':saveLocal();break;case'open':$('#openFile').click();break;case'print':printDrawing();break;case'undo':undo();break;case'redo':redo();break;case'fit':case'fit-selection':case'fit-frame':fitDrawingView(action);break;case'go-to-origin':state.view={...state.view,x:-state.view.w/2,y:-state.view.h/2};applyView();persist();notify('Drawing origin centered.');break;case'zoom-in':setZoom(state.zoom+10);break;case'zoom-out':setZoom(state.zoom-10);break;case'theme':state.theme=state.theme==='light'?'dark':'light';wrap.classList.toggle('dark-paper',state.theme==='dark');$('#drawing').style.background=state.theme==='dark'?'#17202a':'#fff';persist();notify(`Drawing paper set to ${state.theme} mode.`);break;case'maximize':workspace.classList.toggle('maximized');break;case'export-svg':case'export-selection-svg':case'export-frame-svg':exportSvg(action);break;case'assistant':openAssistant();break;case'symbol-picker':openSymbolPicker();break;case'settings':openInspector('Workspace settings');break;case'new':$('#projectTemplate').value='';$('#projectTemplate').dispatchEvent(new Event('change'));$('#newProjectName').value='New Project';$('#newProjectDialog').showModal();break;case'palette':toggleColorPalette();break;case'fill-toggle':state.fillEnabled=!state.fillEnabled;if(state.selected){const obj=state.objects.find(o=>o.id===state.selected);if(obj&&['rect','circle','ellipse','triangle'].includes(obj.kind))obj.fill=state.fillEnabled?state.fillColor:'none';}$('#fillEnabledTool').setAttribute('aria-pressed',String(state.fillEnabled));$('#paletteFillEnabled').checked=state.fillEnabled;renderObjects();persist();notify(state.fillEnabled?'Shape fill enabled.':'Shape fill disabled.');break;}}
   const paletteColors=['#111827','#164eac','#ed3f38','#22d3ee','#16864a','#a20c98','#d4af37','#f97316','#f8fafc','#78869a','#7c3aed','#000000'];
   let paletteMode='stroke',paletteCloseTimer=0;
   function renderPalette(){const host=$('#paletteSwatches');host.replaceChildren();for(const color of paletteColors){const b=document.createElement('button');b.type='button';b.className='palette-swatch';b.style.background=color;b.dataset.color=color;b.title=color;b.setAttribute('aria-label',(paletteMode==='stroke'?'Set stroke ':'Set fill ')+color);host.append(b);}$('#customColor').value=paletteMode==='stroke'?state.strokeColor:state.fillColor;$$('[data-palette-mode]').forEach(b=>{const on=b.dataset.paletteMode===paletteMode;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});}
@@ -1261,7 +1820,7 @@
     'IEC / DIN / US Standards':[['Electrical Checks','checks'],['Print Current Sheet','print'],['Open Sheet Index','project']]
   };
   function closeModuleMenu(restoreFocus=false){if(moduleCloseTimer)clearTimeout(moduleCloseTimer);moduleCloseTimer=0;moduleMenu.hidden=true;hoverOpenedTrigger=null;$$('[data-module]').forEach(b=>b.setAttribute('aria-expanded','false'));const trigger=activeModuleTrigger;activeModuleTrigger=null;if(restoreFocus&&trigger)trigger.focus();}
-  function openModuleMenu(trigger){const name=trigger.dataset.module;if(!moduleMenu.hidden&&activeModuleTrigger===trigger)return;if(moduleCloseTimer)clearTimeout(moduleCloseTimer);moduleCloseTimer=0;activeModuleTrigger=trigger;$$('[data-module]').forEach(b=>{const active=b===trigger;b.setAttribute('aria-expanded',String(active));if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#moduleMenuTitle').textContent=name;moduleMenuActions.replaceChildren();moduleMenuNote.hidden=true;for(const [label,action] of(moduleCommands[name]||[])){const b=document.createElement('button');b.type='button';b.setAttribute('role','menuitem');b.textContent=label;b.addEventListener('click',()=>{closeModuleMenu();switch(action){case'project':selectPanel('project');break;case'symbols':selectPanel('symbols');break;case'new-sheet':$('#newSheet').click();break;case'commands':createPalette();$('#commands').showModal();$('#commandSearch').focus();break;case'control-sheet':setSheet('control');break;case'plc-sheet':setSheet('plc');break;case'plc-symbol':openSymbolPicker();break;case'checks':openInspector('Electrical checks');break;case'properties':openInspector('Properties');break;case'layers':openInspector('Layers and visibility');break;case'print':window.print();break;case'fit':runAction('fit');break;case'export-svg':exportSvg();break;}});moduleMenuActions.append(b);}if(name==='IEC / DIN / US Standards'){moduleMenuNote.textContent='Electrical Checks validates the native connections and cable assignments. Standards compliance requires separate review.';moduleMenuNote.hidden=false;}moduleMenu.hidden=false;const anchor=moduleMenu.offsetParent||moduleMenu.parentElement;const anchorRect=anchor.getBoundingClientRect(),triggerRect=trigger.getBoundingClientRect();moduleMenu.style.left=Math.max(8,Math.min(triggerRect.left-anchorRect.left,anchorRect.width-moduleMenu.offsetWidth-8))+'px';}
+  function openModuleMenu(trigger){const name=trigger.dataset.module;if(!moduleMenu.hidden&&activeModuleTrigger===trigger)return;if(moduleCloseTimer)clearTimeout(moduleCloseTimer);moduleCloseTimer=0;activeModuleTrigger=trigger;$$('[data-module]').forEach(b=>{const active=b===trigger;b.setAttribute('aria-expanded',String(active));if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});$('#moduleMenuTitle').textContent=name;moduleMenuActions.replaceChildren();moduleMenuNote.hidden=true;for(const [label,action] of(moduleCommands[name]||[])){const b=document.createElement('button');b.type='button';b.setAttribute('role','menuitem');b.textContent=label;b.addEventListener('click',()=>{closeModuleMenu();switch(action){case'project':selectPanel('project');break;case'symbols':selectPanel('symbols');break;case'new-sheet':$('#newSheet').click();break;case'commands':createPalette();$('#commands').showModal();$('#commandSearch').focus();break;case'control-sheet':setSheet('control');break;case'plc-sheet':setSheet('plc');break;case'plc-symbol':openSymbolPicker();break;case'checks':openInspector('Electrical checks');break;case'properties':openInspector('Properties');break;case'layers':openInspector('Layers and visibility');break;case'print':printDrawing();break;case'fit':runAction('fit');break;case'export-svg':exportSvg();break;}});moduleMenuActions.append(b);}if(name==='IEC / DIN / US Standards'){moduleMenuNote.textContent='Electrical Checks validates the native connections and cable assignments. Standards compliance requires separate review.';moduleMenuNote.hidden=false;}moduleMenu.hidden=false;const anchor=moduleMenu.offsetParent||moduleMenu.parentElement;const anchorRect=anchor.getBoundingClientRect(),triggerRect=trigger.getBoundingClientRect();moduleMenu.style.left=Math.max(8,Math.min(triggerRect.left-anchorRect.left,anchorRect.width-moduleMenu.offsetWidth-8))+'px';}
   function scheduleModuleClose(event){if(event.pointerType!=='mouse'&&event.pointerType!=='pen')return;if(moduleCloseTimer)clearTimeout(moduleCloseTimer);moduleCloseTimer=setTimeout(()=>closeModuleMenu(),180);}
   function cancelModuleClose(){if(moduleCloseTimer)clearTimeout(moduleCloseTimer);moduleCloseTimer=0;}
   $$('[data-module]').forEach(b=>{b.addEventListener('click',()=>{if(!moduleMenu.hidden&&activeModuleTrigger===b){if(hoverOpenedTrigger===b){hoverOpenedTrigger=null;return;}closeModuleMenu();return;}hoverOpenedTrigger=null;openModuleMenu(b);});b.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){hoverOpenedTrigger=b;openModuleMenu(b);}else{hoverOpenedTrigger=null;cancelModuleClose();}});b.addEventListener('pointerleave',scheduleModuleClose);});
@@ -1293,13 +1852,27 @@
   $$('[data-panel]').forEach(b=>b.addEventListener('click',()=>selectPanel(b.dataset.panel)));
   $$('[data-inspector]').forEach(b=>b.addEventListener('click',()=>openInspector(b.dataset.inspector)));
 
-  $$('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const key=b.dataset.toggle;state[key]=!state[key];b.setAttribute('aria-pressed',String(state[key]));if(key==='grid')drawing.querySelector('rect').style.display=state.grid?'':'none';persist();notify(`${key.toUpperCase()} ${state[key]?'on':'off'}.`);}));
+  $$('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const key=b.dataset.toggle;state[key]=!state[key];b.setAttribute('aria-pressed',String(state[key]));if(key==='grid'){$('#viewportGrid').style.display=state.grid?'':'none';applyView();}persist();notify(`${key.toUpperCase()} ${state[key]?'on':'off'}.`);}));
   $('#collapseProject').addEventListener('click',()=>{const hidden=$('#projectPanel').hidden;$('#projectPanel').hidden=!hidden;});$('#focusSymbols').addEventListener('click',()=>$('#symbolSearch').focus());$('#closeRightPanel').addEventListener('click',()=>{$('#rightPanel').classList.remove('open');workspace.classList.remove('inspector-open');});$('#maximize').addEventListener('click',()=>workspace.classList.toggle('maximized'));$('#newSheet').addEventListener('click',()=>openAddSheetDialog());
   $('#zoomValue').addEventListener('click',function(){const menu=$('#zoomMenu'),open=menu.hidden;menu.hidden=!open;$('#zoomValue').setAttribute('aria-expanded',String(open));if(open){const r=$('#zoomValue').getBoundingClientRect();menu.style.left=Math.max(8,Math.min(innerWidth-150,r.left))+'px';menu.style.bottom=(innerHeight-r.top+5)+'px';}});
   $('#zoomMenu').addEventListener('click',function(e){const b=e.target.closest('[data-zoom-preset]');if(!b)return;$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');if(b.dataset.zoomPreset==='fit')runAction('fit');else setZoom(Number(b.dataset.zoomPreset));});
   document.addEventListener('click',function(e){if(!e.target.closest('#zoomMenu')&&!e.target.closest('#zoomValue')){$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');}});
   $('#openCommands').addEventListener('click',()=>{createPalette();$('#commands').showModal();$('#commandSearch').focus();});$('#closeCommands').addEventListener('click',()=>$('#commands').close());$('#closeSymbols').addEventListener('click',()=>$('#symbolsDialog').close());$('#closeNewProject').addEventListener('click',()=>$('#newProjectDialog').close());$('#closeSheetDialog').addEventListener('click',()=>$('#sheetDialog').close());
-  $('#commandSearch').addEventListener('input',e=>$('.command-item',$('#commandList')).forEach(b=>b.hidden=!b.dataset.search.includes(e.target.value.toLowerCase())));
+  $('#commandSearch').addEventListener('input',event=>{
+    const query=event.target.value.trim().toLowerCase();
+    for(const button of $$('#commandList .command-item'))button.hidden=!button.dataset.search.includes(query);
+  });
+  $('#commands').addEventListener('keydown',event=>{
+    const options=$$('#commandList .command-item').filter(button=>!button.hidden);
+    if(event.key==='Enter'&&event.target===$('#commandSearch')&&options.length){
+      event.preventDefault();
+      options[0].click();
+    }else if((event.key==='ArrowDown'||event.key==='ArrowUp')&&options.length){
+      const current=options.indexOf(document.activeElement),step=event.key==='ArrowDown'?1:-1;
+      event.preventDefault();
+      options[(current<0?(step>0?0:options.length-1):(current+step+options.length)%options.length)].focus();
+    }
+  });
   $('#projectSearch').addEventListener('input',e=>$$('.tree-row',$('#projectTree')).forEach(function(row){row.hidden=!row.textContent.toLowerCase().includes(e.target.value.toLowerCase());row.style.display=row.hidden?'none':'';}));
   $('#projectTree').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const row=e.target.closest('[data-project-section],[data-sheet]');if(row){e.preventDefault();row.click();}}});
   $('#projectTree').addEventListener('click',e=>{if(e.target.closest('input'))return;const addSection=e.target.closest('[data-add-project-section]');if(addSection){const id='A'+(state.sections.length+1);state.sections.push({id:id,name:'Additional section',collapsed:false});state.activeSection=id;renderCustomSheetNavigation();persist();return;}const toggle=e.target.closest('[data-toggle-section]');if(toggle){const section=state.sections.find(function(item){return item.id===toggle.dataset.toggleSection;});section.collapsed=!section.collapsed;renderCustomSheetNavigation();persist();return;}const add=e.target.closest('[data-add-section-sheet]');if(add){state.activeSection=add.dataset.addSectionSheet;addSheet();return;}const section=e.target.closest('[data-project-section]');if(section){selectProjectSection(section.dataset.projectSection);return;}const row=e.target.closest('[data-sheet]');if(row)setSheet(row.dataset.sheet);});$('#sheetTabs').addEventListener('click',e=>{const close=e.target.closest('[data-delete-sheet],[data-close-sheet]');if(close){e.preventDefault();e.stopPropagation();closeSheetTab(close.dataset.closeSheet||close.dataset.deleteSheet);return;}const tab=e.target.closest('.document-tab[data-sheet]');if(tab)setSheet(tab.dataset.sheet);});$('#sheetTabs').addEventListener('keydown',e=>{const close=e.target.closest('[data-delete-sheet],[data-close-sheet]');if(close&&(e.key==='Enter'||e.key===' ')){e.preventDefault();closeSheetTab(close.dataset.closeSheet||close.dataset.deleteSheet);}});
@@ -1326,10 +1899,10 @@
   $('#createProject').addEventListener('click',()=>{setTool('select');wrap.classList.add('blank-start');const name=$('#newProjectName').value.trim().slice(0,80)||'New project';state.projectName=name;state.projectId=crypto.randomUUID();state.metadata={};state.openSheetIds=[];state.sections=window.AdigunCADEngine.defaultProjectSections();state.activeSection='A1';state.crossSheetConnections=[];state.connectionIssues=[];state.objects=[];state.sheets=[];state.sheetLabels=Object.create(null);state.sheetObjects={};state.sheetViews={};state.sheet=null;state.selected=null;state.selectedObjectIds=[];state.undo=[];state.redo=[];updateHistoryButtons();renderObjects();renderCustomSheetNavigation();$('#sheetDialog').close();$('#newProjectDialog').close();$('#rightPanelTitle').textContent='Properties';selectPanel('project');if($('#projectTemplate').value){loadProjectExample($('#projectTemplate').value,name);return;}showEmptyProjectSheet();selectPanel('project');notify(`${name} created with A1–A4 sections. Select a sheet in the sidebar, or use a section + to create one.`);persist();});
   $('#openFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;if(f.size>5_000_000&&!f.name.toLowerCase().endsWith('.json')&&f.type!=='application/json'){notify('Project or SVG exceeds the 5 MB local import limit.');e.target.value='';return;}const text=await f.text();if(f.name.toLowerCase().endsWith('.json')||f.type==='application/json'){try{const parsed=window.AdigunCADEngine.parseProject(text);if(!parsed.valid){notify('Project not opened: '+parsed.errors.join(' '));e.target.value='';return;}const payload=parsed.project;state.projectId=payload.projectId||crypto.randomUUID();state.metadata=payload.metadata||{};state.sections=payload.sections||null;state.openSheetIds=Array.isArray(payload.openSheetIds)?payload.openSheetIds.slice():(payload.activeSheet?[payload.activeSheet]:[]);state.activeSection=payload.activeSection||'A1';state.projectName=typeof payload.project==='string'?payload.project.slice(0,80):'Imported project';state.connectionIssues=Array.isArray(payload.connectionIssues)?payload.connectionIssues:[];state.crossSheetConnections=Array.isArray(payload.crossSheetConnections)?payload.crossSheetConnections:[];state.undo=[];state.redo=[];state.selectedObjectIds=[];state.sheets=payload.sheets.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&typeof x.number==='string');state.sheetLabels=payload.sheetLabels&&typeof payload.sheetLabels==='object'?Object.assign(Object.create(null),payload.sheetLabels):Object.create(null);state.sheet=(sheetNames[payload.activeSheet]||state.sheets.some(x=>x.id===payload.activeSheet))?payload.activeSheet:(state.sections?null:'control');state.sheetObjects=Object.create(null);state.sheetViews=Object.assign(Object.create(null),payload.sheetViews&&typeof payload.sheetViews==='object'?payload.sheetViews:{});state.zoom=Number.isFinite(payload.zoom)?Math.max(10,Math.min(500,payload.zoom)):100;state.view=payload.view&&[payload.view.x,payload.view.y,payload.view.w,payload.view.h].every(Number.isFinite)?payload.view:{x:0,y:0,w:1200,h:760};for(const object of payload.objects){const target=object.sheetId&&(sheetNames[object.sheetId]||state.sheets.some(sheet=>sheet.id===object.sheetId))?object.sheetId:state.sheet;(state.sheetObjects[target]||(state.sheetObjects[target]=[])).push(object);}state.objects=state.sheetObjects[state.sheet]||[];state.sheetObjects[state.sheet]=state.objects;const activeView=state.sheetViews[state.sheet];if(activeView&&[activeView.x,activeView.y,activeView.w,activeView.h].every(Number.isFinite))state.view=activeView;else state.sheetViews[state.sheet]=state.view;state.theme=payload.theme==='dark'?'dark':'light';wrap.classList.add('blank-start');wrap.classList.toggle('dark-paper',state.theme==='dark');renderCustomSheetNavigation();renderObjects();applyView();setSheet(state.sheet);dirty=false;notify(`Project ${f.name} opened.`);}catch{notify('Project file could not be read.');}e.target.value='';return;}if(f.type!=='image/svg+xml'&&!f.name.toLowerCase().endsWith('.svg')){notify('Open accepts Adigun project JSON or SVG drawings.');e.target.value='';return;}const doc=new DOMParser().parseFromString(text,'image/svg+xml');if(doc.querySelector('parsererror')||doc.documentElement.tagName.toLowerCase()!=='svg'||doc.querySelector('script,foreignObject,iframe,object,embed')){notify('This SVG is invalid or contains unsupported active content.');e.target.value='';return;}const vb=(doc.documentElement.getAttribute('viewBox')||'0 0 1200 760').split(/[ ,]+/).map(Number);if(vb.length!==4||vb.some(n=>!Number.isFinite(n))){notify('SVG needs a valid four-value viewBox.');e.target.value='';return;}drawing.setAttribute('viewBox',vb.join(' '));state.view={x:vb[0],y:vb[1],w:vb[2],h:vb[3]};const imported=document.importNode(doc.documentElement,true);const safeGroup=document.createElementNS('http://www.w3.org/2000/svg','g');for(const child of Array.from(imported.children)){if(!['script','foreignObject','iframe','object','embed'].includes(child.tagName.toLowerCase()))safeGroup.append(child);}design.replaceWith(safeGroup);state.importedSvg=true;dirty=false;notify(`${f.name} opened in read-only SVG view. Editing imported SVG markup is disabled.`);e.target.value='';});
   function handleDeleteShortcut(event){if(event.key!=='Delete'&&event.key!=='Backspace')return false;const editable=event.target&&event.target.closest&&event.target.closest('input,textarea,select,[contenteditable="true"]');if(editable)return false;const selectedIds=state.selectedObjectIds||[];if(!selectedIds.length&&!state.selected)return false;event.preventDefault();if(selectedIds.length>1)deleteSelection();else deleteObject(state.selected||selectedIds[0]);return true;}
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(terminalDrag||wireDraft)){e.preventDefault();cancelTerminalDrag();cancelWireDraft();return;}if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(e.key==='Escape'&&wireEndDrag){e.preventDefault();wireEndDrag.preview.remove();wireEndDrag=null;return;}if(e.key==='Escape'&&state.pendingMoveObjectId){e.preventDefault();state.pendingMoveObjectId=null;notify('Move cancelled.');return;}if(e.key==='Escape'&&!moduleMenu.hidden){e.preventDefault();closeModuleMenu(true);return;}if(e.key==='Escape'&&objectDrag){e.preventDefault();state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';return;}if(e.key==='Escape'&&state.pendingComponentId){e.preventDefault();cancelComponentPlacement();return;}if(e.ctrlKey&&e.key.toLowerCase()==='k'){closeModuleMenu(false);e.preventDefault();createPalette();$('#commands').showModal();$('#commandSearch').focus();return;}if(e.key==='Escape'&&$('#commands').open){$('#commands').close();return;}if(e.ctrlKey&&e.key.toLowerCase()==='s'){e.preventDefault();saveLocal();return;}if(e.ctrlKey&&e.key.toLowerCase()==='o'){e.preventDefault();$('#openFile').click();return;}if(e.ctrlKey&&e.key.toLowerCase()==='p'){e.preventDefault();window.print();return;}if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}if((e.key==='Delete'||e.key==='Backspace')&&handleDeleteShortcut(e))return;if(e.key==='f'||e.key==='F'){runAction('fit');return;}const key=e.key.toLowerCase(),tool={v:'select',w:'wire',s:'symbol',l:'line',r:'rect',c:'circle',t:'text'}[key];if(tool){e.preventDefault();tool==='symbol'?openSymbolPicker():setTool(tool);}});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(terminalDrag||wireDraft)){e.preventDefault();cancelTerminalDrag();cancelWireDraft();return;}if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(e.key==='Escape'&&wireEndDrag){e.preventDefault();wireEndDrag.preview.remove();wireEndDrag=null;return;}if(e.key==='Escape'&&state.pendingMoveObjectId){e.preventDefault();state.pendingMoveObjectId=null;notify('Move cancelled.');return;}if(e.key==='Escape'&&!moduleMenu.hidden){e.preventDefault();closeModuleMenu(true);return;}if(e.key==='Escape'&&objectDrag){e.preventDefault();state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';return;}if(e.key==='Escape'&&state.pendingComponentId){e.preventDefault();cancelComponentPlacement();return;}if(e.ctrlKey&&e.key.toLowerCase()==='k'){closeModuleMenu(false);e.preventDefault();createPalette();$('#commands').showModal();$('#commandSearch').focus();return;}if(e.key==='Escape'&&$('#commands').open){$('#commands').close();return;}if(e.ctrlKey&&e.key.toLowerCase()==='s'){e.preventDefault();saveLocal();return;}if(e.ctrlKey&&e.key.toLowerCase()==='o'){e.preventDefault();$('#openFile').click();return;}if(e.ctrlKey&&e.key.toLowerCase()==='p'){e.preventDefault();printDrawing();return;}if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}if((e.key==='Delete'||e.key==='Backspace')&&handleDeleteShortcut(e))return;if(e.key==='f'||e.key==='F'){runAction('fit');return;}const key=e.key.toLowerCase(),tool={v:'select',w:'wire',s:'symbol',l:'line',r:'rect',c:'circle',t:'text'}[key];if(tool){e.preventDefault();tool==='symbol'?openSymbolPicker():setTool(tool);}});
   $$('[data-tree-view]').forEach(b=>b.addEventListener('click',()=>{$$('[data-tree-view]').forEach(x=>x.classList.toggle('active',x===b));$('#projectTree').classList.toggle('list-view',b.dataset.treeView==='list');}));
   $$('[data-symbol-view]').forEach(b=>b.addEventListener('click',()=>{$$('[data-symbol-view]').forEach(x=>x.classList.toggle('active',x===b));notify(b.dataset.symbolView==='macros'?'No saved symbol macros exist in this project yet.':'Built-in IEC-style symbol library selected.');}));
-  wrap.classList.add('blank-start');wrap.classList.toggle('dark-paper',state.theme==='dark');applyView();renderObjects();$('#projectTree').replaceChildren();$('#symbolsPanel').hidden=true;showEmptyProjectSheet();[['snap','snap'],['ortho','ortho'],['osnap','osnap']].forEach(([key])=>{const b=$(`[data-toggle="${key}"]`);b.setAttribute('aria-pressed',String(state[key]));});if(!state.grid)drawing.querySelector('rect').style.display='none';
+  wrap.classList.add('blank-start');wrap.classList.toggle('dark-paper',state.theme==='dark');applyView();renderObjects();$('#projectTree').replaceChildren();$('#symbolsPanel').hidden=true;showEmptyProjectSheet();[['snap','snap'],['ortho','ortho'],['osnap','osnap']].forEach(([key])=>{const b=$(`[data-toggle="${key}"]`);b.setAttribute('aria-pressed',String(state[key]));});if(!state.grid)$('#viewportGrid').style.display='none';
   renderSymbolSidebar();
   if(matchMedia('(max-width:640px)').matches)workspace.classList.add('mobile-tools');
   initializing=false;

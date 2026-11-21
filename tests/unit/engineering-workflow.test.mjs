@@ -10,6 +10,15 @@ const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("incoming PE bonds explicit mounting feet without doubling conductor clamps", () => {
   const project = engine.createExample("eng0601");
+  const bonding = project.objects
+    .filter((o) => o.sheetId === "eng0601-a3-bonding")
+    .map((o) => o.text)
+    .join("\n");
+  assert.match(
+    bonding,
+    /XPE:1:2 → XPEF:1:1 \(W2 PE\); XPEF:1:2 → M1:PE \(W3 PE\)/,
+  );
+  assert.match(bonding, /XPE:2:2 → PS1:PE/);
   const terminals = project.objects.filter((o) =>
     ["XPE:0", "XPE:1", "XPE:2"].includes(o.ref),
   );
@@ -2292,6 +2301,23 @@ test("A4 native registers match canonical devices and remain editable after reop
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
+  const evidenceReferences = reportObjects.filter((o) =>
+    o.id.startsWith("eng0601-release-evidence-sheets-"),
+  );
+  assert.equal(evidenceReferences.length, 8);
+  for (const row of evidenceReferences) {
+    const references = row.text.match(/A[1-4]\/\d{3}/g);
+    assert.ok(references?.length);
+    assert.ok(
+      references.every((number) =>
+        project.sheets.some((sheet) => sheet.number === number),
+      ),
+    );
+  }
+  const bondingSheet = project.sheets.find(
+    (sheet) => sheet.id === "eng0601-a3-bonding",
+  );
+  assert.ok(evidenceReferences[3].text.includes(bondingSheet.number));
   const w1 = reportObjects.find((o) => o.id === "eng0601-feeder-cable-W1");
   assert.match(w1.text, /Q1:1L1.*Q1:3L2.*Q1:5L3.*Q1:N.*XPE:0:1 \(PE\)/);
   const w2 = reportObjects.find(
@@ -2706,6 +2732,20 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     (o) => o.id.startsWith("eng0601-duct-") && o.kind === "rect",
   );
   assert.equal(ducts.length, 2);
+  const gapNote = project.objects.find((o) => o.id === "eng0601-rail-duct-gap");
+  for (const side of ["power", "control"]) {
+    const duct = ducts.find((o) => o.id === "eng0601-duct-" + side);
+    const clearances = zones
+      .slice(0, 6)
+      .filter((zone) => duct.y < zone.y2 && duct.y2 > zone.y)
+      .map(
+        (zone) =>
+          (side === "power" ? zone.x - duct.x2 : duct.x - zone.x2) / 0.5,
+      );
+    const minimum = Math.min(...clearances);
+    assert.ok(Number.isFinite(minimum) && minimum > 0);
+    assert.ok(gapNote.text.includes(side + " " + minimum + " mm"));
+  }
   for (const duct of ducts) {
     assert.equal((duct.x2 - duct.x) / 0.5, 20);
     assert.equal((duct.y2 - duct.y) / 0.5, 700);

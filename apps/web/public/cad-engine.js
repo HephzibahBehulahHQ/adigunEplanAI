@@ -1264,6 +1264,28 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           errors.push('Sheet ' + (index + 1) + ' must have a non-empty string ID.');
           return;
         }
+        if(sheet.drafting!==undefined){
+          const drafting=sheet.drafting;
+          if(!drafting||!['du','mm','in'].includes(drafting.units)||['minor','major','snap'].some(key=>!Number.isFinite(drafting[key])||drafting[key]<1e-5||drafting[key]>1e6)){
+            errors.push('Invalid drafting settings on sheet '+sheet.id+'.');
+          }
+        }
+        if(sheet.guides!==undefined){
+          const guides=sheet.guides,ids=new Set();
+          if(!Array.isArray(guides)||guides.some(guide=>{
+            if(!guide||typeof guide.id!=='string'||!guide.id||ids.has(guide.id)||!['x','y'].includes(guide.axis)||!Number.isFinite(guide.position)||typeof guide.hidden!=='boolean'||typeof guide.locked!=='boolean')return true;
+            ids.add(guide.id);
+            return false;
+          }))errors.push('Invalid drafting guides on sheet '+sheet.id+'.');
+        }
+        if(sheet.paper!==undefined){
+          const paper=sheet.paper,paperSizes={A0:841,A1:594,A2:420,A3:297,A4:210};
+          const size=paper?.format==='Custom'?Math.min(paper.customWidth,paper.customHeight):paperSizes[paper?.format];
+          if(!paper||!Number.isFinite(size)||!['portrait','landscape'].includes(paper.orientation)||
+            [paper.customWidth,paper.customHeight].some(value=>!Number.isFinite(value)||value<20||value>5000)||
+            !Number.isFinite(paper.margin)||paper.margin<0||paper.margin>=size/2||
+            !Number.isFinite(paper.scale)||paper.scale<0||paper.scale>10000)errors.push('Invalid paper settings on sheet '+sheet.id+'.');
+        }
         if (sheetIds.has(sheet.id)) errors.push('Duplicate sheet ID: ' + sheet.id + '.');
         sheetIds.add(sheet.id);
       });
@@ -1913,7 +1935,7 @@ function createPumpStarterDocumentation(name) {
       text(index,'terminal-layout-limit-'+index,60,570,'Dashed space reserves one matching terminal beyond the current end stop. Reposition the end stop and cover if used.\nNo spare terminal is fitted. See Terminal rail mounting for plate datums and slot centres.',11,1050);
     });
     text(sheets.length-1,'accessory-register-heading',60,65,'ENG-0601 | Terminal accessory instances',22);
-    text(sheets.length-1,'accessory-register-basis',60,105,'Editable part instances and their references. Linked 5:1 body views are on the preceding A3 sheets.',11);
+    text(sheets.length-1,'accessory-register-basis',60,105,'Editable accessories. Linked 5:1 body views are on the preceding A3 sheets.\nUK 5 N (3004362): Phoenix Contact lists end cover D-UK 4/10 (3003020), 1.8 mm wide.',11);
     function developmentSheet(section,id,title){
       const index=sheets.length;
       sheets.push({id:id,sectionId:section,name:title,number:section+'/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Engineering development — not approved'}});
@@ -1960,8 +1982,23 @@ function createPumpStarterDocumentation(name) {
       text(railPage,'rail-plate-label-'+rail.strip,cx-halfWidth,cy-13,rail.strip,9,45);
       text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+rail.slotOffsets.map(function(offset){return rail.x+offset;}).join(' / ')+' at y '+rail.y,12,680);
     });
+    const railAccessZones=objects.filter(function(o){return o.sheetId===sheets[railPage].id&&o.id.startsWith('eng0601-rail-access-');});
+    const ductGaps=['power','control'].map(function(side){
+      const duct=objects.find(function(o){return o.id==='eng0601-duct-'+side;});
+      return Math.min(...railAccessZones.filter(function(zone){return duct.y<zone.y2&&duct.y2>zone.y;}).map(function(zone){
+        return (side==='power'?zone.x-duct.x2:duct.x-zone.x2)/plate.scale;
+      }));
+    });
+    text(railPage,'rail-duct-gap',410,595,'DRAWN DUCT-TO-SERVICE GAPS · power '+ductGaps[0]+' mm / control '+ductGaps[1]+' mm. Check delivered assembly fit separately.',11,680);
     text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut around the listed slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
     text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nACC-F2: proposed support centre (432.5, 490). Verify the complete F2 assembly envelope and clearance.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
+    const peDevices=new Map([pe,fieldPE,m1,auxPE,ps1].map(function(device){return [device.id,device];}));
+    function bondingPath(segment){
+      return ['start','end'].map(function(end){
+        const attachment=segment.attachments[end],device=peDevices.get(attachment.instanceId);
+        return device.ref+':'+pin(device,attachment.pinId).number;
+      }).join(' → ');
+    }
     const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');
     rows(bondingPage,[
       'BONDING DATUM: incoming PE → XPE:0 connection 1; XPE:0/1/2 share the dedicated XPE rail.',
@@ -1974,7 +2011,9 @@ function createPumpStarterDocumentation(name) {
       'Verify the XPE rail and mounting feet against required fault duty. Do not rely on rail mounting screws as the sole cabinet bond.',
       'Check each strap and conductor size, connection hardware and torque against actual protective duty and instructions.',
       'Verify continuity from incoming PE to each exposed part and record results. Keep N and 0 V separate from PE.',
-      'This is a physical bonding schedule. Schematic PE paths and existing terminal identities remain on A2/017.'
+      'MODELED PE PATHS · See the A2 protective-earth and field motor sheets for rail continuations.',
+      'Field: '+bondingPath(fieldEarth)+' (W2 PE); '+bondingPath(motorEarth)+' (W3 PE).',
+      'Auxiliary: '+bondingPath(psEarth)+'. Site and assembly bonds above require separate evidence.'
     ]);
     const doorPage=developmentSheet('A3','eng0601-a3-door','Door operator and indication layout');
     const doorSheet=sheets[doorPage].id;
@@ -2091,10 +2130,12 @@ function createPumpStarterDocumentation(name) {
       'Record test method, acceptance criterion, actual value, date, instrument, tester and independent review.',
       'No measured result, signature, successful test or installation approval is implied by this document.'
     ]);
+    const feederMotor=component(m1.componentId).specifications,feederBreaker=component(f1.componentId).specifications;
+    const nominalVoltage=400,motorCurrent=feederMotor.ratedLineCurrentAt400V50Hz.value;
     const feederReview=a4Sheet('Motor feeder acceptance worksheet');rows(feederReview,[
       'PATH: supply → Q1 → X1 → F1 → K1 → F2 → X2 → Q2 → M1. Auxiliary F3 branches after Q1.',
-      'DESIGN BASIS: 400 V three-phase; M1 15.2 A candidate. F2 15.2 A proposal; confirm duty and nameplate.',
-      'F1 data at 400 V: 55 kA Icu / 25 kA Ics. Individual breaker ratings are separate from starter coordination.',
+      'DESIGN BASIS: '+nominalVoltage+' V three-phase; M1 '+motorCurrent+' A candidate. F2 '+f2.properties.overloadSettingA+' A proposal; confirm duty and nameplate.',
+      'F1 data at '+nominalVoltage+' V: '+feederBreaker.icuAt400V.value+' kA Icu / '+feederBreaker.icsAt400V.value+' kA Ics. Individual breaker ratings are separate from starter coordination.',
       'Supply inputs: maximum prospective fault current ___ kA; minimum earth fault current ___ A; method/date ___.',
       'Upstream device and settings ___; maximum fault duty at Q1, F1 and auxiliary branch ___; evidence ___.',
       'Compare maximum duty with exact switchgear and Siemens combination conditions, including upstream limits.',
@@ -2129,12 +2170,12 @@ function createPumpStarterDocumentation(name) {
       text(feederReview,'feeder-cable-'+tag,60,447+index*23,tag+' | '+labels.join('   /   '),11,1060);
     });
     const dropPage=a4Sheet('Motor feeder voltage-drop study');
-    const nominalVoltage=400,motorCurrent=15.2,startRatio=7.8;
+    const startRatio=7.8;
     const startingCurrent=motorCurrent*startRatio;
-    const nominalPickup=component(f1.componentId).specifications.instantaneousShortCircuitRelease.value;
+    const nominalPickup=feederBreaker.instantaneousShortCircuitRelease.value;
     const conductorTemperature=70,copperCoefficient=0.00393,resistanceAt20=4.95,reactance=0.08;
     const hotResistance=resistanceAt20*(1+copperCoefficient*(conductorTemperature-20));
-    const runPowerFactor=0.78,startPowerFactor=0.35;
+    const runPowerFactor=feederMotor.powerFactor.value,startPowerFactor=0.35;
     function feederDrop(current,powerFactor,lengthM){
       return Math.sqrt(3)*current*lengthM/1000*(hotResistance*powerFactor+reactance*Math.sqrt(1-powerFactor*powerFactor));
     }
@@ -2179,18 +2220,19 @@ function createPumpStarterDocumentation(name) {
     const evidencePage=a4Sheet('Future installation evidence');
     text(evidencePage,'release-evidence-scope',60,105,'This example has no physical installation. Use these fields only if adapting the design for a real site.',12,1060);
     [
-      ['01 Supply and protection','Supply, earthing, maximum and minimum fault duty, upstream settings and coordination.'],
-      ['02 Feeder calculations','Actual W1–W3 lengths and installation. Ampacity, start/run drop, disconnection and withstand.'],
-      ['03 Rail and enclosure fit','Delivered rail, terminals, covers and fasteners. Service clearances, door travel and entries.'],
-      ['04 Protective bonding','Record cabinet, door, support rail and field PE paths. Link measured continuity and fault-duty review.'],
-      ['05 Assembly and thermal review','Record enclosure thermal assessment, final settings, torque checks and installed protection.'],
-      ['06 Functional commissioning','Record authorised start, stop, pressure, overload, local isolation and restoration tests.'],
-      ['07 As-built documentation','Reconcile revisions, native connections, terminal/cable schedules and installed equipment.'],
-      ['08 Independent review and owner release','Record reviewer, owner, signed approval reference and any outstanding conditions.']
+      ['01 Supply and protection','Supply, earthing, maximum and minimum fault duty, upstream settings and coordination.',[feederReview]],
+      ['02 Feeder calculations','Actual W1–W3 lengths and installation. Ampacity, start/run drop, disconnection and withstand.',[feederReview,dropPage]],
+      ['03 Rail and enclosure fit','Delivered rail, terminals, covers and fasteners. Service clearances, door travel and entries.',[railPage,doorPage,entryPage,fieldPage]],
+      ['04 Protective bonding','Record cabinet, door, support rail and field PE paths. Link measured continuity and fault-duty review.',[17,bondingPage]],
+      ['05 Assembly and thermal review','Record enclosure thermal assessment, final settings, torque checks and installed protection.',[assemblyPage]],
+      ['06 Functional commissioning','Record authorised start, stop, pressure, overload, local isolation and restoration tests.',[checks]],
+      ['07 As-built documentation','Reconcile revisions, native connections, terminal/cable schedules and installed equipment.',[2,handover]],
+      ['08 Independent review and owner release','Record reviewer, owner, signed approval reference and any outstanding conditions.',[checks,handover]]
     ].forEach(function(entry,index){
       const y=140+index*49;
-      text(evidencePage,'release-evidence-task-'+index,60,y,entry.join(' · '),11,1060);
+      text(evidencePage,'release-evidence-task-'+index,60,y,entry.slice(0,2).join(' · '),11,1060);
       text(evidencePage,'release-evidence-record-'+index,60,y+18,'Future site record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
+      text(evidencePage,'release-evidence-sheets-'+index,60,y+33,'Reference sheets: '+entry[2].map(function(page){return sheets[page].number;}).join(' · '),10,1060);
     });
     const cableSchedule=a4Sheet('Cable routes and identification schedule');
     text(cableSchedule,'cable-schedule-basis',60,105,'Example assignments from the native project. Route lengths and installation methods are unspecified.',12,1060);
