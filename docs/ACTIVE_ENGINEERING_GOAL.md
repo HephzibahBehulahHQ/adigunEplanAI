@@ -30,6 +30,12 @@ interface. A separate live check edited an A4/040 schedule note and verified
 that it survived native save/reopen. A4/040 lists W1–W5. Route lengths and
 installation methods remain unspecified for the example.
 
+A separate browser sweep opened all 41 sheets, checked that their 840
+native drawing objects rendered, and edited one note per sheet in a test
+copy. All 41 edits survived save/reopen. The 37 continuation pairs matched
+the original graph after accounting for generated component IDs and the
+endpoint directions populated when sheets open.
+
 The held or welded S1 restart scenario remains explicitly open on the
 commissioning sheet. The model checks establish drawing and connectivity
 consistency. A physical adaptation still requires an independent restart
