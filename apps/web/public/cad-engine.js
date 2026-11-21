@@ -1982,6 +1982,14 @@ function createPumpStarterDocumentation(name) {
       text(railPage,'rail-plate-label-'+rail.strip,cx-halfWidth,cy-13,rail.strip,9,45);
       text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+rail.slotOffsets.map(function(offset){return rail.x+offset;}).join(' / ')+' at y '+rail.y,12,680);
     });
+    const railAccessZones=objects.filter(function(o){return o.sheetId===sheets[railPage].id&&o.id.startsWith('eng0601-rail-access-');});
+    const ductGaps=['power','control'].map(function(side){
+      const duct=objects.find(function(o){return o.id==='eng0601-duct-'+side;});
+      return Math.min(...railAccessZones.filter(function(zone){return duct.y<zone.y2&&duct.y2>zone.y;}).map(function(zone){
+        return (side==='power'?zone.x-duct.x2:duct.x-zone.x2)/plate.scale;
+      }));
+    });
+    text(railPage,'rail-duct-gap',410,595,'DRAWN DUCT-TO-SERVICE GAPS · power '+ductGaps[0]+' mm / control '+ductGaps[1]+' mm. Check delivered assembly fit separately.',11,680);
     text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut around the listed slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
     text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nACC-F2: proposed support centre (432.5, 490). Verify the complete F2 assembly envelope and clearance.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
     const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');

@@ -2700,6 +2700,20 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     (o) => o.id.startsWith("eng0601-duct-") && o.kind === "rect",
   );
   assert.equal(ducts.length, 2);
+  const gapNote = project.objects.find((o) => o.id === "eng0601-rail-duct-gap");
+  for (const side of ["power", "control"]) {
+    const duct = ducts.find((o) => o.id === "eng0601-duct-" + side);
+    const clearances = zones
+      .slice(0, 6)
+      .filter((zone) => duct.y < zone.y2 && duct.y2 > zone.y)
+      .map(
+        (zone) =>
+          (side === "power" ? zone.x - duct.x2 : duct.x - zone.x2) / 0.5,
+      );
+    const minimum = Math.min(...clearances);
+    assert.ok(Number.isFinite(minimum) && minimum > 0);
+    assert.ok(gapNote.text.includes(side + " " + minimum + " mm"));
+  }
   for (const duct of ducts) {
     assert.equal((duct.x2 - duct.x) / 0.5, 20);
     assert.equal((duct.y2 - duct.y) / 0.5, 700);
