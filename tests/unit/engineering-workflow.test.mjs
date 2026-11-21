@@ -2300,6 +2300,23 @@ test("A4 native registers match canonical devices and remain editable after reop
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
+  const evidenceReferences = reportObjects.filter((o) =>
+    o.id.startsWith("eng0601-release-evidence-sheets-"),
+  );
+  assert.equal(evidenceReferences.length, 8);
+  for (const row of evidenceReferences) {
+    const references = row.text.match(/A[1-4]\/\d{3}/g);
+    assert.ok(references?.length);
+    assert.ok(
+      references.every((number) =>
+        project.sheets.some((sheet) => sheet.number === number),
+      ),
+    );
+  }
+  const bondingSheet = project.sheets.find(
+    (sheet) => sheet.id === "eng0601-a3-bonding",
+  );
+  assert.ok(evidenceReferences[3].text.includes(bondingSheet.number));
   const w1 = reportObjects.find((o) => o.id === "eng0601-feeder-cable-W1");
   assert.match(w1.text, /Q1:1L1.*Q1:3L2.*Q1:5L3.*Q1:N.*XPE:0:1 \(PE\)/);
   const dropSheet = sheets.find(

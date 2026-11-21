@@ -2220,18 +2220,19 @@ function createPumpStarterDocumentation(name) {
     const evidencePage=a4Sheet('Future installation evidence');
     text(evidencePage,'release-evidence-scope',60,105,'This example has no physical installation. Use these fields only if adapting the design for a real site.',12,1060);
     [
-      ['01 Supply and protection','Supply, earthing, maximum and minimum fault duty, upstream settings and coordination.'],
-      ['02 Feeder calculations','Actual W1–W3 lengths and installation. Ampacity, start/run drop, disconnection and withstand.'],
-      ['03 Rail and enclosure fit','Delivered rail, terminals, covers and fasteners. Service clearances, door travel and entries.'],
-      ['04 Protective bonding','Record cabinet, door, support rail and field PE paths. Link measured continuity and fault-duty review.'],
-      ['05 Assembly and thermal review','Record enclosure thermal assessment, final settings, torque checks and installed protection.'],
-      ['06 Functional commissioning','Record authorised start, stop, pressure, overload, local isolation and restoration tests.'],
-      ['07 As-built documentation','Reconcile revisions, native connections, terminal/cable schedules and installed equipment.'],
-      ['08 Independent review and owner release','Record reviewer, owner, signed approval reference and any outstanding conditions.']
+      ['01 Supply and protection','Supply, earthing, maximum and minimum fault duty, upstream settings and coordination.',[feederReview]],
+      ['02 Feeder calculations','Actual W1–W3 lengths and installation. Ampacity, start/run drop, disconnection and withstand.',[feederReview,dropPage]],
+      ['03 Rail and enclosure fit','Delivered rail, terminals, covers and fasteners. Service clearances, door travel and entries.',[railPage,doorPage,entryPage,fieldPage]],
+      ['04 Protective bonding','Record cabinet, door, support rail and field PE paths. Link measured continuity and fault-duty review.',[17,bondingPage]],
+      ['05 Assembly and thermal review','Record enclosure thermal assessment, final settings, torque checks and installed protection.',[assemblyPage]],
+      ['06 Functional commissioning','Record authorised start, stop, pressure, overload, local isolation and restoration tests.',[checks]],
+      ['07 As-built documentation','Reconcile revisions, native connections, terminal/cable schedules and installed equipment.',[2,handover]],
+      ['08 Independent review and owner release','Record reviewer, owner, signed approval reference and any outstanding conditions.',[checks,handover]]
     ].forEach(function(entry,index){
       const y=140+index*49;
-      text(evidencePage,'release-evidence-task-'+index,60,y,entry.join(' · '),11,1060);
+      text(evidencePage,'release-evidence-task-'+index,60,y,entry.slice(0,2).join(' · '),11,1060);
       text(evidencePage,'release-evidence-record-'+index,60,y+18,'Future site record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
+      text(evidencePage,'release-evidence-sheets-'+index,60,y+33,'Reference sheets: '+entry[2].map(function(page){return sheets[page].number;}).join(' · '),10,1060);
     });
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
     const dependencies=new Map(sheets.map(function(sheet){return [sheet.id,new Set()];}));
