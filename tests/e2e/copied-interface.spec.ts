@@ -27,9 +27,11 @@ test("sourced feeder parts use the existing library and preserve editable settin
     await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
     await page.locator("#symbolSearch").fill(id);
     await page.locator('[data-insert="' + id + '"]').click();
-    await page
-      .locator("#drawing")
-      .click({ position: { x: 240 + index * 210, y: 260 } });
+    const location = await sheetPoint(page, 220 + index * 370, 330);
+    await page.mouse.click(location.x, location.y);
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
+      index + 1,
+    );
     await page.locator('[data-draw="select"]').click();
     await page.locator("#userDrawings .drawing-object").last().click();
     await page.locator('[data-inspector="Properties"]').click();
