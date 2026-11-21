@@ -2185,6 +2185,27 @@ test("wire lanes share routing, branch geometry, length and native persistence",
   );
 });
 
+test("project cable export follows the current core assignments and continuation identities", () => {
+  const project = engine.createExample("eng0601");
+  const rows = engine.cableCoreRegister(project);
+  const pe = rows.filter((row) => row.tag === "W2" && row.core === "PE");
+  assert.equal(pe.length, 1);
+  assert.ok(
+    [pe[0].start, pe[0].end].some((name) => name.startsWith("XPEF:1:")),
+  );
+  const phase = rows.filter((row) => row.tag === "W2" && row.core === "1");
+  assert.equal(phase.length, 2);
+  assert.deepEqual(phase[0].links, phase[1].links);
+  assert.ok(phase[0].links.length);
+  project.objects = engine.assignWireCable(project, phase[0].wireId, {
+    tag: "W2-REVISED",
+    core: "1",
+  });
+  const revised = engine.cableCoreRegister(project);
+  assert.equal(revised.filter((row) => row.tag === "W2-REVISED").length, 2);
+  assert.match(engine.cableCoreRegisterCsv(project), /"W2-REVISED","1","A2\//);
+});
+
 test("A4 native registers match canonical devices and remain editable after reopen", () => {
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");

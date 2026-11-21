@@ -2060,6 +2060,18 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
     await page.screenshot({ path: test.info().outputPath(sheet.id + ".png") });
   }
   const saved = await saveDrawing(page, "a4-reports");
+  await page
+    .getByRole("button", { name: "Electrical checks", exact: true })
+    .click();
+  const exportEvent = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export cable core register CSV" })
+    .click();
+  const cableExport = await exportEvent;
+  const cableCsv = fs.readFileSync(await cableExport.path(), "utf8");
+  expect(cableCsv).toContain('"W2","PE"');
+  expect(cableCsv).toContain("XPEF:1:");
+  expect(cableCsv).toContain('"W5","2"');
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
   const reopened = await saveDrawing(page, "a4-reopened");
