@@ -554,13 +554,13 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 38);
+  assert.equal(project.sheets.length, 39);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 38 },
+      { length: 39 },
       (_, i) =>
-        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 28 ? "A3/" : "A4/") +
+        (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 29 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
     ),
   );
@@ -1707,7 +1707,7 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
   const rows = contents.filter((o) =>
     /^eng0601-panel-inventory-\d+$/.test(o.id),
   );
-  const external = new Set(["M1", "Q2", "Q2:AUX", "B1"]);
+  const external = new Set(["M1", "Q2", "Q2:AUX", "B1", "ENC2"]);
   const internal = project.objects.filter(
     (o) =>
       o.kind === "component-instance" &&
@@ -1720,6 +1720,18 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
     assert.ok(rows.some((row) => row.text.startsWith(device.ref + " · ")));
   for (const ref of external)
     assert.ok(!rows.some((row) => row.text.startsWith(ref + " · ")));
+  const fieldEnclosure = project.objects.find((o) => o.ref === "ENC2");
+  assert.equal(fieldEnclosure.componentId, "rittal-1033000");
+  assert.equal(fieldEnclosure.sheetId, "eng0601-a3-field-isolator");
+  const fieldViews = project.objects.filter(
+    (o) => o.kind === "panel-placement" && o.sheetId === fieldEnclosure.sheetId,
+  );
+  assert.equal(fieldViews.length, 1);
+  assert.equal(engine.resolvePanelDevice(project, fieldViews[0]).ref, "Q2");
+  assert.equal(
+    engine.panelPlacementGeometry(project, fieldViews[0]).width,
+    33.5,
+  );
   assert.ok(rows.every((row) => row.y < 520));
   const withoutLayout = {
     ...project,
@@ -2125,8 +2137,8 @@ test("A4 native registers match canonical devices and remain editable after reop
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
   assert.equal(sheets.length, 10);
-  assert.equal(sheets[0].number, "A4/028");
-  assert.equal(sheets.at(-1).number, "A4/037");
+  assert.equal(sheets[0].number, "A4/029");
+  assert.equal(sheets.at(-1).number, "A4/038");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
