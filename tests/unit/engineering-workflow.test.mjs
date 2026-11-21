@@ -1670,6 +1670,39 @@ test("LAPP motor and field-control articles retain the exact core and bend data"
   }
 });
 
+test("graphical component resizing preserves manufacturer data and terminal identity", () => {
+  const componentId = "lapp-1120307";
+  const cable = engine.createInstance(componentId, 680, 300, "W4");
+  const wire = {
+    id: "control-lead",
+    kind: "wire",
+    x1: 500,
+    y1: 276,
+    x2: 590,
+    y2: 276,
+    attachments: { end: { instanceId: cable.id, pinId: "a-1" } },
+  };
+  const original = JSON.stringify(engine.component(componentId));
+  assert.equal(
+    engine.resizeGraphicObject(cable, "se", { x: 860, y: 430 }),
+    true,
+  );
+  assert.equal(cable.displayScale, 1.5);
+  engine.synchronizeWireAttachments([cable, wire]);
+  assert.equal(wire.x2, 590);
+  assert.equal(wire.y2, 296.5);
+  engine.rotateInstance(cable, 90);
+  engine.synchronizeWireAttachments([cable, wire]);
+  assert.equal(wire.x2, 761);
+  assert.equal(wire.y2, 197.5);
+  assert.equal(wire.attachments.end.pinId, "a-1");
+  assert.equal(JSON.stringify(engine.component(componentId)), original);
+  assert.equal(
+    engine.validateInstance({ ...cable, displayScale: 0 }).valid,
+    false,
+  );
+});
+
 test("enclosure is a native mechanical component without invented electrical terminals", () => {
   const definition = engine.component("rittal-1059000");
   assert.equal(definition.specifications.dimensions.width.value, 600);
