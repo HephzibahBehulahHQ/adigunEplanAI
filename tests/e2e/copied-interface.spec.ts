@@ -3255,3 +3255,45 @@ test("building floor sheets keep editable identities and physical units on reope
   await expect(building).toHaveValue("East workshop");
   await expect(level).toHaveValue("Mezzanine");
 });
+
+test("room outlines have editable physical dimensions and reopen on their floor", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.keyboard.press("Control+k");
+  const search = page.locator("#commandSearch");
+  await search.fill("Draw room outline");
+  await search.press("Enter");
+  const start = await sheetPoint(page, 200, 200);
+  const end = await sheetPoint(page, 600, 450);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const name = page.getByRole("textbox", { name: "Room name" });
+  const width = page.getByRole("spinbutton", { name: "Room width (mm)" });
+  const length = page.getByRole("spinbutton", { name: "Room length (mm)" });
+  await name.fill("Workshop");
+  await name.press("Tab");
+  await width.fill("4000");
+  await width.press("Tab");
+  await length.fill("3000");
+  await length.press("Tab");
+  await expect(page.getByText("12 m²", { exact: true })).toBeVisible();
+  const saved = await saveDrawing(page, "measured-room");
+  const room = saved.data.objects[0];
+  expect(room.roomName).toBe("Workshop");
+  expect(room.sheetId).toBe(saved.data.sheets[0].id);
+  expect(Math.abs(room.x2 - room.x)).toBe(4000);
+  expect(Math.abs(room.y2 - room.y)).toBe(3000);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings [data-object]")).toContainText(
+    "Workshop",
+  );
+});
