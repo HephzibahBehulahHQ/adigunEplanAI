@@ -21,7 +21,13 @@
   <style id="cad-viewport-styles">
     [data-component-placement-preview], [data-component-placement-preview] * { pointer-events: none !important; }
     #drawingWrap.frame-hidden #customSheetFrame { display: none !important; }
+    .cad-ruler { position: absolute; z-index: 2; touch-action: none; background: #142235; }
+    .cad-ruler[hidden] { display: none; }
+    .cad-ruler[data-ruler-axis="y"] { top: 0; left: 0; width: 100%; height: 22px; cursor: ns-resize; }
+    .cad-ruler[data-ruler-axis="x"] { top: 0; left: 0; height: 100%; width: 22px; cursor: ew-resize; }
+    @media print { .cad-ruler, #editorGuides { display: none !important; } }
     @media screen {
+      #drawingWrap { position: relative; }
       .workspace .canvas-stage { padding: 0; }
       .workspace .canvas-stage .drawing-wrap { width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; }
     }
@@ -98,7 +104,7 @@
         <path d="M906 538h61v-32h104" class="wire-dark"/><path d="M906 554h83v32h82" class="wire-dark"/><text x="989" y="494" class="small green">DE.2 / 14.4</text><text x="989" y="601" class="small green">DE.4 / 13.2</text>
         <path d="M120 640H770" class="construction"/><g class="accent"><text x="153" y="626">SENSOR INPUT · I0.0</text><text x="577" y="626">DRIVE ENABLE · Q0.2</text></g><path d="M184 466H230V619H153M884 466H812V619H770" stroke="#b122a7" stroke-width="1.3" stroke-dasharray="4 3" fill="none"/>
         <g transform="translate(783 654)"><rect width="365" height="64" fill="#fbfcfd" stroke="#8795a3" stroke-width=".8"/><path d="M0 37H365M230 0v64M296 0v64" stroke="#a8b3be" stroke-width=".8"/><text x="9" y="14" class="medium" font-weight="700">HB ELEKTRONIKER · ENGINEERING DOCUMENT</text><text x="9" y="29" class="small">Project: Control cabinet · 24 V DC field controls</text><text x="9" y="53" class="small">SHEET A1/020 · CONTROL CIRCUIT</text><text x="239" y="15" class="tiny">REVISION</text><text x="239" y="31" class="medium">A</text><text x="305" y="15" class="tiny">SCALE</text><text x="305" y="31" class="medium">NTS</text><text x="305" y="53" class="tiny">SAMPLE PROJECT</text></g>
-        <g id="userDrawings" aria-label="User drawing objects"></g></g></svg></div>
+        <g id="userDrawings" aria-label="User drawing objects"></g></g><g id="editorGuides" aria-hidden="true" pointer-events="none"></g></svg><canvas class="cad-ruler" data-ruler-axis="y" aria-label="Horizontal ruler" hidden></canvas><canvas class="cad-ruler" data-ruler-axis="x" aria-label="Vertical ruler" hidden></canvas></div>
       <aside class="rightpanel" id="rightPanel" aria-label="Inspector panel"><div class="panel-head"><span id="rightPanelTitle">Properties</span><span class="grow"></span><button id="closeRightPanel" aria-label="Close panel">×</button></div><div class="inspector-content" id="inspectorContent"><div class="inspector-block"><div class="inspector-title">Current sheet</div><div class="property-row"><span>Designation</span><strong id="sheetDesignation">A1/020</strong></div><div class="property-row"><span>Function</span><strong>Control circuit</strong></div><div class="property-row"><span>Format</span><strong>A3 landscape</strong></div><div class="property-row"><span>Units</span><strong>mm</strong></div></div><div class="inspector-block" id="selectionDetails"><div class="inspector-title">Selection</div><div class="empty-selection">Select an electrical object on the sheet to inspect its drawing designation.</div></div><div class="inspector-block"><div class="inspector-title">Workspace</div><div class="property-row"><span>Grid spacing</span><strong>2.50 mm</strong></div><div class="property-row"><span>Snap</span><strong>Enabled</strong></div><div class="property-row"><span>Save mode</span><strong>Browser local storage</strong></div></div></div></aside>
       <button class="floating-bot" data-action="assistant" aria-label="Adigun BOT service status"><svg><use href="#i-bot"/></svg></button><div class="toast" id="toast" role="status" aria-live="polite"></div>
       <input class="sr-only" type="file" id="openFile" accept=".svg,image/svg+xml,.json,application/json" aria-label="Open project or SVG drawing">
@@ -153,6 +159,8 @@
       const visibleWidth=width/scale,visibleHeight=height/scale;
       setDrawingViewport(drawing,{x:x+(w-visibleWidth)/2,y:y+(h-visibleHeight)/2,w:visibleWidth,h:visibleHeight});
       updateDrawingGrid(scale);
+      renderRulers(scale);
+      renderGuides();
     }
     $("#zoomValue").textContent=Number(state.zoom.toPrecision(4))+"%";
   }
@@ -274,6 +282,104 @@
   function draftingSettings(){
     return state.sheets.find(sheet=>sheet.id===state.sheet)?.drafting||defaultDrafting;
   }
+  let guideDraft=null;
+  function activeDraftingSheet(){return state.sheets.find(sheet=>sheet.id===state.sheet);}
+  function renderRulers(scale){
+    const sheet=activeDraftingSheet(),units=draftingSettings().units,conversion=units==='in'?25.4:1;
+    const visible=Boolean(sheet&&sheet.rulersVisible!==false),view=drawing.viewBox.baseVal;
+    const target=74/scale/conversion;
+    const power=10**Math.floor(Math.log10(target));
+    const step=(target<=power?1:target<=2*power?2:target<=5*power?5:10)*power;
+    const dpi=Math.min(window.devicePixelRatio||1,2);
+    for(const ruler of $$('.cad-ruler')){
+      ruler.hidden=!visible;
+      if(!visible)continue;
+      const horizontal=ruler.dataset.rulerAxis==='y';
+      const width=ruler.clientWidth,height=ruler.clientHeight;
+      if(!width||!height)continue;
+      const pixelWidth=Math.round(width*dpi),pixelHeight=Math.round(height*dpi);
+      if(ruler.width!==pixelWidth)ruler.width=pixelWidth;
+      if(ruler.height!==pixelHeight)ruler.height=pixelHeight;
+      const context=ruler.getContext('2d');
+      context.setTransform(dpi,0,0,dpi,0,0);
+      context.clearRect(0,0,width,height);
+      context.fillStyle='#c3d4e6';
+      context.strokeStyle='#7f97b0';
+      context.font='10px system-ui';
+      const start=(horizontal?view.x:view.y)/conversion,length=horizontal?width:height;
+      const first=Math.ceil(start/step)*step;
+      const ticks=Math.min(100,Math.ceil(length/(step*conversion*scale))+1);
+      for(let index=0;index<ticks;index++){
+        const coord=first+index*step,pixel=(coord-start)*conversion*scale;
+        if(pixel>=length)break;
+        if(pixel<25)continue;
+        context.beginPath();
+        context.moveTo(horizontal?pixel:width-7,horizontal?height-7:pixel);
+        context.lineTo(horizontal?pixel:width,horizontal?height:pixel);
+        context.stroke();
+        const label=String(Number(coord.toPrecision(8)));
+        if(horizontal)context.fillText(label,pixel+3,11);
+        else{
+          context.save();
+          context.translate(11,pixel+4);
+          context.rotate(Math.PI/2);
+          context.fillText(label,0,0);
+          context.restore();
+        }
+      }
+      context.fillText(units,3,12);
+    }
+  }
+  function renderGuides(){
+    const layer=$('#editorGuides'),view=drawing.viewBox.baseVal;
+    const guides=[...(activeDraftingSheet()?.guides||[]),...(guideDraft?[guideDraft]:[])];
+    layer.replaceChildren();
+    for(const guide of guides){
+      if(guide.hidden)continue;
+      const vertical=guide.axis==='x';
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.dataset.draftingGuide=guide.id||'preview';
+      line.setAttribute('x1',vertical?guide.position:view.x);
+      line.setAttribute('x2',vertical?guide.position:view.x+view.width);
+      line.setAttribute('y1',vertical?view.y:guide.position);
+      line.setAttribute('y2',vertical?view.y+view.height:guide.position);
+      line.setAttribute('stroke','#1683a0');
+      line.setAttribute('stroke-opacity',guide.locked?'.7':'.9');
+      line.setAttribute('stroke-dasharray',guide.locked?'none':'5 4');
+      line.setAttribute('vector-effect','non-scaling-stroke');
+      layer.append(line);
+    }
+  }
+  function addDraftingGuide(axis,position){
+    const sheet=activeDraftingSheet();
+    if(!sheet||!Number.isFinite(position))return;
+    (sheet.guides||=[]).push({id:crypto.randomUUID(),axis,position,locked:false,hidden:false});
+    renderGuides();refreshFrameControl();persist();
+  }
+  for(const ruler of $$('.cad-ruler')){
+    const axis=ruler.dataset.rulerAxis;
+    ruler.addEventListener('pointerdown',event=>{
+      if(event.button!==0||!activeDraftingSheet())return;
+      event.preventDefault();
+      ruler.setPointerCapture(event.pointerId);
+      guideDraft={axis,position:svgPoint(event)[axis]};
+      renderGuides();
+    });
+    ruler.addEventListener('pointermove',event=>{
+      if(!guideDraft||!ruler.hasPointerCapture(event.pointerId))return;
+      guideDraft.position=svgPoint(event)[axis];
+      renderGuides();
+    });
+    ruler.addEventListener('pointerup',event=>{
+      if(!guideDraft)return;
+      guideDraft=null;
+      const bounds=drawing.getBoundingClientRect();
+      if(event.clientX>bounds.left+22&&event.clientX<bounds.right&&event.clientY>bounds.top+22&&event.clientY<bounds.bottom){
+        addDraftingGuide(axis,svgPoint(event)[axis]);
+      }else renderGuides();
+    });
+    ruler.addEventListener('pointercancel',()=>{guideDraft=null;renderGuides();});
+  }
   function updateDrawingGrid(scale){
     const {minor,major}=draftingSettings();
     const spacing=major*Math.max(1,2**Math.ceil(Math.log2(8/(major*scale))));
@@ -314,7 +420,26 @@
     return target;
   }
   function svgPoint(evt){const p=drawing.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;return p.matrixTransform(drawing.getScreenCTM().inverse());}
-  function snapObjectPoint(point){const step=draftingSettings().snap;return state.snap?{x:Math.round(point.x/step)*step,y:Math.round(point.y/step)*step}:point;}
+  function snapToGuides(point,fallback=point){
+    const sheet=activeDraftingSheet();
+    if(!sheet?.snapToGuides)return fallback;
+    const tolerance=7*drawing.getScreenCTM().inverse().a;
+    const nearest={x:tolerance,y:tolerance};
+    const result={x:fallback.x,y:fallback.y};
+    for(const guide of sheet.guides||[]){
+      if(guide.hidden)continue;
+      const distance=Math.abs(guide.position-point[guide.axis]);
+      if(distance<nearest[guide.axis]){
+        nearest[guide.axis]=distance;
+        result[guide.axis]=guide.position;
+      }
+    }
+    return result;
+  }
+  function snapObjectPoint(point){
+    const step=draftingSettings().snap;
+    return snapToGuides(point,state.snap?{x:Math.round(point.x/step)*step,y:Math.round(point.y/step)*step}:point);
+  }
   function makeObj(kind,x,y,extra={}){const id=`obj-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;return{id,kind,x,y,rotation:0,...extra};}
 
   function remapConnectedWireEnds(oldPins,newPins,objects=state.objects){
@@ -970,7 +1095,7 @@
   }
   function wireDestination(event){
     const matrix=drawing.getScreenCTM(),scale=Math.hypot(matrix.a,matrix.b),point=svgPoint(event);
-    return terminalAt(point,Math.min(24,9/scale))||point;
+    return terminalAt(point,Math.min(24,9/scale))||snapToGuides(point);
   }
   function beginTerminalDrag(event,start){
     const preview=document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -1151,6 +1276,65 @@
       field.value=key==='units'?settings.units:Number((settings[key]/(settings.units==='in'?25.4:1)).toPrecision(8));
     }
   }
+  function refreshGuideControls(block,sheet){
+    let controls=block.querySelector('[data-guide-controls]');
+    const open=controls?.open;
+    if(!controls){
+      controls=document.createElement('details');
+      controls.dataset.guideControls='';
+      block.append(controls);
+    }
+    controls.hidden=!sheet;
+    if(!sheet)return;
+    controls.innerHTML='<summary>Rulers and guides</summary><label class="property-row"><span>Show rulers</span><input type="checkbox" data-ruler-visibility></label><label class="property-row"><span>Snap to guides</span><input type="checkbox" data-guide-snapping></label><button type="button" data-add-guide="y">Add horizontal guide</button> <button type="button" data-add-guide="x">Add vertical guide</button>';
+    controls.open=Boolean(open);
+    controls.querySelector('[data-ruler-visibility]').checked=sheet.rulersVisible!==false;
+    controls.querySelector('[data-guide-snapping]').checked=Boolean(sheet.snapToGuides);
+    const factor=draftingSettings().units==='in'?25.4:1;
+    (sheet.guides||[]).forEach((guide,index)=>{
+      const row=document.createElement('div');
+      row.dataset.guideId=guide.id;
+      row.innerHTML='<label class="property-row"><span></span><input type="number" step="any" data-guide-position></label><label>Lock <input type="checkbox" data-guide-locked></label> <label>Hide <input type="checkbox" data-guide-hidden></label> <button type="button" data-delete-guide>Delete</button>';
+      row.querySelector('span').textContent=(guide.axis==='x'?'Vertical':'Horizontal')+' guide '+(index+1);
+      const position=row.querySelector('[data-guide-position]');
+      position.value=Number((guide.position/factor).toPrecision(12));
+      position.disabled=guide.locked;
+      row.querySelector('[data-guide-locked]').checked=guide.locked;
+      row.querySelector('[data-guide-hidden]').checked=guide.hidden;
+      controls.append(row);
+    });
+  }
+  $('#inspectorContent').addEventListener('click',event=>{
+    const add=event.target.closest('[data-add-guide]');
+    if(add){
+      const axis=add.dataset.addGuide;
+      addDraftingGuide(axis,state.view[axis]+(axis==='x'?state.view.w:state.view.h)/2);
+      return;
+    }
+    const remove=event.target.closest('[data-delete-guide]');
+    if(remove){
+      const sheet=activeDraftingSheet(),id=remove.closest('[data-guide-id]').dataset.guideId;
+      sheet.guides=sheet.guides.filter(guide=>guide.id!==id);
+      renderGuides();refreshFrameControl();persist();
+    }
+  });
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target,sheet=activeDraftingSheet();
+    if(!sheet||!field.closest('[data-guide-controls]'))return;
+    if(field.matches('[data-ruler-visibility]'))sheet.rulersVisible=field.checked;
+    else if(field.matches('[data-guide-snapping]'))sheet.snapToGuides=field.checked;
+    else{
+      const guide=sheet.guides.find(item=>item.id===field.closest('[data-guide-id]')?.dataset.guideId);
+      if(!guide)return;
+      if(field.matches('[data-guide-position]')&&!guide.locked&&field.value!==''){
+        const position=Number(field.value)*(draftingSettings().units==='in'?25.4:1);
+        if(Number.isFinite(position))guide.position=position;
+      }
+      if(field.matches('[data-guide-hidden]'))guide.hidden=field.checked;
+      if(field.matches('[data-guide-locked]'))guide.locked=field.checked;
+    }
+    refreshFrameControl();applyView();persist();
+  });
   function refreshFrameControl(){
     const sheet=state.sheets.find(item=>item.id===state.sheet);
     wrap.classList.toggle('frame-hidden',sheet?.showPrintFrame===false);
@@ -1171,6 +1355,7 @@
     field.closest('label').hidden=!sheet;
     field.checked=sheet?.showPrintFrame!==false;
     refreshDraftingControls(block,sheet);
+    refreshGuideControls(block,sheet);
   }
   function renderProjectTitleBlock(){
     if(!state.sheet)return;
@@ -1252,7 +1437,7 @@
     setTimeout(function(){URL.revokeObjectURL(url);},1000);
     notify('Register exported for all project sheets.');
   }
-  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview],[data-component-placement-preview]').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame){if(wrap.classList.contains('frame-hidden'))frame.remove();else frame.style.display='block';}}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
+  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview],[data-component-placement-preview],#editorGuides').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame){if(wrap.classList.contains('frame-hidden'))frame.remove();else frame.style.display='block';}}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
   function selectPanel(id){
     if(id==='layers'){openInspector('Layers and visibility');return;}
     workspace.classList.remove('left-sidebar-closed');

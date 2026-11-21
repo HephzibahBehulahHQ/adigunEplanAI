@@ -3036,3 +3036,44 @@ test("physical grid, cursor units and snap spacing persist independently", async
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(page.locator("#userDrawings [data-object]")).toHaveCount(1);
 });
+
+test("rulers create saved guides with exact coordinates, visibility and locking", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1550, height: 850 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const horizontalRuler = page.getByLabel("Horizontal ruler");
+  const top = (await horizontalRuler.boundingBox())!;
+  const drop = await sheetPoint(page, 450, 275);
+  await page.mouse.move(drop.x, top.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(drop.x, drop.y, { steps: 5 });
+  await page.mouse.up();
+  const guides = page.locator("#editorGuides [data-drafting-guide]");
+  await expect(guides).toHaveCount(1);
+  expect(Number(await guides.first().getAttribute("y1"))).toBeCloseTo(275, 0);
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("Rulers and guides", { exact: true }).click();
+  await page.getByRole("button", { name: "Add vertical guide" }).click();
+  const vertical = page.getByLabel("Vertical guide 2");
+  await vertical.fill("-125");
+  await vertical.press("Tab");
+  await expect(guides.last()).toHaveAttribute("x1", "-125");
+  const row = page.locator("[data-guide-id]").last();
+  await row.getByLabel("Lock").check();
+  await expect(vertical).toBeDisabled();
+  await row.getByLabel("Hide").check();
+  await expect(guides).toHaveCount(1);
+  const saved = await saveDrawing(page, "drafting-guides");
+  expect(saved.data.sheets[0].guides[1]).toMatchObject({
+    axis: "x",
+    position: -125,
+    locked: true,
+    hidden: true,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(guides).toHaveCount(1);
+});

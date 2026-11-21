@@ -1270,6 +1270,14 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             errors.push('Invalid drafting settings on sheet '+sheet.id+'.');
           }
         }
+        if(sheet.guides!==undefined){
+          const guides=sheet.guides,ids=new Set();
+          if(!Array.isArray(guides)||guides.some(guide=>{
+            if(!guide||typeof guide.id!=='string'||!guide.id||ids.has(guide.id)||!['x','y'].includes(guide.axis)||!Number.isFinite(guide.position)||typeof guide.hidden!=='boolean'||typeof guide.locked!=='boolean')return true;
+            ids.add(guide.id);
+            return false;
+          }))errors.push('Invalid drafting guides on sheet '+sheet.id+'.');
+        }
         if (sheetIds.has(sheet.id)) errors.push('Duplicate sheet ID: ' + sheet.id + '.');
         sheetIds.add(sheet.id);
       });
