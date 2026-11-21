@@ -1550,11 +1550,26 @@ test("cable core assignments follow paired segments without changing electrical 
 
 test("electrical checks reject disconnected reuse and inconsistent continuation core assignments", () => {
   const project = engine.createExample("eng0601");
+  const initial = engine.analyzeProject(project);
+  assert.equal(initial.valid, true);
+  assert.equal(initial.globalNetCount, 27);
+  for (const phase of [1, 2, 3]) {
+    for (const [prefix, tag] of [
+      ["field-out-", "W2"],
+      ["field-in-", "W2"],
+      ["q2-m1-", "W3"],
+    ]) {
+      const wire = project.objects.find(
+        (object) => object.id === "eng0601-wire-" + prefix + phase,
+      );
+      assert.deepEqual(plain(wire.cable), { tag, core: String(phase) });
+    }
+  }
   const phase1 = project.crossSheetConnections[0];
   project.objects = engine.assignWireCable(
     project,
     phase1.endpoints[0].wireId,
-    { tag: "W2", core: "1" },
+    { tag: "W-TEST", core: "1" },
   );
   const report = engine.analyzeProject(project);
   assert.equal(report.valid, true);
@@ -1570,7 +1585,7 @@ test("electrical checks reject disconnected reuse and inconsistent continuation 
       ),
   );
   project.objects = engine.assignWireCable(project, other.endpoints[0].wireId, {
-    tag: "W2",
+    tag: "W-TEST",
     core: "1",
   });
   assert.equal(engine.analyzeProject(project).valid, false);
@@ -1579,7 +1594,7 @@ test("electrical checks reject disconnected reuse and inconsistent continuation 
     /disconnected electrical nets/,
   );
   project.objects = engine.assignWireCable(project, other.endpoints[0].wireId, {
-    tag: "W2",
+    tag: "W-TEST",
     core: "2",
   });
   assert.equal(engine.analyzeProject(project).valid, true);
