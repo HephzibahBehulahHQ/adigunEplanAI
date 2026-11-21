@@ -1799,21 +1799,50 @@ function createPumpStarterDocumentation(name) {
     panelDevices.forEach(function(device,index){const definition=component(device.componentId);text(19,'panel-inventory-'+index,650,150+index*13,device.ref+' · '+definition.model,10,460);});
     text(19,'external-boundary',650,525,'EXTERNAL: M1 motor; Q2 field isolator + auxiliary; B1 pressure device.\nDo not place field equipment inside this cabinet by default.',11,460);
     text(19,'enclosure-scope',60,620,'DIMENSIONAL BASIS — 1:2 front view; manufacturer dimensions are in mm.\nPlate outline shows its size, not verified mounting offsets or drill coordinates.\nF1, K1, PS1, F3 and F4: linked body envelopes at 1:2; proposed positions, not drill coordinates.\nOther footprints, rails, ducts, clearance verification, thermal load and bonding remain to be designed.\nThe device register is an editable snapshot of A2 instances; no duplicate devices are created.',11,620);
+    let accessoryCount=0;
+    const coverByTerminal=new Map([[utCoverDefinition.supportedComponentIds[0],utCoverDefinition],...peCoverDefinition.supportedComponentIds.map(function(id){return [id,peCoverDefinition];})]);
+    const terminalDetailStart=sheets.length;
+    const accessorySheet=terminalDetailStart+2;
+    sheets[accessorySheet]={id:'eng0601-a3-accessories',sectionId:'A3',name:'Terminal accessory instances',number:'A3/'+String(accessorySheet).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development detail — not installation approved'}};
     // Enlarged terminal body arrangements retain canonical A2 device identities.
     [['X1','X2','X3'],['X4','X5','XPE']].forEach(function(strips,pageOffset){
-      const index=sheets.length,id='eng0601-a3-'+(pageOffset+1);
-      sheets.push({id:id,sectionId:'A3',name:'Terminal body arrangement '+(pageOffset+1),number:'A3/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development detail — not installation approved'}});
+      const index=terminalDetailStart+pageOffset,id='eng0601-a3-'+(pageOffset+1);
+      sheets[index]={id:id,sectionId:'A3',name:'Terminal body arrangement '+(pageOffset+1),number:'A3/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development detail — not installation approved'}};
       text(index,'terminal-layout-heading-'+index,60,65,'ENG-0601 | Terminal body arrangement '+(pageOffset+1),22);
-      text(index,'terminal-layout-basis-'+index,60,100,'ENLARGED 5:1 BODY DETAILS — proposed strip order; positions are drawing coordinates, not panel drill coordinates.',11,1080);
+      text(index,'terminal-layout-basis-'+index,60,100,'5:1 BODY ENVELOPES AND PROPOSED RAILS — drawing coordinates only. Rail stock: Phoenix Contact 0801733.',11,1080);
       strips.forEach(function(strip,column){
         const devices=objects.filter(function(o){return o.kind==='component-instance'&&o.ref.split(':')[0]===strip;}).sort(function(a,b){return a.ref.localeCompare(b.ref,undefined,{numeric:true});});
-        const width=devices.reduce(function(total,o){return total+component(o.componentId).panelFootprint.widthMm*5;},0);
-        let left=220+column*330-width/2;
-        text(index,'terminal-strip-'+strip,130+column*330,135,strip+' — '+devices.length+' terminal bodies',12,290);
-        devices.forEach(function(device){const footprint=component(device.componentId).panelFootprint;objects.push(createPanelPlacement(panelProject,device.id,id,left+footprint.widthMm*2.5,340,5));left+=footprint.widthMm*5;});
+        const lastTerminal=devices.at(-1),cover=coverByTerminal.get(lastTerminal.componentId);
+        function accessory(definition,suffix,comment){
+          const slot=accessoryCount++, x=130+slot%6*170, y=175+Math.floor(slot/6)*140;
+          const instance=part(accessorySheet,definition.id,'ACC-'+strip+'-'+suffix,x,y,0,comment);
+          instance.properties.location='Terminal strip '+strip;
+          text(accessorySheet,'accessory-'+instance.ref,x-65,y+44,instance.ref+'\n'+definition.model,10,155);
+          return instance;
+        }
+        const leftBracket=accessory(terminalEndBracketDefinition,'L','Proposed left end bracket on NS 35/7.5 rail.');
+        const rightBracket=accessory(terminalEndBracketDefinition,'R','Proposed right end bracket on NS 35/7.5 rail.');
+        const arranged=[leftBracket,...devices];
+        if(cover){
+          const endCover=accessory(cover,'C','Proposed cover on the final terminal in this strip.');
+          endCover.assemblyFor=lastTerminal.id;
+          arranged.push(endCover);
+        }
+        arranged.push(rightBracket);
+        const width=arranged.reduce(function(total,o){return total+component(o.componentId).panelFootprint.widthMm*5;},0);
+        const center=220+column*330;
+        const railLength=Math.ceil((width/5+10)/5)*5;
+        const railHalfLength=railLength*2.5;
+        objects.push({id:'eng0601-terminal-rail-'+strip,sheetId:id,kind:'rect',x:center-railHalfLength,y:252.5,x2:center+railHalfLength,y2:427.5,stroke:'#6b7280',fill:'#e5e7eb'});
+        let left=center-width/2;
+        text(index,'terminal-strip-'+strip,130+column*330,135,strip+' — '+devices.length+' terminals'+(cover?'':' | cover pending'),12,290);
+        arranged.forEach(function(device){const footprint=component(device.componentId).panelFootprint;objects.push(createPanelPlacement(panelProject,device.id,id,left+footprint.widthMm*2.5,340,5));left+=footprint.widthMm*5;});
+        text(index,'terminal-rail-size-'+strip,130+column*330,547,'NS 35/7.5 · proposed '+railLength+' mm segment',10,290);
       });
-      text(index,'terminal-layout-limit-'+index,60,555,'Body-only arrangement: end covers, end clamps, DIN rail and wire access space are NOT included.\nNo drilling or rail bonding is defined by these views. Select a body to inspect its canonical A2 device.\nStrip ordering is an editable design proposal; verify installation details before assembly.',11,620);
+      text(index,'terminal-layout-limit-'+index,60,570,'Rail outlines use nominal 35 mm width. Segment lengths include proposed end allowance; verify slot locations and cut lengths.\nUT and PE covers link to the final terminal in each strip. UK cover, cabinet location, wire access, drilling and bonding remain open.',11,1050);
     });
+    text(sheets.length-1,'accessory-register-heading',60,65,'ENG-0601 | Terminal accessory instances',22);
+    text(sheets.length-1,'accessory-register-basis',60,105,'Editable part instances and their references. Linked 5:1 body views are on the preceding A3 sheets.',11);
     const a4Start=sheets.length;
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-a4Start),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
@@ -1860,7 +1889,8 @@ function createPumpStarterDocumentation(name) {
       'Save a named local copy, reopen it, and confirm sheets, component identities and cross-sheet links.'
     ]);
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
-    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<15?60:620,120+(index%15)*27,sheet.number+' '+sheet.name,10,510);});
+    const registerRows=Math.ceil(sheets.length/2);
+    sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*25,sheet.number+' '+sheet.name,10,510);});
     objects.find(function(o){return o.id==='eng0601-dependencies';}).text='All listed sheets exist. A4 reports are editable development snapshots; review them after design changes.';
     return parseProject(serializeProject({project:name||'ENG-0601 — Direct-on-line pump starter',projectId:'eng0601-local-manual',sections:sections,activeSection:'A1',activeSheet:null,openSheetIds:[],sheets:sheets,objects:objects,crossSheetConnections:powerLinks,metadata:{jobNumber:'ENG-0601',drawnBy:'Codex',drawingDate:'2026-11-15',issueStatus:'Engineering development — not approved'},example:{id:'eng0601',description:'ENG-0601 development issue: six A1 documents and eleven connected A2 circuit sheets and two editable reports, plus an A3 enclosure basis and A4 development reports. Control, source protection, complete bonding, cable sizing and installation remain incomplete.'}})).project;
   }
