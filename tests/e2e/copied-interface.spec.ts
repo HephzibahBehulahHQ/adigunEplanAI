@@ -27,9 +27,11 @@ test("sourced feeder parts use the existing library and preserve editable settin
     await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
     await page.locator("#symbolSearch").fill(id);
     await page.locator('[data-insert="' + id + '"]').click();
-    await page
-      .locator("#drawing")
-      .click({ position: { x: 240 + index * 210, y: 260 } });
+    const location = await sheetPoint(page, 220 + index * 370, 330);
+    await page.mouse.click(location.x, location.y);
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
+      index + 1,
+    );
     await page.locator('[data-draw="select"]').click();
     await page.locator("#userDrawings .drawing-object").last().click();
     await page.locator('[data-inspector="Properties"]').click();
@@ -122,6 +124,9 @@ test("example copy remains a native editable project through replacement and loc
       !initial.data.objects.some(
         (original: { id: string }) => original.id === o.id,
       ),
+  );
+  await expect(page.locator('[data-object="' + copy.id + '"]')).toHaveClass(
+    /selected-object/,
   );
   await select(copy.id);
   await page.locator("[data-delete-object]").click();
@@ -2842,3 +2847,116 @@ for (const template of [
     expect(reopened.data.objects).toEqual(saved.data.objects);
   });
 }
+
+test("drafts across the full viewport with a signed, pointer-centered camera", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1750, height: 700 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const drawing = page.locator("#drawing");
+  const stage = page.locator("#canvasStage");
+  await expect
+    .poll(async () => {
+      const canvas = await drawing.boundingBox();
+      const available = await stage.boundingBox();
+      return (
+        Math.abs(canvas!.width - available!.width) +
+        Math.abs(canvas!.height - available!.height)
+      );
+    })
+    .toBeLessThan(2);
+
+  const start = await sheetPoint(page, -65, 250);
+  const end = await sheetPoint(page, -25, 320);
+  const box = (await drawing.boundingBox())!;
+  expect(start.x).toBeGreaterThan(box.x);
+  await page.locator('[data-draw="line"]').click();
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const line = page.locator("#userDrawings [data-object]");
+  await expect(line).toHaveCount(1);
+  const geometry = await line.innerHTML();
+
+  const anchor = await sheetPoint(page, 200, 300);
+  await page.mouse.move(anchor.x, anchor.y);
+  await page.mouse.wheel(0, -200);
+  await expect(page.locator("#zoomValue")).not.toHaveText("100%");
+  const zoomed = await sheetPoint(page, 200, 300);
+  expect(Math.abs(zoomed.x - anchor.x)).toBeLessThan(0.5);
+  expect(Math.abs(zoomed.y - anchor.y)).toBeLessThan(0.5);
+  await page.mouse.down({ button: "middle" });
+  await page.mouse.move(anchor.x + 85, anchor.y + 45);
+  await page.mouse.up({ button: "middle" });
+  const panned = await sheetPoint(page, 200, 300);
+  expect(Math.abs(panned.x - zoomed.x - 85)).toBeLessThan(0.5);
+  expect(Math.abs(panned.y - zoomed.y - 45)).toBeLessThan(0.5);
+
+  await page.setViewportSize({ width: 1250, height: 900 });
+  await expect
+    .poll(async () =>
+      drawing.evaluate((svg: SVGSVGElement) => {
+        const view = svg.viewBox.baseVal;
+        return Math.abs(
+          view.width / view.height - svg.clientWidth / svg.clientHeight,
+        );
+      }),
+    )
+    .toBeLessThan(0.001);
+  expect(await line.innerHTML()).toBe(geometry);
+});
+
+test("free drafting sheets save their print-frame visibility independently", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Free drafting" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  const frame = page.locator("#customSheetFrame");
+  await expect(frame).toBeHidden();
+  await page.locator('[data-inspector="Properties"]').click();
+  const setting = page.getByRole("checkbox", { name: "Show print frame" });
+  await expect(setting).not.toBeChecked();
+  await setting.check();
+  await expect(frame).toBeVisible();
+  await setting.uncheck();
+  await expect(frame).toBeHidden();
+  const saved = await saveDrawing(page, "free-drafting-frame");
+  expect(saved.data.sheets[0].showPrintFrame).toBe(false);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(frame).toBeHidden();
+});
+
+test("component placement accounts for the rendered PLC reference label", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const plc = page.locator('[data-insert-tool="plc"]');
+  const components = page.locator("#userDrawings .drawing-object");
+  await plc.click();
+  const first = await sheetPoint(page, 500, 240);
+  await page.mouse.click(first.x, first.y);
+  await expect(components).toHaveCount(1);
+  await plc.click();
+  const close = await sheetPoint(page, 500, 535);
+  await page.mouse.click(close.x, close.y);
+  await expect(components).toHaveCount(1);
+  const preview = page.locator("[data-component-placement-preview]");
+  await expect(preview).toHaveAttribute("stroke", "#b91c1c");
+  await expect(preview).toContainText("A2");
+  const clear = await sheetPoint(page, 500, 565);
+  await page.mouse.click(clear.x, clear.y);
+  await expect(components).toHaveCount(2);
+  await expect(components.last()).toContainText("A2");
+});
