@@ -2234,6 +2234,21 @@ function createPumpStarterDocumentation(name) {
       text(evidencePage,'release-evidence-record-'+index,60,y+18,'Future site record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
       text(evidencePage,'release-evidence-sheets-'+index,60,y+33,'Reference sheets: '+entry[2].map(function(page){return sheets[page].number;}).join(' · '),10,1060);
     });
+    const cableSchedule=a4Sheet('Cable routes and identification schedule');
+    text(cableSchedule,'cable-schedule-basis',60,105,'Example assignments from the native project. Route lengths and installation methods are unspecified.',12,1060);
+    [
+      ['W1','Incoming supply to panel','Select the supply cable for the eventual site. Identify N blue and PE green/yellow where applicable.'],
+      ['W2','Panel X2/XPE to field isolator ENC2','LAPP 1120360 candidate, 4G4 unshielded. Numbered cores 1–3 carry phases. Green/yellow is PE.'],
+      ['W3','Field isolator ENC2 to pump motor','LAPP 1120360 candidate, 4G4 unshielded. Numbered cores 1–3 carry phases. Green/yellow is PE.'],
+      ['W4','Panel X5 to B1 pressure switch','LAPP 1120307 candidate, 3G1.5 unshielded. The protective core termination requires review.'],
+      ['W5','Panel X5 to Q2 auxiliary','Two working cores carry the auxiliary-contact loop. Select the cable and shield treatment for the route.']
+    ].forEach(function(entry,index){
+      const [tag,route,basis]=entry,y=143+index*82;
+      const coreLabels=tag==='W1'?w1Terminals.join(' / '):Array.from(cableEndpoints.get(tag),function(core){return core[0]+' '+core[1].join(' → ');}).join('   /   ');
+      text(cableSchedule,'cable-schedule-heading-'+tag,60,y,tag+' · '+route,13,1060);
+      text(cableSchedule,'cable-schedule-cores-'+tag,60,y+19,coreLabels+'\n'+basis,11,1060);
+    });
+    text(cableSchedule,'cable-schedule-update',60,545,'Check A3 cable entry and the A4 voltage-drop study. Re-export the cable core register after rewiring.',10,1060);
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
     const dependencies=new Map(sheets.map(function(sheet){return [sheet.id,new Set()];}));
     const sheetNumbers=new Map(sheets.map(function(sheet){return [sheet.id,sheet.number];}));

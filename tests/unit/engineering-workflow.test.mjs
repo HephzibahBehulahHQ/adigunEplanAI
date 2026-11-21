@@ -581,11 +581,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 40);
+  assert.equal(project.sheets.length, 41);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 40 },
+      { length: 41 },
       (_, i) =>
         (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 29 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
@@ -2293,10 +2293,11 @@ test("project cable export follows the current core assignments and continuation
 test("A4 native registers match canonical devices and remain editable after reopen", () => {
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
-  assert.equal(sheets.length, 11);
+  assert.equal(sheets.length, 12);
   assert.equal(sheets[0].number, "A4/029");
-  assert.equal(sheets.at(-1).number, "A4/039");
-  assert.equal(sheets.at(-1).name, "Future installation evidence");
+  assert.equal(sheets.at(-2).name, "Future installation evidence");
+  assert.equal(sheets.at(-1).number, "A4/040");
+  assert.equal(sheets.at(-1).name, "Cable routes and identification schedule");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2319,6 +2320,11 @@ test("A4 native registers match canonical devices and remain editable after reop
   assert.ok(evidenceReferences[3].text.includes(bondingSheet.number));
   const w1 = reportObjects.find((o) => o.id === "eng0601-feeder-cable-W1");
   assert.match(w1.text, /Q1:1L1.*Q1:3L2.*Q1:5L3.*Q1:N.*XPE:0:1 \(PE\)/);
+  const w2 = reportObjects.find(
+    (o) => o.id === "eng0601-cable-schedule-cores-W2",
+  );
+  assert.match(w2.text, /PE XPE:1:2 → XPEF:1:1/);
+  assert.match(w2.text, /LAPP 1120360 candidate, 4G4 unshielded/);
   const dropSheet = sheets.find(
     (sheet) => sheet.name === "Motor feeder voltage-drop study",
   );
