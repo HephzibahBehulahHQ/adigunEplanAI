@@ -2072,6 +2072,18 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   expect(cableCsv).toContain('"W2","PE"');
   expect(cableCsv).toContain("XPEF:1:");
   expect(cableCsv).toContain('"W5","2"');
+  await page
+    .getByRole("button", { name: "Bill of materials", exact: true })
+    .click();
+  await expect(
+    page.getByText("Project bill of materials", { exact: true }),
+  ).toBeVisible();
+  const bomEvent = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export CSV", exact: true }).click();
+  const bomExport = await bomEvent;
+  const bomCsv = fs.readFileSync(await bomExport.path(), "utf8");
+  expect(bomCsv).toMatch(/"3LD2203-0TK51",[^\r\n]+,"1","Q2",/);
+  expect(bomCsv).toMatch(/"1033000",[^\r\n]+,"1","ENC2",/);
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
   const reopened = await saveDrawing(page, "a4-reopened");
