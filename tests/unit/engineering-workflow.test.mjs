@@ -10,6 +10,15 @@ const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("incoming PE bonds explicit mounting feet without doubling conductor clamps", () => {
   const project = engine.createExample("eng0601");
+  const bonding = project.objects
+    .filter((o) => o.sheetId === "eng0601-a3-bonding")
+    .map((o) => o.text)
+    .join("\n");
+  assert.match(
+    bonding,
+    /XPE:1:2 → XPEF:1:1 \(W2 PE\); XPEF:1:2 → M1:PE \(W3 PE\)/,
+  );
+  assert.match(bonding, /XPE:2:2 → PS1:PE/);
   const terminals = project.objects.filter((o) =>
     ["XPE:0", "XPE:1", "XPE:2"].includes(o.ref),
   );
