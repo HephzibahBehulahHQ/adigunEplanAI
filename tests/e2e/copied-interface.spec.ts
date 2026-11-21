@@ -3077,3 +3077,90 @@ test("rulers create saved guides with exact coordinates, visibility and locking"
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(guides).toHaveCount(1);
 });
+
+test("full SVG keeps off-frame geometry and PDF honors physical paper size", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1750, height: 700 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-draw="line"]').click();
+  const start = await sheetPoint(page, -100, 190);
+  const end = await sheetPoint(page, -25, 280);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const insideA = await sheetPoint(page, 260, 230);
+  const insideB = await sheetPoint(page, 690, 480);
+  await page.mouse.move(insideA.x, insideA.y);
+  await page.mouse.down();
+  await page.mouse.move(insideB.x, insideB.y);
+  await page.mouse.up();
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export drawing as SVG" }).click();
+  const svgFile = await download;
+  const svgPath = test.info().outputPath("off-frame.svg");
+  await svgFile.saveAs(svgPath);
+  const svg = fs.readFileSync(svgPath, "utf8");
+  expect(svg).toContain('d="M-100 190L-25 280"');
+  expect(svg).not.toContain('id="editorGuides"');
+  expect(svg).not.toContain('id="viewportGrid"');
+  expect(svg).toContain('d="M260 230L690 480"');
+  await page.locator('[data-draw="select"]').click();
+  const selected = await sheetPoint(page, -62.5, 235);
+  await page.mouse.click(selected.x, selected.y);
+  await expect(page.locator("#userDrawings .selected-object")).toHaveCount(1);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export selection as SVG");
+  const selectedDownload = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export selection as SVG" }).click();
+  const selectionFile = await selectedDownload;
+  const selectionPath = test.info().outputPath("selected-vector.svg");
+  await selectionFile.saveAs(selectionPath);
+  const selection = fs.readFileSync(selectionPath, "utf8");
+  expect(selection).toContain('d="M-100 190L-25 280"');
+  expect(selection).not.toContain('d="M260 230L690 480"');
+  expect(selection).not.toContain('id="customSheetFrame"');
+  if (!(await page.locator("#closeRightPanel").isVisible()))
+    await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("Print layout", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Paper format", exact: true })
+    .selectOption("A4");
+  await page
+    .getByRole("combobox", { name: "Orientation", exact: true })
+    .selectOption("portrait");
+  const margin = page.getByLabel("Page margin (mm)", { exact: true });
+  await margin.fill("12");
+  await margin.press("Tab");
+  const saved = await saveDrawing(page, "a4-print-layout");
+  expect(saved.data.sheets[0].paper).toMatchObject({
+    format: "A4",
+    orientation: "portrait",
+    margin: 12,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#paperBoundary")).toBeVisible();
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export print frame as SVG");
+  const clipping = page.waitForEvent("dialog").then(async (dialog) => {
+    const message = dialog.message();
+    await dialog.dismiss();
+    return message;
+  });
+  await page.getByRole("button", { name: "Export print frame as SVG" }).click();
+  expect(await clipping).toMatch(/clips some visible drawing geometry/);
+  const pdf = await page.pdf({
+    path: test.info().outputPath("a4-print-layout.pdf"),
+    preferCSSPageSize: true,
+  });
+  const text = pdf.toString("latin1");
+  const pageBox = text.match(/\/MediaBox\s*\[0 0 ([\d.]+) ([\d.]+)\]/);
+  expect(pageBox).not.toBeNull();
+  expect(Math.abs(Number(pageBox![1]) - (210 * 72) / 25.4)).toBeLessThan(2);
+  expect(Math.abs(Number(pageBox![2]) - (297 * 72) / 25.4)).toBeLessThan(2);
+  expect(text.match(/\/Type\s*\/Page\b/g)).toHaveLength(1);
+});
