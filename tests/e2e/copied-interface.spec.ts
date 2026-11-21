@@ -1513,10 +1513,41 @@ test("sourced LAPP motor and control cables expose only their real cores and kee
   await page.mouse.dblclick(pick.x, pick.y);
   await page.locator('[data-object-coordinate="x"]').fill("740");
   await page.locator('[data-object-coordinate="x"]').press("Tab");
+  await page.getByRole("textbox", { name: "Stroke color" }).fill("#802a14");
+  await page.getByRole("textbox", { name: "Stroke color" }).press("Tab");
+  await page.getByRole("spinbutton", { name: "Line weight (mm)" }).fill("1.5");
+  await page.getByRole("spinbutton", { name: "Line weight (mm)" }).press("Tab");
+  await page
+    .getByRole("combobox", { name: "Line type" })
+    .selectOption("dashed");
+  await page
+    .getByRole("combobox", { name: "Drawing layer" })
+    .selectOption("annotations");
+  const glyph = page.locator('#userDrawings [data-object="' + cable.id + '"]');
+  await expect(glyph).toHaveAttribute("stroke", "#802a14");
+  await expect(glyph).toHaveAttribute("stroke-width", "1.5");
+  await expect(glyph).toHaveAttribute("stroke-dasharray", "6 3");
+  await expect(glyph).toHaveAttribute("data-layer", "annotations");
+  await page
+    .getByRole("complementary", { name: "Inspector tools" })
+    .getByRole("button", { name: "Layers and visibility" })
+    .click();
+  await page.locator('#inspectorContent [data-layer="annotations"]').uncheck();
+  await expect(glyph).toBeHidden();
+  await page.locator('#inspectorContent [data-layer="annotations"]').check();
+  await expect(glyph).toBeVisible();
   const edited = await saveDrawing(page, "sourced-cables-moved");
   expect(
     edited.data.objects.find((o: { id: string }) => o.id === wire.id),
   ).toMatchObject({ x2: 650, attachments: wire.attachments });
+  expect(
+    edited.data.objects.find((o: { id: string }) => o.id === cable.id),
+  ).toMatchObject({
+    stroke: "#802a14",
+    strokeWidth: 1.5,
+    lineType: "dashed",
+    layer: "annotations",
+  });
   await page.reload();
   await page.locator("#openFile").setInputFiles(edited.path);
   const reopened = await saveDrawing(page, "sourced-cables-reopened");
