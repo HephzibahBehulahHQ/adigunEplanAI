@@ -1,5 +1,14 @@
 # Active engineering goal — 2026-11-14
 
+## ENG-0601 release evidence
+
+A4/039 is an editable evidence register linked by topic to the feeder
+worksheet, rail and bonding drawings, commissioning plan and handover
+register. It starts with eight open records. Supply and fault data, route
+measurements, assembly inspections, continuity and functional test results,
+as-built records and signed approvals must come from the actual installation.
+Editing the register does not change project approval status.
+
 ## Locked control and native component audit — 2026-11-21
 
 The placement and wire workflow follows the behavior of AdigunSimulator's
