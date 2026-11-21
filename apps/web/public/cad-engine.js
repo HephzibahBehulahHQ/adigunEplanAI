@@ -1524,21 +1524,21 @@ function createPumpStarterDocumentation(name) {
     function text(page,id,x,y,value,size,width){objects.push({id:'eng0601-'+id,sheetId:sheets[page].id,kind:'text',x:x,y:y,text:value,fontFamily:'Arial',fontSize:size||14,textWidth:width||1050,rotation:0,stroke:'#183c50'});}
     function rows(page,lines){lines.forEach(function(line,index){text(page,'p'+page+'-r'+index,60,125+index*24,line,13,1070);});}
     titles.forEach(function(title,index){text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);});
-    rows(0,[
-      'Direct-on-line pump starter | Local manual baseline',
-      'Purpose: one locally started pump motor, pressure permissive, stop control and operating indication.',
-      'Power path: site supply → panel isolation/protection → K1 contactor → F2 overload → Q2 field isolator → M1.',
-      'Control path: protected 24 V DC → stop → overload healthy → pressure permissive → start / K1 hold → K1 coil.',
-      'These arrows describe functional dependencies. They are not electrical connections or terminal assignments.',
-      'Start requires a deliberate local command. Stop, overload trip, loss of permissive or power drops K1.',
-      'Power restoration alone must not restart the motor. Resetting an overload must not issue a start command.',
-      'Panel scope: protection, starter, control supply, terminals, operator controls and indication.',
-      'Field scope: motor/pump, lockable maintenance isolator and pressure device; retain their field locations.',
-      'External services: site supply/protection/PE, hydraulic process and mechanical pump coupling.',
-      'Safety boundary: ordinary controls are not a safety-rated emergency-stop or machinery safety system.',
-      'Current delivery: A1 basis, A2 circuits/reports, A3 enclosure basis and A4 development records. Detailed installation remains unfinished.',
-      'Release gate: coordinated circuit, fault/protection/cable checks, layout, testing and competent review.'
-    ]);
+    text(0,'p0-r0',60,100,'Direct-on-line pump starter | Local manual baseline',14);
+    function overviewPath(id,title,y,steps){
+      text(0,'overview-path-'+id,60,y-14,title,12);
+      steps.forEach(function(step,index){
+        const x=60+index*174,key=id+'-'+index;
+        objects.push({id:'eng0601-overview-block-'+key,sheetId:sheets[0].id,kind:'rect',x:x,y:y,x2:x+146,y2:y+54,stroke:'#64748b',fill:'#eef4f8'});
+        text(0,'overview-label-'+key,x+10,y+20,step,12,126);
+        if(index<steps.length-1){
+          objects.push({id:'eng0601-overview-arrow-'+key,sheetId:sheets[0].id,kind:'arrow',x:x+149,y:y+27,x1:x+149,y1:y+27,x2:x+171,y2:y+27,stroke:'#183c50'});
+        }
+      });
+    }
+    overviewPath('power','MOTOR POWER PATH',145,['Site supply\nW1 boundary','Q1 / F1\nIsolate and protect','K1\nSwitch motor power','F2\nOverload relay','Q2\nField isolator','M1\nPump motor']);
+    overviewPath('control','24 V CONTROL PATH',267,['PS1 / F4\nProtected supply','S0 / Q2:AUX\nStop and field enable','F2:95/96 / B1\nOverload and pressure','S1 / K1:13–14\nStart and hold','K1:A1/A2\nContactor coil','PS1\n0 V return']);
+    text(0,'overview-scope',60,360,'Arrows show functional dependencies. See A2 for electrical wires and terminal identities.\nPanel: protection, starter, control supply, terminals, operator controls and indication.\nField: motor and pump, lockable Q2 isolator and B1 pressure device. PE bypasses both isolators.\nExternal interfaces: site supply and PE, hydraulic process and mechanical pump coupling.\nH1 shows coil command. H2 shows overload trip when its protected control supply is available.\nSee the interlock matrix for power restoration and the held-S1 limitation. Ordinary control is not a safety function.',13);
     rows(1,[
       'Project identifier: ENG-0601',
       'Project: Direct-on-line pump starter — Local manual baseline',

@@ -586,9 +586,19 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     const content = project.objects.filter((o) => o.sheetId === sheet.id);
     assert.ok(content.length >= 12);
     assert.ok(
-      content.every((o) => o.kind === "text" && o.y < 574 && !o.locked),
+      content.every(
+        (o) =>
+          (o.kind === "text" ||
+            (sheet.id === "eng0601-a1-0" &&
+              ["rect", "arrow"].includes(o.kind))) &&
+          o.y < 574 &&
+          !o.locked,
+      ),
     );
   }
+  const overview = project.objects.filter((o) => o.sheetId === "eng0601-a1-0");
+  assert.equal(overview.filter((o) => o.kind === "rect").length, 12);
+  assert.equal(overview.filter((o) => o.kind === "arrow").length, 10);
   assert.match(
     project.objects.map((o) => o.text).join("\n"),
     /All listed sheets exist/,
