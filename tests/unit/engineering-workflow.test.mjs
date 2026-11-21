@@ -2282,6 +2282,15 @@ test("A4 native registers match canonical devices and remain editable after reop
       assert.ok(text.text.includes(pin.localNumber + ":"));
   }
   assert.ok(reportObjects.some((o) => o.text.includes("NOT PERFORMED")));
+  const commissioning = sheets.find(
+    (s) => s.name === "Inspection and commissioning plan",
+  );
+  const commissioningRows = reportObjects
+    .filter((o) => o.sheetId === commissioning.id)
+    .map((o) => o.text)
+    .join("\n");
+  assert.match(commissioningRows, /With S1 released/);
+  assert.match(commissioningRows, /RELEASE HOLD: held or welded S1/);
   const evidenceRecords = reportObjects.filter((o) =>
     o.id.startsWith("eng0601-release-evidence-record-"),
   );

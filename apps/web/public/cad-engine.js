@@ -2062,7 +2062,8 @@ function createPumpStarterDocumentation(name) {
       'Plan insulation and protective-device tests for the actual installation and connected electronic equipment.',
       'Confirm F2 setting against the motor nameplate, starting duty and manufacturer instructions.',
       'Under an authorised procedure: verify stop, pressure permissive, overload trip and indication behaviour.',
-      'Verify loss and restoration of power cannot cause an uncommanded restart.',
+      'With S1 released, verify K1 stays off after power or permissive restoration until a new start command.',
+      'RELEASE HOLD: held or welded S1 can re-command K1. Resolve restart prevention through the machinery risk review.',
       'Verify Q2 isolation and sources. At 23/24 verify opening before and closing after the main poles.',
       'Record test method, acceptance criterion, actual value, date, instrument, tester and independent review.',
       'No measured result, signature, successful test or installation approval is implied by this document.'
@@ -2138,7 +2139,7 @@ function createPumpStarterDocumentation(name) {
       'Outstanding: prospective fault current, upstream protection and complete source-isolation verification.',
       'Outstanding: cable installation methods, grouping, voltage drop, protective conductor and fault checks.',
       'Outstanding: verify proposed rails, service zones and bond hardware. Complete duct design and enclosure thermal checks.',
-      'Outstanding: motor/pump selection confirmation, pressure thresholds and machinery risk assessment.',
+      'Outstanding: motor/pump selection, pressure thresholds and machinery risk review of held or welded S1 restart.',
       'Outstanding: verify mounting and terminal-strip fit, cable entry and field installation details on the actual build.',
       'Outstanding: independent engineering review, physical inspection, commissioning and owner acceptance.',
       'Keep manufacturer records distinct from editable design assumptions; approve replacements separately.',
