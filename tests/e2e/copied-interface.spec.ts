@@ -797,6 +797,40 @@ async function addSectionSheet(page: Page, section = "A2") {
     .click();
 }
 
+test("the docked library keeps the project tree visible and the left sidebar can close", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: "Symbol Library" }).click();
+  await expect(page.locator("#projectTree [data-sheet]").first()).toBeVisible();
+  await page
+    .getByRole("searchbox", { name: "Search symbols" })
+    .fill("resistor");
+  await expect(page.locator('[data-insert="eplan-resistor"]')).toBeVisible();
+  const explorer = (await page.locator("#projectPanel").boundingBox())!;
+  const library = (await page.locator("#symbolsPanel").boundingBox())!;
+  expect(library.x).toBe(explorer.x);
+  expect(library.y).toBeGreaterThan(explorer.y);
+  const before = (await page.locator(".editor").boundingBox())!.width;
+  await page.getByRole("button", { name: "Close left sidebar" }).click();
+  await expect(page.locator("#sidepanel")).toBeHidden();
+  const collapsed = (await page.locator(".editor").boundingBox())!.width;
+  expect(collapsed - before).toBeGreaterThan(200);
+  await page
+    .getByRole("button", { name: "Symbol library", exact: true })
+    .click();
+  await expect(page.locator("#projectTree [data-sheet]").first()).toBeVisible();
+  await expect(page.locator('[data-insert="eplan-resistor"]')).toBeVisible();
+  await page.screenshot({
+    path: test.info().outputPath("library-below-project-explorer.png"),
+  });
+});
+
 test("new project wires attach to terminals, follow edits, undo and reopen", async ({
   page,
 }) => {
