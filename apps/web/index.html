@@ -80,7 +80,7 @@
     <section class="editor" aria-label="Electrical drawing editor">
       <div class="editor-tabs" id="sheetTabs" role="tablist" aria-label="Open drawing sheets"><button class="document-tab" role="tab" data-sheet="power" aria-selected="false">A1/010 · Power supply <span class="tab-close" role="button" tabindex="0" data-close-sheet="power" aria-label="Close Power supply tab">×</span></button><button class="document-tab" role="tab" data-sheet="control" aria-selected="true">A1/020 · Control circuit <span class="tab-close" role="button" tabindex="0" data-close-sheet="control" aria-label="Close Control circuit tab">×</span></button><button class="document-tab" role="tab" data-sheet="plc" aria-selected="false">A2/030 · PLC / I/O <span class="tab-close" role="button" tabindex="0" data-close-sheet="plc" aria-label="Close PLC / I/O tab">×</span></button><button class="document-tab add-sheet" id="newSheet" aria-label="Add sheet">+</button></div>
       <div class="canvas-stage" id="canvasStage"><span class="mobile-note">Viewer · rotate device for drawing detail</span><div class="drawing-wrap" id="drawingWrap"><svg class="drawing" id="drawing" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sample electrical control cabinet schematic with PLC, relay, sensor and terminal connections" viewBox="0 0 1200 760" preserveAspectRatio="xMidYMid meet">
-        <defs><pattern id="paperGrid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" class="gridline" fill="none"/></pattern></defs><rect id="viewportGrid" width="1200" height="760" fill="url(#paperGrid)"/><g id="sheetDesign"><g id="customSheetFrame" style="display:none"><rect x="26" y="25" width="1148" height="710" fill="none" stroke="#17212f" stroke-width="1.5"/><path d="M26 675H1174M26 675V735M890 675V735M1000 675V735M1080 675V735" fill="none" stroke="#17212f" stroke-width="1.2"/><text x="42" y="710" fill="#17212f" font-size="19" font-weight="700">HB Elektroniker</text><text x="415" y="701" fill="#17212f" font-size="13" font-weight="700" id="customSheetName">New drawing sheet</text><text x="415" y="721" fill="#17212f" font-size="11" id="customSheetNumber">A3/201</text><text x="910" y="710" fill="#17212f" font-size="12">AdigunEplanAI</text></g>
+        <defs><pattern id="paperGrid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" class="gridline" fill="none"/></pattern><pattern id="minorPaperGrid" width="2.5" height="2.5" patternUnits="userSpaceOnUse"><path class="gridline" d="M2.5 0H0V2.5" opacity=".5" fill="none"/></pattern></defs><rect id="viewportMinorGrid" width="1200" height="760" fill="url(#minorPaperGrid)" display="none" pointer-events="none"/><rect id="viewportGrid" width="1200" height="760" fill="url(#paperGrid)"/><g id="sheetDesign"><g id="customSheetFrame" style="display:none"><rect x="26" y="25" width="1148" height="710" fill="none" stroke="#17212f" stroke-width="1.5"/><path d="M26 675H1174M26 675V735M890 675V735M1000 675V735M1080 675V735" fill="none" stroke="#17212f" stroke-width="1.2"/><text x="42" y="710" fill="#17212f" font-size="19" font-weight="700">HB Elektroniker</text><text x="415" y="701" fill="#17212f" font-size="13" font-weight="700" id="customSheetName">New drawing sheet</text><text x="415" y="721" fill="#17212f" font-size="11" id="customSheetNumber">A3/201</text><text x="910" y="710" fill="#17212f" font-size="12">AdigunEplanAI</text></g>
         <rect x="26" y="25" width="1148" height="710" class="sheet-border"/><path d="M98 25v14M170 25v14M242 25v14M314 25v14M386 25v14M458 25v14M530 25v14M602 25v14M674 25v14M746 25v14M818 25v14M890 25v14M962 25v14M1034 25v14M1106 25v14M98 721v14M170 721v14M242 721v14M314 721v14M386 721v14M458 721v14M530 721v14M602 721v14M674 721v14M746 721v14M818 721v14M890 721v14M962 721v14M1034 721v14M1106 721v14" class="construction"/>
         <g class="small green"><text x="92" y="20">1</text><text x="164" y="20">2</text><text x="236" y="20">3</text><text x="308" y="20">4</text><text x="380" y="20">5</text><text x="452" y="20">6</text><text x="524" y="20">7</text><text x="596" y="20">8</text><text x="668" y="20">9</text><text x="736" y="20">10</text><text x="808" y="20">11</text><text x="880" y="20">12</text><text x="952" y="20">13</text><text x="1024" y="20">14</text><text x="1096" y="20">15</text></g>
         <g class="medium green"><text x="42" y="70">L1 / 24V+</text><text x="42" y="87">L2 / 0V</text><text x="42" y="104">PE / 2K</text><text x="1092" y="70">24V+ / 10.0</text><text x="1092" y="87">0V / 10.0</text></g>
@@ -137,11 +137,12 @@
   function setZoom(value){state.zoom=Math.max(10,Math.min(500,Math.round(value/5)*5));$('#zoomValue').textContent=`${state.zoom}%`;const scale=100/state.zoom;const w=1200*scale,h=760*scale,cx=state.view.x+state.view.w/2,cy=state.view.y+state.view.h/2;state.view={x:cx-w/2,y:cy-h/2,w,h};applyView();persist();}
   function setDrawingViewport(svg,{x,y,w,h}){
     svg.setAttribute("viewBox",[x,y,w,h].join(" "));
-    const grid=svg.querySelector("#viewportGrid");
-    grid.setAttribute("x",x);
-    grid.setAttribute("y",y);
-    grid.setAttribute("width",w);
-    grid.setAttribute("height",h);
+    for(const grid of svg.querySelectorAll("#viewportGrid, #viewportMinorGrid")){
+      grid.setAttribute("x",x);
+      grid.setAttribute("y",y);
+      grid.setAttribute("width",w);
+      grid.setAttribute("height",h);
+    }
   }
   function applyView(){
     const {x,y,w,h}=state.view;
@@ -151,6 +152,7 @@
       const scale=Math.min(width/w,height/h);
       const visibleWidth=width/scale,visibleHeight=height/scale;
       setDrawingViewport(drawing,{x:x+(w-visibleWidth)/2,y:y+(h-visibleHeight)/2,w:visibleWidth,h:visibleHeight});
+      updateDrawingGrid(scale);
     }
     $("#zoomValue").textContent=Number(state.zoom.toPrecision(4))+"%";
   }
@@ -216,7 +218,9 @@
   }
   function addSheet(name,showPrintFrame=true){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
     const safeName=String(name||'Sheet').trim().slice(0,80)||'Sheet',id='custom-'+Date.now()+'-'+(++sheetIdSequence);
-    const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
+    const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};
+    if(state.activeSection==='A3'&&showPrintFrame)sheet.drafting={units:'mm',minor:2.5,major:10,snap:2.5};
+    if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
     state.sheets.push(sheet);state.sheetObjects[id]=[];state.sheetViews[id]={x:0,y:0,w:1200,h:760};
     renderCustomSheetNavigation();notify(sheetLabel(id)[0]+' created. Select it in the sidebar to open.');persist();return id;
   }
@@ -266,15 +270,34 @@
   function refreshSelectedProperties(){if($('#rightPanelTitle').textContent!=='Properties'||!state.selected)return;const selected=state.objects.find(function(obj){return obj.id===state.selected;});if(selected)showObject(selected);}
   function undo(){if(!state.undo.length)return;state.redo.push(drawingHistorySnapshot());restoreDrawingHistory(state.undo.pop());renderObjects();refreshSelectedProperties();updateHistoryButtons();persist();notify('Drawing command undone.');}
   function redo(){if(!state.redo.length)return;state.undo.push(drawingHistorySnapshot());restoreDrawingHistory(state.redo.pop());renderObjects();refreshSelectedProperties();updateHistoryButtons();persist();notify('Drawing command restored.');}
+  const defaultDrafting={units:'du',minor:10,major:10,snap:2.5};
+  function draftingSettings(){
+    return state.sheets.find(sheet=>sheet.id===state.sheet)?.drafting||defaultDrafting;
+  }
+  function updateDrawingGrid(scale){
+    const {minor,major}=draftingSettings();
+    const spacing=major*Math.max(1,2**Math.ceil(Math.log2(8/(major*scale))));
+    const grid=$('#paperGrid'),minorGrid=$('#minorPaperGrid');
+    for(const key of ['width','height']){
+      grid.setAttribute(key,spacing);
+      minorGrid.setAttribute(key,minor);
+    }
+    grid.querySelector('path').setAttribute('d','M'+spacing+' 0H0V'+spacing);
+    minorGrid.querySelector('path').setAttribute('d','M'+minor+' 0H0V'+minor);
+    $('#viewportMinorGrid').setAttribute('display',state.grid&&minor<major&&minor*scale>=6?'inline':'none');
+  }
+  function showCursorPoint(point,raw=point){
+    const {units}=draftingSettings(),factor=units==='in'?25.4:1;
+    const snap=point.attachment?' · terminal':Math.hypot(point.x-raw.x,point.y-raw.y)>1e-6?' · snap':'';
+    $('#coordinates').textContent='X: '+(point.x/factor).toFixed(3)+'  Y: '+(point.y/factor).toFixed(3)+' '+units+snap;
+  }
   function snapDrawingPoint(point){
     if(state.osnap){
-      const bounds=drawing.getBoundingClientRect();
-      const tolerance=Math.max(2.5,Math.min(30,12*state.view.w/Math.max(1,bounds.width)));
+      const tolerance=Math.max(2.5,Math.min(30,12*drawing.getScreenCTM().inverse().a));
       const nearest=terminalAt(point,tolerance);
       if(nearest)return nearest;
     }
-    if(state.snap){const grid=2.5;return{x:Math.round(point.x/grid)*grid,y:Math.round(point.y/grid)*grid};}
-    return point;
+    return snapObjectPoint(point);
   }
   function terminalAt(point,tolerance){
     let target=null,best=tolerance;
@@ -291,8 +314,8 @@
     return target;
   }
   function svgPoint(evt){const p=drawing.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;return p.matrixTransform(drawing.getScreenCTM().inverse());}
-  function snapObjectPoint(point){return state.snap?{x:Math.round(point.x/2.5)*2.5,y:Math.round(point.y/2.5)*2.5}:point;}
-  function makeObj(kind,x,y,extra={}){const id=`obj-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;return{id,kind,x:Math.round(x/5)*5,y:Math.round(y/5)*5,rotation:0,...extra};}
+  function snapObjectPoint(point){const step=draftingSettings().snap;return state.snap?{x:Math.round(point.x/step)*step,y:Math.round(point.y/step)*step}:point;}
+  function makeObj(kind,x,y,extra={}){const id=`obj-${Date.now()}-${Math.random().toString(36).slice(2,7)}`;return{id,kind,x,y,rotation:0,...extra};}
 
   function remapConnectedWireEnds(oldPins,newPins,objects=state.objects){
     objects.filter(function(candidate){return candidate.kind==='wire';}).forEach(function(wire){
@@ -1106,10 +1129,28 @@
   window.addEventListener('blur',()=>{spacePan=false;});
   drawing.addEventListener('pointerdown',e=>{if(!state.sheet){notify('Select a sheet in the sidebar, or use a section + to create one before drawing.');return;}if(e.button===0&&!objectContextMenu.hidden)closeObjectContextMenu();if(e.button===2){const hit=e.target.closest&&e.target.closest('[data-object]'),obj=hit&&state.objects.find(function(item){return item.id===hit.dataset.object;});e.preventDefault();if(obj)openObjectContextMenu(obj,e);else openCanvasContextMenu(e);return;}if(e.button===1||e.altKey||spacePan||state.tool==='pan'){e.preventDefault();state.pan={x:e.clientX,y:e.clientY,view:{...state.view},unitsPerPixel:drawing.getScreenCTM().inverse().a};drawing.style.cursor='grabbing';drawing.setPointerCapture(e.pointerId);return;}if(state.pendingMoveObjectId){if(e.button===0){e.preventDefault();finishObjectMove(state.pendingMoveObjectId,svgPoint(e));}return;}if(e.button===0&&wireDraft){wireDraft.pressed=true;drawing.setPointerCapture(e.pointerId);e.preventDefault();return;}if(e.button===0&&state.tool==='select'){const handle=e.target.closest&&e.target.closest('[data-resize-handle]');if(handle){const obj=state.objects.find(function(item){return item.id===handle.dataset.resizeObject;});if(obj&&state.selectedObjectIds.length===1){e.preventDefault();beginObjectResize(obj,handle,e.pointerId);return;}}}if(state.pendingComponentId){if(e.button===0){e.preventDefault();finishComponentPlacement(svgPoint(e),e.shiftKey);}return;}if(state.tool==='select'){const hit=e.target.closest&&e.target.closest('[data-object]'),obj=hit&&state.objects.find(function(item){return item.id===hit.dataset.object;});const pin=e.button===0&&!e.shiftKey&&!e.ctrlKey&&!e.metaKey?terminalDragPoint(e,obj?.kind==='wire'):null;if(pin&&(!obj||obj.kind==='wire'||obj.id===pin.attachment.instanceId)){beginTerminalDrag(e,pin);return;}if(obj){e.preventDefault();if(e.shiftKey||e.ctrlKey||e.metaKey){toggleSelection(obj.id);return;}if(!state.selectedObjectIds.includes(obj.id)){const ids=obj.groupId?state.objects.filter(function(item){return item.groupId===obj.groupId;}).map(function(item){return item.id;}):[obj.id];setSelection(ids,obj.kind==='text'?false:true);}if(obj.locked){state.selected=obj.id;showObject(obj);notify('Object is locked. Right-click to unlock it.');}else beginObjectDrag(obj,svgPoint(e),e.pointerId);}else{e.preventDefault();beginSelectionBox(e);return;}return;}drawStart=state.tool==='freehand'?svgPoint(e):snapDrawingPoint(svgPoint(e));if(state.tool==='freehand')freehandPoints=[drawStart];drawing.setPointerCapture(e.pointerId);});
   drawing.addEventListener('pointerup',e=>{if(state.pan){state.pan=null;drawing.style.cursor=state.tool==='pan'?'grab':'crosshair';return;}if(terminalDrag){finishTerminalDrag(e);return;}if(wireDraft?.pressed){wireDraft.pressed=false;finishWireDraft(e);return;}if(wireEndDrag){const drag=wireEndDrag;wireEndDrag=null;drag.preview.remove();if(Math.hypot(e.clientX-drag.clientX,e.clientY-drag.clientY)>2)editWireEndpoint(drag.wire,drag.end,snapDrawingPoint(svgPoint(e)));return;}if(resizeDrag){finishObjectResize(e);return;}if(objectDrag){const drag=objectDrag;objectDrag=null;drawing.style.cursor='default';finishObjectClick(e,drag);if(drag.moved&&JSON.stringify(state.objects)!==drag.snapshot){pushUndo(drag.snapshot);persist();refreshSelectedProperties();notify('Object moved. Connected component pins and wire ends were preserved.');}return;}if(selectionBox){finishSelectionBox(e);return;}if(!drawStart)return;const end=state.tool==='freehand'?svgPoint(e):snapDrawingPoint(svgPoint(e)),a=drawStart;drawStart=null;if(state.tool==='wire'){finishWireGesture(a,end);return;}let obj;if(state.tool==='freehand'){freehandPoints.push(end);if(freehandPoints.length<2){freehandPoints=null;return;}pushUndo();obj=makeObj('freehand',a.x,a.y,{points:freehandPoints.map(p=>({x:p.x,y:p.y})),stroke:state.strokeColor,fill:'none'});freehandPoints=null;}else if(['line','arrow','curve'].includes(state.tool)){pushUndo();obj=makeStyledObject(state.tool,a,end);}else if(['rect','circle','ellipse','triangle'].includes(state.tool)){pushUndo();obj=makeStyledObject(state.tool,a,end);}else if(state.tool==='text'){pushUndo();obj=makeObj('text',a.x,a.y,{text:'',fontSize:16,fontFamily:'Arial',stroke:state.strokeColor});}else if(state.tool==='symbol'){openSymbolPicker();return;}if(obj){state.objects.push(obj);renderObjects();persist();if(obj.kind==='text'){setTool('select');state.selected=obj.id;openInspector('Properties');showObject(obj);editSheetText(obj);}notify(`${obj.kind} added to ${sheetNames[state.sheet]?.[0]||'the active sheet'}.`);}});
-  drawing.addEventListener('pointermove',e=>{if(state.pan){const dx=(e.clientX-state.pan.x)*state.pan.unitsPerPixel,dy=(e.clientY-state.pan.y)*state.pan.unitsPerPixel;state.view.x=state.pan.view.x-dx;state.view.y=state.pan.view.y-dy;applyView();return;}if(terminalDrag){updateTerminalDrag(e);return;}if(wireEndDrag){previewWireEnd(svgPoint(e));return;}if(resizeDrag){updateObjectResize(svgPoint(e));}else if(objectDrag){const current=svgPoint(e),proposed={x:objectDrag.origin.x+current.x-objectDrag.pointerStart.x,y:objectDrag.origin.y+current.y-objectDrag.pointerStart.y},location=e.shiftKey?snapObjectPoint(proposed):proposed,dx=location.x-objectDrag.origin.x,dy=location.y-objectDrag.origin.y;if(Math.abs(dx)>1e-6||Math.abs(dy)>1e-6){state.objects=JSON.parse(objectDrag.snapshot);translateObjectSet(objectDrag.ids||[objectDrag.id],dx,dy);objectDrag.moved=true;renderObjects();const moved=state.objects.find(function(item){return item.id===objectDrag.id;});showObject(moved);}}else if(selectionBox){updateSelectionBox(svgPoint(e));}else if(state.pendingComponentId){updatePlacementPreview(svgPoint(e));}else if(wireDraft){updateWireDraft(wireDestination(e));}else if(freehandPoints&&drawStart){const p=svgPoint(e),last=freehandPoints[freehandPoints.length-1];if(Math.hypot(p.x-last.x,p.y-last.y)>2)freehandPoints.push(p);}else{if(state.tool==='select'){const hit=e.target.closest('[data-object]'),overWire=hit&&state.objects.some(function(obj){return obj.id===hit.dataset.object&&obj.kind==='wire';}),pin=terminalDragPoint(e,overWire);drawing.style.cursor=pin&&(!hit||hit.dataset.object===pin.attachment.instanceId||overWire)?'crosshair':'default';}const p=svgPoint(e);$('#coordinates').textContent=`X: ${(p.x/4).toFixed(3)}  Y: ${(p.y/4).toFixed(3)}`;}});
+  drawing.addEventListener('pointermove',e=>{if(state.pan){const dx=(e.clientX-state.pan.x)*state.pan.unitsPerPixel,dy=(e.clientY-state.pan.y)*state.pan.unitsPerPixel;state.view.x=state.pan.view.x-dx;state.view.y=state.pan.view.y-dy;applyView();return;}if(terminalDrag){updateTerminalDrag(e);return;}if(wireEndDrag){previewWireEnd(svgPoint(e));return;}if(resizeDrag){updateObjectResize(svgPoint(e));}else if(objectDrag){const current=svgPoint(e),proposed={x:objectDrag.origin.x+current.x-objectDrag.pointerStart.x,y:objectDrag.origin.y+current.y-objectDrag.pointerStart.y},location=e.shiftKey?snapObjectPoint(proposed):proposed,dx=location.x-objectDrag.origin.x,dy=location.y-objectDrag.origin.y;if(Math.abs(dx)>1e-6||Math.abs(dy)>1e-6){state.objects=JSON.parse(objectDrag.snapshot);translateObjectSet(objectDrag.ids||[objectDrag.id],dx,dy);objectDrag.moved=true;renderObjects();const moved=state.objects.find(function(item){return item.id===objectDrag.id;});showObject(moved);}}else if(selectionBox){updateSelectionBox(svgPoint(e));}else if(state.pendingComponentId){const point=svgPoint(e);updatePlacementPreview(point);showCursorPoint(snapObjectPoint(point),point);}else if(wireDraft){const point=wireDestination(e);updateWireDraft(point);showCursorPoint(point,svgPoint(e));}else if(freehandPoints&&drawStart){const p=svgPoint(e),last=freehandPoints[freehandPoints.length-1];if(Math.hypot(p.x-last.x,p.y-last.y)>2)freehandPoints.push(p);}else{if(state.tool==='select'){const hit=e.target.closest('[data-object]'),overWire=hit&&state.objects.some(function(obj){return obj.id===hit.dataset.object&&obj.kind==='wire';}),pin=terminalDragPoint(e,overWire);drawing.style.cursor=pin&&(!hit||hit.dataset.object===pin.attachment.instanceId||overWire)?'crosshair':'default';}const p=svgPoint(e);showCursorPoint(state.tool==='select'||state.tool==='freehand'?p:snapDrawingPoint(p),p);}});
   drawing.addEventListener('pointercancel',()=>{if(state.pan){state.pan=null;drawing.style.cursor=state.tool==='pan'?'grab':'crosshair';return;}drawStart=null;cancelTerminalDrag();cancelWireDraft();if(wireEndDrag){wireEndDrag.preview.remove();wireEndDrag=null;}cancelSelectionBox();if(resizeDrag){state.objects=JSON.parse(resizeDrag.snapshot);resizeDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(objectDrag){state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(state.pendingComponentId)cancelComponentPlacement();});
   drawing.addEventListener('wheel',e=>{e.preventDefault();const shift=e.shiftKey,deltaX=e.deltaX||(shift?e.deltaY:0),deltaY=shift?0:e.deltaY;if(deltaX!==0||shift){const unitsPerPixel=drawing.getScreenCTM().inverse().a;state.view.x+=deltaX*unitsPerPixel;state.view.y+=deltaY*unitsPerPixel;applyView();persist();return;}const anchor=svgPoint(e),oldView=state.view,requestedZoom=state.zoom*Math.pow(1.1,-e.deltaY/100),nextZoom=Math.max(Math.min(10,state.zoom),Math.min(500,Math.round(requestedZoom/5)*5));if(nextZoom===state.zoom)return;const nextWidth=1200*100/nextZoom,nextHeight=760*100/nextZoom;state.zoom=nextZoom;state.view={x:anchor.x-(anchor.x-oldView.x)/oldView.w*nextWidth,y:anchor.y-(anchor.y-oldView.y)/oldView.h*nextHeight,w:nextWidth,h:nextHeight};applyView();persist();},{passive:false});
 
+  function refreshDraftingControls(block,sheet){
+    const units=Array.from(block.querySelectorAll('.property-row')).find(row=>row.firstElementChild?.textContent==='Units');
+    if(!units)return;
+    const settings=draftingSettings();
+    units.lastElementChild.textContent=settings.units==='du'?'Drafting units':settings.units;
+    let group=block.querySelector('[data-drafting-controls]');
+    if(!group){
+      group=document.createElement('div');
+      group.dataset.draftingControls='';
+      group.innerHTML='<label class="property-row"><span>Display units</span><select data-drafting-value="units"><option value="du">Drafting units</option><option value="mm">Millimeters</option><option value="in">Inches</option></select></label><label class="property-row"><span>Minor grid</span><input type="number" min="0.00001" step="any" data-drafting-value="minor"></label><label class="property-row"><span>Major grid</span><input type="number" min="0.00001" step="any" data-drafting-value="major"></label><label class="property-row"><span>Snap interval</span><input type="number" min="0.00001" step="any" data-drafting-value="snap"></label>';
+      block.append(group);
+    }
+    group.hidden=!sheet;
+    for(const field of group.querySelectorAll('[data-drafting-value]')){
+      const key=field.dataset.draftingValue;
+      field.value=key==='units'?settings.units:Number((settings[key]/(settings.units==='in'?25.4:1)).toPrecision(8));
+    }
+  }
   function refreshFrameControl(){
     const sheet=state.sheets.find(item=>item.id===state.sheet);
     wrap.classList.toggle('frame-hidden',sheet?.showPrintFrame===false);
@@ -1129,6 +1170,7 @@
     }
     field.closest('label').hidden=!sheet;
     field.checked=sheet?.showPrintFrame!==false;
+    refreshDraftingControls(block,sheet);
   }
   function renderProjectTitleBlock(){
     if(!state.sheet)return;
@@ -1163,7 +1205,22 @@
     const note=document.createElement('p');note.className='notice';note.textContent='Hephzibah Behulah · AdigunEplanAI. Rename the sheet in the sidebar. Blank checked/approved fields do not imply review.';host.append(note);
   }
   $('#customSheetFrame').addEventListener('dblclick',function(event){event.stopPropagation();editTitleBlock();});
-  $('#inspectorContent').addEventListener('change',function(event){if(event.target.matches('[data-show-print-frame]')){
+  $('#inspectorContent').addEventListener('change',function(event){if(event.target.matches('[data-drafting-value]')){
+      const sheet=state.sheets.find(item=>item.id===state.sheet);
+      if(!sheet)return;
+      const settings={...draftingSettings()};
+      const key=event.target.dataset.draftingValue,value=event.target.value;
+      if(key==='units')settings.units=value;
+      else{
+        const number=Number(value)*(settings.units==='in'?25.4:1);
+        if(!Number.isFinite(number)||number<1e-5||number>1e6){refreshFrameControl();return;}
+        settings[key]=number;
+      }
+      sheet.drafting=settings;
+      refreshFrameControl();applyView();persist();
+      return;
+    }
+    if(event.target.matches('[data-show-print-frame]')){
       const sheet=state.sheets.find(item=>item.id===state.sheet);
       if(sheet){sheet.showPrintFrame=event.target.checked;refreshFrameControl();persist();}
       return;
@@ -1335,7 +1392,7 @@
   $$('[data-panel]').forEach(b=>b.addEventListener('click',()=>selectPanel(b.dataset.panel)));
   $$('[data-inspector]').forEach(b=>b.addEventListener('click',()=>openInspector(b.dataset.inspector)));
 
-  $$('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const key=b.dataset.toggle;state[key]=!state[key];b.setAttribute('aria-pressed',String(state[key]));if(key==='grid')drawing.querySelector('rect').style.display=state.grid?'':'none';persist();notify(`${key.toUpperCase()} ${state[key]?'on':'off'}.`);}));
+  $$('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const key=b.dataset.toggle;state[key]=!state[key];b.setAttribute('aria-pressed',String(state[key]));if(key==='grid'){$('#viewportGrid').style.display=state.grid?'':'none';applyView();}persist();notify(`${key.toUpperCase()} ${state[key]?'on':'off'}.`);}));
   $('#collapseProject').addEventListener('click',()=>{const hidden=$('#projectPanel').hidden;$('#projectPanel').hidden=!hidden;});$('#focusSymbols').addEventListener('click',()=>$('#symbolSearch').focus());$('#closeRightPanel').addEventListener('click',()=>{$('#rightPanel').classList.remove('open');workspace.classList.remove('inspector-open');});$('#maximize').addEventListener('click',()=>workspace.classList.toggle('maximized'));$('#newSheet').addEventListener('click',()=>openAddSheetDialog());
   $('#zoomValue').addEventListener('click',function(){const menu=$('#zoomMenu'),open=menu.hidden;menu.hidden=!open;$('#zoomValue').setAttribute('aria-expanded',String(open));if(open){const r=$('#zoomValue').getBoundingClientRect();menu.style.left=Math.max(8,Math.min(innerWidth-150,r.left))+'px';menu.style.bottom=(innerHeight-r.top+5)+'px';}});
   $('#zoomMenu').addEventListener('click',function(e){const b=e.target.closest('[data-zoom-preset]');if(!b)return;$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');if(b.dataset.zoomPreset==='fit')runAction('fit');else setZoom(Number(b.dataset.zoomPreset));});
@@ -1371,7 +1428,7 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&(terminalDrag||wireDraft)){e.preventDefault();cancelTerminalDrag();cancelWireDraft();return;}if(e.target.closest('input,textarea,select,[contenteditable="true"]'))return;if(e.key==='Escape'&&wireEndDrag){e.preventDefault();wireEndDrag.preview.remove();wireEndDrag=null;return;}if(e.key==='Escape'&&state.pendingMoveObjectId){e.preventDefault();state.pendingMoveObjectId=null;notify('Move cancelled.');return;}if(e.key==='Escape'&&!moduleMenu.hidden){e.preventDefault();closeModuleMenu(true);return;}if(e.key==='Escape'&&objectDrag){e.preventDefault();state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';return;}if(e.key==='Escape'&&state.pendingComponentId){e.preventDefault();cancelComponentPlacement();return;}if(e.ctrlKey&&e.key.toLowerCase()==='k'){closeModuleMenu(false);e.preventDefault();createPalette();$('#commands').showModal();$('#commandSearch').focus();return;}if(e.key==='Escape'&&$('#commands').open){$('#commands').close();return;}if(e.ctrlKey&&e.key.toLowerCase()==='s'){e.preventDefault();saveLocal();return;}if(e.ctrlKey&&e.key.toLowerCase()==='o'){e.preventDefault();$('#openFile').click();return;}if(e.ctrlKey&&e.key.toLowerCase()==='p'){e.preventDefault();window.print();return;}if(e.ctrlKey&&e.key.toLowerCase()==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}if((e.key==='Delete'||e.key==='Backspace')&&handleDeleteShortcut(e))return;if(e.key==='f'||e.key==='F'){runAction('fit');return;}const key=e.key.toLowerCase(),tool={v:'select',w:'wire',s:'symbol',l:'line',r:'rect',c:'circle',t:'text'}[key];if(tool){e.preventDefault();tool==='symbol'?openSymbolPicker():setTool(tool);}});
   $$('[data-tree-view]').forEach(b=>b.addEventListener('click',()=>{$$('[data-tree-view]').forEach(x=>x.classList.toggle('active',x===b));$('#projectTree').classList.toggle('list-view',b.dataset.treeView==='list');}));
   $$('[data-symbol-view]').forEach(b=>b.addEventListener('click',()=>{$$('[data-symbol-view]').forEach(x=>x.classList.toggle('active',x===b));notify(b.dataset.symbolView==='macros'?'No saved symbol macros exist in this project yet.':'Built-in IEC-style symbol library selected.');}));
-  wrap.classList.add('blank-start');wrap.classList.toggle('dark-paper',state.theme==='dark');applyView();renderObjects();$('#projectTree').replaceChildren();$('#symbolsPanel').hidden=true;showEmptyProjectSheet();[['snap','snap'],['ortho','ortho'],['osnap','osnap']].forEach(([key])=>{const b=$(`[data-toggle="${key}"]`);b.setAttribute('aria-pressed',String(state[key]));});if(!state.grid)drawing.querySelector('rect').style.display='none';
+  wrap.classList.add('blank-start');wrap.classList.toggle('dark-paper',state.theme==='dark');applyView();renderObjects();$('#projectTree').replaceChildren();$('#symbolsPanel').hidden=true;showEmptyProjectSheet();[['snap','snap'],['ortho','ortho'],['osnap','osnap']].forEach(([key])=>{const b=$(`[data-toggle="${key}"]`);b.setAttribute('aria-pressed',String(state[key]));});if(!state.grid)$('#viewportGrid').style.display='none';
   renderSymbolSidebar();
   if(matchMedia('(max-width:640px)').matches)workspace.classList.add('mobile-tools');
   initializing=false;

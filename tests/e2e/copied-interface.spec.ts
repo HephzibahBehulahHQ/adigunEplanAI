@@ -2997,3 +2997,42 @@ test("fit drawing centers signed geometry and the origin command centers zero", 
   expect(Math.abs(origin.x - canvas.x - canvas.width / 2)).toBeLessThan(1);
   expect(Math.abs(origin.y - canvas.y - canvas.height / 2)).toBeLessThan(1);
 });
+
+test("physical grid, cursor units and snap spacing persist independently", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page, "A3");
+  await page.locator('[data-inspector="Properties"]').click();
+  const minor = page.getByLabel("Minor grid", { exact: true });
+  const major = page.getByLabel("Major grid", { exact: true });
+  const snap = page.getByLabel("Snap interval", { exact: true });
+  await expect(minor).toHaveValue("2.5");
+  await expect(major).toHaveValue("10");
+  await snap.fill("12.7");
+  await snap.press("Tab");
+  await page.getByLabel("Display units").selectOption("in");
+  await expect(snap).toHaveValue("0.5");
+  await expect(minor).toHaveValue("0.098425197");
+  await page.locator('[data-draw="line"]').click();
+  const start = await sheetPoint(page, 131, 205);
+  const end = await sheetPoint(page, 258, 260);
+  await page.mouse.move(start.x, start.y);
+  await expect(page.locator("#coordinates")).toContainText("5.000");
+  await expect(page.locator("#coordinates")).toContainText("in · snap");
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const saved = await saveDrawing(page, "physical-grid-units");
+  expect(saved.data.sheets[0].drafting).toEqual({
+    units: "in",
+    minor: 2.5,
+    major: 10,
+    snap: 12.7,
+  });
+  expect(saved.data.objects[0].x).toBeCloseTo(127);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings [data-object]")).toHaveCount(1);
+});
