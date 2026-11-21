@@ -1278,6 +1278,14 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             return false;
           }))errors.push('Invalid drafting guides on sheet '+sheet.id+'.');
         }
+        if(sheet.paper!==undefined){
+          const paper=sheet.paper,paperSizes={A0:841,A1:594,A2:420,A3:297,A4:210};
+          const size=paper?.format==='Custom'?Math.min(paper.customWidth,paper.customHeight):paperSizes[paper?.format];
+          if(!paper||!Number.isFinite(size)||!['portrait','landscape'].includes(paper.orientation)||
+            [paper.customWidth,paper.customHeight].some(value=>!Number.isFinite(value)||value<20||value>5000)||
+            !Number.isFinite(paper.margin)||paper.margin<0||paper.margin>=size/2||
+            !Number.isFinite(paper.scale)||paper.scale<0||paper.scale>10000)errors.push('Invalid paper settings on sheet '+sheet.id+'.');
+        }
         if (sheetIds.has(sheet.id)) errors.push('Duplicate sheet ID: ' + sheet.id + '.');
         sheetIds.add(sheet.id);
       });
