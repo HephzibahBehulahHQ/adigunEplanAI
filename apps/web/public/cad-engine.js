@@ -2684,6 +2684,28 @@ function createPumpStarterDocumentation(name) {
       ['Start terminal','start'], ['End terminal','end'], ['Continuation IDs','links']], cableCoreRegister(project));
   }
 
+  function continuationRegisterCsv(project) {
+    const validation = validateProject(project);
+    const errors = validation.errors.concat((project.connectionIssues || []).map(function(issue) { return issue.message; }));
+    if (errors.length) throw new Error('Continuation export blocked: ' + errors.join(' '));
+    const sheets = new Map(project.sheets.map(function(sheet) { return [sheet.id, sheet.number || sheet.name]; }));
+    const objects = new Map(project.objects.map(function(object) { return [object.id, object]; }));
+    const rows = (project.crossSheetConnections || []).flatMap(function(link) {
+      return link.endpoints.map(function(endpoint) {
+        const wire = objects.get(endpoint.wireId);
+        const terminals = Object.values(wire.attachments || {}).map(function(binding) {
+          const device = objects.get(binding.instanceId);
+          const pin = device && worldPins(device).find(function(candidate) { return candidate.id === binding.pinId; });
+          return pin ? device.ref + ':' + pin.number : 'Unresolved terminal';
+        });
+        return {id:link.id, name:link.name, sheet:sheets.get(endpoint.sheetId), wire:wire.id,
+          x:endpoint.point.x, y:endpoint.point.y, terminals:terminals, tag:wire.cable?.tag, core:wire.cable?.core};
+      });
+    });
+    return reportCsv([['Continuation ID','id'], ['Potential','name'], ['Sheet','sheet'], ['Wire ID','wire'],
+      ['Reference X','x'], ['Reference Y','y'], ['Attached terminals','terminals'], ['Cable','tag'], ['Core','core']], rows);
+  }
+
   function wireListCsv(objects) {
     const report = wireList(objects);
     if (!report.valid) throw new Error('Wire list export blocked: ' + report.errors.join(' '));
@@ -2747,7 +2769,8 @@ function createPumpStarterDocumentation(name) {
     wireList: wireList,
     wireListCsv: wireListCsv,
     cableCoreRegister: cableCoreRegister,
-    cableCoreRegisterCsv: cableCoreRegisterCsv
+    cableCoreRegisterCsv: cableCoreRegisterCsv,
+    continuationRegisterCsv: continuationRegisterCsv
   });
 })(typeof window !== 'undefined' ? window : globalThis);
 
