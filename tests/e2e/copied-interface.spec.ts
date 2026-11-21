@@ -2801,6 +2801,9 @@ for (const template of [
       'input[type="color"][data-drawing-style="stroke"]',
     );
     await color.fill("#d94024");
+    await expect(
+      page.locator('#userDrawings [data-layer="connections"]'),
+    ).toHaveAttribute("stroke", "#d94024");
     await page
       .getByRole("combobox", { name: "Wire route axis" })
       .selectOption("y");
@@ -2867,6 +2870,14 @@ test("drafts across the full viewport with a signed, pointer-centered camera", a
   await addSectionSheet(page);
   const drawing = page.locator("#drawing");
   const stage = page.locator("#canvasStage");
+  const footer = page.locator(".canvas-status");
+  await expect
+    .poll(async () => {
+      const area = (await stage.boundingBox())!,
+        status = (await footer.boundingBox())!;
+      return Math.abs(status.y - area.y - area.height);
+    })
+    .toBeLessThan(2);
   await expect
     .poll(async () => {
       const canvas = await drawing.boundingBox();
@@ -2992,7 +3003,7 @@ test("fit drawing centers signed geometry and the origin command centers zero", 
   expect(Math.abs(middle.y - canvas.y - canvas.height / 2)).toBeLessThan(8);
   await page.keyboard.press("Control+k");
   await page.locator("#commandSearch").fill("Go to drawing origin");
-  await page.getByRole("button", { name: "Go to drawing origin" }).click();
+  await page.locator("#commandSearch").press("Enter");
   const origin = await sheetPoint(page, 0, 0);
   expect(Math.abs(origin.x - canvas.x - canvas.width / 2)).toBeLessThan(1);
   expect(Math.abs(origin.y - canvas.y - canvas.height / 2)).toBeLessThan(1);
@@ -3033,6 +3044,15 @@ test("physical grid, cursor units and snap spacing persist independently", async
     snap: 12.7,
   });
   expect(saved.data.objects[0].x).toBeCloseTo(127);
+  await page.locator('[data-draw="select"]').click();
+  const midpoint = await sheetPoint(page, 190.5, 228.6);
+  await page.mouse.click(midpoint.x, midpoint.y);
+  const coordinate = page.getByLabel("X (in)", { exact: true });
+  await expect(coordinate).toHaveValue("5");
+  await coordinate.fill("6");
+  await coordinate.press("Tab");
+  const moved = await saveDrawing(page, "inch-position");
+  expect(moved.data.objects[0].x).toBeCloseTo(152.4);
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(page.locator("#userDrawings [data-object]")).toHaveCount(1);
 });
