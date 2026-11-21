@@ -2072,6 +2072,17 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   expect(cableCsv).toContain('"W2","PE"');
   expect(cableCsv).toContain("XPEF:1:");
   expect(cableCsv).toContain('"W5","2"');
+  const continuationEvent = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export continuation register CSV" })
+    .click();
+  const continuationExport = await continuationEvent;
+  const continuationCsv = fs.readFileSync(
+    await continuationExport.path(),
+    "utf8",
+  );
+  expect(continuationCsv.trimEnd().split("\r\n")).toHaveLength(75);
+  expect(continuationCsv).toContain('"X5:1:2","W5","1"');
   await page
     .getByRole("button", { name: "Bill of materials", exact: true })
     .click();
