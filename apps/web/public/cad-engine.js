@@ -1942,6 +1942,8 @@ function createPumpStarterDocumentation(name) {
     cabinetViews.forEach(function(view){
       objects.push(createPanelPlacement(panelProject,view.deviceId,sheets[railPage].id,plateCenter.x+view.x-enclosure.x,plateCenter.y+view.y-enclosure.y,plate.scale));
     });
+    const f2Support=part(railPage,overloadSupportDefinition.id,'ACC-F2',plate.x+432.5*plate.scale,plate.y+490*plate.scale,0,'Proposed stand-alone support for F2. Shown at 1:2 using support body dimensions. Verify the installed relay envelope and wiring before fabrication.');
+    f2Support.assemblyFor=f2.id;
     text(railPage,'rail-datum',80,112,'0,0 · PLATE FRONT / TOP LEFT · 1:2',11,300);
     text(railPage,'rail-table-heading',410,110,'CENTRES AND FASTENER LOCATIONS · mm from plate datum',13,680);
     railSegments.forEach(function(rail,index){
@@ -1954,7 +1956,7 @@ function createPumpStarterDocumentation(name) {
       text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+(rail.x-12.5)+' / '+(rail.x+12.5)+' at y '+rail.y,12,680);
     });
     text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut between two slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
-    text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nF2 mounting remains open. Check actual plate fit, door travel and depth before drilling.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
+    text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nACC-F2: proposed support centre (432.5, 490). Verify the complete F2 assembly envelope and clearance.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
     const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');
     rows(bondingPage,[
       'BONDING DATUM: incoming PE → XPE:0 connection 1; XPE:0/1/2 share the dedicated XPE rail.',
