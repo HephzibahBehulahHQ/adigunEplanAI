@@ -1,5 +1,14 @@
 # Active engineering goal — 2026-11-14
 
+The A3 assembly sheet includes a worked ENC1 heat-load subtotal for F1,
+K1, F2 and PS1. It uses the [Siemens F1 data sheet](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RV2321-4BC10),
+[K1 data sheet](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RT20272KB40),
+[F2 data sheet](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2126-4BB0)
+and [PS1 data sheet](https://tableeditor.cicservice.siemens.com/teddatasheet/?caller=documentservice&format=PDF&language=en&mlfbs=6EP1332-5BA00).
+The K1 entries are additive budgeting allowances. The subtotal excludes
+other cabinet losses and uses mixed operating points. It does not size
+the enclosure or its cooling.
+
 The owner confirmed on 2026-11-21 that ENG-0601 is an app example and
 no physical pump was built. Validate the editable A1–A4 model, reports
 and live editor workflows for example acceptance. A4/039 retains the

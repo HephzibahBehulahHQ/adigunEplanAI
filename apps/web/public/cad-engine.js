@@ -2025,6 +2025,17 @@ function createPumpStarterDocumentation(name) {
       '9. Confirm ratings after all entries and devices are fitted, then complete the A4 inspection plan.',
       '10. Record departures from the design and update the native project before independent review.'
     ]);
+    const f1Loss=10.5*Math.pow(15.2/20,2);
+    const selectedLosses=f1Loss+6.3+4.5+8.1+9;
+    text(assemblyPage,'thermal-heading',60,390,'ENC1 · Worked heat-load subtotal',14,1060);
+    text(assemblyPage,'thermal-screen',60,418,
+      'F1: Siemens 10.5 W at 20 A, quadratic dependence. At the candidate 15.2 A: '+f1Loss.toFixed(2)+' W.\n'+
+      'K1 allowances: 6.3 W hot at rated current and 4.5 W typical without load current, budgeted separately.\n'+
+      'F2 allowance: 8.1 W hot at rated current. PS1 allowance: 9 W typical at rated output.\n'+
+      'Selected-device subtotal: '+selectedLosses.toFixed(2)+' W using these mixed operating points.\n'+
+      'Add Q1, F3/F4, terminal, conductor and other losses. Apply actual duty and worst-case ambient.\n'+
+      'Use the installed enclosure heat-transfer conditions and temperature limits before assessing cooling.',
+      11,1060);
     const fieldPage=developmentSheet('A3','eng0601-a3-field-isolator','Field isolator enclosure');
     const fieldBox=part(fieldPage,rittalFieldEnclosureDefinition.id,'ENC2',245,295,0,'Proposed wall-mounted Q2 enclosure. Confirm the environment, four-hole cut-out and protective bonding.');
     fieldBox.properties.location='Field maintenance isolator';
