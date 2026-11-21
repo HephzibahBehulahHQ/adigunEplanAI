@@ -2262,6 +2262,18 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
       .first()
       .click();
     await expect(page.locator("#userDrawings")).toContainText(content);
+    if (id === "eng0601-a3-rail-mounting") {
+      const railViews = initial.data.objects.filter(
+        (o: { kind: string; sheetId: string }) =>
+          o.kind === "panel-placement" && o.sheetId === id,
+      );
+      expect(railViews).toHaveLength(5);
+      for (const view of railViews) {
+        await expect(
+          page.locator('#userDrawings [data-object="' + view.id + '"]'),
+        ).toBeVisible();
+      }
+    }
     await page.screenshot({ path: test.info().outputPath(id + ".png") });
   }
   await page.locator('[data-sheet="eng0601-a3-2"]').first().click();

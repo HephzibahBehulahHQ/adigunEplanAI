@@ -2653,10 +2653,18 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
     (o) => o.kind === "panel-placement" && o.sheetId === cabinet.sheetId,
   );
   assert.equal(bodies.length, 5);
+  const railBodies = project.objects.filter(
+    (o) => o.kind === "panel-placement" && o.sheetId === plate.sheetId,
+  );
+  assert.equal(railBodies.length, bodies.length);
   for (const body of bodies) {
     const geometry = engine.panelPlacementGeometry(project, body);
     const x = (plate.x + plate.x2) / 2 + geometry.x - cabinet.x;
     const y = (plate.y + plate.y2) / 2 + geometry.y - cabinet.y;
+    const railBody = railBodies.find((o) => o.deviceId === body.deviceId);
+    assert.equal(railBody.x, x);
+    assert.equal(railBody.y, y);
+    assert.equal(railBody.scale, body.scale);
     for (const zone of zones.filter((o) => o !== ps1Zone)) {
       assert.ok(
         x + geometry.width / 2 <= zone.x ||
