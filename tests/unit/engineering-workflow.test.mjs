@@ -2596,6 +2596,33 @@ test("A3 terminal detail sheets cover each canonical terminal once without overl
   const ps1Zone = project.objects.find((o) => o.id === "eng0601-rail-ps1-zone");
   assert.equal((ps1Zone.y2 - ps1Zone.y) / 0.5, 180);
   zones.push(ps1Zone);
+  const ducts = project.objects.filter(
+    (o) => o.id.startsWith("eng0601-duct-") && o.kind === "rect",
+  );
+  assert.equal(ducts.length, 2);
+  for (const duct of ducts) {
+    assert.equal((duct.x2 - duct.x) / 0.5, 20);
+    assert.equal((duct.y2 - duct.y) / 0.5, 700);
+  }
+  zones.push(...ducts);
+  const cabinet = project.objects.find((o) => o.ref === "ENC1");
+  const bodies = project.objects.filter(
+    (o) => o.kind === "panel-placement" && o.sheetId === cabinet.sheetId,
+  );
+  assert.equal(bodies.length, 5);
+  for (const body of bodies) {
+    const geometry = engine.panelPlacementGeometry(project, body);
+    const x = (plate.x + plate.x2) / 2 + geometry.x - cabinet.x;
+    const y = (plate.y + plate.y2) / 2 + geometry.y - cabinet.y;
+    for (const zone of zones.filter((o) => o !== ps1Zone)) {
+      assert.ok(
+        x + geometry.width / 2 <= zone.x ||
+          x - geometry.width / 2 >= zone.x2 ||
+          y + geometry.height / 2 <= zone.y ||
+          y - geometry.height / 2 >= zone.y2,
+      );
+    }
+  }
   for (const [index, zone] of zones.entries()) {
     assert.ok(
       zone.x >= plate.x &&

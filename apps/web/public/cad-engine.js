@@ -1920,6 +1920,13 @@ function createPumpStarterDocumentation(name) {
     const plate={x:80,y:125,scale:0.5};
     const plateSize=rittalEnclosureDefinition.specifications.mountingPlate;
     railRectangle('rail-plate',plate.x,plate.y,plateSize.width.value*plate.scale,plateSize.height.value*plate.scale,'none');
+    const ductWidth=20,ductInset=20,ductTop=50,ductLength=700;
+    const controlDuctX=plateSize.width.value-ductInset-ductWidth;
+    railRectangle('duct-power',plate.x+ductInset*plate.scale,plate.y+ductTop*plate.scale,ductWidth*plate.scale,ductLength*plate.scale,'#e0edff');
+    railRectangle('duct-control',plate.x+controlDuctX*plate.scale,plate.y+ductTop*plate.scale,ductWidth*plate.scale,ductLength*plate.scale,'#dcfce7');
+    text(railPage,'duct-power-label',80,530,'LEFT: POWER',10,110);
+    text(railPage,'duct-control-label',270,530,'RIGHT: CONTROL',10,130);
+    text(railPage,'duct-corridor-datums',410,520,'DUCT RESERVATIONS · '+ductWidth+' mm wide × '+ductLength+' mm long, y '+ductTop+'–'+(ductTop+ductLength)+' from plate datum.\nPower x '+ductInset+'–'+(ductInset+ductWidth)+'; control x '+controlDuctX+'–'+(controlDuctX+ductWidth)+'. Select actual ducts after cable fill and bend checks.\nConfirm branch routes and separation between power and control before drilling.',11,680);
     const psPlacement=objects.find(function(o){return o.kind==='panel-placement'&&o.deviceId===ps1.id;});
     const psGeometry=panelPlacementGeometry(panelProject,psPlacement);
     const psCenter={x:plate.x+psGeometry.x-enclosure.x+plateSize.width.value*plate.scale/2,y:plate.y+psGeometry.y-enclosure.y+plateSize.height.value*plate.scale/2};
