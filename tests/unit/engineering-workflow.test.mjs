@@ -42,6 +42,7 @@ test("incoming PE bonds explicit mounting feet without doubling conductor clamps
       net.pins.every(
         (p) =>
           p.ref.startsWith("XPE:") ||
+          p.ref === "XPEF:1" ||
           (p.ref === "M1" && p.pinId === "protective-earth") ||
           (p.ref === "PS1" && p.pinId === "line-pe"),
       ),
@@ -475,7 +476,7 @@ test("field motor delta bridges and unswitched PE stay distinct", () => {
   assert.ok(
     pe.pins.every(
       (pin) =>
-        ["M1", "XPE:0", "XPE:1", "XPE:2"].includes(pin.ref) ||
+        ["M1", "XPE:0", "XPE:1", "XPE:2", "XPEF:1"].includes(pin.ref) ||
         (pin.ref === "PS1" && pin.pinId === "line-pe"),
     ),
   );
@@ -484,6 +485,23 @@ test("field motor delta bridges and unswitched PE stay distinct", () => {
       .conductorColor,
     "green/yellow",
   );
+  const fieldTerminal = project.objects.find((o) => o.ref === "XPEF:1");
+  const fieldEarth = project.objects.find(
+    (o) => o.id === "eng0601-wire-isolator-pe",
+  );
+  const motorEarth = project.objects.find(
+    (o) => o.id === "eng0601-wire-motor-pe",
+  );
+  assert.deepEqual(plain(fieldEarth.cable), { tag: "W2", core: "PE" });
+  assert.deepEqual(plain(motorEarth.cable), { tag: "W3", core: "PE" });
+  assert.deepEqual(plain(fieldEarth.attachments.end), {
+    instanceId: fieldTerminal.id,
+    pinId: "connection-1",
+  });
+  assert.deepEqual(plain(motorEarth.attachments.start), {
+    instanceId: fieldTerminal.id,
+    pinId: "connection-2",
+  });
 });
 
 test("XMLB004A2S11 retains four manufacturer terminals without inventing switching continuity", () => {
@@ -589,7 +607,7 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
       ["F2:line-l" + n, "K1:power-t" + n],
     );
   }
-  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 92);
+  assert.equal(project.objects.filter((o) => o.kind === "wire").length, 93);
   for (const link of project.crossSheetConnections) {
     assert.equal(link.endpoints.length, 2);
     assert.equal(
@@ -1740,7 +1758,7 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
   const rows = contents.filter((o) =>
     /^eng0601-panel-inventory-\d+$/.test(o.id),
   );
-  const external = new Set(["M1", "Q2", "Q2:AUX", "B1", "ENC2"]);
+  const external = new Set(["M1", "Q2", "Q2:AUX", "B1", "ENC2", "XPEF:1"]);
   const internal = project.objects.filter(
     (o) =>
       o.kind === "component-instance" &&
@@ -1759,8 +1777,9 @@ test("A3 enclosure basis preserves A2 devices and separates field equipment", ()
   const fieldViews = project.objects.filter(
     (o) => o.kind === "panel-placement" && o.sheetId === fieldEnclosure.sheetId,
   );
-  assert.equal(fieldViews.length, 1);
+  assert.equal(fieldViews.length, 2);
   assert.equal(engine.resolvePanelDevice(project, fieldViews[0]).ref, "Q2");
+  assert.equal(engine.resolvePanelDevice(project, fieldViews[1]).ref, "XPEF:1");
   assert.equal(
     engine.panelPlacementGeometry(project, fieldViews[0]).width,
     33.5,
@@ -2436,7 +2455,8 @@ test("terminal panel views preserve canonical connections and survive local reop
 test("A3 terminal detail sheets cover each canonical terminal once without overlapping bodies", () => {
   const project = engine.createExample("eng0601");
   const terminals = project.objects.filter(
-    (o) => o.kind === "component-instance" && /^X/.test(o.ref),
+    (o) =>
+      o.kind === "component-instance" && /^X/.test(o.ref) && o.ref !== "XPEF:1",
   );
   const views = project.objects.filter(
     (o) =>
