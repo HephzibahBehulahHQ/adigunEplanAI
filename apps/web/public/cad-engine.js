@@ -1921,6 +1921,8 @@ function createPumpStarterDocumentation(name) {
     }
     const plate={x:80,y:125,scale:0.5};
     const plateSize=rittalEnclosureDefinition.specifications.mountingPlate;
+    const plateCenter={x:plate.x+plateSize.width.value*plate.scale/2,y:plate.y+plateSize.height.value*plate.scale/2};
+    const cabinetViews=objects.filter(function(o){return o.kind==='panel-placement'&&o.sheetId===enclosure.sheetId;});
     railRectangle('rail-plate',plate.x,plate.y,plateSize.width.value*plate.scale,plateSize.height.value*plate.scale,'none');
     const ductWidth=20,ductInset=20,ductTop=50,ductLength=700;
     const controlDuctX=plateSize.width.value-ductInset-ductWidth;
@@ -1929,14 +1931,17 @@ function createPumpStarterDocumentation(name) {
     text(railPage,'duct-power-label',80,530,'LEFT: POWER',10,110);
     text(railPage,'duct-control-label',270,530,'RIGHT: CONTROL',10,130);
     text(railPage,'duct-corridor-datums',410,520,'DUCT RESERVATIONS · '+ductWidth+' mm wide × '+ductLength+' mm long, y '+ductTop+'–'+(ductTop+ductLength)+' from plate datum.\nPower x '+ductInset+'–'+(ductInset+ductWidth)+'; control x '+controlDuctX+'–'+(controlDuctX+ductWidth)+'. Select actual ducts after cable fill and bend checks.\nConfirm branch routes and separation between power and control before drilling.',11,680);
-    const psPlacement=objects.find(function(o){return o.kind==='panel-placement'&&o.deviceId===ps1.id;});
+    const psPlacement=cabinetViews.find(function(o){return o.deviceId===ps1.id;});
     const psGeometry=panelPlacementGeometry(panelProject,psPlacement);
-    const psCenter={x:plate.x+psGeometry.x-enclosure.x+plateSize.width.value*plate.scale/2,y:plate.y+psGeometry.y-enclosure.y+plateSize.height.value*plate.scale/2};
+    const psCenter={x:plateCenter.x+psGeometry.x-enclosure.x,y:plateCenter.y+psGeometry.y-enclosure.y};
     const psClearance=psGeometry.footprint.clearancesMm;
     const psZoneTop=psCenter.y-psGeometry.height/2-psClearance.top*plate.scale;
     const psZoneHeight=psGeometry.height+(psClearance.top+psClearance.bottom)*plate.scale;
     railRectangle('rail-ps1-zone',psCenter.x-psGeometry.width/2,psZoneTop,psGeometry.width,psZoneHeight,'#fef3c7');
     text(railPage,'rail-ps1-label',psCenter.x-27,psZoneTop-5,'PS1 convection',9,100);
+    cabinetViews.forEach(function(view){
+      objects.push(createPanelPlacement(panelProject,view.deviceId,sheets[railPage].id,plateCenter.x+view.x-enclosure.x,plateCenter.y+view.y-enclosure.y,plate.scale));
+    });
     text(railPage,'rail-datum',80,112,'0,0 · PLATE FRONT / TOP LEFT · 1:2',11,300);
     text(railPage,'rail-table-heading',410,110,'CENTRES AND FASTENER LOCATIONS · mm from plate datum',13,680);
     railSegments.forEach(function(rail,index){
@@ -1949,7 +1954,7 @@ function createPumpStarterDocumentation(name) {
       text(railPage,'rail-mount-'+rail.strip,410,143+index*25,rail.strip+' · cut '+rail.length+' · centre ('+rail.x+', '+rail.y+') · slots x '+(rail.x-12.5)+' / '+(rail.x+12.5)+' at y '+rail.y,12,680);
     });
     text(railPage,'rail-mount-notes',410,315,'STOCK 0801733 · 35 × 7.5 mm · 15 × 6.2 mm slots at 25 mm pitch.\nCentre each cut between two slots. Confirm cut tolerance, burr-free ends and full washer seating.\nCandidate M5 through-fasteners with washers and locking nuts. Check grip and enclosure rear space.\n50 mm above/below body and 15 mm at rail ends are proposed service spaces. Check cable bend radii.\nKeep the existing PS1 50 mm upper and lower convection zones free. Route ducts outside these zones.',11,680);
-    text(railPage,'rail-mount-status',410,451,'Fit the removable plate before drilling. Check fastener projection, door travel and installed depth.\nCut dimensions are a design proposal. Measure the actual plate and rail stock before releasing the layout.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
+    text(railPage,'rail-mount-status',410,451,'Linked bodies share device identities with the cabinet view. Reconcile proposed coordinates after moving either view.\nF2 mounting remains open. Check actual plate fit, door travel and depth before drilling.\nSee Protective bonding schedule for the separate PE connection requirements.',11,680);
     const bondingPage=developmentSheet('A3','eng0601-a3-bonding','Protective bonding schedule');
     rows(bondingPage,[
       'BONDING DATUM: incoming PE → XPE:0 connection 1; XPE:0/1/2 share the dedicated XPE rail.',
