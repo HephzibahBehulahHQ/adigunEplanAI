@@ -320,7 +320,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(38);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(39);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -401,7 +401,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(38);
+  expect(saved.data.sheets).toHaveLength(39);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -503,7 +503,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   });
   await page.locator('[data-sheet="eng0601-a3-0"]').first().click();
   await expect(page.locator("#userDrawings")).toContainText(
-    "EXTERNAL: M1 motor; Q2 field isolator",
+    "EXTERNAL: M1 motor; ENC2 with Q2 and its auxiliary",
   );
   await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
   await page.screenshot({
@@ -1577,6 +1577,20 @@ test("Rittal enclosure inserts as editable mechanical data without electrical pi
   await page.locator('[data-component-property="location"]').press("Tab");
   await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
   await expect(page.locator("#userDrawings")).toContainText("545 × 775 mm");
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: /Symbol Library$/ }).click();
+  await page.locator("#symbolSearch").fill("rittal-1033000");
+  await page.locator('[data-insert="rittal-1033000"]').click();
+  const fieldPoint = await sheetPoint(page, 760, 350);
+  await page.mouse.click(fieldPoint.x, fieldPoint.y);
+  await page.locator('[data-draw="select"]').click();
+  await page.mouse.dblclick(fieldPoint.x, fieldPoint.y);
+  await page
+    .locator('[data-component-property="location"]')
+    .fill("Field isolator");
+  await page.locator('[data-component-property="location"]').press("Tab");
+  await expect(page.locator("#userDrawings")).toContainText("250 × 275 mm");
+  await expect(page.locator("#userDrawings [data-terminal]")).toHaveCount(0);
   await page.screenshot({
     path: test.info().outputPath("rittal-enclosure-library.png"),
   });
@@ -1584,6 +1598,10 @@ test("Rittal enclosure inserts as editable mechanical data without electrical pi
   expect(saved.data.objects[0]).toMatchObject({
     componentId: "rittal-1059000",
     properties: { location: "Indoor starter cabinet" },
+  });
+  expect(saved.data.objects[1]).toMatchObject({
+    componentId: "rittal-1033000",
+    properties: { location: "Field isolator" },
   });
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
@@ -2119,6 +2137,7 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
     ["eng0601-a3-door", "MAIN ISOLATOR"],
     ["eng0601-a3-cable-entry", "436 × 221 mm"],
     ["eng0601-a3-assembly", "Trial fit ENC1"],
+    ["eng0601-a3-field-isolator", "300 × 300 × 210 mm external"],
   ]) {
     await page
       .locator('[data-sheet="' + id + '"]')
