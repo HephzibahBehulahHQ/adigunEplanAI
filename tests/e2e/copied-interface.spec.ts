@@ -1590,8 +1590,12 @@ test("sourced LAPP motor and control cables expose only their real cores and kee
   await expect(
     page.getByRole("combobox", { name: "Drawing rotation" }),
   ).toHaveValue("90");
-  await page.getByRole("textbox", { name: "Stroke color" }).fill("#802a14");
-  await page.getByRole("textbox", { name: "Stroke color" }).press("Tab");
+  const strokeColor = page.getByRole("textbox", {
+    name: "Stroke color",
+    exact: true,
+  });
+  await strokeColor.fill("#802a14");
+  await strokeColor.press("Tab");
   await page.getByRole("spinbutton", { name: "Line weight (mm)" }).fill("1.5");
   await page.getByRole("spinbutton", { name: "Line weight (mm)" }).press("Tab");
   await page
@@ -2354,5 +2358,189 @@ test("editable draw order controls topmost selection and survives undo and reope
   await page.locator("#openFile").setInputFiles(saved.path);
   expect(await topAtPoint()).toBe("lower");
   const reopened = await saveDrawing(page, "draw-order-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
+
+test("every published component renders from a valid native project and reopens exactly", async ({
+  page,
+}) => {
+  test.setTimeout(60000);
+  page.setDefaultTimeout(8000);
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/");
+  const fixture = await page.evaluate(() => {
+    const engine = Reflect.get(window, "AdigunCADEngine");
+    const sheets: { id: string; name: string; sectionId: string }[] = [];
+    const objects = [];
+    for (const [index, entry] of engine.catalog().entries()) {
+      const slot = index % 12,
+        pageIndex = Math.floor(index / 12);
+      if (slot === 0)
+        sheets.push({
+          id: "catalogue-" + pageIndex,
+          name: "Catalogue sheet " + (pageIndex + 1),
+          sectionId: "A2",
+        });
+      const part = engine.createInstance(
+        entry.id,
+        150 + (slot % 4) * 270,
+        155 + Math.floor(slot / 4) * 170,
+        "LIB-" + (index + 1),
+      );
+      part.sheetId = sheets[pageIndex].id;
+      part.displayScale = 0.3;
+      const definition = engine.component(entry.id);
+      if (
+        !engine.validateInstance(part).valid ||
+        engine.worldPins(part).length !== definition.symbol.pins.length
+      )
+        throw new Error("Invalid native component: " + entry.id);
+      objects.push(part);
+    }
+    const sections = engine.defaultProjectSections();
+    return engine.serializeProject({
+      project: "Complete published catalogue",
+      sections,
+      sheets: engine.numberProjectSheets(sheets, sections),
+      activeSheet: sheets[0].id,
+      objects,
+    });
+  });
+  const expected = JSON.parse(fixture);
+  await page.locator("#openFile").setInputFiles({
+    name: "catalogue.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(fixture),
+  });
+  for (const sheet of expected.sheets) {
+    await page.locator('#projectTree [data-sheet="' + sheet.id + '"]').click();
+    const parts = expected.objects.filter(
+      (object: { sheetId: string }) => object.sheetId === sheet.id,
+    );
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
+      parts.length,
+    );
+    for (const part of parts) {
+      await expect(
+        page
+          .locator(
+            '#userDrawings .drawing-object[data-object="' + part.id + '"]',
+          )
+          .locator("title"),
+      ).toContainText(part.ref);
+    }
+  }
+  const saved = await saveDrawing(page, "all-catalogue-parts");
+  expect(saved.data.objects).toEqual(expected.objects);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "all-catalogue-parts-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+  expect(errors).toEqual([]);
+});
+
+test("pick, drop, wire, recolor, reroute and reconnect from the existing canvas", async ({
+  page,
+}) => {
+  test.setTimeout(60000);
+  page.setDefaultTimeout(7500);
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-module="Electrical"]').click();
+  await page.getByRole("menuitem", { name: "Symbol Library" }).click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  const drag = async (
+    from: { x: number; y: number },
+    to: { x: number; y: number },
+  ) => {
+    await page.mouse.move(from.x, from.y);
+    await page.mouse.down();
+    await page.mouse.move(to.x, to.y, { steps: 8 });
+    await page.mouse.up();
+  };
+  await page.locator("#symbolSearch").fill("eplan-terminal");
+  await page.locator('[data-insert="eplan-terminal"]').click();
+  const previewPoint = await sheetPoint(page, 200, 320);
+  await page.mouse.move(previewPoint.x, previewPoint.y);
+  await expect(page.locator('#drawing [opacity="0.55"]')).toBeVisible();
+  await clickAt(200, 320);
+  await expect(page.locator("#userDrawings .selected-object")).toHaveCount(1);
+  await page.locator("#symbolSearch").fill("eplan-resistor");
+  await page.locator('[data-insert="eplan-resistor"]').click();
+  await clickAt(200, 320);
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  await clickAt(390, 320);
+  await page.locator("#symbolSearch").fill("eplan-terminal");
+  const point = await sheetPoint(page, 650, 440);
+  const card = await page
+    .locator('[data-insert="eplan-terminal"]')
+    .boundingBox();
+  expect(card).toBeTruthy();
+  await page.mouse.move(card!.x + card!.width / 2, card!.y + card!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(point.x - 4, point.y, { steps: 10 });
+  await page.mouse.move(point.x, point.y, { steps: 3 });
+  await page.mouse.up();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(3);
+  await page.locator('[data-draw="wire"]').click();
+  await drag(
+    await sheetPoint(page, 200, 320),
+    await sheetPoint(page, 380, 320),
+  );
+  await page.locator('[data-draw="select"]').click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await clickAt(285, 320);
+  const color = page.locator(
+    'input[type="color"][data-drawing-style="stroke"]',
+  );
+  await color.fill("#d94024");
+  await page
+    .getByRole("combobox", { name: "Wire route axis" })
+    .selectOption("y");
+  const lane = page.getByRole("spinbutton", { name: "Wire lane coordinate" });
+  await lane.fill("365");
+  await lane.press("Tab");
+  const handle = await page
+    .locator('[data-wire-end-handle="end"]')
+    .boundingBox();
+  expect(handle).toBeTruthy();
+  await drag(
+    { x: handle!.x + handle!.width / 2, y: handle!.y + handle!.height / 2 },
+    await sheetPoint(page, 650, 440),
+  );
+  const beforeMove = await saveDrawing(page, "workshop-before-move");
+  const terminal = beforeMove.data.objects
+    .filter((o: { kind: string }) => o.kind === "component-instance")
+    .at(-1);
+  const wire = beforeMove.data.objects.find(
+    (o: { kind: string }) => o.kind === "wire",
+  );
+  expect(wire).toMatchObject({
+    stroke: "#d94024",
+    route: { axis: "y", coordinate: 365 },
+    attachments: { end: { instanceId: terminal.id, pinId: "1" } },
+  });
+  await drag(
+    await sheetPoint(page, 646, 437),
+    await sheetPoint(page, 659.7, 449.3),
+  );
+  const saved = await saveDrawing(page, "workshop-complete");
+  const moved = saved.data.objects.find(
+    (o: { id: string }) => o.id === terminal.id,
+  );
+  expect(Math.abs(moved.x - 663.7)).toBeLessThan(1);
+  expect(moved.x % 2.5).not.toBe(0);
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === wire.id),
+  ).toMatchObject({ x2: moved.x, y2: moved.y, attachments: wire.attachments });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  const reopened = await saveDrawing(page, "workshop-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
