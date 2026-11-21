@@ -1,5 +1,26 @@
 # ENG-0601 F2 physical mounting research
 
+## Evidence for the current F2 decision
+
+The [Siemens 07/2024 equipment manual](https://support.industry.siemens.com/cs/attachments/60298164/manual_SIRIUS_overload_relay_3RU_3RB_en-US.pdf?download=true)
+distinguishes three different envelopes. Figure C-5 shows the contactor-mounted
+3RU2126-..B0 arrangement. Figure C-6 shows the 45 × 97 mm installed front
+envelope for 3RU2126-4.B1. Figure C-55 shows the 45 × 97.1 mm front envelope
+and mounting hole pattern for the 3RU2926-3AA01 support itself.
+
+The [Siemens-hosted UL certificate](https://cache.industry.siemens.com/dl/files/299/40223299/att_1326996/v1/3RU2126_CoC_202505131337157102.pdf)
+identifies 3RU2926-3AA01 as a stand-alone connecting kit for the covered
+3RU2126 series. The [exact F2 product record](https://sieportal.siemens.com/en-be/products-services/detail/3RU21264BB0)
+identifies 3RU2126-4BB0 as the contactor-mounting order code.
+
+These sources establish a support option and its own footprint. The complete
+installed envelope for the selected 3RU2126-4BB0 with that support still needs
+an exact assembly drawing or measurement. Confirm the selected separately
+wired arrangement against Siemens' starter coordination conditions before
+using the planned arrangement for release. Keep F2 in the native circuit and
+defer its mounting footprint and drill coordinates until those checks have
+evidence.
+
 Primary source: https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RU2126-4BB0
 
 Indexed Siemens datasheet, printed page 2/5, dated 2026-01-27, inspected 2026-11-15: 3RU2126-4BB0 body height 85 mm, width 45 mm, depth 85 mm. Fastening method is contactor mounting. The mounting-position text distinguishes contactor-mounted and stand-alone installation; this alone does not identify or verify a stand-alone terminal/mounting accessory.
