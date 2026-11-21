@@ -19,6 +19,7 @@
   .workspace.inspector-open .editor{grid-template-columns:minmax(0,1fr)}.workspace.inspector-open .editor-tabs{grid-column:1}.workspace.inspector-open .canvas-stage{grid-column:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,270px);grid-template-rows:minmax(0,1fr);align-items:stretch;justify-items:stretch}.workspace.inspector-open .drawing-wrap{grid-column:1;grid-row:1;justify-self:center;align-self:center}.workspace.inspector-open .rightpanel{position:relative;inset:auto;width:auto;min-width:0;grid-column:2;grid-row:1;z-index:1;backdrop-filter:none;box-shadow:none;border-top:0;border-bottom:0}.workspace.inspector-open .rightpanel.open{display:grid}@media(max-width:850px){.workspace.inspector-open .canvas-stage{grid-template-columns:minmax(0,1fr) minmax(200px,230px)}}@media(max-width:640px){.workspace.inspector-open .canvas-stage{grid-template-columns:minmax(0,1fr) 0}.workspace.inspector-open .rightpanel.open{display:none}}
   </style>
   <style id="cad-viewport-styles">
+    #drawingWrap.frame-hidden #customSheetFrame { display: none !important; }
     @media screen {
       .workspace .canvas-stage { padding: 0; }
       .workspace .canvas-stage .drawing-wrap { width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; }
@@ -108,7 +109,7 @@
 <dialog id="commands" aria-label="Command palette"><div class="dialog-head"><span>Command palette</span><span class="grow"></span><button id="closeCommands" aria-label="Close command palette">Esc</button></div><div class="dialog-body"><input class="palette-search" id="commandSearch" placeholder="Type a command…" aria-label="Search commands"><div class="command-list" id="commandList"></div></div><div class="dialog-footer">Use ↑ ↓ to move · Enter to run · Esc to close</div></dialog>
 <dialog id="symbolsDialog" aria-label="Insert electrical symbol"><div class="dialog-head"><span>Insert symbol</span><span class="grow"></span><button id="closeSymbols" aria-label="Close symbol picker">×</button></div><div class="dialog-body" id="symbolsDialogList"></div></dialog>
 <dialog id="newProjectDialog" aria-label="Create project"><div class="dialog-head"><span>New project</span><span class="grow"></span><button id="closeNewProject" aria-label="Close dialog">×</button></div><div class="dialog-body"><label class="property-row" style="display:grid;gap:6px">Project name<input id="newProjectName" class="palette-search" value="Control cabinet" maxlength="80" aria-label="Project name"></label><button class="command-item" id="createProject"><span>＋</span><span>Create blank A3 project</span></button><p class="notice">A new browser-local drawing is created on this device. No cloud account or sync service is connected.</p></div></dialog>
-<dialog id="sheetDialog" aria-label="Add drawing sheet"><div class="dialog-head"><span>New drawing sheet</span><span class="grow"></span><button id="closeSheetDialog" aria-label="Close dialog">×</button></div><div class="dialog-body"><p class="notice">Choose a drawing type to add a properly indexed, titled project sheet.</p><button class="command-item" data-new-sheet="Power supply"><span>＋</span><span>Power supply · IEC A3</span></button><button class="command-item" data-new-sheet="Control circuit"><span>＋</span><span>Control circuit · IEC A3</span></button><button class="command-item" data-new-sheet="PLC / I/O"><span>＋</span><span>PLC / I/O · IEC A3</span></button></div></dialog>
+<dialog id="sheetDialog" aria-label="Add drawing sheet"><div class="dialog-head"><span>New drawing sheet</span><span class="grow"></span><button id="closeSheetDialog" aria-label="Close dialog">×</button></div><div class="dialog-body"><p class="notice">Choose a drawing type to add a properly indexed, titled project sheet.</p><button class="command-item" data-new-sheet="Power supply"><span>＋</span><span>Power supply · IEC A3</span></button><button class="command-item" data-new-sheet="Control circuit"><span>＋</span><span>Control circuit · IEC A3</span></button><button class="command-item" data-new-sheet="PLC / I/O"><span>＋</span><span>PLC / I/O · IEC A3</span></button><button class="command-item" data-free-sheet><span>＋</span><span>Free drafting</span></button></div></dialog>
 <script src="./eplan-symbols.js"></script>
 <script src="./cad-engine.js"></script>
 <script>(()=>{
@@ -157,7 +158,7 @@
   let sheetIdSequence=0;
   let legacyProjectRows=[];
   function sheetLabel(id){const meta=state.sheets.find(function(sheet){return sheet.id===id;});const base=meta?[meta.number,meta.name]:(sheetNames[id]||[id,id]),override=state.sheetLabels[id];return override?[base[0],override]:base;}
-  function refreshSheetProperties(){renderProjectTitleBlock();const label=sheetLabel(state.sheet);const designation=$('#sheetDesignation');if(designation)designation.textContent=label[0];const block=designation?.closest('.inspector-block');if(block)for(const row of block.querySelectorAll('.property-row')){if(row.querySelector('span')?.textContent==='Function'){const value=row.querySelector('strong');if(value)value.textContent=label[1];}}}
+  function refreshSheetProperties(){renderProjectTitleBlock();refreshFrameControl();const label=sheetLabel(state.sheet);const designation=$('#sheetDesignation');if(designation)designation.textContent=label[0];const block=designation?.closest('.inspector-block');if(block)for(const row of block.querySelectorAll('.property-row')){if(row.querySelector('span')?.textContent==='Function'){const value=row.querySelector('strong');if(value)value.textContent=label[1];}}}
   function sheetCaption(sheet){return sheet.sectionId?sheet.sectionId+'/'+(sheet.customName===false?sheet.number.split('/')[1]:sheet.name):sheet.number+' · '+sheet.name;}
   function ensureSheetTab(id){
     let tab=$$('#sheetTabs .document-tab[data-sheet]').find(function(item){return item.dataset.sheet===id;});
@@ -211,9 +212,9 @@
     $('#sheetDialog .notice').textContent=state.sections?'Add a sheet to '+state.activeSection+'. Page numbering continues across A1–A4.':'Choose a drawing type to add a project sheet.';
     $('#sheetDialog').showModal();
   }
-  function addSheet(name){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
+  function addSheet(name,showPrintFrame=true){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
     const safeName=String(name||'Sheet').trim().slice(0,80)||'Sheet',id='custom-'+Date.now()+'-'+(++sheetIdSequence);
-    const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name};if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
+    const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
     state.sheets.push(sheet);state.sheetObjects[id]=[];state.sheetViews[id]={x:0,y:0,w:1200,h:760};
     renderCustomSheetNavigation();notify(sheetLabel(id)[0]+' created. Select it in the sidebar to open.');persist();return id;
   }
@@ -1003,6 +1004,26 @@
   drawing.addEventListener('pointercancel',()=>{drawStart=null;cancelTerminalDrag();cancelWireDraft();if(wireEndDrag){wireEndDrag.preview.remove();wireEndDrag=null;}cancelSelectionBox();if(resizeDrag){state.objects=JSON.parse(resizeDrag.snapshot);resizeDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(objectDrag){state.objects=JSON.parse(objectDrag.snapshot);objectDrag=null;renderObjects();refreshSelectedProperties();drawing.style.cursor='default';}if(state.pendingComponentId)cancelComponentPlacement();});
   drawing.addEventListener('wheel',e=>{e.preventDefault();const shift=e.shiftKey,deltaX=e.deltaX||(shift?e.deltaY:0),deltaY=shift?0:e.deltaY;if(deltaX!==0||shift){const unitsPerPixel=drawing.getScreenCTM().inverse().a;state.view.x+=deltaX*unitsPerPixel;state.view.y+=deltaY*unitsPerPixel;applyView();persist();return;}const anchor=svgPoint(e),oldView=state.view,requestedZoom=state.zoom*Math.pow(1.1,-e.deltaY/100),nextZoom=Math.max(10,Math.min(500,Math.round(requestedZoom/5)*5));if(nextZoom===state.zoom)return;const nextWidth=1200*100/nextZoom,nextHeight=760*100/nextZoom;state.zoom=nextZoom;state.view={x:anchor.x-(anchor.x-oldView.x)/oldView.w*nextWidth,y:anchor.y-(anchor.y-oldView.y)/oldView.h*nextHeight,w:nextWidth,h:nextHeight};applyView();persist();},{passive:false});
 
+  function refreshFrameControl(){
+    const sheet=state.sheets.find(item=>item.id===state.sheet);
+    wrap.classList.toggle('frame-hidden',sheet?.showPrintFrame===false);
+    const block=$('#sheetDesignation')?.closest('.inspector-block');
+    if(!block)return;
+    let field=block.querySelector('[data-show-print-frame]');
+    if(!field){
+      const row=document.createElement('label');
+      row.className='property-row';
+      const caption=document.createElement('span');
+      caption.textContent='Show print frame';
+      field=document.createElement('input');
+      field.type='checkbox';
+      field.dataset.showPrintFrame='';
+      row.append(caption,field);
+      block.append(row);
+    }
+    field.closest('label').hidden=!sheet;
+    field.checked=sheet?.showPrintFrame!==false;
+  }
   function renderProjectTitleBlock(){
     if(!state.sheet)return;
     const sheet=projectSheets().find(function(item){return item.id===state.sheet;});if(!sheet)return;
@@ -1025,7 +1046,7 @@
     frame.setAttribute('aria-label','Project title block');frame.style.cursor='pointer';
   }
   function editTitleBlock(){
-    if(!state.sheet)return;openInspector('Properties');
+    if(!state.sheet||wrap.classList.contains('frame-hidden'))return;openInspector('Properties');
     const sheet=state.sheets.find(function(item){return item.id===state.sheet;});if(!sheet)return;
     const host=$('#selectionDetails');host.replaceChildren();
     const heading=document.createElement('div');heading.className='inspector-title';heading.textContent='Project and sheet title block';host.append(heading);
@@ -1036,7 +1057,11 @@
     const note=document.createElement('p');note.className='notice';note.textContent='Hephzibah Behulah · AdigunEplanAI. Rename the sheet in the sidebar. Blank checked/approved fields do not imply review.';host.append(note);
   }
   $('#customSheetFrame').addEventListener('dblclick',function(event){event.stopPropagation();editTitleBlock();});
-  $('#inspectorContent').addEventListener('change',function(event){const field=event.target.closest('[data-title-key]');if(!field)return;const sheet=state.sheets.find(function(item){return item.id===state.sheet;});if(!sheet)return;const key=field.dataset.titleKey,value=field.value.trim();if(field.dataset.titleScope==='project'){if(key==='projectTitle'){if(!value)return;state.projectName=value;renderCustomSheetNavigation();}else{state.metadata=state.metadata||{};state.metadata[key]=value;}}else{sheet.metadata=sheet.metadata||{};sheet.metadata[key]=value;}renderProjectTitleBlock();persist();});
+  $('#inspectorContent').addEventListener('change',function(event){if(event.target.matches('[data-show-print-frame]')){
+      const sheet=state.sheets.find(item=>item.id===state.sheet);
+      if(sheet){sheet.showPrintFrame=event.target.checked;refreshFrameControl();persist();}
+      return;
+    }const field=event.target.closest('[data-title-key]');if(!field)return;const sheet=state.sheets.find(function(item){return item.id===state.sheet;});if(!sheet)return;const key=field.dataset.titleKey,value=field.value.trim();if(field.dataset.titleScope==='project'){if(key==='projectTitle'){if(!value)return;state.projectName=value;renderCustomSheetNavigation();}else{state.metadata=state.metadata||{};state.metadata[key]=value;}}else{sheet.metadata=sheet.metadata||{};sheet.metadata[key]=value;}renderProjectTitleBlock();persist();});
 
   function projectSheets(){if(state.sections)return window.AdigunCADEngine.numberProjectSheets(state.sheets,state.sections);const sheets=state.sheets.slice(),known=new Set(sheets.map(function(sheet){return sheet.id;}));collectProjectObjects().forEach(function(obj){if(!known.has(obj.sheetId)){const label=sheetLabel(obj.sheetId);sheets.push({id:obj.sheetId,name:label[1],number:label[0]});known.add(obj.sheetId);}});state.openSheetIds.forEach(function(id){if(!known.has(id)){const label=sheetLabel(id);sheets.push({id:id,name:label[1],number:label[0]});known.add(id);}});if(state.sheet&&!known.has(state.sheet)){const label=sheetLabel(state.sheet);sheets.push({id:state.sheet,name:label[1],number:label[0]});}return sheets;}
   function loadProjectExample(id,name){const project=window.AdigunCADEngine.createExample(id,name);state.projectName=project.project;state.projectId=crypto.randomUUID();state.metadata=project.metadata||{};state.openSheetIds=[];state.sections=window.AdigunCADEngine.defaultProjectSections();state.activeSection='A2';state.sheets=window.AdigunCADEngine.numberProjectSheets(project.sheets.map(function(sheet){return Object.assign({},sheet,{sectionId:sheet.sectionId||'A2'});}),state.sections);state.sheetObjects=Object.create(null);project.objects.forEach(function(object){(state.sheetObjects[object.sheetId]||(state.sheetObjects[object.sheetId]=[])).push(object);});state.sheet=null;state.objects=[];state.view={x:0,y:0,w:1200,h:760};state.zoom=100;state.undo=[];state.redo=[];state.crossSheetConnections=project.crossSheetConnections||[];state.connectionIssues=project.connectionIssues||[];renderCustomSheetNavigation();showEmptyProjectSheet();updateHistoryButtons();notify(project.example.description+' Select a sheet in the sidebar to open it.');persist();}
@@ -1064,7 +1089,7 @@
     setTimeout(function(){URL.revokeObjectURL(url);},1000);
     notify('Register exported for all project sheets.');
   }
-  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview]').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame)frame.style.display='block';}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
+  function exportSvg(){const clone=drawing.cloneNode(true);setDrawingViewport(clone,state.view);clone.querySelectorAll('.resize-controls,[data-terminal-wire-preview],[data-wire-draft-preview]').forEach(function(node){node.remove();});if(state.sheet!=='control'||wrap.classList.contains('blank-start')){clone.querySelectorAll('#sheetDesign > *').forEach(function(node,index){if(index!==0&&node.id!=='userDrawings'&&node.id!=='customSheetFrame')node.remove();});}if(state.sheet!=='control'||wrap.classList.contains('blank-start')){const frame=clone.querySelector('#customSheetFrame');if(frame){if(wrap.classList.contains('frame-hidden'))frame.remove();else frame.style.display='block';}}clone.setAttribute('xmlns','http://www.w3.org/2000/svg');clone.removeAttribute('role');clone.removeAttribute('aria-label');const xml=new XMLSerializer().serializeToString(clone);const blob=new Blob([`<?xml version="1.0" encoding="UTF-8"?>\n${xml}`],{type:'image/svg+xml'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${sheetNames[state.sheet]?.[0]||state.sheets.find(s=>s.id===state.sheet)?.number||'sheet'}-drawing.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);notify('SVG drawing exported with embedded vector geometry.');}
   function selectPanel(id){
     if(id==='layers'){openInspector('Layers and visibility');return;}
     workspace.classList.remove('left-sidebar-closed');
@@ -1220,6 +1245,7 @@
   $('#inspectorContent').addEventListener('change',e=>{const key=e.target.dataset.layer;if(!key)return;const map={connections:'.wire,.wire-blue,.wire-dark,.cross-sheet-connector',devices:'.drawing-object[data-object]',annotations:'.accent,.small,.medium,.tiny'};drawing.querySelectorAll(map[key]).forEach(el=>el.style.display=e.target.checked?'':'none');notify(`${key} layer ${e.target.checked?'shown':'hidden'}.`);});
   $('#rightPanel').addEventListener('click',e=>{const rotate=e.target.closest('[data-rotate-object]');if(rotate){rotateObject(rotate.dataset.rotateObject);return;}if(e.target.closest('[data-delete-object]')){const id=e.target.closest('[data-delete-object]').dataset.deleteObject;pushUndo();removeSelectedDrawingObjects([id]);state.selected=null;renderObjects();$('#selectionDetails').innerHTML='<div class="inspector-title">Selection</div><div class="empty-selection">Select an electrical object on the sheet to inspect its drawing designation.</div>';persist();notify('Drawing object removed.');}});
   $('#inspectorContent').addEventListener('change',e=>{const formatting=e.target.closest('[data-text-format]');if(formatting){const obj=state.objects.find(function(item){return item.id===formatting.dataset.objectId;});if(!obj||obj.kind!=='text'||obj.locked)return;const key=formatting.dataset.textFormat;let value=formatting.type==='checkbox'?formatting.checked:formatting.value;if(key==='fontSize')value=Math.max(6,Math.min(144,Number(value)||12));if(key==='textWidth')value=Math.max(60,Math.min(1100,Number(value)||460));pushUndo();obj[key]=value;renderObjects();persist();return;}const coordinate=e.target.closest('[data-object-coordinate]');if(coordinate){updateObjectCoordinate(coordinate.dataset.objectId,coordinate.dataset.objectCoordinate,coordinate.value);return;}const textField=e.target.closest('[data-object-text]');if(textField){const obj=state.objects.find(function(item){return item.id===textField.dataset.objectText;});if(!obj||obj.kind!=='text')return;const next=textField.value;if(next===obj.text)return;pushUndo();obj.text=next;renderObjects();persist();refreshSelectedProperties();notify('Drawing text updated.');}});
+  $('[data-free-sheet]').addEventListener('click',()=>{addSheet('Free drafting',false);$('#sheetDialog').close();});
   $$('[data-new-sheet]').forEach(b=>b.addEventListener('click',()=>{addSheet(b.dataset.newSheet);$('#sheetDialog').close();}));
   const templateLabel=document.createElement('label');templateLabel.className='property-row';templateLabel.textContent='Project template';const templateSelect=document.createElement('select');templateSelect.id='projectTemplate';templateSelect.className='palette-search';templateSelect.setAttribute('aria-label','Project template');const blankOption=document.createElement('option');blankOption.value='';blankOption.textContent='Empty project · A1–A4 sections';templateSelect.append(blankOption);window.AdigunCADEngine.projectExamples().forEach(function(example){const option=document.createElement('option');option.value=example.id;option.textContent=example.name+' · editable schematic';templateSelect.append(option);});templateLabel.append(templateSelect);$('#createProject').before(templateLabel);templateSelect.addEventListener('change',function(){$('#createProject span:last-child').textContent=templateSelect.value?'Create from selected example':'Create New Project';});
   const exampleRows=document.createDocumentFragment();
