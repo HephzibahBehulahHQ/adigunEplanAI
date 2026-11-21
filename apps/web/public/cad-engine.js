@@ -1238,6 +1238,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
         objectIds.add(object.id);
+        if(object.zIndex!==undefined&&!Number.isSafeInteger(object.zIndex))errors.push('Drawing object '+object.id+' requires an integer draw order.');
         if(object.kind==='wire'){try{wireRoute(object);}catch(error){errors.push(error.message);}}
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
         if(object.kind==='wire'&&object.cable!==undefined){const c=object.cable;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).some(function(k){return !['tag','core'].includes(k);})||['tag','core'].some(function(k){return typeof c[k]!=='string'||!c[k].trim()||c[k].length>64;}))errors.push('Wire cable assignment requires a cable tag and core identifier (1–64 characters).');}

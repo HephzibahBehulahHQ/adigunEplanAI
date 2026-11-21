@@ -1,5 +1,31 @@
 # Active engineering goal — 2026-11-14
 
+## Locked control and native component audit — 2026-11-21
+
+The shipped editor starts at `apps/web/index.html` and uses the native project
+validator and connectivity engine in `apps/web/public/cad-engine.js`. The
+README describes capabilities across the repository. Verify availability from
+the shipped entry point and its build, especially for panels also present in
+the React source tree. The master specification and the owner's locked-interface
+directive govern outstanding work. Manufacturer definitions retain sourced
+dimensions and electrical terminals. Editable instances and placement views
+carry geometry and presentation. Mechanical parts use applicable assembly and
+placement relationships; a part without electrical terminals has no wire pins.
+
+| Existing controls | Command path and acceptance |
+| --- | --- |
+| Electrical, Project Explorer, open/new/save, sheet controls | Open the native project or instantiate an independent example, manage sheet identities, validate and serialize project state. |
+| Electrical Symbol Library, insert button, symbol tool | Resolve real catalog definitions and create native instances on the current sheet. Validate placement, editable properties, real terminal IDs and reopen. |
+| Select, wire, shapes, line, curve, freehand, text | Canvas tools select or mutate native objects. Electrical wires bind to terminals. Graphics and annotations retain separate geometry and support native history. |
+| Panel Design Properties, Layers and Visibility | Inspect and edit instance fields through the existing inspector. Layer visibility participates in SVG hit-testing. Draw order is an optional saved integer; equal values preserve object order. |
+| Automation sheet and PLC entries, Electrical Checks, Bill of Materials | Navigate available native sheets, insert available symbols and analyze the current project. Diagnostics and reports use native objects and relationships. |
+| EPLAN-Style, IEC / DIN / US Standards, print, fit, pan, zoom, export | Use the existing navigation, viewport and SVG/print commands. The standards-labelled menu exposes diagnostics and does not implement standards certification. |
+| Undo/redo, palette, fill, theme, settings and BOT | Invoke native history, presentation settings, existing command search and the BOT status control. Feature acceptance requires testing each relevant action, including saved settings. |
+
+This inventory identifies existing command paths. Full component-layer styling,
+arbitrary graphical resizing of canonical parts, native DXF roundtrip and
+complete end-to-end command coverage still need separate verification or work.
+
 ## Paper text editing — shipped 2026-11-15
 
 PR #76 merged as 8d151ad02f35f9c52a198a57856466d6ab80c5e3. Existing T tool creates a multiline on-sheet editor; Ctrl+Enter or leaving the editor commits, Escape cancels the current edit. Double-click a note to edit again. Existing Properties offers font, size, text width, alignment, bold/italic/underline and colour. Long text wraps to the chosen width; stored text retains its original line breaks. Existing shapes and palette remain in place. Formatting is per text object, not per selected character range. User drawing shortcuts do not intercept text inputs. Preserve empty startup and sheet/document identities.

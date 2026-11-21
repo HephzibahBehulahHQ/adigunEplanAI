@@ -876,11 +876,22 @@ test("existing New Project dialog opens both connected editable examples", async
     await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
     await page.locator("#projectTree [data-sheet]").first().click();
     await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(9);
+    await page.locator('[data-draw="select"]').click();
+    await page.locator("#userDrawings .drawing-object").first().dblclick();
+    await page.locator('[data-component-property="ref"]').fill("EDITED1");
+    await page.locator('[data-component-property="ref"]').press("Tab");
     const saved = await saveDrawing(page, id);
     expect(saved.data.project).toBe(id + " workshop");
     expect(
+      saved.data.objects.some((o: { ref?: string }) => o.ref === "EDITED1"),
+    ).toBe(true);
+    expect(
       saved.data.objects.filter((o: { kind: string }) => o.kind === "wire"),
     ).toHaveLength(4);
+    await page.reload();
+    await page.locator("#openFile").setInputFiles(saved.path);
+    const reopened = await saveDrawing(page, id + "-reopened");
+    expect(reopened.data.objects).toEqual(saved.data.objects);
     await page.locator('[data-inspector="Electrical checks"]').click();
     await expect(page.locator("#inspectorContent")).toContainText(
       "No wire geometry issues found",
@@ -2095,5 +2106,64 @@ test("terminal accessories insert through the existing library as editable mecha
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
   const reopened = await saveDrawing(page, "terminal-accessories-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
+
+test("editable draw order controls topmost selection and survives undo and reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page, "A3");
+  const fixture = await saveDrawing(page, "draw-order-fixture");
+  const sheetId = fixture.data.activeSheet;
+  fixture.data.objects.push(
+    ...["lower", "upper"].map((id, index) => ({
+      id,
+      sheetId,
+      kind: "rect",
+      x: 240 + index * 30,
+      y: 200,
+      x2: 360 + index * 30,
+      y2: 310,
+      fill: index === 0 ? "#aabbcc" : "#88aa99",
+    })),
+  );
+  await page.locator("#openFile").setInputFiles({
+    name: "draw-order.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(fixture.data)),
+  });
+  const point = await sheetPoint(page, 310, 245);
+  const topAtPoint = async () =>
+    page.evaluate(
+      ({ x, y }) =>
+        document
+          .elementFromPoint(x, y)
+          ?.closest("[data-object]")
+          ?.getAttribute("data-object"),
+      await sheetPoint(page, 310, 245),
+    );
+  expect(await topAtPoint()).toBe("upper");
+  await page.locator('[data-draw="select"]').click();
+  await page.mouse.dblclick(point.x, point.y);
+  const order = page.getByRole("spinbutton", { name: "Draw order" });
+  await expect(order).toHaveAttribute("data-object-z-index", "upper");
+  await order.fill("-1");
+  await order.press("Tab");
+  expect(await topAtPoint()).toBe("lower");
+  await page.locator('[data-action="undo"]').click();
+  expect(await topAtPoint()).toBe("upper");
+  await page.locator('[data-action="redo"]').click();
+  expect(await topAtPoint()).toBe("lower");
+  const saved = await saveDrawing(page, "draw-order-saved");
+  expect(
+    saved.data.objects.find((o: { id: string }) => o.id === "upper"),
+  ).toMatchObject({ zIndex: -1 });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(saved.path);
+  expect(await topAtPoint()).toBe("lower");
+  const reopened = await saveDrawing(page, "draw-order-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });

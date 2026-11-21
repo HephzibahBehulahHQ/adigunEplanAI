@@ -439,7 +439,7 @@
   function updateObjectResize(point){if(!resizeDrag)return;const drag=resizeDrag,objects=JSON.parse(drag.snapshot),obj=objects.find(function(item){return item.id===drag.id;});if(!obj){state.objects=JSON.parse(drag.lastValid);return;}const next=snapObjectPoint(point);if(!window.AdigunCADEngine.resizeGraphicObject(obj,drag.corner,next)){state.objects=JSON.parse(drag.lastValid);return;}state.objects=objects;drag.lastValid=JSON.stringify(objects);drag.moved=drag.lastValid!==drag.snapshot;renderObjects();}
   function finishObjectResize(event){if(!resizeDrag)return;const drag=resizeDrag;updateObjectResize(svgPoint(event));resizeDrag=null;drawing.style.cursor='default';if(drag.moved&&drag.lastValid!==drag.snapshot){pushUndo(drag.snapshot);persist();refreshSelectedProperties();notify('Shape resized. Undo is available.');}else{state.objects=JSON.parse(drag.snapshot);renderObjects();}}
   function synchronizeActiveConnections(){const endpoints=(state.crossSheetConnections||[]).flatMap(function(link){return link.endpoints;}).filter(function(e){return e.sheetId===state.sheet;});endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&!e.wireEnd){if(e.point.x===wire.x1&&e.point.y===wire.y1)e.wireEnd='start';else if(e.point.x===wire.x2&&e.point.y===wire.y2)e.wireEnd='end';}});window.AdigunCADEngine.synchronizeWireAttachments(state.objects);endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&['start','end'].includes(e.wireEnd))e.point={x:wire[e.wireEnd==='start'?'x1':'x2'],y:wire[e.wireEnd==='start'?'y1':'y2']};});}
-  function renderObjects(){synchronizeActiveConnections();userDrawings.replaceChildren();for(const obj of state.objects){let el;const stroke=obj.stroke||'#164eac',fill=obj.fill||'none',width=obj.strokeWidth||1.8;if(['wire','line','arrow','curve','freehand'].includes(obj.kind)){el=document.createElementNS('http://www.w3.org/2000/svg','path');let d;if(obj.kind==='wire')d=window.AdigunCADEngine.wireRoute(obj).map(function(p,i){return (i?'L':'M')+p.x+' '+p.y;}).join(' ');else if(obj.kind==='curve'){const cx=(obj.x1+obj.x2)/2,cy=Math.min(obj.y1,obj.y2)-Math.max(22,Math.abs(obj.x2-obj.x1)*.22);d=`M${obj.x1} ${obj.y1} Q${cx} ${cy} ${obj.x2} ${obj.y2}`;}else if(obj.kind==='freehand')d=(obj.points||[]).map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');else if(obj.kind==='arrow'){const a=Math.atan2(obj.y2-obj.y1,obj.x2-obj.x1),len=10,p1={x:obj.x2-len*Math.cos(a-Math.PI/6),y:obj.y2-len*Math.sin(a-Math.PI/6)},p2={x:obj.x2-len*Math.cos(a+Math.PI/6),y:obj.y2-len*Math.sin(a+Math.PI/6)};d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}M${p1.x} ${p1.y}L${obj.x2} ${obj.y2}L${p2.x} ${p2.y}`;}else d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}`;el.setAttribute('d',d);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);el.setAttribute('fill','none');el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
+  function renderObjects(){synchronizeActiveConnections();userDrawings.replaceChildren();const paintOrder=state.objects.slice().sort(function(a,b){return (a.zIndex||0)-(b.zIndex||0);});for(const obj of paintOrder){let el;const stroke=obj.stroke||'#164eac',fill=obj.fill||'none',width=obj.strokeWidth||1.8;if(['wire','line','arrow','curve','freehand'].includes(obj.kind)){el=document.createElementNS('http://www.w3.org/2000/svg','path');let d;if(obj.kind==='wire')d=window.AdigunCADEngine.wireRoute(obj).map(function(p,i){return (i?'L':'M')+p.x+' '+p.y;}).join(' ');else if(obj.kind==='curve'){const cx=(obj.x1+obj.x2)/2,cy=Math.min(obj.y1,obj.y2)-Math.max(22,Math.abs(obj.x2-obj.x1)*.22);d=`M${obj.x1} ${obj.y1} Q${cx} ${cy} ${obj.x2} ${obj.y2}`;}else if(obj.kind==='freehand')d=(obj.points||[]).map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');else if(obj.kind==='arrow'){const a=Math.atan2(obj.y2-obj.y1,obj.x2-obj.x1),len=10,p1={x:obj.x2-len*Math.cos(a-Math.PI/6),y:obj.y2-len*Math.sin(a-Math.PI/6)},p2={x:obj.x2-len*Math.cos(a+Math.PI/6),y:obj.y2-len*Math.sin(a+Math.PI/6)};d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}M${p1.x} ${p1.y}L${obj.x2} ${obj.y2}L${p2.x} ${p2.y}`;}else d=`M${obj.x1} ${obj.y1}L${obj.x2} ${obj.y2}`;el.setAttribute('d',d);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);el.setAttribute('fill','none');el.setAttribute('stroke',stroke);el.setAttribute('stroke-width',width);el.setAttribute('stroke-linecap','round');el.setAttribute('stroke-linejoin','round');}
         else if(obj.kind==='panel-placement'){
           el=document.createElementNS('http://www.w3.org/2000/svg','g');
           el.setAttribute('class','drawing-object '+(state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''));
@@ -598,12 +598,24 @@
       persist();notify('Linked panel placement added. Select its A3 sheet to position it and verify clearances.');
     }catch(error){notify(error.message);}
   });
+  function drawOrderField(obj){
+    return '<label class="property-row"><span>Draw order</span><input type="number" step="1" data-object-z-index="'+escapeHtml(obj.id)+'" value="'+(obj.zIndex||0)+'"'+(obj.locked?' disabled':'')+'></label>';
+  }
+  $('#inspectorContent').addEventListener('change',function(event){
+    const field=event.target.closest('[data-object-z-index]');if(!field)return;
+    const obj=state.objects.find(function(o){return o.id===field.dataset.objectZIndex;});
+    if(!obj||obj.locked)return;
+    const order=field.valueAsNumber;
+    if(!Number.isSafeInteger(order)){field.value=String(obj.zIndex||0);notify('Draw order must be an integer.');return;}
+    if(order===(obj.zIndex||0))return;
+    pushUndo();obj.zIndex=order;renderObjects();persist();
+  });
   function showObject(obj){
     const host=$('#selectionDetails');
     if(!host){openInspector('Properties');return showObject(obj);}
     const def=obj.kind==='component-instance'?window.AdigunCADEngine.component(obj.componentId):null;
     if(!def || def.generic){
-      host.innerHTML='<div class="inspector-title">Drawing object · '+escapeHtml(def?def.name:(symbolNames[obj.symbolId]||symbolNames[obj.kind]||obj.kind))+'</div>'+panelPlacementInfo(obj)
+      host.innerHTML='<div class="inspector-title">Drawing object · '+escapeHtml(def?def.name:(symbolNames[obj.symbolId]||symbolNames[obj.kind]||obj.kind))+'</div>'+panelPlacementInfo(obj)+drawOrderField(obj)
         +(def&&def.generic?'<label class="property-row"><span>Reference</span><input class="component-edit" data-component-property="ref" data-component-object="'+escapeHtml(obj.id)+'" maxlength="32" value="'+escapeHtml(obj.ref)+'"></label>'+componentInstanceFields(obj,def):'')
         +'<label class="property-row"><span>X (mm)</span><input type="number" step="2.5" data-object-coordinate="x" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.x)+'"></label>'
         +'<label class="property-row"><span>Y (mm)</span><input type="number" step="2.5" data-object-coordinate="y" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.y)+'"></label>'
@@ -648,7 +660,7 @@
     host.innerHTML='<div class="inspector-title">Verified component · '+escapeHtml(def.model)+'</div>'
     
       +'<div class="property-row"><span>Part number</span><strong>'+escapeHtml(def.manufacturerPartNumber)+'</strong></div>'
-      +specRows
+      +specRows+drawOrderField(obj)
       +'<div class="property-row"><span>External terminals</span><strong>'+escapeHtml(def.symbol.pins.length+' · '+pinSummary)+'</strong></div>'
       +'<div class="property-row"><span>Rotation</span><strong>'+escapeHtml(obj.rotation+'°')+'</strong></div>'
       +(def&&def.generic?'<div class="notice">Original Eplan '+escapeHtml(def.connectionClass)+' symbol. Manufacturer part not assigned. Pins: '+escapeHtml(def.symbol.pins.map(function(p){return p.id;}).join(', '))+'</div>':'')
