@@ -2271,11 +2271,15 @@ function createPumpStarterDocumentation(name) {
 
   function wireRoute(wire) {
     const start={x:wire.x1,y:wire.y1},end={x:wire.x2,y:wire.y2},route=wire.route;
+    if(wire.waypoints!==undefined){
+      if(route!==undefined||!Array.isArray(wire.waypoints)||!wire.waypoints.length||!wire.waypoints.every(function(p){return p&&finite(p.x)&&finite(p.y);}))throw new Error('Manual wire routes require finite bend coordinates and cannot also use a route lane.');
+      return [start,...wire.waypoints.map(function(p){return {x:p.x,y:p.y};}),end];
+    }
     if(route!==undefined&&(!route||!['x','y'].includes(route.axis)||!finite(route.coordinate)))throw new Error('Wire route requires an x/y axis and finite coordinate.');
     if(!route)return [start,{x:end.x,y:start.y},end];
     return route.axis==='y'?[start,{x:start.x,y:route.coordinate},{x:end.x,y:route.coordinate},end]:[start,{x:route.coordinate,y:start.y},{x:route.coordinate,y:end.y},end];
   }
-  function wireRouteLength(wire){const points=wireRoute(wire);return points.slice(1).reduce(function(sum,p,i){return sum+Math.abs(p.x-points[i].x)+Math.abs(p.y-points[i].y);},0);}
+  function wireRouteLength(wire){const points=wireRoute(wire);return points.slice(1).reduce(function(sum,p,i){return sum+Math.hypot(p.x-points[i].x,p.y-points[i].y);},0);}
   function analyze(objects) {
     const source = Array.isArray(objects) ? objects : [];
     const wires = [];

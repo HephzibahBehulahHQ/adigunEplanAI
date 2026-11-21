@@ -2579,6 +2579,100 @@ test("every published component renders from a valid native project and reopens 
   expect(errors).toEqual([]);
 });
 
+test("terminal clicks auto-route and manual bends survive moving both connected parts", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("eplan-terminal");
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [x, y] of [
+    [200, 320],
+    [430, 320],
+    [630, 440],
+  ]) {
+    await page.locator('[data-insert="eplan-terminal"]').click();
+    await clickAt(x, y);
+  }
+  await clickAt(200, 320);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(1);
+  await clickAt(430, 320);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(0);
+
+  const start = await sheetPoint(page, 430, 320);
+  const firstBend = await sheetPoint(page, 480, 240);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(firstBend.x, firstBend.y, { steps: 8 });
+  await page.mouse.up();
+  await clickAt(550, 395);
+  await clickAt(590, 375);
+  await clickAt(630, 440);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(0);
+  await expect(page.getByLabel("Wire route axis")).toHaveValue("manual");
+  const before = await saveDrawing(page, "manual-route-before-move");
+  const wires = before.data.objects.filter(
+    (o: { kind: string }) => o.kind === "wire",
+  );
+  expect(wires).toHaveLength(2);
+  expect(wires[0].waypoints).toBeUndefined();
+  expect(wires[0].attachments.start).toBeTruthy();
+  expect(wires[0].attachments.end).toBeTruthy();
+  const manual = wires[1];
+  expect(manual.attachments.start).toEqual(wires[0].attachments.end);
+  expect(manual.attachments.end).toBeTruthy();
+  expect(manual.waypoints).toHaveLength(3);
+  for (const [index, [x, y]] of [
+    [480, 240],
+    [550, 395],
+    [590, 375],
+  ].entries()) {
+    expect(Math.abs(manual.waypoints[index].x - x)).toBeLessThan(2);
+    expect(Math.abs(manual.waypoints[index].y - y)).toBeLessThan(2);
+  }
+  for (const [x, y] of [
+    [430, 320],
+    [630, 440],
+  ]) {
+    const from = await sheetPoint(page, x - 5, y - 3);
+    const to = await sheetPoint(page, x + 12, y + 5);
+    await page.mouse.move(from.x, from.y);
+    await page.mouse.down();
+    await page.mouse.move(to.x, to.y, { steps: 6 });
+    await page.mouse.up();
+  }
+  const after = await saveDrawing(page, "manual-route-after-move");
+  const moved = after.data.objects.find(
+    (o: { id: string }) => o.id === manual.id,
+  );
+  expect(moved.waypoints).toEqual(manual.waypoints);
+  expect(moved.attachments).toEqual(manual.attachments);
+  expect(moved.x1).toBeGreaterThan(manual.x1);
+  expect(moved.x2).toBeGreaterThan(manual.x2);
+  for (const [end, coordinate] of [
+    ["start", "x1"],
+    ["end", "x2"],
+  ] as const) {
+    const part = after.data.objects.find(
+      (o: { id: string }) => o.id === manual.attachments[end].instanceId,
+    );
+    expect(moved[coordinate]).toBe(part.x);
+  }
+  await page.screenshot({
+    path: test.info().outputPath("terminal-wire-bends.png"),
+  });
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(after.path);
+  const reopened = await saveDrawing(page, "manual-route-reopened");
+  expect(reopened.data.objects).toEqual(after.data.objects);
+});
+
 for (const template of [
   "",
   "eng0601",
