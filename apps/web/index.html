@@ -125,7 +125,7 @@
 <dialog id="commands" aria-label="Command palette"><div class="dialog-head"><span>Command palette</span><span class="grow"></span><button id="closeCommands" aria-label="Close command palette">Esc</button></div><div class="dialog-body"><input class="palette-search" id="commandSearch" placeholder="Type a command…" aria-label="Search commands"><div class="command-list" id="commandList"></div></div><div class="dialog-footer">Use ↑ ↓ to move · Enter to run · Esc to close</div></dialog>
 <dialog id="symbolsDialog" aria-label="Insert electrical symbol"><div class="dialog-head"><span>Insert symbol</span><span class="grow"></span><button id="closeSymbols" aria-label="Close symbol picker">×</button></div><div class="dialog-body" id="symbolsDialogList"></div></dialog>
 <dialog id="newProjectDialog" aria-label="Create project"><div class="dialog-head"><span>New project</span><span class="grow"></span><button id="closeNewProject" aria-label="Close dialog">×</button></div><div class="dialog-body"><label class="property-row" style="display:grid;gap:6px">Project name<input id="newProjectName" class="palette-search" value="Control cabinet" maxlength="80" aria-label="Project name"></label><button class="command-item" id="createProject"><span>＋</span><span>Create blank A3 project</span></button><p class="notice">A new browser-local drawing is created on this device. No cloud account or sync service is connected.</p></div></dialog>
-<dialog id="sheetDialog" aria-label="Add drawing sheet"><div class="dialog-head"><span>New drawing sheet</span><span class="grow"></span><button id="closeSheetDialog" aria-label="Close dialog">×</button></div><div class="dialog-body"><p class="notice">Choose a drawing type to add a properly indexed, titled project sheet.</p><button class="command-item" data-new-sheet="Power supply"><span>＋</span><span>Power supply · IEC A3</span></button><button class="command-item" data-new-sheet="Control circuit"><span>＋</span><span>Control circuit · IEC A3</span></button><button class="command-item" data-new-sheet="PLC / I/O"><span>＋</span><span>PLC / I/O · IEC A3</span></button><button class="command-item" data-free-sheet><span>＋</span><span>Free drafting</span></button></div></dialog>
+<dialog id="sheetDialog" aria-label="Add drawing sheet"><div class="dialog-head"><span>New drawing sheet</span><span class="grow"></span><button id="closeSheetDialog" aria-label="Close dialog">×</button></div><div class="dialog-body"><p class="notice">Choose a drawing type to add a properly indexed, titled project sheet.</p><button class="command-item" data-new-sheet="Power supply"><span>＋</span><span>Power supply · IEC A3</span></button><button class="command-item" data-new-sheet="Control circuit"><span>＋</span><span>Control circuit · IEC A3</span></button><button class="command-item" data-new-sheet="PLC / I/O"><span>＋</span><span>PLC / I/O · IEC A3</span></button><button class="command-item" data-floor-sheet><span>＋</span><span>Building floor plan</span></button><button class="command-item" data-free-sheet><span>＋</span><span>Free drafting</span></button></div></dialog>
 <script src="./eplan-symbols.js"></script>
 <script src="./cad-engine.js"></script>
 <script>(()=>{
@@ -237,10 +237,11 @@
     $('#sheetDialog .notice').textContent=state.sections?'Add a sheet to '+state.activeSection+'. Page numbering continues across A1–A4.':'Choose a drawing type to add a project sheet.';
     $('#sheetDialog').showModal();
   }
-  function addSheet(name,showPrintFrame=true){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
+  function addSheet(name,showPrintFrame=true,floorPlan){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
     const safeName=String(name||'Sheet').trim().slice(0,80)||'Sheet',id='custom-'+Date.now()+'-'+(++sheetIdSequence);
     const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};
-    if(state.activeSection==='A3'&&showPrintFrame)sheet.drafting={units:'mm',minor:2.5,major:10,snap:2.5};
+    if(floorPlan)sheet.floorPlan=floorPlan;
+    if(floorPlan||(state.activeSection==='A3'&&showPrintFrame))sheet.drafting={units:'mm',minor:2.5,major:10,snap:2.5};
     if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
     state.sheets.push(sheet);state.sheetObjects[id]=[];state.sheetViews[id]={x:0,y:0,w:1200,h:760};
     renderCustomSheetNavigation();notify(sheetLabel(id)[0]+' created. Select it in the sidebar to open.');persist();return id;
@@ -1475,6 +1476,24 @@
     }
     refreshFrameControl();
   });
+  function refreshFloorPlanControls(block,sheet){
+    let fields=block.querySelector('[data-floor-plan-fields]');
+    if(!fields){
+      fields=document.createElement('div');
+      fields.dataset.floorPlanFields='';
+      fields.innerHTML='<label class="property-row"><span>Building name</span><input data-floor-plan-field="building" maxlength="80"></label><label class="property-row"><span>Floor level</span><input data-floor-plan-field="level" maxlength="80"></label>';
+      block.append(fields);
+    }
+    fields.hidden=!sheet?.floorPlan;
+    for(const field of fields.querySelectorAll('input'))field.value=sheet?.floorPlan?.[field.dataset.floorPlanField]||'';
+  }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const key=event.target.dataset.floorPlanField,plan=activeDraftingSheet()?.floorPlan;
+    if(!plan||!['building','level'].includes(key))return;
+    const value=event.target.value.trim().slice(0,80);
+    if(value){plan[key]=value;persist();}
+    event.target.value=plan[key];
+  });
   function refreshFrameControl(){
     const sheet=state.sheets.find(item=>item.id===state.sheet);
     wrap.classList.toggle('frame-hidden',sheet?.showPrintFrame===false);
@@ -1494,6 +1513,7 @@
     }
     field.closest('label').hidden=!sheet;
     field.checked=sheet?.showPrintFrame!==false;
+    refreshFloorPlanControls(block,sheet);
     refreshDraftingControls(block,sheet);
     refreshGuideControls(block,sheet);
     refreshPrintControls(block,sheet);
@@ -1882,6 +1902,9 @@
   $('#inspectorContent').addEventListener('change',e=>{const key=e.target.dataset.layer;if(!key)return;const map={connections:'.wire,.wire-blue,.wire-dark,.cross-sheet-connector',devices:'.drawing-object[data-object]',annotations:'.accent,.small,.medium,.tiny'};drawing.querySelectorAll(map[key]).forEach(el=>el.style.display=e.target.checked?'':'none');notify(`${key} layer ${e.target.checked?'shown':'hidden'}.`);});
   $('#rightPanel').addEventListener('click',e=>{const rotate=e.target.closest('[data-rotate-object]');if(rotate){rotateObject(rotate.dataset.rotateObject);return;}if(e.target.closest('[data-delete-object]')){const id=e.target.closest('[data-delete-object]').dataset.deleteObject;pushUndo();removeSelectedDrawingObjects([id]);state.selected=null;renderObjects();$('#selectionDetails').innerHTML='<div class="inspector-title">Selection</div><div class="empty-selection">Select an electrical object on the sheet to inspect its drawing designation.</div>';persist();notify('Drawing object removed.');}});
   $('#inspectorContent').addEventListener('change',e=>{const formatting=e.target.closest('[data-text-format]');if(formatting){const obj=state.objects.find(function(item){return item.id===formatting.dataset.objectId;});if(!obj||obj.kind!=='text'||obj.locked)return;const key=formatting.dataset.textFormat;let value=formatting.type==='checkbox'?formatting.checked:formatting.value;if(key==='fontSize')value=Math.max(6,Math.min(144,Number(value)||12));if(key==='textWidth')value=Math.max(60,Math.min(1100,Number(value)||460));pushUndo();obj[key]=value;renderObjects();persist();return;}const coordinate=e.target.closest('[data-object-coordinate]');if(coordinate){updateObjectCoordinate(coordinate.dataset.objectId,coordinate.dataset.objectCoordinate,coordinate.value);return;}const textField=e.target.closest('[data-object-text]');if(textField){const obj=state.objects.find(function(item){return item.id===textField.dataset.objectText;});if(!obj||obj.kind!=='text')return;const next=textField.value;if(next===obj.text)return;pushUndo();obj.text=next;renderObjects();persist();refreshSelectedProperties();notify('Drawing text updated.');}});
+  $('[data-floor-sheet]').addEventListener('click',()=>{
+    if(addSheet('Building floor plan',false,{building:state.projectName.trim().slice(0,80),level:'Ground floor'}))$('#sheetDialog').close();
+  });
   $('[data-free-sheet]').addEventListener('click',()=>{addSheet('Free drafting',false);$('#sheetDialog').close();});
   $$('[data-new-sheet]').forEach(b=>b.addEventListener('click',()=>{addSheet(b.dataset.newSheet);$('#sheetDialog').close();}));
   const templateLabel=document.createElement('label');templateLabel.className='property-row';templateLabel.textContent='Project template';const templateSelect=document.createElement('select');templateSelect.id='projectTemplate';templateSelect.className='palette-search';templateSelect.setAttribute('aria-label','Project template');const blankOption=document.createElement('option');blankOption.value='';blankOption.textContent='Empty project · A1–A4 sections';templateSelect.append(blankOption);window.AdigunCADEngine.projectExamples().forEach(function(example){const option=document.createElement('option');option.value=example.id;option.textContent=example.name+' · editable schematic';templateSelect.append(option);});templateLabel.append(templateSelect);$('#createProject').before(templateLabel);templateSelect.addEventListener('change',function(){$('#createProject span:last-child').textContent=templateSelect.value?'Create from selected example':'Create New Project';});
