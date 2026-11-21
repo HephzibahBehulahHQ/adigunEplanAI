@@ -320,7 +320,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   await page.locator("#newProjectName").fill("ENG-0601 development");
   await page.locator("#createProject").click();
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
-  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(40);
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(41);
   await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
   for (let i = 0; i < 8; i++) {
     await page
@@ -416,7 +416,7 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
       height: 27,
     });
   const saved = await saveDrawing(page, "eng0601");
-  expect(saved.data.sheets).toHaveLength(40);
+  expect(saved.data.sheets).toHaveLength(41);
   expect(saved.data.sections).toHaveLength(4);
   expect(
     saved.data.objects
@@ -2074,7 +2074,7 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   const reports = original.data.sheets.filter(
     (s: { sectionId: string }) => s.sectionId === "A4",
   );
-  expect(reports).toHaveLength(11);
+  expect(reports).toHaveLength(12);
   const handover = reports.find(
     (s: { name: string }) =>
       s.name === "Handover and unresolved design register",
