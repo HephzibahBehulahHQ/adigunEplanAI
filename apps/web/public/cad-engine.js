@@ -2117,6 +2117,22 @@ function createPumpStarterDocumentation(name) {
       'Before handover: update report snapshots and revisions to match the final native circuit and layout.',
       'Save a named local copy, reopen it, and confirm sheets, component identities and cross-sheet links.'
     ]);
+    const evidencePage=a4Sheet('Release evidence register');
+    text(evidencePage,'release-evidence-scope',60,105,'OPEN · Enter evidence from the actual installation. Reference the signed record for each item.',12,1060);
+    [
+      ['01 Supply and protection','Supply, earthing, maximum and minimum fault duty, upstream settings and coordination.'],
+      ['02 Feeder calculations','Actual W1–W3 lengths and installation. Ampacity, start/run drop, disconnection and withstand.'],
+      ['03 Rail and enclosure fit','Delivered rail, terminals, covers and fasteners. Service clearances, door travel and entries.'],
+      ['04 Protective bonding','Record cabinet, door, support rail and field PE paths. Link measured continuity and fault-duty review.'],
+      ['05 Assembly and thermal review','Record enclosure thermal assessment, final settings, torque checks and installed protection.'],
+      ['06 Functional commissioning','Record authorised start, stop, pressure, overload, local isolation and restoration tests.'],
+      ['07 As-built documentation','Reconcile revisions, native connections, terminal/cable schedules and installed equipment.'],
+      ['08 Independent review and owner release','Record reviewer, owner, signed approval reference and any outstanding conditions.']
+    ].forEach(function(entry,index){
+      const y=140+index*49;
+      text(evidencePage,'release-evidence-task-'+index,60,y,entry.join(' · '),11,1060);
+      text(evidencePage,'release-evidence-record-'+index,60,y+18,'OPEN | Record / result: ___   |   Responsible person: ___   |   Date: ___',11,1060);
+    });
     // The contents list refers only to real sheets; unfinished scope belongs in the release register.
     const registerRows=Math.ceil(sheets.length/2);
     sheets.forEach(function(sheet,index){text(2,'register-'+index,index<registerRows?60:620,120+(index%registerRows)*20,sheet.number+' '+sheet.name,10,510);});

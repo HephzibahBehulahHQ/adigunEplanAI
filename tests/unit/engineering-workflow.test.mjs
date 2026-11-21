@@ -572,11 +572,11 @@ test("ENG-0601 has authored A1 documents without fabricated circuits or blank fu
     "A4",
   ]);
   assert.equal(project.activeSheet, null);
-  assert.equal(project.sheets.length, 39);
+  assert.equal(project.sheets.length, 40);
   assert.deepEqual(
     plain(project.sheets.map((s) => s.number)),
     Array.from(
-      { length: 39 },
+      { length: 40 },
       (_, i) =>
         (i < 6 ? "A1/" : i < 19 ? "A2/" : i < 29 ? "A3/" : "A4/") +
         String(i).padStart(3, "0"),
@@ -2188,9 +2188,10 @@ test("wire lanes share routing, branch geometry, length and native persistence",
 test("A4 native registers match canonical devices and remain editable after reopen", () => {
   const project = engine.createExample("eng0601");
   const sheets = project.sheets.filter((s) => s.sectionId === "A4");
-  assert.equal(sheets.length, 10);
+  assert.equal(sheets.length, 11);
   assert.equal(sheets[0].number, "A4/029");
-  assert.equal(sheets.at(-1).number, "A4/038");
+  assert.equal(sheets.at(-1).number, "A4/039");
+  assert.equal(sheets.at(-1).name, "Release evidence register");
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
@@ -2228,6 +2229,12 @@ test("A4 native registers match canonical devices and remain editable after reop
       assert.ok(text.text.includes(pin.localNumber + ":"));
   }
   assert.ok(reportObjects.some((o) => o.text.includes("NOT PERFORMED")));
+  const evidenceRecords = reportObjects.filter((o) =>
+    o.id.startsWith("eng0601-release-evidence-record-"),
+  );
+  assert.equal(evidenceRecords.length, 8);
+  assert.ok(evidenceRecords.every((o) => o.text.startsWith("OPEN |")));
+  evidenceRecords[0].text = "OPEN | Review record attached, acceptance pending";
   assert.ok(reportObjects.every((o) => o.y <= 545));
   reportObjects.find((o) => o.text.includes("NOT PERFORMED")).text =
     "Owner review note; testing remains unperformed.";
