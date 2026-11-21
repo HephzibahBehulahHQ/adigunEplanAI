@@ -1264,6 +1264,10 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           errors.push('Sheet ' + (index + 1) + ' must have a non-empty string ID.');
           return;
         }
+        if(sheet.floorPlan!==undefined){
+          const plan=sheet.floorPlan;
+          if(!plan||typeof plan!=='object'||['building','level'].some(key=>typeof plan[key]!=='string'||!plan[key].trim()||plan[key].length>80))errors.push('Invalid building floor plan on sheet '+sheet.id+'.');
+        }
         if(sheet.drafting!==undefined){
           const drafting=sheet.drafting;
           if(!drafting||!['du','mm','in'].includes(drafting.units)||['minor','major','snap'].some(key=>!Number.isFinite(drafting[key])||drafting[key]<1e-5||drafting[key]>1e6)){

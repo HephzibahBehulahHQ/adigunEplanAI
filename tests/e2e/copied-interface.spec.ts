@@ -3223,3 +3223,35 @@ test("drag redraws connected geometry only and can return exactly to its origin"
   await expect(first).toHaveAttribute("transform", original!);
   await expect(wire).toHaveAttribute("d", route!);
 });
+
+test("building floor sheets keep editable identities and physical units on reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#newProjectName").fill("Workshop");
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.locator('[data-inspector="Properties"]').click();
+  const building = page.getByRole("textbox", { name: "Building name" });
+  const level = page.getByRole("textbox", { name: "Floor level" });
+  await expect(building).toHaveValue("Workshop");
+  await expect(level).toHaveValue("Ground floor");
+  await building.fill("East workshop");
+  await building.press("Tab");
+  await level.fill("Mezzanine");
+  await level.press("Tab");
+  await expect(page.locator("#customSheetFrame")).toBeHidden();
+  const saved = await saveDrawing(page, "building-floor-plan");
+  expect(saved.data.sheets[0]).toMatchObject({
+    floorPlan: { building: "East workshop", level: "Mezzanine" },
+    drafting: { units: "mm" },
+    showPrintFrame: false,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(building).toHaveValue("East workshop");
+  await expect(level).toHaveValue("Mezzanine");
+});
