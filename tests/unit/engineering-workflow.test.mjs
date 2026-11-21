@@ -2234,6 +2234,8 @@ test("A4 native registers match canonical devices and remain editable after reop
   const reportObjects = project.objects.filter((o) =>
     sheets.some((s) => s.id === o.sheetId),
   );
+  const w1 = reportObjects.find((o) => o.id === "eng0601-feeder-cable-W1");
+  assert.match(w1.text, /Q1:1L1.*Q1:3L2.*Q1:5L3.*Q1:N.*XPE:0:1 \(PE\)/);
   const dropSheet = sheets.find(
     (sheet) => sheet.name === "Motor feeder voltage-drop study",
   );
