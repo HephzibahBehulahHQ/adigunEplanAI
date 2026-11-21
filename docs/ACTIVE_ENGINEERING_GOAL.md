@@ -16,14 +16,14 @@ placement relationships; a part without electrical terminals has no wire pins.
 | --- | --- |
 | Electrical, Project Explorer, open/new/save, sheet controls | Open the native project or instantiate an independent example, manage sheet identities, validate and serialize project state. |
 | Electrical Symbol Library, insert button, symbol tool | Resolve real catalog definitions and create native instances on the current sheet. Validate placement, editable properties, real terminal IDs and reopen. |
-| Select, wire, shapes, line, curve, freehand, text | Canvas tools select or mutate native objects. Electrical wires bind to terminals. Graphics and annotations retain separate geometry and support native history. |
+| Select, wire, shapes, line, curve, freehand, text | Canvas tools select or mutate native objects. Electrical wires bind to stable terminals. Components support proportional graphical resize and quarter-turn rotation while their terminal coordinates follow the view. |
 | Panel Design Properties, Layers and Visibility | Edit instance fields and saved stroke color, weight, type, drawing layer and draw order through the existing inspector. Hidden entities are excluded from hit-testing and terminal snapping. Equal draw-order values preserve object order. |
 | Automation sheet and PLC entries, Electrical Checks, Bill of Materials | Navigate available native sheets, insert available symbols and analyze the current project. Diagnostics and reports use native objects and relationships. |
 | EPLAN-Style, IEC / DIN / US Standards, print, fit, pan, zoom, export | Use the existing navigation, viewport and SVG/print commands. The standards-labelled menu exposes diagnostics and does not implement standards certification. |
 | Undo/redo, palette, fill, theme, settings and BOT | Invoke native history, presentation settings, existing command search and the BOT status control. Feature acceptance requires testing each relevant action, including saved settings. |
 
 This inventory identifies existing command paths. Per-layer locking and defaults,
-arbitrary graphical resizing of canonical parts, native DXF roundtrip and
+native DXF roundtrip and
 complete end-to-end command coverage still need separate verification or work.
 
 ## Paper text editing — shipped 2026-11-15

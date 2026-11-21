@@ -1513,6 +1513,34 @@ test("sourced LAPP motor and control cables expose only their real cores and kee
   await page.mouse.dblclick(pick.x, pick.y);
   await page.locator('[data-object-coordinate="x"]').fill("740");
   await page.locator('[data-object-coordinate="x"]').press("Tab");
+  const corner = await page
+    .locator('#userDrawings [data-resize-handle="se"]')
+    .boundingBox();
+  expect(corner).toBeTruthy();
+  const resizeTo = await sheetPoint(page, 920, 430);
+  await page.mouse.move(
+    corner!.x + corner!.width / 2,
+    corner!.y + corner!.height / 2,
+  );
+  await page.mouse.down();
+  await page.mouse.move(resizeTo.x, resizeTo.y);
+  await page.mouse.up();
+  await expect(
+    page.getByRole("spinbutton", { name: "Drawing scale" }),
+  ).toHaveValue("1.5");
+  await page
+    .getByRole("combobox", { name: "Drawing rotation" })
+    .selectOption("90");
+  await page
+    .getByRole("button", { name: "Rotate selected component 90°" })
+    .click();
+  await expect(
+    page.getByRole("combobox", { name: "Drawing rotation" }),
+  ).toHaveValue("180");
+  await page.locator('[data-action="undo"]').click();
+  await expect(
+    page.getByRole("combobox", { name: "Drawing rotation" }),
+  ).toHaveValue("90");
   await page.getByRole("textbox", { name: "Stroke color" }).fill("#802a14");
   await page.getByRole("textbox", { name: "Stroke color" }).press("Tab");
   await page.getByRole("spinbutton", { name: "Line weight (mm)" }).fill("1.5");
@@ -1539,7 +1567,7 @@ test("sourced LAPP motor and control cables expose only their real cores and kee
   const edited = await saveDrawing(page, "sourced-cables-moved");
   expect(
     edited.data.objects.find((o: { id: string }) => o.id === wire.id),
-  ).toMatchObject({ x2: 650, attachments: wire.attachments });
+  ).toMatchObject({ x2: 821, y2: 197.5, attachments: wire.attachments });
   expect(
     edited.data.objects.find((o: { id: string }) => o.id === cable.id),
   ).toMatchObject({
@@ -1547,6 +1575,8 @@ test("sourced LAPP motor and control cables expose only their real cores and kee
     strokeWidth: 1.5,
     lineType: "dashed",
     layer: "annotations",
+    displayScale: 1.5,
+    rotation: 90,
   });
   await page.reload();
   await page.locator("#openFile").setInputFiles(edited.path);

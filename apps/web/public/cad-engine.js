@@ -1014,6 +1014,22 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 
   function resizeGraphicObject(object, corner, point) {
+    if (object && object.kind === 'component-instance') {
+      const result=validateInstance(object);
+      if(!result.valid||object.locked||!['nw','ne','sw','se'].includes(corner)||!point||!finite(point.x)||!finite(point.y))return false;
+      const turned=object.rotation===90||object.rotation===270;
+      const width=turned?result.definition.symbol.height:result.definition.symbol.width;
+      const height=turned?result.definition.symbol.width:result.definition.symbol.height;
+      const previous=object.displayScale||1,xDirection=corner.endsWith('w')?-1:1,yDirection=corner.startsWith('n')?-1:1;
+      const fixedX=object.x-xDirection*width*previous/2,fixedY=object.y-yDirection*height*previous/2;
+      const dx=(point.x-fixedX)*xDirection,dy=(point.y-fixedY)*yDirection;
+      if(dx<=0||dy<=0)return false;
+      const scale=Math.max(0.25,Math.min(4,(dx*width+dy*height)/(width*width+height*height)));
+      object.displayScale=scale;
+      object.x=fixedX+xDirection*width*scale/2;
+      object.y=fixedY+yDirection*height*scale/2;
+      return true;
+    }
     if (!object || !['rect', 'ellipse', 'triangle', 'circle'].includes(object.kind) ||
         !['nw', 'ne', 'sw', 'se'].includes(corner) || !point ||
         !finite(point.x) || !finite(point.y) ||
@@ -1091,6 +1107,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if (instance.schemaVersion !== COMPONENT_SCHEMA_VERSION) errors.push('Unsupported component schema version.');
     if (!def) errors.push('Component ID has no verified definition.');
     if (!finite(instance.x) || !finite(instance.y)) errors.push('Component position is invalid.');
+    if(instance.displayScale!==undefined&&(!finite(instance.displayScale)||instance.displayScale<0.25||instance.displayScale>4))errors.push('Component drawing scale must be between 0.25 and 4.');
     if (![0, 90, 180, 270].includes(instance.rotation)) errors.push('Component rotation must be 0, 90, 180, or 270 degrees.');
     if (typeof instance.id !== 'string' || !instance.id || instance.id.length > 100) errors.push('Component instance ID is invalid.');
     if (typeof instance.ref !== 'string' || !instance.ref.trim() || instance.ref.length > 32) errors.push('Component reference is invalid.');
@@ -1137,14 +1154,15 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if (!result.valid) return [];
     const angle = instance.rotation * Math.PI / 180;
     const cos = Math.cos(angle), sin = Math.sin(angle);
+    const scale=instance.displayScale||1;
     return result.definition.symbol.pins.map(function (pin) {
       return {
         id: pin.id,
         number: pin.localNumber,
         name: pin.name,
         electricalType: pin.electricalType,
-        x: instance.x + pin.x * cos - pin.y * sin,
-        y: instance.y + pin.x * sin + pin.y * cos
+        x: instance.x + scale * pin.x * cos - scale * pin.y * sin,
+        y: instance.y + scale * pin.x * sin + scale * pin.y * cos
       };
     });
   }
