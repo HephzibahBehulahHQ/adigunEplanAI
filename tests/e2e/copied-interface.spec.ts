@@ -126,6 +126,7 @@ test("example copy remains a native editable project through replacement and loc
   await expect(page.locator('[data-object="' + copy.id + '"]')).toHaveClass(
     /selected-object/,
   );
+  await select(copy.id);
   await page.locator("[data-delete-object]").click();
   const deleted = await saveDrawing(page, "editable-copy-deleted");
   expect(deleted.data.objects.length).toBe(initial.data.objects.length);
@@ -2930,4 +2931,30 @@ test("free drafting sheets save their print-frame visibility independently", asy
   expect(saved.data.sheets[0].showPrintFrame).toBe(false);
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(frame).toBeHidden();
+});
+
+test("component placement accounts for the rendered PLC reference label", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  const plc = page.locator('[data-insert-tool="plc"]');
+  const components = page.locator("#userDrawings .drawing-object");
+  await plc.click();
+  const first = await sheetPoint(page, 500, 240);
+  await page.mouse.click(first.x, first.y);
+  await expect(components).toHaveCount(1);
+  await plc.click();
+  const close = await sheetPoint(page, 500, 535);
+  await page.mouse.click(close.x, close.y);
+  await expect(components).toHaveCount(1);
+  const preview = page.locator("[data-component-placement-preview]");
+  await expect(preview).toHaveAttribute("stroke", "#b91c1c");
+  await expect(preview).toContainText("A2");
+  const clear = await sheetPoint(page, 500, 565);
+  await page.mouse.click(clear.x, clear.y);
+  await expect(components).toHaveCount(2);
+  await expect(components.last()).toContainText("A2");
 });
