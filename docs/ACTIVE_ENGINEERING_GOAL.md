@@ -14,6 +14,26 @@ no physical pump was built. Validate the editable A1–A4 model, reports
 and live editor workflows for example acceptance. A4/039 retains the
 evidence requirements for anyone who later adapts the design to a real site.
 
+### Deployed example audit — 2026-11-21
+
+Audited the native project downloaded from live revision
+`6e7249b6385436c4b2fc29b54b8695c362b27e1d` (PR #165). The download
+contains 40 sheets across A1–A4 (6, 13, 10, 11), 54 components, 93
+wires, and 37 paired continuations. Project analysis found zero unmatched
+endpoints, geometry errors, missing attachments, cable issues, or reference
+issues. The eight A4 evidence entries list the relevant drawing numbers.
+
+Four live Chromium checks passed. They cover the selected A1/A2 layouts,
+A3 linked component placement, all 11 A4 reports and their native
+save/reopen workflow, and terminal wiring with manual bends.
+
+The held or welded S1 restart scenario remains explicitly open on the
+commissioning sheet. The model checks establish drawing and connectivity
+consistency. A physical adaptation still requires an independent restart
+review, site feeder data, delivered fit, protective bonding continuity,
+and commissioning records. The separate cable-route schedule is in
+paused PR #152 and was outside this deployed snapshot.
+
 The A3 field isolator drawing includes the editable Q2 mounting detail
 from the [Siemens exact-part dimension drawing](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3LD2203-0TK51),
 visually checked against the Siemens drawing dated 23 March 2022, page 4.
