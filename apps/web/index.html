@@ -35,6 +35,8 @@
     @media print { .cad-ruler, #editorGuides { display: none !important; } }
     @media screen {
       #drawingWrap { position: relative; }
+      .workspace .editor { grid-template-rows: auto minmax(0, 1fr); }
+      #commandList .command-item[hidden] { display: none; }
       .workspace .canvas-stage { padding: 0; }
       .workspace .canvas-stage .drawing-wrap { width: 100%; height: 100%; min-height: 0; aspect-ratio: auto; }
     }
@@ -118,7 +120,7 @@
     </section>
     <aside class="rail right" aria-label="Inspector tools"><button data-tip="Properties" aria-label="Properties" aria-pressed="false" data-inspector="Properties"><svg><use href="#i-list"/></svg></button><button data-tip="Electrical checks" aria-label="Electrical checks" aria-pressed="false" data-inspector="Electrical checks"><svg><use href="#i-check"/></svg></button><button data-tip="Layers and visibility" aria-label="Layers and visibility" aria-pressed="false" data-inspector="Layers and visibility"><svg><use href="#i-layers"/></svg></button><button data-tip="Bill of materials" aria-label="Bill of materials" aria-pressed="false" data-inspector="Bill of materials"><svg><use href="#i-file"/></svg></button><div class="rail-spacer"></div><button data-tip="Adigun BOT service status" aria-label="Adigun BOT service status" data-action="assistant"><svg><use href="#i-bot"/></svg></button></aside>
   </div>
-  <footer class="canvas-status"><span class="ready-dot" aria-hidden="true"></span><span id="statusText">Ready · browser-local workspace</span><span class="grow"></span><span class="desktop-only" id="coordinates">X: 420.250&nbsp; Y: 118.750</span><span class="status-chip desktop-only">Grid: 2.50 mm</span><button class="status-chip toggle" data-toggle="snap" aria-pressed="true">Snap</button><button class="status-chip toggle" data-toggle="ortho" aria-pressed="false">ORTHO</button><button class="status-chip toggle" data-toggle="osnap" aria-pressed="true">OSNAP</button><button class="status-chip" id="zoomValue" aria-label="Current zoom" aria-haspopup="true" aria-expanded="false" title="Choose zoom level">100%</button><div id="zoomMenu" class="zoom-menu" hidden role="menu" aria-label="Zoom presets"><button data-zoom-preset="10">10%</button><button data-zoom-preset="20">20%</button><button data-zoom-preset="50">50%</button><button data-zoom-preset="100">100%</button><button data-zoom-preset="150">150%</button><button data-zoom-preset="250">250%</button><button data-zoom-preset="fit">Fit sheet</button></div><span class="desktop-only">A3 · mm</span></footer>
+  <footer class="canvas-status"><span class="ready-dot" aria-hidden="true"></span><span id="statusText">Ready · browser-local workspace</span><span class="grow"></span><span class="desktop-only" id="coordinates"></span><span class="status-chip desktop-only" id="gridStatus"></span><button class="status-chip toggle" data-toggle="snap" aria-pressed="true">Snap</button><button class="status-chip toggle" data-toggle="ortho" aria-pressed="false">ORTHO</button><button class="status-chip toggle" data-toggle="osnap" aria-pressed="true">OSNAP</button><button class="status-chip" id="zoomValue" aria-label="Current zoom" aria-haspopup="true" aria-expanded="false" title="Choose zoom level">100%</button><div id="zoomMenu" class="zoom-menu" hidden role="menu" aria-label="Zoom presets"><button data-zoom-preset="10">10%</button><button data-zoom-preset="20">20%</button><button data-zoom-preset="50">50%</button><button data-zoom-preset="100">100%</button><button data-zoom-preset="150">150%</button><button data-zoom-preset="250">250%</button><button data-zoom-preset="fit">Fit sheet</button></div><span class="desktop-only" id="sheetStatus"></span></footer>
 </main>
 <dialog id="commands" aria-label="Command palette"><div class="dialog-head"><span>Command palette</span><span class="grow"></span><button id="closeCommands" aria-label="Close command palette">Esc</button></div><div class="dialog-body"><input class="palette-search" id="commandSearch" placeholder="Type a command…" aria-label="Search commands"><div class="command-list" id="commandList"></div></div><div class="dialog-footer">Use ↑ ↓ to move · Enter to run · Esc to close</div></dialog>
 <dialog id="symbolsDialog" aria-label="Insert electrical symbol"><div class="dialog-head"><span>Insert symbol</span><span class="grow"></span><button id="closeSymbols" aria-label="Close symbol picker">×</button></div><div class="dialog-body" id="symbolsDialogList"></div></dialog>
@@ -401,10 +403,23 @@
     }
     grid.querySelector('path').setAttribute('d','M'+spacing+' 0H0V'+spacing);
     minorGrid.querySelector('path').setAttribute('d','M'+minor+' 0H0V'+minor);
-    $('#viewportMinorGrid').setAttribute('display',state.grid&&minor<major&&minor*scale>=6?'inline':'none');
+    const showMinor=state.grid&&minor<major&&minor*scale>=6;
+    $('#viewportMinorGrid').setAttribute('display',showMinor?'inline':'none');
+    const units=draftingSettings().units,sheet=activeDraftingSheet();
+    const gridLabel=state.grid?'Grid: '+displayCoordinate(showMinor?minor:spacing)+' '+units:'Grid off';
+    $('#gridStatus').textContent=gridLabel;
+    $('#sheetStatus').textContent=sheet?(sheet.showPrintFrame===false?'Free drafting':printSettings().format)+' · '+units:'';
+  }
+  function unitFactor(){return draftingSettings().units==='in'?25.4:1;}
+  function displayCoordinate(value){
+    return Number((Number(value)/unitFactor()).toPrecision(12));
+  }
+  function coordinateField(obj,axis){
+    const units=draftingSettings().units,label=axis.toUpperCase()+' ('+units+')';
+    return '<label class="property-row"><span>'+label+'</span><input type="number" step="any" data-object-coordinate="'+axis+'" data-object-id="'+escapeHtml(obj.id)+'" value="'+displayCoordinate(obj[axis])+'"></label>';
   }
   function showCursorPoint(point,raw=point){
-    const {units}=draftingSettings(),factor=units==='in'?25.4:1;
+    const {units}=draftingSettings(),factor=unitFactor();
     const snap=point.attachment?' · terminal':Math.hypot(point.x-raw.x,point.y-raw.y)>1e-6?' · snap':'';
     $('#coordinates').textContent='X: '+(point.x/factor).toFixed(3)+'  Y: '+(point.y/factor).toFixed(3)+' '+units+snap;
   }
@@ -504,8 +519,8 @@
   function updateObjectCoordinate(id,axis,value){
     const obj=state.objects.find(function(item){return item.id===id;});
     if(!obj||!['x','y'].includes(axis))return;
-    const next=Number(value);
-    if(!Number.isFinite(next))return;
+    const next=Number(value)*unitFactor();
+    if(value===''||!Number.isFinite(next))return;
     const current=Number(obj[axis])||0,delta=next-current;
     if(Math.abs(delta)<1e-9)return;
     const snapshot=JSON.stringify(state.objects);translateObjectGeometry(obj,axis==='x'?delta:0,axis==='y'?delta:0);
@@ -609,7 +624,7 @@
     const obj=state.objects.find(item=>item.id===drag.id);
     for(const field of $$('#selectionDetails [data-object-coordinate]')){
       const value=obj[field.dataset.objectCoordinate];
-      if(Number.isFinite(value))field.value=value.toFixed(3);
+      if(Number.isFinite(value))field.value=displayCoordinate(value);
     }
   }
   function deleteObject(id){const index=state.objects.findIndex(function(obj){return obj.id===id;});if(index<0)return;pushUndo();removeSelectedDrawingObjects([id]);if(state.selected===id)state.selected=null;state.selectedObjectIds=state.selectedObjectIds.filter(function(selectedId){return selectedId!==id;});renderObjects();persist();refreshSelectedProperties();notify('Drawing object deleted. Undo is available.');}
@@ -1045,7 +1060,7 @@
     if(!allowed[property]){showObject(obj);notify('Enter a valid drawing style.');return;}
     if(obj[property]===value)return;
     pushUndo();obj[property]=value;
-    if(property==='stroke')$('[data-drawing-style="stroke"]').forEach(function(input){if(input.dataset.objectId===obj.id)input.value=value;});
+    if(property==='stroke')$$('[data-drawing-style="stroke"]').forEach(function(input){if(input.dataset.objectId===obj.id)input.value=value;});
     if(state.layerVisibility[drawingLayerForObject(obj)]===false){setSelection(state.selectedObjectIds.filter(function(id){return id!==obj.id;}),false);openInspector('Properties');}
     renderObjects();persist();
   });
@@ -1068,8 +1083,8 @@
     if(!def || def.generic){
       host.innerHTML='<div class="inspector-title">Drawing object · '+escapeHtml(def?def.name:(symbolNames[obj.symbolId]||symbolNames[obj.kind]||obj.kind))+'</div>'+panelPlacementInfo(obj)+drawOrderField(obj)+drawingStyleFields(obj)
         +(def&&def.generic?'<label class="property-row"><span>Reference</span><input class="component-edit" data-component-property="ref" data-component-object="'+escapeHtml(obj.id)+'" maxlength="32" value="'+escapeHtml(obj.ref)+'"></label>'+componentInstanceFields(obj,def):'')
-        +'<label class="property-row"><span>X (mm)</span><input type="number" step="2.5" data-object-coordinate="x" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.x)+'"></label>'
-        +'<label class="property-row"><span>Y (mm)</span><input type="number" step="2.5" data-object-coordinate="y" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.y)+'"></label>'
+        +coordinateField(obj,'x')
+        +coordinateField(obj,'y')
         +(obj.kind==='text'?textFormattingFields(obj):'')
         +(obj.kind==='wire'?wireConnectionFields(obj):'')
         +'<div class="property-row"><span>Rotation</span><strong>'+escapeHtml((obj.rotation||0)+'°')+'</strong></div>'
@@ -1115,8 +1130,8 @@
       +'<div class="property-row"><span>External terminals</span><strong>'+escapeHtml(def.symbol.pins.length+' · '+pinSummary)+'</strong></div>'
       +'<div class="property-row"><span>Rotation</span><strong>'+escapeHtml(obj.rotation+'°')+'</strong></div>'
       +(def&&def.generic?'<div class="notice">Original Eplan '+escapeHtml(def.connectionClass)+' symbol. Manufacturer part not assigned. Pins: '+escapeHtml(def.symbol.pins.map(function(p){return p.id;}).join(', '))+'</div>':'')
-        +'<label class="property-row"><span>X (mm)</span><input type="number" step="2.5" data-object-coordinate="x" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.x)+'"></label>'
-      +'<label class="property-row"><span>Y (mm)</span><input type="number" step="2.5" data-object-coordinate="y" data-object-id="'+escapeHtml(obj.id)+'" value="'+escapeHtml(obj.y)+'"></label>'
+        +coordinateField(obj,'x')
+      +coordinateField(obj,'y')
       +'<button class="command-item" data-rotate-object="'+escapeHtml(obj.id)+'"><span>↻</span><span>Rotate 90° clockwise</span></button>'
       +'<label class="property-row"><span>Reference</span><input class="component-edit" data-component-property="ref" data-component-object="'+escapeHtml(obj.id)+'" maxlength="32" value="'+escapeHtml(obj.ref)+'"></label>'
       +componentInstanceFields(obj,def)
@@ -1455,7 +1470,7 @@
     if(dimensions.every(mm=>mm>=20&&mm<=5000)&&settings.margin>=0&&settings.margin<Math.min(...dimensions)/2&&settings.scale>=0&&settings.scale<=10000){
       sheet.paper=settings;
       renderProjectTitleBlock();
-      renderPrintBoundary();
+      applyView();
       persist();
     }
     refreshFrameControl();
@@ -1540,12 +1555,12 @@
         settings[key]=number;
       }
       sheet.drafting=settings;
-      refreshFrameControl();applyView();persist();
+      refreshFrameControl();refreshSelectedProperties();applyView();persist();
       return;
     }
     if(event.target.matches('[data-show-print-frame]')){
       const sheet=state.sheets.find(item=>item.id===state.sheet);
-      if(sheet){sheet.showPrintFrame=event.target.checked;refreshFrameControl();renderPrintBoundary();persist();}
+      if(sheet){sheet.showPrintFrame=event.target.checked;refreshFrameControl();applyView();persist();}
       return;
     }const field=event.target.closest('[data-title-key]');if(!field)return;const sheet=state.sheets.find(function(item){return item.id===state.sheet;});if(!sheet)return;const key=field.dataset.titleKey,value=field.value.trim();if(field.dataset.titleScope==='project'){if(key==='projectTitle'){if(!value)return;state.projectName=value;renderCustomSheetNavigation();}else{state.metadata=state.metadata||{};state.metadata[key]=value;}}else{sheet.metadata=sheet.metadata||{};sheet.metadata[key]=value;}renderProjectTitleBlock();persist();});
 
@@ -1843,7 +1858,21 @@
   $('#zoomMenu').addEventListener('click',function(e){const b=e.target.closest('[data-zoom-preset]');if(!b)return;$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');if(b.dataset.zoomPreset==='fit')runAction('fit');else setZoom(Number(b.dataset.zoomPreset));});
   document.addEventListener('click',function(e){if(!e.target.closest('#zoomMenu')&&!e.target.closest('#zoomValue')){$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');}});
   $('#openCommands').addEventListener('click',()=>{createPalette();$('#commands').showModal();$('#commandSearch').focus();});$('#closeCommands').addEventListener('click',()=>$('#commands').close());$('#closeSymbols').addEventListener('click',()=>$('#symbolsDialog').close());$('#closeNewProject').addEventListener('click',()=>$('#newProjectDialog').close());$('#closeSheetDialog').addEventListener('click',()=>$('#sheetDialog').close());
-  $('#commandSearch').addEventListener('input',e=>$('.command-item',$('#commandList')).forEach(b=>b.hidden=!b.dataset.search.includes(e.target.value.toLowerCase())));
+  $('#commandSearch').addEventListener('input',event=>{
+    const query=event.target.value.trim().toLowerCase();
+    for(const button of $$('#commandList .command-item'))button.hidden=!button.dataset.search.includes(query);
+  });
+  $('#commands').addEventListener('keydown',event=>{
+    const options=$$('#commandList .command-item').filter(button=>!button.hidden);
+    if(event.key==='Enter'&&event.target===$('#commandSearch')&&options.length){
+      event.preventDefault();
+      options[0].click();
+    }else if((event.key==='ArrowDown'||event.key==='ArrowUp')&&options.length){
+      const current=options.indexOf(document.activeElement),step=event.key==='ArrowDown'?1:-1;
+      event.preventDefault();
+      options[(current<0?(step>0?0:options.length-1):(current+step+options.length)%options.length)].focus();
+    }
+  });
   $('#projectSearch').addEventListener('input',e=>$$('.tree-row',$('#projectTree')).forEach(function(row){row.hidden=!row.textContent.toLowerCase().includes(e.target.value.toLowerCase());row.style.display=row.hidden?'none':'';}));
   $('#projectTree').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const row=e.target.closest('[data-project-section],[data-sheet]');if(row){e.preventDefault();row.click();}}});
   $('#projectTree').addEventListener('click',e=>{if(e.target.closest('input'))return;const addSection=e.target.closest('[data-add-project-section]');if(addSection){const id='A'+(state.sections.length+1);state.sections.push({id:id,name:'Additional section',collapsed:false});state.activeSection=id;renderCustomSheetNavigation();persist();return;}const toggle=e.target.closest('[data-toggle-section]');if(toggle){const section=state.sections.find(function(item){return item.id===toggle.dataset.toggleSection;});section.collapsed=!section.collapsed;renderCustomSheetNavigation();persist();return;}const add=e.target.closest('[data-add-section-sheet]');if(add){state.activeSection=add.dataset.addSectionSheet;addSheet();return;}const section=e.target.closest('[data-project-section]');if(section){selectProjectSection(section.dataset.projectSection);return;}const row=e.target.closest('[data-sheet]');if(row)setSheet(row.dataset.sheet);});$('#sheetTabs').addEventListener('click',e=>{const close=e.target.closest('[data-delete-sheet],[data-close-sheet]');if(close){e.preventDefault();e.stopPropagation();closeSheetTab(close.dataset.closeSheet||close.dataset.deleteSheet);return;}const tab=e.target.closest('.document-tab[data-sheet]');if(tab)setSheet(tab.dataset.sheet);});$('#sheetTabs').addEventListener('keydown',e=>{const close=e.target.closest('[data-delete-sheet],[data-close-sheet]');if(close&&(e.key==='Enter'||e.key===' ')){e.preventDefault();closeSheetTab(close.dataset.closeSheet||close.dataset.deleteSheet);}});
