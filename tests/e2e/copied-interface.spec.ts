@@ -2232,7 +2232,7 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
     ["eng0601-a3-door", "MAIN ISOLATOR"],
     ["eng0601-a3-cable-entry", "436 × 221 mm"],
     ["eng0601-a3-assembly", "Trial fit ENC1"],
-    ["eng0601-a3-field-isolator", "300 × 300 × 210 mm external"],
+    ["eng0601-a3-field-isolator", "4 × Ø5 mm at 48 × 48 mm centres"],
   ]) {
     await page
       .locator('[data-sheet="' + id + '"]')

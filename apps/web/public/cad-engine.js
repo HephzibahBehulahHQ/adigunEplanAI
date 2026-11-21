@@ -2023,7 +2023,18 @@ function createPumpStarterDocumentation(name) {
     objects.push(createPanelPlacement(panelProject,fieldPE.id,sheets[fieldPage].id,fieldBox.x,fieldBox.y+43,0.5));
     text(fieldPage,'field-box-fit',440,128,'ENC2 · Rittal AX 1033.000 · 300 × 300 × 210 mm external.\n250 × 275 mm mounting plate, 1.5 mm door and size 1 gland plate.\nQ2 · Siemens 3LD2203-0TK51 · 67 × 83 × 93 mm overall envelope.\nLinked view shows Q2 at the proposed door position. Keep Q2:AUX with the isolator.',12,700);
     text(fieldPage,'field-box-cable',440,236,'Use W2 as the panel feed, W3 as the motor exit and W5 for the Q2 auxiliary contacts.\nXPEF:1 accepts W2 PE at clamp 1 and W3 PE at clamp 2; PE bypasses Q2.\nVerify the XPEF rail connection and provide separate enclosure, plate and flexible door bonds.\nTrial fit the switch, auxiliary block, gland retention, cable bends and access with the door closed.',12,700);
-    text(fieldPage,'field-box-review',440,326,'Use the exact four-hole mounting pattern from the delivered Siemens instructions.\nVerify actuator travel, OFF locking and auxiliary timing before commissioning.\nIP66 is the bare enclosure rating. Verify the installed unit for the actual site.',12,700);
+    text(fieldPage,'field-box-review',440,326,'Verify the hole pattern against the delivered Siemens template before drilling.\nVerify actuator travel, OFF locking and auxiliary timing before commissioning.\nIP66 is the bare enclosure rating. Verify the installed unit for the actual site.',12,700);
+    const q2Cutout={x:245,y:475,pitch:48,mountingDiameter:5,centreWidth:10};
+    function cutoutCircle(id,x,y,diameter){
+      objects.push({id:'eng0601-q2-cutout-'+id,sheetId:sheets[fieldPage].id,kind:'circle',x:x,y:y,x2:x+diameter/2,y2:y,stroke:'#183c50',fill:'none'});
+    }
+    [-1,1].forEach(function(column){
+      [-1,1].forEach(function(row){
+        cutoutCircle(column+'-'+row,q2Cutout.x+column*q2Cutout.pitch/2,q2Cutout.y+row*q2Cutout.pitch/2,q2Cutout.mountingDiameter);
+      });
+    });
+    cutoutCircle('centre',q2Cutout.x,q2Cutout.y,q2Cutout.centreWidth);
+    text(fieldPage,'q2-cutout-label',440,425,'Q2 MOUNTING DETAIL · 1:1 · Siemens 3LD2203-0TK51\n4 × Ø5 mm at 48 × 48 mm centres. Centre opening 10 mm wide.\nOrigin: centre opening. Mounting holes at x ±24 and y ±24 mm.\nEnlarged detail. Transfer the pattern to the approved door datum before fabrication.',12,700);
     const a4Start=sheets.length;
     // Native editable A4 snapshots generated from this same project's canonical objects.
     function a4Sheet(title){const index=sheets.length;const sheet={id:'eng0601-a4-'+(index-a4Start),sectionId:'A4',name:title,number:'A4/'+String(index).padStart(3,'0'),metadata:{revision:'P01',issueStatus:'Development snapshot — not approved'}};sheets.push(sheet);text(index,'heading-'+index,60,65,'ENG-0601 | '+title,22);return index;}
