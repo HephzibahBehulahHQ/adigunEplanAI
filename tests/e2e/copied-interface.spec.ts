@@ -123,7 +123,7 @@ test("example copy remains a native editable project through replacement and loc
         (original: { id: string }) => original.id === o.id,
       ),
   );
-  await select(copy.id);
+  await expect(page.locator('[data-object="' + copy.id + '"]')).toHaveClass(/selected-object/);
   await page.locator("[data-delete-object]").click();
   const deleted = await saveDrawing(page, "editable-copy-deleted");
   expect(deleted.data.objects.length).toBe(initial.data.objects.length);
