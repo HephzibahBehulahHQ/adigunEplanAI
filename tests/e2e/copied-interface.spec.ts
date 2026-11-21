@@ -2291,6 +2291,9 @@ test("A3 terminal detail sheets render linked bodies and retain native edits", a
       .locator('[data-sheet="' + id + '"]')
       .first()
       .click();
+    await expect(
+      page.locator('#userDrawings rect[data-object^="eng0601-rail-spare-"]'),
+    ).toHaveCount(3);
     const views = initial.data.objects.filter(
       (o: { kind: string; sheetId: string }) =>
         o.kind === "panel-placement" && o.sheetId === id,
