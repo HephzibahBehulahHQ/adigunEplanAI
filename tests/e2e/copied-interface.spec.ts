@@ -865,6 +865,7 @@ test("new project wires attach to terminals, follow edits, undo and reopen", asy
 test("existing New Project dialog opens both connected editable examples", async ({
   page,
 }) => {
+  page.setDefaultTimeout(6000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("/");
@@ -877,9 +878,20 @@ test("existing New Project dialog opens both connected editable examples", async
     await page.locator("#projectTree [data-sheet]").first().click();
     await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(9);
     await page.locator('[data-draw="select"]').click();
-    await page.locator("#userDrawings .drawing-object").first().dblclick();
-    await page.locator('[data-component-property="ref"]').fill("EDITED1");
-    await page.locator('[data-component-property="ref"]').press("Tab");
+    await page.locator('[data-inspector="Properties"]').click();
+    const target = await page
+      .locator("#userDrawings .component-hit-target")
+      .first()
+      .boundingBox();
+    expect(target).toBeTruthy();
+    await page.mouse.click(
+      target!.x + target!.width / 4,
+      target!.y + target!.height / 4,
+    );
+    const reference = page.locator('[data-component-property="ref"]');
+    await expect(reference).toHaveValue("X1");
+    await reference.fill("EDITED1");
+    await reference.press("Tab");
     const saved = await saveDrawing(page, id);
     expect(saved.data.project).toBe(id + " workshop");
     expect(
