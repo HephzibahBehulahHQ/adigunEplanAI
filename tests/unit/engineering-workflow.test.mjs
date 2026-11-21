@@ -2234,6 +2234,32 @@ test("wire lanes share routing, branch geometry, length and native persistence",
   );
 });
 
+test("manual wire bends retain diagonal route geometry and length on reopen", () => {
+  const wire = {
+    id: "manual",
+    kind: "wire",
+    x1: 0,
+    y1: 0,
+    x2: 10,
+    y2: 4,
+    waypoints: [
+      { x: 3, y: 4 },
+      { x: 7, y: 4 },
+    ],
+  };
+  const project = { project: "Manual route", sheets: [], objects: [wire] };
+  const restored = engine.parseProject(
+    engine.serializeProject(project),
+  ).project;
+  assert.deepEqual(plain(restored.objects[0]), wire);
+  assert.equal(engine.wireRouteLength(restored.objects[0]), 12);
+  assert.equal(engine.wireList(restored.objects).rows[0].lengthMm, 12);
+  assert.throws(
+    () => engine.wireRoute({ ...wire, waypoints: [{ x: Infinity, y: 4 }] }),
+    /finite bend/,
+  );
+});
+
 test("project cable export follows the current core assignments and continuation identities", () => {
   const project = engine.createExample("eng0601");
   const rows = engine.cableCoreRegister(project);
