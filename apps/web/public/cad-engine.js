@@ -1515,7 +1515,7 @@ function createPumpStarterDocumentation(name) {
       'F3 Siemens 5SY4110-7 C10; F4 Phoenix 2908262 set to 1 A. Verify upstream and branch coordination.',
       'H1 / H2 | Panel door | coil voltage / F2 trip contact | Schneider XB5AVB3 green / XB5AVB4 red.',
       'X1–X5 / XPE | Panel terminals with sourced covers and brackets. See A3 layouts and the A4 material register.',
-      'Cables W1 supply, W2 motor, W3 pressure: route, lengths, installation methods and core sizes unresolved.',
+      'Cable tags: W1 supply, W2 panel to Q2, W3 Q2 to M1, W4 pressure, W5 Q2 auxiliary. Sizes and routes open.',
       'K1, F2, M1, PS1 and S0/S1 candidates already exist in the component library; no generic substitutions.',
       'Q2:AUX | Field | Siemens 3LD9200-5B | mechanically mounted on Q2; 23/24 in hold circuit.',
       'A4 BOM must be generated from final instantiated devices, not this provisional candidate register.'
@@ -1595,13 +1595,15 @@ function createPumpStarterDocumentation(name) {
       terminal.properties.comment='Panel outgoing phase terminal to field Q2; cable sizing and enclosure selection remain unresolved.';
       const a=wire(7,'field-out-'+n,pin(terminal,'connection-2'),out,'W2:'+n),
         b=wire(8,'field-in-'+n,input,pin(q2,'line-l'+n),'W2:'+n);
+      a.cable={tag:'W2',core:String(n)};
+      b.cable={tag:'W2',core:String(n)};
       a.continuationEnds=['end'];b.continuationEnds=['start'];
       powerLinks.push({id:'eng0601-x2-q2-'+n,name:'W2:'+n+' · X2:'+n+' → Q2:'+String(n*2-1)+'L'+n,endpoints:[
         {sheetId:sheets[7].id,wireId:a.id,point:out,connector:{targetSheetId:sheets[8].id,targetRef:'Q2',direction:'right'}},
         {sheetId:sheets[8].id,wireId:b.id,point:input,connector:{targetSheetId:sheets[7].id,targetRef:'X2:'+n,direction:'left'}}
       ]});
       const phase=['u','v','w'][n-1],other=['w','u','v'][n-1];
-      wire(8,'q2-m1-'+n,pin(q2,'load-t'+n),pin(m1,'winding-'+phase+'1'),'W3:'+n);
+      wire(8,'q2-m1-'+n,pin(q2,'load-t'+n),pin(m1,'winding-'+phase+'1'),'W3:'+n).cable={tag:'W3',core:String(n)};
       wire(8,'delta-'+n,pin(m1,'winding-'+phase+'1'),pin(m1,'winding-'+other+'2'),'M1 bridge '+n);
     }
     const earth=wire(8,'motor-pe',pin(pe,'connection-2'),pin(m1,'protective-earth'),'PE');
@@ -1623,18 +1625,19 @@ function createPumpStarterDocumentation(name) {
     pressure.properties.risingPressureBar=2;pressure.properties.fallingPressureBar=1;
     pressure.properties.processPoint='Pump discharge';
     pressure.properties.thresholdDesignNote='Educational assumption: stop at 2 bar rising, allow reset below 1 bar. Verify process suitability, contact action and differential before use.';
-    function continuation(id,from,fromPin,fromPoint,to,toPin,toPoint,label,fromDirection,toDirection){
+    function continuation(id,from,fromPin,fromPoint,to,toPin,toPoint,label,fromDirection,toDirection,cable){
       const fp=sheets.findIndex(function(s){return s.id===from.sheetId;}),tp=sheets.findIndex(function(s){return s.id===to.sheetId;}),a=wire(fp,id+'-from',pin(from,fromPin),fromPoint,label),b=wire(tp,id+'-to',toPoint,pin(to,toPin),label);
       a.continuationEnds=['end'];b.continuationEnds=['start'];
+      if(cable){a.cable=Object.assign({},cable);b.cable=Object.assign({},cable);}
       powerLinks.push({id:'eng0601-control-'+id,name:label,endpoints:[{sheetId:from.sheetId,wireId:a.id,point:fromPoint,connector:{targetSheetId:to.sheetId,targetRef:to.ref,targetInstanceId:to.id,direction:fromDirection||'right'}},{sheetId:to.sheetId,wireId:b.id,point:toPoint,connector:{targetSheetId:from.sheetId,targetRef:from.ref,targetInstanceId:from.id,direction:toDirection||'left'}}]});
     }
     const fieldControl=[1,2,3,4].map(function(n){return part(16,'phoenix-contact-3044076','X5:'+n,400,80+n*100,0,'Panel field-control interface; feed-through terminal. Cable/core assignments and accessory selection remain to be verified.');});
-    continuation('field-q2-feed',fieldControl[0],'connection-2',{x:580,y:180},auxiliary,'no-23',{x:60,y:270},'Q2-FEED','right','right');
-    continuation('field-q2-return',auxiliary,'no-24',{x:280,y:330},fieldControl[1],'connection-2',{x:580,y:280},'Q2-RETURN','left','right');
-    continuation('field-b1-feed',fieldControl[2],'connection-2',{x:580,y:380},pressure,'terminal-11',{x:620,y:250},'B1-FEED','right','right');
-    continuation('field-b1-return',pressure,'terminal-12',{x:620,y:470},fieldControl[3],'connection-2',{x:580,y:480},'B1-RETURN','right','right');
+    continuation('field-q2-feed',fieldControl[0],'connection-2',{x:580,y:180},auxiliary,'no-23',{x:60,y:270},'Q2-FEED','right','right',{tag:'W5',core:'1'});
+    continuation('field-q2-return',auxiliary,'no-24',{x:280,y:330},fieldControl[1],'connection-2',{x:580,y:280},'Q2-RETURN','left','right',{tag:'W5',core:'2'});
+    continuation('field-b1-feed',fieldControl[2],'connection-2',{x:580,y:380},pressure,'terminal-11',{x:620,y:250},'B1-FEED','right','right',{tag:'W4',core:'1'});
+    continuation('field-b1-return',pressure,'terminal-12',{x:620,y:470},fieldControl[3],'connection-2',{x:580,y:480},'B1-RETURN','right','right',{tag:'W4',core:'2'});
     text(16,'field-control-basis',60,110,'PANEL X5 — four independent feed-through terminals; field devices remain on their existing sheets.',12,1070);
-    text(16,'field-control-notes',740,180,'X5:1 / X5:2 — Q2 auxiliary loop.\nX5:3 / X5:4 — B1 pressure loop.\nNo bridging between these four terminals.\nX5:4 feeds Start and the K1 holding contact.\nTerminal coordinates are schematic only.\nCable/core and physical rail design pending.',12,400);
+    text(16,'field-control-notes',740,180,'X5:1 / X5:2 — Q2 auxiliary via W5 cores 1/2.\nX5:3 / X5:4 — B1 pressure via W4 cores 1/2.\nNo bridging between these four terminals.\nX5:4 feeds Start and the K1 holding contact.\nTerminal coordinates are schematic only.\nCable products, lengths and PE details remain open.',12,400);
     wire(9,'control-positive',pin(positive,'connection-2'),pin(stop,'contact-21'),'24V-01');
     continuation('stop-isolator',stop,'contact-22',{x:400,y:200},fieldControl[0],'connection-1',{x:220,y:180},'24V-02 · S0:22 → X5:1','right','right');
     continuation('isolator-overload',fieldControl[1],'connection-1',{x:220,y:280},f2,'aux-95',{x:600,y:250},'24V-03 · X5:2 → F2:95','left','right');
@@ -1782,9 +1785,10 @@ function createPumpStarterDocumentation(name) {
         if(!device||!terminal||!page)throw new Error('Unresolved continuation register endpoint: '+link.id);
         return page.number+' '+device.ref+':'+terminal.number;
       });
-      text(18,'continuation-row-'+index,index<19?60:620,145+(index%19)*21,ends.join(' → '),10,510);
+      const cable=objects.find(function(o){return o.id===link.endpoints[0].wireId;}).cable;
+      text(18,'continuation-row-'+index,index<19?60:620,145+(index%19)*21,ends.join(' → ')+(cable?' · '+cable.tag+':'+cable.core:''),10,510);
     });
-    text(18,'continuation-scope',60,560,'Each row records one paired continuation. Same-sheet wires are omitted.\nRAIL is a mounting-foot interface, not a conductor clamp.\nAfter rewiring, inspect Electrical checks; this snapshot does not auto-refresh.\nCable products, cores, lengths and installation calculations remain unselected.',10,610);
+    text(18,'continuation-scope',60,560,'Each row records one paired continuation. Same-sheet wires are omitted.\nRAIL identifies a mounting-foot interface. Assigned cable cores appear alongside endpoints.\nAfter rewiring, inspect Electrical checks; this snapshot does not auto-refresh.\nCable products, lengths and installation calculations remain open.',10,610);
     const enclosure=part(19,'rittal-1059000','ENC1',300,350,0,'Educational enclosure choice; final assembly thermal, clearance and bonding verification remains required.');
     enclosure.properties.location='Indoor starter/control cabinet';
     const panelProject={objects:objects,sheets:sheets};
@@ -1933,16 +1937,35 @@ function createPumpStarterDocumentation(name) {
       'Supply inputs: maximum prospective fault current ___ kA; minimum earth fault current ___ A; method/date ___.',
       'Upstream device and settings ___; maximum fault duty at Q1, F1 and auxiliary branch ___; evidence ___.',
       'Compare maximum duty with exact switchgear and Siemens combination conditions, including upstream limits.',
-      'Record W1 and W2 routes, lengths, core sizes, installation methods, grouping and ambient temperature.',
+      'Record W1–W3 routes, lengths, core sizes, installation methods, grouping and ambient temperature.',
       'Verify effective ampacity, start/run voltage drop, minimum-fault disconnection and conductor thermal withstand.',
       'Check F2 setting, start duration and overload class; verify selectivity and auxiliary branch protection.',
       'Confirm supply and neutral switching requirements for Q1. Confirm PE continuity using the A3 bond schedule.',
       'REVIEW: pending site inputs and independent review. Record evidence, reviewer and acceptance date ___.',
     ]);
+    const cableEndpoints=new Map();
+    const devicesById=new Map(objects.filter(function(o){return o.kind==='component-instance';}).map(function(o){return [o.id,o];}));
+    objects.filter(function(o){return o.kind==='wire'&&o.cable;}).forEach(function(wire){
+      const tag=wire.cable.tag,core=wire.cable.core;
+      if(!cableEndpoints.has(tag))cableEndpoints.set(tag,new Map());
+      const cable=cableEndpoints.get(tag);
+      if(!cable.has(core))cable.set(core,[]);
+      Object.values(wire.attachments||{}).forEach(function(binding){
+        const device=devicesById.get(binding.instanceId);
+        const terminal=worldPins(device).find(function(pin){return pin.id===binding.pinId;});
+        cable.get(core).push(device.ref+':'+terminal.number);
+      });
+    });
+    text(feederReview,'feeder-core-heading',60,400,'FIELD WORKING CORES · snapshot derived from native wire attachments',11,1060);
+    Array.from(cableEndpoints).sort(function(a,b){return a[0].localeCompare(b[0]);}).forEach(function(entry,index){
+      const [tag,cores]=entry;
+      const labels=Array.from(cores,function(core){return core[0]+' '+core[1].join(' → ');});
+      text(feederReview,'feeder-cable-'+tag,60,424+index*23,tag+' | '+labels.join('   /   '),11,1060);
+    });
     const handover=a4Sheet('Handover and unresolved design register');rows(handover,[
       'RELEASE STATUS: ENGINEERING DEVELOPMENT — NOT APPROVED FOR INSTALLATION.',
       'Deliverable: one native editable project; A1 basis, A2 circuits, A3 enclosure basis and A4 report snapshots.',
-      'Cable/core status: no project cable products, measured lengths or approved cable sizing have been assigned.',
+      'Cable/core status: W2–W5 working cores are mapped. Product selection, PE routing and cable sizing remain open.',
       'Supply assumptions: Germany, 400/230 V TN-S, indoor 25 °C; confirm actual site conditions.',
       'Outstanding: prospective fault current, upstream protection and complete source-isolation verification.',
       'Outstanding: cable installation methods, grouping, voltage drop, protective conductor and fault checks.',
