@@ -1,0 +1,30 @@
+#eplan-workspace-gate {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(5 13 21 / 88%);
+  color: #f5f1e8;
+  text-align: center;
+  padding: 1rem;
+}
+#eplan-workspace-gate > div {
+  max-width: 30rem;
+  padding: 1.5rem;
+  border: 1px solid #61788a;
+  border-radius: 0.5rem;
+  background: #132c43;
+}
+#eplan-workspace-gate button {
+  padding: 0.5rem 1rem;
+  color: #132c43;
+  background: #f0ce69;
+  border: 0;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+#eplan-account-button {
+  width: auto;
+  padding-inline: 0.55rem;
+}

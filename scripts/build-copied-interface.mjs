@@ -42,6 +42,40 @@ html = html.replace(
   "./src/compactPlanImport.ts",
   `./${planImport}?v=${importDigest}`,
 );
+const accountScript = "assets/workspace-account.js";
+const accountStyles = "assets/workspace-account.css";
+await build({
+  configFile: false,
+  publicDir: false,
+  define: { "process.env.NODE_ENV": JSON.stringify("production") },
+  build: {
+    outDir: `${dist}/assets`,
+    emptyOutDir: false,
+    lib: {
+      entry: `${root}apps/web/src/copiedInterfaceAccount.tsx`,
+      formats: ["es"],
+      fileName: () => "workspace-account.js",
+      cssFileName: "workspace-account",
+    },
+  },
+  esbuild: { jsx: "automatic" },
+});
+const versionedAccountAsset = (asset) => {
+  const digest = crypto
+    .createHash("sha256")
+    .update(fs.readFileSync(`${dist}/${asset}`))
+    .digest("hex")
+    .slice(0, 16);
+  return `./${asset}?v=${digest}`;
+};
+html = html.replace(
+  "./src/copiedInterfaceAccount.tsx",
+  versionedAccountAsset(accountScript),
+);
+html = html.replace(
+  "</head>",
+  `<link rel="stylesheet" href="${versionedAccountAsset(accountStyles)}" />\n</head>`,
+);
 for (const asset of ["cad-engine.js", "eplan-symbols.js"]) {
   const digest = crypto
     .createHash("sha256")

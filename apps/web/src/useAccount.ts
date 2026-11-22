@@ -5,11 +5,7 @@ import {
   type Session,
   type User,
 } from "@supabase/supabase-js";
-import {
-  accountRedirectUrl,
-  supabasePublishableKey,
-  supabaseUrl,
-} from "./publicBackendConfig";
+import { supabasePublishableKey, supabaseUrl } from "./publicBackendConfig";
 import type { CloudSession } from "../../../packages/project-storage/cloud.ts";
 import {
   ownedAvatarPath,
@@ -33,14 +29,13 @@ const supabase = createClient(supabaseUrl, supabasePublishableKey, {
     storageKey: authStorageKey,
     persistSession: true,
     autoRefreshToken: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false,
     flowType: "pkce",
   },
 });
 type AccountState = {
   user: User | null;
   checking: boolean;
-  recovery: boolean;
   error: boolean;
 };
 export function profileName(user: User | null): string {
@@ -49,11 +44,56 @@ export function profileName(user: User | null): string {
   return typeof value === "string" ? value.slice(0, 160) : "";
 }
 
+type AccountIntent = "sign-in" | "register" | "reset-password";
+
+async function productAccountRequest(payload: Record<string, unknown>) {
+  const response = await fetch("/api/account", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    signal: AbortSignal.timeout(15000),
+    body: JSON.stringify(payload),
+  });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.error || "accountFailure");
+  return result;
+}
+
+export async function requestGuestTrial(allowStart: boolean): Promise<number> {
+  const result = await productAccountRequest({ step: "guest", allowStart });
+  if (
+    result.step !== "guest" ||
+    !Number.isInteger(result.remainingMs) ||
+    result.remainingMs < 0 ||
+    result.remainingMs > 240_000
+  ) {
+    throw new Error("accountFailure");
+  }
+  return result.remainingMs;
+}
+
+async function checkProductSession(accessToken: string) {
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/rpc/adiguneplanai_has_verified_product_session`,
+    {
+      method: "POST",
+      signal: AbortSignal.timeout(10000),
+      headers: {
+        apikey: supabasePublishableKey,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: "{}",
+    },
+  );
+  if (!response.ok) throw new Error("accountFailure");
+  return (await response.json()) === true;
+}
+
 export function useAccount() {
   const [state, setState] = useState<AccountState>({
     user: null,
     checking: true,
-    recovery: false,
     error: false,
   });
   const verified = useRef<CloudSession | null>(null);
@@ -74,20 +114,17 @@ export function useAccount() {
       if (alive.current)
         setState((previous) =>
           previous.checking
-            ? { user: null, checking: false, recovery: false, error: true }
+            ? { user: null, checking: false, error: true }
             : previous,
         );
     }, 12000);
-    const onChange = (event: AuthChangeEvent, session: Session | null) => {
+    const onChange = (_event: AuthChangeEvent, session: Session | null) => {
       clearTimeout(initializationTimeout);
       const version = ++epoch.current;
       verified.current = null;
       setState((previous) => ({
         user: session?.user.id === previous.user?.id ? previous.user : null,
         checking: Boolean(session),
-        recovery:
-          event === "PASSWORD_RECOVERY" ||
-          (Boolean(session) && previous.recovery),
         error: false,
       }));
       if (timer) clearTimeout(timer);
@@ -96,7 +133,7 @@ export function useAccount() {
       timer = setTimeout(() => {
         void supabase.auth
           .getUser(session.access_token)
-          .then(({ data, error }) => {
+          .then(async ({ data, error }) => {
             if (!alive.current || epoch.current !== version) return;
             const user = data.user;
             if (
@@ -119,9 +156,16 @@ export function useAccount() {
                     ? previous.user
                     : null,
                 checking: false,
-                recovery: false,
                 error: true,
               }));
+              return;
+            }
+            const productVerified = await checkProductSession(
+              session.access_token,
+            );
+            if (!alive.current || epoch.current !== version) return;
+            if (!productVerified) {
+              setState({ user: null, checking: false, error: false });
               return;
             }
             verified.current = {
@@ -142,7 +186,6 @@ export function useAccount() {
                 user:
                   previous.user?.id === session.user.id ? previous.user : null,
                 checking: false,
-                recovery: false,
                 error: true,
               }));
           });
@@ -202,7 +245,6 @@ export function useAccount() {
   }, [ownerId, avatarPath, accountVerified, cloudSession]);
   async function updateBoundUser(
     attributes: {
-      password?: string;
       data?: Record<string, unknown>;
     },
     current = verified.current,
@@ -301,33 +343,39 @@ export function useAccount() {
         await client.remove(path);
       }
     },
-    async signIn(email: string, password: string) {
-      const { error } = await supabase.auth.signInWithPassword({
+    async begin(intent: AccountIntent, email: string, password: string) {
+      const result = await productAccountRequest({
+        step: "begin",
+        mode: intent,
         email: email.trim(),
         password,
       });
-      if (error) throw new Error("accountFailure");
+      if (result.step !== "verify") throw new Error("accountFailure");
     },
-    async register(email: string, password: string) {
-      const { error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password,
-        options: { emailRedirectTo: accountRedirectUrl },
+    async verify(
+      code: string,
+    ): Promise<"signed-in" | "registered" | "password-reset"> {
+      const result = await productAccountRequest({
+        step: "verify",
+        code: code.trim(),
       });
-      if (error) throw new Error("accountFailure");
-    },
-    async resetPassword(email: string) {
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        email.trim(),
-        { redirectTo: accountRedirectUrl },
-      );
-      if (error) throw new Error("accountFailure");
-    },
-    async updatePassword(password: string) {
-      if (!verified.current) throw new Error("accountFailure");
-      await updateBoundUser({ password });
-      if (alive.current)
-        setState((previous) => ({ ...previous, recovery: false }));
+      if (result.step === "signed-in") {
+        if (
+          typeof result.session?.access_token !== "string" ||
+          typeof result.session?.refresh_token !== "string"
+        )
+          throw new Error("accountFailure");
+        const { error } = await supabase.auth.setSession(result.session);
+        if (error) throw new Error("accountFailure");
+      } else if (result.step === "password-reset" && verified.current) {
+        await supabase.auth.signOut({ scope: "local" });
+      } else if (
+        result.step !== "registered" &&
+        result.step !== "password-reset"
+      ) {
+        throw new Error("accountFailure");
+      }
+      return result.step;
     },
     async updateProfile(displayName: string) {
       const current = verified.current;
@@ -349,7 +397,7 @@ export function useAccount() {
     async signOut() {
       verified.current = null;
       ++epoch.current;
-      setState({ user: null, checking: false, recovery: false, error: false });
+      setState({ user: null, checking: false, error: false });
       const { error } = await supabase.auth.signOut({ scope: "local" });
       if (error) throw new Error("accountFailure");
     },

@@ -7,12 +7,14 @@ import { validateAvatarFile } from "../../../packages/project-storage/avatar.ts"
 
 type Props = {
   account: Account;
-  native: NativeProjects;
+  native?: NativeProjects;
   dialog: RefObject<HTMLDialogElement | null>;
   t: (key: MessageKey) => string;
 };
 export function AccountPanel({ account, native, dialog, t }: Props) {
   const [mode, setMode] = useState<"signIn" | "register" | "reset">("signIn");
+  const [codePending, setCodePending] = useState(false);
+  const [credentialEmail, setCredentialEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<MessageKey | null>(null);
   const active = useRef(true);
@@ -34,21 +36,35 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
       if (previewUrl.current) URL.revokeObjectURL(previewUrl.current);
     };
   }, []);
-  useEffect(() => {
-    if (account.recovery && !dialog.current?.open) dialog.current?.showModal();
-  }, [account.recovery, dialog]);
   const perform = async (
-    operation: () => Promise<void>,
+    operation: () => Promise<void | MessageKey>,
     success: MessageKey | null,
   ) => {
     if (busy) return;
     setBusy(true);
     setMessage(null);
     try {
-      await operation();
-      if (active.current) setMessage(success);
-    } catch {
-      if (active.current) setMessage("accountFailure");
+      const result = await operation();
+      if (active.current) setMessage(result ?? success);
+    } catch (error) {
+      if (!active.current) return;
+      const key = error instanceof Error ? error.message : "";
+      if (
+        key === "email-code-request-required" ||
+        key === "product-account-not-authorized"
+      )
+        setCodePending(false);
+      setMessage(
+        key === "invalid-or-expired-email-code"
+          ? "accountInvalidCode"
+          : key === "wait-and-retry"
+            ? "accountCodeWait"
+            : key === "email-code-request-required"
+              ? "accountCodeRestart"
+              : key === "invalid-product-credentials"
+                ? "accountInvalidCredentials"
+                : "accountFailure",
+      );
     } finally {
       if (active.current) setBusy(false);
     }
@@ -76,7 +92,53 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
           {t("accountRetryVerify")}
         </button>
       )}
-      {account.user ? (
+      {codePending ? (
+        <form
+          aria-label={t("accountEmailCode")}
+          onSubmit={(event) => {
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            void perform(async () => {
+              const result = await account.verify(
+                String(data.get("code") ?? ""),
+              );
+              setCodePending(false);
+              setMode("signIn");
+              return result === "registered"
+                ? "accountRegistered"
+                : result === "password-reset"
+                  ? "accountPasswordSaved"
+                  : "accountSignedIn";
+            }, null);
+          }}
+        >
+          <label>
+            {t("accountEmailCode")}
+            <input
+              name="code"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              pattern="[0-9]{6,10}"
+              maxLength={10}
+              required
+            />
+          </label>
+          <div className="account-actions">
+            <button disabled={busy}>{t("accountVerifyCode")}</button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => {
+                setCodePending(false);
+                setMessage(null);
+              }}
+            >
+              {t("accountStartAgain")}
+            </button>
+          </div>
+        </form>
+      ) : account.user ? (
         <>
           <p>{account.user.email}</p>
           {!account.verified && <p>{t("accountOffline")}</p>}
@@ -183,9 +245,16 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
               const form = event.currentTarget;
               const password = String(new FormData(form).get("password"));
               void perform(async () => {
-                await account.updatePassword(password);
+                if (!account.user?.email) throw new Error("accountFailure");
+                await account.begin(
+                  "reset-password",
+                  account.user.email,
+                  password,
+                );
+                setCredentialEmail(account.user.email);
                 form.reset();
-              }, "accountPasswordSaved");
+                setCodePending(true);
+              }, "accountEnterCode");
             }}
           >
             <label>
@@ -193,7 +262,7 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
               <input
                 name="password"
                 type="password"
-                minLength={8}
+                minLength={12}
                 maxLength={256}
                 required
                 autoComplete="new-password"
@@ -203,7 +272,9 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
               {t("accountPasswordUpdate")}
             </button>
           </form>
-          <CloudProjectPanel account={account} native={native} t={t} />
+          {native && (
+            <CloudProjectPanel account={account} native={native} t={t} />
+          )}
           <button
             onClick={() => {
               void account.signOut().catch(() => {
@@ -246,16 +317,18 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
               const data = new FormData(form);
               const email = String(data.get("email"));
               const password = String(data.get("password") ?? "");
-              void perform(
-                async () => {
-                  if (mode === "signIn") await account.signIn(email, password);
-                  else if (mode === "register")
-                    await account.register(email, password);
-                  else await account.resetPassword(email);
-                  form.reset();
-                },
-                mode === "signIn" ? "accountSignedIn" : "accountCheckEmail",
-              );
+              void perform(async () => {
+                const intent =
+                  mode === "signIn"
+                    ? "sign-in"
+                    : mode === "reset"
+                      ? "reset-password"
+                      : "register";
+                await account.begin(intent, email, password);
+                setCredentialEmail(email);
+                form.reset();
+                setCodePending(true);
+              }, "accountEnterCode");
             }}
           >
             <label>
@@ -263,26 +336,25 @@ export function AccountPanel({ account, native, dialog, t }: Props) {
               <input
                 name="email"
                 type="email"
-                maxLength={320}
+                maxLength={254}
+                defaultValue={credentialEmail}
                 required
                 autoComplete="email"
               />
             </label>
-            {mode !== "reset" && (
-              <label>
-                {t("accountPassword")}
-                <input
-                  name="password"
-                  type="password"
-                  minLength={mode === "register" ? 8 : 1}
-                  maxLength={256}
-                  required
-                  autoComplete={
-                    mode === "register" ? "new-password" : "current-password"
-                  }
-                />
-              </label>
-            )}
+            <label>
+              {t(mode === "reset" ? "accountNewPassword" : "accountPassword")}
+              <input
+                name="password"
+                type="password"
+                minLength={12}
+                maxLength={256}
+                required
+                autoComplete={
+                  mode === "signIn" ? "current-password" : "new-password"
+                }
+              />
+            </label>
             <button disabled={busy || account.checking}>
               {t("accountContinue")}
             </button>
