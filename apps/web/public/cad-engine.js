@@ -3285,6 +3285,16 @@ function createPumpStarterDocumentation(name) {
     }));
     return reportCsv([['Sheet','sheet'],['Category','kind'],['Description','description'],['Linked devices','devices']],rows);
   }
+  function drawingRegisterCsv(project){
+    return reportCsv([['Section','sectionId'],['Sheet number','number'],['Sheet reference','sheetReference'],['Sheet title','sheetTitle'],['Drawing number','drawingNumber'],
+      ['Revision','revision'],['Issue status','issueStatus'],['Drawing date','drawingDate'],['Job number','jobNumber'],['Project','projectTitle']],
+      project.sheets.map(sheet=>({...titleBlockValues(project,sheet),sectionId:sheet.sectionId,number:sheet.number})));
+  }
+  function revisionRegisterCsv(project){
+    const revisions=project.sheets.map(sheet=>({...titleBlockValues(project,sheet),number:sheet.number})).filter(row=>row.revision.trim()||row.revisionDate.trim());
+    return reportCsv([['Sheet number','number'],['Sheet reference','sheetReference'],['Sheet title','sheetTitle'],['Drawing number','drawingNumber'],['Revision','revision'],
+      ['Revision date','revisionDate'],['Issue status','issueStatus'],['Drawn by','drawnBy'],['Checked by','checkedBy'],['Approved by','approvedBy'],['Notes','notes']],revisions);
+  }
   const floorProfileColumns=[['Engineering documentation profile','engineeringProfile'],['Declared standard and edition','standardEdition']];
   function floorProfileReport(sheet){
     const plan=sheet.floorPlan;
@@ -3509,6 +3519,8 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    drawingRegisterCsv,
+    revisionRegisterCsv,
     automationNoteKinds,
     validAutomationNote,
     automationNoteRegisterCsv,

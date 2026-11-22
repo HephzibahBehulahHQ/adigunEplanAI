@@ -769,6 +769,16 @@ test("title block edits propagate shared fields and retain sheet overrides", asy
   await page.getByLabel("Project manager", { exact: true }).press("Tab");
   await page.getByLabel("Sheet revision", { exact: true }).fill("02");
   await page.getByLabel("Sheet revision", { exact: true }).press("Tab");
+  await page
+    .getByLabel("Project issueStatus", { exact: true })
+    .fill("Draft review");
+  await page.getByLabel("Project issueStatus", { exact: true }).press("Tab");
+  await page.getByLabel("Sheet drawingNumber", { exact: true }).fill("DWG-001");
+  await page.getByLabel("Sheet drawingNumber", { exact: true }).press("Tab");
+  await page
+    .getByLabel("Sheet revisionDate", { exact: true })
+    .fill("2026-11-22");
+  await page.getByLabel("Sheet revisionDate", { exact: true }).press("Tab");
   await expect(page.locator("#customSheetFrame")).toContainText(
     "Manager example",
   );
@@ -792,6 +802,30 @@ test("title block edits propagate shared fields and retain sheet overrides", asy
   await expect(page.locator("#customSheetFrame")).toContainText("Revision: 02");
   await expect(page.locator("#customSheetFrame")).toContainText(
     "Hephzibah Behulah",
+  );
+  await page.locator("#customSheetFrame rect").last().dblclick();
+  const downloadRegister = async (type: "drawing" | "revision") => {
+    const pending = page.waitForEvent("download");
+    await page
+      .getByRole("button", { name: `Export ${type} register CSV` })
+      .click();
+    const download = await pending;
+    expect(download.suggestedFilename()).toBe(`${type}-register.csv`);
+    return fs
+      .readFileSync(await download.path(), "utf8")
+      .trim()
+      .split(/\r?\n/);
+  };
+  const drawings = await downloadRegister("drawing");
+  expect(drawings).toHaveLength(3);
+  expect(drawings[1]).toMatch(
+    /^"A1","A1\/000",.*"DWG-001","02","Draft review"/,
+  );
+  expect(drawings[2]).toMatch(/^"A2","A2\/001",.*"Draft review"/);
+  const revisions = await downloadRegister("revision");
+  expect(revisions).toHaveLength(2);
+  expect(revisions[1]).toMatch(
+    /^"A1\/000",.*"DWG-001","02","2026-11-22","Draft review"/,
   );
 });
 
