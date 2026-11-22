@@ -1421,8 +1421,10 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           const zone=object.floorZone;
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           const width=Math.abs(object.x2-object.x),length=Math.abs(object.y2-object.y);
+          const validBoundary=object.kind==='rect'?finite(width*length)&&width>=2&&length>=2:
+            object.kind==='freehand'&&floorZonePolygonArea(object.points)!==null;
           if(!zone||!['electrical','distribution'].includes(zone.kind)||typeof zone.name!=='string'||!zone.name.trim()||zone.name.length>80||
-            object.kind!=='rect'||object.roomName!==undefined||!floorIds.has(sheetId)||!finite(width*length)||width<2||length<2)errors.push('Invalid floor zone '+object.id+'.');
+            !validBoundary||object.roomName!==undefined||!floorIds.has(sheetId))errors.push('Invalid floor zone '+object.id+'.');
           if(zone?.roomIds!==undefined&&(!Array.isArray(zone.roomIds)||new Set(zone.roomIds).size!==zone.roomIds.length||
             zone.roomIds.some(id=>!rooms.has(id)||(rooms.get(id).sheetId||sheetId)!==sheetId)))errors.push('Zone rooms must be unique and on the same floor.');
           if(zone?.boardId!==undefined){
@@ -2548,6 +2550,28 @@ function createPumpStarterDocumentation(name) {
       return point&&finite(point.x)&&finite(point.y)&&(!index||Math.hypot(point.x-points[index-1].x,point.y-points[index-1].y)>0);
     })&&finite(floorRouteLength({points}));
   }
+  function floorZonePolygonArea(points){
+    if(!Array.isArray(points)||points.length<3||points.length>1000||!validFloorRoutePoints(points))return null;
+    if(new Set(points.map(point=>JSON.stringify([point.x,point.y]))).size!==points.length)return null;
+    const cross=(a,b,c)=>(b.x-a.x)*(c.y-a.y)-(b.y-a.y)*(c.x-a.x);
+    const intersects=(a,b,c,d)=>{
+      if(Math.max(a.x,b.x)<Math.min(c.x,d.x)||Math.max(c.x,d.x)<Math.min(a.x,b.x)||
+        Math.max(a.y,b.y)<Math.min(c.y,d.y)||Math.max(c.y,d.y)<Math.min(a.y,b.y))return false;
+      const spans=(p,q,r,s)=>Math.sign(cross(p,q,r))*Math.sign(cross(p,q,s))<=0;
+      return spans(a,b,c,d)&&spans(c,d,a,b);
+    };
+    let twiceArea=0;
+    for(let i=0;i<points.length;i++){
+      const a=points[i],b=points[(i+1)%points.length];
+      twiceArea+=cross(points[0],a,b);
+      for(let j=i+2;j<points.length;j++){
+        if(i===0&&j===points.length-1)continue;
+        if(intersects(a,b,points[j],points[(j+1)%points.length]))return null;
+      }
+    }
+    const area=Math.abs(twiceArea)/2;
+    return finite(area)&&area>0?area:null;
+  }
   function floorRouteLength(route){
     return route.points.slice(1).reduce((sum,point,index)=>sum+Math.hypot(point.x-route.points[index].x,point.y-route.points[index].y),0);
   }
@@ -3281,6 +3305,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
+    floorZonePolygonArea: floorZonePolygonArea,
     floorEngineeringProfiles: floorEngineeringProfiles,
     floorCableScheduleCsv: floorCableScheduleCsv,
     floorPanelScheduleCsv: floorPanelScheduleCsv,
