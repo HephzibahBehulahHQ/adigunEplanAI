@@ -3807,9 +3807,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(page.locator("#userDrawings [data-object]")).toHaveCount(4);
   const command = async (name: string) => {
-    await page.keyboard.press("Control+k");
+    await page.locator("#openCommands").click();
     await page.locator("#commandSearch").fill(name);
-    await page.locator("#commandSearch").press("Enter");
+    await page.locator("#commandList").getByText(name, { exact: true }).click();
   };
   await command("Draw room outline");
   const start = await sheetPoint(page, 460, 170);
@@ -4047,6 +4047,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   expect(diagramSvg).toContain("Known demand 450 W");
   const panelPending = page.waitForEvent("download");
   await command("Export floor panel schedule");
+  await expect(page.locator("#statusText")).toContainText(
+    "Register exported for all project sheets.",
+  );
   const panelReport = await panelPending;
   expect(panelReport.suggestedFilename()).toBe("floor-panel-schedule.csv");
   expect(fs.readFileSync((await panelReport.path())!, "utf8")).toContain(
