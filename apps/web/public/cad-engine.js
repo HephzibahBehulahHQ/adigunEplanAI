@@ -2616,6 +2616,7 @@ function createPumpStarterDocumentation(name) {
       {id:'indicator',name:'Indicator circuit',description:'Terminal → fuse → contact → lamp → return terminal. Generic schematic; no supply rating or simulation.'},
       {id:'relay',name:'Relay control circuit',description:'Terminal → fuse → contact → relay coil → return terminal. Generic schematic; no protection sizing or simulation.'},
       {id:'hardware-plc-input',hardware:true,name:'PLC digital input bench',description:'Siemens CPU 1212C DC/DC/DC with Schneider NO pushbutton, 24 V supply/return and functional-earth boundaries. No PLC program or simulation; protection, bonding and unused channels require engineering.'},
+      {id:'hardware-plc-io',hardware:true,name:'PLC input and output indication',description:'Editable Siemens PLC input and indicator output wiring with separate supply boundary terminals, signal documentation and a wiring review note.'},
       {id:'hardware-relay',hardware:true,name:'24 V momentary relay control',description:'Phoenix Contact relay and terminals with Schneider start/stop buttons. External supply/load boundaries; no seal-in or safety function.'},
       {id:'hardware-sensor',hardware:true,name:'PNP proximity sensor terminal wiring',description:'ifm IFS204 pin 1 supply, pin 3 return and pin 4 output with Phoenix Contact terminals. External supply/PLC boundaries.'},
       {id:'hardware-sitop',hardware:true,name:'SITOP 24 V terminal distribution',description:'Siemens PSU100C output distribution through Phoenix Contact terminals. Input supply, bonding and protection require engineering.'}];
@@ -2625,7 +2626,7 @@ function createPumpStarterDocumentation(name) {
     function device(id,ref,x,y,comment){const instance=createInstance(id,x,y,ref);instance.sheetId=sheetId;instance.properties.comment=comment||'';objects.push(instance);byRef[ref]=instance;return instance;}
     function connect(from,pinA,to,pinB){const a=byRef[from],b=byRef[to],ap=worldPins(a).find(function(p){return p.id===pinA;}),bp=worldPins(b).find(function(p){return p.id===pinB;});if(!ap||!bp)throw new Error('Example references an unknown terminal.');objects.push(attachWire({id:'wire-'+example.id+'-'+objects.length,kind:'wire',sheetId:sheetId,x:ap.x,y:ap.y,x1:ap.x,y1:ap.y,x2:bp.x,y2:bp.y,rotation:0,stroke:'#164eac'},Object.assign({},ap,{attachment:{instanceId:a.id,pinId:ap.id}}),Object.assign({},bp,{attachment:{instanceId:b.id,pinId:bp.id}})));}
     const ut='phoenix-contact-3044076',uk='phoenix-contact-3004362';
-    if(example.id==='hardware-plc-input'){
+    if(example.id==='hardware-plc-input'||example.id==='hardware-plc-io'){
       device(ut,'X1',160,204,'External protected 24 V DC supply. Source selection and protection remain project-specific.');
       device(ut,'X2',400,222,'External DC return shared by CPU supply M and input common 1M.');
       device(ut,'X3',500,240,'Functional-earth interface to engineered cabinet bonding; this feed-through terminal is not a PE rail-bonding terminal.');
@@ -2634,6 +2635,17 @@ function createPumpStarterDocumentation(name) {
       byRef.A1.plcIo={'x10-7':{signal:'Start pushbutton',address:''}};
       connect('X1','connection-2','A1','x10-1');connect('X2','connection-2','A1','x10-2');connect('X3','connection-2','A1','x10-3');
       connect('X1','connection-1','S1','contact-13');connect('S1','contact-14','A1','x10-7');connect('A1','x10-6','X2','connection-1');
+      if(example.id==='hardware-plc-io'){
+        device(ut,'X4',975,244,'External protected positive supply boundary for the transistor output group.');
+        device(ut,'X5',1110,274,'Output group DC return and pilot-light return. Check the common reference in the final supply design.');
+        device('schneider-electric-xb5avb3','H1',1010,354,'Indicator load for the documented output request. Check compatibility and output loading before implementation.');
+        byRef.A1.plcIo['x12-3']={signal:'Indicator request',address:''};
+        connect('A1','x12-1','X4','connection-1');connect('A1','x12-2','X5','connection-1');
+        connect('A1','x12-3','H1','terminal-x1');connect('H1','terminal-x2','X5','connection-2');
+        objects.push({id:'plc-io-sequence',kind:'text',sheetId,x:100,y:510,fontSize:14,textWidth:850,rotation:0,stroke:'#164eac',
+          text:'Review sequence: S1 is an input request. H1 is commanded by the documented output. Assign the program and confirm supply references, output loading and spare pins before applying power.',
+          automationNote:{kind:'sequence',deviceIds:[byRef.S1.id,byRef.A1.id,byRef.H1.id]}});
+      }
     }else if(example.id==='hardware-relay'){
       device(uk,'X1',140,320,'External protected 24 V DC positive supply boundary; protection and supply selection remain project-specific.');
       device(ut,'X2',500,180,'External 0 V return boundary.');

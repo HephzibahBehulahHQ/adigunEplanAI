@@ -1155,7 +1155,7 @@ test("project import rejects malformed attachment data and duplicate identities"
 });
 
 test("examples are independent editable projects with complete terminal attachments", () => {
-  assert.equal(engine.projectExamples().length, 7);
+  assert.equal(engine.projectExamples().length, 8);
   for (const example of engine
     .projectExamples()
     .filter((item) => ["indicator", "relay"].includes(item.id))) {
@@ -1191,6 +1191,7 @@ test("examples are independent editable projects with complete terminal attachme
 test("manufacturer examples preserve separate circuits and editable source-backed parts", () => {
   for (const [id, components, wires, spare, nets = wires] of [
     ["hardware-plc-input", 5, 6, 21, 4],
+    ["hardware-plc-io", 8, 10, 19, 7],
     ["hardware-relay", 7, 6, 5],
     ["hardware-sensor", 4, 3, 3],
     ["hardware-sitop", 3, 2, 5],
