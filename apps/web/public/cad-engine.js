@@ -1092,11 +1092,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
 
   const EPLAN_COMPONENTS = Object.freeze(Object.fromEntries((root.AdigunEplanSymbols || []).map(function(def) { return [def.id, deepFreeze(def)]; })));
   const wagoTopjobTerminals=deepFreeze(Object.fromEntries([
-    {orderCode:'2002-1301',positions:[3],heightMm:59.2,depthMm:32.9,revision:'21 June 2021',pages:'2–3',
+    {orderCode:'2002-1301',positions:[3],nominalVoltage:800,ratedCurrent:24,finish:'Gray',heightMm:59.2,depthMm:32.9,revision:'21 June 2021',pages:'2–3',dimensionPage:3,
       slug:'3-conductor-through-terminal-block',datasheet:'https://www.tme.com/Document/48da317c62302f1fde27b2c2b6a09f40/2002-1301.pdf'},
-    {orderCode:'2002-1401',positions:[4],heightMm:69.9,depthMm:32.9,revision:'02 November 2021',pages:'2–3',
+    {orderCode:'2002-1304',positions:[3],nominalVoltage:800,ratedCurrent:24,finish:'Blue',heightMm:59.2,depthMm:32.9,revision:'06 September 2024',pages:'1',dimensionPage:1,
+      slug:'3-conductor-through-terminal-block',datasheet:'https://www.faitaengineering.com/assets/product_image/674341683-WAGO_2002-1304en_SG.pdf',
+      connectionSource:'https://asset.conrad.com/media10/add/160267/c1/-/de/000730641DS01/datablad-730641-wago-2002-1304-doorgangsklem-520-mm-spanveer-toewijzing-n-blauw-1-stuks.pdf'},
+    {orderCode:'2002-1401',positions:[4],nominalVoltage:800,ratedCurrent:24,finish:'Gray',heightMm:69.9,depthMm:32.9,revision:'02 November 2021',pages:'2–3',dimensionPage:3,
       slug:'4-conductor-through-terminal-block',datasheet:'https://4donline.ihs.com/images/VipMasterIC/IC/WAGO/WAGO-S-A0013864068/WAGO-S-A0013864653-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0'},
-    {orderCode:'2002-2401',positions:[4,4],heightMm:105.1,depthMm:52.1,revision:'27 June 2024',pages:'1–2',
+    {orderCode:'2002-1403',positions:[4],nominalVoltage:800,ratedCurrent:24,finish:'Red',heightMm:69.9,depthMm:32.9,revision:'13 June 2025',pages:'1–3',dimensionPage:2,
+      slug:'4-conductor-through-terminal-block',datasheet:'https://www.tme.eu/Document/4f60907ecb4c1bae8b1afd339364dd4e/2002-1403.pdf'},
+    {orderCode:'2002-2201',positions:[2,2],nominalVoltage:500,ratedCurrent:24,finish:'Gray',markerCarrier:false,heightMm:69.7,depthMm:51.7,revision:'13 November 2023',pages:'1–2',dimensionPage:2,
+      slug:'double-deck-terminal-block',datasheet:'https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/50/73/32715073.pdf'},
+    {orderCode:'2002-2231',positions:[2,2],nominalVoltage:500,ratedCurrent:24,finish:'Gray',markerCarrier:true,heightMm:69.7,depthMm:61.8,revision:'13 November 2023',pages:'1–2',dimensionPage:2,
+      slug:'double-deck-terminal-block',datasheet:'https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/51/78/32715178.pdf'},
+    {orderCode:'2002-2401',positions:[4,4],nominalVoltage:800,ratedCurrent:24,finish:'Gray',markerCarrier:false,heightMm:105.1,depthMm:52.1,revision:'27 June 2024',pages:'1–2',dimensionPage:2,
       slug:'4-conductor-double-deck-terminal-block',datasheet:'https://tlauk.net/document/65105/Wago%2C%202002-2401.pdf'}
   ].map(part=>{
     const id='wago-'+part.orderCode,deckCount=part.positions.length,height=deckCount*54+16;
@@ -1109,11 +1118,12 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       artwork.push(line(-34,y,34,y));
       for(let index=0;index<count;index++){
         const side=index<Math.ceil(count/2)?-1:1;
-        const pinY=y+(index%2===0?-10:10),localNumber=(deckCount===1?'':deck===0?'U':'L')+(index+1);
+        const pinY=count===2?y:y+(index%2===0?-10:10),localNumber=(deckCount===1?'':deck===0?'U':'L')+(index+1);
         const pin={id:'clamp-'+localNumber.toLowerCase(),localNumber,name:'Clamping position '+localNumber,
           x:side*72,y:pinY,electricalType:'passive',connectionType:'Push-in CAGE CLAMP'};
         pins.push(pin);group.push(pin.id);
-        artwork.push(line(pin.x,pin.y,side*34,pin.y),line(side*34,pin.y,side*34,y));
+        artwork.push(line(pin.x,pin.y,side*34,pin.y));
+        if(pin.y!==y)artwork.push(line(side*34,pin.y,side*34,y));
       }
       internalConnections.push(group);
     }
@@ -1122,15 +1132,18 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:144,height,pins,internalConnections,artwork,
         numberingNote:'Anchor labels identify schematic clamping positions. Each level is one documented potential; no cross-level or adjacent-block jumper is included.'},
       specifications:{connectionCount:{value:pins.length},levels:{value:deckCount},potentials:{value:deckCount},
-        ratedCurrent:{value:24,unit:'A'},nominalVoltage:{value:800,unit:'V',basis:'IEC/EN, category III, pollution degree 3'},
+        ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN, category III, pollution degree 3'},
+        finish:{value:part.finish},...(part.markerCarrier===undefined?{}:{markerCarrier:{value:part.markerCarrier?'Fitted':'Without marker carrier'}}),
         nominalCrossSection:{value:2.5,unit:'mm²'},mounting:{value:'DIN rail 35 × 7.5 or 35 × 15 mm'},
         railReferencedDimensions:{width:{value:5.2,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}},
-      panelFootprint:{widthMm:5.2,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:deckCount===2?2:3,
+      panelFootprint:{widthMm:5.2,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:part.dimensionPage,
         note:'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.'},
       instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
       sources:[{publisher:'WAGO',title:`${part.orderCode} datasheet, pp. ${part.pages}`,url:part.datasheet,documentRevision:part.revision,
         revisionNote:'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:'2026-11-22'},
-        {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:'2026-11-22'}]}];
+        {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:'2026-11-22'},
+        ...(part.connectionSource?[{publisher:'WAGO',title:'Connection schedule, p. 1',url:part.connectionSource,documentRevision:'30 September 2008',
+          revisionNote:'Three clamping positions on one potential.',retrievedAt:'2026-11-22'}]:[])]}];
   })));
   const BUILDING_COMPONENTS=deepFreeze(Object.fromEntries([
     ['building-luminaire','Floor-plan luminaire','LUM','M-50 -50L50 50M-50 50L50 -50',[-60,-60,120,120]],
@@ -3572,9 +3585,12 @@ function createPumpStarterDocumentation(name) {
       });
     });
     const rows = project.objects.filter(function(object) { return object.kind === 'component-instance'; }).flatMap(function(device) {
-      return worldPins(device).flatMap(function(pin) {
+      const pins=worldPins(device),numbers=new Map(pins.map(pin=>[pin.id,pin.number]));
+      const groups=component(device.componentId)?.symbol.internalConnections??[];
+      return pins.flatMap(function(pin) {
         const key = JSON.stringify([device.id,pin.id]);
-        const terminal = {sheet:sheets.get(device.sheetId), ref:device.ref, terminal:pin.number, pin:pin.id};
+        const commonPositions=groups.filter(group=>group.includes(pin.id)).map(group=>group.map(id=>numbers.get(id)).join(' / '));
+        const terminal = {sheet:sheets.get(device.sheetId), ref:device.ref, terminal:pin.number, pin:pin.id, commonPositions};
         return (assignments.get(key) || [{}]).map(function(assignment) {
           return Object.assign({},terminal,assignment,{status:assignment.wire?'Attached':'Unwired'});
         });
@@ -3582,7 +3598,7 @@ function createPumpStarterDocumentation(name) {
     });
     return reportCsv([['Sheet','sheet'], ['Device','ref'], ['Terminal','terminal'], ['Pin ID','pin'],
       ['Status','status'], ['Wire ID','wire'], ['Wire end','end'], ['Conductor','conductor'],
-      ['Cable tag','cable'], ['Core','core']],rows);
+      ['Cable tag','cable'], ['Core','core'], ['Declared common clamping positions','commonPositions']],rows);
   }
 
   function wireListCsv(objects) {

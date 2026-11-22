@@ -25,3 +25,15 @@ from product markings. The body envelopes use the documented DIN rail datum.
 - 2002-1301, WAGO datasheet dated 21 June 2021, pages 2–3. [Datasheet](https://www.tme.com/Document/48da317c62302f1fde27b2c2b6a09f40/2002-1301.pdf)
 - 2002-1401, WAGO datasheet dated 02 November 2021, pages 2–3. [Datasheet](https://4donline.ihs.com/images/VipMasterIC/IC/WAGO/WAGO-S-A0013864068/WAGO-S-A0013864653-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0)
 - 2002-2401, WAGO datasheet version 27 June 2024, pages 1–2. [Datasheet](https://tlauk.net/document/65105/Wago%2C%202002-2401.pdf)
+
+## Second terminal-system batch
+
+Four additional exact parts retain their own ratings, finish, mounting envelope
+and clamping groups. The 2002-2201 and 2002-2231 have two clamps per level and a
+500 V IEC/EN nominal rating for category III and pollution degree 3. The marker
+carrier on the 2002-2231 changes the depth above the rail from 51.7 to 61.8 mm.
+The terminal CSV identifies the declared common clamping positions per row.
+
+- 2002-1304, WAGO datasheet 06 September 2024 and the connection schedule dated 30 September 2008. [Electrical and mechanical data](https://www.faitaengineering.com/assets/product_image/674341683-WAGO_2002-1304en_SG.pdf) · [Connection schedule](https://asset.conrad.com/media10/add/160267/c1/-/de/000730641DS01/datablad-730641-wago-2002-1304-doorgangsklem-520-mm-spanveer-toewijzing-n-blauw-1-stuks.pdf)
+- 2002-1403, WAGO datasheet 13 June 2025, pages 1–3. [Datasheet](https://www.tme.eu/Document/4f60907ecb4c1bae8b1afd339364dd4e/2002-1403.pdf)
+- 2002-2201 and 2002-2231, WAGO datasheets 13 November 2023, pages 1–2. [2002-2201 datasheet](https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/50/73/32715073.pdf) · [2002-2231 datasheet](https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/51/78/32715178.pdf)
