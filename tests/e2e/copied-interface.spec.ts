@@ -3793,6 +3793,10 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await clickAt(580, 300);
   const circuit = page.getByRole("combobox", { name: "Assigned circuit" });
   await circuit.selectOption({ label: "DB1 · Workshop sockets" });
+  const socketCircuitLabel = page.locator(
+    '[data-object="' + socket.id + '"] [data-floor-circuit-label]',
+  );
+  await expect(socketCircuitLabel).toHaveText("DB1 · Workshop sockets");
   await page.getByRole("spinbutton", { name: "Active power (W)" }).fill("600");
   await page
     .getByRole("spinbutton", { name: "Demand factor (0–1)" })
@@ -3853,8 +3857,11 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     "Project floor-plan-cable-route.adigun.json opened.",
   );
   await expect(
-    page.locator('[data-object="' + route.id + '"]'),
+    page.locator('[data-object="' + route.id + '"] path'),
   ).toHaveAttribute("d", "M300 530 L500 530 L500 630");
+  await expect(
+    page.locator('[data-object="' + route.id + '"] [data-floor-circuit-label]'),
+  ).toHaveText("DB1 · Workshop sockets");
   const ground = routedFloor.data.sheets[0].id;
   const elevation = page.getByRole("spinbutton", {
     name: "Floor elevation (mm)",
@@ -3921,7 +3928,11 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   expect(fs.readFileSync((await panelReport.path())!, "utf8")).toContain(
     '"DB1","","","1","1","600","0","450","0"',
   );
-  await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
+  await circuitName.fill("Renamed sockets");
+  await circuitName.press("Tab");
+  await expect(socketCircuitLabel).toHaveText("DB1 · Renamed sockets");
+  await page.getByRole("button", { name: "Remove Renamed sockets" }).click();
+  await expect(socketCircuitLabel).toHaveCount(0);
   await clickAt(580, 300);
   await expect(circuit).toHaveValue("");
   await command("Draw distribution zone");
