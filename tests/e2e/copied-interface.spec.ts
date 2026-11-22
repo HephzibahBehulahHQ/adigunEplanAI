@@ -3797,6 +3797,52 @@ test("floor plan specialty devices expose independent native terminals", async (
   await expect(architecture).toBeVisible();
 });
 
+test("engineering calculation registry converts units and exports the method result", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Engineering calculations");
+  await page
+    .locator("#commandList")
+    .getByText("Engineering calculations", { exact: true })
+    .click();
+  const method = page.getByRole("combobox", { name: "Calculation method" });
+  await expect(method.locator("option")).toHaveCount(26);
+  await method.selectOption("ohms-law");
+  const voltage = page.getByRole("spinbutton", {
+    name: "Voltage (line-to-line for 3φ)",
+    exact: true,
+  });
+  await voltage.fill("12");
+  await page
+    .getByRole("combobox", {
+      name: "Voltage (line-to-line for 3φ) · Unit",
+      exact: true,
+    })
+    .selectOption("kV");
+  await expect(voltage).toHaveValue("0.012");
+  await page
+    .getByRole("spinbutton", { name: "Resistance of one conductor" })
+    .fill("6");
+  await page.getByRole("button", { name: "Calculate", exact: true }).click();
+  const result = page.getByRole("region", { name: "Calculation results" });
+  await expect(result).toContainText("Current: 2 A");
+  const pending = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Download calculation JSON" }).click();
+  const file = await pending;
+  const exported = JSON.parse(fs.readFileSync((await file.path())!, "utf8"));
+  expect(exported).toMatchObject({
+    methodReference: "adiguneplanai:calculation:ohms-law:1.0.0",
+    inputs: { voltage: 0.012, resistance: 6 },
+    units: { voltage: "kV", resistance: "ohm" },
+  });
+  await voltage.fill("24");
+  await expect(
+    page.getByRole("button", { name: "Download calculation JSON" }),
+  ).toHaveCount(0);
+});
+
 test("floor cable ampacity compares explicit inputs and reopens them", async ({
   page,
 }) => {
