@@ -3500,6 +3500,33 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   expect(fs.readFileSync((await circuitSchedule.path())!, "utf8")).toContain(
     '"DB1","Workshop sockets","SO1"',
   );
+  await command("Draw floor cable route");
+  await clickAt(300, 530);
+  await clickAt(500, 530);
+  await clickAt(500, 630);
+  await page.keyboard.press("Enter");
+  await expect(page.getByText("300 mm", { exact: true })).toBeVisible();
+  await circuit.selectOption({ label: "DB1 · Workshop sockets" });
+  const routedFloor = await saveDrawing(page, "floor-plan-cable-route");
+  const route = routedFloor.data.objects.find(
+    (object: { floorRouteKind?: string }) => object.floorRouteKind === "cable",
+  );
+  expect(route.floorCircuit).toEqual({ boardId: board.id, circuitId });
+  expect(route.points).toEqual([
+    { x: 300, y: 530 },
+    { x: 500, y: 530 },
+    { x: 500, y: 630 },
+  ]);
+  await page.locator("#openFile").setInputFiles(routedFloor.path);
+  await expect(
+    page.locator('[data-object="' + route.id + '"]'),
+  ).toHaveAttribute("d", "M300 530 L500 530 L500 630");
+  const routingPending = page.waitForEvent("download");
+  await command("Export floor circuit schedule");
+  const routingSchedule = await routingPending;
+  expect(fs.readFileSync((await routingSchedule.path())!, "utf8")).toContain(
+    '"DB1","Workshop sockets","SO1","300","0","0"',
+  );
   await clickAt(260, 240);
   await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
   await clickAt(580, 300);
