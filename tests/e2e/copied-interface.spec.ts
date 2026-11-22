@@ -1374,6 +1374,74 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
 });
 
+test("generic PLC library places six editable modules with native terminal wiring", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("generic-plc");
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  const modules = [
+    "cpu",
+    "digital-input",
+    "digital-output",
+    "analog-input",
+    "analog-output",
+    "communication",
+  ];
+  for (const [index, kind] of modules.entries()) {
+    await page.locator(`[data-insert="generic-plc-${kind}"]`).click();
+    await clickAt(200 + (index % 3) * 200, 230 + Math.floor(index / 3) * 200);
+  }
+  await clickAt(232, 218);
+  await clickAt(376, 218);
+  const placed = await saveDrawing(page, "generic-plc-placed");
+  const cpu = placed.data.objects.find(
+    ({ componentId }: { componentId?: string }) =>
+      componentId === "generic-plc-cpu",
+  );
+  const input = placed.data.objects.find(
+    ({ componentId }: { componentId?: string }) =>
+      componentId === "generic-plc-digital-input",
+  );
+  expect(
+    placed.data.objects.filter(
+      ({ kind }: { kind: string }) => kind === "component-instance",
+    ),
+  ).toHaveLength(6);
+  expect(
+    placed.data.objects.find(({ kind }: { kind: string }) => kind === "wire")
+      .attachments,
+  ).toEqual({
+    start: { instanceId: cpu.id, pinId: "Q0" },
+    end: { instanceId: input.id, pinId: "IN0" },
+  });
+  await clickAt(400, 230);
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PLC I/O assignments", { exact: true }).click();
+  const signal = page.getByLabel("IN0 signal", { exact: true });
+  await signal.fill("Feedback");
+  await signal.press("Tab");
+  const edited = await saveDrawing(page, "generic-plc-wired");
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(edited.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "generic-plc-wired.adigun.json opened",
+  );
+  const reopened = await saveDrawing(page, "generic-plc-reopened");
+  expect(reopened.data.objects).toEqual(edited.data.objects);
+  expect(
+    reopened.data.objects.find(({ id }: { id: string }) => id === input.id)
+      .plcIo.IN0.signal,
+  ).toBe("Feedback");
+});
+
 test("sidebar creates documents without opening, renames inline, reorders and closes views without deleting", async ({
   page,
 }) => {

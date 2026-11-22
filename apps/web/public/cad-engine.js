@@ -1123,9 +1123,22 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         })
       },sources:[]}];
   })));
-  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || null; }
+  const plcComponents=new Map();
+  function registerPlcSymbols(entries){
+    for(const {kind,channels,symbol} of entries){
+      const id='generic-plc-'+kind;
+      const pins=symbol.pins.map(pin=>({id:pin.id,localNumber:pin.id,name:pin.id,x:pin.position.x,y:pin.position.y,
+        plcChannel:pin.kind==='signal',electricalType:'passive',connectionType:'schematic'}));
+      plcComponents.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,name:symbol.name,model:symbol.name,generic:true,
+        manufacturer:'Not assigned',manufacturerPartNumber:'Not assigned',family:'generic-plc',plcKind:kind,referencePrefix:'A',
+        category:'Automation · Generic PLC',connectionClass:'electrical',symbol:{id:symbol.id,view:'schematic',unit:'mm',width:symbol.width,
+          height:symbol.height,artwork:symbol.artwork,pins,internalConnections:[],numberingNote:'Logical terminals for schematic documentation. Select actual hardware before assigning ratings or physical pin numbers.'},
+        specifications:{channelCount:{value:channels}},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}));
+    }
+  }
+  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || plcComponents.get(id) || null; }
   function catalog() {
-    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS)).map(function (id) {
+    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Array.from(plcComponents.keys())).map(function (id) {
       const def = component(id);
       return { id: def.id, componentId: def.id, name: def.generic ? def.name : def.model + ' · ' + def.manufacturerPartNumber + (def.family==='motor-terminal-board'?' · Delta terminal-board view':''), category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
     });
@@ -1153,6 +1166,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     };
   }
   function plcIoPins(def){
+    if(def?.family==='generic-plc')return def.symbol.pins.filter(pin=>pin.plcChannel);
     return def?.family==='plc-cpu'?def.symbol.pins.filter(pin=>/^(DI|DQ|AI) /.test(pin.name)):[];
   }
   function validPlcIo(def,records){
@@ -3459,6 +3473,7 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    registerPlcSymbols,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,
