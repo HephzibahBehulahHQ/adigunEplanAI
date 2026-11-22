@@ -1026,9 +1026,33 @@
     if(obj.kind!=='panel-placement')return '';
     try{const g=window.AdigunCADEngine.panelPlacementGeometry({objects:collectProjectObjects()},obj);return '<div class="notice">Linked device: '+escapeHtml(g.ref)+' · '+escapeHtml(g.footprint.widthMm+' × '+g.footprint.heightMm+' × '+g.footprint.depthMm+' mm')+'<br>Drawing scale: '+escapeHtml(obj.scale)+' drawing units/mm. Moving this view does not move its electrical symbol.<br>'+escapeHtml(g.footprint.note)+'</div><a class="component-source" href="'+escapeHtml(g.footprint.source)+'" target="_blank" rel="noopener noreferrer">Footprint source · '+escapeHtml(g.footprint.edition)+'</a>'
       +'<label class="property-row"><span>Mounting depth from rear (mm)</span><input type="number" min="0" max="1000000" step="any" data-panel-mounting-depth value="'+(obj.mountingDepthMm??'')+'"'+(obj.locked?' disabled':'')+'></label>'
-      +panelMountingRailField(obj)+panelClearanceConditionField(obj,g.footprint);}
+      +panelMountingRailField(obj)+panelClearanceConditionField(obj,g.footprint)+panelServiceAccessFields(obj);}
     catch(error){return '<div class="notice">REVIEW: '+escapeHtml(error.message)+'</div>';}
   }
+  const serviceAccessFaces=['front','back','left','right','top','bottom'];
+  function panelServiceAccessFields(placement){
+    const disabled=placement.locked?' disabled':'';
+    const options=serviceAccessFaces.map(face=>`<option ${face===(placement.accessDirection??'front')?'selected':''}>${face}</option>`);
+    return `<label class="property-row"><span>Cabinet service access face</span><select data-service-access-face${disabled}>${options.join('')}</select></label>
+      <label class="property-row"><span>Declared service access (mm)</span><input data-service-access-distance type="number" min="0" max="1000000" step="any" value="${placement.accessClearanceMm??''}"${disabled}></label>`;
+  }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target;
+    if(!field.matches('[data-service-access-face],[data-service-access-distance]'))return;
+    const placement=state.objects.find(item=>item.id===state.selected&&item.kind==='panel-placement'&&!item.locked);
+    if(!placement)return;
+    const face=field.hasAttribute('data-service-access-face');
+    const key=face?'accessDirection':'accessClearanceMm';
+    const blank=field.value===''&&!field.validity.badInput;
+    const value=face?field.value:blank?undefined:field.valueAsNumber;
+    if(face?!serviceAccessFaces.includes(value):!blank&&(!Number.isFinite(value)||value<=0||value>1e6)){
+      field.value=placement[key]??(face?'front':'');return;
+    }
+    if(value===placement[key])return;
+    pushUndo();
+    if(value===undefined)delete placement[key];else placement[key]=value;
+    persist();
+  });
   function panelMountingRailField(placement){
     const rails=state.objects.filter(item=>item.panelStructure?.kind==='din-rail');
     if(!rails.length&&!placement.mountingRailId)return '';
@@ -2622,6 +2646,21 @@
       const bounds3=({x,y,z,width,height,depth})=>({
         min:{x:x-width/2,y:y-height/2,z},max:{x:x+width/2,y:y+height/2,z:z+depth}
       });
+      const {accessBounds,volumesIntersect}=window.AdigunPanelGeometry;
+      const obstacles=[...bodies,...structures].map(item=>({item,bounds:bounds3(item)}));
+      const cabinetBounds=cabinet&&bounds3({...cabinet,x:cabinet.x+cabinet.width/2,y:cabinet.y+cabinet.height/2,z:0});
+      for(const body of bodies){
+        if(body.accessClearanceMm===undefined)continue;
+        const space=accessBounds({id:body.id,name:body.ref,positionMm:bounds3(body).min,sizeMm:{x:body.width,y:body.height,z:body.depth},
+          accessDirection:body.accessDirection,accessClearanceMm:body.accessClearanceMm});
+        const blockers=obstacles.filter(({item,bounds})=>item!==body&&volumesIntersect(bounds,space))
+          .map(({item})=>item.ref||panelStructureNames[item.kind]);
+        if(cabinetBounds&&['x','y','z'].some(axis=>space.min[axis]<cabinetBounds.min[axis]-1e-9||space.max[axis]>cabinetBounds.max[axis]+1e-9))blockers.push('cabinet boundary');
+        const notice=document.createElement('p');notice.className='notice';notice.dataset.panelServiceAccess='';
+        notice.textContent=`${body.ref} · ${body.accessDirection} service access (${body.accessClearanceMm} mm): `
+          +(blockers.length?'Obstructed by '+blockers.join(', '):'Clear of modeled geometry'+(cabinet?'':' · cabinet boundaries unavailable'))+'.';
+        host.append(notice);
+      }
       for(const body of bodies){
         if(!body.mountingRailId)continue;
         const rail=rails.get(body.mountingRailId);
