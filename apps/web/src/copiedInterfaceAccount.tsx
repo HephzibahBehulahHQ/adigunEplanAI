@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   dictionaries,
@@ -75,8 +75,19 @@ function WorkspaceAccount() {
       clearTimeout(expiration);
     };
   }, [account.checking, account.verified]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     workspace.inert = !allowed;
+    if (!account.checking) {
+      window.dispatchEvent(
+        new CustomEvent("adigun-workspace-owner", {
+          detail: account.verified
+            ? account.user?.id
+            : access === "guest"
+              ? null
+              : undefined,
+        }),
+      );
+    }
     if (!allowed) {
       for (const open of document.querySelectorAll<HTMLDialogElement>(
         "dialog[open]",
@@ -84,7 +95,7 @@ function WorkspaceAccount() {
         if (open !== dialog.current) open.close();
       }
     }
-  }, [allowed]);
+  }, [access, account.checking, account.user?.id, account.verified, allowed]);
   return (
     <>
       {!allowed && (
