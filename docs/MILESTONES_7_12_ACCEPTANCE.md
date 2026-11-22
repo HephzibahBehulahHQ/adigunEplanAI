@@ -41,6 +41,11 @@ The command palette exports a selected board's single-line assignment diagram
 with circuit branches, equipment tags and known load totals. Branches document
 assignments independently of conductor connectivity.
 
+The compact editor includes a generic earthing bond point with two common PE
+terminals. The floor protective-earth CSV lists wires attached to a building
+PE terminal and unattached PE terminals. Its status describes direct terminal
+attachments, independently of installed continuity or compliance.
+
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 
 The Supabase history/avatar migration is applied. Direct read-only inspection verifies owner/nonanonymous RLS, immutable client history, restricted grants, nonpublic trigger functions and private image storage. Unauthenticated REST returned 401 for both tables. The rollback fixture in supabase/tests/history-avatars.sql has not executed because mandatory confirmation expired; no substitute mutation was used to bypass that gate.
