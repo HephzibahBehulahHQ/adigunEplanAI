@@ -1671,6 +1671,45 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
 });
 
+test("TOPJOB single-deck variants can be found, placed and wired by exact code", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const place = async (code: string, x: number) => {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    const point = await sheetPoint(page, x, 250);
+    await page.mouse.click(point.x, point.y);
+  };
+  await place("2002-1202", 400);
+  await place("2002-1406", 650);
+  for (const [x, y] of [
+    [472, 250],
+    [578, 240],
+  ]) {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  }
+  const native = await saveDrawing(page, "topjob-variants");
+  expect(native.data.objects).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({ componentId: "wago-2002-1202" }),
+      expect.objectContaining({ componentId: "wago-2002-1406" }),
+      expect.objectContaining({
+        kind: "wire",
+        attachments: {
+          start: expect.objectContaining({ pinId: "clamp-2" }),
+          end: expect.objectContaining({ pinId: "clamp-1" }),
+        },
+      }),
+    ]),
+  );
+});
+
 test("WAGO double-deck terminal exposes both levels and stays wired on reopen", async ({
   page,
 }) => {
