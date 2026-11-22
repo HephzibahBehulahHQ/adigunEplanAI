@@ -1014,6 +1014,17 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     return true;
   }
 
+  function validWallOpenings(wall) {
+    if(!wall.wallThickness||!Array.isArray(wall.wallOpenings))return false;
+    const length=Math.hypot(wall.x2-wall.x1,wall.y2-wall.y1);
+    if(!finite(length))return false;
+    let end=1;
+    return wall.wallOpenings.every(function(opening){
+      if(!opening||!['door','window'].includes(opening.kind)||!finite(opening.offset)||!finite(opening.width)||opening.offset<end||opening.width<1||opening.offset+opening.width>length-1)return false;
+      end=opening.offset+opening.width;
+      return true;
+    });
+  }
   function resizeGraphicObject(object, corner, point) {
     if (object && object.kind === 'component-instance') {
       const result=validateInstance(object);
@@ -1317,6 +1328,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.layer!==undefined&&!['connections','devices','annotations'].includes(object.layer))errors.push('Drawing object '+object.id+' requires a supported drawing layer.');
         if(object.lineType!==undefined&&!['solid','dashed','dotted'].includes(object.lineType))errors.push('Drawing object '+object.id+' requires a supported line type.');
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
+        if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
         if(object.roomName!==undefined&&(object.kind!=='rect'||typeof object.roomName!=='string'||!object.roomName.trim()||object.roomName.length>80||![object.x,object.y,object.x2,object.y2].every(finite)||Math.abs(object.x2-object.x)<2||Math.abs(object.y2-object.y)<2))errors.push('Invalid room outline '+object.id+'.');
         if(object.kind==='wire'){try{wireRoute(object);}catch(error){errors.push(error.message);}}
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
@@ -2896,6 +2908,7 @@ function createPumpStarterDocumentation(name) {
     moveInstance: moveInstance,
     reorderObject: reorderObject,
     resizeGraphicObject: resizeGraphicObject,
+    validWallOpenings: validWallOpenings,
     rotateInstance: rotateInstance,
     validateInstance: validateInstance,
     worldPins: worldPins,
