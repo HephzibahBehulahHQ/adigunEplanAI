@@ -1364,6 +1364,12 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.layer!==undefined&&!['connections','devices','annotations','architecture'].includes(object.layer))errors.push('Drawing object '+object.id+' requires a supported drawing layer.');
         if(object.lineType!==undefined&&!['solid','dashed','dotted'].includes(object.lineType))errors.push('Drawing object '+object.id+' requires a supported line type.');
         if(object.dimensionOffset!==undefined&&(object.kind!=='line'||object.wallThickness!==undefined||!finite(object.dimensionOffset)||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid dimension line '+object.id+'.');
+        if(object.planImport!==undefined){
+          const source=object.planImport;
+          if(!source||typeof source.closed!=='boolean'||['file','layer','element'].some(key=>typeof source[key]!=='string'||!source[key].trim()||source[key].length>255)||
+            object.kind!=='freehand'||!Array.isArray(object.points)||object.points.length<(source.closed?3:2)||
+            object.points.length>10000||object.points.some(point=>!point||!finite(point.x)||!finite(point.y)))errors.push('Invalid imported plan geometry '+object.id+'.');
+        }
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
         if(object.floorRouteKind!==undefined&&(object.kind!=='freehand'||!['cable','conduit','tray'].includes(object.floorRouteKind)||!validFloorRoutePoints(object.points)||!floorIds.has(object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null))))errors.push('Invalid measured floor route '+object.id+'.');
