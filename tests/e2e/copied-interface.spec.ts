@@ -2056,6 +2056,24 @@ test("linked panel placement preserves its canonical device on local reopen", as
     });
     await field.fill(depth);
     await field.press("Tab");
+    if (command === "Draw cable duct") {
+      for (const [key, value] of Object.entries({
+        cableDiametersMm: "10, 10",
+        usableCrossSectionMm2: "1000",
+        maximumFillPercent: "10",
+      })) {
+        const input = page.locator(`[data-duct-field="${key}"]`);
+        await input.fill(value);
+        await input.press("Tab");
+      }
+      await expect(page.locator("[data-duct-estimate]")).toContainText(
+        "157.08 mm² occupied · 15.71% fill · Above entered limit",
+      );
+      const limit = page.locator('[data-duct-field="maximumFillPercent"]');
+      await limit.fill("101");
+      await limit.press("Tab");
+      await expect(limit).toHaveValue("10");
+    }
   }
   await selectPanelCommand("Preview panel in 3D");
   await expect(preview.locator("[data-panel-structure]")).toHaveCount(4);
@@ -2076,7 +2094,13 @@ test("linked panel placement preserves its canonical device on local reopen", as
   ).toEqual([
     { kind: "mounting-plate", depth: 2 },
     { kind: "din-rail", depth: 7.5 },
-    { kind: "cable-duct", depth: 45 },
+    {
+      kind: "cable-duct",
+      depth: 45,
+      cableDiametersMm: [10, 10],
+      usableCrossSectionMm2: 1000,
+      maximumFillPercent: 10,
+    },
     { kind: "terminal-rail", depth: 15 },
   ]);
   await page.screenshot({

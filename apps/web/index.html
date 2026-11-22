@@ -1037,13 +1037,43 @@
   }
   const panelStructureNames={'mounting-plate':'Mounting plate','din-rail':'DIN rail','cable-duct':'Cable duct','terminal-rail':'Terminal rail'};
   const panelStructureColors={'mounting-plate':'#9ca9b7','din-rail':'#a9bca9','cable-duct':'#c5b69f','terminal-rail':'#ada2bf'};
+  const ductFields={cableDiametersMm:'Cable outside diameters (mm, comma separated)',usableCrossSectionMm2:'Usable duct cross-section (mm²)',maximumFillPercent:'Documented fill limit (%)'};
+  function ductEstimateText(shape){
+    if(!shape.cableDiametersMm)return 'Enter cable diameters to estimate occupancy.';
+    const result=window.AdigunPanelEstimates.ductOccupancy(shape.cableDiametersMm,shape.usableCrossSectionMm2,shape.maximumFillPercent);
+    return `${result.cableCount} cables · ${result.occupiedMm2.toFixed(2)} mm² occupied · `
+      +(result.fillPercent===null?'Enter usable cross-section to calculate fill.':`${result.fillPercent.toFixed(2)}% fill`)
+      +(result.exceedsLimit===null?'':result.exceedsLimit?' · Above entered limit':' · Within entered limit');
+  }
   function panelStructureFields(object){
     const shape=object.panelStructure;
     if(!shape)return '';
     return ['z','depth'].map(key=>'<label class="property-row"><span>'
       +(key==='z'?'Structure rear offset (mm)':'Structure depth (mm)')
-      +'</span><input type="number" step="any" min="0" max="1000000" data-panel-structure-field="'+key+'" value="'+(shape[key]??'')+'"'+(object.locked?' disabled':'')+'></label>').join('');
+      +'</span><input type="number" step="any" min="0" max="1000000" data-panel-structure-field="'+key+'" value="'+(shape[key]??'')+'"'+(object.locked?' disabled':'')+'></label>').join('')
+      +(shape.kind==='cable-duct'?Object.entries(ductFields).map(([key,label])=>
+        `<label class="property-row"><span>${label}</span><input data-duct-field="${key}" value="${shape[key]??''}" ${object.locked?'disabled':''}></label>`).join('')
+        +`<output data-duct-estimate>${ductEstimateText(shape)}</output>`:'');
   }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target,key=field.dataset.ductField;
+    if(!Object.hasOwn(ductFields,key))return;
+    const shape=state.objects.find(item=>item.id===state.selected&&!item.locked&&item.panelStructure?.kind==='cable-duct')?.panelStructure;
+    if(!shape)return;
+    const raw=field.value.trim();
+    const value=raw===''?undefined:key==='cableDiametersMm'?raw.split(',').map(Number):Number(raw);
+    const next={...shape,[key]:value};
+    if(!window.AdigunCADEngine.validDuctInputs(next)){
+      field.value=shape[key]??'';
+      notify('Enter positive duct values and a fill limit at or below 100%.');
+      return;
+    }
+    if(JSON.stringify(value)===JSON.stringify(shape[key]))return;
+    pushUndo();
+    if(value===undefined)delete shape[key];else shape[key]=value;
+    $('[data-duct-estimate]').textContent=ductEstimateText(shape);
+    persist();
+  });
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target,key=field.dataset.panelStructureField;
     if(!['z','depth'].includes(key))return;

@@ -13,6 +13,14 @@
     return Object.freeze(value);
   }
   function finite(value) { return typeof value === 'number' && Number.isFinite(value); }
+  function validDuctInputs({kind,cableDiametersMm,usableCrossSectionMm2,maximumFillPercent}) {
+    if(cableDiametersMm===undefined&&usableCrossSectionMm2===undefined&&maximumFillPercent===undefined)return true;
+    const positive=(value,min,max)=>finite(value)&&value>=min&&value<=max;
+    return kind==='cable-duct'&&
+      (cableDiametersMm===undefined||Array.isArray(cableDiametersMm)&&cableDiametersMm.every(value=>positive(value,1e-6,1e6)))&&
+      (usableCrossSectionMm2===undefined||positive(usableCrossSectionMm2,1e-9,1e12))&&
+      (maximumFillPercent===undefined||positive(maximumFillPercent,1e-6,100));
+  }
   function validImportScale(value) { return value===undefined||finite(value)&&value>0&&value<=1000000; }
   const floorEngineeringProfiles=Object.freeze({'de-v1':'Germany · DIN/VDE documentation v1','iec-v1':'IEC documentation v1'});
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
@@ -1566,7 +1574,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail','cable-duct','terminal-rail'].includes(shape.kind)||
             ![object.x,object.y,object.x2,object.y2].every(finite)||object.x===object.x2||object.y===object.y2||
             shape.z!==undefined&&(!finite(shape.z)||shape.z<0||shape.z>1e6)||
-            shape.depth!==undefined&&(!finite(shape.depth)||shape.depth<=0||shape.depth>1e6))errors.push('Invalid panel mounting structure '+object.id+'.');
+            shape.depth!==undefined&&(!finite(shape.depth)||shape.depth<=0||shape.depth>1e6)||!validDuctInputs(shape))errors.push('Invalid panel mounting structure '+object.id+'.');
         }
         if(object.clearanceCondition!==undefined&&(object.kind!=='panel-placement'||
           !['sideBySide','groundedParts','liveParts'].includes(object.clearanceCondition)||
@@ -3385,6 +3393,7 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    validDuctInputs,
     linkAssemblyAccessory: linkAssemblyAccessory,
     createPanelPlacement: createPanelPlacement,
     panelPlacementGeometry: panelPlacementGeometry,
