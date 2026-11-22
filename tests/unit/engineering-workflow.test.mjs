@@ -140,6 +140,21 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
         ]),
       ),
   );
+  const verifiedDoubleDecks = terminalBatch.filter(
+    (part) => part.connectionDiagramSha256,
+  );
+  assert.ok(verifiedDoubleDecks.length >= 50);
+  for (const part of verifiedDoubleDecks) {
+    const definition = engine.component("wago-" + part.orderCode);
+    assert.equal(
+      definition.sources[0].connectionDiagramSha256,
+      part.connectionDiagramSha256,
+    );
+    assert.equal(
+      definition.specifications.potentialMarking?.value,
+      part.potentialMarking,
+    );
+  }
   for (const [
     orderCode,
     counts,
@@ -154,6 +169,18 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
   ] of [
     ...singleDeckSeries,
     ...higherCurrentSeries,
+    ...verifiedDoubleDecks.map((part) => [
+      part.orderCode,
+      part.orderCode.startsWith("2002-24") ? [4, 4] : [2, 2],
+      part.nominalVoltage,
+      part.depthMm,
+      part.finish,
+      part.widthMm,
+      part.nominalCrossSectionMm2,
+      part.ratedCurrent,
+      part.actuationMethod,
+      part.heightMm,
+    ]),
     ["2002-1301", [3], 800, 32.9],
     ["2002-1304", [3], 800, 32.9],
     ["2002-1401", [4], 800, 32.9],

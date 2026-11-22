@@ -139,3 +139,18 @@ Exact datasheet versions, the physical-data page and PDF hashes are stored
 in the batch.
 [2204-1201 datasheet](https://wago.priintcloud.com/datasheets/2204-1201/en) ·
 [2206-1201 datasheet](https://wago.priintcloud.com/datasheets/2206-1201/en)
+
+## Double-deck through terminals
+
+Fifty distinct 2000-, 2002-, 2200- and 2202-series parts were verified
+against their WAGO datasheets. The extractor checks that the printed clamping
+totals agree with a reviewed connection diagram showing two isolated groups.
+The native symbols expose two or four actual wire clamps per level. Filled
+junction dots in the source drawings do not become wire terminals.
+
+The batch preserves each exact PDF hash, circuit-diagram hash, rail
+dimensions and the manufacturer potential marking when available. Five
+candidates stay out of this batch because the source lacks a reviewed
+diagram or shows or describes internal commoning. To review mixed inputs,
+pass `--skip-unverified`; the tool reports rejected PDFs to standard error.
+[Example source with two isolated levels](https://wago.priintcloud.com/datasheets/2202-2234/en)
