@@ -7,5 +7,9 @@ import {
 
 Object.assign(window, { AdigunPanelEstimates: { ductOccupancy } });
 Object.assign(window, {
-  AdigunPanelGeometry: { accessBounds, fitsRailMountingPlane, volumesIntersect },
+  AdigunPanelGeometry: {
+    accessBounds,
+    fitsRailMountingPlane,
+    volumesIntersect,
+  },
 });
