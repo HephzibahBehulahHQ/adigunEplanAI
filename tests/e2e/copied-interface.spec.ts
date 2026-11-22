@@ -3922,6 +3922,30 @@ test("engineering calculation registry converts units and exports the method res
   );
   expect(csv).toContain('"Voltage (line-to-line for 3φ)","0.012","kV"');
   expect(csv).toContain('"Current","2","A"');
+  await method.selectOption("protective-coordination");
+  for (const [label, value] of [
+    ["Prospective fault current", "5000"],
+    ["Manufacturer selectivity limit", "5000"],
+    ["Applicable breaking capacity", "6000"],
+  ]) {
+    await page
+      .getByRole("spinbutton", { name: label, exact: true })
+      .fill(value);
+  }
+  const evidence = page.getByRole("textbox", {
+    name: "Sources and operating conditions",
+  });
+  await expect(evidence).toHaveAttribute("required", "");
+  await page.getByRole("button", { name: "Calculate", exact: true }).click();
+  await expect(result).toBeEmpty();
+  await evidence.fill("Synthetic case for calculator verification");
+  await page.getByRole("button", { name: "Calculate", exact: true }).click();
+  await expect(
+    page.getByRole("list", { name: "Warnings and limitations" }),
+  ).toContainText("At least one supplied condition is not met.");
+  await expect(result).toContainText(
+    "Fault current below supplied selectivity limit: Supplied condition not met",
+  );
 });
 
 test("floor cable ampacity compares explicit inputs and reopens them", async ({
