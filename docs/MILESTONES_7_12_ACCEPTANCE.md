@@ -129,6 +129,9 @@ overlap on all three axes and reports the overlap dimensions.
 Documented clearances rotate with their device and are checked against the
 usable cabinet boundary and other linked bodies. When the footprint has
 condition-dependent clearances, choose the applicable condition in Properties.
+On a sheet with linked placements, drawing commands create editable mounting
+plates and DIN rails. Enter their rear offsets and depths in Properties to
+show their user-defined envelopes in the shared 3D view.
 
 Focused M8 verification covers all 26 methods, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

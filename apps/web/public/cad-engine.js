@@ -1290,7 +1290,24 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const scale=placements[0].scale;
     if(placements.some(placement=>placement.scale!==scale))throw new Error('3D requires one common drawing scale for the panel placements.');
     const cabinet=project.sheets?.find(sheet=>sheet.id===sheetId)?.cabinetBounds;
+    const structures=[];
     const bodies=[],issues=[],clearanceRules=[];
+    for(const item of project.objects){
+      if(item.sheetId!==sheetId||!item.panelStructure)continue;
+      const shape=item.panelStructure;
+      const rotated=item.rotation===90||item.rotation===270;
+      const width=Math.abs(item.x2-item.x)/scale,height=Math.abs(item.y2-item.y)/scale;
+      const structure={id:item.id,kind:shape.kind,x:(item.x+item.x2)/2/scale,y:(item.y+item.y2)/2/scale,
+        width:rotated?height:width,height:rotated?width:height,z:shape.z??0,depth:shape.depth};
+      if(!finite(shape.depth)){
+        issues.push({id:item.id,message:'Enter a structure depth to include this item in 3D.'});
+        continue;
+      }
+      structures.push(structure);
+      if(cabinet&&(structure.x-structure.width/2<cabinet.x||structure.y-structure.height/2<cabinet.y||
+        structure.x+structure.width/2>cabinet.x+cabinet.width||structure.y+structure.height/2>cabinet.y+cabinet.height||
+        structure.z+structure.depth>cabinet.depth))issues.push({id:item.id,message:'Mounting structure extends beyond the declared cabinet boundary.'});
+    }
     for(const placement of placements){
       try{
         const geometry=panelPlacementGeometry(project,placement),{footprint}=geometry;
@@ -1357,7 +1374,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(x&&y&&z)collisions.push({ids:[a.id,b.id],refs:[a.ref,b.ref],overlapMm:{x,y,z}});
       }
     }
-    return {bodies,issues,cabinet,collisions,clearanceConflicts};
+    return {bodies,structures,issues,cabinet,collisions,clearanceConflicts};
   }
   function validCabinetBounds(value){
     return value&&['x','y','width','height','depth'].every(key=>finite(value[key])&&Math.abs(value[key])<=1e6)
@@ -1544,6 +1561,13 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           });
         }
         if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
+        if(object.panelStructure!==undefined){
+          const shape=object.panelStructure;
+          if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail'].includes(shape.kind)||
+            ![object.x,object.y,object.x2,object.y2].every(finite)||object.x===object.x2||object.y===object.y2||
+            shape.z!==undefined&&(!finite(shape.z)||shape.z<0||shape.z>1e6)||
+            shape.depth!==undefined&&(!finite(shape.depth)||shape.depth<=0||shape.depth>1e6))errors.push('Invalid panel mounting structure '+object.id+'.');
+        }
         if(object.clearanceCondition!==undefined&&(object.kind!=='panel-placement'||
           !['sideBySide','groundedParts','liveParts'].includes(object.clearanceCondition)||
           !component(object.footprintComponentId)?.panelFootprint?.clearancesMm?.[object.clearanceCondition]))errors.push('Invalid panel clearance condition '+object.id+'.');
