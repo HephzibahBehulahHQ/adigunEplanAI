@@ -3290,6 +3290,40 @@ function createPumpStarterDocumentation(name) {
       ['Revision','revision'],['Issue status','issueStatus'],['Drawing date','drawingDate'],['Job number','jobNumber'],['Project','projectTitle']],
       project.sheets.map(sheet=>({...titleBlockValues(project,sheet),sectionId:sheet.sectionId,number:sheet.number})));
   }
+  function deviceRegisterCsv(project){
+    const sheetById=new Map(project.sheets.map(sheet=>[sheet.id,sheet.number]));
+    const attachedPins=new Map(),placementCounts=new Map();
+    for(const item of project.objects){
+      if(item.kind==='wire')for(const {instanceId,pinId} of Object.values(item.attachments??{})){
+        if(!attachedPins.has(instanceId))attachedPins.set(instanceId,new Set());
+        attachedPins.get(instanceId).add(pinId);
+      }
+      if(item.kind==='panel-placement')placementCounts.set(item.deviceId,(placementCounts.get(item.deviceId)??0)+1);
+    }
+    const rows=project.objects.filter(item=>item.kind==='component-instance').map(item=>{
+      const def=component(item.componentId);
+      return {id:item.id,sheet:sheetById.get(item.sheetId),reference:item.ref,name:item.displayName||def?.name,
+        manufacturer:def?.generic?'':def?.manufacturer,part:def?.generic?'':def?.manufacturerPartNumber,
+        provenance:def?.generic?'Generic schematic':def?'Manufacturer catalog':'Missing definition',source:def?.sources[0]?.url,
+        terminals:def?.symbol.pins.length,attachedPins:attachedPins.get(item.id)?.size??0,panelViews:placementCounts.get(item.id)??0};
+    });
+    return reportCsv([['Sheet','sheet'],['Reference','reference'],['Name','name'],['Manufacturer','manufacturer'],['Part number','part'],
+      ['Provenance','provenance'],['Catalog source','source'],['Terminals','terminals'],['Terminals with attached wires','attachedPins'],['Panel views','panelViews'],['Stable ID','id']],rows);
+  }
+  function projectWireRegisterCsv(project){
+    const objectsBySheet=new Map();
+    for(const item of project.objects){
+      if(!objectsBySheet.has(item.sheetId))objectsBySheet.set(item.sheetId,[]);
+      objectsBySheet.get(item.sheetId).push(item);
+    }
+    const rows=project.sheets.flatMap(sheet=>{
+      const report=wireList(objectsBySheet.get(sheet.id)??[]);
+      if(!report.valid)throw new Error('Wire register blocked on '+sheet.number+': '+report.errors.join(' '));
+      return report.rows.map(row=>({...row,sheet:sheet.number,units:sheet.floorPlan||sheet.drafting?.units==='mm'?'mm':'drawing units'}));
+    });
+    return reportCsv([['Sheet','sheet'],['Wire ID','wireId'],['Sheet-local net','netId'],['Start terminals','startPinRefs'],['End terminals','endPinRefs'],
+      ['Connected terminals on sheet','netPinRefs'],['Route','routePath'],['Route length','lengthMm'],['Units','units']],rows);
+  }
   function revisionRegisterCsv(project){
     const revisions=project.sheets.map(sheet=>({...titleBlockValues(project,sheet),number:sheet.number})).filter(row=>row.revision.trim()||row.revisionDate.trim());
     return reportCsv([['Sheet number','number'],['Sheet reference','sheetReference'],['Sheet title','sheetTitle'],['Drawing number','drawingNumber'],['Revision','revision'],
@@ -3519,6 +3553,8 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    deviceRegisterCsv,
+    projectWireRegisterCsv,
     drawingRegisterCsv,
     revisionRegisterCsv,
     automationNoteKinds,
