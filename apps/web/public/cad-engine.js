@@ -2461,9 +2461,10 @@ function createPumpStarterDocumentation(name) {
     const length=Math.abs(b-a);
     return finite(a)&&finite(b)&&finite(length)&&length>0?length:null;
   }
-  function svgLabel(x,y,value){
+  function svgLabel(x,y,value,width){
     const escaped=String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]));
-    return `<text x="${x}" y="${y}" stroke="none">${escaped}</text>`;
+    const sizing=width&&String(value).length*14>width?` textLength="${width}" lengthAdjust="spacingAndGlyphs"`:'';
+    return `<text x="${x}" y="${y}" stroke="none"${sizing}>${escaped}</text>`;
   }
   function floorRiserElevationSvg(project,routeId){
     const route=project.objects.find(item=>item.id===routeId&&item.floorRouteKind);
@@ -2484,6 +2485,47 @@ function createPumpStarterDocumentation(name) {
     }).join('');
     const title=`${source.floorPlan.building} · ${route.floorRouteKind} riser elevation`;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 840 594"><title>${escape(title)}</title><rect width="840" height="594" fill="white"/><g font-family="sans-serif" font-size="15" fill="#19283c">${text(36,43,title)}${datums}<path d="M540 120 V310" stroke="#1855a4" stroke-width="4"/><path d="M568 120 H588 M578 120 V310 M568 310 H588" fill="none" stroke="#19283c"/>${text(590,220,`${length} mm`)}${text(36,360,'Floor datum to floor datum · diagram not to scale')}</g></svg>`;
+  }
+  function buildingRiserDiagramSvg(project,sheetId){
+    const building=project.sheets.find(sheet=>sheet.id===sheetId)?.floorPlan?.building;
+    if(!building)throw new Error('Open a building floor plan to export its riser diagram.');
+    const floors=project.sheets.filter(sheet=>sheet.floorPlan?.building===building&&finite(sheet.floorPlan.elevationMm))
+      .sort((a,b)=>b.floorPlan.elevationMm-a.floorPlan.elevationMm);
+    const floorById=new Map(floors.map(floor=>[floor.id,floor]));
+    const risers=[];
+    for(const route of project.objects){
+      if(!route.floorRouteKind)continue;
+      const source=floorById.get(route.sheetId),target=floorById.get(route.riserTargetSheetId);
+      const length=floorRiserLength(source,target);
+      if(length!==null)risers.push({route,source,target,length});
+    }
+    if(!risers.length)throw new Error('This building has no linked risers to export.');
+    const datums=new Map();
+    for(const floor of floors){
+      const elevation=floor.floorPlan.elevationMm;
+      if(!datums.has(elevation))datums.set(elevation,[]);
+      datums.get(elevation).push(floor);
+    }
+    const columnStart=780,columnWidth=460,width=Math.max(1120,columnStart+columnWidth*risers.length);
+    const ordinate=new Map();
+    let y=204;
+    const levels=Array.from(datums,([elevation,sheets])=>{
+      const base=y;
+      ordinate.set(elevation,base);
+      y+=Math.max(108,36+sheets.length*20);
+      return `<path d="M32 ${base} H${width-32}" stroke="#64748b"/>`
+        +svgLabel(36,base-9,`Elevation ${elevation} mm`)
+        +sheets.map((sheet,index)=>svgLabel(36,base+22+index*20,`${sheet.number} · ${sheet.floorPlan.level}`,columnStart-65)).join('');
+    }).join('');
+    const routes=risers.map(({route,source,target,length},index)=>{
+      const x=columnStart+index*columnWidth,axis=x+60;
+      const from=ordinate.get(source.floorPlan.elevationMm),to=ordinate.get(target.floorPlan.elevationMm);
+      return svgLabel(x,108,`R${index+1} · ${route.floorRouteTag||route.floorRouteKind}`,columnWidth-32)
+        +svgLabel(x,131,`${source.number} → ${target.number} · ${route.floorRouteKind}`)
+        +svgLabel(x,154,`${Number(length.toPrecision(12))} mm vertical`)
+        +`<path d="M${axis} ${from} V${to}" stroke="#1855a4" stroke-width="3"/><circle cx="${axis}" cy="${from}" r="5" fill="white" stroke="#1855a4" stroke-width="2"/><circle cx="${axis}" cy="${to}" r="5" fill="#1855a4"/>`;
+    }).join('');
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${y}" viewBox="0 0 ${width} ${y}"><title>Building riser diagram</title><rect width="${width}" height="${y}" fill="white"/><g font-family="sans-serif" font-size="15" fill="#19283c">${svgLabel(36,38,building+' · Building riser diagram')}${svgLabel(36,66,'Open end = source floor · Filled end = target floor · Elevations arranged schematically')}${levels}${routes}</g></svg>`;
   }
   function validFloorRoutePoints(points){
     return Array.isArray(points)&&points.length>=2&&points.every(function(point,index){
@@ -3222,6 +3264,7 @@ function createPumpStarterDocumentation(name) {
     floorPanelScheduleCsv: floorPanelScheduleCsv,
     floorProtectiveEarthCsv: floorProtectiveEarthCsv,
     floorRiserElevationSvg: floorRiserElevationSvg,
+    buildingRiserDiagramSvg: buildingRiserDiagramSvg,
     floorBoardSingleLineSvg: floorBoardSingleLineSvg,
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,

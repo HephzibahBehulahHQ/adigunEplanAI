@@ -8,6 +8,38 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("building riser diagrams isolate buildings and show every authored riser", () => {
+  const sheets = [
+    ["ground", "A2/000", "Workshop & Stores", "Ground", 0],
+    ["first", "A2/001", "Workshop & Stores", "First", 3200],
+    ["roof", "A2/002", "Workshop & Stores", "Roof", 6200],
+    ["annex", "A2/003", "Annex", "Ground", 0],
+    ["annexRoof", "A2/004", "Annex", "Roof", 2000],
+  ].map(([id, number, building, level, elevationMm]) => ({
+    id,
+    number,
+    floorPlan: { building, level, elevationMm },
+  }));
+  const objects = [
+    ["ground", "first", "cable", "W-1"],
+    ["roof", "first", "tray", "T-1"],
+    ["annex", "annexRoof", "cable", "ANNEX-ONLY"],
+  ].map(([sheetId, riserTargetSheetId, floorRouteKind, floorRouteTag]) => ({
+    sheetId,
+    riserTargetSheetId,
+    floorRouteKind,
+    floorRouteTag,
+  }));
+  const svg = engine.buildingRiserDiagramSvg({ sheets, objects }, "first");
+  assert.match(svg, /Workshop &amp; Stores · Building riser diagram/);
+  assert.match(svg, /R1 · W-1/);
+  assert.match(svg, /3200 mm vertical/);
+  assert.match(svg, /R2 · T-1/);
+  assert.match(svg, /A2\/002 → A2\/001 · tray/);
+  assert.match(svg, /3000 mm vertical/);
+  assert.doesNotMatch(svg, /ANNEX-ONLY/);
+});
+
 test("specialty floor devices expose the authored independent pin identities", () => {
   const symbols = {
     "building-emergency-luminaire": ["L", "N", "PE"],

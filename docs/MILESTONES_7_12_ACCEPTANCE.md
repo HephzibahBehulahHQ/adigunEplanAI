@@ -27,8 +27,10 @@ A route can end in a riser to a different floor of the same building.
 The editor derives the vertical length from the two saved elevations and
 reports it separately from planar length. With the route selected, the command
 palette exports a dimensioned SVG showing both floor datums and the vertical
-distance. Multi-riser diagrams and protection sizing remain open in the compact
-editor. The command palette can draw electrical and distribution zones as
+distance. The building riser diagram exports all linked routes in the active
+floor's building against common floor datums, with direction and vertical
+dimensions. Protection sizing remains open in the compact editor. The command
+palette can draw electrical and distribution zones as
 rectangular floor boundaries. Zone names and dimensions are editable in
 Properties. Zones can reference rooms on the same floor, and distribution
 zones can also reference a board on that floor. These assignments are explicit
