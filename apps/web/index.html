@@ -1156,6 +1156,33 @@
     const linked=devices.find(function(o){return o.id===obj.assemblyFor;});
     return '<div class="notice">'+escapeHtml(obj.assemblyFor?(linked?'Assembly device: '+linked.ref:'REVIEW: linked device is missing or incompatible.'):'No assembly device assigned.')+'</div><label class="property-row"><span>Assembly device</span><select aria-label="Accessory assembly device" data-assembly-target="'+escapeHtml(obj.id)+'">'+devices.map(function(o){return '<option value="'+escapeHtml(o.id)+'"'+(o.id===obj.assemblyFor?' selected':'')+'>'+escapeHtml(o.ref)+'</option>';}).join('')+'</select></label><button class="command-item" data-link-assembly="'+escapeHtml(obj.id)+'"'+(!devices.length?' disabled':'')+'>Link mounting accessory</button>';
   }
+  function plcIoFields(instance,definition){
+    const pins=window.AdigunCADEngine.plcIoPins(definition);
+    if(!pins.length)return '';
+    const rows=pins.map(pin=>{
+      const label=escapeHtml(pin.localNumber+' '+pin.name),id=escapeHtml(pin.id),record=instance.plcIo?.[pin.id];
+      const input=(key,title,max)=>`<label class="property-row"><span>${label} ${title}</span><input data-plc-pin="${id}" data-plc-field="${key}" maxlength="${max}" value="${escapeHtml(record?.[key]??'')}"${instance.locked?' disabled':''}></label>`;
+      return input('signal','signal',120)+input('address','configured address',40);
+    });
+    return `<details><summary>PLC I/O assignments</summary><button type="button" class="command-item" data-export-project-register="plc-io">Export PLC I/O register</button>${rows.join('')}</details>`;
+  }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const {target:field}=event,key=field.dataset.plcField,pin=field.dataset.plcPin;
+    if(!['signal','address'].includes(key))return;
+    const item=state.objects.find(object=>object.id===state.selected&&object.kind==='component-instance'&&!object.locked);
+    if(!item)return;
+    const value=field.value.trim(),previous=item.plcIo?.[pin]?.[key]??'';
+    if(value===previous)return;
+    const row={signal:'',address:'',...item.plcIo?.[pin],[key]:value},next={...item.plcIo,[pin]:row};
+    const engine=window.AdigunCADEngine;
+    if(!engine.validPlcIo(engine.component(item.componentId),next)){
+      field.value=previous;notify('Use a unique configured address for each PLC terminal.');return;
+    }
+    if(!row.signal&&!row.address)delete next[pin];
+    pushUndo();
+    if(Object.keys(next).length)item.plcIo=next;else delete item.plcIo;
+    field.value=value;persist();
+  });
   $('#inspectorContent').addEventListener('click',function(event){const button=event.target.closest('[data-link-assembly]');if(!button)return;const selector=$('[data-assembly-target="'+button.dataset.linkAssembly+'"]');try{const result=window.AdigunCADEngine.linkAssemblyAccessory({objects:collectProjectObjects()},button.dataset.linkAssembly,selector.value),replacement=result.find(function(o){return o.id===button.dataset.linkAssembly;});pushUndo();state.objects=state.objects.map(function(o){return o.id===replacement.id?replacement:o;});persist();renderObjects();refreshSelectedProperties();notify('Mounting accessory linked to the canonical device. Electrical terminal mapping remains separate.');}catch(error){notify(error.message);}});
   function panelPlacementFields(obj,def){
     if(!def.panelFootprint)return '';
@@ -1812,6 +1839,7 @@
       +'<label class="property-row"><span>Reference</span><input class="component-edit" data-component-property="ref" data-component-object="'+escapeHtml(obj.id)+'" maxlength="32" value="'+escapeHtml(obj.ref)+'"></label>'
       +componentInstanceFields(obj,def)
       +assemblyAccessoryFields(obj,def)
+      +plcIoFields(obj,def)
       +panelPlacementFields(obj,def)
       +'<a class="component-source" href="'+escapeHtml(source.url)+'" target="_blank" rel="noopener noreferrer">Manufacturer source · '+escapeHtml(source.retrievedAt)+'</a>'
       +'<p class="notice component-specs">'+escapeHtml(def.symbol.numberingNote+' '+behaviorNote)+' Manufacturer ratings remain read-only.</p>'
@@ -2464,7 +2492,7 @@
     const engine=window.AdigunCADEngine;
     let csv;
     try {
-      const exporters={'floor-cable':engine.floorCableScheduleCsv,'floor-panel':engine.floorPanelScheduleCsv,'floor-protective-earth':engine.floorProtectiveEarthCsv,'floor-circuit':engine.floorCircuitScheduleCsv,'room-equipment':engine.roomEquipmentScheduleCsv,'cable-core':engine.cableCoreRegisterCsv,continuation:engine.continuationRegisterCsv,terminal:engine.terminalRegisterCsv};
+      const exporters={'floor-cable':engine.floorCableScheduleCsv,'floor-panel':engine.floorPanelScheduleCsv,'floor-protective-earth':engine.floorProtectiveEarthCsv,'floor-circuit':engine.floorCircuitScheduleCsv,'room-equipment':engine.roomEquipmentScheduleCsv,'cable-core':engine.cableCoreRegisterCsv,continuation:engine.continuationRegisterCsv,terminal:engine.terminalRegisterCsv,'plc-io':engine.plcIoRegisterCsv};
       csv=exporters[register](register==='continuation'?JSON.parse(engine.serializeProject(project)):project);
     } catch(error) {
       notify(error.message);
