@@ -1098,15 +1098,17 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const isSource=value=>typeof value==='string'&&/^https:\/\/[^/\s]+\/\S+$/.test(value);
     for(const part of rows){
       const id='wago-'+part?.orderCode;
-      if(!part||typeof part.orderCode!=='string'||!/^(?:2001|2002|2201|2202)-[0-9]{4}$/.test(part.orderCode)||
+      if(!part||typeof part.orderCode!=='string'||!/^(?:2000|2001|2002|2004|2201|2202)-[0-9]{4}$/.test(part.orderCode)||
         !Array.isArray(part.positions)||part.positions.length<1||part.positions.length>2||
         !Array.from(part.positions).every(count=>Number.isInteger(count)&&count>=2&&count<=4)||
         ![part.nominalVoltage,part.ratedCurrent,part.widthMm,part.heightMm,part.depthMm,part.nominalCrossSectionMm2].every(value=>Number.isFinite(value)&&value>0)||
         ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
         typeof part.slug!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(part.slug)||
         !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||!isSource(part.datasheet)||
-        (part.actuationMethod!==undefined&&part.actuationMethod!=='Push-button')||
+        (part.actuationMethod!==undefined&&!['Push-button','Operating tool'].includes(part.actuationMethod))||
         (part.markerCarrier!==undefined&&typeof part.markerCarrier!=='boolean')||
+        (part.retrievedAt!==undefined&&(typeof part.retrievedAt!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(part.retrievedAt)))||
+        (part.datasheetSha256!==undefined&&(typeof part.datasheetSha256!=='string'||!/^[a-f0-9]{64}$/.test(part.datasheetSha256)))||
         (part.connectionSource!==undefined&&!isSource(part.connectionSource))){
         throw new TypeError('Invalid WAGO terminal catalog row: '+id);
       }
@@ -1150,8 +1152,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         note:'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.'},
       instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
       sources:[{publisher:'WAGO',title:`${part.orderCode} datasheet, pp. ${part.pages}`,url:part.datasheet,documentRevision:part.revision,
-        revisionNote:'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:'2026-11-22'},
-        {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:'2026-11-22'},
+        revisionNote:'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:part.retrievedAt||'2026-11-22',
+        ...(part.datasheetSha256?{sha256:part.datasheetSha256}:{})},
+        {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:part.retrievedAt||'2026-11-22'},
         ...(part.connectionSource?[{publisher:'WAGO',title:'Connection schedule, p. 1',url:part.connectionSource,documentRevision:'30 September 2008',
           revisionNote:'Three clamping positions on one potential.',retrievedAt:'2026-11-22'}]:[])]};
   }

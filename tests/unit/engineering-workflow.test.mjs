@@ -41,10 +41,12 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
   const singleDeckSeries = [
+    [2000, 3.5, 1, 13.5, "Operating tool", [48.5, 58.2, 67.9]],
     [2001, 4.2, 1.5, 17.5, undefined],
+    [2004, 6.2, 4, 32, "Operating tool", [52.3, 65.5, 78.7]],
     [2201, 4.2, 1.5, 17.5, "Push-button"],
     [2202, 5.2, 2.5, 24, "Push-button"],
-  ].flatMap(([series, width, crossSection, current, actuation]) =>
+  ].flatMap(([series, width, crossSection, current, actuation, heights]) =>
     [2, 3, 4].flatMap((clamps) =>
       ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"].map(
         (finish, index) => [
@@ -57,6 +59,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
           crossSection,
           current,
           actuation,
+          heights?.[clamps - 2],
         ],
       ),
     ),
@@ -71,6 +74,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     crossSection = 2.5,
     current = 24,
     actuation,
+    height,
   ] of [
     ...singleDeckSeries,
     ["2002-1301", [3], 800, 32.9],
@@ -110,6 +114,10 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     );
     assert.equal(definition.specifications.ratedCurrent.value, current);
     assert.equal(definition.specifications.actuationMethod?.value, actuation);
+    if (height !== undefined) {
+      assert.equal(definition.panelFootprint.heightMm, height);
+      assert.match(definition.sources[0].sha256, /^[a-f0-9]{64}$/);
+    }
     if (finish) assert.equal(definition.specifications.finish.value, finish);
     const pins = engine.worldPins(device);
     const wires = definition.symbol.internalConnections.map((group, index) => {
