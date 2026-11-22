@@ -1375,6 +1375,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
         if(object.floorRouteKind!==undefined&&(object.kind!=='freehand'||!['cable','conduit','tray'].includes(object.floorRouteKind)||!validFloorRoutePoints(object.points)||!floorIds.has(object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null))))errors.push('Invalid measured floor route '+object.id+'.');
+        if(object.floorRouteTag!==undefined&&(!object.floorRouteKind||typeof object.floorRouteTag!=='string'||!object.floorRouteTag.trim()||object.floorRouteTag.length>64))errors.push('Invalid floor route tag '+object.id+'.');
         if(object.riserTargetSheetId!==undefined){
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           if(!object.floorRouteKind||floorRiserLength(floorSheets.get(sheetId),floorSheets.get(object.riserTargetSheetId))===null)errors.push('Invalid floor riser '+object.id+'.');
@@ -2989,6 +2990,28 @@ function createPumpStarterDocumentation(name) {
     const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser'],['Known connected load (W)','connected'],['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']];
     return reportCsv(columns,floorCircuitRows(project));
   }
+  function floorCableScheduleCsv(project){
+    const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
+    const boards=new Map(project.objects.filter(object=>object.componentId==='building-distribution-board').map(board=>[board.id,board]));
+    const rows=[];
+    for(const route of project.objects){
+      const source=sheets.get(route.sheetId);
+      if(!route.floorRouteKind||!source)continue;
+      const assignment=route.floorCircuit;
+      const board=boards.get(assignment?.boardId);
+      const circuit=board?.floorCircuits?.find(item=>item.id===assignment.circuitId);
+      const target=sheets.get(route.riserTargetSheetId);
+      const planar=floorRouteLength(route),vertical=floorRiserLength(source,target);
+      rows.push({id:route.id,tag:route.floorRouteTag,kind:route.floorRouteKind,
+        building:source.floorPlan.building,fromSheet:source.number,fromFloor:source.floorPlan.level,
+        toSheet:target?.number,toFloor:target?.floorPlan.level,board:board?.ref,circuit:circuit?.name,
+        planar,vertical,total:planar+(vertical??0)});
+    }
+    return reportCsv([['Route ID','id'],['Route tag','tag'],['Route kind','kind'],['Building','building'],
+      ['Source sheet','fromSheet'],['Source floor','fromFloor'],['Riser target sheet','toSheet'],['Riser target floor','toFloor'],
+      ['Assigned board','board'],['Assigned circuit','circuit'],['Planar length (mm)','planar'],['Vertical length (mm)','vertical'],
+      ['Total drawn length (mm)','total']],rows);
+  }
   function floorPanelScheduleCsv(project){
     const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
     const objects=new Map(project.objects.map(object=>[object.id,object]));
@@ -3195,6 +3218,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
+    floorCableScheduleCsv: floorCableScheduleCsv,
     floorPanelScheduleCsv: floorPanelScheduleCsv,
     floorProtectiveEarthCsv: floorProtectiveEarthCsv,
     floorRiserElevationSvg: floorRiserElevationSvg,
