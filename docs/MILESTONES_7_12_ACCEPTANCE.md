@@ -30,8 +30,9 @@ palette exports a dimensioned SVG showing both floor datums and the vertical
 distance. Multi-riser diagrams and protection sizing remain open in the compact
 editor. The command palette can draw electrical and distribution zones as
 rectangular floor boundaries. Zone names and dimensions are editable in
-Properties. Room membership and distribution-board links remain open in the
-compact editor.
+Properties. Zones can reference rooms on the same floor, and distribution
+zones can also reference a board on that floor. These assignments are explicit
+and independent of the drawn boundary.
 
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

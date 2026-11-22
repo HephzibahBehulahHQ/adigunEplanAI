@@ -1381,9 +1381,17 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.roomName!==undefined&&(object.kind!=='rect'||typeof object.roomName!=='string'||!object.roomName.trim()||object.roomName.length>80||![object.x,object.y,object.x2,object.y2].every(finite)||Math.abs(object.x2-object.x)<2||Math.abs(object.y2-object.y)<2))errors.push('Invalid room outline '+object.id+'.');
         if(object.floorZone!==undefined){
           const zone=object.floorZone;
+          const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           const width=Math.abs(object.x2-object.x),length=Math.abs(object.y2-object.y);
           if(!zone||!['electrical','distribution'].includes(zone.kind)||typeof zone.name!=='string'||!zone.name.trim()||zone.name.length>80||
-            object.kind!=='rect'||object.roomName!==undefined||!floorIds.has(object.sheetId||project.activeSheet)||!finite(width*length)||width<2||length<2)errors.push('Invalid floor zone '+object.id+'.');
+            object.kind!=='rect'||object.roomName!==undefined||!floorIds.has(sheetId)||!finite(width*length)||width<2||length<2)errors.push('Invalid floor zone '+object.id+'.');
+          if(zone?.roomIds!==undefined&&(!Array.isArray(zone.roomIds)||new Set(zone.roomIds).size!==zone.roomIds.length||
+            zone.roomIds.some(id=>!rooms.has(id)||(rooms.get(id).sheetId||sheetId)!==sheetId)))errors.push('Zone rooms must be unique and on the same floor.');
+          if(zone?.boardId!==undefined){
+            const board=objectsById.get(zone.boardId);
+            if(zone.kind!=='distribution'||board?.kind!=='component-instance'||board.componentId!=='building-distribution-board'||
+              (board.sheetId||sheetId)!==sheetId)errors.push('A distribution zone board must be on the same floor.');
+          }
         }
         if(object.kind==='wire'){try{wireRoute(object);}catch(error){errors.push(error.message);}}
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
@@ -1583,7 +1591,13 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 function removeDrawingObjects(objects,ids){
     const selected=new Set(ids),removed=(objects||[]).filter(function(o){return selected.has(o.id);}),result=clone((objects||[]).filter(function(o){return !selected.has(o.id);})),detached=[];
-    result.forEach(function(object){if(selected.has(object.roomId))delete object.roomId;if(selected.has(object.floorCircuit?.boardId))delete object.floorCircuit;});
+    result.forEach(function(object){
+      if(selected.has(object.roomId))delete object.roomId;
+      if(selected.has(object.floorCircuit?.boardId))delete object.floorCircuit;
+      const zone=object.floorZone;
+      if(zone?.roomIds)zone.roomIds=zone.roomIds.filter(id=>!selected.has(id));
+      if(zone&&selected.has(zone.boardId))delete zone.boardId;
+    });
     result.forEach(function(wire){if(wire.kind!=='wire'||!wire.attachments)return;Object.keys(wire.attachments).forEach(function(end){const target=wire.attachments[end];if(!selected.has(target.instanceId))return;detached.push({wireId:wire.id,end:end,instanceId:target.instanceId,pinId:target.pinId});delete wire.attachments[end];wire.detachedEnds=Array.from(new Set((wire.detachedEnds||[]).concat(end)));});});
     return {objects:result,removed:removed,detached:detached};
   }
@@ -1603,6 +1617,9 @@ function removeDrawingObjects(objects,ids){
     else if(target.floorCircuits){
       delete target.floorCircuits;
       for(const load of result)if(load.floorCircuit?.boardId===target.id)delete load.floorCircuit;
+    }
+    if(original.componentId==='building-distribution-board'&&replacementId!==original.componentId){
+      for(const item of result)if(item.floorZone?.boardId===target.id)delete item.floorZone.boardId;
     }
     Object.keys(replacement.instanceProperties).forEach(function(name){
       const rule=replacement.instanceProperties[name],value=original.properties[name];

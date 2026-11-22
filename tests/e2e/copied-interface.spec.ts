@@ -3627,4 +3627,36 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
   await clickAt(580, 300);
   await expect(circuit).toHaveValue("");
+  await command("Draw distribution zone");
+  const zoneStart = await sheetPoint(page, 180, 180);
+  const zoneEnd = await sheetPoint(page, 690, 420);
+  await page.mouse.move(zoneStart.x, zoneStart.y);
+  await page.mouse.down();
+  await page.mouse.move(zoneEnd.x, zoneEnd.y);
+  await page.mouse.up();
+  await page.getByLabel("Zone rooms").selectOption({ label: "Workshop" });
+  await page
+    .getByLabel("Zone distribution board")
+    .selectOption({ label: "DB1" });
+  const linked = await saveDrawing(page, "linked-distribution-zone");
+  const zone = linked.data.objects.find(
+    (item: { floorZone?: object }) => item.floorZone,
+  );
+  expect(zone.floorZone.boardId).toBe(board.id);
+  expect(zone.floorZone.roomIds).toEqual([
+    linked.data.objects.find(
+      (item: { roomName?: string }) => item.roomName === "Workshop",
+    ).id,
+  ]);
+  await page.locator("#openFile").setInputFiles(linked.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project linked-distribution-zone.adigun.json opened.",
+  );
+  await clickAt(180, 180);
+  await expect(page.getByLabel("Zone rooms")).toHaveValues(
+    zone.floorZone.roomIds,
+  );
+  await expect(page.getByLabel("Zone distribution board")).toHaveValue(
+    board.id,
+  );
 });
