@@ -3968,6 +3968,14 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   expect(svg).toContain("To · A2/001 · Upper floor");
   expect(svg).toContain("Elevation 3200 mm");
   expect(svg).toContain(">3200 mm</text>");
+  const buildingRiserPending = page.waitForEvent("download");
+  await command("Export building riser diagram");
+  const buildingRiser = await buildingRiserPending;
+  expect(buildingRiser.suggestedFilename()).toBe("building-riser-diagram.svg");
+  const buildingSvg = fs.readFileSync((await buildingRiser.path())!, "utf8");
+  expect(buildingSvg).toContain("R1 · W-FLOOR-01");
+  expect(buildingSvg).toContain("Elevation 3200 mm");
+  expect(buildingSvg).toContain("3200 mm vertical");
   const routingPending = page.waitForEvent("download");
   await command("Export floor circuit schedule");
   const routingSchedule = await routingPending;
