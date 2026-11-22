@@ -667,7 +667,7 @@
   function footprintsOverlap(first,second){
     return first.left<second.right&&first.right>second.left&&first.top<second.bottom&&first.bottom>second.top;
   }
-  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(!activeDraftingSheet()?.floorPlan){delete copy.floorCircuits;delete copy.floorRouteKind;delete copy.floorZone;}if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.riserTargetSheetId&&window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===copy.riserTargetSheetId))===null)delete copy.riserTargetSheetId;if(copy.floorCircuit){const boardId=copiedIds.get(copy.floorCircuit.boardId)||copy.floorCircuit.boardId;if(activeDraftingSheet()?.floorPlan&&[...copies,...state.objects].some(item=>item.id===boardId&&item.componentId==='building-distribution-board'&&item.floorCircuits?.some(circuit=>circuit.id===copy.floorCircuit.circuitId)))copy.floorCircuit.boardId=boardId;else delete copy.floorCircuit;}if(copy.roomId){const roomId=copiedIds.get(copy.roomId)||copy.roomId;if(activeDraftingSheet()?.floorPlan&&(copies.some(item=>item.id===roomId&&item.roomName)||state.objects.some(item=>item.id===roomId&&item.roomName)))copy.roomId=roomId;else delete copy.roomId;}if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
+  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(!activeDraftingSheet()?.floorPlan){delete copy.floorCircuits;delete copy.floorRouteKind;delete copy.floorZone;}if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.floorZone)remapZoneLinks(copy.floorZone,copiedIds,[...copies,...state.objects]);if(copy.riserTargetSheetId&&window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===copy.riserTargetSheetId))===null)delete copy.riserTargetSheetId;if(copy.floorCircuit){const boardId=copiedIds.get(copy.floorCircuit.boardId)||copy.floorCircuit.boardId;if(activeDraftingSheet()?.floorPlan&&[...copies,...state.objects].some(item=>item.id===boardId&&item.componentId==='building-distribution-board'&&item.floorCircuits?.some(circuit=>circuit.id===copy.floorCircuit.circuitId)))copy.floorCircuit.boardId=boardId;else delete copy.floorCircuit;}if(copy.roomId){const roomId=copiedIds.get(copy.roomId)||copy.roomId;if(activeDraftingSheet()?.floorPlan&&(copies.some(item=>item.id===roomId&&item.roomName)||state.objects.some(item=>item.id===roomId&&item.roomName)))copy.roomId=roomId;else delete copy.roomId;}if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
     const position=clearComponentPastePosition(copies[0]);
     if(!position){notify('No clear space for this component in the current view. Zoom out or pan to open space.');return;}
     Object.assign(copies[0],position);
@@ -1346,8 +1346,43 @@
       +'<label class="property-row"><span>'+label+' name</span><input maxlength="80" data-room-property="name" value="'+escapeHtml(name)+'"></label>'
       +'<label class="property-row"><span>'+label+' width (mm)</span><input type="number" min="2" step="any" data-room-property="width" value="'+width+'"></label>'
       +'<label class="property-row"><span>'+label+' length (mm)</span><input type="number" min="2" step="any" data-room-property="length" value="'+length+'"></label>'
-      +'<div class="property-row"><span>'+label+' area</span><strong>'+Number((width*length/1e6).toPrecision(8))+' m²</strong></div>';
+      +'<div class="property-row"><span>'+label+' area</span><strong>'+Number((width*length/1e6).toPrecision(8))+' m²</strong></div>'
+      +zoneLinkFields(obj);
   }
+  function remapZoneLinks(zone,copiedIds,objects){
+    const remap=id=>copiedIds.get(id)||id;
+    if(zone.roomIds)zone.roomIds=zone.roomIds.map(remap).filter(id=>objects.some(item=>item.id===id&&item.roomName));
+    if(zone.boardId){
+      const id=remap(zone.boardId);
+      if(objects.some(item=>item.id===id&&item.componentId==='building-distribution-board'))zone.boardId=id;
+      else delete zone.boardId;
+    }
+  }
+  function zoneLinkFields(obj){
+    const zone=obj.floorZone;
+    if(!zone)return '';
+    const disabled=obj.locked?' disabled':'';
+    const option=(item,label,selected)=>'<option value="'+escapeHtml(item.id)+'"'+(selected?' selected':'')+'>'+escapeHtml(label)+'</option>';
+    const rooms=state.objects.filter(item=>item.roomName).map(item=>option(item,item.roomName,zone.roomIds?.includes(item.id))).join('');
+    const boards=state.objects.filter(item=>item.componentId==='building-distribution-board').map(item=>option(item,item.ref,zone.boardId===item.id)).join('');
+    return '<label class="property-row"><span>Zone rooms</span><select data-zone-rooms multiple size="3"'+disabled+'>'+rooms+'</select></label>'
+      +(zone.kind==='distribution'?'<label class="property-row"><span>Zone distribution board</span><select data-zone-board'+disabled+'><option value="">Unassigned</option>'+boards+'</select></label>':'');
+  }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target;
+    if(!field.matches('[data-zone-rooms],[data-zone-board]'))return;
+    const obj=state.objects.find(item=>item.id===state.selected&&item.floorZone&&!item.locked);
+    if(!obj)return;
+    pushUndo();
+    if(field.matches('[data-zone-rooms]')){
+      obj.floorZone.roomIds=Array.from(field.selectedOptions,option=>option.value);
+    }else if(field.value){
+      obj.floorZone.boardId=field.value;
+    }else{
+      delete obj.floorZone.boardId;
+    }
+    persist();
+  });
   $('#inspectorContent').addEventListener('change',event=>{
     const key=event.target.dataset.roomProperty;
     if(!key)return;
