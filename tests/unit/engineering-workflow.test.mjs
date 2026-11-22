@@ -40,18 +40,25 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 });
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
-  const series2001 = [2, 3, 4].flatMap((clamps) =>
-    ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"].map(
-      (finish, index) => [
-        `2001-1${clamps}0${index + 1}`,
-        [clamps],
-        800,
-        32.9,
-        finish,
-        4.2,
-        1.5,
-        17.5,
-      ],
+  const singleDeckSeries = [
+    [2001, 4.2, 1.5, 17.5, undefined],
+    [2201, 4.2, 1.5, 17.5, "Push-button"],
+    [2202, 5.2, 2.5, 24, "Push-button"],
+  ].flatMap(([series, width, crossSection, current, actuation]) =>
+    [2, 3, 4].flatMap((clamps) =>
+      ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"].map(
+        (finish, index) => [
+          series + "-1" + clamps + "0" + (index + 1),
+          [clamps],
+          800,
+          32.9,
+          finish,
+          width,
+          crossSection,
+          current,
+          actuation,
+        ],
+      ),
     ),
   );
   for (const [
@@ -63,8 +70,9 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     width = 5.2,
     crossSection = 2.5,
     current = 24,
+    actuation,
   ] of [
-    ...series2001,
+    ...singleDeckSeries,
     ["2002-1301", [3], 800, 32.9],
     ["2002-1304", [3], 800, 32.9],
     ["2002-1401", [4], 800, 32.9],
@@ -101,6 +109,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
       crossSection,
     );
     assert.equal(definition.specifications.ratedCurrent.value, current);
+    assert.equal(definition.specifications.actuationMethod?.value, actuation);
     if (finish) assert.equal(definition.specifications.finish.value, finish);
     const pins = engine.worldPins(device);
     const wires = definition.symbol.internalConnections.map((group, index) => {

@@ -78,3 +78,14 @@ layout. The terminal body is 4.2 mm wide and the nominal conductor section is
 and a nominal voltage of 800 V for category III and pollution degree 3. The
 18 A shown in the power-loss table refers to that separate measurement.
 [Representative 2001-1406 datasheet, pp. 2–3](https://wago.priintcloud.com/datasheets/2001-1406/en)
+
+## 2201- and 2202-series push-button terminals
+
+Thirty-six exact codes cover the six standard housing colors across two-,
+three- and four-clamp layouts in both series. Their push-button actuates the
+conductor clamp. The schematic shows a single common potential through the
+clamping positions. Part records carry the distinct 4.2 mm / 1.5 mm² /
+17.5 A and 5.2 mm / 2.5 mm² / 24 A specifications. The IEC/EN nominal voltage
+is 800 V for category III and pollution degree 3.
+[2201-1201 datasheet](https://wago.priintcloud.com/datasheets/2201-1201/en) ·
+[2202-1401 datasheet](https://wago.priintcloud.com/datasheets/2202-1401/en)

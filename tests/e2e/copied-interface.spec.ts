@@ -1671,7 +1671,7 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
 });
 
-test("TOPJOB single-deck variants can be found, placed and wired by exact code", async ({
+test("TOPJOB push-button variants can be found, placed and wired by exact code", async ({
   page,
 }) => {
   await page.goto("/");
@@ -1685,8 +1685,8 @@ test("TOPJOB single-deck variants can be found, placed and wired by exact code",
     const point = await sheetPoint(page, x, 250);
     await page.mouse.click(point.x, point.y);
   };
-  await place("2002-1202", 400);
-  await place("2001-1406", 650);
+  await place("2201-1202", 400);
+  await place("2202-1406", 650);
   for (const [x, y] of [
     [472, 250],
     [578, 240],
@@ -1697,8 +1697,8 @@ test("TOPJOB single-deck variants can be found, placed and wired by exact code",
   const native = await saveDrawing(page, "topjob-variants");
   expect(native.data.objects).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ componentId: "wago-2002-1202" }),
-      expect.objectContaining({ componentId: "wago-2001-1406" }),
+      expect.objectContaining({ componentId: "wago-2201-1202" }),
+      expect.objectContaining({ componentId: "wago-2202-1406" }),
       expect.objectContaining({
         kind: "wire",
         attachments: {
