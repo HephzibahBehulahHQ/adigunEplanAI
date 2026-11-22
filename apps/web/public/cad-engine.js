@@ -1323,7 +1323,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         const rotated=geometry.rotation===90||geometry.rotation===270;
         const body={id:placement.id,ref:geometry.ref,x:geometry.x/scale,y:geometry.y/scale,
           width:rotated?footprint.heightMm:footprint.widthMm,height:rotated?footprint.widthMm:footprint.heightMm,depth:footprint.depthMm,
-          z:placement.mountingDepthMm??0,mountingRailId:placement.mountingRailId};
+          z:placement.mountingDepthMm??0,mountingRailId:placement.mountingRailId,
+          accessDirection:placement.accessDirection??'front',accessClearanceMm:placement.accessClearanceMm};
         bodies.push(body);
         const settings=footprint.clearancesMm;
         if(settings){
@@ -1570,6 +1571,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
         if(object.mountingRailId!==undefined&&(object.kind!=='panel-placement'||typeof object.mountingRailId!=='string'||!object.mountingRailId))errors.push('Invalid mounting rail reference '+object.id+'.');
+        if(object.accessDirection!==undefined&&(object.kind!=='panel-placement'||!['front','back','left','right','top','bottom'].includes(object.accessDirection)))errors.push('Invalid service access direction '+object.id+'.');
+        if(object.accessClearanceMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.accessClearanceMm)||object.accessClearanceMm<=0||object.accessClearanceMm>1e6))errors.push('Invalid service access distance '+object.id+'.');
         if(object.panelStructure!==undefined){
           const shape=object.panelStructure;
           if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail','cable-duct','terminal-rail'].includes(shape.kind)||

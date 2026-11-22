@@ -2097,11 +2097,22 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page
     .getByRole("combobox", { name: "Mounting DIN rail" })
     .selectOption(railId!);
+  await page
+    .getByRole("combobox", { name: "Cabinet service access face" })
+    .selectOption("back");
+  const serviceDistance = page.getByRole("spinbutton", {
+    name: "Declared service access (mm)",
+  });
+  await serviceDistance.fill("500");
+  await serviceDistance.press("Tab");
   await selectPanelCommand("Preview panel in 3D");
   await expect(page.locator("[data-panel-mounting-check]")).toContainText(
     "misses the declared DIN rail mounting plane or extends beyond the rail ends",
   );
   const structured = await saveDrawing(page, "panel-structures");
+  await expect(page.locator("[data-panel-service-access]")).toContainText(
+    /back service access \(500 mm\): Obstructed by .*cabinet boundary/,
+  );
   expect(
     structured.data.objects.find(
       (object: { id: string }) => object.id === placement.id,
@@ -2133,6 +2144,9 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await selectPanelCommand("Preview panel in 3D");
   await expect(preview.locator("[data-panel-structure]")).toHaveCount(4);
   await expect(page.locator("[data-panel-mounting-check]")).toHaveCount(1);
+  await expect(page.locator("[data-panel-service-access]")).toContainText(
+    "back service access (500 mm)",
+  );
 });
 
 test("mounting accessory links to the canonical overload and survives rename and reopen", async ({
