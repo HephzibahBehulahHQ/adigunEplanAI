@@ -22,6 +22,10 @@ jobs:
         env:
           WRANGLER_SEND_METRICS: "false"
         run: npm exec --yes --package=wrangler@4.158.0 -- wrangler deploy --config apps/bot-worker/wrangler.toml --dry-run --outdir "$RUNNER_TEMP/bot-worker-bundle"
+      - name: Verify hosted account Worker bundle
+        env:
+          WRANGLER_SEND_METRICS: "false"
+        run: npm exec --yes --package=wrangler@4.158.0 -- wrangler deploy --config apps/account-worker/wrangler.toml --env production --dry-run --outdir "$RUNNER_TEMP/account-worker-bundle"
       # GitHub's Ubuntu runner already has Chromium's shared libraries. Avoid
       # apt dependency installation here: transient Ubuntu mirror DNS failures
       # otherwise block browser verification before Playwright can start.

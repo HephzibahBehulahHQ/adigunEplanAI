@@ -1,5 +1,19 @@
 # Production domain and development deployment
 
+## Cloudflare Worker publication
+
+The production Worker workflow follows successful push CI on `main` and uses
+that exact commit. It reuses the verified Pages packaging pipeline and verifies
+the public source revision, entry-page hash and account route after publishing.
+Configure `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` in the
+`cloudflare-production` GitHub environment. The publishing token must have
+access to the existing `adiguneplanai-product` Worker and its configured zone
+route. Existing account bindings remain managed on the Worker.
+
+Verify a published revision with `node scripts/check-live-worker.mjs <commit>`.
+This probe sends a read-only request and does not validate Supabase sign-in,
+workspace ownership or project recovery.
+
 Required public origin: **https://adiguneplanai.hephzibahbehulah.com/**.
 
 ## Current verified checkpoint — 2026-11-09
