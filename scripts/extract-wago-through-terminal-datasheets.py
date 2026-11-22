@@ -28,7 +28,7 @@ def evidence(pages, pattern, label):
 
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
-    if not re.fullmatch(r"(?:2000|2004)-1[234]0[1-6]", code):
+    if not re.fullmatch(r"(?:2000|2004|2006|2010|2016)-1[234]0[1-6]", code):
         raise ValueError("unsupported order code")
     with pypdfium2.PdfDocument(pdf) as document:
         pages = []

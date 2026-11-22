@@ -64,6 +64,59 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
       ),
     ),
   );
+  const higherCurrentSeries = [
+    [
+      2006,
+      7.5,
+      6,
+      41,
+      32.9,
+      [
+        [57.4, "12345"],
+        [73.3, "123456"],
+        [89.3, "12345"],
+      ],
+    ],
+    [
+      2010,
+      10,
+      10,
+      57,
+      36.9,
+      [
+        [67.8, "123456"],
+        [89, "123456"],
+      ],
+    ],
+    [
+      2016,
+      12,
+      16,
+      76,
+      36.9,
+      [
+        [69.8, "12345"],
+        [91.8, "12456"],
+      ],
+    ],
+  ].flatMap(([series, width, crossSection, current, depth, profiles]) =>
+    profiles.flatMap(([height, variants], index) =>
+      Array.from(variants, (suffix) => [
+        series + "-1" + (index + 2) + "0" + suffix,
+        [index + 2],
+        800,
+        depth,
+        ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"][
+          Number(suffix) - 1
+        ],
+        width,
+        crossSection,
+        current,
+        "Operating tool",
+        height,
+      ]),
+    ),
+  );
   for (const [
     orderCode,
     counts,
@@ -77,6 +130,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     height,
   ] of [
     ...singleDeckSeries,
+    ...higherCurrentSeries,
     ["2002-1301", [3], 800, 32.9],
     ["2002-1304", [3], 800, 32.9],
     ["2002-1401", [4], 800, 32.9],
