@@ -1390,6 +1390,12 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       &&[value.width,value.height,value.depth].every(dimension=>dimension>0);
   }
   const cabinetFeatureFaces=Object.freeze(['back','front','left','right','top','bottom']);
+  function validPanelThermalInputs(value){
+    return value&&finite(value.ambientC)&&value.ambientC>=-273.15&&value.ambientC<=1000&&
+      finite(value.heatTransferCoefficientWm2K)&&value.heatTransferCoefficientWm2K>=1e-9&&value.heatTransferCoefficientWm2K<=1e6&&
+      finite(value.exposedAreaM2)&&value.exposedAreaM2>=1e-9&&value.exposedAreaM2<=1e12&&
+      [value.additionalLossW,value.coolingW].every(loss=>finite(loss)&&loss>=0&&loss<=1e12);
+  }
   function validCabinetFeatures(records){
     if(!Array.isArray(records))return false;
     const ids=new Set();
@@ -1462,6 +1468,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         if(sheet.cabinetBounds!==undefined&&!validCabinetBounds(sheet.cabinetBounds))errors.push('Invalid cabinet boundaries on sheet '+sheet.id+'.');
         if(sheet.cabinetFeatures!==undefined&&(!sheet.cabinetBounds||!validCabinetFeatures(sheet.cabinetFeatures)))errors.push('Invalid cabinet openings on sheet '+sheet.id+'.');
+        if(sheet.panelThermal!==undefined&&!validPanelThermalInputs(sheet.panelThermal))errors.push('Invalid panel thermal assumptions on sheet '+sheet.id+'.');
         if(sheet.paper!==undefined){
           const paper=sheet.paper,paperSizes={A0:841,A1:594,A2:420,A3:297,A4:210};
           const size=paper?.format==='Custom'?Math.min(paper.customWidth,paper.customHeight):paperSizes[paper?.format];
@@ -1584,6 +1591,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           });
         }
         if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
+        if(object.heatLossW!==undefined&&(object.kind!=='panel-placement'||!finite(object.heatLossW)||object.heatLossW<0||object.heatLossW>1e12))errors.push('Invalid panel equipment loss '+object.id+'.');
         if(object.mountingRailId!==undefined&&(object.kind!=='panel-placement'||typeof object.mountingRailId!=='string'||!object.mountingRailId))errors.push('Invalid mounting rail reference '+object.id+'.');
         if(object.accessDirection!==undefined&&(object.kind!=='panel-placement'||!['front','back','left','right','top','bottom'].includes(object.accessDirection)))errors.push('Invalid service access direction '+object.id+'.');
         if(object.accessClearanceMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.accessClearanceMm)||object.accessClearanceMm<=0||object.accessClearanceMm>1e6))errors.push('Invalid service access distance '+object.id+'.');
@@ -3411,6 +3419,7 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    validPanelThermalInputs,
     cabinetFeatureFaces,
     validCabinetFeatures,
     validDuctInputs,
