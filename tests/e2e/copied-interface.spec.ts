@@ -1925,12 +1925,23 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page.locator('[data-object-coordinate="y"]').fill("330");
   await page.locator('[data-object-coordinate="y"]').press("Tab");
   await page.locator('[data-rotate-object="' + placement.id + '"]').click();
+  const mountingDepth = page.getByRole("spinbutton", {
+    name: "Mounting depth from rear (mm)",
+  });
+  await mountingDepth.fill("25");
+  await mountingDepth.press("Tab");
   const edited = await saveDrawing(page, "panel-edited");
   expect(
     edited.data.objects.find(
       (o: Record<string, unknown>) => o.id === placement.id,
     ),
-  ).toMatchObject({ x: 200, y: 330, rotation: 90, deviceId: device.id });
+  ).toMatchObject({
+    x: 200,
+    y: 330,
+    rotation: 90,
+    deviceId: device.id,
+    mountingDepthMm: 25,
+  });
   await page.reload();
   await page.locator("#openFile").setInputFiles(edited.path);
   await expect(page.locator("#statusText")).toContainText(
@@ -1958,6 +1969,31 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await expect(
     page.locator('#userDrawings [data-object="' + contactorView.id + '"]'),
   ).toHaveClass(/selected-object/);
+  await expect(
+    preview.locator('[data-panel-body="' + placement.id + '"] title'),
+  ).toContainText("Z 25 mm");
+  for (const [label, value] of [
+    ["Cabinet left X (mm)", "0"],
+    ["Cabinet top Y (mm)", "0"],
+    ["Usable cabinet width (mm)", "1500"],
+    ["Usable cabinet height (mm)", "1500"],
+    ["Usable cabinet depth (mm)", "100"],
+  ]) {
+    await page
+      .getByRole("spinbutton", { name: label, exact: true })
+      .fill(value);
+  }
+  await page.getByRole("button", { name: "Apply cabinet boundaries" }).click();
+  await expect(preview.locator("[data-cabinet-boundary]")).toHaveCount(1);
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "Body extends beyond the declared cabinet boundary.",
+  );
+  const bounded = await saveDrawing(page, "panel-cabinet-bounds");
+  expect(
+    bounded.data.sheets.find(
+      (sheet: { id: string }) => sheet.id === "eng0601-a3-0",
+    ).cabinetBounds,
+  ).toEqual({ x: 0, y: 0, width: 1500, height: 1500, depth: 100 });
   await page.screenshot({
     path: test.info().outputPath("linked-panel-placement.png"),
   });
