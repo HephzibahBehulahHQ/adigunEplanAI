@@ -3933,6 +3933,15 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     await page.locator('[data-inspector="Properties"]').click();
   await elevation.fill("0");
   await elevation.press("Tab");
+  const profile = page.getByRole("combobox", {
+    name: "Engineering documentation profile",
+  });
+  await profile.selectOption("de-v1");
+  const standardEdition = page.getByRole("textbox", {
+    name: "Declared standard and edition",
+  });
+  await standardEdition.fill("Project test reference · edition 2024");
+  await standardEdition.press("Tab");
   await page.locator("#newSheet").click();
   await page.locator("#sheetDialog [data-floor-sheet]").click();
   await page.locator("#projectTree [data-generated-sheet]").last().click();
@@ -3955,6 +3964,10 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await page.locator("#openFile").setInputFiles(withRiser.path);
   await expect(page.locator("#statusText")).toContainText(
     "Project floor-plan-riser.adigun.json opened.",
+  );
+  await expect(profile).toHaveValue("de-v1");
+  await expect(standardEdition).toHaveValue(
+    "Project test reference · edition 2024",
   );
   await expect(page.locator('[data-object="' + route.id + '"]')).toContainText(
     "Upper floor · 3200 mm",
@@ -3989,7 +4002,7 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   const cableCsv = fs.readFileSync((await cableReport.path())!, "utf8");
   expect(cableCsv).toContain('"W-FLOOR-01","cable"');
   expect(cableCsv).toContain(
-    '"A2/001","Upper floor","DB1","Workshop sockets","300","3200","3500"',
+    '"A2/001","Upper floor","DB1","Workshop sockets","300","3200","3500","Germany · DIN/VDE documentation v1","Project test reference · edition 2024"',
   );
   await clickAt(260, 240);
   const diagramPending = page.waitForEvent("download");

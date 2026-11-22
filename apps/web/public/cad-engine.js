@@ -14,6 +14,7 @@
   }
   function finite(value) { return typeof value === 'number' && Number.isFinite(value); }
   function validImportScale(value) { return value===undefined||finite(value)&&value>0&&value<=1000000; }
+  const floorEngineeringProfiles=Object.freeze({'de-v1':'Germany · DIN/VDE documentation v1','iec-v1':'IEC documentation v1'});
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
   const terminalDefinition = deepFreeze({
@@ -1311,6 +1312,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(sheet.floorPlan!==undefined){
           const plan=sheet.floorPlan;
           if(!plan||typeof plan!=='object'||['building','level'].some(key=>typeof plan[key]!=='string'||!plan[key].trim()||plan[key].length>80)||plan.elevationMm!==undefined&&!finite(plan.elevationMm)||!validImportScale(plan.importMmPerUnit))errors.push('Invalid building floor plan on sheet '+sheet.id+'.');
+          if(plan?.engineeringProfile!==undefined&&(typeof plan.engineeringProfile!=='string'||!Object.prototype.hasOwnProperty.call(floorEngineeringProfiles,plan.engineeringProfile))||
+            plan?.standardEdition!==undefined&&(!plan.engineeringProfile||typeof plan.standardEdition!=='string'||!plan.standardEdition.trim()||plan.standardEdition.length>120))errors.push('Invalid floor engineering profile on sheet '+sheet.id+'.');
         }
         if(sheet.drafting!==undefined){
           const drafting=sheet.drafting;
@@ -2994,6 +2997,11 @@ function createPumpStarterDocumentation(name) {
     });
     return '\uFEFF' + lines.join('\r\n') + '\r\n';
   }
+  const floorProfileColumns=[['Engineering documentation profile','engineeringProfile'],['Declared standard and edition','standardEdition']];
+  function floorProfileReport(sheet){
+    const plan=sheet.floorPlan;
+    return {engineeringProfile:floorEngineeringProfiles[plan.engineeringProfile],standardEdition:plan.standardEdition};
+  }
 
   function floorCircuitRows(project,boardId){
     const emptyTotals=()=>({loads:[],cable:0,conduit:0,tray:0,riser:0,connected:0,unknownConnected:0,demand:0,unknownDemand:0});
@@ -3024,13 +3032,13 @@ function createPumpStarterDocumentation(name) {
       const sheet=sheets.get(board.sheetId);
       if(!sheet?.floorPlan)continue;
       for(const circuit of board.floorCircuits)rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
-        boardId:board.id,board:board.ref,circuit:circuit.name,...(assignments.get(board.id)?.get(circuit.id)||emptyTotals())});
+        boardId:board.id,board:board.ref,circuit:circuit.name,...floorProfileReport(sheet),...(assignments.get(board.id)?.get(circuit.id)||emptyTotals())});
     }
     return rows;
   }
   function floorCircuitScheduleCsv(project) {
     const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser'],['Known connected load (W)','connected'],['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']];
-    return reportCsv(columns,floorCircuitRows(project));
+    return reportCsv([...columns,...floorProfileColumns],floorCircuitRows(project));
   }
   function floorCableScheduleCsv(project){
     const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
@@ -3047,12 +3055,12 @@ function createPumpStarterDocumentation(name) {
       rows.push({id:route.id,tag:route.floorRouteTag,kind:route.floorRouteKind,
         building:source.floorPlan.building,fromSheet:source.number,fromFloor:source.floorPlan.level,
         toSheet:target?.number,toFloor:target?.floorPlan.level,board:board?.ref,circuit:circuit?.name,
-        planar,vertical,total:planar+(vertical??0)});
+        planar,vertical,total:planar+(vertical??0),...floorProfileReport(source)});
     }
     return reportCsv([['Route ID','id'],['Route tag','tag'],['Route kind','kind'],['Building','building'],
       ['Source sheet','fromSheet'],['Source floor','fromFloor'],['Riser target sheet','toSheet'],['Riser target floor','toFloor'],
       ['Assigned board','board'],['Assigned circuit','circuit'],['Planar length (mm)','planar'],['Vertical length (mm)','vertical'],
-      ['Total drawn length (mm)','total']],rows);
+      ['Total drawn length (mm)','total'],...floorProfileColumns],rows);
   }
   function floorPanelScheduleCsv(project){
     const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
@@ -3064,7 +3072,7 @@ function createPumpStarterDocumentation(name) {
       rows.set(board.id,{
         building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
         board:board.ref,room:objects.get(board.roomId)?.roomName,zones:[],circuits:0,loads:0,
-        connected:0,demand:0,unknownConnected:0,unknownDemand:0
+        connected:0,demand:0,unknownConnected:0,unknownDemand:0,...floorProfileReport(sheet)
       });
     }
     for(const object of project.objects)rows.get(object.floorZone?.boardId)?.zones.push(object.floorZone.name);
@@ -3076,7 +3084,7 @@ function createPumpStarterDocumentation(name) {
     }
     return reportCsv([['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Board room','room'],
       ['Distribution zones','zones'],['Circuits','circuits'],['Assigned loads','loads'],['Known connected load (W)','connected'],
-      ['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']],Array.from(rows.values()));
+      ['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand'],...floorProfileColumns],Array.from(rows.values()));
   }
   function floorBoardSingleLineSvg(project,boardId){
     const rows=boardId?floorCircuitRows(project,boardId):[];
@@ -3260,6 +3268,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
+    floorEngineeringProfiles: floorEngineeringProfiles,
     floorCableScheduleCsv: floorCableScheduleCsv,
     floorPanelScheduleCsv: floorPanelScheduleCsv,
     floorProtectiveEarthCsv: floorProtectiveEarthCsv,

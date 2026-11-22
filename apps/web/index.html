@@ -1999,15 +1999,38 @@
       fields=document.createElement('div');
       fields.dataset.floorPlanFields='';
       fields.innerHTML='<label class="property-row"><span>Building name</span><input data-floor-plan-field="building" maxlength="80"></label><label class="property-row"><span>Floor level</span><input data-floor-plan-field="level" maxlength="80"></label><label class="property-row"><span>Floor elevation (mm)</span><input type="number" step="any" data-floor-plan-field="elevationMm"></label><label class="property-row"><span>Import scale (mm per source unit)</span><input type="number" step="any" min="0" max="1000000" placeholder="Use file scale" data-floor-plan-field="importMmPerUnit"></label>';
+      const options=Object.entries(window.AdigunCADEngine.floorEngineeringProfiles)
+        .map(([id,label])=>'<option value="'+escapeHtml(id)+'">'+escapeHtml(label)+'</option>').join('');
+      fields.insertAdjacentHTML('beforeend','<label class="property-row"><span>Engineering documentation profile</span><select data-floor-plan-field="engineeringProfile"><option value="">Unspecified</option>'+options+'</select></label>'
+        +'<label class="property-row"><span>Declared standard and edition</span><input data-floor-plan-field="standardEdition" maxlength="120"></label>');
       block.append(fields);
     }
     fields.hidden=!sheet?.floorPlan;
-    for(const field of fields.querySelectorAll('input'))field.value=sheet?.floorPlan?.[field.dataset.floorPlanField]??'';
+    for(const field of fields.querySelectorAll('[data-floor-plan-field]'))field.value=sheet?.floorPlan?.[field.dataset.floorPlanField]??'';
+    fields.querySelector('[data-floor-plan-field="standardEdition"]').disabled=!sheet?.floorPlan?.engineeringProfile;
   }
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target,key=field.dataset.floorPlanField,sheet=activeDraftingSheet();
-    if(!sheet?.floorPlan||!['building','level','elevationMm','importMmPerUnit'].includes(key))return;
+    if(!sheet?.floorPlan||!['building','level','elevationMm','importMmPerUnit','engineeringProfile','standardEdition'].includes(key))return;
     const next={...sheet.floorPlan};
+    if(key==='engineeringProfile'||key==='standardEdition'){
+      const value=field.value.trim();
+      if(key==='engineeringProfile'){
+        if(value&&!Object.prototype.hasOwnProperty.call(window.AdigunCADEngine.floorEngineeringProfiles,value))return;
+        if(value===(next.engineeringProfile||''))return;
+        if(value)next.engineeringProfile=value;
+        else delete next.engineeringProfile;
+        delete next.standardEdition;
+      }else{
+        if(!next.engineeringProfile)return;
+        if(value)next.standardEdition=value.slice(0,120);
+        else delete next.standardEdition;
+      }
+      sheet.floorPlan=next;
+      refreshFloorPlanControls(field.closest('.inspector-block'),sheet);
+      persist();
+      return;
+    }
     if(key==='importMmPerUnit'){
       const scale=field.valueAsNumber;
       if(field.value===''&&!field.validity.badInput)delete next.importMmPerUnit;
