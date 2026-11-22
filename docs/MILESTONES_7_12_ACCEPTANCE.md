@@ -86,6 +86,11 @@ The route protection-coordination check compares documented prospective
 fault current against user-entered manufacturer limits for selectivity and
 breaking capacity. It saves the device-pair evidence and reports both
 comparisons separately.
+**Export building protection review** produces a JSON record for every cable
+route in the active building. It reruns the saved inputs against current
+geometry and identifies missing inputs, invalid inputs and comparison outcomes.
+Versioned calculation details, source references and entered evidence are
+included for completed checks.
 
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

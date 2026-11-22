@@ -3800,6 +3800,7 @@ test("floor plan specialty devices expose independent native terminals", async (
 test("floor cable ampacity compares explicit inputs and reopens them", async ({
   page,
 }) => {
+  test.setTimeout(45_000);
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
@@ -3905,6 +3906,50 @@ test("floor cable ampacity compares explicit inputs and reopens them", async ({
       name: "Device pair and source evidence",
     }),
   ).toHaveValue("Synthetic device pair and conditions for browser test");
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Draw floor cable route");
+  await page
+    .locator("#commandList")
+    .getByText("Draw floor cable route", { exact: true })
+    .click();
+  for (const x of [220, 520]) {
+    const point = await sheetPoint(page, x, 480);
+    await page.mouse.click(point.x, point.y);
+  }
+  await page.keyboard.press("Enter");
+  const reviewPending = page.waitForEvent("download");
+  await page.locator("#openCommands").click();
+  await page
+    .locator("#commandSearch")
+    .fill("Export building protection review");
+  await page
+    .locator("#commandList")
+    .getByText("Export building protection review", { exact: true })
+    .click();
+  const reviewFile = await reviewPending;
+  expect(reviewFile.suggestedFilename()).toBe(
+    "building-protection-review.json",
+  );
+  const review = JSON.parse(
+    fs.readFileSync((await reviewFile.path())!, "utf8"),
+  );
+  expect(review.routes).toHaveLength(2);
+  expect(review.routes[0].checks).toMatchObject([
+    { method: "voltage-drop", status: "missing-inputs" },
+    { method: "cable-sizing", status: "outside-supplied-limits" },
+    {
+      method: "protective-coordination",
+      status: "outside-supplied-limits",
+      result: {
+        methodReference:
+          "adiguneplanai:calculation:protective-coordination:1.0.0",
+        evidence: ["Synthetic device pair and conditions for browser test"],
+      },
+    },
+  ]);
+  expect(
+    review.routes[1].checks.map((check: { status: string }) => check.status),
+  ).toEqual(["missing-inputs", "missing-inputs", "missing-inputs"]);
 });
 
 test("floor plan equipment uses native devices and preserves terminal wiring", async ({
