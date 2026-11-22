@@ -8,6 +8,45 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("floor equipment cannot reference a room on another sheet and deletion clears membership", () => {
+  const floorPlan = { building: "Workshop", level: "Ground floor" };
+  const device = {
+    ...engine.createInstance("building-socket", 100, 100, "SO1"),
+    sheetId: "ground",
+    roomId: "room",
+  };
+  const room = {
+    id: "room",
+    kind: "rect",
+    roomName: "Workshop",
+    sheetId: "ground",
+    x: 0,
+    y: 0,
+    x2: 200,
+    y2: 200,
+  };
+  const project = {
+    sheets: [
+      { id: "ground", floorPlan },
+      { id: "upper", floorPlan },
+    ],
+    objects: [device, room],
+  };
+  assert.ok(engine.parseProject(engine.serializeProject(project)).valid);
+  assert.throws(
+    () =>
+      engine.serializeProject({
+        ...project,
+        objects: [device, { ...room, sheetId: "upper" }],
+      }),
+    /Invalid room assignment/,
+  );
+  assert.equal(
+    engine.removeDrawingObjects(project.objects, [room.id]).objects[0].roomId,
+    undefined,
+  );
+});
+
 test("incoming PE bonds explicit mounting feet without doubling conductor clamps", () => {
   const project = engine.createExample("eng0601");
   const bonding = project.objects

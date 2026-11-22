@@ -3433,4 +3433,41 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   });
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(page.locator("#userDrawings [data-object]")).toHaveCount(4);
+  const command = async (name: string) => {
+    await page.keyboard.press("Control+k");
+    await page.locator("#commandSearch").fill(name);
+    await page.locator("#commandSearch").press("Enter");
+  };
+  await command("Draw room outline");
+  const start = await sheetPoint(page, 460, 170);
+  const end = await sheetPoint(page, 780, 460);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const name = page.getByRole("textbox", { name: "Room name" });
+  await name.fill("Workshop");
+  await name.press("Tab");
+  await clickAt(580, 300);
+  const assignment = page.getByRole("combobox", { name: "Assigned room" });
+  await assignment.selectOption({ label: "Workshop" });
+  const withRoom = await saveDrawing(page, "floor-plan-equipment-rooms");
+  const room = withRoom.data.objects.find(
+    (object: { roomName?: string }) => object.roomName === "Workshop",
+  );
+  expect(
+    withRoom.data.objects.find(
+      (object: { id: string }) => object.id === socket.id,
+    ).roomId,
+  ).toBe(room.id);
+  await page.locator("#openFile").setInputFiles(withRoom.path);
+  await clickAt(580, 300);
+  await expect(assignment).toHaveValue(room.id);
+  const pending = page.waitForEvent("download");
+  await command("Export room equipment schedule");
+  const schedule = await pending;
+  expect(schedule.suggestedFilename()).toBe("room-equipment-schedule.csv");
+  const csv = fs.readFileSync((await schedule.path())!, "utf8");
+  expect(csv).toContain('"Workshop","SO1","Floor-plan socket outlet"');
+  expect(csv).toContain('"Unassigned","LUM1","Floor-plan luminaire"');
 });
