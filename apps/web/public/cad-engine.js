@@ -1563,7 +1563,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
         if(object.panelStructure!==undefined){
           const shape=object.panelStructure;
-          if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail'].includes(shape.kind)||
+          if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail','cable-duct','terminal-rail'].includes(shape.kind)||
             ![object.x,object.y,object.x2,object.y2].every(finite)||object.x===object.x2||object.y===object.y2||
             shape.z!==undefined&&(!finite(shape.z)||shape.z<0||shape.z>1e6)||
             shape.depth!==undefined&&(!finite(shape.depth)||shape.depth<=0||shape.depth>1e6))errors.push('Invalid panel mounting structure '+object.id+'.');

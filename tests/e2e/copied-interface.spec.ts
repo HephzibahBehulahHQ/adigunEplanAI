@@ -1801,6 +1801,7 @@ test("Rittal enclosure inserts as editable mechanical data without electrical pi
 test("linked panel placement preserves its canonical device on local reopen", async ({
   page,
 }) => {
+  test.setTimeout(45_000);
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
@@ -2040,6 +2041,8 @@ test("linked panel placement preserves its canonical device on local reopen", as
   for (const [command, x, y, width, height, depth] of [
     ["Draw mounting plate", 100, 150, 200, 70, "2"],
     ["Draw DIN rail", 120, 280, 100, 17.5, "7.5"],
+    ["Draw cable duct", 140, 360, 150, 20, "45"],
+    ["Draw terminal rail", 160, 410, 90, 17.5, "15"],
   ] as const) {
     await selectPanelCommand(command);
     const start = await sheetPoint(page, x, y);
@@ -2055,10 +2058,16 @@ test("linked panel placement preserves its canonical device on local reopen", as
     await field.press("Tab");
   }
   await selectPanelCommand("Preview panel in 3D");
-  await expect(preview.locator("[data-panel-structure]")).toHaveCount(2);
+  await expect(preview.locator("[data-panel-structure]")).toHaveCount(4);
   await expect(
-    preview.locator("[data-panel-structure] title").last(),
+    preview.locator("[data-panel-structure] title").nth(1),
   ).toContainText("DIN rail · 200 × 35 × 7.5 mm");
+  await expect(
+    preview.locator("[data-panel-structure] title").nth(2),
+  ).toContainText("Cable duct · 300 × 40 × 45 mm");
+  await expect(
+    preview.locator("[data-panel-structure] title").nth(3),
+  ).toContainText("Terminal rail · 180 × 35 × 15 mm");
   const structured = await saveDrawing(page, "panel-structures");
   expect(
     structured.data.objects
@@ -2067,6 +2076,8 @@ test("linked panel placement preserves its canonical device on local reopen", as
   ).toEqual([
     { kind: "mounting-plate", depth: 2 },
     { kind: "din-rail", depth: 7.5 },
+    { kind: "cable-duct", depth: 45 },
+    { kind: "terminal-rail", depth: 15 },
   ]);
   await page.screenshot({
     path: test.info().outputPath("linked-panel-placement.png"),
@@ -2076,7 +2087,7 @@ test("linked panel placement preserves its canonical device on local reopen", as
     "Project panel-structures.adigun.json opened.",
   );
   await selectPanelCommand("Preview panel in 3D");
-  await expect(preview.locator("[data-panel-structure]")).toHaveCount(2);
+  await expect(preview.locator("[data-panel-structure]")).toHaveCount(4);
 });
 
 test("mounting accessory links to the canonical overload and survives rename and reopen", async ({
