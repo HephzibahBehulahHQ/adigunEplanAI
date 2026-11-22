@@ -3850,6 +3850,29 @@ test("floor cable ampacity compares explicit inputs and reopens them", async ({
   await expect(output).toContainText(
     "Protection rating ≤ corrected ampacity: fail",
   );
+  await page
+    .getByText("Route protection coordination check", { exact: true })
+    .click();
+  const coordination = page.locator("[data-route-coordination]");
+  for (const [label, value] of [
+    ["Prospective fault current (kA)", "5"],
+    ["Declared selectivity limit (kA)", "5"],
+    ["Declared breaking capacity (kA)", "6"],
+  ]) {
+    await coordination.getByRole("spinbutton", { name: label }).fill(value);
+  }
+  await coordination
+    .getByRole("textbox", { name: "Device pair and source evidence" })
+    .fill("Synthetic device pair and conditions for browser test");
+  await coordination
+    .getByRole("button", { name: "Check route protection coordination" })
+    .click();
+  await expect(coordination.locator("output")).toContainText(
+    "Declared selectivity: fail (margin 0 kA). Declared breaking capacity: pass (margin 1 kA).",
+  );
+  await expect(coordination.locator("output")).toContainText(
+    "adiguneplanai:calculation:protective-coordination:1.0.0",
+  );
   const saved = await saveDrawing(page, "floor-ampacity-inputs");
   expect(saved.data.objects[0].ampacity).toMatchObject({
     ratedCurrent: 20,
@@ -3869,6 +3892,19 @@ test("floor cable ampacity compares explicit inputs and reopens them", async ({
   await expect(output).toContainText(
     "adiguneplanai:calculation:cable-sizing:1.0.0",
   );
+  await page
+    .getByText("Route protection coordination check", { exact: true })
+    .click();
+  await expect(
+    coordination.getByRole("spinbutton", {
+      name: "Declared breaking capacity (kA)",
+    }),
+  ).toHaveValue("6");
+  await expect(
+    coordination.getByRole("textbox", {
+      name: "Device pair and source evidence",
+    }),
+  ).toHaveValue("Synthetic device pair and conditions for browser test");
 });
 
 test("floor plan equipment uses native devices and preserves terminal wiring", async ({
