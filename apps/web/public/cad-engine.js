@@ -1085,24 +1085,29 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     ['building-luminaire','Floor-plan luminaire','LUM','M-50 -50L50 50M-50 50L50 -50',[-60,-60,120,120]],
     ['building-socket','Floor-plan socket outlet','SO','M-32 -14H32M-32 14H32',[-50,-50,100,100]],
     ['building-distribution-board','Floor-plan distribution board','DB','M-55 -30H55M-55 0H55M-55 30H55',[-75,-55,150,110]],
-    ['building-earthing-bond-point','Floor-plan earthing bond point','PE','M-20 20H20M0 20V-12M-24 -12H24M-16 -23H16M-8 -34H8',[-50,-50,100,100]]
+    ['building-earthing-bond-point','Floor-plan earthing bond point','PE','M-20 20H20M0 20V-12M-24 -12H24M-16 -23H16M-8 -34H8',[-50,-50,100,100],['PE1','PE2']],
+    ['building-emergency-luminaire','Floor-plan emergency luminaire','EL','M-45 -25L-8 12M-45 12L-8 -25M8 -23H46V9H8ZM46 -13H52V-1H46M17 -7H29M23 -13V-1',[-60,-60,120,120]],
+    ['building-fire-alarm-loop-interface','Floor-plan fire alarm loop interface','FA','M0 -38A34 34 0 1 1 -0.01 -38M0 -25V1M0 12V16',[-50,-50,100,100],['LOOP+','LOOP-']],
+    ['building-data-outlet-8p8c-shielded','Floor-plan shielded 8P8C data outlet','DO','M-81 -35H81V11H45V26H-45V11H-81ZM-60 -24V-5M-40 -24V-5M-20 -24V-5M0 -24V-5M20 -24V-5M40 -24V-5M60 -24V-5',[-120,-55,240,110],['1','2','3','4','5','6','7','8','SHIELD']],
+    ['building-wall-switch','Floor-plan single-pole wall switch','SW','M-20 30V8L17 -24M20 30V-12',[-50,-50,100,100],['LINE','LOAD']]
   ].map(function(entry){
-    const [id,name,referencePrefix,path,body]=entry;
+    const [id,name,referencePrefix,path,body,terminalIds=['L','N','PE']]=entry;
     const [x,y,width,height]=body;
     const bonded=id==='building-earthing-bond-point';
-    const pins=(bonded?['PE1','PE2']:['L','N','PE']).map(function(number,index){
-      return {id:number,localNumber:number,name:number,x:bonded?index*40-20:(index-1)*40,y:80,electricalType:'passive',connectionType:'schematic'};
+    const pinPitch=terminalIds.length>3?24:40;
+    const pins=terminalIds.map(function(number,index){
+      return {id:number,localNumber:number,name:number,x:(index-(terminalIds.length-1)/2)*pinPitch,y:80,electricalType:'passive',connectionType:'schematic'};
     });
     const artwork=[{kind:'rect',x,y,width,height},{kind:'path',d:path},...pins.map(pin=>({
       kind:'line',from:{x:pin.x,y:y+height},to:pin
     }))];
     return [id,{schemaVersion:COMPONENT_SCHEMA_VERSION,id,name,model:name,generic:true,manufacturer:'Not assigned',manufacturerPartNumber:'Not assigned',
       family:'building-device',referencePrefix,category:'Building · floor-plan devices',connectionClass:'electrical',
-      symbol:{id:id+'-symbol',view:'schematic',unit:'mm',width:160,height:180,artwork,pins,internalConnections:bonded?[['PE1','PE2']]:[],
+      symbol:{id:id+'-symbol',view:'schematic',unit:'mm',width:Math.max(160,width+20),height:180,artwork,pins,internalConnections:bonded?[['PE1','PE2']]:[],
         numberingNote:'Logical floor-plan terminals. Supply, product ratings and installed footprint require design inputs.'},
       specifications:{},instanceProperties:{
         comment:{type:'string',default:'',maximumLength:160},
-        ...(id==='building-distribution-board'||bonded?{}:{
+        ...(!['building-luminaire','building-socket','building-emergency-luminaire'].includes(id)?{}:{
           activePowerW:{type:'number',default:null,minimum:0,maximum:1e9},
           demandFactor:{type:'number',default:null,minimum:0,maximum:1}
         })

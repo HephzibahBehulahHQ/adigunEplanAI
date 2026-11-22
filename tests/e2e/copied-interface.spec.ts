@@ -3445,6 +3445,59 @@ test("floor plan dimensions measure endpoints and save their offset", async ({
   await expect(dimension).toHaveText("500 mm");
 });
 
+test("floor plan specialty devices expose independent native terminals", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  const parts = [
+    ["building-emergency-luminaire", 220, 220],
+    ["building-fire-alarm-loop-interface", 500, 220],
+    ["building-data-outlet-8p8c-shielded", 500, 530],
+    ["building-wall-switch", 220, 530],
+  ] as const;
+  for (const [id, x, y] of parts) {
+    await page.locator("#symbolSearch").fill(id);
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, y);
+    await expect(page.locator("#statusText")).toContainText(
+      "placed on the floor plan.",
+    );
+  }
+  await clickAt(180, 300);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(1);
+  await clickAt(240, 610);
+  await expect(page.locator("[data-wire-draft-preview]")).toHaveCount(0);
+  const saved = await saveDrawing(page, "floor-specialty-devices");
+  const [emergency, fire, data, wallSwitch, wire] = saved.data.objects;
+  expect([
+    emergency.componentId,
+    fire.componentId,
+    data.componentId,
+    wallSwitch.componentId,
+  ]).toEqual(parts.map(([id]) => id));
+  expect(wire.attachments).toEqual({
+    start: { instanceId: emergency.id, pinId: "L" },
+    end: { instanceId: wallSwitch.id, pinId: "LOAD" },
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-specialty-devices.adigun.json opened.",
+  );
+  const reopened = await saveDrawing(page, "floor-specialty-reopened");
+  expect(reopened.data.objects).toEqual(saved.data.objects);
+});
+
 test("floor plan equipment uses native devices and preserves terminal wiring", async ({
   page,
 }) => {
@@ -3567,6 +3620,7 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     '"DB1","Workshop sockets","SO1"',
   );
   await command("Draw floor cable route");
+  await expect(page.locator("#statusText")).toContainText("Click route corners.");
   await clickAt(300, 530);
   await clickAt(500, 530);
   await clickAt(500, 630);

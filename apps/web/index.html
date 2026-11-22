@@ -1148,7 +1148,7 @@
       +['cable','conduit','tray'].map(kind=>'<option value="'+kind+'"'+(kind===route.floorRouteKind?' selected':'')+'>'+kind+'</option>').join('')+'</select></label>'
       +'<label class="property-row"><span>Route points (X, Y mm)</span><textarea rows="4" data-floor-route-points'+(route.locked?' disabled':'')+'>'+route.points.map(point=>point.x+', '+point.y).join('&#10;')+'</textarea></label>'
       +floorRiserFields(route)
-      +equipmentCircuitFields(route,{family:'building-device'});
+      +equipmentCircuitFields(route);
   }
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target;
@@ -1484,7 +1484,8 @@
     pushUndo();obj[property]=value;remapConnectedWireEnds(oldPins,engine.worldPins(obj));renderObjects();persist();refreshSelectedProperties();
   });
   function equipmentCircuitFields(obj,definition){
-    if(definition.family!=='building-device'||obj.componentId==='building-earthing-bond-point'||!activeDraftingSheet()?.floorPlan)return '';
+    if(!activeDraftingSheet()?.floorPlan)return '';
+    if(!obj.floorRouteKind&&obj.componentId!=='building-distribution-board'&&!definition?.instanceProperties.activePowerW)return '';
     const disabled=obj.locked?' disabled':'';
     if(obj.componentId==='building-distribution-board'){
       const rows=(obj.floorCircuits||[]).map(circuit=>
