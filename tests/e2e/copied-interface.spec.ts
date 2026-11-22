@@ -1618,6 +1618,18 @@ test("generic PLC library places six editable modules with native terminal wirin
     reopened.data.objects.find(({ id }: { id: string }) => id === input.id)
       .plcIo.IN0.signal,
   ).toBe("Feedback");
+  await page
+    .getByRole("button", { name: "Bill of materials", exact: true })
+    .click();
+  const devicePending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export device register CSV" })
+    .click();
+  const deviceCsv = fs.readFileSync(await (await devicePending).path(), "utf8");
+  expect(deviceCsv.trimEnd().split("\r\n")).toHaveLength(7);
+  expect(deviceCsv).toContain(
+    '"Four-channel digital input interface","","","Generic schematic","","6","1","0"',
+  );
 });
 
 test("sidebar creates documents without opening, renames inline, reorders and closes views without deleting", async ({
@@ -2802,6 +2814,21 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
     /"XPEF:1","1","connection-1","Attached",[^\r\n]+,"W2","PE"/,
   );
   expect(terminalCsv).toContain('"XPE:0","1","connection-1","Unwired"');
+  const wireEvent = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export project wire register CSV" })
+    .click();
+  const wireCsv = fs.readFileSync(await (await wireEvent).path(), "utf8");
+  const projectWires = saved.data.objects.filter(
+    (object: { kind: string }) => object.kind === "wire",
+  );
+  expect(wireCsv.trimEnd().split("\r\n")).toHaveLength(projectWires.length + 1);
+  for (const wire of projectWires) {
+    const sheet = saved.data.sheets.find(
+      ({ id }: { id: string }) => id === wire.sheetId,
+    );
+    expect(wireCsv).toContain(`"${sheet.number}","${wire.id}",`);
+  }
   await page
     .getByRole("button", { name: "Bill of materials", exact: true })
     .click();
@@ -2814,6 +2841,16 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   const bomCsv = fs.readFileSync(await bomExport.path(), "utf8");
   expect(bomCsv).toMatch(/"3LD2203-0TK51",[^\r\n]+,"1","Q2",/);
   expect(bomCsv).toMatch(/"1033000",[^\r\n]+,"1","ENC2",/);
+  const deviceEvent = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export device register CSV" })
+    .click();
+  const deviceCsv = fs.readFileSync(await (await deviceEvent).path(), "utf8");
+  const devices = saved.data.objects.filter(
+    (object: { kind: string }) => object.kind === "component-instance",
+  );
+  expect(deviceCsv.trimEnd().split("\r\n")).toHaveLength(devices.length + 1);
+  expect(deviceCsv).toContain('"3LD2203-0TK51","Manufacturer catalog"');
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
   const reopened = await saveDrawing(page, "a4-reopened");

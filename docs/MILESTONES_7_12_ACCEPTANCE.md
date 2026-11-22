@@ -177,6 +177,9 @@ sheet overrides. Revision rows appear when a revision or revision date is set.
 The calculation inspector exports all saved calculations as a versioned JSON
 register. It pairs each saved record with its exact-method replay result, or
 preserves the record and gives the reason replay is unavailable.
+The BOM inspector exports a device register with one row per native device,
+including generic symbols and catalog provenance. Electrical Checks exports
+all project wires with the sheet number, sheet-local net and route geometry.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
