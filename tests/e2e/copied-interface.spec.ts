@@ -1680,8 +1680,8 @@ test("WAGO double-deck terminal exposes both levels and stays wired on reopen", 
   await addSectionSheet(page);
   await page.locator('[data-panel="symbols"]').click();
   const search = page.locator("#symbolSearch");
-  await search.fill("2002-2401");
-  await page.locator('[data-insert="wago-2002-2401"]').click();
+  await search.fill("2002-2231");
+  await page.locator('[data-insert="wago-2002-2231"]').click();
   const clickAt = async (x: number, y: number) => {
     const point = await sheetPoint(page, x, y);
     await page.mouse.click(point.x, point.y);
@@ -1689,19 +1689,19 @@ test("WAGO double-deck terminal exposes both levels and stays wired on reopen", 
   await clickAt(400, 250);
   await search.fill("eplan-terminal");
   await page.locator('[data-insert="eplan-terminal"]').click();
-  await clickAt(650, 233);
-  await clickAt(472, 233);
-  await clickAt(650, 233);
+  await clickAt(650, 223);
+  await clickAt(472, 223);
+  await clickAt(650, 223);
   const native = await saveDrawing(page, "wago-deck-wired");
   const terminal = native.data.objects.find(
-    (item: { componentId?: string }) => item.componentId === "wago-2002-2401",
+    (item: { componentId?: string }) => item.componentId === "wago-2002-2231",
   );
   const wire = native.data.objects.find(
     (item: { kind: string }) => item.kind === "wire",
   );
   expect(wire.attachments.start).toEqual({
     instanceId: terminal.id,
-    pinId: "clamp-u4",
+    pinId: "clamp-u2",
   });
   await page.locator("#openFile").setInputFiles(native.path);
   await expect(page.locator("#statusText")).toContainText(
@@ -1709,8 +1709,18 @@ test("WAGO double-deck terminal exposes both levels and stays wired on reopen", 
   );
   await page.locator(`[data-object="${terminal.id}"]`).click();
   await page.locator('[data-inspector="Properties"]').click();
-  await expect(page.locator("#inspectorContent")).toContainText("8 · U1");
-  await expect(page.locator("#inspectorContent")).toContainText("L4");
+  await expect(page.locator("#inspectorContent")).toContainText("4 · U1");
+  await expect(page.locator("#inspectorContent")).toContainText("Fitted");
+  await page
+    .getByRole("button", { name: "Electrical checks", exact: true })
+    .click();
+  const pending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export terminal register CSV" })
+    .click();
+  const csv = fs.readFileSync(await (await pending).path(), "utf8");
+  expect(csv).toMatch(/"U2","clamp-u2","Attached",[^\r\n]*,"U1 \/ U2"/);
+  expect(csv).toMatch(/"L2","clamp-l2","Unwired",[^\r\n]*,"L1 \/ L2"/);
   const reopened = await saveDrawing(page, "wago-deck-reopened");
   expect(reopened.data.objects).toEqual(native.data.objects);
 });

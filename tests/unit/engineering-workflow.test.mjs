@@ -9,16 +9,22 @@ const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
-  for (const [orderCode, counts] of [
-    ["2002-1301", [3]],
-    ["2002-1401", [4]],
-    ["2002-2401", [4, 4]],
+  for (const [orderCode, counts, voltage, depth] of [
+    ["2002-1301", [3], 800, 32.9],
+    ["2002-1304", [3], 800, 32.9],
+    ["2002-1401", [4], 800, 32.9],
+    ["2002-1403", [4], 800, 32.9],
+    ["2002-2201", [2, 2], 500, 51.7],
+    ["2002-2231", [2, 2], 500, 61.8],
+    ["2002-2401", [4, 4], 800, 52.1],
   ]) {
     const id = `wago-${orderCode}`;
     const device = engine.createInstance(id, 300, 220, "X1");
     device.sheetId = "terminals";
     assert.equal(engine.validateInstance(device).valid, true);
     const definition = engine.component(id);
+    assert.equal(definition.specifications.nominalVoltage.value, voltage);
+    assert.equal(definition.panelFootprint.depthMm, depth);
     const pins = engine.worldPins(device);
     const wires = definition.symbol.internalConnections.map((group, index) => {
       const pin = pins.find((item) => item.id === group.at(-1));
@@ -47,6 +53,13 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
       sheets: [{ id: "terminals", name: "Terminals", number: "A2/000" }],
       objects: [device, ...wires],
     };
+    const register = engine.terminalRegisterCsv(project);
+    for (const group of definition.symbol.internalConnections) {
+      const row = group
+        .map((id) => pins.find((pin) => pin.id === id).number)
+        .join(" / ");
+      assert.ok(register.includes(`,"${row}"\r\n`));
+    }
     assert.equal(
       engine.parseProject(engine.serializeProject(project)).valid,
       true,
