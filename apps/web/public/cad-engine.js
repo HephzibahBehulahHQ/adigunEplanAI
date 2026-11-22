@@ -1290,7 +1290,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const scale=placements[0].scale;
     if(placements.some(placement=>placement.scale!==scale))throw new Error('3D requires one common drawing scale for the panel placements.');
     const cabinet=project.sheets?.find(sheet=>sheet.id===sheetId)?.cabinetBounds;
-    const bodies=[],issues=[];
+    const bodies=[],issues=[],clearanceRules=[];
     for(const placement of placements){
       try{
         const geometry=panelPlacementGeometry(project,placement),{footprint}=geometry;
@@ -1300,16 +1300,53 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           width:rotated?footprint.heightMm:footprint.widthMm,height:rotated?footprint.widthMm:footprint.heightMm,depth:footprint.depthMm,
           z:placement.mountingDepthMm??0};
         bodies.push(body);
+        const settings=footprint.clearancesMm;
+        if(settings){
+          const condition=placement.clearanceCondition;
+          const source=condition?settings[condition]:settings;
+          const offsets={front:source?.front};
+          const sides=['top','right','bottom','left'],turns=geometry.rotation/90;
+          sides.forEach((side,index)=>{
+            offsets[sides[(index+turns)%4]]=source?.[side]??(['left','right'].includes(side)?source?.side:undefined);
+          });
+          const rules=Object.entries(offsets).filter(([,value])=>finite(value)&&value>0);
+          if(rules.length)clearanceRules.push({body,rules,source:footprint.source});
+          else if(!condition&&Object.values(settings).some(value=>value&&typeof value==='object'))
+            issues.push({id:body.ref,message:'Choose a documented clearance condition to evaluate this device.'});
+        }
         if(cabinet&&(body.x-body.width/2<cabinet.x||body.y-body.height/2<cabinet.y||
           body.x+body.width/2>cabinet.x+cabinet.width||body.y+body.height/2>cabinet.y+cabinet.height||
           body.z+body.depth>cabinet.depth))issues.push({id:body.ref,message:'Body extends beyond the declared cabinet boundary.'});
       }catch(error){issues.push({id:placement.id,message:error.message});}
     }
-    const collisions=[];
+    const collisions=[],clearanceConflicts=[];
     const overlap=(minA,maxA,minB,maxB)=>{
       const shared=Math.min(maxA,maxB)-Math.max(minA,minB);
       return shared>16*Number.EPSILON*Math.max(Math.abs(minA),Math.abs(maxA),Math.abs(minB),Math.abs(maxB))?shared:0;
     };
+    const box=body=>[[body.x-body.width/2,body.x+body.width/2],[body.y-body.height/2,body.y+body.height/2],[body.z,body.z+body.depth]];
+    const bodyBoxes=new Map(bodies.map(body=>[body.id,box(body)]));
+    const cabinetBox=cabinet&&[[cabinet.x,cabinet.x+cabinet.width],[cabinet.y,cabinet.y+cabinet.height],[0,cabinet.depth]];
+    const faceAxes={left:[0,0],right:[0,1],top:[1,0],bottom:[1,1],front:[2,1]};
+    for(const {body,rules,source} of clearanceRules){
+      const envelope=bodyBoxes.get(body.id);
+      for(const [face,requiredMm] of rules){
+        const [axis,end]=faceAxes[face];
+        const edge=envelope[axis][end],limit=edge+(end?requiredMm:-requiredMm);
+        const conflict=(obstacle,availableMm)=>clearanceConflicts.push({id:body.id,ref:body.ref,face,requiredMm,obstacle,availableMm,source});
+        if(cabinetBox){
+          const available=(cabinetBox[axis][end]-edge)*(end?1:-1);
+          if(available<requiredMm)conflict('Cabinet boundary',available);
+        }
+        const span=end?[edge,limit]:[limit,edge];
+        for(const other of bodies){
+          if(other===body)continue;
+          const otherBox=bodyBoxes.get(other.id);
+          const intersects=otherBox.every(([min,max],dimension)=>overlap(min,max,...(dimension===axis?span:envelope[dimension])));
+          if(intersects)conflict(other.ref,(otherBox[axis][1-end]-edge)*(end?1:-1));
+        }
+      }
+    }
     for(let i=0;i<bodies.length;i++){
       const a=bodies[i];
       for(let j=i+1;j<bodies.length;j++){
@@ -1320,7 +1357,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(x&&y&&z)collisions.push({ids:[a.id,b.id],refs:[a.ref,b.ref],overlapMm:{x,y,z}});
       }
     }
-    return {bodies,issues,cabinet,collisions};
+    return {bodies,issues,cabinet,collisions,clearanceConflicts};
   }
   function validCabinetBounds(value){
     return value&&['x','y','width','height','depth'].every(key=>finite(value[key])&&Math.abs(value[key])<=1e6)
@@ -1507,6 +1544,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           });
         }
         if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
+        if(object.clearanceCondition!==undefined&&(object.kind!=='panel-placement'||
+          !['sideBySide','groundedParts','liveParts'].includes(object.clearanceCondition)||
+          !component(object.footprintComponentId)?.panelFootprint?.clearancesMm?.[object.clearanceCondition]))errors.push('Invalid panel clearance condition '+object.id+'.');
         if (object.kind === 'panel-placement') {
           if(typeof object.deviceId!=='string'||!object.deviceId||typeof object.footprintComponentId!=='string'||!object.footprintComponentId||![object.x,object.y,object.scale].every(finite)||object.scale<=0||![0,90,180,270].includes(object.rotation===undefined?0:object.rotation))errors.push('Panel placement '+object.id+' has invalid identity or geometry.');
         }
