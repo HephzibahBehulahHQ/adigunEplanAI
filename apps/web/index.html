@@ -1024,9 +1024,23 @@
   function formatSpecification(value){if(value===null||value===undefined)return 'Not specified';if(Array.isArray(value))return value.map(formatSpecification).join(' · ');if(typeof value!=='object')return String(value);if(value.value!==undefined)return formatSpecification(value.value)+(value.unit?' '+value.unit:'');if(value.minimum!==undefined&&value.maximum!==undefined)return value.minimum+'–'+value.maximum+(value.unit?' '+value.unit:'');return Object.keys(value).map(function(key){return key+': '+formatSpecification(value[key]);}).join(' · ');}
     function panelPlacementInfo(obj){
     if(obj.kind!=='panel-placement')return '';
-    try{const g=window.AdigunCADEngine.panelPlacementGeometry({objects:collectProjectObjects()},obj);return '<div class="notice">Linked device: '+escapeHtml(g.ref)+' · '+escapeHtml(g.footprint.widthMm+' × '+g.footprint.heightMm+' × '+g.footprint.depthMm+' mm')+'<br>Drawing scale: '+escapeHtml(obj.scale)+' drawing units/mm. Moving this view does not move its electrical symbol.<br>'+escapeHtml(g.footprint.note)+'</div><a class="component-source" href="'+escapeHtml(g.footprint.source)+'" target="_blank" rel="noopener noreferrer">Footprint source · '+escapeHtml(g.footprint.edition)+'</a>';}
+    try{const g=window.AdigunCADEngine.panelPlacementGeometry({objects:collectProjectObjects()},obj);return '<div class="notice">Linked device: '+escapeHtml(g.ref)+' · '+escapeHtml(g.footprint.widthMm+' × '+g.footprint.heightMm+' × '+g.footprint.depthMm+' mm')+'<br>Drawing scale: '+escapeHtml(obj.scale)+' drawing units/mm. Moving this view does not move its electrical symbol.<br>'+escapeHtml(g.footprint.note)+'</div><a class="component-source" href="'+escapeHtml(g.footprint.source)+'" target="_blank" rel="noopener noreferrer">Footprint source · '+escapeHtml(g.footprint.edition)+'</a>'
+      +'<label class="property-row"><span>Mounting depth from rear (mm)</span><input type="number" min="0" max="1000000" step="any" data-panel-mounting-depth value="'+(obj.mountingDepthMm??'')+'"'+(obj.locked?' disabled':'')+'></label>';}
     catch(error){return '<div class="notice">REVIEW: '+escapeHtml(error.message)+'</div>';}
   }
+  $('#inspectorContent').addEventListener('change',event=>{
+    const field=event.target;
+    if(!field.matches('[data-panel-mounting-depth]'))return;
+    const item=state.objects.find(object=>object.id===state.selected&&object.kind==='panel-placement'&&!object.locked);
+    if(!item)return;
+    const depth=field.valueAsNumber,blank=field.value===''&&!field.validity.badInput;
+    if(!blank&&(!Number.isFinite(depth)||depth<0||depth>1000000)){field.value=item.mountingDepthMm??'';return;}
+    if((blank?undefined:depth)===item.mountingDepthMm)return;
+    pushUndo();
+    if(blank)delete item.mountingDepthMm;
+    else item.mountingDepthMm=depth;
+    persist();
+  });
   function assemblyAccessoryFields(obj,def){
     if(!def.supportedComponentIds)return '';
     const devices=collectProjectObjects().filter(function(o){return o.kind==='component-instance'&&def.supportedComponentIds.includes(o.componentId);});
@@ -2502,33 +2516,51 @@
   function renderPanelBodyPreview(host){
     host.replaceChildren();
     try{
-      const project={objects:collectProjectObjects()};
-      const {bodies,issues}=window.AdigunCADEngine.panelBodyScene(project,state.sheet);
+      const project={objects:collectProjectObjects(),sheets:state.sheets};
+      const {bodies,issues,cabinet}=window.AdigunCADEngine.panelBodyScene(project,state.sheet);
       const note=document.createElement('p');
       note.className='notice';
-      note.textContent='Dimensioned body envelopes in millimetres. Z starts at a shared reference plane. Mounting offsets and enclosure geometry require separate definition.';
+      note.textContent='Dimensioned body envelopes in millimetres. Blank mounting depths use the rear reference plane. Enter the usable cabinet boundaries for a body fit comparison.';
       host.append(note);
+      const config=document.createElement('form');
+      config.dataset.cabinetBounds='';
+      config.innerHTML=Object.entries({x:'Cabinet left X (mm)',y:'Cabinet top Y (mm)',width:'Usable cabinet width (mm)',height:'Usable cabinet height (mm)',depth:'Usable cabinet depth (mm)'})
+        .map(([key,label])=>'<label class="property-row"><span>'+label+'</span><input type="number" required step="any" name="'+key+'" value="'+(cabinet?.[key]??'')+'"></label>').join('')
+        +'<button class="command-item" type="submit">Apply cabinet boundaries</button>';
+      host.append(config);
       for(const issue of issues){
         const warning=document.createElement('p');warning.className='notice';warning.textContent=issue.id+' · '+issue.message;host.append(warning);
       }
-      if(!bodies.length)return;
+      if(!bodies.length&&!cabinet)return;
       const ns='http://www.w3.org/2000/svg';
       const svg=document.createElementNS(ns,'svg');
       svg.setAttribute('role','img');svg.setAttribute('aria-label','Linked panel device envelopes');
       svg.setAttribute('width','100%');svg.setAttribute('height','280');
       const projectPoint=(x,y,z)=>[x-z*.45,y-z*.32];
       const bounds={left:Infinity,top:Infinity,right:-Infinity,bottom:-Infinity};
-      for(const body of bodies.sort((a,b)=>a.x+a.y-b.x-b.y)){
-        const x=body.x-body.width/2,y=body.y-body.height/2,r=x+body.width,b=y+body.height;
+      function projectBox(x,y,width,height,z,depth){
+        const r=x+width,b=y+height;
         const corners=[[x,y],[r,y],[r,b],[x,b]];
-        const vertices=[...corners.map(p=>projectPoint(...p,0)),...corners.map(p=>projectPoint(...p,body.depth))];
+        const vertices=[...corners.map(p=>projectPoint(...p,z)),...corners.map(p=>projectPoint(...p,z+depth))];
         for(const [px,py] of vertices){
           bounds.left=Math.min(bounds.left,px);bounds.right=Math.max(bounds.right,px);
           bounds.top=Math.min(bounds.top,py);bounds.bottom=Math.max(bounds.bottom,py);
         }
+        return vertices;
+      }
+      if(cabinet){
+        const vertices=projectBox(cabinet.x,cabinet.y,cabinet.width,cabinet.height,0,cabinet.depth);
+        const frame=document.createElementNS(ns,'path');
+        frame.dataset.cabinetBoundary='';
+        frame.setAttribute('d',[[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]].map(([a,b])=>'M'+vertices[a].join(' ')+' L'+vertices[b].join(' ')).join(' '));
+        frame.setAttribute('fill','none');frame.setAttribute('stroke','#7597b8');frame.setAttribute('vector-effect','non-scaling-stroke');
+        svg.append(frame);
+      }
+      for(const body of bodies.sort((a,b)=>a.x+a.y-b.x-b.y||a.z-b.z)){
+        const vertices=projectBox(body.x-body.width/2,body.y-body.height/2,body.width,body.height,body.z,body.depth);
         const group=document.createElementNS(ns,'g');group.dataset.panelBody=body.id;
         const title=document.createElementNS(ns,'title');
-        title.textContent=body.ref+' · '+body.width+' × '+body.height+' × '+body.depth+' mm';
+        title.textContent=body.ref+' · '+body.width+' × '+body.height+' × '+body.depth+' mm · Z '+body.z+' mm';
         group.append(title);
         for(const [face,fill] of [[[6,7,3,2],'#a6c3dd'],[[5,6,2,1],'#7597b8'],[[4,5,6,7],'#d8e8f5']]){
           const polygon=document.createElementNS(ns,'polygon');
@@ -2548,6 +2580,19 @@
       host.prepend(svg);
     }catch(error){host.textContent=error.message;}
   }
+  $('#inspectorContent').addEventListener('submit',event=>{
+    const form=event.target;
+    if(!form.matches('[data-cabinet-bounds]'))return;
+    event.preventDefault();
+    const sheet=activeDraftingSheet();
+    if(!sheet)return;
+    const bounds=Object.fromEntries(Array.from(new FormData(form),([key,value])=>[key,Number(value)]));
+    if(!window.AdigunCADEngine.validCabinetBounds(bounds)){
+      notify('Enter positive cabinet dimensions and coordinates within 1,000,000 mm.');return;
+    }
+    sheet.cabinetBounds=bounds;
+    persist();notify('Cabinet boundaries saved on this sheet.');
+  });
   function openInspector(name){
     $('#rightPanelTitle').textContent=name;
     $('#rightPanel').classList.add('open');

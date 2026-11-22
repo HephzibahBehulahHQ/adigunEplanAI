@@ -1289,17 +1289,27 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if(!placements.length)throw new Error('Open a sheet with linked panel placements.');
     const scale=placements[0].scale;
     if(placements.some(placement=>placement.scale!==scale))throw new Error('3D requires one common drawing scale for the panel placements.');
+    const cabinet=project.sheets?.find(sheet=>sheet.id===sheetId)?.cabinetBounds;
     const bodies=[],issues=[];
     for(const placement of placements){
       try{
         const geometry=panelPlacementGeometry(project,placement),{footprint}=geometry;
         if(!finite(footprint.depthMm)||footprint.depthMm<=0)throw new Error('Verified body depth is unavailable.');
         const rotated=geometry.rotation===90||geometry.rotation===270;
-        bodies.push({id:placement.id,ref:geometry.ref,x:geometry.x/scale,y:geometry.y/scale,
-          width:rotated?footprint.heightMm:footprint.widthMm,height:rotated?footprint.widthMm:footprint.heightMm,depth:footprint.depthMm});
+        const body={id:placement.id,ref:geometry.ref,x:geometry.x/scale,y:geometry.y/scale,
+          width:rotated?footprint.heightMm:footprint.widthMm,height:rotated?footprint.widthMm:footprint.heightMm,depth:footprint.depthMm,
+          z:placement.mountingDepthMm??0};
+        bodies.push(body);
+        if(cabinet&&(body.x-body.width/2<cabinet.x||body.y-body.height/2<cabinet.y||
+          body.x+body.width/2>cabinet.x+cabinet.width||body.y+body.height/2>cabinet.y+cabinet.height||
+          body.z+body.depth>cabinet.depth))issues.push({id:body.ref,message:'Body extends beyond the declared cabinet boundary.'});
       }catch(error){issues.push({id:placement.id,message:error.message});}
     }
-    return {bodies,issues};
+    return {bodies,issues,cabinet};
+  }
+  function validCabinetBounds(value){
+    return value&&['x','y','width','height','depth'].every(key=>finite(value[key])&&Math.abs(value[key])<=1e6)
+      &&[value.width,value.height,value.depth].every(dimension=>dimension>0);
   }
 
   function validateProject(project) {
@@ -1359,6 +1369,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             return false;
           }))errors.push('Invalid drafting guides on sheet '+sheet.id+'.');
         }
+        if(sheet.cabinetBounds!==undefined&&!validCabinetBounds(sheet.cabinetBounds))errors.push('Invalid cabinet boundaries on sheet '+sheet.id+'.');
         if(sheet.paper!==undefined){
           const paper=sheet.paper,paperSizes={A0:841,A1:594,A2:420,A3:297,A4:210};
           const size=paper?.format==='Custom'?Math.min(paper.customWidth,paper.customHeight):paperSizes[paper?.format];
@@ -1480,6 +1491,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             if (!['start','end'].includes(end) || !target || typeof target.instanceId !== 'string' || !target.instanceId || typeof target.pinId !== 'string' || !target.pinId) errors.push('Wire has an invalid terminal attachment.');
           });
         }
+        if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
         if (object.kind === 'panel-placement') {
           if(typeof object.deviceId!=='string'||!object.deviceId||typeof object.footprintComponentId!=='string'||!object.footprintComponentId||![object.x,object.y,object.scale].every(finite)||object.scale<=0||![0,90,180,270].includes(object.rotation===undefined?0:object.rotation))errors.push('Panel placement '+object.id+' has invalid identity or geometry.');
         }
@@ -3298,6 +3310,7 @@ function createPumpStarterDocumentation(name) {
     createPanelPlacement: createPanelPlacement,
     panelPlacementGeometry: panelPlacementGeometry,
     panelBodyScene: panelBodyScene,
+    validCabinetBounds: validCabinetBounds,
     resolvePanelDevice: resolvePanelDevice,
     sheetDeletionDiagnostics: sheetDeletionDiagnostics,
     removeSheetConnections: removeSheetConnections,
