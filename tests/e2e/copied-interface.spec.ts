@@ -3,6 +3,51 @@ import fs from "node:fs";
 import crypto from "node:crypto";
 import type { Page } from "@playwright/test";
 
+// Keep editor regression tests independent of the live account provider.
+test.beforeEach(async ({ page }) => {
+  await page.route("**/api/account", async (route) => {
+    const data = route.request().postDataJSON();
+    if (data?.step !== "guest") return route.fallback();
+    await route.fulfill({ json: { step: "guest", remainingMs: 240_000 } });
+  });
+});
+
+test("expired guests can open Eplan registration and enter an email code", async ({
+  page,
+}) => {
+  let intent;
+  await page.route("**/api/account", async (route) => {
+    const data = route.request().postDataJSON();
+    if (data.step === "guest") {
+      await route.fulfill({ json: { step: "guest", remainingMs: 0 } });
+    } else if (data.step === "begin") {
+      intent = data.mode;
+      await route.fulfill({ json: { step: "verify" } });
+    } else {
+      expect(data.code).toBe("12345678");
+      await route.fulfill({ json: { step: "registered" } });
+    }
+  });
+  await page.goto("/");
+  await expect(page.getByText(/four-minute guest trial ended/)).toBeVisible();
+  await expect(page.locator("#app")).toHaveAttribute("inert", "");
+  await page.locator("#eplan-workspace-gate button").click();
+  const dialog = page.getByRole("dialog", { name: "Account" });
+  await dialog.getByRole("button", { name: "Register" }).click();
+  await dialog.locator('input[name="email"]').fill("eplan-test@example.test");
+  await dialog
+    .locator('input[name="password"]')
+    .fill("A synthetic preview password");
+  await dialog.getByRole("button", { name: "Continue" }).click();
+  expect(intent).toBe("register");
+  await dialog
+    .getByRole("textbox", { name: "Email verification code" })
+    .fill("12345678");
+  await dialog.getByRole("button", { name: "Verify code" }).click();
+  await expect(dialog.getByText(/Account verified/)).toBeVisible();
+  await expect(page.locator("#app")).toHaveAttribute("inert", "");
+});
+
 test("sourced feeder parts use the existing library and preserve editable settings", async ({
   page,
 }) => {
