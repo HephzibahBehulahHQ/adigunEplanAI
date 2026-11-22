@@ -2925,6 +2925,20 @@
         });
         exportActions.append(button);
       }
+      const solids=boxes.filter(box=>!box.wireframe).map(({id,bounds})=>({id,bounds}));
+      if(solids.length){
+        const input=document.createElement('button');input.type='button';input.className='command-item';
+        input.textContent='Download STEP conversion input';
+        input.addEventListener('click',()=>{
+          const data={schema:'adiguneplanai-panel-solids/1',units:'mm',solids};
+          const link=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+          link.href=url;link.download=(activeDraftingSheet()?.number||state.sheet).replace(/[\\/]/g,'-')+'-panel-solids.json';
+          link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        });
+        const explanation=document.createElement('p');explanation.className='notice';
+        explanation.textContent='Use scripts/convert-panel-step.py with Open CASCADE DRAW to convert the solid envelopes.';
+        exportActions.append(input,explanation);
+      }
       host.prepend(svg,exportActions);
     }catch(error){host.textContent=error.message;}
   }

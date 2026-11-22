@@ -180,6 +180,13 @@ preserves the record and gives the reason replay is unavailable.
 The BOM inspector exports a device register with one row per native device,
 including generic symbols and catalog provenance. Electrical Checks exports
 all project wires with the sheet number, sheet-local net and route geometry.
+**Download STEP conversion input** in the panel preview exports the native
+solid envelopes in millimetres. With Open CASCADE DRAW installed, run
+`python3 scripts/convert-panel-step.py panel-solids.json panel.step`. Use
+`--draw` when the DRAW executable is absent from PATH. The converter checks
+the resulting STEP in a fresh OCCT session and publishes only files with
+matching solid bounds. Cabinet and compartment wireframes and opening outlines
+remain available through OBJ and SVG.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

@@ -2534,6 +2534,25 @@ test("linked panel placement preserves its canonical device on local reopen", as
   expect(obj).toMatch(/^o panel-door-.*\nv 700 480 190$/m);
   expect(obj).toMatch(/^o panel-compartment-.*(?:\nv [^\n]+){8}\nl /m);
   expect(obj).toMatch(/^o cable-entry-bottom-.*\nv 25 1500 34$/m);
+  const solidsPending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Download STEP conversion input" })
+    .click();
+  const solidsDownload = await solidsPending;
+  const solidPath = test.info().outputPath("panel-solids.json");
+  await solidsDownload.saveAs(solidPath);
+  const solidInput = JSON.parse(fs.readFileSync(solidPath, "utf8"));
+  expect(solidInput.schema).toBe("adiguneplanai-panel-solids/1");
+  expect(solidInput.units).toBe("mm");
+  expect(solidInput.solids).toHaveLength(7);
+  expect(
+    solidInput.solids.find(({ id }: { id: string }) =>
+      id.startsWith("panel-door-"),
+    ).bounds,
+  ).toEqual({
+    min: { x: 700, y: 480, z: 190 },
+    max: { x: 850, y: 720, z: 192 },
+  });
   const vertices = obj.match(/^v /gm)!.length;
   for (const element of obj.matchAll(/^[fl] (.+)$/gm)) {
     expect(
