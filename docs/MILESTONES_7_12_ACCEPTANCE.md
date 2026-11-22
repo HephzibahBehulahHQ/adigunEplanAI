@@ -45,6 +45,9 @@ The compact editor includes a generic earthing bond point with two common PE
 terminals. The floor protective-earth CSV lists wires attached to a building
 PE terminal and unattached PE terminals. Its status describes direct terminal
 attachments, independently of installed continuity or compliance.
+The compact component bank also includes emergency lighting, a fire-alarm
+loop interface, a shielded 8P8C data outlet and a single-pole switch. Each
+places a native generic device with independently wireable terminals.
 
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

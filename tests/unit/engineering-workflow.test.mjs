@@ -8,6 +8,34 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("specialty floor devices expose the authored independent pin identities", () => {
+  const symbols = {
+    "building-emergency-luminaire": ["L", "N", "PE"],
+    "building-fire-alarm-loop-interface": ["LOOP+", "LOOP-"],
+    "building-data-outlet-8p8c-shielded": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "SHIELD",
+    ],
+    "building-wall-switch": ["LINE", "LOAD"],
+  };
+  for (const [id, pins] of Object.entries(symbols)) {
+    const definition = engine.component(id);
+    assert.deepEqual(plain(definition.symbol.pins.map((pin) => pin.id)), pins);
+    assert.deepEqual(plain(definition.symbol.internalConnections), []);
+    assert.equal(
+      engine.validateInstance(engine.createInstance(id, 0, 0, "X1")).valid,
+      true,
+    );
+  }
+});
+
 test("floor protective earth schedule uses actual attachments and identifies unattached terminals", () => {
   const sheetId = "floor";
   const point = {
