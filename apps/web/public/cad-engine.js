@@ -1091,6 +1091,47 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 
   const EPLAN_COMPONENTS = Object.freeze(Object.fromEntries((root.AdigunEplanSymbols || []).map(function(def) { return [def.id, deepFreeze(def)]; })));
+  const wagoTopjobTerminals=deepFreeze(Object.fromEntries([
+    {orderCode:'2002-1301',positions:[3],heightMm:59.2,depthMm:32.9,revision:'21 June 2021',pages:'2–3',
+      slug:'3-conductor-through-terminal-block',datasheet:'https://www.tme.com/Document/48da317c62302f1fde27b2c2b6a09f40/2002-1301.pdf'},
+    {orderCode:'2002-1401',positions:[4],heightMm:69.9,depthMm:32.9,revision:'02 November 2021',pages:'2–3',
+      slug:'4-conductor-through-terminal-block',datasheet:'https://4donline.ihs.com/images/VipMasterIC/IC/WAGO/WAGO-S-A0013864068/WAGO-S-A0013864653-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0'},
+    {orderCode:'2002-2401',positions:[4,4],heightMm:105.1,depthMm:52.1,revision:'27 June 2024',pages:'1–2',
+      slug:'4-conductor-double-deck-terminal-block',datasheet:'https://tlauk.net/document/65105/Wago%2C%202002-2401.pdf'}
+  ].map(part=>{
+    const id='wago-'+part.orderCode,deckCount=part.positions.length,height=deckCount*54+16;
+    const title=deckCount===2?'Double-deck through terminal block':'Through terminal block';
+    const productUrl='https://www.wago.com/gb/rail-mount-terminal-blocks/'+part.slug+'/p/'+part.orderCode;
+    const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-48,y:-height/2,width:96,height}];
+    const line=(x1,y1,x2,y2)=>({kind:'line',from:{x:x1,y:y1},to:{x:x2,y:y2}});
+    for(const [deck,count] of part.positions.entries()){
+      const y=(deck-(deckCount-1)/2)*54,group=[];
+      artwork.push(line(-34,y,34,y));
+      for(let index=0;index<count;index++){
+        const side=index<Math.ceil(count/2)?-1:1;
+        const pinY=y+(index%2===0?-10:10),localNumber=(deckCount===1?'':deck===0?'U':'L')+(index+1);
+        const pin={id:'clamp-'+localNumber.toLowerCase(),localNumber,name:'Clamping position '+localNumber,
+          x:side*72,y:pinY,electricalType:'passive',connectionType:'Push-in CAGE CLAMP'};
+        pins.push(pin);group.push(pin.id);
+        artwork.push(line(pin.x,pin.y,side*34,pin.y),line(side*34,pin.y,side*34,y));
+      }
+      internalConnections.push(group);
+    }
+    return [id,{schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+      model:'TOPJOB S '+part.orderCode,name:title,family:'topjob-terminal',referencePrefix:'X',category:'Electrical · WAGO terminal systems',
+      symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:144,height,pins,internalConnections,artwork,
+        numberingNote:'Anchor labels identify schematic clamping positions. Each level is one documented potential; no cross-level or adjacent-block jumper is included.'},
+      specifications:{connectionCount:{value:pins.length},levels:{value:deckCount},potentials:{value:deckCount},
+        ratedCurrent:{value:24,unit:'A'},nominalVoltage:{value:800,unit:'V',basis:'IEC/EN, category III, pollution degree 3'},
+        nominalCrossSection:{value:2.5,unit:'mm²'},mounting:{value:'DIN rail 35 × 7.5 or 35 × 15 mm'},
+        railReferencedDimensions:{width:{value:5.2,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}},
+      panelFootprint:{widthMm:5.2,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:deckCount===2?2:3,
+        note:'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.'},
+      instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+      sources:[{publisher:'WAGO',title:`${part.orderCode} datasheet, pp. ${part.pages}`,url:part.datasheet,documentRevision:part.revision,
+        revisionNote:'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:'2026-11-22'},
+        {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:'2026-11-22'}]}];
+  })));
   const BUILDING_COMPONENTS=deepFreeze(Object.fromEntries([
     ['building-luminaire','Floor-plan luminaire','LUM','M-50 -50L50 50M-50 50L50 -50',[-60,-60,120,120]],
     ['building-socket','Floor-plan socket outlet','SO','M-32 -14H32M-32 14H32',[-50,-50,100,100]],
@@ -1136,9 +1177,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{channelCount:{value:channels}},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}));
     }
   }
-  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || plcComponents.get(id) || null; }
+  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || wagoTopjobTerminals[id] || plcComponents.get(id) || null; }
   function catalog() {
-    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Array.from(plcComponents.keys())).map(function (id) {
+    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Object.keys(wagoTopjobTerminals),Array.from(plcComponents.keys())).map(function (id) {
       const def = component(id);
       return { id: def.id, componentId: def.id, name: def.generic ? def.name : def.model + ' · ' + def.manufacturerPartNumber + (def.family==='motor-terminal-board'?' · Delta terminal-board view':''), category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
     });
@@ -2876,12 +2917,17 @@ function createPumpStarterDocumentation(name) {
       attachedWires.forEach(function (wire) { join(pin.node, wire.node); });
     });
 
+    const pinNodesByInstance=new Map();
+    for(const pin of pins){
+      if(!pinNodesByInstance.has(pin.instanceId))pinNodesByInstance.set(pin.instanceId,new Map());
+      pinNodesByInstance.get(pin.instanceId).set(pin.pinId,pin.node);
+    }
     validInstances.forEach(function (instance) {
       const def = component(instance.componentId);
-      def.symbol.internalConnections.forEach(function (pair) {
-        const first = pins.find(function (pin) { return pin.instanceId === instance.id && pin.pinId === pair[0]; });
-        const second = pins.find(function (pin) { return pin.instanceId === instance.id && pin.pinId === pair[1]; });
-        if (first && second) join(first.node, second.node);
+      const byId=pinNodesByInstance.get(instance.id);
+      if(!byId)return;
+      def.symbol.internalConnections.forEach(function ([first,...rest]) {
+        if(byId.has(first))for(const id of rest)if(byId.has(id))join(byId.get(first),byId.get(id));
       });
     });
 

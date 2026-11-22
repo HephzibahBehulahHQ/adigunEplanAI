@@ -1671,6 +1671,50 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
 });
 
+test("WAGO double-deck terminal exposes both levels and stays wired on reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const search = page.locator("#symbolSearch");
+  await search.fill("2002-2401");
+  await page.locator('[data-insert="wago-2002-2401"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  await clickAt(400, 250);
+  await search.fill("eplan-terminal");
+  await page.locator('[data-insert="eplan-terminal"]').click();
+  await clickAt(650, 233);
+  await clickAt(472, 233);
+  await clickAt(650, 233);
+  const native = await saveDrawing(page, "wago-deck-wired");
+  const terminal = native.data.objects.find(
+    (item: { componentId?: string }) => item.componentId === "wago-2002-2401",
+  );
+  const wire = native.data.objects.find(
+    (item: { kind: string }) => item.kind === "wire",
+  );
+  expect(wire.attachments.start).toEqual({
+    instanceId: terminal.id,
+    pinId: "clamp-u4",
+  });
+  await page.locator("#openFile").setInputFiles(native.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "wago-deck-wired.adigun.json opened",
+  );
+  await page.locator(`[data-object="${terminal.id}"]`).click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("8 · U1");
+  await expect(page.locator("#inspectorContent")).toContainText("L4");
+  const reopened = await saveDrawing(page, "wago-deck-reopened");
+  expect(reopened.data.objects).toEqual(native.data.objects);
+});
+
 test("generic PLC library places six editable modules with native terminal wiring", async ({
   page,
 }) => {

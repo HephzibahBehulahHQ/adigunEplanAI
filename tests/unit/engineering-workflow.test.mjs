@@ -8,6 +8,52 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
+  for (const [orderCode, counts] of [
+    ["2002-1301", [3]],
+    ["2002-1401", [4]],
+    ["2002-2401", [4, 4]],
+  ]) {
+    const id = `wago-${orderCode}`;
+    const device = engine.createInstance(id, 300, 220, "X1");
+    device.sheetId = "terminals";
+    assert.equal(engine.validateInstance(device).valid, true);
+    const definition = engine.component(id);
+    const pins = engine.worldPins(device);
+    const wires = definition.symbol.internalConnections.map((group, index) => {
+      const pin = pins.find((item) => item.id === group.at(-1));
+      return engine.attachWire(
+        {
+          id: `terminal-wire-${index}`,
+          kind: "wire",
+          sheetId: device.sheetId,
+          x1: pin.x,
+          y1: pin.y,
+          x2: pin.x + 100,
+          y2: pin.y,
+        },
+        { attachment: { instanceId: device.id, pinId: pin.id } },
+        {},
+      );
+    });
+    const nets = engine.analyze([device, ...wires]).nets;
+    assert.deepEqual(plain(nets.map((net) => net.pins.length)), counts);
+    assert.equal(
+      engine.billOfMaterials([device]).rows[0].partNumber,
+      orderCode,
+    );
+    const project = {
+      project: "Terminal verification",
+      sheets: [{ id: "terminals", name: "Terminals", number: "A2/000" }],
+      objects: [device, ...wires],
+    };
+    assert.equal(
+      engine.parseProject(engine.serializeProject(project)).valid,
+      true,
+    );
+  }
+});
+
 test("panel envelopes require positive overlap on all three axes", () => {
   const componentId = "siemens-3rt2027-2kb40";
   const a = engine.createInstance(componentId, 0, 0, "K1");
