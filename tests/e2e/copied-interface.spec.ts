@@ -50,6 +50,125 @@ test("expired guests can open Eplan registration and enter an email code", async
   await expect(page.locator("#app")).toHaveAttribute("inert", "");
 });
 
+test("compact workspace keeps guest and verified account drafts isolated", async ({
+  page,
+}) => {
+  const owners = {
+    "a@example.test": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "b@example.test": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+  } as const;
+  const backend = "https://fqcbfnktdvqojyezxeis.supabase.co";
+  const encode = (value: object) =>
+    Buffer.from(JSON.stringify(value)).toString("base64url");
+  const sessions = Object.entries(owners).map(([email, id]) => ({
+    user: {
+      id,
+      email,
+      aud: "authenticated",
+      is_anonymous: false,
+      user_metadata: {},
+      app_metadata: {},
+    },
+    access_token: `${encode({ alg: "HS256", typ: "JWT" })}.${encode({ sub: id, exp: Math.floor(Date.now() / 1000) + 3600 })}.mock`,
+    refresh_token: `refresh-${id}`,
+  }));
+  let email = "";
+  await page.route("**/api/account", async (route) => {
+    const data = route.request().postDataJSON();
+    if (data.step === "guest")
+      return route.fulfill({
+        json: { step: "guest", remainingMs: data.allowStart ? 240000 : 0 },
+      });
+    if (data.step === "begin") {
+      email = data.email;
+      return route.fulfill({ json: { step: "verify" } });
+    }
+    return route.fulfill({
+      json: {
+        step: "signed-in",
+        session: sessions.find((session) => session.user.email === email),
+      },
+    });
+  });
+  await page.route(`${backend}/**`, async (route) => {
+    const token = route.request().headers().authorization;
+    const session = sessions.find(
+      (item) => token === `Bearer ${item.access_token}`,
+    );
+    const path = new URL(route.request().url()).pathname;
+    if (!session)
+      return route.fulfill({ status: 401, json: { message: "Unauthorized" } });
+    if (path.endsWith("/auth/v1/user"))
+      return route.fulfill({ json: session.user });
+    if (path.endsWith("/adiguneplanai_has_verified_product_session"))
+      return route.fulfill({ json: true });
+    if (path.endsWith("/auth/v1/logout")) return route.fulfill({ status: 204 });
+    return route.fulfill({ status: 404 });
+  });
+  await page.goto("/");
+  const workspace = page.locator("#app");
+  const tree = page.locator("#projectTree");
+  const dialog = page.getByRole("dialog", { name: "Account" });
+  async function create(name: string) {
+    await page.locator('[data-action="new"]').first().click();
+    await page.locator("#newProjectName").fill(name);
+    await page.locator("#createProject").click();
+    await addSectionSheet(page);
+  }
+  async function signIn(address: string) {
+    const gate = page.locator("#eplan-workspace-gate button");
+    if (!(await dialog.isVisible()))
+      await (
+        (await gate.isVisible()) ? gate : page.locator("#eplan-account-button")
+      ).click();
+    await dialog.getByRole("button", { name: "Sign in", exact: true }).click();
+    await dialog.locator('input[name="email"]').fill(address);
+    await dialog
+      .locator('input[name="password"]')
+      .fill("Synthetic sign-in password");
+    await dialog.getByRole("button", { name: "Continue" }).click();
+    await dialog
+      .getByRole("textbox", { name: "Email verification code" })
+      .fill("12345678");
+    await dialog.getByRole("button", { name: "Verify code" }).click();
+    await expect(
+      dialog.getByRole("button", { name: "Sign out of this app" }),
+    ).toBeVisible();
+    await expect(workspace).not.toHaveAttribute("inert", "");
+    await page.keyboard.press("Escape");
+  }
+  async function signOut() {
+    await page.locator("#eplan-account-button").click();
+    await dialog.getByRole("button", { name: "Sign out of this app" }).click();
+    await expect(workspace).toHaveAttribute("inert", "");
+  }
+  await create("Guest draft");
+  await signIn("a@example.test");
+  await expect(tree).not.toContainText("Guest draft");
+  await create("Account A draft");
+  await page.locator('[data-draw="line"]').click();
+  const start = await sheetPoint(page, 200, 200),
+    end = await sheetPoint(page, 400, 300);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  await signOut();
+  await expect(tree).not.toContainText("Account A draft");
+  await signIn("b@example.test");
+  await expect(tree).not.toContainText("Account A draft");
+  await expect(page.locator('[data-action="undo"]')).toBeDisabled();
+  await create("Account B draft");
+  await signOut();
+  await signIn("a@example.test");
+  await expect(tree).toContainText("Account A draft");
+  await expect(tree).not.toContainText("Account B draft");
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(1);
+  await page.locator('[data-action="undo"]').click();
+  await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(0);
+});
+
 test("sourced feeder parts use the existing library and preserve editable settings", async ({
   page,
 }) => {

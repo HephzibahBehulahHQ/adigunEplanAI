@@ -187,6 +187,12 @@ solid envelopes in millimetres. With Open CASCADE DRAW installed, run
 the resulting STEP in a fresh OCCT session and publishes only files with
 matching solid bounds. Cabinet and compartment wireframes and opening outlines
 remain available through OBJ and SVG.
+
+### M12 compact workspace ownership
+
+The compact editor keeps guest and verified account drafts, clipboard state and
+undo history separate while the page is open. Signing back in as the same owner
+restores that owner's in-memory draft. Refresh starts with an empty workspace.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
