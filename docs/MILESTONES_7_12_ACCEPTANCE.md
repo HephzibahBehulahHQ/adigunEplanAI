@@ -55,7 +55,9 @@ On an open floor sheet, **Import SVG or DXF floor plan** brings supported
 geometry into Architecture as native objects. SVG uses the declared physical
 viewport and DXF uses the file's declared drawing units. The import report
 lists unsupported geometry, and Layers and visibility exposes the source
-layers. Manual unit overrides are still pending in the compact editor.
+layers. Floor Properties accepts an optional millimetres-per-source-unit
+override for subsequent imports. Clearing the field restores file-based
+scaling. Each manually scaled object retains its original override value.
 
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

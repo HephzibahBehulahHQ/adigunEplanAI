@@ -13,6 +13,7 @@
     return Object.freeze(value);
   }
   function finite(value) { return typeof value === 'number' && Number.isFinite(value); }
+  function validImportScale(value) { return value===undefined||finite(value)&&value>0&&value<=1000000; }
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
   const terminalDefinition = deepFreeze({
@@ -1309,7 +1310,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         if(sheet.floorPlan!==undefined){
           const plan=sheet.floorPlan;
-          if(!plan||typeof plan!=='object'||['building','level'].some(key=>typeof plan[key]!=='string'||!plan[key].trim()||plan[key].length>80)||plan.elevationMm!==undefined&&!finite(plan.elevationMm))errors.push('Invalid building floor plan on sheet '+sheet.id+'.');
+          if(!plan||typeof plan!=='object'||['building','level'].some(key=>typeof plan[key]!=='string'||!plan[key].trim()||plan[key].length>80)||plan.elevationMm!==undefined&&!finite(plan.elevationMm)||!validImportScale(plan.importMmPerUnit))errors.push('Invalid building floor plan on sheet '+sheet.id+'.');
         }
         if(sheet.drafting!==undefined){
           const drafting=sheet.drafting;
@@ -1366,7 +1367,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.dimensionOffset!==undefined&&(object.kind!=='line'||object.wallThickness!==undefined||!finite(object.dimensionOffset)||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid dimension line '+object.id+'.');
         if(object.planImport!==undefined){
           const source=object.planImport;
-          if(!source||typeof source.closed!=='boolean'||['file','layer','element'].some(key=>typeof source[key]!=='string'||!source[key].trim()||source[key].length>255)||
+          if(!source||typeof source.closed!=='boolean'||!validImportScale(source.overrideMmPerUnit)||['file','layer','element'].some(key=>typeof source[key]!=='string'||!source[key].trim()||source[key].length>255)||
             object.kind!=='freehand'||!Array.isArray(object.points)||object.points.length<(source.closed?3:2)||
             object.points.length>10000||object.points.some(point=>!point||!finite(point.x)||!finite(point.y)))errors.push('Invalid imported plan geometry '+object.id+'.');
         }
