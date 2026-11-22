@@ -3634,6 +3634,15 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     '"DB1","Workshop sockets","SO1","300","0","0","3200","600","0","450","0"',
   );
   await clickAt(260, 240);
+  const diagramPending = page.waitForEvent("download");
+  await command("Export selected board single-line");
+  const diagram = await diagramPending;
+  expect(diagram.suggestedFilename()).toBe("board-single-line.svg");
+  const diagramSvg = fs.readFileSync((await diagram.path())!, "utf8");
+  expect(diagramSvg).toContain("DB1 · Distribution board single-line");
+  expect(diagramSvg).toContain(">Workshop sockets</text>");
+  expect(diagramSvg).toContain(">SO1</text>");
+  expect(diagramSvg).toContain("Known demand 450 W");
   await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
   await clickAt(580, 300);
   await expect(circuit).toHaveValue("");
