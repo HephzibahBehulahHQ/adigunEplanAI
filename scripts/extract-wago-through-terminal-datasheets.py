@@ -28,7 +28,7 @@ def evidence(pages, pattern, label):
 
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
-    if not re.fullmatch(r"(?:2000|2004|2006|2010|2016)-1[234]0[1-6]", code):
+    if not re.fullmatch(r"(?:2000|2004|2006|2010|2016|2204|2206)-1[234]0[1-6]", code):
         raise ValueError("unsupported order code")
     with pypdfium2.PdfDocument(pdf) as document:
         pages = []
@@ -51,7 +51,10 @@ def read_article(pdf, candidate, retrieved_at):
     clamps = evidence(pages, r"^Clamping units ([234])\b", "clamp count")
     potential = evidence(pages, r"^Total number of potentials (\d+)\b", "potential count")
     levels = evidence(pages, r"^Number of levels (\d+)\b", "level count")
-    actuation = evidence(pages, r"^Actuation (?:type|Method) (Operating tool)\b", "actuation")
+    actuation = evidence(pages, r"^Actuation (?:type|Method) (Operating tool|Push-button)\b", "actuation")
+    expected_actuation = "Push-button" if code.startswith("22") else "Operating tool"
+    if actuation[1] != expected_actuation:
+        raise ValueError("actuation does not match the supported series")
     nominal = evidence(pages, rf"^Nominal cross-section {NUMBER} mm", "conductor section")
     width = evidence(pages, rf"^Width {NUMBER} mm", "width")
     height = evidence(pages, rf"^Height {NUMBER} mm", "height")

@@ -128,3 +128,14 @@ All added parts have one common potential. The two larger series have a
 [2006-1201 datasheet](https://wago.priintcloud.com/datasheets/2006-1201/en) ·
 [2010-1201 datasheet](https://wago.priintcloud.com/datasheets/2010-1201/en) ·
 [2016-1201 datasheet](https://wago.priintcloud.com/datasheets/2016-1201/en)
+
+## 2204- and 2206-series push-button through terminals
+
+Thirty-one exact codes extend the push-button catalog to 4 and 6 mm² nominal
+conductor sections. The 2204 series is 6.2 mm wide and rated 32 A under the
+documented IEC/EN conditions. The 2206 series is 7.5 mm wide and rated 41 A.
+The 2206 two-clamp body is 57.3 mm high, with a depth of 32.9 mm above the rail.
+Exact datasheet versions, the physical-data page and PDF hashes are stored
+in the batch.
+[2204-1201 datasheet](https://wago.priintcloud.com/datasheets/2204-1201/en) ·
+[2206-1201 datasheet](https://wago.priintcloud.com/datasheets/2206-1201/en)

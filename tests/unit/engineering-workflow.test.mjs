@@ -46,6 +46,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     [2004, 6.2, 4, 32, "Operating tool", [52.3, 65.5, 78.7]],
     [2201, 4.2, 1.5, 17.5, "Push-button"],
     [2202, 5.2, 2.5, 24, "Push-button"],
+    [2204, 6.2, 4, 32, "Push-button", [52.3, 65.5, 78.7]],
   ].flatMap(([series, width, crossSection, current, actuation, heights]) =>
     [2, 3, 4].flatMap((clamps) =>
       ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"].map(
@@ -99,23 +100,45 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
         [91.8, "12456"],
       ],
     ],
-  ].flatMap(([series, width, crossSection, current, depth, profiles]) =>
-    profiles.flatMap(([height, variants], index) =>
-      Array.from(variants, (suffix) => [
-        series + "-1" + (index + 2) + "0" + suffix,
-        [index + 2],
-        800,
-        depth,
-        ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"][
-          Number(suffix) - 1
-        ],
-        width,
-        crossSection,
-        current,
-        "Operating tool",
-        height,
-      ]),
-    ),
+    [
+      2206,
+      7.5,
+      6,
+      41,
+      32.9,
+      [
+        [57.3, "1345"],
+        [73.3, "1345"],
+        [89.3, "12345"],
+      ],
+      "Push-button",
+    ],
+  ].flatMap(
+    ([
+      series,
+      width,
+      crossSection,
+      current,
+      depth,
+      profiles,
+      actuation = "Operating tool",
+    ]) =>
+      profiles.flatMap(([height, variants], index) =>
+        Array.from(variants, (suffix) => [
+          series + "-1" + (index + 2) + "0" + suffix,
+          [index + 2],
+          800,
+          depth,
+          ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"][
+            Number(suffix) - 1
+          ],
+          width,
+          crossSection,
+          current,
+          actuation,
+          height,
+        ]),
+      ),
   );
   for (const [
     orderCode,
