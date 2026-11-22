@@ -3445,6 +3445,114 @@ test("floor plan dimensions measure endpoints and save their offset", async ({
   await expect(dimension).toHaveText("500 mm");
 });
 
+test("floor plan imports scaled SVG and DXF as native geometry", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  const input = page.locator("#floorPlanImportFile");
+  const svg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="800mm" height="400mm" viewBox="0 0 400 200"><g id="Walls"><rect id="outline" x="30" y="40" width="150" height="70"/><circle id="unsupported" r="8"/></g></svg>';
+  const pending = page.waitForEvent("filechooser");
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Import SVG or DXF floor plan");
+  await page.locator("#commandSearch").press("Enter");
+  const chooser = await pending;
+  await chooser.setFiles({
+    name: "plan.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(svg),
+  });
+  await expect(page.locator("#inspectorContent")).toContainText("unsupported");
+  await expect(
+    page.locator('#userDrawings [data-layer="architecture"]'),
+  ).toHaveCount(1);
+  const dxf = [
+    "0",
+    "SECTION",
+    "2",
+    "HEADER",
+    "9",
+    "$INSUNITS",
+    "70",
+    "5",
+    "0",
+    "ENDSEC",
+    "0",
+    "SECTION",
+    "2",
+    "ENTITIES",
+    "0",
+    "LINE",
+    "8",
+    "Survey",
+    "10",
+    "40",
+    "20",
+    "-30",
+    "11",
+    "55",
+    "21",
+    "-35",
+    "0",
+    "ENDSEC",
+    "0",
+    "EOF",
+  ].join("\n");
+  await input.setInputFiles({
+    name: "plan.dxf",
+    mimeType: "application/dxf",
+    buffer: Buffer.from(dxf),
+  });
+  await expect(page.locator("#inspectorContent")).toContainText("plan.dxf");
+  const saved = await saveDrawing(page, "imported-floor");
+  const [outline, line] = saved.data.objects;
+  expect(outline.planImport).toMatchObject({
+    layer: "Walls",
+    element: "outline",
+    closed: true,
+  });
+  expect(outline.points[0].x).toBeCloseTo(60);
+  expect(outline.points[0].y).toBeCloseTo(80);
+  expect(line.planImport).toMatchObject({ layer: "Survey", closed: false });
+  expect(line.points).toEqual([
+    { x: 400, y: 300 },
+    { x: 550, y: 350 },
+  ]);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project imported-floor.adigun.json opened.",
+  );
+  await expect(
+    page.locator('#userDrawings [data-object="' + outline.id + '"]'),
+  ).toHaveAttribute("d", / Z$/);
+  const outlinePoint = await sheetPoint(page, 180, 80);
+  await page.mouse.click(outlinePoint.x, outlinePoint.y);
+  const coordinate = page.locator(
+    '#selectionDetails [data-object-coordinate="x"]',
+  );
+  await coordinate.fill("100");
+  await coordinate.press("Tab");
+  const moved = await saveDrawing(page, "imported-floor-moved");
+  expect(moved.data.objects[0].points[0].x).toBeCloseTo(100);
+  await page
+    .getByRole("complementary", { name: "Inspector tools" })
+    .getByRole("button", { name: "Layers and visibility" })
+    .click();
+  await page.getByRole("checkbox", { name: "Source layer · Survey" }).uncheck();
+  await expect(
+    page.locator('#userDrawings [data-object="' + line.id + '"]'),
+  ).toBeHidden();
+  await expect(
+    page.locator('#userDrawings [data-object="' + outline.id + '"]'),
+  ).toBeVisible();
+});
+
 test("floor plan specialty devices expose independent native terminals", async ({
   page,
 }) => {

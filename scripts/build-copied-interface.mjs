@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { build } from "vite";
 import "./export-eplan-symbols.mjs";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const dist = `${root}apps/web/dist`;
@@ -18,6 +19,29 @@ for (const [source, target] of [
 // Stable asset names otherwise let returning browsers reuse an older engine.
 // Version script requests by their actual content without changing the UI.
 let html = fs.readFileSync(`${dist}/index.html`, "utf8");
+const planImport = "assets/compact-plan-import.js";
+await build({
+  configFile: false,
+  publicDir: false,
+  build: {
+    outDir: dist,
+    emptyOutDir: false,
+    lib: {
+      entry: `${root}apps/web/src/compactPlanImport.ts`,
+      formats: ["es"],
+      fileName: () => planImport,
+    },
+  },
+});
+const importDigest = crypto
+  .createHash("sha256")
+  .update(fs.readFileSync(`${dist}/${planImport}`))
+  .digest("hex")
+  .slice(0, 16);
+html = html.replace(
+  "./src/compactPlanImport.ts",
+  `./${planImport}?v=${importDigest}`,
+);
 for (const asset of ["cad-engine.js", "eplan-symbols.js"]) {
   const digest = crypto
     .createHash("sha256")
