@@ -157,6 +157,9 @@ ENG-0601 classifies its editable sequence, motor-control, interlock and safety
 notes and links them to stable device IDs. The text inspector edits the notes
 and exports a project-wide register. Missing linked devices are reported in the
 register. The notes document expected behavior and review limits.
+The PLC input and output indication example pairs the pushbutton input with a
+wired indicator output, editable assignments and a linked sequence note. Its
+terminal report reflects the documented hardware connections.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

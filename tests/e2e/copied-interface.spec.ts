@@ -1367,7 +1367,7 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   await expect(page.locator("#projectPanel")).toBeVisible();
   await expect(page.locator("#symbolsPanel")).toBeVisible();
   const examples = page.locator("#projectTree [data-project-example]");
-  await expect(examples).toHaveCount(7);
+  await expect(examples).toHaveCount(8);
   await expect(examples.first()).toBeVisible();
   await page.locator("#projectSearch").fill("PLC digital input");
   const plc = page.locator('[data-project-example="hardware-plc-input"]');
@@ -1434,6 +1434,62 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   await page.locator('[data-panel="project"]').click();
   await expect(page.locator("#projectSearch")).toHaveValue("");
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
+});
+
+test("integrated PLC example preserves its input and output wiring through edits and exports", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("hardware-plc-io");
+  await page.locator("#createProject").click();
+  await page.locator("#projectTree [data-sheet]").first().click();
+  const original = await saveDrawing(page, "plc-integrated-original");
+  const component = (ref: string) =>
+    original.data.objects.find((item: { ref?: string }) => item.ref === ref);
+  const cpu = component("A1"),
+    lamp = component("H1");
+  await page.locator(`[data-object="${cpu.id}"]`).click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PLC I/O assignments", { exact: true }).click();
+  const output = page.getByLabel("X12:3 DQ a.0 configured address", {
+    exact: true,
+  });
+  await output.fill("%Q0.0");
+  await output.press("Tab");
+  const exportPending = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export PLC I/O register" }).click();
+  const csv = fs.readFileSync(await (await exportPending).path(), "utf8");
+  expect(csv).toMatch(
+    /"X10:7","DI a.0","Start pushbutton","","wire-hardware-plc-io-\d+","S1:14"/,
+  );
+  expect(csv).toMatch(
+    /"X12:3","DQ a.0","Indicator request","%Q0.0","wire-hardware-plc-io-\d+","H1:X1"/,
+  );
+  await page.locator(`[data-object="${lamp.id}"]`).click();
+  const x = page.locator('[data-object-coordinate="x"]');
+  await x.fill(String(lamp.x + 10));
+  await x.press("Tab");
+  const edited = await saveDrawing(page, "plc-integrated-edited");
+  const signalWire = edited.data.objects.find(
+    (item: { attachments?: { start?: { pinId: string } } }) =>
+      item.attachments?.start?.pinId === "x12-3",
+  );
+  expect(signalWire.attachments.end).toEqual({
+    instanceId: lamp.id,
+    pinId: "terminal-x1",
+  });
+  expect(signalWire.x2).toBe(lamp.x + 10 - 60);
+  await page.locator("#openFile").setInputFiles(edited.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "plc-integrated-edited.adigun.json opened",
+  );
+  await page.locator('[data-inspector="Electrical checks"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "Connected nets7",
+  );
+  const reopened = await saveDrawing(page, "plc-integrated-reopened");
+  expect(reopened.data.objects).toEqual(edited.data.objects);
 });
 
 test("generic PLC library places six editable modules with native terminal wiring", async ({
@@ -3218,6 +3274,7 @@ for (const template of [
   "indicator",
   "relay",
   "hardware-plc-input",
+  "hardware-plc-io",
   "hardware-relay",
   "hardware-sensor",
   "hardware-sitop",
