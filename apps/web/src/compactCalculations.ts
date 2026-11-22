@@ -1,9 +1,12 @@
 import {
   calculate,
+  calculateRecord,
+  calculationToRecord,
   CalculationError,
   calculatorById,
   calculatorRegistry,
   type CalculationResult,
+  type CalculationRecord,
 } from "../../../packages/engineering-core/calculations";
 import {
   convert,
@@ -86,7 +89,15 @@ function renderResult(host: HTMLElement, result: CalculationResult) {
   );
 }
 
-export function mountCompactCalculations(host: HTMLElement) {
+type ProjectCalculations = {
+  records: CalculationRecord[];
+  save: (record: CalculationRecord) => boolean;
+};
+
+export function mountCompactCalculations(
+  host: HTMLElement,
+  project?: ProjectCalculations,
+) {
   const method = document.createElement("select");
   for (const calculator of calculatorRegistry) {
     method.add(new Option(message(calculator.titleKey), calculator.id));
@@ -103,12 +114,50 @@ export function mountCompactCalculations(host: HTMLElement) {
   const result = document.createElement("section");
   result.setAttribute("aria-label", message("calcResults"));
   result.setAttribute("aria-live", "polite");
+  const savedRecords = document.createElement("select");
+  const name = document.createElement("input");
+  name.maxLength = 160;
+  let savedId: string | undefined;
+  const selectedUnits = new Map<string, Unit>();
   form.append(fields, evidenceRow, run);
   host.replaceChildren(field(message("calcTool"), method), form, result);
+  if (project) host.prepend(field(message("calcSavedRecords"), savedRecords));
+
+  function refreshRecords() {
+    savedRecords.replaceChildren(new Option(message("calcChoose"), ""));
+    for (const record of project?.records ?? [])
+      savedRecords.add(new Option(record.name, record.id));
+    savedRecords.value = savedId ?? "";
+  }
+
+  function showResult(calculation: CalculationResult) {
+    renderResult(result, calculation);
+    if (!project) return;
+    result.append(field(message("calcName"), name));
+    const save = addText(
+      result,
+      "button",
+      message(savedId ? "calcUpdate" : "calcSave"),
+    );
+    save.className = "command-item";
+    save.addEventListener("click", () => {
+      const record = calculationToRecord(
+        calculation,
+        savedId ?? crypto.randomUUID(),
+        name.value.trim() || message(calculation.titleKey),
+      );
+      if (!project.save(record)) return;
+      savedId = record.id;
+      name.value = record.name;
+      refreshRecords();
+      save.textContent = message("calcUpdate");
+    });
+  }
 
   function populate() {
     const calculator = calculatorById(method.value);
     fields.replaceChildren();
+    selectedUnits.clear();
     result.replaceChildren();
     evidence.value = "";
     evidence.required = Boolean(calculator.evidenceRequired);
@@ -133,7 +182,7 @@ export function mountCompactCalculations(host: HTMLElement) {
       const unit = document.createElement("select");
       unit.name = `${input.key}-unit`;
       for (const option of input.units) unit.add(new Option(option, option));
-      let previousUnit = input.units[0];
+      selectedUnits.set(input.key, input.units[0]);
       unit.addEventListener("change", () => {
         if (
           value instanceof HTMLInputElement &&
@@ -141,19 +190,71 @@ export function mountCompactCalculations(host: HTMLElement) {
         ) {
           try {
             value.value = String(
-              convert(value.valueAsNumber, previousUnit, unit.value as Unit),
+              convert(
+                value.valueAsNumber,
+                selectedUnits.get(input.key) ?? input.units[0],
+                unit.value as Unit,
+              ),
             );
           } catch {
             value.value = "";
           }
         }
-        previousUnit = unit.value as Unit;
+        selectedUnits.set(input.key, unit.value as Unit);
       });
       if (input.units.length > 1)
         fields.append(field(`${label} · ${message("calcUnit")}`, unit));
     }
   }
-  method.addEventListener("change", populate);
+  method.addEventListener("change", () => {
+    savedId = undefined;
+    name.value = "";
+    refreshRecords();
+    populate();
+  });
+  savedRecords.addEventListener("change", () => {
+    const record = project?.records.find(
+      (item) => item.id === savedRecords.value,
+    );
+    savedId = undefined;
+    name.value = "";
+    if (!record) {
+      populate();
+      return;
+    }
+    try {
+      const calculation = calculateRecord(record);
+      method.value = record.kind;
+      populate();
+      savedId = record.id;
+      name.value = record.name;
+      evidence.value = calculation.evidence.join("\n");
+      for (const input of calculatorById(record.kind).inputs) {
+        const value = form.elements.namedItem(input.key) as
+          HTMLInputElement | HTMLSelectElement;
+        value.value = String(calculation.inputs[input.key]);
+        const unit = form.elements.namedItem(
+          `${input.key}-unit`,
+        ) as HTMLSelectElement | null;
+        if (unit) {
+          unit.value = calculation.units[input.key];
+          selectedUnits.set(input.key, unit.value as Unit);
+        }
+      }
+      showResult(calculation);
+    } catch (error) {
+      populate();
+      addText(
+        result,
+        "p",
+        message(
+          error instanceof CalculationError
+            ? (error.issues[0]?.code ?? "calcErrorRecord")
+            : "calcErrorRecord",
+        ),
+      );
+    }
+  });
   form.addEventListener("input", () => result.replaceChildren());
   form.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -172,8 +273,7 @@ export function mountCompactCalculations(host: HTMLElement) {
       ]),
     );
     try {
-      renderResult(
-        result,
+      showResult(
         calculate(
           calculator.id,
           inputs,
@@ -203,4 +303,5 @@ export function mountCompactCalculations(host: HTMLElement) {
     }
   });
   populate();
+  refreshRecords();
 }
