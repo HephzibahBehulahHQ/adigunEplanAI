@@ -3770,6 +3770,7 @@ test("floor plan specialty devices expose independent native terminals", async (
 test("floor plan equipment uses native devices and preserves terminal wiring", async ({
   page,
 }) => {
+  test.setTimeout(45_000);
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
@@ -3955,6 +3956,32 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   const riser = page.getByRole("combobox", { name: "Riser target floor" });
   await riser.selectOption({ label: "A2/001 · Upper floor" });
   await expect(page.getByText("3200 mm", { exact: true })).toBeVisible();
+  await page.getByText("Route voltage-drop check", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Phases", exact: true })
+    .selectOption("1");
+  for (const [label, value] of [
+    ["Supply voltage (V)", "230"],
+    ["Design current (A)", "10"],
+    ["Resistance (Ω/km)", "10"],
+    ["Reactance (Ω/km)", "0"],
+    ["Power factor (0–1)", "1"],
+    ["Drop limit (%)", "1"],
+  ]) {
+    await page
+      .getByRole("spinbutton", { name: label, exact: true })
+      .fill(value);
+  }
+  await page
+    .getByRole("textbox", { name: "Input evidence" })
+    .fill("Synthetic reference inputs for browser test");
+  await page.getByRole("button", { name: "Check route voltage drop" }).click();
+  await expect(page.locator("[data-route-drop] output")).toContainText(
+    "One-way drawn length 3500 mm · 0.7 V",
+  );
+  await expect(page.locator("[data-route-drop] output")).toContainText(
+    "adiguneplanai:calculation:voltage-drop:1.0.0",
+  );
   const withRiser = await saveDrawing(page, "floor-plan-riser");
   expect(
     withRiser.data.objects.find(
@@ -3973,6 +4000,10 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     "Upper floor · 3200 mm",
   );
   await clickAt(400, 530);
+  await page.getByText("Route voltage-drop check", { exact: true }).click();
+  await expect(
+    page.getByRole("spinbutton", { name: "Design current (A)" }),
+  ).toHaveValue("10");
   const elevationPending = page.waitForEvent("download");
   await command("Export selected riser elevation");
   const elevationDrawing = await elevationPending;

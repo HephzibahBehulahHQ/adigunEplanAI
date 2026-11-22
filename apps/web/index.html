@@ -667,7 +667,7 @@
   function footprintsOverlap(first,second){
     return first.left<second.right&&first.right>second.left&&first.top<second.bottom&&first.bottom>second.top;
   }
-  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(!activeDraftingSheet()?.floorPlan){delete copy.floorCircuits;delete copy.floorRouteKind;delete copy.floorRouteTag;delete copy.floorZone;}if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.floorZone)remapZoneLinks(copy.floorZone,copiedIds,[...copies,...state.objects]);if(copy.riserTargetSheetId&&window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===copy.riserTargetSheetId))===null)delete copy.riserTargetSheetId;if(copy.floorCircuit){const boardId=copiedIds.get(copy.floorCircuit.boardId)||copy.floorCircuit.boardId;if(activeDraftingSheet()?.floorPlan&&[...copies,...state.objects].some(item=>item.id===boardId&&item.componentId==='building-distribution-board'&&item.floorCircuits?.some(circuit=>circuit.id===copy.floorCircuit.circuitId)))copy.floorCircuit.boardId=boardId;else delete copy.floorCircuit;}if(copy.roomId){const roomId=copiedIds.get(copy.roomId)||copy.roomId;if(activeDraftingSheet()?.floorPlan&&(copies.some(item=>item.id===roomId&&item.roomName)||state.objects.some(item=>item.id===roomId&&item.roomName)))copy.roomId=roomId;else delete copy.roomId;}if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
+  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(!activeDraftingSheet()?.floorPlan){delete copy.floorCircuits;delete copy.floorRouteKind;delete copy.floorRouteTag;delete copy.voltageDrop;delete copy.floorZone;}if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.floorZone)remapZoneLinks(copy.floorZone,copiedIds,[...copies,...state.objects]);if(copy.riserTargetSheetId&&window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===copy.riserTargetSheetId))===null)delete copy.riserTargetSheetId;if(copy.floorCircuit){const boardId=copiedIds.get(copy.floorCircuit.boardId)||copy.floorCircuit.boardId;if(activeDraftingSheet()?.floorPlan&&[...copies,...state.objects].some(item=>item.id===boardId&&item.componentId==='building-distribution-board'&&item.floorCircuits?.some(circuit=>circuit.id===copy.floorCircuit.circuitId)))copy.floorCircuit.boardId=boardId;else delete copy.floorCircuit;}if(copy.roomId){const roomId=copiedIds.get(copy.roomId)||copy.roomId;if(activeDraftingSheet()?.floorPlan&&(copies.some(item=>item.id===roomId&&item.roomName)||state.objects.some(item=>item.id===roomId&&item.roomName)))copy.roomId=roomId;else delete copy.roomId;}if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
     const position=clearComponentPastePosition(copies[0]);
     if(!position){notify('No clear space for this component in the current view. Zoom out or pan to open space.');return;}
     Object.assign(copies[0],position);
@@ -1177,8 +1177,57 @@
       +['cable','conduit','tray'].map(kind=>'<option value="'+kind+'"'+(kind===route.floorRouteKind?' selected':'')+'>'+kind+'</option>').join('')+'</select></label>'
       +'<label class="property-row"><span>Route points (X, Y mm)</span><textarea rows="4" data-floor-route-points'+(route.locked?' disabled':'')+'>'+route.points.map(point=>point.x+', '+point.y).join('&#10;')+'</textarea></label>'
       +floorRiserFields(route)
-      +equipmentCircuitFields(route);
+      +equipmentCircuitFields(route)
+      +routeVoltageDropFields(route);
   }
+  const routeVoltageDropInputs={
+    voltage:'Supply voltage (V)',current:'Design current (A)',resistancePerLength:'Resistance (Ω/km)',
+    reactancePerLength:'Reactance (Ω/km)',powerFactor:'Power factor (0–1)',dropLimit:'Drop limit (%)'
+  };
+  function routeVoltageDropFields(route){
+    if(route.floorRouteKind!=='cable')return '';
+    const candidate=route.voltageDrop||{};
+    const inputFields=Object.entries(routeVoltageDropInputs).map(([key,label])=>
+      '<label class="property-row"><span>'+label+'</span><input type="number" name="'+key+'" step="any" min="0" value="'+escapeHtml(candidate[key]??'')+'" required></label>'
+    ).join('');
+    return '<details><summary>Route voltage-drop check</summary><form data-route-drop="'+escapeHtml(route.id)+'">'
+      +'<label class="property-row"><span>Phases</span><select name="phases" required><option value="">Select</option>'
+      +[1,3].map(value=>'<option value="'+value+'"'+(candidate.phases===value?' selected':'')+'>'+value+'</option>').join('')
+      +'</select></label>'+inputFields
+      +'<label class="property-row"><span>Input evidence</span><textarea name="evidence" minlength="8" maxlength="400" required>'+escapeHtml(candidate.evidence||'')+'</textarea></label>'
+      +'<button class="command-item" type="submit">Check route voltage drop</button><output role="status"></output></form></details>';
+  }
+  $('#inspectorContent').addEventListener('submit',async event=>{
+    const form=event.target;
+    if(!form.matches('[data-route-drop]'))return;
+    event.preventDefault();
+    const route=state.objects.find(item=>item.id===form.dataset.routeDrop&&item.floorRouteKind==='cable');
+    if(!route)return;
+    const output=form.querySelector('output'),fields=new FormData(form);
+    const candidate=Object.fromEntries(Object.keys(routeVoltageDropInputs).concat('phases').map(key=>[key,Number(fields.get(key))]));
+    candidate.evidence=String(fields.get('evidence')).trim();
+    try{
+      const {calculate}=await import('./src/compactPlanImport.ts');
+      if(!form.isConnected||!state.objects.includes(route))return;
+      const engine=window.AdigunCADEngine;
+      const vertical=engine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===route.riserTargetSheetId))??0;
+      const length=engine.floorRouteLength(route)+vertical;
+      const {evidence,...inputs}=candidate;
+      const result=calculate('voltage-drop',{...inputs,length},{
+        voltage:'V',current:'A',phases:'1',length:'mm',resistancePerLength:'ohm/km',
+        reactancePerLength:'ohm/km',powerFactor:'1',dropLimit:'%'
+      },[evidence]);
+      if(!route.locked&&JSON.stringify(route.voltageDrop)!==JSON.stringify(candidate)){
+        pushUndo();route.voltageDrop=candidate;persist();
+      }
+      const [drop,percent]=result.values.map(item=>Number(item.value.toPrecision(6)));
+      output.textContent=`One-way drawn length ${length} mm · ${drop} V (${percent}%) · ${result.checks[0].passed?'Within':'Exceeds'} supplied ${inputs.dropLimit}% limit. Method ${result.methodReference}. Route estimate only.`;
+    }catch(error){
+      if(form.isConnected)output.textContent=error.issues?
+        'Check inputs and evidence: '+error.issues.map(issue=>routeVoltageDropInputs[issue.field]||issue.field||'input evidence').join(', ')+'.':
+        'Check could not run: '+error.message;
+    }
+  });
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target;
     if(!field.matches('[data-floor-route-kind],[data-floor-route-points],[data-riser-target],[data-floor-route-tag]'))return;
@@ -1200,6 +1249,7 @@
     }else if(field.matches('[data-floor-route-kind]')){
       if(!['cable','conduit','tray'].includes(field.value)||field.value===route.floorRouteKind)return;
       pushUndo();route.floorRouteKind=field.value;
+      if(field.value!=='cable')delete route.voltageDrop;
     }else{
       const pairs=field.value.trim().split(/\r?\n/).map(line=>line.split(',').map(value=>value.trim()));
       const points=pairs.map(([x,y])=>({x:Number(x),y:Number(y)}));
