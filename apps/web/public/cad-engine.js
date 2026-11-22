@@ -1379,6 +1379,12 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           if(!room||!floorIds.has(sheetId)||(room.sheetId||sheetId)!==sheetId||object.kind!=='component-instance'||component(object.componentId)?.family!=='building-device')errors.push('Invalid room assignment on '+object.id+'.');
         }
         if(object.roomName!==undefined&&(object.kind!=='rect'||typeof object.roomName!=='string'||!object.roomName.trim()||object.roomName.length>80||![object.x,object.y,object.x2,object.y2].every(finite)||Math.abs(object.x2-object.x)<2||Math.abs(object.y2-object.y)<2))errors.push('Invalid room outline '+object.id+'.');
+        if(object.floorZone!==undefined){
+          const zone=object.floorZone;
+          const width=Math.abs(object.x2-object.x),length=Math.abs(object.y2-object.y);
+          if(!zone||!['electrical','distribution'].includes(zone.kind)||typeof zone.name!=='string'||!zone.name.trim()||zone.name.length>80||
+            object.kind!=='rect'||object.roomName!==undefined||!floorIds.has(object.sheetId||project.activeSheet)||!finite(width*length)||width<2||length<2)errors.push('Invalid floor zone '+object.id+'.');
+        }
         if(object.kind==='wire'){try{wireRoute(object);}catch(error){errors.push(error.message);}}
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
         if(object.kind==='wire'&&object.cable!==undefined){const c=object.cable;if(!c||typeof c!=='object'||Array.isArray(c)||Object.keys(c).some(function(k){return !['tag','core'].includes(k);})||['tag','core'].some(function(k){return typeof c[k]!=='string'||!c[k].trim()||c[k].length>64;}))errors.push('Wire cable assignment requires a cable tag and core identifier (1–64 characters).');}

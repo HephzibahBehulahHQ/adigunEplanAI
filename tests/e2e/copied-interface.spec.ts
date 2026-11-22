@@ -3356,6 +3356,53 @@ test("room outlines have editable physical dimensions and reopen on their floor"
   );
 });
 
+test("floor zones preserve their type and editable boundary on reopen", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  for (const [index, kind] of ["electrical", "distribution"].entries()) {
+    await page.keyboard.press("Control+k");
+    const search = page.locator("#commandSearch");
+    await search.fill("Draw " + kind + " zone");
+    await search.press("Enter");
+    const start = await sheetPoint(page, 200, 200 + index * 250);
+    const end = await sheetPoint(page, 600, 400 + index * 250);
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(end.x, end.y);
+    await page.mouse.up();
+    const name = page.getByRole("textbox", { name: "Zone name" });
+    await name.fill(kind + " services");
+    await name.press("Tab");
+    const width = page.getByRole("spinbutton", { name: "Zone width (mm)" });
+    await width.fill("550");
+    await width.press("Tab");
+  }
+  const saved = await saveDrawing(page, "floor-zones");
+  expect(
+    saved.data.objects.map(
+      (object: { floorZone: unknown }) => object.floorZone,
+    ),
+  ).toEqual([
+    { kind: "electrical", name: "electrical services" },
+    { kind: "distribution", name: "distribution services" },
+  ]);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-zones.adigun.json opened.",
+  );
+  const zones = page.locator("#userDrawings [data-object]");
+  await expect(zones).toHaveCount(2);
+  await expect(zones.nth(1)).toContainText("distribution services");
+  await expect(zones.nth(1).locator("rect")).toHaveAttribute("width", "550");
+});
+
 test("floor plan dimensions measure endpoints and save their offset", async ({
   page,
 }) => {
