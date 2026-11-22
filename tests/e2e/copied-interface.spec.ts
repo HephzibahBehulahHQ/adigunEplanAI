@@ -1994,6 +1994,29 @@ test("linked panel placement preserves its canonical device on local reopen", as
       (sheet: { id: string }) => sheet.id === "eng0601-a3-0",
     ).cabinetBounds,
   ).toEqual({ x: 0, y: 0, width: 1500, height: 1500, depth: 100 });
+  await preview
+    .locator('[data-panel-body="' + placement.id + '"] polygon')
+    .last()
+    .click();
+  await page.locator('[data-inspector="Properties"]').click();
+  const contactorPosition = bounded.data.objects.find(
+    (object: { id: string }) => object.id === contactorView.id,
+  );
+  for (const axis of ["x", "y"] as const) {
+    const coordinate = page.locator('[data-object-coordinate="' + axis + '"]');
+    await coordinate.fill(String(contactorPosition[axis]));
+    await coordinate.press("Tab");
+  }
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Preview panel in 3D");
+  await page
+    .locator("#commandList")
+    .getByText("Preview panel in 3D", { exact: true })
+    .click();
+  await expect(preview.locator("[data-colliding]")).toHaveCount(2);
+  await expect(page.locator("[data-panel-collision]")).toContainText(
+    "Body collision.",
+  );
   await page.screenshot({
     path: test.info().outputPath("linked-panel-placement.png"),
   });

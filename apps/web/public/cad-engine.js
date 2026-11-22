@@ -1305,7 +1305,22 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           body.z+body.depth>cabinet.depth))issues.push({id:body.ref,message:'Body extends beyond the declared cabinet boundary.'});
       }catch(error){issues.push({id:placement.id,message:error.message});}
     }
-    return {bodies,issues,cabinet};
+    const collisions=[];
+    const overlap=(minA,maxA,minB,maxB)=>{
+      const shared=Math.min(maxA,maxB)-Math.max(minA,minB);
+      return shared>16*Number.EPSILON*Math.max(Math.abs(minA),Math.abs(maxA),Math.abs(minB),Math.abs(maxB))?shared:0;
+    };
+    for(let i=0;i<bodies.length;i++){
+      const a=bodies[i];
+      for(let j=i+1;j<bodies.length;j++){
+        const b=bodies[j];
+        const x=overlap(a.x-a.width/2,a.x+a.width/2,b.x-b.width/2,b.x+b.width/2);
+        const y=overlap(a.y-a.height/2,a.y+a.height/2,b.y-b.height/2,b.y+b.height/2);
+        const z=overlap(a.z,a.z+a.depth,b.z,b.z+b.depth);
+        if(x&&y&&z)collisions.push({ids:[a.id,b.id],refs:[a.ref,b.ref],overlapMm:{x,y,z}});
+      }
+    }
+    return {bodies,issues,cabinet,collisions};
   }
   function validCabinetBounds(value){
     return value&&['x','y','width','height','depth'].every(key=>finite(value[key])&&Math.abs(value[key])<=1e6)
