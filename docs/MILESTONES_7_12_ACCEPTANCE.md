@@ -166,6 +166,11 @@ terminal report reflects the documented hardware connections.
 The command palette exports a PNG using the visible full-drawing SVG bounds,
 including off-frame geometry. PNG export preserves transparency and limits the
 longest edge to 4096 pixels.
+DXF export writes editable vector entities from visible drawing objects, with
+native wire bends, layer names and CAD's upward Y axis. Sheets with declared
+millimetres export in millimetres and other sheets export unitless. Curved
+paths and ellipses are approximated as polylines. DXF export omits the print
+frame, fills and application-specific connectivity metadata.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

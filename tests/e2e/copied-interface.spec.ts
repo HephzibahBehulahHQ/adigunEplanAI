@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import crypto from "node:crypto";
+import DxfParser from "dxf-parser";
 import type { Page } from "@playwright/test";
 
 // Keep editor regression tests independent of the live account provider.
@@ -1490,6 +1491,30 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
   const reopened = await saveDrawing(page, "plc-integrated-reopened");
   expect(reopened.data.objects).toEqual(edited.data.objects);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export drawing geometry as DXF");
+  const dxfPending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export drawing geometry as DXF" })
+    .click();
+  const parsed = new DxfParser().parseSync(
+    fs.readFileSync(await (await dxfPending).path(), "utf8"),
+  )!;
+  expect(parsed.entities).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        type: "LINE",
+        layer: "connections",
+        vertices: [
+          { x: signalWire.x1, y: -signalWire.y1 },
+          { x: signalWire.x2, y: -signalWire.y2 },
+        ],
+      }),
+      expect.objectContaining({ type: "LWPOLYLINE", layer: "connections" }),
+      expect.objectContaining({ type: "CIRCLE", layer: "devices" }),
+      expect.objectContaining({ type: "TEXT", text: "H1" }),
+    ]),
+  );
 });
 
 test("generic PLC library places six editable modules with native terminal wiring", async ({
@@ -3754,6 +3779,27 @@ test("SVG and PNG keep off-frame geometry and PDF honors physical paper size", a
   expect(pixels.leftInk).toBeGreaterThan(10);
   expect(pixels.rightInk).toBeGreaterThan(10);
   expect(pixels.cornerAlpha).toBe(0);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export drawing geometry as DXF");
+  const dxfPending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export drawing geometry as DXF" })
+    .click();
+  const dxf = await dxfPending;
+  const parsedDxf = new DxfParser().parseSync(
+    fs.readFileSync(await dxf.path(), "utf8"),
+  )!;
+  expect(dxf.suggestedFilename()).toMatch(/-drawing\.dxf$/);
+  expect(parsedDxf.header.$INSUNITS).toBe(0);
+  expect(parsedDxf.entities).toHaveLength(2);
+  expect(parsedDxf.entities[0]).toMatchObject({
+    type: "LINE",
+    layer: "annotations",
+    vertices: [
+      { x: -100, y: -190 },
+      { x: -25, y: -280 },
+    ],
+  });
   await page.locator('[data-draw="select"]').click();
   const selected = await sheetPoint(page, -62.5, 235);
   await page.mouse.click(selected.x, selected.y);
