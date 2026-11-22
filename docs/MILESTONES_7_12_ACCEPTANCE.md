@@ -171,6 +171,9 @@ native wire bends, layer names and CAD's upward Y axis. Sheets with declared
 millimetres export in millimetres and other sheets export unitless. Curved
 paths and ellipses are approximated as polylines. DXF export omits the print
 frame, fills and application-specific connectivity metadata.
+The title-block inspector and command palette export the drawing register and
+the current recorded revisions. The exports use project defaults and saved
+sheet overrides. Revision rows appear when a revision or revision date is set.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
