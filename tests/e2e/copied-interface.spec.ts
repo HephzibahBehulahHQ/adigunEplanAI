@@ -1933,8 +1933,31 @@ test("linked panel placement preserves its canonical device on local reopen", as
   ).toMatchObject({ x: 200, y: 330, rotation: 90, deviceId: device.id });
   await page.reload();
   await page.locator("#openFile").setInputFiles(edited.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project panel-edited.adigun.json opened.",
+  );
   const reopened = await saveDrawing(page, "panel-reopened");
   expect(reopened.data.objects).toEqual(edited.data.objects);
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Preview panel in 3D");
+  await page
+    .locator("#commandList")
+    .getByText("Preview panel in 3D", { exact: true })
+    .click();
+  const preview = page.getByRole("img", {
+    name: "Linked panel device envelopes",
+  });
+  await expect(preview.locator("[data-panel-body]")).toHaveCount(2);
+  const contactorBody = preview.locator(
+    '[data-panel-body="' + contactorView.id + '"]',
+  );
+  await expect(contactorBody.locator("title")).toContainText(
+    "45 × 102 × 107 mm",
+  );
+  await contactorBody.locator("polygon").last().click();
+  await expect(
+    page.locator('#userDrawings [data-object="' + contactorView.id + '"]'),
+  ).toHaveClass(/selected-object/);
   await page.screenshot({
     path: test.info().outputPath("linked-panel-placement.png"),
   });
