@@ -1207,7 +1207,7 @@
     const candidate=Object.fromEntries(Object.keys(routeVoltageDropInputs).concat('phases').map(key=>[key,Number(fields.get(key))]));
     candidate.evidence=String(fields.get('evidence')).trim();
     try{
-      const {calculate}=await import('./src/compactPlanImport.ts');
+      const {calculate}=await loadFloorTools();
       if(!form.isConnected||!state.objects.includes(route))return;
       const engine=window.AdigunCADEngine;
       const vertical=engine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===route.riserTargetSheetId))??0;
@@ -1407,6 +1407,9 @@
       +'<div class="property-row"><span>Source element</span><strong>'+escapeHtml(source.element)+'</strong></div>'
       +(source.overrideMmPerUnit===undefined?'':'<div class="property-row"><span>Import scale override</span><strong>'+source.overrideMmPerUnit+' mm per source unit</strong></div>'):'';
   }
+  function loadFloorTools(){
+    return import('./src/compactPlanImport.ts');
+  }
   function importedLayerFields(){
     const groups=new Map();
     for(const object of state.objects){
@@ -1435,7 +1438,7 @@
     try{
       if(file.size>1024*1024)throw new Error('Floor plan exceeds 1 MiB.');
       const text=await file.text();
-      const {parseSvgPlan,parseDxfPlan}=await import('./src/compactPlanImport.ts');
+      const {parseSvgPlan,parseDxfPlan}=await loadFloorTools();
       const draft=/\.dxf$/i.test(file.name)?parseDxfPlan(text,file.name,overrideMmPerUnit):parseSvgPlan(text,file.name,overrideMmPerUnit??'viewport');
       if(state.sheet!==sheetId||state.projectId!==projectId)return;
       const objects=draft.shapes.map(shape=>{
