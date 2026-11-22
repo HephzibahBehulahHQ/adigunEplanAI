@@ -1951,15 +1951,19 @@
       group=document.createElement('details');
       group.dataset.printSettings='';
       group.innerHTML='<summary>Print layout</summary><label class="property-row"><span>Paper format</span><select data-paper-setting="format"><option>A0</option><option>A1</option><option>A2</option><option>A3</option><option>A4</option><option>Custom</option></select></label><label class="property-row"><span>Orientation</span><select data-paper-setting="orientation"><option value="portrait">Portrait</option><option value="landscape">Landscape</option></select></label><label class="property-row"><span>Custom width (mm)</span><input type="number" data-paper-setting="customWidth" min="20" max="5000" step="any"></label><label class="property-row"><span>Custom height (mm)</span><input type="number" data-paper-setting="customHeight" min="20" max="5000" step="any"></label><label class="property-row"><span>Page margin (mm)</span><input type="number" data-paper-setting="margin" min="0" step="any"></label><label class="property-row"><span>Scale 1:n (0 fits frame)</span><input type="number" data-paper-setting="scale" min="0" max="10000" step="any"></label>';
+      group.insertAdjacentHTML('beforeend',
+        '<label class="property-row" data-floor-paper><span>Print centre X (mm)</span><input type="number" step="any" min="-10000000" max="10000000" data-paper-setting="centerX"></label>'
+        +'<label class="property-row" data-floor-paper><span>Print centre Y (mm)</span><input type="number" step="any" min="-10000000" max="10000000" data-paper-setting="centerY"></label>');
       block.append(group);
     }
     const settings=printSettings();
     const format=Array.from(block.querySelectorAll('.property-row')).find(row=>row.firstElementChild?.textContent==='Format');
     if(format)format.lastElementChild.textContent=settings.format+' '+settings.orientation;
     group.hidden=!sheet;
+    for(const row of group.querySelectorAll('[data-floor-paper]'))row.hidden=!sheet?.floorPlan;
     for(const field of group.querySelectorAll('[data-paper-setting]')){
       const key=field.dataset.paperSetting;
-      field.value=settings[key];
+      field.value=settings[key]??defaultPaper[key];
       if(key==='customWidth'||key==='customHeight')field.disabled=settings.format!=='Custom';
     }
   }
@@ -1973,7 +1977,8 @@
     if(key==='format'||key==='orientation')settings[key]=value;
     else if(value!==''&&Number.isFinite(Number(value)))settings[key]=Number(value);
     const dimensions=paperSizes[settings.format]||[settings.customWidth,settings.customHeight];
-    if(dimensions.every(mm=>mm>=20&&mm<=5000)&&settings.margin>=0&&settings.margin<Math.min(...dimensions)/2&&settings.scale>=0&&settings.scale<=10000){
+    if(dimensions.every(mm=>mm>=20&&mm<=5000)&&settings.margin>=0&&settings.margin<Math.min(...dimensions)/2&&settings.scale>=0&&settings.scale<=10000
+      &&['centerX','centerY'].every(axis=>Math.abs(settings[axis]??defaultPaper[axis])<=10000000)){
       sheet.paper=settings;
       renderProjectTitleBlock();
       applyView();
@@ -2160,7 +2165,7 @@
     notify('Register exported for all project sheets.');
   }
   const paperSizes={A0:[841,1189],A1:[594,841],A2:[420,594],A3:[297,420],A4:[210,297]};
-  const defaultPaper={format:'A3',orientation:'landscape',customWidth:420,customHeight:297,margin:10,scale:0};
+  const defaultPaper={format:'A3',orientation:'landscape',customWidth:420,customHeight:297,margin:10,scale:0,centerX:600,centerY:380};
   function printSettings(){
     const settings=activeDraftingSheet()?.paper||defaultPaper;
     const dimensions=paperSizes[settings.format]||[settings.customWidth,settings.customHeight];
@@ -2171,7 +2176,7 @@
     const availableWidth=settings.width-2*settings.margin,availableHeight=settings.height-2*settings.margin;
     const unitsPerMm=settings.scale||Math.max(1200/availableWidth,760/availableHeight);
     const w=availableWidth*unitsPerMm,h=availableHeight*unitsPerMm;
-    return {x:600-w/2,y:380-h/2,w,h};
+    return {x:(settings.centerX??defaultPaper.centerX)-w/2,y:(settings.centerY??defaultPaper.centerY)-h/2,w,h};
   }
   function renderPrintBoundary(){
     const sheet=activeDraftingSheet(),outline=$('#paperBoundary');
