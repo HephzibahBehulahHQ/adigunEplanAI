@@ -1098,10 +1098,10 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const isSource=value=>typeof value==='string'&&/^https:\/\/[^/\s]+\/\S+$/.test(value);
     for(const part of rows){
       const id='wago-'+part?.orderCode;
-      if(!part||typeof part.orderCode!=='string'||!/^2002-[0-9]{4}$/.test(part.orderCode)||
+      if(!part||typeof part.orderCode!=='string'||!/^(?:2001|2002)-[0-9]{4}$/.test(part.orderCode)||
         !Array.isArray(part.positions)||part.positions.length<1||part.positions.length>2||
         !Array.from(part.positions).every(count=>Number.isInteger(count)&&count>=2&&count<=4)||
-        ![part.nominalVoltage,part.ratedCurrent,part.heightMm,part.depthMm].every(value=>Number.isFinite(value)&&value>0)||
+        ![part.nominalVoltage,part.ratedCurrent,part.widthMm,part.heightMm,part.depthMm,part.nominalCrossSectionMm2].every(value=>Number.isFinite(value)&&value>0)||
         ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
         typeof part.slug!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(part.slug)||
         !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||!isSource(part.datasheet)||
@@ -1142,9 +1142,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       specifications:{connectionCount:{value:pins.length},levels:{value:deckCount},potentials:{value:deckCount},
         ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN, category III, pollution degree 3'},
         finish:{value:part.finish},...(part.markerCarrier===undefined?{}:{markerCarrier:{value:part.markerCarrier?'Fitted':'Without marker carrier'}}),
-        nominalCrossSection:{value:2.5,unit:'mm²'},mounting:{value:'DIN rail 35 × 7.5 or 35 × 15 mm'},
-        railReferencedDimensions:{width:{value:5.2,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}},
-      panelFootprint:{widthMm:5.2,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:part.dimensionPage,
+        nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},mounting:{value:'DIN rail 35 × 7.5 or 35 × 15 mm'},
+        railReferencedDimensions:{width:{value:part.widthMm,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}},
+      panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:part.dimensionPage,
         note:'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.'},
       instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
       sources:[{publisher:'WAGO',title:`${part.orderCode} datasheet, pp. ${part.pages}`,url:part.datasheet,documentRevision:part.revision,

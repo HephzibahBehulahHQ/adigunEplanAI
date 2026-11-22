@@ -1686,7 +1686,7 @@ test("TOPJOB single-deck variants can be found, placed and wired by exact code",
     await page.mouse.click(point.x, point.y);
   };
   await place("2002-1202", 400);
-  await place("2002-1406", 650);
+  await place("2001-1406", 650);
   for (const [x, y] of [
     [472, 250],
     [578, 240],
@@ -1698,7 +1698,7 @@ test("TOPJOB single-deck variants can be found, placed and wired by exact code",
   expect(native.data.objects).toEqual(
     expect.arrayContaining([
       expect.objectContaining({ componentId: "wago-2002-1202" }),
-      expect.objectContaining({ componentId: "wago-2002-1406" }),
+      expect.objectContaining({ componentId: "wago-2001-1406" }),
       expect.objectContaining({
         kind: "wire",
         attachments: {
