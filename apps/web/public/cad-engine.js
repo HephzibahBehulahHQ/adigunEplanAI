@@ -1336,6 +1336,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     }
     if (Array.isArray(project.objects)) {
       const objectIds = new Set();
+      const rooms=new Map(project.objects.filter(object=>object?.roomName).map(room=>[room.id,room]));
+      const floorIds=new Set((Array.isArray(project.sheets)?project.sheets:[]).filter(sheet=>sheet?.floorPlan).map(sheet=>sheet.id));
       project.objects.forEach(function (object, index) {
         if (!object || typeof object !== 'object') {
           errors.push('Drawing object ' + (index + 1) + ' is invalid.');
@@ -1349,6 +1351,11 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.dimensionOffset!==undefined&&(object.kind!=='line'||object.wallThickness!==undefined||!finite(object.dimensionOffset)||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid dimension line '+object.id+'.');
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
+        if(object.roomId!==undefined){
+          const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
+          const room=rooms.get(object.roomId);
+          if(!room||!floorIds.has(sheetId)||(room.sheetId||sheetId)!==sheetId||object.kind!=='component-instance'||component(object.componentId)?.family!=='building-device')errors.push('Invalid room assignment on '+object.id+'.');
+        }
         if(object.roomName!==undefined&&(object.kind!=='rect'||typeof object.roomName!=='string'||!object.roomName.trim()||object.roomName.length>80||![object.x,object.y,object.x2,object.y2].every(finite)||Math.abs(object.x2-object.x)<2||Math.abs(object.y2-object.y)<2))errors.push('Invalid room outline '+object.id+'.');
         if(object.kind==='wire'){try{wireRoute(object);}catch(error){errors.push(error.message);}}
         if(object.kind==='wire'&&object.continuationEnds!==undefined&&(!Array.isArray(object.continuationEnds)||object.continuationEnds.some(function(end){return !['start','end'].includes(end);})||new Set(object.continuationEnds).size!==object.continuationEnds.length))errors.push('Wire continuation endpoints must be unique start/end identifiers.');
@@ -1548,6 +1555,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 function removeDrawingObjects(objects,ids){
     const selected=new Set(ids),removed=(objects||[]).filter(function(o){return selected.has(o.id);}),result=clone((objects||[]).filter(function(o){return !selected.has(o.id);})),detached=[];
+    result.forEach(function(object){if(selected.has(object.roomId))delete object.roomId;});
     result.forEach(function(wire){if(wire.kind!=='wire'||!wire.attachments)return;Object.keys(wire.attachments).forEach(function(end){const target=wire.attachments[end];if(!selected.has(target.instanceId))return;detached.push({wireId:wire.id,end:end,instanceId:target.instanceId,pinId:target.pinId});delete wire.attachments[end];wire.detachedEnds=Array.from(new Set((wire.detachedEnds||[]).concat(end)));});});
     return {objects:result,removed:removed,detached:detached};
   }
@@ -1562,6 +1570,7 @@ function removeDrawingObjects(objects,ids){
     });});
     const result=clone(objects),target=result.find(function(o){return o.id===instanceId;}),reset=[];
     target.componentId=replacementId;target.properties={};
+    if(replacement.family!=='building-device')delete target.roomId;
     Object.keys(replacement.instanceProperties).forEach(function(name){
       const rule=replacement.instanceProperties[name],value=original.properties[name];
       const compatible=rule.type==='number'?(value===null||finite(value)&&value>=rule.minimum&&value<=rule.maximum&&(!rule.integer||Number.isInteger(value))):typeof value==='string'&&value.length<=rule.maximumLength;
@@ -2834,6 +2843,20 @@ function createPumpStarterDocumentation(name) {
     return '\uFEFF' + lines.join('\r\n') + '\r\n';
   }
 
+  function roomEquipmentScheduleCsv(project) {
+    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Room ID','roomId'],['Room','room'],['Reference','reference'],['Equipment','equipment']];
+    const objects=project.objects||[],objectsById=new Map(objects.map(object=>[object.id,object]));
+    const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
+    const rows=[];
+    for(const object of objects){
+      const sheet=sheets.get(object.sheetId),definition=component(object.componentId);
+      if(!sheet||object.kind!=='component-instance'||definition?.family!=='building-device')continue;
+      const room=objectsById.get(object.roomId);
+      rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
+        roomId:room?.id||'',room:room?.roomName||'Unassigned',reference:object.ref,equipment:definition.name});
+    }
+    return reportCsv(columns,rows);
+  }
   function cableCoreRegisterCsv(project) {
     return reportCsv([['Cable tag','tag'], ['Core','core'], ['Sheet','sheet'], ['Wire ID','wireId'],
       ['Start terminal','start'], ['End terminal','end'], ['Continuation IDs','links']], cableCoreRegister(project));
@@ -2945,6 +2968,7 @@ function createPumpStarterDocumentation(name) {
     crossSheetConnectors: crossSheetConnectors,
     billOfMaterials: billOfMaterials,
     billOfMaterialsCsv: billOfMaterialsCsv,
+    roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
     wireList: wireList,
