@@ -160,6 +160,12 @@ register. The notes document expected behavior and review limits.
 The PLC input and output indication example pairs the pushbutton input with a
 wired indicator output, editable assignments and a linked sequence note. Its
 terminal report reflects the documented hardware connections.
+
+### M11 compact drawing export
+
+The command palette exports a PNG using the visible full-drawing SVG bounds,
+including off-frame geometry. PNG export preserves transparency and limits the
+longest edge to 4096 pixels.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

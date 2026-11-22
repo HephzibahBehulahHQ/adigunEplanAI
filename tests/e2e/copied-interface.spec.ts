@@ -3680,7 +3680,7 @@ test("rulers create saved guides with exact coordinates, visibility and locking"
   await expect(guides).toHaveCount(1);
 });
 
-test("full SVG keeps off-frame geometry and PDF honors physical paper size", async ({
+test("SVG and PNG keep off-frame geometry and PDF honors physical paper size", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1750, height: 700 });
@@ -3711,6 +3711,49 @@ test("full SVG keeps off-frame geometry and PDF honors physical paper size", asy
   expect(svg).not.toContain('id="editorGuides"');
   expect(svg).not.toContain('id="viewportGrid"');
   expect(svg).toContain('d="M260 230L690 480"');
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export complete drawing as PNG");
+  const pngPending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export complete drawing as PNG" })
+    .click();
+  const png = await pngPending;
+  expect(png.suggestedFilename()).toMatch(/-drawing\.png$/);
+  const image = fs.readFileSync(await png.path());
+  expect(image.subarray(0, 8).toString("hex")).toBe("89504e470d0a1a0a");
+  const [, , , viewWidth, viewHeight] = svg.match(
+    /viewBox="([^ ]+) ([^ ]+) ([^ ]+) ([^"]+)"/,
+  )!;
+  const pixels = await page.evaluate(async (base64) => {
+    const image = new Image();
+    image.src = `data:image/png;base64,${base64}`;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(image, 0, 0);
+    const { width, height } = canvas;
+    const ink = (x: number, w: number) => {
+      const rgba = ctx.getImageData(x, 0, w, height).data;
+      return rgba.reduce(
+        (count, value, index) => count + Number(index % 4 === 3 && value > 100),
+        0,
+      );
+    };
+    return {
+      width,
+      height,
+      leftInk: ink(0, Math.floor(width / 8)),
+      rightInk: ink(Math.floor(width / 2), Math.floor(width / 2)),
+      cornerAlpha: ctx.getImageData(0, 0, 1, 1).data[3],
+    };
+  }, image.toString("base64"));
+  expect(pixels.width).toBe(Math.round(Number(viewWidth) * 2));
+  expect(pixels.height).toBe(Math.round(Number(viewHeight) * 2));
+  expect(pixels.leftInk).toBeGreaterThan(10);
+  expect(pixels.rightInk).toBeGreaterThan(10);
+  expect(pixels.cornerAlpha).toBe(0);
   await page.locator('[data-draw="select"]').click();
   const selected = await sheetPoint(page, -62.5, 235);
   await page.mouse.click(selected.x, selected.y);

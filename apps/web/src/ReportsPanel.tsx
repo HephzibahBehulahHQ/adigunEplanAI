@@ -6,6 +6,7 @@ import {
 } from "../../../packages/electrical-model/project-reports.ts";
 import { CommandIcon } from "./WorkspaceRibbon";
 import { useState } from "react";
+import { rasterizeDrawingSvg } from "./drawingPng.ts";
 import { dictionaries, type MessageKey } from "../../../packages/localization";
 import type { NativeProjects } from "./useNativeProjects";
 import {
@@ -246,33 +247,16 @@ export function ReportsPanel({
             onClick={async () => {
               setError(false);
               setBusy(true);
-              const url = URL.createObjectURL(
-                new Blob([svg], { type: "image/svg+xml" }),
-              );
               try {
-                const image = new Image();
-                image.src = url;
-                await image.decode();
-                const canvas = document.createElement("canvas");
-                canvas.width = Math.ceil(page.widthMm * pngScale);
-                canvas.height = Math.ceil(page.heightMm * pngScale);
-                const context = canvas.getContext("2d");
-                if (!context) throw new Error("Canvas unavailable");
-                context.drawImage(image, 0, 0, canvas.width, canvas.height);
-                const blob = await new Promise<Blob>((resolve, reject) =>
-                  canvas.toBlob(
-                    (result) =>
-                      result
-                        ? resolve(result)
-                        : reject(new Error("PNG failed")),
-                    "image/png",
-                  ),
+                const blob = await rasterizeDrawingSvg(
+                  svg,
+                  Math.ceil(page.widthMm * pngScale),
+                  Math.ceil(page.heightMm * pngScale),
                 );
                 downloadFile(`${page.name}.png`, blob, "image/png");
               } catch {
                 setError(true);
               } finally {
-                URL.revokeObjectURL(url);
                 setBusy(false);
               }
             }}
