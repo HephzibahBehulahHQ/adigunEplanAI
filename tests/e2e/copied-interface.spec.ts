@@ -1671,6 +1671,84 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
 });
 
+test("both component pickers search 10,000 entries and place the final real part", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(window, "AdigunCADEngine", {
+      configurable: true,
+      set(engine) {
+        Object.defineProperty(window, "AdigunCADEngine", {
+          value: {
+            ...engine,
+            catalog() {
+              const catalog = engine.catalog();
+              const last = catalog.find(
+                (row: { id: string }) => row.id === "wago-2202-1406",
+              );
+              const existing = catalog.filter(
+                (row: { id: string }) => row !== last,
+              );
+              const filler = Array.from(
+                { length: 10_000 - catalog.length },
+                (_, index) => ({
+                  id: "test-only-" + index,
+                  componentId: "test-only-" + index,
+                  name: "Fixture entry " + index,
+                  category: "Scale fixture",
+                  family: "test",
+                  tag: "T",
+                }),
+              );
+              return last
+                ? [...filler, ...existing, last]
+                : [...filler, ...catalog];
+            },
+          },
+          configurable: true,
+        });
+      },
+    });
+  });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const sidebar = page.locator("#symbolList");
+  await expect(sidebar.locator(".symbol-row")).toHaveCount(250);
+  await sidebar.getByRole("button", { name: "Next results" }).click();
+  await expect(sidebar.getByRole("status")).toHaveText("251–500 of 10000");
+  await sidebar.getByRole("button", { name: "Previous results" }).click();
+  await expect(sidebar.getByRole("status")).toHaveText("1–250 of 10000");
+  await page.locator("#symbolSearch").fill("WAGO 2202-1406");
+  await expect(sidebar.locator(".symbol-row")).toHaveCount(1);
+  await sidebar.locator('[data-insert="wago-2202-1406"]').click();
+  const first = await sheetPoint(page, 400, 250);
+  await page.mouse.click(first.x, first.y);
+
+  await page.keyboard.press("Control+k");
+  await page.getByRole("button", { name: /Insert electrical symbol/ }).click();
+  const picker = page.locator("#symbolsDialog");
+  const list = picker.locator(".command-list");
+  await expect(list.locator(".command-item")).toHaveCount(250);
+  await list.getByRole("button", { name: "Next results" }).click();
+  await expect(list.getByRole("status")).toHaveText("251–500 of 10000");
+  await picker
+    .getByRole("searchbox", { name: "Search component library" })
+    .fill("WAGO 2202-1406");
+  await expect(list.locator(".command-item")).toHaveCount(1);
+  await list.getByRole("button", { name: /2202-1406/ }).click();
+  const second = await sheetPoint(page, 650, 250);
+  await page.mouse.click(second.x, second.y);
+  const saved = await saveDrawing(page, "catalog-scale");
+  expect(
+    saved.data.objects.filter(
+      (item: { componentId?: string }) => item.componentId === "wago-2202-1406",
+    ),
+  ).toHaveLength(2);
+});
+
 test("TOPJOB push-button variants can be found, placed and wired by exact code", async ({
   page,
 }) => {
