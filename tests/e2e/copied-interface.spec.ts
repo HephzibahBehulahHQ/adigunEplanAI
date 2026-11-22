@@ -2086,7 +2086,27 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await expect(
     preview.locator("[data-panel-structure] title").nth(3),
   ).toContainText("Terminal rail · 180 × 35 × 15 mm");
+  const railId = await preview
+    .locator("[data-panel-structure]")
+    .nth(1)
+    .getAttribute("data-panel-structure");
+  await preview
+    .locator(`[data-panel-body="${placement.id}"]`)
+    .click({ force: true });
+  await page.locator('[data-inspector="Properties"]').click();
+  await page
+    .getByRole("combobox", { name: "Mounting DIN rail" })
+    .selectOption(railId!);
+  await selectPanelCommand("Preview panel in 3D");
+  await expect(page.locator("[data-panel-mounting-check]")).toContainText(
+    "misses the declared DIN rail mounting plane or extends beyond the rail ends",
+  );
   const structured = await saveDrawing(page, "panel-structures");
+  expect(
+    structured.data.objects.find(
+      (object: { id: string }) => object.id === placement.id,
+    ).mountingRailId,
+  ).toBe(railId);
   expect(
     structured.data.objects
       .filter((object: { panelStructure?: unknown }) => object.panelStructure)
@@ -2112,6 +2132,7 @@ test("linked panel placement preserves its canonical device on local reopen", as
   );
   await selectPanelCommand("Preview panel in 3D");
   await expect(preview.locator("[data-panel-structure]")).toHaveCount(4);
+  await expect(page.locator("[data-panel-mounting-check]")).toHaveCount(1);
 });
 
 test("mounting accessory links to the canonical overload and survives rename and reopen", async ({

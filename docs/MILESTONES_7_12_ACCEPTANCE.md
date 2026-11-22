@@ -136,6 +136,9 @@ show their user-defined envelopes in the shared 3D view.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
+Placement Properties can assign a native DIN rail. The 3D preview checks the
+body against the specified rail's front plane and along its span. This envelope
+check leaves manufacturer clip and profile compatibility for separate review.
 
 Focused M8 verification covers all 26 methods, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

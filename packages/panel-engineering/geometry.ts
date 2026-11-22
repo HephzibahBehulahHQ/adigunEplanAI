@@ -23,6 +23,23 @@ export type PanelStructure = PanelVolume & {
   mountingProfile?: string;
 };
 export type Bounds3 = { min: Vector3; max: Vector3 };
+export function fitsRailMountingPlane(body: Bounds3, rail: Bounds3): boolean {
+  const axis = rail.max.x - rail.min.x >= rail.max.y - rail.min.y ? "x" : "y";
+  const across = axis === "x" ? "y" : "x";
+  const epsilon = tolerance(
+    body.min[axis],
+    body.max[axis],
+    rail.min[axis],
+    rail.max[axis],
+  );
+  return (
+    Math.abs(body.min.z - rail.max.z) <= tolerance(body.min.z, rail.max.z) &&
+    body.min[axis] >= rail.min[axis] - epsilon &&
+    body.max[axis] <= rail.max[axis] + epsilon &&
+    body.min[across] < rail.max[across] &&
+    body.max[across] > rail.min[across]
+  );
+}
 export type PanelDiagnostic = {
   code:
     | "out-of-bounds"
@@ -256,18 +273,20 @@ export function panelDiagnostics(
     }
     const box = volumeBounds(item);
     const mount = volumeBounds(support);
+    if (support.kind === "din-rail") {
+      if (!fitsRailMountingPlane(box, mount))
+        diagnostics.push({
+          code: "mounting-position",
+          severity: "warning",
+          objectIds: [item.id, support.id],
+        });
+      continue;
+    }
     const contact =
       support.kind === "door"
         ? Math.abs(box.max.z - mount.min.z) <= tolerance(box.max.z, mount.min.z)
         : Math.abs(box.min.z - mount.max.z) <=
           tolerance(box.min.z, mount.max.z);
-    const xyOverlap =
-      box.min.x < mount.max.x &&
-      box.max.x > mount.min.x &&
-      box.min.y < mount.max.y &&
-      box.max.y > mount.min.y;
-    const longAxis =
-      mount.max.x - mount.min.x >= mount.max.y - mount.min.y ? "x" : "y";
     const within = (axis: "x" | "y") => {
       const epsilon = tolerance(
         box.min[axis],
@@ -280,11 +299,7 @@ export function panelDiagnostics(
         box.max[axis] <= mount.max[axis] + epsilon
       );
     };
-    const supported =
-      support.kind === "plate" || support.kind === "door"
-        ? within("x") && within("y")
-        : within(longAxis) && xyOverlap;
-    if (!contact || !supported)
+    if (!contact || !within("x") || !within("y"))
       diagnostics.push({
         code: "mounting-position",
         severity: "warning",
