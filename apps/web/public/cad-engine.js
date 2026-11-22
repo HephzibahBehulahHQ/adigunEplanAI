@@ -1336,6 +1336,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     }
     if (Array.isArray(project.objects)) {
       const objectIds = new Set();
+      const objectsById=new Map(project.objects.filter(Boolean).map(object=>[object.id,object]));
       const rooms=new Map(project.objects.filter(object=>object?.roomName).map(room=>[room.id,room]));
       const floorIds=new Set((Array.isArray(project.sheets)?project.sheets:[]).filter(sheet=>sheet?.floorPlan).map(sheet=>sheet.id));
       project.objects.forEach(function (object, index) {
@@ -1351,6 +1352,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.dimensionOffset!==undefined&&(object.kind!=='line'||object.wallThickness!==undefined||!finite(object.dimensionOffset)||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid dimension line '+object.id+'.');
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
+        if(object.floorCircuits!==undefined||object.floorCircuit!==undefined){
+          const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
+          const boardId='building-distribution-board';
+          const circuits=object.floorCircuits;
+          if(circuits!==undefined&&(object.kind!=='component-instance'||object.componentId!==boardId||!floorIds.has(sheetId)||!Array.isArray(circuits)||
+            circuits.some(circuit=>!circuit||typeof circuit.id!=='string'||!circuit.id||typeof circuit.name!=='string'||!circuit.name.trim()||circuit.name.length>40)||
+            new Set(circuits.map(circuit=>circuit.id)).size!==circuits.length||new Set(circuits.map(circuit=>circuit.name)).size!==circuits.length))errors.push('Invalid floor circuits on '+object.id+'.');
+          if(object.floorCircuit!==undefined){
+            const assignment=object.floorCircuit,board=objectsById.get(assignment?.boardId);
+            if(!floorIds.has(sheetId)||object.kind!=='component-instance'||object.componentId===boardId||component(object.componentId)?.family!=='building-device'||
+              board?.kind!=='component-instance'||board.componentId!==boardId||(board.sheetId||sheetId)!==sheetId||!Array.isArray(board.floorCircuits)||
+              !board.floorCircuits.some(circuit=>circuit&&circuit.id===assignment.circuitId))errors.push('Invalid floor circuit assignment on '+object.id+'.');
+          }
+        }
         if(object.roomId!==undefined){
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           const room=rooms.get(object.roomId);
@@ -1555,7 +1570,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 function removeDrawingObjects(objects,ids){
     const selected=new Set(ids),removed=(objects||[]).filter(function(o){return selected.has(o.id);}),result=clone((objects||[]).filter(function(o){return !selected.has(o.id);})),detached=[];
-    result.forEach(function(object){if(selected.has(object.roomId))delete object.roomId;});
+    result.forEach(function(object){if(selected.has(object.roomId))delete object.roomId;if(selected.has(object.floorCircuit?.boardId))delete object.floorCircuit;});
     result.forEach(function(wire){if(wire.kind!=='wire'||!wire.attachments)return;Object.keys(wire.attachments).forEach(function(end){const target=wire.attachments[end];if(!selected.has(target.instanceId))return;detached.push({wireId:wire.id,end:end,instanceId:target.instanceId,pinId:target.pinId});delete wire.attachments[end];wire.detachedEnds=Array.from(new Set((wire.detachedEnds||[]).concat(end)));});});
     return {objects:result,removed:removed,detached:detached};
   }
@@ -1570,7 +1585,12 @@ function removeDrawingObjects(objects,ids){
     });});
     const result=clone(objects),target=result.find(function(o){return o.id===instanceId;}),reset=[];
     target.componentId=replacementId;target.properties={};
-    if(replacement.family!=='building-device')delete target.roomId;
+    if(replacement.family!=='building-device'){delete target.roomId;delete target.floorCircuit;}
+    if(replacementId==='building-distribution-board')delete target.floorCircuit;
+    else if(target.floorCircuits){
+      delete target.floorCircuits;
+      for(const load of result)if(load.floorCircuit?.boardId===target.id)delete load.floorCircuit;
+    }
     Object.keys(replacement.instanceProperties).forEach(function(name){
       const rule=replacement.instanceProperties[name],value=original.properties[name];
       const compatible=rule.type==='number'?(value===null||finite(value)&&value>=rule.minimum&&value<=rule.maximum&&(!rule.integer||Number.isInteger(value))):typeof value==='string'&&value.length<=rule.maximumLength;
@@ -2843,6 +2863,27 @@ function createPumpStarterDocumentation(name) {
     return '\uFEFF' + lines.join('\r\n') + '\r\n';
   }
 
+  function floorCircuitScheduleCsv(project) {
+    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads']];
+    const assignments=new Map();
+    for(const object of project.objects){
+      if(!object.floorCircuit)continue;
+      const {boardId,circuitId}=object.floorCircuit;
+      if(!assignments.has(boardId))assignments.set(boardId,new Map());
+      const circuits=assignments.get(boardId);
+      if(!circuits.has(circuitId))circuits.set(circuitId,[]);
+      circuits.get(circuitId).push(object.ref);
+    }
+    const sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet]));
+    const rows=[];
+    for(const board of project.objects){
+      if(!board.floorCircuits?.length)continue;
+      const sheet=sheets.get(board.sheetId);
+      for(const circuit of board.floorCircuits)rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
+        board:board.ref,circuit:circuit.name,loads:assignments.get(board.id)?.get(circuit.id)||[]});
+    }
+    return reportCsv(columns,rows);
+  }
   function roomEquipmentScheduleCsv(project) {
     const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Room ID','roomId'],['Room','room'],['Reference','reference'],['Equipment','equipment']];
     const objects=project.objects||[],objectsById=new Map(objects.map(object=>[object.id,object]));
@@ -2969,6 +3010,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterials: billOfMaterials,
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
+    floorCircuitScheduleCsv: floorCircuitScheduleCsv,
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
     wireList: wireList,

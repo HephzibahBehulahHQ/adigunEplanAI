@@ -3470,4 +3470,38 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   const csv = fs.readFileSync((await schedule.path())!, "utf8");
   expect(csv).toContain('"Workshop","SO1","Floor-plan socket outlet"');
   expect(csv).toContain('"Unassigned","LUM1","Floor-plan luminaire"');
+  await clickAt(260, 240);
+  await page.getByRole("button", { name: "Add circuit", exact: true }).click();
+  const circuitName = page.getByRole("textbox", { name: "Circuit name" });
+  await circuitName.fill("Workshop sockets");
+  await circuitName.press("Tab");
+  await clickAt(580, 300);
+  const circuit = page.getByRole("combobox", { name: "Assigned circuit" });
+  await circuit.selectOption({ label: "DB1 · Workshop sockets" });
+  const wiredFloor = await saveDrawing(page, "floor-plan-circuits");
+  const savedBoard = wiredFloor.data.objects.find(
+    (object: { id: string }) => object.id === board.id,
+  );
+  const circuitId = savedBoard.floorCircuits[0].id;
+  expect(
+    wiredFloor.data.objects.find(
+      (object: { id: string }) => object.id === socket.id,
+    ).floorCircuit,
+  ).toEqual({ boardId: board.id, circuitId });
+  await page.locator("#openFile").setInputFiles(wiredFloor.path);
+  await clickAt(580, 300);
+  await expect(circuit).toHaveValue(circuitId);
+  const circuitPending = page.waitForEvent("download");
+  await command("Export floor circuit schedule");
+  const circuitSchedule = await circuitPending;
+  expect(circuitSchedule.suggestedFilename()).toBe(
+    "floor-circuit-schedule.csv",
+  );
+  expect(fs.readFileSync((await circuitSchedule.path())!, "utf8")).toContain(
+    '"DB1","Workshop sockets","SO1"',
+  );
+  await clickAt(260, 240);
+  await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
+  await clickAt(580, 300);
+  await expect(circuit).toHaveValue("");
 });

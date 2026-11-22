@@ -8,6 +8,41 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("floor circuits reject cross-floor assignments and clear references when a board is removed", () => {
+  const floorPlan = { building: "Workshop", level: "Ground floor" };
+  const board = {
+    ...engine.createInstance("building-distribution-board", 100, 100, "DB1"),
+    sheetId: "ground",
+    floorCircuits: [{ id: "circuit", name: "Sockets" }],
+  };
+  const socket = {
+    ...engine.createInstance("building-socket", 300, 100, "SO1"),
+    sheetId: "ground",
+    floorCircuit: { boardId: board.id, circuitId: "circuit" },
+  };
+  const project = {
+    sheets: [
+      { id: "ground", floorPlan },
+      { id: "upper", floorPlan },
+    ],
+    objects: [board, socket],
+  };
+  assert.ok(engine.parseProject(engine.serializeProject(project)).valid);
+  assert.throws(
+    () =>
+      engine.serializeProject({
+        ...project,
+        objects: [board, { ...socket, sheetId: "upper" }],
+      }),
+    /Invalid floor circuit assignment/,
+  );
+  assert.equal(
+    engine.removeDrawingObjects(project.objects, [board.id]).objects[0]
+      .floorCircuit,
+    undefined,
+  );
+});
+
 test("floor equipment cannot reference a room on another sheet and deletion clears membership", () => {
   const floorPlan = { building: "Workshop", level: "Ground floor" };
   const device = {
