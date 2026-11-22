@@ -259,6 +259,7 @@ test("example copy remains a native editable project through replacement and loc
       id: string;
       deviceId?: string;
       assemblyFor?: string;
+      automationNote?: { kind: string; deviceIds: string[] };
       attachments?: Record<string, { instanceId: string; pinId: string }>;
     }>,
   ) => {
@@ -273,6 +274,12 @@ test("example copy remains a native editable project through replacement and loc
       deviceId: object.deviceId ? targetIndex(object.deviceId) : undefined,
       assemblyFor: object.assemblyFor
         ? targetIndex(object.assemblyFor)
+        : undefined,
+      automationNote: object.automationNote
+        ? {
+            ...object.automationNote,
+            deviceIds: object.automationNote.deviceIds.map(targetIndex),
+          }
         : undefined,
       attachments: object.attachments
         ? Object.fromEntries(
