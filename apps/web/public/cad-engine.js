@@ -1084,23 +1084,25 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   const BUILDING_COMPONENTS=deepFreeze(Object.fromEntries([
     ['building-luminaire','Floor-plan luminaire','LUM','M-50 -50L50 50M-50 50L50 -50',[-60,-60,120,120]],
     ['building-socket','Floor-plan socket outlet','SO','M-32 -14H32M-32 14H32',[-50,-50,100,100]],
-    ['building-distribution-board','Floor-plan distribution board','DB','M-55 -30H55M-55 0H55M-55 30H55',[-75,-55,150,110]]
+    ['building-distribution-board','Floor-plan distribution board','DB','M-55 -30H55M-55 0H55M-55 30H55',[-75,-55,150,110]],
+    ['building-earthing-bond-point','Floor-plan earthing bond point','PE','M-20 20H20M0 20V-12M-24 -12H24M-16 -23H16M-8 -34H8',[-50,-50,100,100]]
   ].map(function(entry){
     const [id,name,referencePrefix,path,body]=entry;
     const [x,y,width,height]=body;
-    const pins=['L','N','PE'].map(function(number,index){
-      return {id:number,localNumber:number,name:number,x:(index-1)*40,y:80,electricalType:'passive',connectionType:'schematic'};
+    const bonded=id==='building-earthing-bond-point';
+    const pins=(bonded?['PE1','PE2']:['L','N','PE']).map(function(number,index){
+      return {id:number,localNumber:number,name:number,x:bonded?index*40-20:(index-1)*40,y:80,electricalType:'passive',connectionType:'schematic'};
     });
     const artwork=[{kind:'rect',x,y,width,height},{kind:'path',d:path},...pins.map(pin=>({
       kind:'line',from:{x:pin.x,y:y+height},to:pin
     }))];
     return [id,{schemaVersion:COMPONENT_SCHEMA_VERSION,id,name,model:name,generic:true,manufacturer:'Not assigned',manufacturerPartNumber:'Not assigned',
       family:'building-device',referencePrefix,category:'Building · floor-plan devices',connectionClass:'electrical',
-      symbol:{id:id+'-symbol',view:'schematic',unit:'mm',width:160,height:180,artwork,pins,internalConnections:[],
+      symbol:{id:id+'-symbol',view:'schematic',unit:'mm',width:160,height:180,artwork,pins,internalConnections:bonded?[['PE1','PE2']]:[],
         numberingNote:'Logical floor-plan terminals. Supply, product ratings and installed footprint require design inputs.'},
       specifications:{},instanceProperties:{
         comment:{type:'string',default:'',maximumLength:160},
-        ...(id==='building-distribution-board'?{}:{
+        ...(id==='building-distribution-board'||bonded?{}:{
           activePowerW:{type:'number',default:null,minimum:0,maximum:1e9},
           demandFactor:{type:'number',default:null,minimum:0,maximum:1}
         })
@@ -1373,7 +1375,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             new Set(circuits.map(circuit=>circuit.id)).size!==circuits.length||new Set(circuits.map(circuit=>circuit.name)).size!==circuits.length))errors.push('Invalid floor circuits on '+object.id+'.');
           if(object.floorCircuit!==undefined){
             const assignment=object.floorCircuit,board=objectsById.get(assignment?.boardId);
-            const eligible=object.floorRouteKind&&object.kind==='freehand'||object.kind==='component-instance'&&object.componentId!==boardId&&component(object.componentId)?.family==='building-device';
+            const eligible=object.floorRouteKind&&object.kind==='freehand'||object.kind==='component-instance'&&Boolean(component(object.componentId)?.instanceProperties.activePowerW);
             if(!floorIds.has(sheetId)||!eligible||
               board?.kind!=='component-instance'||board.componentId!==boardId||(board.sheetId||sheetId)!==sheetId||!Array.isArray(board.floorCircuits)||
               !board.floorCircuits.some(circuit=>circuit&&circuit.id===assignment.circuitId))errors.push('Invalid floor circuit assignment on '+object.id+'.');
@@ -1619,8 +1621,8 @@ function removeDrawingObjects(objects,ids){
     const result=clone(objects),target=result.find(function(o){return o.id===instanceId;}),reset=[];
     target.componentId=replacementId;target.properties={};
     if(replacement.family!=='building-device'){delete target.roomId;delete target.floorCircuit;}
-    if(replacementId==='building-distribution-board')delete target.floorCircuit;
-    else if(target.floorCircuits){
+    if(!replacement.instanceProperties.activePowerW)delete target.floorCircuit;
+    if(replacementId!=='building-distribution-board'&&target.floorCircuits){
       delete target.floorCircuits;
       for(const load of result)if(load.floorCircuit?.boardId===target.id)delete load.floorCircuit;
     }
@@ -2991,6 +2993,43 @@ function createPumpStarterDocumentation(name) {
     const height=y+20;
     return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 ${height}" width="980" height="${height}"><title>Distribution board single-line assignments</title><rect width="980" height="${height}" fill="white"/><g font-family="sans-serif" font-size="15" fill="#19283c">${svgLabel(32,32,board.board+' · Distribution board single-line')}${svgLabel(32,56,board.sheet+' · '+board.building)}${svgLabel(32,79,'Floor · '+board.floor)}${svgLabel(32,104,'Branches show assigned equipment. Verify conductor connections in the project.')}${svgLabel(75,138,board.board)}<g stroke="#1855a4" stroke-width="2"><path d="M56 132 V${y-28}" fill="none"/>${branches}</g></g></svg>`;
   }
+  function floorProtectiveEarthCsv(project){
+    const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
+    const devices=new Map(project.objects.filter(item=>item.kind==='component-instance').map(item=>[item.id,item]));
+    const rows=[];
+    const attached=new Set();
+    const pinKey=(device,pin)=>JSON.stringify([device.id,pin.id]);
+    const isPe=(device,pin)=>component(device.componentId)?.family==='building-device'&&['PE','PE1','PE2'].includes(pin.id);
+    for(const wire of project.objects){
+      const sheet=sheets.get(wire.sheetId);
+      if(!sheet||wire.kind!=='wire')continue;
+      const terminals=['start','end'].map(end=>{
+        const binding=wire.attachments?.[end];
+        const device=devices.get(binding?.instanceId);
+        const pin=device?.sheetId===sheet.id?component(device.componentId)?.symbol.pins.find(item=>item.id===binding.pinId):null;
+        if(!pin)return null;
+        const pe=isPe(device,pin);
+        if(pe)attached.add(pinKey(device,pin));
+        return {label:device.ref+':'+pin.localNumber,pe};
+      });
+      if(!terminals.some(terminal=>terminal?.pe))continue;
+      const [start,end]=terminals;
+      const status=terminals.some(terminal=>terminal&&!terminal.pe)?'Other terminal type':
+        start&&end?'PE terminals at both ends':'End without terminal attachment';
+      rows.push({sheet:sheet.number,wire:wire.id,start:start?.label,end:end?.label,status,length:wireRouteLength(wire)});
+    }
+    for(const device of devices.values()){
+      const sheet=sheets.get(device.sheetId);
+      if(!sheet)continue;
+      for(const pin of component(device.componentId)?.symbol.pins||[]){
+        if(isPe(device,pin)&&!attached.has(pinKey(device,pin)))rows.push({
+          sheet:sheet.number,start:device.ref+':'+pin.localNumber,status:'PE terminal without attached wire'
+        });
+      }
+    }
+    return reportCsv([['Floor sheet','sheet'],['Wire ID','wire'],['Start terminal','start'],['End terminal','end'],
+      ['Attachment status','status'],['Drawn route length (mm)','length']],rows);
+  }
   function roomEquipmentScheduleCsv(project) {
     const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Room ID','roomId'],['Room','room'],['Reference','reference'],['Equipment','equipment']];
     const objects=project.objects||[],objectsById=new Map(objects.map(object=>[object.id,object]));
@@ -3118,6 +3157,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
+    floorProtectiveEarthCsv: floorProtectiveEarthCsv,
     floorRiserElevationSvg: floorRiserElevationSvg,
     floorBoardSingleLineSvg: floorBoardSingleLineSvg,
     wireRoute: wireRoute,

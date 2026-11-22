@@ -3684,4 +3684,22 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await expect(page.getByLabel("Zone distribution board")).toHaveValue(
     board.id,
   );
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("building-earthing-bond-point");
+  await page.locator('[data-insert="building-earthing-bond-point"]').click();
+  await clickAt(180, 620);
+  await expect(page.locator("#statusText")).toContainText(
+    "Floor-plan earthing bond point PE1 placed on the floor plan.",
+  );
+  const earthPending = page.waitForEvent("download");
+  await command("Export floor protective earth schedule");
+  const earthReport = await earthPending;
+  expect(earthReport.suggestedFilename()).toBe(
+    "floor-protective-earth-register.csv",
+  );
+  const earthCsv = fs.readFileSync((await earthReport.path())!, "utf8");
+  expect(earthCsv).toContain(
+    '"PE1:PE2","","PE terminal without attached wire"',
+  );
+  expect(earthCsv).not.toContain('"DB1:L"');
 });

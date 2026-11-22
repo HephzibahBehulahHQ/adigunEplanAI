@@ -8,6 +8,53 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("floor protective earth schedule uses actual attachments and identifies unattached terminals", () => {
+  const sheetId = "floor";
+  const point = {
+    ...engine.createInstance("building-earthing-bond-point", 0, 0, "PE1"),
+    sheetId,
+  };
+  const socket = {
+    ...engine.createInstance("building-socket", 500, 0, "SO1"),
+    sheetId,
+  };
+  const wire = (id, start, end) => ({
+    id,
+    sheetId,
+    kind: "wire",
+    x1: 0,
+    y1: 0,
+    x2: 500,
+    y2: 0,
+    attachments: { start, end },
+  });
+  const report = engine.floorProtectiveEarthCsv({
+    sheets: [{ id: sheetId, number: "A2/000", floorPlan: {} }],
+    objects: [
+      point,
+      socket,
+      wire(
+        "bond",
+        { instanceId: point.id, pinId: "PE1" },
+        { instanceId: socket.id, pinId: "PE" },
+      ),
+      wire(
+        "mixed",
+        { instanceId: point.id, pinId: "PE1" },
+        { instanceId: socket.id, pinId: "L" },
+      ),
+      wire("loose", { instanceId: socket.id, pinId: "PE" }, undefined),
+    ],
+  });
+  assert.match(
+    report,
+    /"bond","PE1:PE1","SO1:PE","PE terminals at both ends","500"/,
+  );
+  assert.match(report, /"mixed","PE1:PE1","SO1:L","Other terminal type"/);
+  assert.match(report, /"loose","SO1:PE","","End without terminal attachment"/);
+  assert.match(report, /"PE1:PE2","","PE terminal without attached wire"/);
+});
+
 test("floor riser length requires distinct elevations in the same building", () => {
   const source = {
     id: "ground",
