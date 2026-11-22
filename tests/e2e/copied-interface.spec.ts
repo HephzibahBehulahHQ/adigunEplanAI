@@ -3256,7 +3256,7 @@ test("building floor sheets keep editable identities and physical units on reope
   await expect(level).toHaveValue("Mezzanine");
 });
 
-test("floor plan walls render and persist their physical thickness", async ({
+test("floor plan walls persist physical thickness and hosted openings", async ({
   page,
 }) => {
   await page.goto("/");
@@ -3294,6 +3294,24 @@ test("floor plan walls render and persist their physical thickness", async ({
   });
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect.poll(renderedThickness).toBe(240);
+  const wallStart = await sheetPoint(page, 220, 330);
+  await page.mouse.click(wallStart.x, wallStart.y);
+  await page.getByRole("button", { name: "Add door", exact: true }).click();
+  const doorWidth = page.getByRole("spinbutton", { name: "Door 1 width (mm)" });
+  await doorWidth.fill("100");
+  await doorWidth.press("Tab");
+  await doorWidth.fill("900");
+  await doorWidth.press("Tab");
+  await expect(doorWidth).toHaveValue("100");
+  await page.getByRole("button", { name: "Add window", exact: true }).click();
+  await expect(wall.locator('[data-wall-opening="door"]')).toHaveCount(1);
+  await expect(wall.locator('[data-wall-opening="window"]')).toHaveCount(1);
+  const outline = await wall.locator("path").first().getAttribute("d");
+  expect(outline?.match(/Z/g)).toHaveLength(3);
+  const withOpenings = await saveDrawing(page, "floor-plan-openings");
+  expect(withOpenings.data.objects[0].wallOpenings).toHaveLength(2);
+  await page.locator("#openFile").setInputFiles(withOpenings.path);
+  await expect(wall.locator("[data-wall-opening]")).toHaveCount(2);
 });
 
 test("room outlines have editable physical dimensions and reopen on their floor", async ({

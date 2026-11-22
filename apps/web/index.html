@@ -885,7 +885,7 @@
         else if(obj.kind==='component-instance'){const validation=window.AdigunCADEngine.validateInstance(obj);if(!validation.valid)return null;const item=symbolCatalog.find(x=>x.componentId===obj.componentId);if(!item)return null;el=buildCatalogGlyph(obj,item,stroke,width);const description=componentHoverDescription(obj,validation.definition),title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=description;el.insertBefore(title,el.firstChild);el.setAttribute('aria-label',description);}
         else if(obj.kind==='text'){el=document.createElementNS('http://www.w3.org/2000/svg','text');el.setAttribute('pointer-events','bounding-box');const size=Number(obj.fontSize)||12;el.setAttribute('x',obj.x);el.setAttribute('y',obj.y);el.setAttribute('font-size',size);el.setAttribute('font-family',obj.fontFamily||'Arial');el.setAttribute('font-weight',obj.bold?'700':'400');el.setAttribute('font-style',obj.italic?'italic':'normal');el.setAttribute('text-decoration',obj.underline?'underline':'none');el.setAttribute('text-anchor',obj.align||'start');el.setAttribute('fill',stroke);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);sheetTextLines(obj).forEach(function(line,index){const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x',obj.x);span.setAttribute('dy',index?size*1.4:0);span.textContent=line||' ';el.append(span);});}
         else {el=document.createElementNS('http://www.w3.org/2000/svg','g');el.setAttribute('transform',`translate(${obj.x} ${obj.y}) rotate(${obj.rotation||0})`);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);const shape=document.createElementNS('http://www.w3.org/2000/svg',obj.kind==='motor'?'circle':'rect');if(obj.kind==='motor'){shape.setAttribute('cx','0');shape.setAttribute('cy','0');shape.setAttribute('r','18');}else{shape.setAttribute('x','-21');shape.setAttribute('y','-14');shape.setAttribute('width','42');shape.setAttribute('height','28');}shape.setAttribute('fill','#fff');shape.setAttribute('stroke',stroke);shape.setAttribute('stroke-width','1.5');el.append(shape);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x','0');t.setAttribute('y','4');t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.setAttribute('fill',stroke);t.textContent=({terminal:'X1',relay:'K2',contact:'13/14',breaker:'F2',sensor:'B2',motor:'M2',plc:'I1',ground:'PE'})[obj.kind]||'DEV';el.append(t);}
-        if(obj.wallThickness)el.setAttribute('fill',obj.fill&&obj.fill!=='none'?obj.fill:stroke);
+        if(obj.wallThickness){el.setAttribute('fill',obj.fill&&obj.fill!=='none'?obj.fill:stroke);el=renderWallOpenings(obj,el,stroke);}
         if(obj.roomName)el=renderRoomOutline(obj,el,stroke);
         if(obj.rotation&&obj.kind!=='component-instance'){const center=objectCenter(obj);el.setAttribute('transform','rotate('+obj.rotation+' '+center.x+' '+center.y+')');}if(obj.strokeWidth)el.setAttribute('stroke-width',width);if(obj.lineType==='dashed')el.setAttribute('stroke-dasharray',(width*4)+' '+(width*2));if(obj.lineType==='dotted'){el.setAttribute('stroke-dasharray',width+' '+(width*2));el.setAttribute('stroke-linecap','round');}el.dataset.object=obj.id;el.dataset.layer=drawingLayerForObject(obj);el.addEventListener('click',e=>{if(state.tool==='select'){e.stopPropagation();const current=state.objects.find(function(item){return item.id===obj.id;});if(current){state.selected=current.id;if(current.kind!=='text')renderObjects();showObject(current);}}});el.addEventListener('dblclick',e=>handleObjectDoubleClick(e,obj.id));if(!drawingObjectVisible(obj))el.style.display='none';if(obj.locked)el.dataset.locked='true';if(obj.flipX||obj.flipY){const center=objectCenter(obj);el.setAttribute('transform',`translate(${obj.flipX?center.x*2:0} ${obj.flipY?center.y*2:0}) scale(${obj.flipX?-1:1} ${obj.flipY?-1:1})`);}return el;}
 
@@ -1080,23 +1080,93 @@
     pushUndo();obj.zIndex=order;renderObjects();persist();
   });
   function wallOutlinePath(wall){
-    const dx=wall.x2-wall.x1,dy=wall.y2-wall.y1;
-    const half=wall.wallThickness/(2*Math.hypot(dx,dy));
-    const x=-dy*half,y=dx*half;
-    return 'M'+(wall.x1+x)+' '+(wall.y1+y)+'L'+(wall.x2+x)+' '+(wall.y2+y)
-      +'L'+(wall.x2-x)+' '+(wall.y2-y)+'L'+(wall.x1-x)+' '+(wall.y1-y)+'Z';
+    const dx=wall.x2-wall.x1,dy=wall.y2-wall.y1,length=Math.hypot(dx,dy),half=wall.wallThickness/2;
+    const point=(distance,side)=>[wall.x1+(dx*distance-dy*side)/length,wall.y1+(dy*distance+dx*side)/length].join(' ');
+    let position=0,path='';
+    for(const opening of [...(wall.wallOpenings||[]),{offset:length,width:0}]){
+      path+='M'+point(position,half)+'L'+point(opening.offset,half)+'L'+point(opening.offset,-half)+'L'+point(position,-half)+'Z';
+      position=opening.offset+opening.width;
+    }
+    return path;
+  }
+  function renderWallOpenings(wall,outline,stroke){
+    if(!wall.wallOpenings?.length)return outline;
+    const ns='http://www.w3.org/2000/svg',group=document.createElementNS(ns,'g');
+    group.setAttribute('class',outline.getAttribute('class'));
+    outline.removeAttribute('class');
+    group.append(outline);
+    const angle=Math.atan2(wall.y2-wall.y1,wall.x2-wall.x1)*180/Math.PI;
+    for(const opening of wall.wallOpenings){
+      const mark=document.createElementNS(ns,'path'),end=opening.offset+opening.width,edge=wall.wallThickness/6;
+      mark.setAttribute('transform','translate('+wall.x1+' '+wall.y1+') rotate('+angle+')');
+      mark.setAttribute('d',opening.kind==='window'
+        ?'M'+opening.offset+' '+edge+'H'+end+'M'+opening.offset+' '+(-edge)+'H'+end
+        :'M'+opening.offset+' 0v'+opening.width+'A'+opening.width+' '+opening.width+' 0 0 0 '+end+' 0');
+      mark.setAttribute('fill','none');
+      mark.setAttribute('stroke',stroke);
+      mark.setAttribute('data-wall-opening',opening.kind);
+      group.append(mark);
+    }
+    return group;
   }
   function wallPropertyFields(wall){
     if(!wall.wallThickness)return '';
-    return '<label class="property-row"><span>Wall thickness (mm)</span><input type="number" min="1" step="any" data-wall-thickness value="'+wall.wallThickness+'"'+(wall.locked?' disabled':'')+'></label>'
-      +'<div class="property-row"><span>Wall length</span><strong>'+Number(Math.hypot(wall.x2-wall.x1,wall.y2-wall.y1).toPrecision(10))+' mm</strong></div>';
+    const disabled=wall.locked?' disabled':'';
+    const openings=(wall.wallOpenings||[]).map((opening,index)=>{
+      const label=(opening.kind==='door'?'Door':'Window')+' '+(index+1);
+      return '<label class="property-row"><span>'+label+' offset (mm)</span><input type="number" min="1" step="any" data-opening-index="'+index+'" data-opening-field="offset" value="'+opening.offset+'"'+disabled+'></label>'
+        +'<label class="property-row"><span>'+label+' width (mm)</span><input type="number" min="1" step="any" data-opening-index="'+index+'" data-opening-field="width" value="'+opening.width+'"'+disabled+'></label>'
+        +'<button type="button" data-remove-opening="'+index+'"'+disabled+'>Remove '+label.toLowerCase()+'</button>';
+    }).join('');
+    return '<label class="property-row"><span>Wall thickness (mm)</span><input type="number" min="1" step="any" data-wall-thickness value="'+wall.wallThickness+'"'+disabled+'></label>'
+      +'<div class="property-row"><span>Wall length</span><strong>'+Number(Math.hypot(wall.x2-wall.x1,wall.y2-wall.y1).toPrecision(10))+' mm</strong></div>'
+      +'<button type="button" data-add-opening="door"'+disabled+'>Add door</button> <button type="button" data-add-opening="window"'+disabled+'>Add window</button>'+openings;
   }
+  function selectedWall(){
+    return state.objects.find(item=>item.id===state.selected&&item.wallThickness&&!item.locked);
+  }
+  function updateWallOpenings(wall,openings){
+    openings.sort((first,second)=>first.offset-second.offset);
+    if(!window.AdigunCADEngine.validWallOpenings({...wall,wallOpenings:openings})){
+      showObject(wall);notify('Openings must fit inside the wall and must not overlap.');return;
+    }
+    pushUndo();
+    wall.wallOpenings=openings;
+    renderObjects();persist();refreshSelectedProperties();
+  }
+  $('#inspectorContent').addEventListener('click',event=>{
+    const button=event.target.closest('[data-add-opening],[data-remove-opening]'),wall=selectedWall();
+    if(!button||!wall)return;
+    const openings=[...(wall.wallOpenings||[])];
+    if(button.dataset.removeOpening!==undefined){
+      openings.splice(Number(button.dataset.removeOpening),1);
+    }else{
+      const length=Math.hypot(wall.x2-wall.x1,wall.y2-wall.y1);
+      let start=1,best={start:1,length:0};
+      for(const opening of [...openings,{offset:length-1,width:0}]){
+        if(opening.offset-start>best.length)best={start,length:opening.offset-start};
+        start=opening.offset+opening.width;
+      }
+      if(best.length<1){notify('There is no space for another opening on this wall.');return;}
+      const kind=button.dataset.addOpening,width=Math.min(kind==='door'?900:1200,best.length);
+      openings.push({kind,width,offset:best.start+(best.length-width)/2});
+    }
+    updateWallOpenings(wall,openings);
+  });
   $('#inspectorContent').addEventListener('change',event=>{
-    if(!event.target.matches('[data-wall-thickness]'))return;
-    const wall=state.objects.find(item=>item.id===state.selected&&item.wallThickness);
-    if(!wall||wall.locked)return;
-    const thickness=event.target.valueAsNumber;
-    if(!Number.isFinite(thickness)||thickness<1){event.target.value=wall.wallThickness;return;}
+    const field=event.target,wall=selectedWall();
+    if(!wall)return;
+    if(field.dataset.openingField){
+      const openings=wall.wallOpenings.map(opening=>({...opening}));
+      const opening=openings[Number(field.dataset.openingIndex)];
+      if(!opening)return;
+      opening[field.dataset.openingField]=field.valueAsNumber;
+      updateWallOpenings(wall,openings);
+      return;
+    }
+    if(!field.matches('[data-wall-thickness]'))return;
+    const thickness=field.valueAsNumber;
+    if(!Number.isFinite(thickness)||thickness<1){field.value=wall.wallThickness;return;}
     if(thickness===wall.wallThickness)return;
     pushUndo();
     wall.wallThickness=thickness;
