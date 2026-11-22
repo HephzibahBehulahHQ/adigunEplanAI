@@ -3561,6 +3561,15 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await expect(page.locator('[data-object="' + route.id + '"]')).toContainText(
     "Upper floor · 3200 mm",
   );
+  await clickAt(400, 530);
+  const elevationPending = page.waitForEvent("download");
+  await command("Export selected riser elevation");
+  const elevationDrawing = await elevationPending;
+  expect(elevationDrawing.suggestedFilename()).toBe("riser-elevation.svg");
+  const svg = fs.readFileSync((await elevationDrawing.path())!, "utf8");
+  expect(svg).toContain("To · A2/001 · Upper floor");
+  expect(svg).toContain("Elevation 3200 mm");
+  expect(svg).toContain(">3200 mm</text>");
   const routingPending = page.waitForEvent("download");
   await command("Export floor circuit schedule");
   const routingSchedule = await routingPending;

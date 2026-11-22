@@ -2416,6 +2416,26 @@ function createPumpStarterDocumentation(name) {
     const length=Math.abs(b-a);
     return finite(a)&&finite(b)&&finite(length)&&length>0?length:null;
   }
+  function floorRiserElevationSvg(project,routeId){
+    const route=project.objects.find(item=>item.id===routeId&&item.floorRouteKind);
+    const source=project.sheets.find(sheet=>sheet.id===route?.sheetId);
+    const target=project.sheets.find(sheet=>sheet.id===route?.riserTargetSheetId);
+    const length=floorRiserLength(source,target);
+    if(length===null)throw new Error('Select a floor route with a linked riser.');
+    const escape=value=>String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]));
+    const text=(x,y,value)=>`<text x="${x}" y="${y}">${escape(value)}</text>`;
+    const levels=[source,target].sort((a,b)=>b.floorPlan.elevationMm-a.floorPlan.elevationMm);
+    const ordinates=[120,310];
+    const datums=levels.map((sheet,index)=>{
+      const y=ordinates[index];
+      const end=sheet===source?'From':'To';
+      return text(36,y-28,`${end} · ${sheet.number} · ${sheet.floorPlan.level}`)
+        +text(36,y-9,`Elevation ${sheet.floorPlan.elevationMm} mm`)
+        +`<path d="M36 ${y} H700" stroke="#64748b"/><circle cx="540" cy="${y}" r="5" fill="#1855a4"/>`;
+    }).join('');
+    const title=`${source.floorPlan.building} · ${route.floorRouteKind} riser elevation`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 840 594"><title>${escape(title)}</title><rect width="840" height="594" fill="white"/><g font-family="sans-serif" font-size="15" fill="#19283c">${text(36,43,title)}${datums}<path d="M540 120 V310" stroke="#1855a4" stroke-width="4"/><path d="M568 120 H588 M578 120 V310 M568 310 H588" fill="none" stroke="#19283c"/>${text(590,220,`${length} mm`)}${text(36,360,'Floor datum to floor datum · diagram not to scale')}</g></svg>`;
+  }
   function validFloorRoutePoints(points){
     return Array.isArray(points)&&points.length>=2&&points.every(function(point,index){
       return point&&finite(point.x)&&finite(point.y)&&(!index||Math.hypot(point.x-points[index-1].x,point.y-points[index-1].y)>0);
@@ -3036,6 +3056,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
+    floorRiserElevationSvg: floorRiserElevationSvg,
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
     floorRouteLength: floorRouteLength,
