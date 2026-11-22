@@ -3256,6 +3256,46 @@ test("building floor sheets keep editable identities and physical units on reope
   await expect(level).toHaveValue("Mezzanine");
 });
 
+test("floor plan walls render and persist their physical thickness", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.keyboard.press("Control+k");
+  const search = page.locator("#commandSearch");
+  await search.fill("Draw wall");
+  await search.press("Enter");
+  const start = await sheetPoint(page, 200, 330);
+  const end = await sheetPoint(page, 700, 330);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const thickness = page.getByRole("spinbutton", {
+    name: "Wall thickness (mm)",
+  });
+  await expect(thickness).toHaveValue("150");
+  await thickness.fill("240");
+  await thickness.press("Tab");
+  const wall = page.locator("#userDrawings [data-object]");
+  const renderedThickness = () =>
+    wall.evaluate((element: SVGGraphicsElement) => element.getBBox().height);
+  await expect.poll(renderedThickness).toBe(240);
+  const saved = await saveDrawing(page, "floor-plan-wall");
+  expect(saved.data.objects[0]).toMatchObject({
+    kind: "line",
+    wallThickness: 240,
+    sheetId: saved.data.sheets[0].id,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect.poll(renderedThickness).toBe(240);
+});
+
 test("room outlines have editable physical dimensions and reopen on their floor", async ({
   page,
 }) => {
