@@ -17,7 +17,7 @@ import {
   convert,
   type Unit,
 } from "../../../packages/engineering-core/quantities.ts";
-import { csvReport } from "../../../packages/reporting/csv.ts";
+import { calculationCsv } from "./calculationCsv";
 import { downloadFile } from "./download";
 import "./calculations.css";
 
@@ -175,37 +175,11 @@ function CalculationForm({ native, t }: Props) {
   };
   const csv = () => {
     if (!result) return;
-    const rows: (string | number | null)[][] = [
-      [tr("calcReport"), title],
-      [tr("calcMethod"), result.methodReference],
-      [tr("calcFormula"), result.formula],
-      [tr("calcInput"), tr("calcValue"), tr("calcUnit")],
-      ...calculator.inputs.map((field) => [
-        tr(field.labelKey),
-        result.inputs[field.key],
-        result.units[field.key],
-      ]),
-      [tr("calcResults"), tr("calcValue"), tr("calcUnit")],
-      ...result.values.map((item) => [
-        tr(item.labelKey),
-        item.value,
-        item.unit,
-      ]),
-      ...result.checks.map((item) => [
-        tr(item.labelKey),
-        tr(item.passed ? "calcCheckMet" : "calcCheckNotMet"),
-      ]),
-      ...result.assumptionKeys.map((key) => [tr("calcAssumptions"), tr(key)]),
-      ...result.warningKeys.map((key) => [tr("calcWarnings"), tr(key)]),
-      ...result.evidence.map((note) => [tr("calcEvidence"), note]),
-      ...result.sources.map((source) => [
-        tr("calcReferences"),
-        source.title,
-        source.url,
-        source.accessed,
-      ]),
-    ];
-    downloadFile(`${title}.csv`, csvReport(rows), "text/csv;charset=utf-8");
+    downloadFile(
+      `${title}.csv`,
+      calculationCsv(result, title, tr),
+      "text/csv;charset=utf-8",
+    );
   };
   return (
     <section

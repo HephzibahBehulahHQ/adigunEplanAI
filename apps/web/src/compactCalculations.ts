@@ -14,6 +14,7 @@ import {
 } from "../../../packages/engineering-core/quantities";
 import messages from "../../../packages/localization/en.json";
 import { downloadFile } from "./download";
+import { calculationCsv } from "./calculationCsv";
 
 const message = (key: string) =>
   (messages as Record<string, string>)[key] ?? key;
@@ -34,7 +35,11 @@ function addText(parent: HTMLElement, tag: string, text: string) {
   return element;
 }
 
-function renderResult(host: HTMLElement, result: CalculationResult) {
+function renderResult(
+  host: HTMLElement,
+  result: CalculationResult,
+  title: () => string,
+) {
   host.replaceChildren();
   addText(
     host,
@@ -87,6 +92,17 @@ function renderResult(host: HTMLElement, result: CalculationResult) {
       "application/json",
     ),
   );
+  const csv = addText(host, "button", message("calcExportCsv"));
+  csv.setAttribute("type", "button");
+  csv.className = "command-item";
+  csv.addEventListener("click", () => {
+    const reportTitle = title();
+    downloadFile(
+      `${reportTitle}.csv`,
+      calculationCsv(result, reportTitle, message),
+      "text/csv;charset=utf-8",
+    );
+  });
 }
 
 type ProjectCalculations = {
@@ -131,7 +147,11 @@ export function mountCompactCalculations(
   }
 
   function showResult(calculation: CalculationResult) {
-    renderResult(result, calculation);
+    renderResult(
+      result,
+      calculation,
+      () => name.value.trim() || message(calculation.titleKey),
+    );
     if (!project) return;
     result.append(field(message("calcName"), name));
     const save = addText(
