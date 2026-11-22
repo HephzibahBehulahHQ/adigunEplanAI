@@ -1379,6 +1379,13 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
         if(object.floorRouteKind!==undefined&&(object.kind!=='freehand'||!['cable','conduit','tray'].includes(object.floorRouteKind)||!validFloorRoutePoints(object.points)||!floorIds.has(object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null))))errors.push('Invalid measured floor route '+object.id+'.');
         if(object.floorRouteTag!==undefined&&(!object.floorRouteKind||typeof object.floorRouteTag!=='string'||!object.floorRouteTag.trim()||object.floorRouteTag.length>64))errors.push('Invalid floor route tag '+object.id+'.');
+        if(object.voltageDrop!==undefined){
+          const drop=object.voltageDrop;
+          if(object.floorRouteKind!=='cable'||!drop||![1,3].includes(drop.phases)||
+            ['voltage','current','resistancePerLength','reactancePerLength','powerFactor','dropLimit'].some(key=>!finite(drop[key])||drop[key]<0)||
+            drop.voltage<=0||drop.powerFactor>1||drop.dropLimit<=0||drop.dropLimit>100||
+            typeof drop.evidence!=='string'||drop.evidence.trim().length<8||drop.evidence.length>400)errors.push('Invalid route voltage drop inputs '+object.id+'.');
+        }
         if(object.riserTargetSheetId!==undefined){
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           if(!object.floorRouteKind||floorRiserLength(floorSheets.get(sheetId),floorSheets.get(object.riserTargetSheetId))===null)errors.push('Invalid floor riser '+object.id+'.');
