@@ -42,3 +42,20 @@ The terminal CSV identifies the declared common clamping positions per row.
 
 - 2002-2234 has two clamps on each of two isolated potentials and a fitted marker carrier. The IEC/EN rating is 500 V and 24 A. [WAGO datasheet, 06 December 2018, pp. 1–3](https://uk.misumi-ec.com/pdf/vona/el/WAG1/WAG1_2002-2234_Datasheet_en_1.pdf)
 - 2002-2404 has four clamps on each of two isolated potentials without a marker carrier. The IEC/EN rating is 800 V and 24 A. [WAGO datasheet, 19 November 2024, pp. 1–2](https://express.ecsnz.com/en/Attachment/DownloadFile?downloadId=3539)
+
+## Manufacturer candidate intake
+
+Download the WAGO product-data ZIP from the [WAGO BMEcat download page](https://www.wago.com/ch-de/lp-danke-bmecat).
+Run the following command from the repository root to extract ETIM class
+EC000897 into a local review file. Omit the class argument for all candidates.
+
+```powershell
+./scripts/export-wago-bmecat-candidates.ps1 -Archive test-results/wago-bmecat-1126.zip -Output test-results/wago-terminal-candidates.jsonl -EtimClass EC000897
+```
+
+The JSON Lines output preserves exact manufacturer order codes, English product
+and document links, raw ETIM feature values and the SHA-256 of the source ZIP.
+A record enters the component bank only after mapping its source-backed
+terminal identities and electrical relationships to native schematic geometry
+and verifying the relevant mounting and report data. Candidate rows are local
+review material and are excluded from the published editor and inventory totals.
