@@ -149,7 +149,7 @@
   const sheetNames={overview:['Z0010000','Control cabinet'],title:['A1/000','Title page'],contents:['A1/001','Contents'],device:['A1/005','Device list'],power:['A1/010','Power supply'],control:['A1/020','Control circuit'],plc:['A2/030','PLC / I/O'],drive:['A2/040','Drive interface'],safety:['A2/050','Safety circuit'],layout:['A3/100','Enclosure layout'],terminals:['A3/120','Terminal strip'],bom:['A3/200','Bill of materials']};
   const symbolNames={terminal:'Terminal · 2-pin',relay:'Relay coil · K',contact:'NO contact · 13 / 14',breaker:'Protective switch',sensor:'Sensor · 3-wire',motor:'Three-phase motor',plc:'PLC I/O module · 8-point',ground:'Protective earth'};
   let symbolCatalog=window.AdigunCADEngine.catalog();
-  window.addEventListener('adigun-plc-library-ready',()=>{
+  window.addEventListener('adigun-component-library-ready',()=>{
     symbolCatalog=window.AdigunCADEngine.catalog();
     renderSymbolSidebar($('#symbolSearch').value);
   });
