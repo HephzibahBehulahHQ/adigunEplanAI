@@ -1,4 +1,7 @@
-import { ductOccupancy } from "../../../packages/panel-engineering/estimates.ts";
+import {
+  ductOccupancy,
+  heatBalance,
+} from "../../../packages/panel-engineering/estimates.ts";
 import { compactPanelObj } from "./compactPanelExport.ts";
 import {
   featureVertices,
@@ -10,7 +13,7 @@ import {
   volumesIntersect,
 } from "../../../packages/panel-engineering/geometry.ts";
 
-Object.assign(window, { AdigunPanelEstimates: { ductOccupancy } });
+Object.assign(window, { AdigunPanelEstimates: { ductOccupancy, heatBalance } });
 Object.assign(window, {
   AdigunPanelGeometry: {
     accessBounds,

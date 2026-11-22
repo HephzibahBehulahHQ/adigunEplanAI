@@ -1931,6 +1931,11 @@ test("linked panel placement preserves its canonical device on local reopen", as
   });
   await mountingDepth.fill("25");
   await mountingDepth.press("Tab");
+  const heatLoss = page.getByRole("spinbutton", {
+    name: "Declared equipment heat loss (W)",
+  });
+  await heatLoss.fill("10");
+  await heatLoss.press("Tab");
   const edited = await saveDrawing(page, "panel-edited");
   expect(
     edited.data.objects.find(
@@ -1977,6 +1982,8 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await page
     .getByRole("combobox", { name: "Documented clearance condition" })
     .selectOption("sideBySide");
+  await heatLoss.fill("0");
+  await heatLoss.press("Tab");
   await page.locator("#openCommands").click();
   await page.locator("#commandSearch").fill("Preview panel in 3D");
   await page
@@ -1996,6 +2003,23 @@ test("linked panel placement preserves its canonical device on local reopen", as
   }
   await page.getByRole("button", { name: "Apply cabinet boundaries" }).click();
   await expect(preview.locator("[data-cabinet-boundary]")).toHaveCount(1);
+  await page.getByText("Panel heat estimate", { exact: true }).click();
+  const thermalForm = page.locator("[data-panel-thermal]");
+  for (const [key, value] of Object.entries({
+    ambientC: "25",
+    heatTransferCoefficientWm2K: "5",
+    exposedAreaM2: "2",
+    additionalLossW: "10",
+    coolingW: "5",
+  })) {
+    await thermalForm.locator(`[name="${key}"]`).fill(value);
+  }
+  await thermalForm
+    .getByRole("button", { name: "Apply thermal assumptions" })
+    .click();
+  await expect(page.locator("[data-panel-heat-estimate]")).toContainText(
+    "20.00 W total · 1.50 K rise · 26.50 °C",
+  );
   const addOpening = page.locator('form[data-cabinet-feature=""]');
   for (const face of ["back", "front", "left", "right", "top", "bottom"]) {
     const rectangular = face === "bottom";
@@ -2186,6 +2210,9 @@ test("linked panel placement preserves its canonical device on local reopen", as
     preview.getByText("Panel door · 150 × 240 × 2 mm · Z 190 mm"),
   ).toBeAttached();
   await expect(page.locator("[data-panel-mounting-check]")).toHaveCount(1);
+  await expect(page.locator("[data-panel-heat-estimate]")).toContainText(
+    "26.50 °C",
+  );
   await expect(outlines).toHaveCount(6);
   await expect(editableOpening.locator('[name="u"]')).toHaveValue("45");
   await editableOpening.getByRole("button", { name: "Remove opening" }).click();

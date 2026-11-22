@@ -268,7 +268,7 @@
   }
   function updateSheetNavigationLabels(){ if(state.sections){renderSectionNavigation();return;} $$('#projectTree [data-sheet]').forEach(function(row){const label=sheetLabel(row.dataset.sheet),detail=row.querySelector('.detail'),file=row.querySelector('.file'),bold=row.querySelector('b');row.setAttribute('aria-label',label[0]+' · '+label[1]);row.title=label[0]+' · '+label[1];if(detail){detail.textContent=label[0];const title=Array.from(row.children).find(function(child){return child!==detail&&child!==file;});if(title)title.textContent=label[0]+' · '+label[1];}else if(bold){bold.textContent=label[0];const title=Array.from(row.children).find(function(child){return child.tagName==='SPAN'&&child!==file;});if(title)title.textContent=label[1];}});$$('#sheetTabs .document-tab[data-sheet]').forEach(function(tab){const label=sheetLabel(tab.dataset.sheet),text=tab.querySelector('span:not(.tab-close)');if(text)text.textContent=label[0]+' · '+label[1];});}
   function nextSheetNumber(){const used=state.sheets.map(function(sheet){const match=/^A3\/(\d+)$/.exec(sheet.number);return match?Number(match[1]):200;});return 'A3/'+String(Math.max(200,...used)+1).padStart(3,'0');}
-  function duplicateSheet(id){const source=state.sheets.find(function(sheet){return sheet.id===id;});const label=sheetLabel(id),copy={id:'custom-'+Date.now()+'-'+(++sheetIdSequence),name:'Copy of '+label[1],number:nextSheetNumber()};if(source&&source.metadata)copy.metadata=JSON.parse(JSON.stringify(source.metadata));if(source?.cabinetBounds)copy.cabinetBounds=structuredClone(source.cabinetBounds);if(source?.cabinetFeatures)copy.cabinetFeatures=structuredClone(source.cabinetFeatures);if(state.sections)copy.sectionId=source?source.sectionId:state.activeSection;if(state.sheet)state.sheetObjects[state.sheet]=state.objects;state.sheets.splice(source?state.sheets.indexOf(source)+1:state.sheets.length,0,copy);const occupiedRefs=new Set(collectProjectObjects().filter(function(object){return object.kind==='component-instance';}).map(function(object){return object.ref;}));let nextObjectId=0;const copiedSheetIds=new Map();state.sheetObjects[copy.id]=JSON.parse(JSON.stringify(state.sheetObjects[id]||[])).map(function(object){const previousId=object.id;object.id='obj-copy-'+Date.now()+'-'+(++nextObjectId);copiedSheetIds.set(previousId,object.id);object.sheetId=copy.id;if(object.kind==='component-instance'){const definition=window.AdigunCADEngine.component(object.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;object.ref=prefix+number;occupiedRefs.add(object.ref);}return object;});state.sheetObjects[copy.id].forEach(function(object){if(object.mountingRailId&&copiedSheetIds.has(object.mountingRailId))object.mountingRailId=copiedSheetIds.get(object.mountingRailId);if(object.attachments)Object.keys(object.attachments).forEach(function(end){const replacement=copiedSheetIds.get(object.attachments[end].instanceId);if(replacement)object.attachments[end].instanceId=replacement;else delete object.attachments[end];});});state.sheetViews[copy.id]=JSON.parse(JSON.stringify(state.sheetViews[id]||{x:0,y:0,w:1200,h:760}));renderCustomSheetNavigation();persist();notify(copy.number+' · '+copy.name+' duplicated with its drawing objects.');}
+  function duplicateSheet(id){const source=state.sheets.find(function(sheet){return sheet.id===id;});const label=sheetLabel(id),copy={id:'custom-'+Date.now()+'-'+(++sheetIdSequence),name:'Copy of '+label[1],number:nextSheetNumber()};if(source&&source.metadata)copy.metadata=JSON.parse(JSON.stringify(source.metadata));if(source?.cabinetBounds)copy.cabinetBounds=structuredClone(source.cabinetBounds);if(source?.cabinetFeatures)copy.cabinetFeatures=structuredClone(source.cabinetFeatures);if(source?.panelThermal)copy.panelThermal=structuredClone(source.panelThermal);if(state.sections)copy.sectionId=source?source.sectionId:state.activeSection;if(state.sheet)state.sheetObjects[state.sheet]=state.objects;state.sheets.splice(source?state.sheets.indexOf(source)+1:state.sheets.length,0,copy);const occupiedRefs=new Set(collectProjectObjects().filter(function(object){return object.kind==='component-instance';}).map(function(object){return object.ref;}));let nextObjectId=0;const copiedSheetIds=new Map();state.sheetObjects[copy.id]=JSON.parse(JSON.stringify(state.sheetObjects[id]||[])).map(function(object){const previousId=object.id;object.id='obj-copy-'+Date.now()+'-'+(++nextObjectId);copiedSheetIds.set(previousId,object.id);object.sheetId=copy.id;if(object.kind==='component-instance'){const definition=window.AdigunCADEngine.component(object.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;object.ref=prefix+number;occupiedRefs.add(object.ref);}return object;});state.sheetObjects[copy.id].forEach(function(object){if(object.mountingRailId&&copiedSheetIds.has(object.mountingRailId))object.mountingRailId=copiedSheetIds.get(object.mountingRailId);if(object.attachments)Object.keys(object.attachments).forEach(function(end){const replacement=copiedSheetIds.get(object.attachments[end].instanceId);if(replacement)object.attachments[end].instanceId=replacement;else delete object.attachments[end];});});state.sheetViews[copy.id]=JSON.parse(JSON.stringify(state.sheetViews[id]||{x:0,y:0,w:1200,h:760}));renderCustomSheetNavigation();persist();notify(copy.number+' · '+copy.name+' duplicated with its drawing objects.');}
   function moveSheetToPosition(id){const index=state.sheets.findIndex(function(sheet){return sheet.id===id;});if(index<0){notify('Built-in sheets keep their standard engineering order; project-created sheets can be reordered.');return;}const answer=window.prompt('Move '+sheetLabel(id)[1]+' to position (1–'+state.sheets.length+')',String(index+1));if(answer===null)return;const position=Number(answer);if(!Number.isInteger(position)||position<1||position>state.sheets.length){notify('Enter a position from 1 to '+state.sheets.length+'.');return;}const moved=state.sheets.splice(index,1)[0];state.sheets.splice(position-1,0,moved);renderCustomSheetNavigation();updateSheetNavigationLabels();persist();notify(moved.name+' moved to project sheet position '+position+'.');}
   function reorderSheetBefore(sourceId,targetId){if(sourceId===targetId)return;const source=state.sheets.findIndex(function(sheet){return sheet.id===sourceId;}),target=state.sheets.findIndex(function(sheet){return sheet.id===targetId;});if(source<0||target<0)return;const moved=state.sheets.splice(source,1)[0];state.sheets.splice(target,0,moved);renderCustomSheetNavigation();updateSheetNavigationLabels();persist();}
   function collectProjectObjects(){if(state.sheet)state.sheetObjects[state.sheet]=state.objects;return Object.keys(state.sheetObjects).flatMap(function(sheetId){return(state.sheetObjects[sheetId]||[]).map(function(object){return Object.assign({},object,{sheetId:sheetId});});});}
@@ -276,8 +276,8 @@
   function setTool(tool){clearFloorRouteDraft();cancelTerminalDrag();cancelWireDraft();if(state.pendingMoveObjectId){state.pendingMoveObjectId=null;notify('Move cancelled.');}if(state.pendingComponentId&&tool!=='component-placement'){state.pendingComponentId=null;if(placementPreview){placementPreview.remove();placementPreview=null;}}state.tool=tool;$$('[data-draw]').forEach(b=>{const on=b.dataset.draw===tool;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});drawing.style.cursor=tool==='select'?'default':tool==='pan'?'grab':'crosshair';const names={freehand:'Freehand pencil',ellipse:'Ellipse',curve:'Bézier curve',triangle:'Triangle',arrow:'Arrow',pan:'Pan'};notify(tool==='wire'?'Click two terminals, or drag between them, to draw a wire.':(names[tool]||tool[0].toUpperCase()+tool.slice(1))+' tool selected · drag on the sheet to draw.');}
 
 
-  function drawingHistorySnapshot(objects){const sheet=activeDraftingSheet();return JSON.stringify({objects:objects||state.objects,sheetObjects:state.sheetObjects,crossSheetConnections:state.crossSheetConnections,connectionIssues:state.connectionIssues||[],cabinetFeatures:{sheetId:sheet?.id,records:sheet?.cabinetFeatures}});}
-  function restoreDrawingHistory(snapshot){const saved=JSON.parse(snapshot);state.objects=Array.isArray(saved)?saved:saved.objects;if(!Array.isArray(saved)){state.sheetObjects=saved.sheetObjects||state.sheetObjects;state.crossSheetConnections=saved.crossSheetConnections||[];state.connectionIssues=saved.connectionIssues||[];const sheet=state.sheets.find(item=>item.id===saved.cabinetFeatures?.sheetId);if(sheet){if(saved.cabinetFeatures.records)sheet.cabinetFeatures=saved.cabinetFeatures.records;else delete sheet.cabinetFeatures;}}}
+  function drawingHistorySnapshot(objects){const sheet=activeDraftingSheet();return JSON.stringify({objects:objects||state.objects,sheetObjects:state.sheetObjects,crossSheetConnections:state.crossSheetConnections,connectionIssues:state.connectionIssues||[],cabinetFeatures:{sheetId:sheet?.id,records:sheet?.cabinetFeatures,thermal:sheet?.panelThermal}});}
+  function restoreDrawingHistory(snapshot){const saved=JSON.parse(snapshot);state.objects=Array.isArray(saved)?saved:saved.objects;if(!Array.isArray(saved)){state.sheetObjects=saved.sheetObjects||state.sheetObjects;state.crossSheetConnections=saved.crossSheetConnections||[];state.connectionIssues=saved.connectionIssues||[];const sheet=state.sheets.find(item=>item.id===saved.cabinetFeatures?.sheetId);if(sheet){if(saved.cabinetFeatures.records)sheet.cabinetFeatures=saved.cabinetFeatures.records;else delete sheet.cabinetFeatures;if(saved.cabinetFeatures.thermal)sheet.panelThermal=saved.cabinetFeatures.thermal;else delete sheet.panelThermal;}}}
   function removeSelectedDrawingObjects(ids){
     const result=window.AdigunCADEngine.removeDrawingObjects(state.objects,ids),removed=new Set(result.removed.map(function(o){return o.id;}));
     const affected=[];
@@ -1026,7 +1026,8 @@
     if(obj.kind!=='panel-placement')return '';
     try{const g=window.AdigunCADEngine.panelPlacementGeometry({objects:collectProjectObjects()},obj);return '<div class="notice">Linked device: '+escapeHtml(g.ref)+' · '+escapeHtml(g.footprint.widthMm+' × '+g.footprint.heightMm+' × '+g.footprint.depthMm+' mm')+'<br>Drawing scale: '+escapeHtml(obj.scale)+' drawing units/mm. Moving this view does not move its electrical symbol.<br>'+escapeHtml(g.footprint.note)+'</div><a class="component-source" href="'+escapeHtml(g.footprint.source)+'" target="_blank" rel="noopener noreferrer">Footprint source · '+escapeHtml(g.footprint.edition)+'</a>'
       +'<label class="property-row"><span>Mounting depth from rear (mm)</span><input type="number" min="0" max="1000000" step="any" data-panel-mounting-depth value="'+(obj.mountingDepthMm??'')+'"'+(obj.locked?' disabled':'')+'></label>'
-      +panelMountingRailField(obj)+panelClearanceConditionField(obj,g.footprint)+panelServiceAccessFields(obj);}
+      +panelMountingRailField(obj)+panelClearanceConditionField(obj,g.footprint)+panelServiceAccessFields(obj)
+      +`<label class="property-row"><span>Declared equipment heat loss (W)</span><input type="number" step="any" min="0" max="1000000000000" data-panel-heat-loss value="${obj.heatLossW??''}"${obj.locked?' disabled':''}></label>`;}
     catch(error){return '<div class="notice">REVIEW: '+escapeHtml(error.message)+'</div>';}
   }
   const serviceAccessFaces=['front','back','left','right','top','bottom'];
@@ -1122,7 +1123,7 @@
   });
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target;
-    if(!field.matches('[data-panel-mounting-depth],[data-panel-clearance-condition],[data-panel-mounting-rail]'))return;
+    if(!field.matches('[data-panel-mounting-depth],[data-panel-clearance-condition],[data-panel-mounting-rail],[data-panel-heat-loss]'))return;
     const item=state.objects.find(object=>object.id===state.selected&&object.kind==='panel-placement'&&!object.locked);
     if(!item)return;
     if(field.hasAttribute('data-panel-mounting-rail')){
@@ -1140,12 +1141,13 @@
       else delete item.clearanceCondition;
       persist();return;
     }
-    const depth=field.valueAsNumber,blank=field.value===''&&!field.validity.badInput;
-    if(!blank&&(!Number.isFinite(depth)||depth<0||depth>1000000)){field.value=item.mountingDepthMm??'';return;}
-    if((blank?undefined:depth)===item.mountingDepthMm)return;
+    const key=field.hasAttribute('data-panel-heat-loss')?'heatLossW':'mountingDepthMm';
+    const value=field.valueAsNumber,blank=field.value===''&&!field.validity.badInput;
+    if(!blank&&(!Number.isFinite(value)||value<0||value>(key==='heatLossW'?1e12:1e6))){field.value=item[key]??'';return;}
+    if((blank?undefined:value)===item[key])return;
     pushUndo();
-    if(blank)delete item.mountingDepthMm;
-    else item.mountingDepthMm=depth;
+    if(blank)delete item[key];
+    else item[key]=value;
     persist();
   });
   function assemblyAccessoryFields(obj,def){
@@ -2626,6 +2628,26 @@
   });
   const cabinetFeatureNames={'mounting-hole':'Mounting hole','cable-entry':'Cable entry'};
   const cabinetEnvelope=cabinet=>({widthMm:cabinet.width,heightMm:cabinet.height,depthMm:cabinet.depth});
+  const thermalLabels={ambientC:'Ambient temperature (°C)',heatTransferCoefficientWm2K:'Heat transfer coefficient (W/m²·K)',
+    exposedAreaM2:'Exposed enclosure area (m²)',additionalLossW:'Additional heat loss (W)',coolingW:'Declared cooling capacity (W)'};
+  function panelThermalReview(sheet,placements){
+    const assumptions=sheet?.panelThermal;
+    const review=document.createElement('details');
+    review.open=Boolean(assumptions);
+    const summary=document.createElement('summary');summary.textContent='Panel heat estimate';review.append(summary);
+    const form=document.createElement('form');form.dataset.panelThermal='';
+    form.innerHTML=Object.entries(thermalLabels).map(([key,label])=>`<label class="property-row"><span>${label}</span><input name="${key}" type="number" step="any" required value="${assumptions?.[key]??''}"></label>`).join('')
+      +'<button type="submit" class="command-item">Apply thermal assumptions</button>';
+    const result=document.createElement('output');result.dataset.panelHeatEstimate='';
+    if(!assumptions)result.textContent='Enter enclosure assumptions and declare equipment losses in Properties. Enter zero when applicable.';
+    else{
+      const estimate=window.AdigunPanelEstimates.heatBalance(placements.map(item=>item.heatLossW),assumptions);
+      result.textContent=estimate.unknownLossCount
+        ?`${estimate.unknownLossCount} equipment losses missing · ${estimate.knownLossW.toFixed(2)} W known · Temperature estimate unavailable.`
+        :`${estimate.totalLossW.toFixed(2)} W total · ${estimate.riseK.toFixed(2)} K rise · ${estimate.estimatedInternalC.toFixed(2)} °C estimated internal temperature.`;
+    }
+    review.append(form,result);return review;
+  }
   function cabinetFeatureFits(feature,cabinet){
     const size=window.AdigunPanelGeometry.panelFaceSize(cabinetEnvelope(cabinet),feature.face);
     const {x,y}=feature.positionMm,halfWidth=feature.widthMm/2,halfHeight=feature.heightMm/2;
@@ -2659,6 +2681,7 @@
         .map(([key,label])=>'<label class="property-row"><span>'+label+'</span><input type="number" required step="any" name="'+key+'" value="'+(cabinet?.[key]??'')+'"></label>').join('')
         +'<button class="command-item" type="submit">Apply cabinet boundaries</button>';
       host.append(config);
+      host.append(panelThermalReview(activeDraftingSheet(),state.objects.filter(item=>item.kind==='panel-placement')));
       const features=activeDraftingSheet()?.cabinetFeatures??[];
       if(cabinet){
         const instructions=document.createElement('p');instructions.className='notice';
@@ -2807,6 +2830,16 @@
   }
   $('#inspectorContent').addEventListener('submit',event=>{
     const form=event.target;
+    if(form.matches('[data-panel-thermal]')){
+      event.preventDefault();
+      const sheet=activeDraftingSheet();
+      if(!sheet)return;
+      const assumptions=Object.fromEntries(Array.from(new FormData(form),([key,value])=>[key,Number(value)]));
+      if(!window.AdigunCADEngine.validPanelThermalInputs(assumptions)){
+        notify('Enter a valid ambient temperature, positive coefficient and area, and nonnegative loss and cooling.');return;
+      }
+      pushUndo();sheet.panelThermal=assumptions;persist();return;
+    }
     if(form.matches('[data-cabinet-feature]')){
       event.preventDefault();
       const sheet=activeDraftingSheet();
