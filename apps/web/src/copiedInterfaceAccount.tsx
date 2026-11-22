@@ -9,11 +9,15 @@ import { AccountPanel } from "./AccountPanel";
 import "./compactPanelEstimates.ts";
 import "./compactPlcLibrary.ts";
 import { rasterizeDrawingSvg } from "./drawingPng.ts";
+import { compactDrawingDxf } from "./compactDrawingDxf.ts";
 import { requestGuestTrial, useAccount } from "./useAccount";
 import "./account.css";
 import "./copiedInterfaceAccount.css";
 
-Object.assign(window, { AdigunRasterizeDrawing: rasterizeDrawingSvg });
+Object.assign(window, {
+  AdigunRasterizeDrawing: rasterizeDrawingSvg,
+  AdigunCompactDrawingDxf: compactDrawingDxf,
+});
 
 const trialMarker = "adiguneplanai.guest-started.v1";
 const workspace = document.querySelector<HTMLElement>("#app")!;
