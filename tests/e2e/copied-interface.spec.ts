@@ -3846,6 +3846,8 @@ test("engineering calculation registry converts units and exports the method res
   page,
 }) => {
   await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
   await page.locator("#openCommands").click();
   await page.locator("#commandSearch").fill("Engineering calculations");
   await page
@@ -3882,10 +3884,31 @@ test("engineering calculation registry converts units and exports the method res
     inputs: { voltage: 0.012, resistance: 6 },
     units: { voltage: "kV", resistance: "ohm" },
   });
+  await page
+    .getByRole("textbox", { name: "Calculation name" })
+    .fill("Bench load");
+  await page
+    .getByRole("button", { name: "Save calculation", exact: true })
+    .click();
+  const saved = await saveDrawing(page, "project-calculations");
+  expect(saved.data.calculations).toHaveLength(1);
+  expect(saved.data.calculations[0]).toMatchObject({
+    name: "Bench load",
+    methodReference: exported.methodReference,
+    inputs: exported.inputs,
+  });
   await voltage.fill("24");
   await expect(
     page.getByRole("button", { name: "Download calculation JSON" }),
   ).toHaveCount(0);
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project project-calculations.adigun.json opened.",
+  );
+  const records = page.getByRole("combobox", { name: "Saved calculations" });
+  await records.selectOption({ label: "Bench load" });
+  await expect(voltage).toHaveValue("0.012");
+  await expect(result).toContainText("Current: 2 A");
 });
 
 test("floor cable ampacity compares explicit inputs and reopens them", async ({

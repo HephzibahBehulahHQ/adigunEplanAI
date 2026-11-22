@@ -113,7 +113,8 @@ limits and evidence supplied for the design.
 The compact editor opens all 26 registry methods through **Engineering
 calculations** in the command palette. The inspector converts input units
 and exports calculation results with version, inputs and evidence as JSON.
-Native calculation records in compact projects remain an integration gate.
+Named calculation records save with compact projects and replay their
+versioned method from saved inputs, units and evidence after reopening.
 
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

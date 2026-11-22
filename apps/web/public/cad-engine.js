@@ -1291,6 +1291,19 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if(project.connectionIssues!==undefined&&(!Array.isArray(project.connectionIssues)||project.connectionIssues.some(function(issue){return !issue||typeof issue.id!=='string'||typeof issue.code!=='string'||typeof issue.message!=='string'||!Array.isArray(issue.endpoints);})))errors.push('Project connection diagnostics are malformed.');
     if (project.format !== PROJECT_FORMAT) errors.push('Unsupported Adigun project format.');
     if (![1, PROJECT_VERSION].includes(project.version)) errors.push('Unsupported project version.');
+    if(project.calculations!==undefined){
+      const records=project.calculations,ids=new Set();
+      const map=(value,check)=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.values(value).every(check);
+      if(!Array.isArray(records)||records.some(record=>{
+        if(!record||typeof record.id!=='string'||!/^[A-Za-z0-9_.:-]{1,128}$/.test(record.id)||ids.has(record.id)||
+          typeof record.name!=='string'||!record.name.trim()||record.name.length>160||
+          typeof record.kind!=='string'||!record.kind||typeof record.methodReference!=='string'||!record.methodReference||
+          !map(record.inputs,finite)||!map(record.units,value=>typeof value==='string')||
+          !Array.isArray(record.assumptions)||record.assumptions.some(value=>typeof value!=='string'))return true;
+        ids.add(record.id);
+        return false;
+      }))errors.push('Invalid or duplicate calculation records.');
+    }
     if (!Array.isArray(project.objects) || !Array.isArray(project.sheets)) errors.push('Project objects and sheets must be arrays.');
     if(project.sections !== undefined) {
       const sections=project.sections;
