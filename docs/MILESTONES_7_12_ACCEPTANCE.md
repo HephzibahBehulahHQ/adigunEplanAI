@@ -30,8 +30,9 @@ palette exports a dimensioned SVG showing both floor datums and the vertical
 distance. The building riser diagram exports all linked routes in the active
 floor's building against common floor datums, with direction and vertical
 dimensions. Protection sizing remains open in the compact editor. The command
-palette can draw electrical and distribution zones as
-rectangular floor boundaries. Zone names and dimensions are editable in
+palette can draw rectangular or polygonal electrical and distribution zones.
+Polygonal zones expose editable corners and report the enclosed area. Zone
+names and rectangular dimensions are editable in
 Properties. Zones can reference rooms on the same floor, and distribution
 zones can also reference a board on that floor. These assignments are explicit
 and independent of the drawn boundary.

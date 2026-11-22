@@ -8,6 +8,45 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("floor zone polygons measure concave geometry and reject crossings", () => {
+  const points = (pairs) => pairs.map(([x, y]) => ({ x, y }));
+  assert.equal(
+    engine.floorZonePolygonArea(
+      points([
+        [0, 0],
+        [4, 0],
+        [4, 2],
+        [2, 2],
+        [2, 4],
+        [0, 4],
+      ]),
+    ),
+    12,
+  );
+  assert.equal(
+    engine.floorZonePolygonArea(
+      points([
+        [0, 0],
+        [4, 4],
+        [0, 3],
+        [3, 0],
+      ]),
+    ),
+    null,
+  );
+  assert.equal(
+    engine.floorZonePolygonArea(
+      points([
+        [0, 0],
+        [4, 0],
+        [4, 4],
+        [0, 0],
+      ]),
+    ),
+    null,
+  );
+});
+
 test("building riser diagrams isolate buildings and show every authored riser", () => {
   const sheets = [
     ["ground", "A2/000", "Workshop & Stores", "Ground", 0],

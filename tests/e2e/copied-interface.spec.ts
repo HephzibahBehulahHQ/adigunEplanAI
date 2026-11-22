@@ -3387,6 +3387,31 @@ test("floor zones preserve their type and editable boundary on reopen", async ({
     await width.fill("550");
     await width.press("Tab");
   }
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Draw electrical zone polygon");
+  await page
+    .locator("#commandList")
+    .getByText("Draw electrical zone polygon", { exact: true })
+    .click();
+  for (const [x, y] of [
+    [650, 200],
+    [950, 200],
+    [950, 300],
+    [800, 300],
+    [800, 400],
+    [650, 400],
+  ]) {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  }
+  await page.keyboard.press("Enter");
+  await expect(page.getByText("0.045 m²", { exact: true })).toBeVisible();
+  const corners = page.getByRole("textbox", { name: "Zone corners (X, Y mm)" });
+  await corners.fill(
+    "650, 200\n1000, 200\n1000, 300\n800, 300\n800, 400\n650, 400",
+  );
+  await corners.press("Tab");
+  await expect(page.getByText("0.05 m²", { exact: true })).toBeVisible();
   const saved = await saveDrawing(page, "floor-zones");
   expect(
     saved.data.objects.map(
@@ -3395,15 +3420,20 @@ test("floor zones preserve their type and editable boundary on reopen", async ({
   ).toEqual([
     { kind: "electrical", name: "electrical services" },
     { kind: "distribution", name: "distribution services" },
+    { kind: "electrical", name: "Electrical zone 2" },
   ]);
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(page.locator("#statusText")).toContainText(
     "Project floor-zones.adigun.json opened.",
   );
   const zones = page.locator("#userDrawings [data-object]");
-  await expect(zones).toHaveCount(2);
+  await expect(zones).toHaveCount(3);
   await expect(zones.nth(1)).toContainText("distribution services");
   await expect(zones.nth(1).locator("rect")).toHaveAttribute("width", "550");
+  await expect(zones.nth(2).locator("path")).toHaveAttribute(
+    "d",
+    "M650 200 L1000 200 L1000 300 L800 300 L800 400 L650 400 Z",
+  );
 });
 
 test("floor plan dimensions measure endpoints and save their offset", async ({
