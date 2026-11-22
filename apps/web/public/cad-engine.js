@@ -1284,6 +1284,23 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if (![placement.x,placement.y,placement.scale].every(finite)||placement.scale<=0||![0,90,180,270].includes(placement.rotation===undefined?0:placement.rotation)) throw new Error('Invalid panel placement geometry.');
     return {x:placement.x,y:placement.y,width:footprint.widthMm*placement.scale,height:footprint.heightMm*placement.scale,rotation:placement.rotation||0,ref:resolved.ref,footprint:footprint};
   }
+  function panelBodyScene(project,sheetId){
+    const placements=project.objects.filter(object=>object.kind==='panel-placement'&&object.sheetId===sheetId);
+    if(!placements.length)throw new Error('Open a sheet with linked panel placements.');
+    const scale=placements[0].scale;
+    if(placements.some(placement=>placement.scale!==scale))throw new Error('3D requires one common drawing scale for the panel placements.');
+    const bodies=[],issues=[];
+    for(const placement of placements){
+      try{
+        const geometry=panelPlacementGeometry(project,placement),{footprint}=geometry;
+        if(!finite(footprint.depthMm)||footprint.depthMm<=0)throw new Error('Verified body depth is unavailable.');
+        const rotated=geometry.rotation===90||geometry.rotation===270;
+        bodies.push({id:placement.id,ref:geometry.ref,x:geometry.x/scale,y:geometry.y/scale,
+          width:rotated?footprint.heightMm:footprint.widthMm,height:rotated?footprint.widthMm:footprint.heightMm,depth:footprint.depthMm});
+      }catch(error){issues.push({id:placement.id,message:error.message});}
+    }
+    return {bodies,issues};
+  }
 
   function validateProject(project) {
     const errors = [];
@@ -3280,6 +3297,7 @@ function createPumpStarterDocumentation(name) {
     linkAssemblyAccessory: linkAssemblyAccessory,
     createPanelPlacement: createPanelPlacement,
     panelPlacementGeometry: panelPlacementGeometry,
+    panelBodyScene: panelBodyScene,
     resolvePanelDevice: resolvePanelDevice,
     sheetDeletionDiagnostics: sheetDeletionDiagnostics,
     removeSheetConnections: removeSheetConnections,
