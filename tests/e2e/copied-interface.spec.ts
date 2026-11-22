@@ -1746,6 +1746,9 @@ test("Rittal enclosure inserts as editable mechanical data without electrical pi
   });
   await page.reload();
   await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project enclosure-edited.adigun.json opened.",
+  );
   const reopened = await saveDrawing(page, "enclosure-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
@@ -3508,6 +3511,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     ).roomId,
   ).toBe(room.id);
   await page.locator("#openFile").setInputFiles(withRoom.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-plan-equipment-rooms.adigun.json opened.",
+  );
   await clickAt(580, 300);
   await expect(assignment).toHaveValue(room.id);
   const pending = page.waitForEvent("download");
