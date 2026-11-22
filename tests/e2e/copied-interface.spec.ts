@@ -1801,7 +1801,7 @@ test("Rittal enclosure inserts as editable mechanical data without electrical pi
 test("linked panel placement preserves its canonical device on local reopen", async ({
   page,
 }) => {
-  test.setTimeout(45_000);
+  test.setTimeout(60_000);
   await page.goto("/");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
@@ -1996,6 +1996,26 @@ test("linked panel placement preserves its canonical device on local reopen", as
   }
   await page.getByRole("button", { name: "Apply cabinet boundaries" }).click();
   await expect(preview.locator("[data-cabinet-boundary]")).toHaveCount(1);
+  const addOpening = page.locator('form[data-cabinet-feature=""]');
+  for (const face of ["back", "front", "left", "right", "top", "bottom"]) {
+    const rectangular = face === "bottom";
+    await addOpening.locator('[name="face"]').selectOption(face);
+    if (rectangular) {
+      await addOpening.locator('[name="kind"]').selectOption("cable-entry");
+      await addOpening.locator('[name="shape"]').selectOption("rectangle");
+      await addOpening.locator('[name="height"]').fill("12");
+    }
+    await addOpening.locator('[name="u"]').fill("30");
+    await addOpening.locator('[name="v"]').fill("40");
+    await addOpening.locator('[name="width"]').fill("10");
+    await addOpening.getByRole("button", { name: "Add opening" }).click();
+  }
+  const outlines = preview.locator("[data-cabinet-opening]");
+  await expect(outlines).toHaveCount(6);
+  const editableOpening = page.locator("form[data-cabinet-feature]").first();
+  await editableOpening.locator('[name="u"]').fill("45");
+  await editableOpening.getByRole("button", { name: "Update opening" }).click();
+  await expect(editableOpening.locator('[name="u"]')).toHaveValue("45");
   await expect(page.locator("#inspectorContent")).toContainText(
     "Body extends beyond the declared cabinet boundary.",
   );
@@ -2086,6 +2106,8 @@ test("linked panel placement preserves its canonical device on local reopen", as
   }
   await selectPanelCommand("Preview panel in 3D");
   await expect(preview.locator("[data-panel-structure]")).toHaveCount(6);
+  await expect(outlines).toHaveCount(6);
+  await expect(editableOpening.locator('[name="u"]')).toHaveValue("45");
   await expect(
     preview.locator("[data-panel-structure] title").nth(1),
   ).toContainText("DIN rail · 200 × 35 × 7.5 mm");
@@ -2164,6 +2186,12 @@ test("linked panel placement preserves its canonical device on local reopen", as
     preview.getByText("Panel door · 150 × 240 × 2 mm · Z 190 mm"),
   ).toBeAttached();
   await expect(page.locator("[data-panel-mounting-check]")).toHaveCount(1);
+  await expect(outlines).toHaveCount(6);
+  await expect(editableOpening.locator('[name="u"]')).toHaveValue("45");
+  await editableOpening.getByRole("button", { name: "Remove opening" }).click();
+  await expect(outlines).toHaveCount(5);
+  await page.locator('[data-action="undo"]').click();
+  await expect(outlines).toHaveCount(6);
   await expect(page.locator("[data-panel-service-access]")).toContainText(
     "back service access (500 mm)",
   );

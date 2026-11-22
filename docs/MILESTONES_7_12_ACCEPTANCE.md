@@ -135,6 +135,9 @@ and depths in Properties to
 show their user-defined envelopes in the shared 3D view.
 A door models the closed envelope. A compartment is a wireframe volume used as
 a layout region and does not obstruct service access.
+The compact panel preview also saves circular and rectangular mounting holes and
+cable entries on any cabinet face using face-local centre coordinates. The outlines
+represent design intent and use the current declared cabinet dimensions.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

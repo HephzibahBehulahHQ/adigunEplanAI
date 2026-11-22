@@ -268,7 +268,7 @@
   }
   function updateSheetNavigationLabels(){ if(state.sections){renderSectionNavigation();return;} $$('#projectTree [data-sheet]').forEach(function(row){const label=sheetLabel(row.dataset.sheet),detail=row.querySelector('.detail'),file=row.querySelector('.file'),bold=row.querySelector('b');row.setAttribute('aria-label',label[0]+' · '+label[1]);row.title=label[0]+' · '+label[1];if(detail){detail.textContent=label[0];const title=Array.from(row.children).find(function(child){return child!==detail&&child!==file;});if(title)title.textContent=label[0]+' · '+label[1];}else if(bold){bold.textContent=label[0];const title=Array.from(row.children).find(function(child){return child.tagName==='SPAN'&&child!==file;});if(title)title.textContent=label[1];}});$$('#sheetTabs .document-tab[data-sheet]').forEach(function(tab){const label=sheetLabel(tab.dataset.sheet),text=tab.querySelector('span:not(.tab-close)');if(text)text.textContent=label[0]+' · '+label[1];});}
   function nextSheetNumber(){const used=state.sheets.map(function(sheet){const match=/^A3\/(\d+)$/.exec(sheet.number);return match?Number(match[1]):200;});return 'A3/'+String(Math.max(200,...used)+1).padStart(3,'0');}
-  function duplicateSheet(id){const source=state.sheets.find(function(sheet){return sheet.id===id;});const label=sheetLabel(id),copy={id:'custom-'+Date.now()+'-'+(++sheetIdSequence),name:'Copy of '+label[1],number:nextSheetNumber()};if(source&&source.metadata)copy.metadata=JSON.parse(JSON.stringify(source.metadata));if(state.sections)copy.sectionId=source?source.sectionId:state.activeSection;if(state.sheet)state.sheetObjects[state.sheet]=state.objects;state.sheets.splice(source?state.sheets.indexOf(source)+1:state.sheets.length,0,copy);const occupiedRefs=new Set(collectProjectObjects().filter(function(object){return object.kind==='component-instance';}).map(function(object){return object.ref;}));let nextObjectId=0;const copiedSheetIds=new Map();state.sheetObjects[copy.id]=JSON.parse(JSON.stringify(state.sheetObjects[id]||[])).map(function(object){const previousId=object.id;object.id='obj-copy-'+Date.now()+'-'+(++nextObjectId);copiedSheetIds.set(previousId,object.id);object.sheetId=copy.id;if(object.kind==='component-instance'){const definition=window.AdigunCADEngine.component(object.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;object.ref=prefix+number;occupiedRefs.add(object.ref);}return object;});state.sheetObjects[copy.id].forEach(function(object){if(object.mountingRailId&&copiedSheetIds.has(object.mountingRailId))object.mountingRailId=copiedSheetIds.get(object.mountingRailId);if(object.attachments)Object.keys(object.attachments).forEach(function(end){const replacement=copiedSheetIds.get(object.attachments[end].instanceId);if(replacement)object.attachments[end].instanceId=replacement;else delete object.attachments[end];});});state.sheetViews[copy.id]=JSON.parse(JSON.stringify(state.sheetViews[id]||{x:0,y:0,w:1200,h:760}));renderCustomSheetNavigation();persist();notify(copy.number+' · '+copy.name+' duplicated with its drawing objects.');}
+  function duplicateSheet(id){const source=state.sheets.find(function(sheet){return sheet.id===id;});const label=sheetLabel(id),copy={id:'custom-'+Date.now()+'-'+(++sheetIdSequence),name:'Copy of '+label[1],number:nextSheetNumber()};if(source&&source.metadata)copy.metadata=JSON.parse(JSON.stringify(source.metadata));if(source?.cabinetBounds)copy.cabinetBounds=structuredClone(source.cabinetBounds);if(source?.cabinetFeatures)copy.cabinetFeatures=structuredClone(source.cabinetFeatures);if(state.sections)copy.sectionId=source?source.sectionId:state.activeSection;if(state.sheet)state.sheetObjects[state.sheet]=state.objects;state.sheets.splice(source?state.sheets.indexOf(source)+1:state.sheets.length,0,copy);const occupiedRefs=new Set(collectProjectObjects().filter(function(object){return object.kind==='component-instance';}).map(function(object){return object.ref;}));let nextObjectId=0;const copiedSheetIds=new Map();state.sheetObjects[copy.id]=JSON.parse(JSON.stringify(state.sheetObjects[id]||[])).map(function(object){const previousId=object.id;object.id='obj-copy-'+Date.now()+'-'+(++nextObjectId);copiedSheetIds.set(previousId,object.id);object.sheetId=copy.id;if(object.kind==='component-instance'){const definition=window.AdigunCADEngine.component(object.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;object.ref=prefix+number;occupiedRefs.add(object.ref);}return object;});state.sheetObjects[copy.id].forEach(function(object){if(object.mountingRailId&&copiedSheetIds.has(object.mountingRailId))object.mountingRailId=copiedSheetIds.get(object.mountingRailId);if(object.attachments)Object.keys(object.attachments).forEach(function(end){const replacement=copiedSheetIds.get(object.attachments[end].instanceId);if(replacement)object.attachments[end].instanceId=replacement;else delete object.attachments[end];});});state.sheetViews[copy.id]=JSON.parse(JSON.stringify(state.sheetViews[id]||{x:0,y:0,w:1200,h:760}));renderCustomSheetNavigation();persist();notify(copy.number+' · '+copy.name+' duplicated with its drawing objects.');}
   function moveSheetToPosition(id){const index=state.sheets.findIndex(function(sheet){return sheet.id===id;});if(index<0){notify('Built-in sheets keep their standard engineering order; project-created sheets can be reordered.');return;}const answer=window.prompt('Move '+sheetLabel(id)[1]+' to position (1–'+state.sheets.length+')',String(index+1));if(answer===null)return;const position=Number(answer);if(!Number.isInteger(position)||position<1||position>state.sheets.length){notify('Enter a position from 1 to '+state.sheets.length+'.');return;}const moved=state.sheets.splice(index,1)[0];state.sheets.splice(position-1,0,moved);renderCustomSheetNavigation();updateSheetNavigationLabels();persist();notify(moved.name+' moved to project sheet position '+position+'.');}
   function reorderSheetBefore(sourceId,targetId){if(sourceId===targetId)return;const source=state.sheets.findIndex(function(sheet){return sheet.id===sourceId;}),target=state.sheets.findIndex(function(sheet){return sheet.id===targetId;});if(source<0||target<0)return;const moved=state.sheets.splice(source,1)[0];state.sheets.splice(target,0,moved);renderCustomSheetNavigation();updateSheetNavigationLabels();persist();}
   function collectProjectObjects(){if(state.sheet)state.sheetObjects[state.sheet]=state.objects;return Object.keys(state.sheetObjects).flatMap(function(sheetId){return(state.sheetObjects[sheetId]||[]).map(function(object){return Object.assign({},object,{sheetId:sheetId});});});}
@@ -276,8 +276,8 @@
   function setTool(tool){clearFloorRouteDraft();cancelTerminalDrag();cancelWireDraft();if(state.pendingMoveObjectId){state.pendingMoveObjectId=null;notify('Move cancelled.');}if(state.pendingComponentId&&tool!=='component-placement'){state.pendingComponentId=null;if(placementPreview){placementPreview.remove();placementPreview=null;}}state.tool=tool;$$('[data-draw]').forEach(b=>{const on=b.dataset.draw===tool;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on));});drawing.style.cursor=tool==='select'?'default':tool==='pan'?'grab':'crosshair';const names={freehand:'Freehand pencil',ellipse:'Ellipse',curve:'Bézier curve',triangle:'Triangle',arrow:'Arrow',pan:'Pan'};notify(tool==='wire'?'Click two terminals, or drag between them, to draw a wire.':(names[tool]||tool[0].toUpperCase()+tool.slice(1))+' tool selected · drag on the sheet to draw.');}
 
 
-  function drawingHistorySnapshot(objects){return JSON.stringify({objects:objects||state.objects,sheetObjects:state.sheetObjects,crossSheetConnections:state.crossSheetConnections,connectionIssues:state.connectionIssues||[]});}
-  function restoreDrawingHistory(snapshot){const saved=JSON.parse(snapshot);state.objects=Array.isArray(saved)?saved:saved.objects;if(!Array.isArray(saved)){state.sheetObjects=saved.sheetObjects||state.sheetObjects;state.crossSheetConnections=saved.crossSheetConnections||[];state.connectionIssues=saved.connectionIssues||[];}}
+  function drawingHistorySnapshot(objects){const sheet=activeDraftingSheet();return JSON.stringify({objects:objects||state.objects,sheetObjects:state.sheetObjects,crossSheetConnections:state.crossSheetConnections,connectionIssues:state.connectionIssues||[],cabinetFeatures:{sheetId:sheet?.id,records:sheet?.cabinetFeatures}});}
+  function restoreDrawingHistory(snapshot){const saved=JSON.parse(snapshot);state.objects=Array.isArray(saved)?saved:saved.objects;if(!Array.isArray(saved)){state.sheetObjects=saved.sheetObjects||state.sheetObjects;state.crossSheetConnections=saved.crossSheetConnections||[];state.connectionIssues=saved.connectionIssues||[];const sheet=state.sheets.find(item=>item.id===saved.cabinetFeatures?.sheetId);if(sheet){if(saved.cabinetFeatures.records)sheet.cabinetFeatures=saved.cabinetFeatures.records;else delete sheet.cabinetFeatures;}}}
   function removeSelectedDrawingObjects(ids){
     const result=window.AdigunCADEngine.removeDrawingObjects(state.objects,ids),removed=new Set(result.removed.map(function(o){return o.id;}));
     const affected=[];
@@ -2624,6 +2624,26 @@
     $('[data-panel="symbols"]').setAttribute('aria-pressed','false');
     projectButton.focus();
   });
+  const cabinetFeatureNames={'mounting-hole':'Mounting hole','cable-entry':'Cable entry'};
+  const cabinetEnvelope=cabinet=>({widthMm:cabinet.width,heightMm:cabinet.height,depthMm:cabinet.depth});
+  function cabinetFeatureFits(feature,cabinet){
+    const size=window.AdigunPanelGeometry.panelFaceSize(cabinetEnvelope(cabinet),feature.face);
+    const {x,y}=feature.positionMm,halfWidth=feature.widthMm/2,halfHeight=feature.heightMm/2;
+    return x>=halfWidth&&y>=halfHeight&&x+halfWidth<=size.widthMm&&y+halfHeight<=size.heightMm;
+  }
+  function cabinetFeatureForm(feature){
+    const form=document.createElement('form');
+    form.dataset.cabinetFeature=feature?.id??'';
+    const select=(name,label,options,selected)=>`<label class="property-row"><span>${label}</span><select name="${name}">${Object.entries(options).map(([value,text])=>`<option value="${value}" ${value===selected?'selected':''}>${text}</option>`).join('')}</select></label>`;
+    const faces=Object.fromEntries(window.AdigunCADEngine.cabinetFeatureFaces.map(face=>[face,face]));
+    form.innerHTML=select('kind','Opening type',cabinetFeatureNames,feature?.kind)+select('face','Cabinet face',faces,feature?.face)
+      +select('shape','Opening shape',{circle:'Circle',rectangle:'Rectangle'},feature?.shape)
+      +Object.entries({u:['Centre U (mm)',feature?.positionMm.x],v:['Centre V (mm)',feature?.positionMm.y],width:['Width or diameter (mm)',feature?.widthMm],height:['Rectangle height (mm)',feature?.heightMm]}).map(([key,[label,value]])=>
+        `<label class="property-row"><span>${label}</span><input name="${key}" type="number" min="0" max="1000000" step="any" ${key==='height'?'':'required'} value="${value??''}"></label>`).join('')
+      +`<button class="command-item" type="submit">${feature?'Update opening':'Add opening'}</button>`
+      +(feature?'<button class="command-item" type="submit" formnovalidate value="remove">Remove opening</button>':'');
+    return form;
+  }
   function renderPanelBodyPreview(host){
     host.replaceChildren();
     try{
@@ -2639,6 +2659,12 @@
         .map(([key,label])=>'<label class="property-row"><span>'+label+'</span><input type="number" required step="any" name="'+key+'" value="'+(cabinet?.[key]??'')+'"></label>').join('')
         +'<button class="command-item" type="submit">Apply cabinet boundaries</button>';
       host.append(config);
+      const features=activeDraftingSheet()?.cabinetFeatures??[];
+      if(cabinet){
+        const instructions=document.createElement('p');instructions.className='notice';
+        instructions.textContent='Opening axes in millimetres: back/front X and Y, left/right Z and Y, top/bottom X and Z. Circles use the diameter only.';
+        host.append(instructions,...features.map(cabinetFeatureForm),cabinetFeatureForm());
+      }
       for(const issue of issues){
         const warning=document.createElement('p');warning.className='notice';warning.textContent=issue.id+' · '+issue.message;host.append(warning);
       }
@@ -2741,12 +2767,42 @@
         });
         svg.append(group);
       }
+      for(const feature of features){
+        const outline=document.createElementNS(ns,'polyline');
+        const fits=cabinetFeatureFits(feature,cabinet);
+        outline.dataset.cabinetOpening=feature.id;
+        outline.setAttribute('points',window.AdigunPanelGeometry.featureVertices(cabinetEnvelope(cabinet),feature)
+          .map(({x,y,z})=>projectPoint(x+cabinet.x,y+cabinet.y,z).join(',')).join(' '));
+        outline.setAttribute('fill','none');outline.setAttribute('stroke',fits?'#146b80':'#b91c1c');
+        outline.setAttribute('vector-effect','non-scaling-stroke');
+        const title=document.createElementNS(ns,'title');
+        title.textContent=`${cabinetFeatureNames[feature.kind]} · ${feature.face}${fits?'':' · Outside cabinet face'}`;
+        outline.append(title);svg.append(outline);
+      }
       svg.setAttribute('viewBox',[bounds.left-15,bounds.top-15,bounds.right-bounds.left+30,bounds.bottom-bounds.top+30].join(' '));
       host.prepend(svg);
     }catch(error){host.textContent=error.message;}
   }
   $('#inspectorContent').addEventListener('submit',event=>{
     const form=event.target;
+    if(form.matches('[data-cabinet-feature]')){
+      event.preventDefault();
+      const sheet=activeDraftingSheet();
+      if(!sheet?.cabinetBounds)return;
+      const records=sheet.cabinetFeatures??[],id=form.dataset.cabinetFeature;
+      let next;
+      if(event.submitter?.value==='remove')next=records.filter(feature=>feature.id!==id);
+      else{
+        const input=new FormData(form),shape=input.get('shape'),width=Number(input.get('width'));
+        const feature={id:id||crypto.randomUUID(),kind:input.get('kind'),face:input.get('face'),shape,
+          positionMm:{x:Number(input.get('u')),y:Number(input.get('v'))},widthMm:width,heightMm:shape==='circle'?width:Number(input.get('height'))};
+        if(!window.AdigunCADEngine.validCabinetFeatures([feature])||!cabinetFeatureFits(feature,sheet.cabinetBounds)){
+          notify('Enter positive opening dimensions that fit entirely within the selected cabinet face.');return;
+        }
+        next=id?records.map(item=>item.id===id?feature:item):[...records,feature];
+      }
+      pushUndo();sheet.cabinetFeatures=next;persist();return;
+    }
     if(!form.matches('[data-cabinet-bounds]'))return;
     event.preventDefault();
     const sheet=activeDraftingSheet();
