@@ -89,3 +89,10 @@ clamping positions. Part records carry the distinct 4.2 mm / 1.5 mm² /
 is 800 V for category III and pollution degree 3.
 [2201-1201 datasheet](https://wago.priintcloud.com/datasheets/2201-1201/en) ·
 [2202-1401 datasheet](https://wago.priintcloud.com/datasheets/2202-1401/en)
+
+## Full-catalog search
+
+The component sidebar and Insert symbol dialog search all loaded entries by
+part number and descriptive terms. Results over 250 are paginated. Search
+always starts on the first matching page. Placement uses the original native
+component IDs, including parts found beyond the initial page.
