@@ -1296,7 +1296,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         if(sheet.floorPlan!==undefined){
           const plan=sheet.floorPlan;
-          if(!plan||typeof plan!=='object'||['building','level'].some(key=>typeof plan[key]!=='string'||!plan[key].trim()||plan[key].length>80))errors.push('Invalid building floor plan on sheet '+sheet.id+'.');
+          if(!plan||typeof plan!=='object'||['building','level'].some(key=>typeof plan[key]!=='string'||!plan[key].trim()||plan[key].length>80)||plan.elevationMm!==undefined&&!finite(plan.elevationMm))errors.push('Invalid building floor plan on sheet '+sheet.id+'.');
         }
         if(sheet.drafting!==undefined){
           const drafting=sheet.drafting;
@@ -1338,7 +1338,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const objectIds = new Set();
       const objectsById=new Map(project.objects.filter(Boolean).map(object=>[object.id,object]));
       const rooms=new Map(project.objects.filter(object=>object?.roomName).map(room=>[room.id,room]));
-      const floorIds=new Set((Array.isArray(project.sheets)?project.sheets:[]).filter(sheet=>sheet?.floorPlan).map(sheet=>sheet.id));
+      const floorSheets=new Map((Array.isArray(project.sheets)?project.sheets:[]).filter(sheet=>sheet?.floorPlan).map(sheet=>[sheet.id,sheet]));
+      const floorIds=new Set(floorSheets.keys());
       project.objects.forEach(function (object, index) {
         if (!object || typeof object !== 'object') {
           errors.push('Drawing object ' + (index + 1) + ' is invalid.');
@@ -1353,6 +1354,10 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
         if(object.floorRouteKind!==undefined&&(object.kind!=='freehand'||!['cable','conduit','tray'].includes(object.floorRouteKind)||!validFloorRoutePoints(object.points)||!floorIds.has(object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null))))errors.push('Invalid measured floor route '+object.id+'.');
+        if(object.riserTargetSheetId!==undefined){
+          const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
+          if(!object.floorRouteKind||floorRiserLength(floorSheets.get(sheetId),floorSheets.get(object.riserTargetSheetId))===null)errors.push('Invalid floor riser '+object.id+'.');
+        }
         if(object.floorCircuits!==undefined||object.floorCircuit!==undefined){
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           const boardId='building-distribution-board';
@@ -2405,6 +2410,12 @@ function createPumpStarterDocumentation(name) {
     if(!route)return [start,{x:end.x,y:start.y},end];
     return route.axis==='y'?[start,{x:start.x,y:route.coordinate},{x:end.x,y:route.coordinate},end]:[start,{x:route.coordinate,y:start.y},{x:route.coordinate,y:end.y},end];
   }
+  function floorRiserLength(source,target){
+    if(!source?.floorPlan||!target?.floorPlan||source.id===target.id||source.floorPlan.building!==target.floorPlan.building)return null;
+    const a=source.floorPlan.elevationMm,b=target.floorPlan.elevationMm;
+    const length=Math.abs(b-a);
+    return finite(a)&&finite(b)&&finite(length)&&length>0?length:null;
+  }
   function validFloorRoutePoints(points){
     return Array.isArray(points)&&points.length>=2&&points.every(function(point,index){
       return point&&finite(point.x)&&finite(point.y)&&(!index||Math.hypot(point.x-points[index-1].x,point.y-points[index-1].y)>0);
@@ -2874,19 +2885,21 @@ function createPumpStarterDocumentation(name) {
   }
 
   function floorCircuitScheduleCsv(project) {
-    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray']];
-    const assignments=new Map();
+    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser']];
+    const assignments=new Map(),sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet]));
     for(const object of project.objects){
       if(!object.floorCircuit)continue;
       const {boardId,circuitId}=object.floorCircuit;
       if(!assignments.has(boardId))assignments.set(boardId,new Map());
       const circuits=assignments.get(boardId);
-      if(!circuits.has(circuitId))circuits.set(circuitId,{loads:[],cable:0,conduit:0,tray:0});
+      if(!circuits.has(circuitId))circuits.set(circuitId,{loads:[],cable:0,conduit:0,tray:0,riser:0});
       const totals=circuits.get(circuitId);
-      if(object.floorRouteKind)totals[object.floorRouteKind]+=floorRouteLength(object);
+      if(object.floorRouteKind){
+        totals[object.floorRouteKind]+=floorRouteLength(object);
+        totals.riser+=floorRiserLength(sheets.get(object.sheetId),sheets.get(object.riserTargetSheetId))??0;
+      }
       else totals.loads.push(object.ref);
     }
-    const sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet]));
     const rows=[];
     for(const board of project.objects){
       if(!board.floorCircuits?.length)continue;
@@ -3026,6 +3039,7 @@ function createPumpStarterDocumentation(name) {
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
     floorRouteLength: floorRouteLength,
+    floorRiserLength: floorRiserLength,
     validFloorRoutePoints: validFloorRoutePoints,
     wireList: wireList,
     wireListCsv: wireListCsv,

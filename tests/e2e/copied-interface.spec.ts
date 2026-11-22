@@ -3527,11 +3527,45 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await expect(
     page.locator('[data-object="' + route.id + '"]'),
   ).toHaveAttribute("d", "M300 530 L500 530 L500 630");
+  const ground = routedFloor.data.sheets[0].id;
+  const elevation = page.getByRole("spinbutton", {
+    name: "Floor elevation (mm)",
+  });
+  if (!(await elevation.isVisible()))
+    await page.locator('[data-inspector="Properties"]').click();
+  await elevation.fill("0");
+  await elevation.press("Tab");
+  await page.locator("#newSheet").click();
+  await page.locator("#sheetDialog [data-floor-sheet]").click();
+  await page.locator("#projectTree [data-generated-sheet]").last().click();
+  const upperLevel = page.getByRole("textbox", { name: "Floor level" });
+  await upperLevel.fill("Upper floor");
+  await upperLevel.press("Tab");
+  await elevation.fill("3200");
+  await elevation.press("Tab");
+  await page.locator('#projectTree [data-sheet="' + ground + '"]').click();
+  await clickAt(400, 530);
+  const riser = page.getByRole("combobox", { name: "Riser target floor" });
+  await riser.selectOption({ label: "A2/001 · Upper floor" });
+  await expect(page.getByText("3200 mm", { exact: true })).toBeVisible();
+  const withRiser = await saveDrawing(page, "floor-plan-riser");
+  expect(
+    withRiser.data.objects.find(
+      (object: { id: string }) => object.id === route.id,
+    ).riserTargetSheetId,
+  ).toBe(withRiser.data.sheets[1].id);
+  await page.locator("#openFile").setInputFiles(withRiser.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-plan-riser.adigun.json opened.",
+  );
+  await expect(page.locator('[data-object="' + route.id + '"]')).toContainText(
+    "Upper floor · 3200 mm",
+  );
   const routingPending = page.waitForEvent("download");
   await command("Export floor circuit schedule");
   const routingSchedule = await routingPending;
   expect(fs.readFileSync((await routingSchedule.path())!, "utf8")).toContain(
-    '"DB1","Workshop sockets","SO1","300","0","0"',
+    '"DB1","Workshop sockets","SO1","300","0","0","3200"',
   );
   await clickAt(260, 240);
   await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
