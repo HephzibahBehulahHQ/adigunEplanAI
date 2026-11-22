@@ -1098,7 +1098,13 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       family:'building-device',referencePrefix,category:'Building · floor-plan devices',connectionClass:'electrical',
       symbol:{id:id+'-symbol',view:'schematic',unit:'mm',width:160,height:180,artwork,pins,internalConnections:[],
         numberingNote:'Logical floor-plan terminals. Supply, product ratings and installed footprint require design inputs.'},
-      specifications:{},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}];
+      specifications:{},instanceProperties:{
+        comment:{type:'string',default:'',maximumLength:160},
+        ...(id==='building-distribution-board'?{}:{
+          activePowerW:{type:'number',default:null,minimum:0,maximum:1e9},
+          demandFactor:{type:'number',default:null,minimum:0,maximum:1}
+        })
+      },sources:[]}];
   })));
   function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || null; }
   function catalog() {
@@ -2928,27 +2934,35 @@ function createPumpStarterDocumentation(name) {
   }
 
   function floorCircuitScheduleCsv(project) {
-    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser']];
+    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser'],['Known connected load (W)','connected'],['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']];
+    const emptyTotals=()=>({loads:[],cable:0,conduit:0,tray:0,riser:0,connected:0,unknownConnected:0,demand:0,unknownDemand:0});
     const assignments=new Map(),sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet]));
     for(const object of project.objects){
       if(!object.floorCircuit)continue;
       const {boardId,circuitId}=object.floorCircuit;
       if(!assignments.has(boardId))assignments.set(boardId,new Map());
       const circuits=assignments.get(boardId);
-      if(!circuits.has(circuitId))circuits.set(circuitId,{loads:[],cable:0,conduit:0,tray:0,riser:0});
+      if(!circuits.has(circuitId))circuits.set(circuitId,emptyTotals());
       const totals=circuits.get(circuitId);
       if(object.floorRouteKind){
         totals[object.floorRouteKind]+=floorRouteLength(object);
         totals.riser+=floorRiserLength(sheets.get(object.sheetId),sheets.get(object.riserTargetSheetId))??0;
       }
-      else totals.loads.push(object.ref);
+      else{
+        totals.loads.push(object.ref);
+        const {activePowerW,demandFactor}=object.properties||{};
+        if(finite(activePowerW))totals.connected+=activePowerW;
+        else totals.unknownConnected++;
+        if(finite(activePowerW)&&finite(demandFactor))totals.demand+=activePowerW*demandFactor;
+        else totals.unknownDemand++;
+      }
     }
     const rows=[];
     for(const board of project.objects){
       if(!board.floorCircuits?.length)continue;
       const sheet=sheets.get(board.sheetId);
       for(const circuit of board.floorCircuits)rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
-        board:board.ref,circuit:circuit.name,...assignments.get(board.id)?.get(circuit.id)});
+        board:board.ref,circuit:circuit.name,...(assignments.get(board.id)?.get(circuit.id)||emptyTotals())});
     }
     return reportCsv(columns,rows);
   }
