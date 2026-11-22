@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import fs from "node:fs";
 import crypto from "node:crypto";
 import DxfParser from "dxf-parser";
+import { calculateRecord } from "../../packages/engineering-core/calculations.ts";
 import type { Page } from "@playwright/test";
 
 // Keep editor regression tests independent of the live account provider.
@@ -4603,6 +4604,55 @@ test("engineering calculation registry converts units and exports the method res
   await expect(result).toContainText(
     "Fault current below supplied selectivity limit: Supplied condition not met",
   );
+  await page
+    .getByRole("textbox", { name: "Calculation name" })
+    .fill("Evidence check");
+  await page
+    .getByRole("button", { name: "Save calculation", exact: true })
+    .click();
+  const project = await saveDrawing(page, "calculation-register-source");
+  const legacy = {
+    ...project.data.calculations[0],
+    id: "unavailable-method",
+    name: "Historical version",
+    methodReference: "adiguneplanai:calculation:ohms-law:0.9.0",
+  };
+  await page.locator("#openFile").setInputFiles({
+    name: "calculation-register-history.adigun.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(
+      JSON.stringify({
+        ...project.data,
+        calculations: [...project.data.calculations, legacy],
+      }),
+    ),
+  });
+  await expect(page.locator("#statusText")).toContainText(
+    "calculation-register-history.adigun.json opened",
+  );
+  const registerPending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Download saved calculation register JSON" })
+    .click();
+  const download = await registerPending;
+  expect(download.suggestedFilename()).toBe("calculation-register.json");
+  const register = JSON.parse(fs.readFileSync(await download.path(), "utf8"));
+  expect(register.schema).toBe("adiguneplanai-calculation-register/1");
+  expect(register.entries).toHaveLength(3);
+  for (const [index, entry] of register.entries.slice(0, 2).entries()) {
+    expect(entry.status).toBe("replayed");
+    expect(entry.record).toEqual(project.data.calculations[index]);
+    expect(entry.result).toEqual(calculateRecord(entry.record));
+    expect(entry.result.assumptionKeys.length).toBeGreaterThan(0);
+  }
+  expect(register.entries[1].result.evidence).toEqual([
+    "Synthetic case for calculator verification",
+  ]);
+  expect(register.entries[2]).toEqual({
+    status: "unavailable",
+    record: legacy,
+    issues: [{ code: "calcErrorMethod" }],
+  });
 });
 
 test("floor cable ampacity compares explicit inputs and reopens them", async ({
