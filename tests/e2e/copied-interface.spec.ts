@@ -2195,6 +2195,32 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await expect(page.locator("[data-panel-service-access]")).toContainText(
     "back service access (500 mm)",
   );
+  const downloadPanel = async (format: "SVG" | "OBJ") => {
+    const event = page.waitForEvent("download");
+    await page.getByRole("button", { name: `Export panel ${format}` }).click();
+    const download = await event;
+    expect(download.suggestedFilename()).toMatch(
+      new RegExp(`-panel\\.${format.toLowerCase()}$`),
+    );
+    return fs.readFileSync(await download.path(), "utf8");
+  };
+  const svg = await downloadPanel("SVG");
+  expect(svg.match(/data-cabinet-opening=/g)).toHaveLength(6);
+  expect(svg).toContain("Panel door · 150 × 240 × 2 mm · Z 190 mm");
+  const obj = await downloadPanel("OBJ");
+  expect(obj).toMatch(/^o cabinet-boundary$/m);
+  expect(obj).toMatch(/^o panel-door-.*\nv 700 480 190$/m);
+  expect(obj).toMatch(/^o panel-compartment-.*(?:\nv [^\n]+){8}\nl /m);
+  expect(obj).toMatch(/^o cable-entry-bottom-.*\nv 25 1500 34$/m);
+  const vertices = obj.match(/^v /gm)!.length;
+  for (const element of obj.matchAll(/^[fl] (.+)$/gm)) {
+    expect(
+      element[1]
+        .split(" ")
+        .map(Number)
+        .every((index) => index > 0 && index <= vertices),
+    ).toBe(true);
+  }
 });
 
 test("mounting accessory links to the canonical overload and survives rename and reopen", async ({

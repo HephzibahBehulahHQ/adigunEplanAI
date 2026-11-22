@@ -1,4 +1,5 @@
 import { ductOccupancy } from "../../../packages/panel-engineering/estimates.ts";
+import { compactPanelObj } from "./compactPanelExport.ts";
 import {
   featureVertices,
   panelFaceSize,
@@ -13,6 +14,7 @@ Object.assign(window, { AdigunPanelEstimates: { ductOccupancy } });
 Object.assign(window, {
   AdigunPanelGeometry: {
     accessBounds,
+    compactPanelObj,
     featureVertices,
     fitsRailMountingPlane,
     panelFaceSize,

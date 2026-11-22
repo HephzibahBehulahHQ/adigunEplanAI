@@ -138,6 +138,9 @@ a layout region and does not obstruct service access.
 The compact panel preview also saves circular and rectangular mounting holes and
 cable entries on any cabinet face using face-local centre coordinates. The outlines
 represent design intent and use the current declared cabinet dimensions.
+The preview exports an SVG of the current projection and an OBJ in millimetres
+with body envelopes, wireframe cabinet and compartment boundaries, and opening
+outlines.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
