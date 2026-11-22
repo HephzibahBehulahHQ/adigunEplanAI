@@ -1,4 +1,4 @@
-"""Extract reviewable native through-terminal rows from exact WAGO PDFs."""
+"""Extract reviewable native terminal rows from exact WAGO PDFs."""
 
 import argparse
 import hashlib
@@ -35,8 +35,109 @@ def evidence(pages, pattern, label):
     return matches[0]
 
 
+def read_pcb_article(pdf, candidate, retrieved_at):
+    code = pdf.stem
+    with pypdfium2.PdfDocument(pdf) as document:
+        pages = [
+            document[index].get_textpage().get_text_range().replace("\r", "").replace("\xa0", " ")
+            for index in range(3)
+        ]
+    if (
+        candidate["manufacturer"] != "WAGO"
+        or candidate["datasheetUrl"] != f"https://wago.priintcloud.com/datasheets/{code}/en"
+        or not candidate["description"].startswith("PCB terminal block;")
+        or not all(f"Item Number: {code}" in page for page in pages)
+    ):
+        raise ValueError("source does not identify this PCB terminal block")
+
+    def field(pattern, name):
+        return evidence(pages, pattern, name)
+
+    def value(item):
+        return float(item[1].replace(",", "."))
+
+    clamps = field(r"^Clamping units (\d+)\b", "clamp count")
+    poles = field(r"^Total number of potentials (\d+)\b", "potential count")
+    levels = field(r"^Number of levels (\d+)\b", "level count")
+    pins = field(r"^Number of solder pins per potential (\d+)\b", "solder pins per potential")
+    technology = field(r"^Connection technology (Push-in CAGE CLAMP|CAGE CLAMP)\b", "connection technology")
+    actuation = field(r"^Actuation (?:type|Method) (Push-button)\b", "actuation")
+    mounting = field(r"^PCB contact (THT)\b", "PCB contact")
+    pattern = field(r"^Solder pin arrangement over the entire terminal strip \(?(in-line)\)?", "pad arrangement")
+    pitch = field(rf"^Pin spacing {NUMBER} mm", "single pad pitch")
+    width = field(rf"^Width {NUMBER} mm", "width")
+    height = field(rf"^Height from the surface {NUMBER} mm", "height above board")
+    depth = field(rf"^Depth {NUMBER} mm", "depth")
+    length = field(rf"^Solder pin length {NUMBER} mm", "solder pin length")
+    drilled = field(rf"^Drilled hole diameter {NUMBER}(?: mm)?[ \t]*$", "drilled hole diameter")
+    pin_dimensions = field(r"^Solder pin dimensions ([0-9.,]+ x [0-9.,]+) mm", "pin dimensions")
+    finish = field(r"^Color ([a-z]+(?:[ -][a-z]+)*)[ \t]*$", "finish")
+    revision = field(r"Version (\d{2}\.\d{2}\.\d{4})", "version")
+    title = " ".join(pages[0].replace("\ufffe", "").split())
+    section = re.search(rf"PCB terminal block;[^;]*; {NUMBER} mm", title)
+
+    if (
+        not section
+        or not candidate["description"].endswith(";" + finish[1])
+        or not 1 <= int(poles[1]) <= 32
+        or clamps[1] != poles[1]
+        or levels[1] != "1"
+        or pins[1] != "1"
+        or (int(poles[1]) - 1) * value(pitch) >= value(width)
+    ):
+        raise ValueError("source does not document one clamp and one in-line pad per pole")
+
+    (voltage, current, ratings_page) = iec_ratings(pages, "60664-1")
+    last = max(ratings_page, pins[0], width[0], finish[0], mounting[0], pattern[0])
+    pin_width, pin_depth = [float(x.replace(",", ".")) for x in pin_dimensions[1].split(" x ")]
+    return {
+        "orderCode": code,
+        "poles": int(poles[1]),
+        "nominalVoltage": value(voltage),
+        "ratedCurrent": value(current),
+        "finish": finish[1].title(),
+        "connectionTechnology": technology[1],
+        "actuationMethod": actuation[1],
+        "nominalCrossSectionMm2": float(section[1].replace(",", ".")),
+        "bodyWidthMm": value(width),
+        "bodyDepthMm": value(depth),
+        "bodyHeightAboveBoardMm": value(height),
+        "padPitchMm": value(pitch),
+        "solderPinLengthMm": value(length),
+        "solderPinWidthMm": pin_width,
+        "solderPinDepthMm": pin_depth,
+        "drilledHoleDiameterMm": value(drilled),
+        "revision": revision[1],
+        "pages": f"1–{last}",
+        "dimensionPage": width[0],
+        "datasheet": candidate["datasheetUrl"],
+        "productUrl": candidate["productUrl"],
+        "retrievedAt": retrieved_at,
+        "datasheetSha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
+    }
+
+
+def iec_ratings(pages, standard="60947-7-1"):
+    iec_tables = []
+    for page in pages:
+        for table in re.finditer(rf"IEC/EN {standard}[\s\S]*?Rated current[^\n]+", page):
+            iec_tables.append(table.group())
+    voltage = evidence(iec_tables, rf"^Nominal voltage {NUMBER} V", "IEC nominal voltage")
+    current = evidence(iec_tables, rf"^Rated current {NUMBER} A", "IEC rated current")
+    ratings_page = next(index for index, page in enumerate(pages, 1) if iec_tables[0] in page)
+    if not all(
+        re.search(r"Overvoltage category III\b", table)
+        and re.search(r"Pollution degree 3\b", table)
+        for table in iec_tables
+    ):
+        raise ValueError("IEC rating basis is missing")
+    return voltage, current, ratings_page
+
+
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
+    if re.fullmatch(r"250-[0-9]{3}", code):
+        return read_pcb_article(pdf, candidate, retrieved_at)
     double_deck = bool(re.fullmatch(r"(?:2000|2002|2200|2202)-2[0-9]{3}", code))
     classic = bool(re.fullmatch(r"(?:279|280|281|282|285)-[0-9]{3}", code))
     if not double_deck and not classic and not re.fullmatch(r"(?:2000|2004|2006|2010|2016|2204|2206)-1[234]0[1-6]", code):
@@ -150,19 +251,7 @@ def read_article(pdf, candidate, retrieved_at):
             raise ValueError("unsupported single-deck grouping")
         slug = f"{clamps[1]}-conductor-through-terminal-block"
 
-    iec_tables = []
-    for page in pages:
-        for table in re.finditer(r"IEC/EN 60947-7-1[\s\S]*?Rated current[^\n]+", page):
-            iec_tables.append(table.group())
-    voltage = evidence(iec_tables, rf"^Nominal voltage {NUMBER} V", "IEC nominal voltage")
-    current = evidence(iec_tables, rf"^Rated current {NUMBER} A", "IEC rated current")
-    ratings_page = next(index for index, page in enumerate(pages, 1) if iec_tables[0] in page)
-    if not all(
-        re.search(r"Overvoltage category III\b", table)
-        and re.search(r"Pollution degree 3\b", table)
-        for table in iec_tables
-    ):
-        raise ValueError("IEC rating basis is missing")
+    voltage, current, ratings_page = iec_ratings(pages)
 
     def number(field):
         return float(field[1].replace(",", "."))

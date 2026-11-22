@@ -26,6 +26,17 @@ const terminalBatch = JSON.parse(
   ),
 );
 engine.registerWagoTerminalBatch(terminalBatch);
+engine.registerWagoPcbTerminalBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-pcb-terminal-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerPlcSymbols(
   plcKinds.map((kind) => ({
     kind,

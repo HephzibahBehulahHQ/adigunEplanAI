@@ -1749,6 +1749,43 @@ test("both component pickers search 10,000 entries and place the final real part
   ).toHaveLength(2);
 });
 
+test("PCB terminal blocks expose wire clamps and solder pins on the canvas", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("250-302");
+  const entry = page.locator('[data-insert="wago-250-302"]');
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const x of [400, 650]) {
+    await entry.click();
+    await clickAt(x, 250);
+  }
+  await clickAt(412, 295);
+  await clickAt(638, 205);
+  const saved = await saveDrawing(page, "pcb-clamp-to-pad");
+  expect(
+    saved.data.objects.filter(
+      (item: { componentId?: string }) => item.componentId === "wago-250-302",
+    ),
+  ).toHaveLength(2);
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "pad-2" }),
+        end: expect.objectContaining({ pinId: "clamp-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", async ({
   page,
 }) => {
