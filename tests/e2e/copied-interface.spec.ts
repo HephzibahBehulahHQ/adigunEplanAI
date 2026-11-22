@@ -2032,9 +2032,51 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await expect(page.locator("[data-panel-collision]")).toContainText(
     "Body collision.",
   );
+  const selectPanelCommand = async (name: string) => {
+    await page.locator("#openCommands").click();
+    await page.locator("#commandSearch").fill(name);
+    await page.locator("#commandList").getByText(name, { exact: true }).click();
+  };
+  for (const [command, x, y, width, height, depth] of [
+    ["Draw mounting plate", 100, 150, 200, 70, "2"],
+    ["Draw DIN rail", 120, 280, 100, 17.5, "7.5"],
+  ] as const) {
+    await selectPanelCommand(command);
+    const start = await sheetPoint(page, x, y);
+    const end = await sheetPoint(page, x + width, y + height);
+    await page.mouse.move(start.x, start.y);
+    await page.mouse.down();
+    await page.mouse.move(end.x, end.y);
+    await page.mouse.up();
+    const field = page.getByRole("spinbutton", {
+      name: "Structure depth (mm)",
+    });
+    await field.fill(depth);
+    await field.press("Tab");
+  }
+  await selectPanelCommand("Preview panel in 3D");
+  await expect(preview.locator("[data-panel-structure]")).toHaveCount(2);
+  await expect(
+    preview.locator("[data-panel-structure] title").last(),
+  ).toContainText("DIN rail · 200 × 35 × 7.5 mm");
+  const structured = await saveDrawing(page, "panel-structures");
+  expect(
+    structured.data.objects
+      .filter((object: { panelStructure?: unknown }) => object.panelStructure)
+      .map((object: { panelStructure: unknown }) => object.panelStructure),
+  ).toEqual([
+    { kind: "mounting-plate", depth: 2 },
+    { kind: "din-rail", depth: 7.5 },
+  ]);
   await page.screenshot({
     path: test.info().outputPath("linked-panel-placement.png"),
   });
+  await page.locator("#openFile").setInputFiles(structured.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project panel-structures.adigun.json opened.",
+  );
+  await selectPanelCommand("Preview panel in 3D");
+  await expect(preview.locator("[data-panel-structure]")).toHaveCount(2);
 });
 
 test("mounting accessory links to the canonical overload and survives rename and reopen", async ({
