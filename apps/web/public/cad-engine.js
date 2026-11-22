@@ -1352,6 +1352,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.dimensionOffset!==undefined&&(object.kind!=='line'||object.wallThickness!==undefined||!finite(object.dimensionOffset)||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid dimension line '+object.id+'.');
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');
         if(object.wallOpenings!==undefined&&!validWallOpenings(object))errors.push('Invalid hosted openings on wall '+object.id+'.');
+        if(object.floorRouteKind!==undefined&&(object.kind!=='freehand'||!['cable','conduit','tray'].includes(object.floorRouteKind)||!validFloorRoutePoints(object.points)||!floorIds.has(object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null))))errors.push('Invalid measured floor route '+object.id+'.');
         if(object.floorCircuits!==undefined||object.floorCircuit!==undefined){
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           const boardId='building-distribution-board';
@@ -1361,7 +1362,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             new Set(circuits.map(circuit=>circuit.id)).size!==circuits.length||new Set(circuits.map(circuit=>circuit.name)).size!==circuits.length))errors.push('Invalid floor circuits on '+object.id+'.');
           if(object.floorCircuit!==undefined){
             const assignment=object.floorCircuit,board=objectsById.get(assignment?.boardId);
-            if(!floorIds.has(sheetId)||object.kind!=='component-instance'||object.componentId===boardId||component(object.componentId)?.family!=='building-device'||
+            const eligible=object.floorRouteKind&&object.kind==='freehand'||object.kind==='component-instance'&&object.componentId!==boardId&&component(object.componentId)?.family==='building-device';
+            if(!floorIds.has(sheetId)||!eligible||
               board?.kind!=='component-instance'||board.componentId!==boardId||(board.sheetId||sheetId)!==sheetId||!Array.isArray(board.floorCircuits)||
               !board.floorCircuits.some(circuit=>circuit&&circuit.id===assignment.circuitId))errors.push('Invalid floor circuit assignment on '+object.id+'.');
           }
@@ -2403,6 +2405,14 @@ function createPumpStarterDocumentation(name) {
     if(!route)return [start,{x:end.x,y:start.y},end];
     return route.axis==='y'?[start,{x:start.x,y:route.coordinate},{x:end.x,y:route.coordinate},end]:[start,{x:route.coordinate,y:start.y},{x:route.coordinate,y:end.y},end];
   }
+  function validFloorRoutePoints(points){
+    return Array.isArray(points)&&points.length>=2&&points.every(function(point,index){
+      return point&&finite(point.x)&&finite(point.y)&&(!index||Math.hypot(point.x-points[index-1].x,point.y-points[index-1].y)>0);
+    })&&finite(floorRouteLength({points}));
+  }
+  function floorRouteLength(route){
+    return route.points.slice(1).reduce((sum,point,index)=>sum+Math.hypot(point.x-route.points[index].x,point.y-route.points[index].y),0);
+  }
   function wireRouteLength(wire){const points=wireRoute(wire);return points.slice(1).reduce(function(sum,p,i){return sum+Math.hypot(p.x-points[i].x,p.y-points[i].y);},0);}
   function analyze(objects) {
     const source = Array.isArray(objects) ? objects : [];
@@ -2864,15 +2874,17 @@ function createPumpStarterDocumentation(name) {
   }
 
   function floorCircuitScheduleCsv(project) {
-    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads']];
+    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray']];
     const assignments=new Map();
     for(const object of project.objects){
       if(!object.floorCircuit)continue;
       const {boardId,circuitId}=object.floorCircuit;
       if(!assignments.has(boardId))assignments.set(boardId,new Map());
       const circuits=assignments.get(boardId);
-      if(!circuits.has(circuitId))circuits.set(circuitId,[]);
-      circuits.get(circuitId).push(object.ref);
+      if(!circuits.has(circuitId))circuits.set(circuitId,{loads:[],cable:0,conduit:0,tray:0});
+      const totals=circuits.get(circuitId);
+      if(object.floorRouteKind)totals[object.floorRouteKind]+=floorRouteLength(object);
+      else totals.loads.push(object.ref);
     }
     const sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet]));
     const rows=[];
@@ -2880,7 +2892,7 @@ function createPumpStarterDocumentation(name) {
       if(!board.floorCircuits?.length)continue;
       const sheet=sheets.get(board.sheetId);
       for(const circuit of board.floorCircuits)rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
-        board:board.ref,circuit:circuit.name,loads:assignments.get(board.id)?.get(circuit.id)||[]});
+        board:board.ref,circuit:circuit.name,...assignments.get(board.id)?.get(circuit.id)});
     }
     return reportCsv(columns,rows);
   }
@@ -3013,6 +3025,8 @@ function createPumpStarterDocumentation(name) {
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
+    floorRouteLength: floorRouteLength,
+    validFloorRoutePoints: validFloorRoutePoints,
     wireList: wireList,
     wireListCsv: wireListCsv,
     cableCoreRegister: cableCoreRegister,
