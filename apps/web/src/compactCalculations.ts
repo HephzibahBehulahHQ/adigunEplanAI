@@ -64,12 +64,18 @@ function renderResult(
       `${message(check.labelKey)}: ${message(check.passed ? "calcCheckMet" : "calcCheckNotMet")}`,
     );
   }
+  if (result.warningKeys.length) {
+    const warnings = document.createElement("ul");
+    warnings.setAttribute("aria-label", message("calcWarnings"));
+    for (const key of result.warningKeys) addText(warnings, "li", message(key));
+    host.append(warnings);
+  }
   const details = document.createElement("details");
   addText(details, "summary", message("calcMethodAndAssumptions"));
   addText(details, "p", result.methodReference);
   addText(details, "p", result.formula);
   const assumptions = document.createElement("ul");
-  for (const key of [...result.assumptionKeys, ...result.warningKeys]) {
+  for (const key of result.assumptionKeys) {
     addText(assumptions, "li", message(key));
   }
   details.append(assumptions);
@@ -122,6 +128,11 @@ export function mountCompactCalculations(
   const fields = document.createElement("div");
   const evidence = document.createElement("textarea");
   evidence.rows = 3;
+  const evidenceHint = document.createElement("p");
+  evidenceHint.id = "compactCalculationEvidenceHint";
+  evidenceHint.className = "notice";
+  evidenceHint.textContent = message("calcEvidenceHint");
+  evidence.setAttribute("aria-describedby", evidenceHint.id);
   const evidenceRow = field(message("calcEvidence"), evidence);
   const run = document.createElement("button");
   run.type = "submit";
@@ -135,9 +146,13 @@ export function mountCompactCalculations(
   name.maxLength = 160;
   let savedId: string | undefined;
   const selectedUnits = new Map<string, Unit>();
-  form.append(fields, evidenceRow, run);
+  form.append(fields, evidenceRow, evidenceHint, run);
   host.replaceChildren(field(message("calcTool"), method), form, result);
   if (project) host.prepend(field(message("calcSavedRecords"), savedRecords));
+  const scope = document.createElement("p");
+  scope.className = "notice";
+  scope.textContent = message("calcScope");
+  host.prepend(scope);
 
   function refreshRecords() {
     savedRecords.replaceChildren(new Option(message("calcChoose"), ""));
@@ -198,7 +213,11 @@ export function mountCompactCalculations(
         value.type = "number";
         value.step = "any";
       }
-      fields.append(field(label, value));
+      const onlyUnit =
+        input.units.length === 1 && input.units[0] !== "1"
+          ? input.units[0]
+          : null;
+      fields.append(field(onlyUnit ? `${label} (${onlyUnit})` : label, value));
       const unit = document.createElement("select");
       unit.name = `${input.key}-unit`;
       for (const option of input.units) unit.add(new Option(option, option));
