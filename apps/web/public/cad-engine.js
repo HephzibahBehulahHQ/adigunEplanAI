@@ -1575,7 +1575,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.accessClearanceMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.accessClearanceMm)||object.accessClearanceMm<=0||object.accessClearanceMm>1e6))errors.push('Invalid service access distance '+object.id+'.');
         if(object.panelStructure!==undefined){
           const shape=object.panelStructure;
-          if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail','cable-duct','terminal-rail'].includes(shape.kind)||
+          if(object.kind!=='rect'||!shape||!['mounting-plate','din-rail','cable-duct','terminal-rail','panel-door','panel-compartment'].includes(shape.kind)||
             ![object.x,object.y,object.x2,object.y2].every(finite)||object.x===object.x2||object.y===object.y2||
             shape.z!==undefined&&(!finite(shape.z)||shape.z<0||shape.z>1e6)||
             shape.depth!==undefined&&(!finite(shape.depth)||shape.depth<=0||shape.depth>1e6)||!validDuctInputs(shape))errors.push('Invalid panel mounting structure '+object.id+'.');
