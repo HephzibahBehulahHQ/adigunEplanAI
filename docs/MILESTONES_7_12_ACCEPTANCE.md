@@ -124,7 +124,8 @@ body dimensions and the authored rotation. Selecting a body locates its 2D
 placement. The sheet accepts a user-entered usable cabinet volume and each
 placement accepts a rear mounting depth. The preview reports body envelopes
 that exceed the declared usable volume. Panel construction and full assembly
-checks remain separate requirements.
+checks remain separate requirements. The preview highlights pairs that
+overlap on all three axes and reports the overlap dimensions.
 
 Focused M8 verification covers all 26 methods, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 

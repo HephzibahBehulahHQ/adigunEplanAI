@@ -8,6 +8,38 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("panel envelopes require positive overlap on all three axes", () => {
+  const componentId = "siemens-3rt2027-2kb40";
+  const a = engine.createInstance(componentId, 0, 0, "K1");
+  const b = engine.createInstance(componentId, 0, 0, "K2");
+  const sheetId = "panel";
+  const placement = {
+    kind: "panel-placement",
+    sheetId,
+    footprintComponentId: componentId,
+    x: 100,
+    y: 100,
+    scale: 0.5,
+    rotation: 0,
+  };
+  const first = { ...placement, id: "first", deviceId: a.id };
+  const other = { ...placement, id: "other", deviceId: b.id };
+  const scene = (changes) =>
+    engine.panelBodyScene(
+      { objects: [a, b, first, { ...other, ...changes }] },
+      sheetId,
+    );
+  assert.deepEqual(plain(scene({ x: 110, mountingDepthMm: 100 }).collisions), [
+    {
+      ids: ["first", "other"],
+      refs: ["K1", "K2"],
+      overlapMm: { x: 25, y: 102, z: 7 },
+    },
+  ]);
+  assert.equal(scene({ mountingDepthMm: 107 }).collisions.length, 0);
+  assert.equal(scene({ x: 122.5 }).collisions.length, 0);
+});
+
 test("floor zone polygons measure concave geometry and reject crossings", () => {
   const points = (pairs) => pairs.map(([x, y]) => ({ x, y }));
   assert.equal(

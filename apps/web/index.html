@@ -2517,7 +2517,7 @@
     host.replaceChildren();
     try{
       const project={objects:collectProjectObjects(),sheets:state.sheets};
-      const {bodies,issues,cabinet}=window.AdigunCADEngine.panelBodyScene(project,state.sheet);
+      const {bodies,issues,cabinet,collisions}=window.AdigunCADEngine.panelBodyScene(project,state.sheet);
       const note=document.createElement('p');
       note.className='notice';
       note.textContent='Dimensioned body envelopes in millimetres. Blank mounting depths use the rear reference plane. Enter the usable cabinet boundaries for a body fit comparison.';
@@ -2530,6 +2530,15 @@
       host.append(config);
       for(const issue of issues){
         const warning=document.createElement('p');warning.className='notice';warning.textContent=issue.id+' · '+issue.message;host.append(warning);
+      }
+      const collidingIds=new Set(collisions.flatMap(collision=>collision.ids));
+      for(const collision of collisions){
+        const warning=document.createElement('p');
+        warning.className='notice';
+        warning.dataset.panelCollision='';
+        const overlap=Object.values(collision.overlapMm).map(value=>Number(value.toPrecision(6))).join(' × ');
+        warning.textContent=collision.refs.join(' and ')+' · Body collision. Overlap X × Y × Z: '+overlap+' mm.';
+        host.append(warning);
       }
       if(!bodies.length&&!cabinet)return;
       const ns='http://www.w3.org/2000/svg';
@@ -2559,13 +2568,15 @@
       for(const body of bodies.sort((a,b)=>a.x+a.y-b.x-b.y||a.z-b.z)){
         const vertices=projectBox(body.x-body.width/2,body.y-body.height/2,body.width,body.height,body.z,body.depth);
         const group=document.createElementNS(ns,'g');group.dataset.panelBody=body.id;
+        const colliding=collidingIds.has(body.id);
+        if(colliding)group.dataset.colliding='';
         const title=document.createElementNS(ns,'title');
         title.textContent=body.ref+' · '+body.width+' × '+body.height+' × '+body.depth+' mm · Z '+body.z+' mm';
         group.append(title);
         for(const [face,fill] of [[[6,7,3,2],'#a6c3dd'],[[5,6,2,1],'#7597b8'],[[4,5,6,7],'#d8e8f5']]){
           const polygon=document.createElementNS(ns,'polygon');
           polygon.setAttribute('points',face.map(index=>vertices[index].join(',')).join(' '));
-          polygon.setAttribute('fill',fill);polygon.setAttribute('stroke','#274663');
+          polygon.setAttribute('fill',fill);polygon.setAttribute('stroke',colliding?'#b91c1c':'#274663');
           polygon.setAttribute('vector-effect','non-scaling-stroke');group.append(polygon);
         }
         group.addEventListener('click',()=>{
