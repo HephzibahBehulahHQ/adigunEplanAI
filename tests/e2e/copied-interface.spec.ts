@@ -3355,3 +3355,42 @@ test("room outlines have editable physical dimensions and reopen on their floor"
     "Workshop",
   );
 });
+
+test("floor plan dimensions measure endpoints and save their offset", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.keyboard.press("Control+k");
+  const search = page.locator("#commandSearch");
+  await search.fill("Draw dimension line");
+  await search.press("Enter");
+  const start = await sheetPoint(page, 200, 250);
+  const end = await sheetPoint(page, 600, 550);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const dimension = page.locator("#userDrawings [data-object]");
+  await expect(dimension).toHaveText("500 mm");
+  const offset = page.getByRole("spinbutton", {
+    name: "Dimension offset (mm)",
+  });
+  await offset.fill("-120");
+  await offset.press("Tab");
+  const saved = await saveDrawing(page, "floor-plan-dimension");
+  expect(saved.data.objects[0]).toMatchObject({
+    dimensionOffset: -120,
+    x1: 200,
+    y1: 250,
+    x2: 600,
+    y2: 550,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(dimension).toHaveText("500 mm");
+});
