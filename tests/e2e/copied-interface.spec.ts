@@ -361,6 +361,61 @@ test("manufacturer pressure switch inserts through existing library and preserve
   expect(configuredAgain.data.objects).toEqual(configured.data.objects);
 });
 
+test("ENG-0601 control and interlock notes edit and export without altering wires", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#projectTemplate").selectOption("eng0601");
+  await page.locator("#createProject").click();
+  await page.locator('[data-sheet="eng0601-a2-6"]').first().click();
+  const original = await saveDrawing(page, "eng0601-interlocks-original");
+  const noteId = "eng0601-p12-r4";
+  await page.locator(`[data-object="${noteId}"]`).click();
+  await page.locator('[data-inspector="Properties"]').click();
+  const category = page.getByLabel("Automation note category");
+  await expect(category).toHaveValue("interlock");
+  const linked = page.getByLabel("Linked automation devices");
+  await expect(linked.locator("option:checked")).toHaveCount(3);
+  const originalLinks = original.data.objects.find(
+    (object: { id: string }) => object.id === noteId,
+  ).automationNote.deviceIds;
+  await linked.selectOption(originalLinks.slice(0, 2));
+  await category.selectOption("sequence");
+  const text = page.getByLabel("Text content");
+  await text.fill(
+    "Review overload indication after control power is restored.",
+  );
+  await text.press("Tab");
+  const pending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Export automation note register" })
+    .click();
+  const report = fs.readFileSync(await (await pending).path(), "utf8");
+  expect(report).toMatch(
+    /"sequence","Review overload indication after control power is restored\.","[^"]*F2[^"]*"/,
+  );
+  const edited = await saveDrawing(page, "eng0601-interlocks-edited");
+  const wires = (project: typeof edited.data) =>
+    project.objects.filter(({ kind }: { kind: string }) => kind === "wire");
+  expect(wires(edited.data)).toEqual(wires(original.data));
+  expect(edited.data.crossSheetConnections).toEqual(
+    original.data.crossSheetConnections,
+  );
+  await page.locator("#openFile").setInputFiles(edited.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "eng0601-interlocks-edited.adigun.json opened",
+  );
+  await page.locator(`[data-object="${noteId}"]`).click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(category).toHaveValue("sequence");
+  await expect(linked.locator("option:checked")).toHaveCount(2);
+  for (const id of originalLinks.slice(0, 2))
+    await expect(linked.locator(`option[value="${id}"]:checked`)).toHaveCount(
+      1,
+    );
+});
+
 test("ENG-0601 opens authored paper documents without overlaps and roundtrips edits", async ({
   page,
 }) => {

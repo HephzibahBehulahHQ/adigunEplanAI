@@ -1169,6 +1169,11 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if(def?.family==='generic-plc')return def.symbol.pins.filter(pin=>pin.plcChannel);
     return def?.family==='plc-cpu'?def.symbol.pins.filter(pin=>/^(DI|DQ|AI) /.test(pin.name)):[];
   }
+  const automationNoteKinds=Object.freeze(['interlock','emergency-stop','motor-control','sequence','safety']);
+  function validAutomationNote(note){
+    return note&&automationNoteKinds.includes(note.kind)&&Array.isArray(note.deviceIds)&&note.deviceIds.length<=1000&&
+      note.deviceIds.every(id=>typeof id==='string'&&id.length>0&&id.length<=100)&&new Set(note.deviceIds).size===note.deviceIds.length;
+  }
   function validPlcIo(def,records){
     if(!records||typeof records!=='object'||Array.isArray(records))return false;
     const pins=new Set(plcIoPins(def).map(pin=>pin.id)),addresses=new Set();
@@ -1622,6 +1627,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if(object.mountingDepthMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.mountingDepthMm)||object.mountingDepthMm<0||object.mountingDepthMm>1e6))errors.push('Invalid mounting depth '+object.id+'.');
         if(object.heatLossW!==undefined&&(object.kind!=='panel-placement'||!finite(object.heatLossW)||object.heatLossW<0||object.heatLossW>1e12))errors.push('Invalid panel equipment loss '+object.id+'.');
         if(object.mountingRailId!==undefined&&(object.kind!=='panel-placement'||typeof object.mountingRailId!=='string'||!object.mountingRailId))errors.push('Invalid mounting rail reference '+object.id+'.');
+        if(object.automationNote!==undefined&&(object.kind!=='text'||!validAutomationNote(object.automationNote)))errors.push('Invalid automation note '+object.id+'.');
         if(object.accessDirection!==undefined&&(object.kind!=='panel-placement'||!['front','back','left','right','top','bottom'].includes(object.accessDirection)))errors.push('Invalid service access direction '+object.id+'.');
         if(object.accessClearanceMm!==undefined&&(object.kind!=='panel-placement'||!finite(object.accessClearanceMm)||object.accessClearanceMm<=0||object.accessClearanceMm>1e6))errors.push('Invalid service access distance '+object.id+'.');
         if(object.panelStructure!==undefined){
@@ -2139,6 +2145,15 @@ function createPumpStarterDocumentation(name) {
       'Do not energise: main protection, cable checks, full bonding, layout and independent review remain open.'
     ]);
     objects.find(o=>o.id==='eng0601-sequence-basis').y=95;
+    for(const [index,kind,refs] of [
+      [1,'motor-control',['S1','K1']], [2,'motor-control',['S0','K1']],
+      [3,'interlock',['Q2','K1']], [4,'interlock',['F2','H2','K1']],
+      [5,'interlock',['B1','K1']], [7,'sequence',['S1','K1','F2','B1','Q2']],
+      [10,'safety',['S1','K1']], [11,'safety',['K1','H1','H2']]
+    ]){
+      const note=objects.find(item=>item.id==='eng0601-p12-r'+index);
+      note.automationNote={kind,deviceIds:refs.map(ref=>objects.find(item=>item.kind==='component-instance'&&item.ref===ref)?.id).filter(Boolean)};
+    }
     const controlNotes=objects.find(o=>o.id==='eng0601-control-notes');
     controlNotes.text=controlNotes.text.replace('Indicator, supply protection and checks remain unfinished.','H1/H2 and PS1/F3/F4 are connected; final checks remain.');
     objects.find(o=>o.id==='eng0601-control-source').text='24 V DC FROM PS1 VIA F4 — see auxiliary supply sheet; final protection checks pending';
@@ -3249,6 +3264,15 @@ function createPumpStarterDocumentation(name) {
     }
     return reportCsv([['CPU','cpu'],['Sheet','sheet'],['Terminal','terminal'],['Channel','channel'],['Signal','signal'],['Configured address','address'],['Attached wire IDs','wires'],['Direct peers','peers']],rows);
   }
+  function automationNoteRegisterCsv(project){
+    const devices=new Map(project.objects.filter(item=>item.kind==='component-instance').map(item=>[item.id,item.ref]));
+    const sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet.number]));
+    const rows=project.objects.filter(item=>item.kind==='text'&&item.automationNote).map(item=>({
+      sheet:sheets.get(item.sheetId),kind:item.automationNote.kind,description:item.text,
+      devices:item.automationNote.deviceIds.map(id=>devices.get(id)||`Missing device (${id})`)
+    }));
+    return reportCsv([['Sheet','sheet'],['Category','kind'],['Description','description'],['Linked devices','devices']],rows);
+  }
   const floorProfileColumns=[['Engineering documentation profile','engineeringProfile'],['Declared standard and edition','standardEdition']];
   function floorProfileReport(sheet){
     const plan=sheet.floorPlan;
@@ -3473,6 +3497,9 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    automationNoteKinds,
+    validAutomationNote,
+    automationNoteRegisterCsv,
     registerPlcSymbols,
     plcIoPins,
     validPlcIo,

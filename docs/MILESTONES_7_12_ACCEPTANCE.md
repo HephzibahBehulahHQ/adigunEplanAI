@@ -153,6 +153,10 @@ with the configured address left for the user to enter.
 The compact library includes the six original generic PLC module types with
 native terminal geometry and editable per-terminal documentation. Generic
 schematic pins carry no manufacturer ratings or physical pin claims.
+ENG-0601 classifies its editable sequence, motor-control, interlock and safety
+notes and links them to stable device IDs. The text inspector edits the notes
+and exports a project-wide register. Missing linked devices are reported in the
+register. The notes document expected behavior and review limits.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
