@@ -4,7 +4,7 @@ This record describes schema 17 implementation, not final production certificati
 
 | Milestone | Implemented behavior | Remaining acceptance |
 | --- | --- | --- |
-| M7 | Additional floor-native emergency lighting, fire loop, data and bonded PE; protected inter-floor cable/conduit/tray risers; native board/circuit assignment and dimensioned riser-elevation diagrams and actual-wire PE schedule | Broader specified zone geometry and complete building documentation/layout acceptance |
+| M7 | Native floor architecture, imports, measured routes and risers, named circuits, equipment and protection reports in the deployed compact editor | Independent engineering acceptance and jurisdiction-specific normative checks |
 | M8 | 25 versioned calculator categories; dimensional input conversion; independent reference cases; bounded invalid inputs; replayable records; explicit assumptions, source URLs and user evidence; CSV/JSON reports | Independent engineering review and licensed manufacturer/standards datasets where needed; estimates do not establish ratings or compliance |
 | M9 | Shared native 2D/3D enclosure geometry; plate/rail/duct/door/compartment placement; equipment provenance; six-face holes/entries; collision, clearance, mounting and access checks; explicit duct/heat estimates; SVG/OBJ | Licensed STEP/manufacturer CAD conversion and physical machining/thermal/certification validation |
 | M10 | Six generic PLC module kinds; own-terminal/channel/type/address constraints; explicit signal assignments; actual wire schedule; control/interlock/safety notes; CSV | Representative motor-control and integrated automation example acceptance; no PLC execution or safety certification claim |
@@ -29,7 +29,7 @@ reports it separately from planar length. With the route selected, the command
 palette exports a dimensioned SVG showing both floor datums and the vertical
 distance. The building riser diagram exports all linked routes in the active
 floor's building against common floor datums, with direction and vertical
-dimensions. Protection sizing remains open in the compact editor. The command
+dimensions. The command
 palette can draw rectangular or polygonal electrical and distribution zones.
 Polygonal zones expose editable corners and report the enclosed area. Zone
 names and rectangular dimensions are editable in
@@ -91,6 +91,24 @@ route in the active building. It reruns the saved inputs against current
 geometry and identifies missing inputs, invalid inputs and comparison outcomes.
 Versioned calculation details, source references and entered evidence are
 included for completed checks.
+
+### M7 live acceptance checkpoint
+
+Twelve Playwright cases passed against deployed source
+`edab2a9fde32560ad3ded412534960beda47daa3` (PR #199). The verified surface
+was the approved compact editor.
+
+| Specification | Live evidence |
+| --- | --- |
+| §7.1 Building structure | Floor identities and model units survive reopen, rectangular rooms and rectangular/polygonal zones remain editable, print scale survives reopen, and room and circuit assignments are reflected in exported schedules. |
+| §7.2 Architectural tools | Hosted wall openings, dimensions, guides and locking, two imported formats with declared and overridden scales, separate layer visibility, editable building-device terminals and cable route geometry passed browser checks. |
+| §7.3 Electrical documentation | Browser checks exercised board/circuit editing and wire attachments, connected load and demand, riser SVGs, cable, panel, room and PE CSVs, and protection review JSON with a documented failed comparison and a missing-input route. |
+
+These checks establish the exercised editing and report workflows. Site
+compliance, independent engineering acceptance and licensed normative rule
+coverage are retained gates. The German DIN/VDE and IEC profile records
+identify the declared documentation basis. The protection methods use the
+limits and evidence supplied for the design.
 
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 
