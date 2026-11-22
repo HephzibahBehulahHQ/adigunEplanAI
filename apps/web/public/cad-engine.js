@@ -1389,6 +1389,19 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     return value&&['x','y','width','height','depth'].every(key=>finite(value[key])&&Math.abs(value[key])<=1e6)
       &&[value.width,value.height,value.depth].every(dimension=>dimension>0);
   }
+  const cabinetFeatureFaces=Object.freeze(['back','front','left','right','top','bottom']);
+  function validCabinetFeatures(records){
+    if(!Array.isArray(records))return false;
+    const ids=new Set();
+    return records.every(feature=>{
+      if(!feature||typeof feature.id!=='string'||!feature.id||ids.has(feature.id))return false;
+      ids.add(feature.id);
+      return ['mounting-hole','cable-entry'].includes(feature.kind)&&cabinetFeatureFaces.includes(feature.face)&&
+        ['circle','rectangle'].includes(feature.shape)&&[feature.positionMm?.x,feature.positionMm?.y].every(value=>finite(value)&&value>=0&&value<=1e6)&&
+        [feature.widthMm,feature.heightMm].every(value=>finite(value)&&value>0&&value<=1e6)&&
+        (feature.shape!=='circle'||feature.widthMm===feature.heightMm);
+    });
+  }
 
   function validateProject(project) {
     const errors = [];
@@ -1448,6 +1461,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           }))errors.push('Invalid drafting guides on sheet '+sheet.id+'.');
         }
         if(sheet.cabinetBounds!==undefined&&!validCabinetBounds(sheet.cabinetBounds))errors.push('Invalid cabinet boundaries on sheet '+sheet.id+'.');
+        if(sheet.cabinetFeatures!==undefined&&(!sheet.cabinetBounds||!validCabinetFeatures(sheet.cabinetFeatures)))errors.push('Invalid cabinet openings on sheet '+sheet.id+'.');
         if(sheet.paper!==undefined){
           const paper=sheet.paper,paperSizes={A0:841,A1:594,A2:420,A3:297,A4:210};
           const size=paper?.format==='Custom'?Math.min(paper.customWidth,paper.customHeight):paperSizes[paper?.format];
@@ -3397,6 +3411,8 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    cabinetFeatureFaces,
+    validCabinetFeatures,
     validDuctInputs,
     linkAssemblyAccessory: linkAssemblyAccessory,
     createPanelPlacement: createPanelPlacement,
