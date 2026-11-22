@@ -1091,24 +1091,32 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 
   const EPLAN_COMPONENTS = Object.freeze(Object.fromEntries((root.AdigunEplanSymbols || []).map(function(def) { return [def.id, deepFreeze(def)]; })));
-  const wagoTopjobTerminals=deepFreeze(Object.fromEntries([
-    {orderCode:'2002-1301',positions:[3],nominalVoltage:800,ratedCurrent:24,finish:'Gray',heightMm:59.2,depthMm:32.9,revision:'21 June 2021',pages:'2–3',dimensionPage:3,
-      slug:'3-conductor-through-terminal-block',datasheet:'https://www.tme.com/Document/48da317c62302f1fde27b2c2b6a09f40/2002-1301.pdf'},
-    {orderCode:'2002-1304',positions:[3],nominalVoltage:800,ratedCurrent:24,finish:'Blue',heightMm:59.2,depthMm:32.9,revision:'06 September 2024',pages:'1',dimensionPage:1,
-      slug:'3-conductor-through-terminal-block',datasheet:'https://www.faitaengineering.com/assets/product_image/674341683-WAGO_2002-1304en_SG.pdf',
-      connectionSource:'https://asset.conrad.com/media10/add/160267/c1/-/de/000730641DS01/datablad-730641-wago-2002-1304-doorgangsklem-520-mm-spanveer-toewijzing-n-blauw-1-stuks.pdf'},
-    {orderCode:'2002-1401',positions:[4],nominalVoltage:800,ratedCurrent:24,finish:'Gray',heightMm:69.9,depthMm:32.9,revision:'02 November 2021',pages:'2–3',dimensionPage:3,
-      slug:'4-conductor-through-terminal-block',datasheet:'https://4donline.ihs.com/images/VipMasterIC/IC/WAGO/WAGO-S-A0013864068/WAGO-S-A0013864653-1.pdf?hkey=6D3A4C79FDBF58556ACFDE234799DDF0'},
-    {orderCode:'2002-1403',positions:[4],nominalVoltage:800,ratedCurrent:24,finish:'Red',heightMm:69.9,depthMm:32.9,revision:'13 June 2025',pages:'1–3',dimensionPage:2,
-      slug:'4-conductor-through-terminal-block',datasheet:'https://www.tme.eu/Document/4f60907ecb4c1bae8b1afd339364dd4e/2002-1403.pdf'},
-    {orderCode:'2002-2201',positions:[2,2],nominalVoltage:500,ratedCurrent:24,finish:'Gray',markerCarrier:false,heightMm:69.7,depthMm:51.7,revision:'13 November 2023',pages:'1–2',dimensionPage:2,
-      slug:'double-deck-terminal-block',datasheet:'https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/50/73/32715073.pdf'},
-    {orderCode:'2002-2231',positions:[2,2],nominalVoltage:500,ratedCurrent:24,finish:'Gray',markerCarrier:true,heightMm:69.7,depthMm:61.8,revision:'13 November 2023',pages:'1–2',dimensionPage:2,
-      slug:'double-deck-terminal-block',datasheet:'https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/51/78/32715178.pdf'},
-    {orderCode:'2002-2401',positions:[4,4],nominalVoltage:800,ratedCurrent:24,finish:'Gray',markerCarrier:false,heightMm:105.1,depthMm:52.1,revision:'27 June 2024',pages:'1–2',dimensionPage:2,
-      slug:'4-conductor-double-deck-terminal-block',datasheet:'https://tlauk.net/document/65105/Wago%2C%202002-2401.pdf'}
-  ].map(part=>{
-    const id='wago-'+part.orderCode,deckCount=part.positions.length,height=deckCount*54+16;
+  const wagoTopjobTerminals=new Map();
+  function registerWagoTerminalBatch(rows){
+    if(!Array.isArray(rows)||!rows.length)throw new TypeError('Expected a nonempty WAGO terminal batch');
+    const batch=new Map();
+    const isSource=value=>typeof value==='string'&&/^https:\/\/[^/\s]+\/\S+$/.test(value);
+    for(const part of rows){
+      const id='wago-'+part?.orderCode;
+      if(!part||typeof part.orderCode!=='string'||!/^2002-[0-9]{4}$/.test(part.orderCode)||
+        !Array.isArray(part.positions)||part.positions.length<1||part.positions.length>2||
+        !Array.from(part.positions).every(count=>Number.isInteger(count)&&count>=2&&count<=4)||
+        ![part.nominalVoltage,part.ratedCurrent,part.heightMm,part.depthMm].every(value=>Number.isFinite(value)&&value>0)||
+        ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
+        typeof part.slug!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(part.slug)||
+        !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||!isSource(part.datasheet)||
+        (part.markerCarrier!==undefined&&typeof part.markerCarrier!=='boolean')||
+        (part.connectionSource!==undefined&&!isSource(part.connectionSource))){
+        throw new TypeError('Invalid WAGO terminal catalog row: '+id);
+      }
+      if(batch.has(id)||wagoTopjobTerminals.has(id))throw new Error('Duplicate WAGO terminal catalog ID: '+id);
+      batch.set(id,deepFreeze(createWagoTerminal(part,id)));
+    }
+    for(const [id,definition] of batch)wagoTopjobTerminals.set(id,definition);
+  }
+
+  function createWagoTerminal(part,id){
+    const deckCount=part.positions.length,height=deckCount*54+16;
     const title=deckCount===2?'Double-deck through terminal block':'Through terminal block';
     const productUrl='https://www.wago.com/gb/rail-mount-terminal-blocks/'+part.slug+'/p/'+part.orderCode;
     const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-48,y:-height/2,width:96,height}];
@@ -1127,7 +1135,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       }
       internalConnections.push(group);
     }
-    return [id,{schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+    return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
       model:'TOPJOB S '+part.orderCode,name:title,family:'topjob-terminal',referencePrefix:'X',category:'Electrical · WAGO terminal systems',
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:144,height,pins,internalConnections,artwork,
         numberingNote:'Anchor labels identify schematic clamping positions. Each level is one documented potential; no cross-level or adjacent-block jumper is included.'},
@@ -1143,8 +1151,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         revisionNote:'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:'2026-11-22'},
         {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:'2026-11-22'},
         ...(part.connectionSource?[{publisher:'WAGO',title:'Connection schedule, p. 1',url:part.connectionSource,documentRevision:'30 September 2008',
-          revisionNote:'Three clamping positions on one potential.',retrievedAt:'2026-11-22'}]:[])]}];
-  })));
+          revisionNote:'Three clamping positions on one potential.',retrievedAt:'2026-11-22'}]:[])]};
+  }
   const BUILDING_COMPONENTS=deepFreeze(Object.fromEntries([
     ['building-luminaire','Floor-plan luminaire','LUM','M-50 -50L50 50M-50 50L50 -50',[-60,-60,120,120]],
     ['building-socket','Floor-plan socket outlet','SO','M-32 -14H32M-32 14H32',[-50,-50,100,100]],
@@ -1190,9 +1198,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{channelCount:{value:channels}},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}));
     }
   }
-  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || wagoTopjobTerminals[id] || plcComponents.get(id) || null; }
+  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || wagoTopjobTerminals.get(id) || plcComponents.get(id) || null; }
   function catalog() {
-    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Object.keys(wagoTopjobTerminals),Array.from(plcComponents.keys())).map(function (id) {
+    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Array.from(wagoTopjobTerminals.keys()),Array.from(plcComponents.keys())).map(function (id) {
       const def = component(id);
       return { id: def.id, componentId: def.id, name: def.generic ? def.name : def.model + ' · ' + def.manufacturerPartNumber + (def.family==='motor-terminal-board'?' · Delta terminal-board view':''), category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
     });
@@ -3623,6 +3631,7 @@ function createPumpStarterDocumentation(name) {
     validAutomationNote,
     automationNoteRegisterCsv,
     registerPlcSymbols,
+    registerWagoTerminalBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,

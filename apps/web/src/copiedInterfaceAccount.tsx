@@ -7,7 +7,7 @@ import {
 } from "../../../packages/localization";
 import { AccountPanel } from "./AccountPanel";
 import "./compactPanelEstimates.ts";
-import "./compactPlcLibrary.ts";
+import "./compactComponentLibrary.ts";
 import { rasterizeDrawingSvg } from "./drawingPng.ts";
 import { compactDrawingDxf } from "./compactDrawingDxf.ts";
 import { requestGuestTrial, useAccount } from "./useAccount";

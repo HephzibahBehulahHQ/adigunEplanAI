@@ -16,6 +16,16 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
     context,
   );
 const engine = context.AdigunCADEngine;
+const terminalBatch = JSON.parse(
+  readFileSync(
+    new URL(
+      "../packages/component-library/wago-terminal-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoTerminalBatch(terminalBatch);
 engine.registerPlcSymbols(
   plcKinds.map((kind) => ({
     kind,

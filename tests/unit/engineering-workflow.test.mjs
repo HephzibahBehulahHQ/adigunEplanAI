@@ -6,7 +6,38 @@ const context = vm.createContext({});
 for (const file of ["eplan-symbols.js", "cad-engine.js"])
   vm.runInContext(fs.readFileSync(`apps/web/public/${file}`, "utf8"), context);
 const engine = context.AdigunCADEngine;
+const terminalBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-terminal-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoTerminalBatch(terminalBatch);
 const plain = (value) => JSON.parse(JSON.stringify(value));
+
+test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", () => {
+  const candidate = { ...terminalBatch[0], orderCode: "2002-9999" };
+  assert.throws(
+    () =>
+      engine.registerWagoTerminalBatch([
+        candidate,
+        { ...candidate, orderCode: "2002-9998", positions: [5] },
+      ]),
+    /Invalid WAGO terminal catalog row/,
+  );
+  assert.throws(
+    () => engine.registerWagoTerminalBatch([candidate, terminalBatch[0]]),
+    /Duplicate WAGO terminal catalog ID/,
+  );
+  assert.throws(
+    () => engine.registerWagoTerminalBatch([candidate, candidate]),
+    /Duplicate WAGO terminal catalog ID/,
+  );
+  assert.equal(engine.component("wago-2002-9999"), null);
+});
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
   for (const [orderCode, counts, voltage, depth] of [
