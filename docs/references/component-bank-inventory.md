@@ -59,3 +59,13 @@ A record enters the component bank only after mapping its source-backed
 terminal identities and electrical relationships to native schematic geometry
 and verifying the relevant mounting and report data. Candidate rows are local
 review material and are excluded from the published editor and inventory totals.
+
+## Single-deck through terminal variants
+
+Thirteen additional exact 2002-series order codes add two-, three- and
+four-conductor through terminals in several housing colors. Each part has one
+potential, an 800 V and 24 A IEC/EN rating for category III and pollution degree
+3, and a 32.9 mm depth above the DIN rail. WAGO's overall depth includes the
+portion below that datum. The individual English datasheets and their printed
+versions are recorded in the part batch.
+[WAGO TOPJOB S family catalog, p. 38](https://www.electromate.com/media/assets/catalog-library/pdfs/wago/Wago-Rail-Mount-Terminal-Block-Systems-topjob.pdf)
