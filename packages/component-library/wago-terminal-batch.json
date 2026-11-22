@@ -87,6 +87,21 @@
     "datasheet": "https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/51/78/32715178.pdf"
   },
   {
+    "orderCode": "2002-2234",
+    "positions": [2, 2],
+    "nominalVoltage": 500,
+    "ratedCurrent": 24,
+    "finish": "Blue",
+    "markerCarrier": true,
+    "heightMm": 69.7,
+    "depthMm": 61.8,
+    "revision": "06 December 2018",
+    "pages": "1–3",
+    "dimensionPage": 3,
+    "slug": "double-deck-terminal-block",
+    "datasheet": "https://uk.misumi-ec.com/pdf/vona/el/WAG1/WAG1_2002-2234_Datasheet_en_1.pdf"
+  },
+  {
     "orderCode": "2002-2401",
     "positions": [4, 4],
     "nominalVoltage": 800,
@@ -100,5 +115,20 @@
     "dimensionPage": 2,
     "slug": "4-conductor-double-deck-terminal-block",
     "datasheet": "https://tlauk.net/document/65105/Wago%2C%202002-2401.pdf"
+  },
+  {
+    "orderCode": "2002-2404",
+    "positions": [4, 4],
+    "nominalVoltage": 800,
+    "ratedCurrent": 24,
+    "finish": "Blue",
+    "markerCarrier": false,
+    "heightMm": 105.1,
+    "depthMm": 52.1,
+    "revision": "19 November 2024",
+    "pages": "1–2",
+    "dimensionPage": 2,
+    "slug": "4-conductor-double-deck-terminal-block",
+    "datasheet": "https://express.ecsnz.com/en/Attachment/DownloadFile?downloadId=3539"
   }
 ]

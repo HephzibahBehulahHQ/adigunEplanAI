@@ -40,14 +40,16 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 });
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
-  for (const [orderCode, counts, voltage, depth] of [
+  for (const [orderCode, counts, voltage, depth, finish] of [
     ["2002-1301", [3], 800, 32.9],
     ["2002-1304", [3], 800, 32.9],
     ["2002-1401", [4], 800, 32.9],
     ["2002-1403", [4], 800, 32.9],
     ["2002-2201", [2, 2], 500, 51.7],
     ["2002-2231", [2, 2], 500, 61.8],
+    ["2002-2234", [2, 2], 500, 61.8, "Blue"],
     ["2002-2401", [4, 4], 800, 52.1],
+    ["2002-2404", [4, 4], 800, 52.1, "Blue"],
   ]) {
     const id = `wago-${orderCode}`;
     const device = engine.createInstance(id, 300, 220, "X1");
@@ -56,6 +58,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     const definition = engine.component(id);
     assert.equal(definition.specifications.nominalVoltage.value, voltage);
     assert.equal(definition.panelFootprint.depthMm, depth);
+    if (finish) assert.equal(definition.specifications.finish.value, finish);
     const pins = engine.worldPins(device);
     const wires = definition.symbol.internalConnections.map((group, index) => {
       const pin = pins.find((item) => item.id === group.at(-1));

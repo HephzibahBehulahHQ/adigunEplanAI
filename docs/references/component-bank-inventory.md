@@ -37,3 +37,8 @@ The terminal CSV identifies the declared common clamping positions per row.
 - 2002-1304, WAGO datasheet 06 September 2024 and the connection schedule dated 30 September 2008. [Electrical and mechanical data](https://www.faitaengineering.com/assets/product_image/674341683-WAGO_2002-1304en_SG.pdf) · [Connection schedule](https://asset.conrad.com/media10/add/160267/c1/-/de/000730641DS01/datablad-730641-wago-2002-1304-doorgangsklem-520-mm-spanveer-toewijzing-n-blauw-1-stuks.pdf)
 - 2002-1403, WAGO datasheet 13 June 2025, pages 1–3. [Datasheet](https://www.tme.eu/Document/4f60907ecb4c1bae8b1afd339364dd4e/2002-1403.pdf)
 - 2002-2201 and 2002-2231, WAGO datasheets 13 November 2023, pages 1–2. [2002-2201 datasheet](https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/50/73/32715073.pdf) · [2002-2231 datasheet](https://pimassetsprdst.blob.core.windows.net/assets/apc_Original/51/78/32715178.pdf)
+
+## Blue double-deck through terminals
+
+- 2002-2234 has two clamps on each of two isolated potentials and a fitted marker carrier. The IEC/EN rating is 500 V and 24 A. [WAGO datasheet, 06 December 2018, pp. 1–3](https://uk.misumi-ec.com/pdf/vona/el/WAG1/WAG1_2002-2234_Datasheet_en_1.pdf)
+- 2002-2404 has four clamps on each of two isolated potentials without a marker carrier. The IEC/EN rating is 800 V and 24 A. [WAGO datasheet, 19 November 2024, pp. 1–2](https://express.ecsnz.com/en/Attachment/DownloadFile?downloadId=3539)
