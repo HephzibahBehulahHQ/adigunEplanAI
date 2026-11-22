@@ -112,7 +112,7 @@ limits and evidence supplied for the design.
 
 The compact editor opens all 26 registry methods through **Engineering
 calculations** in the command palette. The inspector converts input units
-and exports calculation results with version, inputs and evidence as JSON.
+and exports calculation results with version, inputs and evidence as JSON or CSV.
 Named calculation records save with compact projects and replay their
 versioned method from saved inputs, units and evidence after reopening.
 

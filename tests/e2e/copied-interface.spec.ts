@@ -3909,6 +3909,19 @@ test("engineering calculation registry converts units and exports the method res
   await records.selectOption({ label: "Bench load" });
   await expect(voltage).toHaveValue("0.012");
   await expect(result).toContainText("Current: 2 A");
+  const csvPending = page.waitForEvent("download");
+  await page
+    .getByRole("button", { name: "Download calculation report CSV" })
+    .click();
+  const csvFile = await csvPending;
+  expect(csvFile.suggestedFilename()).toBe("Bench_load.csv");
+  const csv = fs.readFileSync((await csvFile.path())!, "utf8");
+  expect(csv).toContain('"Calculation report","Bench load"');
+  expect(csv).toContain(
+    '"Versioned method","adiguneplanai:calculation:ohms-law:1.0.0"',
+  );
+  expect(csv).toContain('"Voltage (line-to-line for 3φ)","0.012","kV"');
+  expect(csv).toContain('"Current","2","A"');
 });
 
 test("floor cable ampacity compares explicit inputs and reopens them", async ({
