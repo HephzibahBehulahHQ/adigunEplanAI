@@ -38,7 +38,8 @@ def evidence(pages, pattern, label):
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
     double_deck = bool(re.fullmatch(r"(?:2000|2002|2200|2202)-2[0-9]{3}", code))
-    if not double_deck and not re.fullmatch(r"(?:2000|2004|2006|2010|2016|2204|2206)-1[234]0[1-6]", code):
+    classic = bool(re.fullmatch(r"(?:279|280|281|282|285)-[0-9]{3}", code))
+    if not double_deck and not classic and not re.fullmatch(r"(?:2000|2004|2006|2010|2016|2204|2206)-1[234]0[1-6]", code):
         raise ValueError("unsupported order code")
     with pypdfium2.PdfDocument(pdf) as document:
         pages = []
@@ -58,13 +59,19 @@ def read_article(pdf, candidate, retrieved_at):
             diagram_hash = diagrams[0]
 
     product_text = " ".join(pages[0].replace("\ufffe", "").split()).lower()
+    rail = None
+    if "35 x 15 and 35 x 7.5" in product_text:
+        rail = "DIN rail 35 × 7.5 or 35 × 15 mm"
+    elif re.search(r"only for din(?:-rail)? 35 x 15(?: mm)? rail", product_text):
+        rail = "DIN rail 35 × 15 mm only"
     if (
         candidate["manufacturer"] != "WAGO"
         or candidate["datasheetUrl"] != f"https://wago.priintcloud.com/datasheets/{code}/en"
         or not all(f"Item Number: {code}" in page for page in pages)
         or "through terminal block" not in product_text
-        or "push-in cage clamp" not in product_text
-        or "35 x 15 and 35 x 7.5" not in product_text
+        or "cage clamp" not in product_text
+        or not rail
+        or (not classic and "push-in cage clamp" not in product_text)
     ):
         raise ValueError("exact identity or supported mounting and device type missing")
 
@@ -72,20 +79,41 @@ def read_article(pdf, candidate, retrieved_at):
     clamps = evidence(pages, r"^Clamping units ([2348])\b", "clamp count")
     potential = evidence(pages, r"^Total number of potentials (\d+)\b", "potential count")
     levels = evidence(pages, r"^Number of levels (\d+)\b", "level count")
-    actuation = evidence(pages, r"^Actuation (?:type|Method) (Operating tool|Push-button)\b", "actuation")
+    actuation = evidence(pages, r"^Actuation (?:type|Method) (Operating tool|Push-button|T-wrench; [0-9]+ mm)\b", "actuation")
     expected_actuation = "Push-button" if code.startswith("22") else "Operating tool"
-    if actuation[1] != expected_actuation:
+    if actuation[1] != expected_actuation and not (classic and actuation[1].startswith("T-wrench;")):
         raise ValueError("actuation does not match the supported series")
-    nominal = evidence(pages, rf"^Nominal cross-section {NUMBER} mm", "conductor section")
+    classic_fields = {}
+    if classic:
+        technology = evidence(pages, r"^Connection technology ((?:POWER )?CAGE CLAMP)\b", "connection technology")
+        title = re.search(rf"\b([234])-conductor through terminal block; {NUMBER} mm", product_text)
+        candidate_section = re.search(rf";{NUMBER} mm", candidate["description"])
+        if (
+            not title
+            or int(title[1]) != int(clamps[1])
+            or not candidate_section
+            or float(title[2].replace(",", ".")) != float(candidate_section[1].replace(",", "."))
+        ):
+            raise ValueError("title and catalog clamping or conductor section conflict")
+        nominal = (1, title[2])
+        if any(re.match(r"^Nominal cross-section ", line) for text in pages for line in text.splitlines()):
+            actual_nominal = evidence(pages, rf"^Nominal cross-section {NUMBER} mm", "conductor section")
+            if float(actual_nominal[1].replace(",", ".")) != float(nominal[1].replace(",", ".")):
+                raise ValueError("nominal conductor section conflicts with connection table")
+        classic_fields = {"connectionTechnology": technology[1], "mounting": rail}
+    else:
+        nominal = evidence(pages, rf"^Nominal cross-section {NUMBER} mm", "conductor section")
     width = evidence(pages, rf"^Width {NUMBER} mm", "width")
     height = evidence(pages, rf"^Height {NUMBER} mm", "height")
     depth = evidence(
         pages, rf"^Depth from upper-edge of DIN-rail {NUMBER} mm", "depth above the rail"
     )
-    finish = evidence(pages, r"^Color ([a-z]+)[ \t]*$", "housing color")
+    finish = evidence(pages, r"^Color ([a-z]+(?:[ /-][a-z]+)*)[ \t]*$", "housing color")
+    finish_name = finish[1]
+    candidate_finish = candidate["description"].rsplit(";", 1)[-1]
     if (
-        finish[1] not in FINISHES
-        or not candidate["description"].endswith(";" + finish[1])
+        (not classic and finish_name not in FINISHES)
+        or candidate_finish.replace("/", "-") != finish_name.replace("/", "-")
         or width[0] != height[0]
         or width[0] != depth[0]
     ):
@@ -118,7 +146,7 @@ def read_article(pdf, candidate, retrieved_at):
         slug = "4-conductor-double-deck-terminal-block" if positions == [4, 4] else "double-deck-terminal-block"
     else:
         positions = [int(clamps[1])]
-        if potential[1] != "1" or levels[1] != "1" or positions != [int(code[6])]:
+        if potential[1] != "1" or levels[1] != "1" or (not classic and positions != [int(code[6])]):
             raise ValueError("unsupported single-deck grouping")
         slug = f"{clamps[1]}-conductor-through-terminal-block"
 
@@ -147,9 +175,10 @@ def read_article(pdf, candidate, retrieved_at):
         "orderCode": code,
         "positions": positions,
         **deck_fields,
+        **classic_fields,
         "nominalVoltage": number(voltage),
         "ratedCurrent": number(current),
-        "finish": finish[1].capitalize(),
+        "finish": finish_name.title() if classic else finish_name.capitalize(),
         "actuationMethod": actuation[1],
         "widthMm": number(width),
         "heightMm": number(height),
@@ -187,7 +216,7 @@ def main():
             parser.error(f"{pdf.name}: no matching exact catalog candidate")
         try:
             batch.append(read_article(pdf, candidates[pdf.stem], args.retrieved_at.isoformat()))
-        except (IndexError, ValueError) as error:
+        except (IndexError, ValueError, pypdfium2.PdfiumError) as error:
             if not args.skip_unverified:
                 parser.error(f"{pdf.name}: {error}")
             print(f"{pdf.name}: {error}", file=sys.stderr)

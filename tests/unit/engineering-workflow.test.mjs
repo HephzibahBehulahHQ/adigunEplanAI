@@ -155,6 +155,23 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
       part.potentialMarking,
     );
   }
+  const classicWago = terminalBatch.filter((part) => part.connectionTechnology);
+  assert.ok(classicWago.length >= 114);
+  for (const part of classicWago) {
+    const definition = engine.component("wago-" + part.orderCode);
+    assert.equal(definition.family, "wago-rail-terminal");
+    assert.ok(
+      definition.symbol.pins.every(
+        (pin) => pin.connectionType === part.connectionTechnology,
+      ),
+    );
+    assert.equal(
+      definition.specifications.mounting.value,
+      part.orderCode.startsWith("285-")
+        ? "DIN rail 35 × 15 mm only"
+        : "DIN rail 35 × 7.5 or 35 × 15 mm",
+    );
+  }
   for (const [
     orderCode,
     counts,
@@ -169,6 +186,18 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
   ] of [
     ...singleDeckSeries,
     ...higherCurrentSeries,
+    ...classicWago.map((part) => [
+      part.orderCode,
+      part.positions,
+      part.nominalVoltage,
+      part.depthMm,
+      part.finish,
+      part.widthMm,
+      part.nominalCrossSectionMm2,
+      part.ratedCurrent,
+      part.actuationMethod,
+      part.heightMm,
+    ]),
     ...verifiedDoubleDecks.map((part) => [
       part.orderCode,
       part.orderCode.startsWith("2002-24") ? [4, 4] : [2, 2],
