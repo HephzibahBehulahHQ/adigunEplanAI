@@ -40,7 +40,31 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 });
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
-  for (const [orderCode, counts, voltage, depth, finish] of [
+  const series2001 = [2, 3, 4].flatMap((clamps) =>
+    ["Gray", "Orange", "Red", "Blue", "Black", "Yellow"].map(
+      (finish, index) => [
+        `2001-1${clamps}0${index + 1}`,
+        [clamps],
+        800,
+        32.9,
+        finish,
+        4.2,
+        1.5,
+        17.5,
+      ],
+    ),
+  );
+  for (const [
+    orderCode,
+    counts,
+    voltage,
+    depth,
+    finish,
+    width = 5.2,
+    crossSection = 2.5,
+    current = 24,
+  ] of [
+    ...series2001,
     ["2002-1301", [3], 800, 32.9],
     ["2002-1304", [3], 800, 32.9],
     ["2002-1401", [4], 800, 32.9],
@@ -71,6 +95,12 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
     const definition = engine.component(id);
     assert.equal(definition.specifications.nominalVoltage.value, voltage);
     assert.equal(definition.panelFootprint.depthMm, depth);
+    assert.equal(definition.panelFootprint.widthMm, width);
+    assert.equal(
+      definition.specifications.nominalCrossSection.value,
+      crossSection,
+    );
+    assert.equal(definition.specifications.ratedCurrent.value, current);
     if (finish) assert.equal(definition.specifications.finish.value, finish);
     const pins = engine.worldPins(device);
     const wires = definition.symbol.internalConnections.map((group, index) => {

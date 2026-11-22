@@ -69,3 +69,12 @@ potential, an 800 V and 24 A IEC/EN rating for category III and pollution degree
 portion below that datum. The individual English datasheets and their printed
 versions are recorded in the part batch.
 [WAGO TOPJOB S family catalog, p. 38](https://www.electromate.com/media/assets/catalog-library/pdfs/wago/Wago-Rail-Mount-Terminal-Block-Systems-topjob.pdf)
+
+## 2001-series single-deck through terminals
+
+Eighteen exact codes cover six finishes for each two-, three- and four-clamp
+layout. The terminal body is 4.2 mm wide and the nominal conductor section is
+1.5 mm². The individual WAGO datasheets list an IEC/EN rated current of 17.5 A
+and a nominal voltage of 800 V for category III and pollution degree 3. The
+18 A shown in the power-loss table refers to that separate measurement.
+[Representative 2001-1406 datasheet, pp. 2–3](https://wago.priintcloud.com/datasheets/2001-1406/en)
