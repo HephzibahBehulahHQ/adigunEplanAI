@@ -96,3 +96,23 @@ The component sidebar and Insert symbol dialog search all loaded entries by
 part number and descriptive terms. Results over 250 are paginated. Search
 always starts on the first matching page. Placement uses the original native
 component IDs, including parts found beyond the initial page.
+
+## 2000- and 2004-series operating-tool terminals
+
+Thirty-six exact codes cover six colors in each two-, three- and four-clamp
+layout. The 2000 series is 3.5 mm wide with a 1 mm² nominal conductor section
+and 13.5 A IEC rated current. The 2004 series is 6.2 mm wide with a 4 mm²
+nominal section and 32 A IEC rated current. Both have one documented common
+potential and 800 V nominal for category III and pollution degree 3.
+[2000-1201 datasheet](https://wago.priintcloud.com/datasheets/2000-1201/en) ·
+[2004-1406 datasheet](https://wago.priintcloud.com/datasheets/2004-1406/en)
+
+The batch stores the exact datasheet version, measurement page and PDF hash.
+To reproduce the evidence extraction, use Python with `pypdfium2` and a
+directory containing the exact English PDFs downloaded from the candidate
+export. The script prints reviewable JSON to standard output and rejects
+unsupported or conflicting data.
+
+```powershell
+python scripts/extract-wago-through-terminal-datasheets.py dist/component-bank-source/wago-terminal-candidates.jsonl dist/component-bank-source/series-2000-2004 --retrieved-at 2026-11-23
+```
