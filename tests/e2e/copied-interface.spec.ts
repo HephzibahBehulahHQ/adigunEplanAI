@@ -1332,6 +1332,43 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
       (object: { kind: string }) => object.kind === "wire",
     ),
   ).toHaveLength(6);
+  const cpu = saved.data.objects.find(
+    (object: { componentId?: string }) =>
+      object.componentId === "siemens-6es7212-1ae40-0xb0",
+  );
+  await page.locator(`[data-object="${cpu.id}"]`).click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PLC I/O assignments", { exact: true }).click();
+  const signal = page.getByLabel("X10:7 DI a.0 signal", { exact: true });
+  await expect(signal).toHaveValue("Start pushbutton");
+  await signal.fill("Operator start request");
+  await signal.press("Tab");
+  const address = page.getByLabel("X10:7 DI a.0 configured address", {
+    exact: true,
+  });
+  await address.fill("%I0.0");
+  await address.press("Tab");
+  const duplicate = page.getByLabel("X10:8 DI a.1 configured address", {
+    exact: true,
+  });
+  await duplicate.fill("%i0.0");
+  await duplicate.press("Tab");
+  await expect(duplicate).toHaveValue("");
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Export PLC I/O register" }).click();
+  const csv = fs.readFileSync(await (await download).path(), "utf8");
+  expect(csv).toMatch(
+    /"X10:7","DI a.0","Operator start request","%I0.0","wire-hardware-plc-input-\d+","S1:14"/,
+  );
+  const mapped = await saveDrawing(page, "plc-mapped");
+  await page.locator("#openFile").setInputFiles(mapped.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "plc-mapped.adigun.json opened",
+  );
+  await page.locator(`[data-object="${cpu.id}"]`).click();
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PLC I/O assignments", { exact: true }).click();
+  await expect(address).toHaveValue("%I0.0");
   await page.locator('[data-panel="project"]').click();
   await expect(page.locator("#projectSearch")).toHaveValue("");
   await expect(page.locator("[data-project-section]")).toHaveCount(4);

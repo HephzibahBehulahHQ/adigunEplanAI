@@ -143,6 +143,13 @@ with body envelopes, wireframe cabinet and compartment boundaries, and opening
 outlines.
 The panel heat estimate uses explicit placement losses and saved enclosure
 assumptions. Unknown equipment losses suppress the estimated temperature.
+
+### M10 compact PLC I/O register
+
+The Siemens CPU Properties panel edits a signal and configured address per
+documented I/O terminal. The CSV includes the drawing's attached wire IDs and
+direct peer terminals. The wired PLC input example includes a named start signal
+with the configured address left for the user to enter.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

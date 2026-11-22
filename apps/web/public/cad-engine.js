@@ -1152,6 +1152,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       properties: properties
     };
   }
+  function plcIoPins(def){
+    return def?.family==='plc-cpu'?def.symbol.pins.filter(pin=>/^(DI|DQ|AI) /.test(pin.name)):[];
+  }
+  function validPlcIo(def,records){
+    if(!records||typeof records!=='object'||Array.isArray(records))return false;
+    const pins=new Set(plcIoPins(def).map(pin=>pin.id)),addresses=new Set();
+    return Object.entries(records).every(([id,row])=>{
+      if(!pins.has(id)||!row||typeof row.signal!=='string'||row.signal.length>120||typeof row.address!=='string'||row.address.length>40)return false;
+      const address=row.address.trim().toUpperCase();
+      if(address&&addresses.has(address))return false;
+      if(address)addresses.add(address);
+      return true;
+    });
+  }
   function validateInstance(instance) {
     const errors = [];
     if (!instance || typeof instance !== 'object') return { valid: false, errors: ['Component instance must be an object.'] };
@@ -1160,6 +1174,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if (instance.kind !== 'component-instance') errors.push('Object is not a component instance.');
     if (instance.schemaVersion !== COMPONENT_SCHEMA_VERSION) errors.push('Unsupported component schema version.');
     if (!def) errors.push('Component ID has no verified definition.');
+    if(instance.plcIo!==undefined&&!validPlcIo(def,instance.plcIo))errors.push('PLC I/O requires valid signal terminals and unique configured addresses per CPU.');
     if (!finite(instance.x) || !finite(instance.y)) errors.push('Component position is invalid.');
     if(instance.displayScale!==undefined&&(!finite(instance.displayScale)||instance.displayScale<0.25||instance.displayScale>4))errors.push('Component drawing scale must be between 0.25 and 4.');
     if (![0, 90, 180, 270].includes(instance.rotation)) errors.push('Component rotation must be 0, 90, 180, or 270 degrees.');
@@ -1813,6 +1828,7 @@ function removeDrawingObjects(objects,ids){
     });});
     const result=clone(objects),target=result.find(function(o){return o.id===instanceId;}),reset=[];
     target.componentId=replacementId;target.properties={};
+    if(replacementId!==original.componentId&&target.plcIo)throw new Error('Clear the PLC I/O assignments before replacing this CPU.');
     if(replacement.family!=='building-device'){delete target.roomId;delete target.floorCircuit;}
     if(!replacement.instanceProperties.activePowerW)delete target.floorCircuit;
     if(replacementId!=='building-distribution-board'&&target.floorCircuits){
@@ -2586,6 +2602,7 @@ function createPumpStarterDocumentation(name) {
       device(ut,'X3',500,240,'Functional-earth interface to engineered cabinet bonding; this feed-through terminal is not a PE rail-bonding terminal.');
       device('schneider-electric-xb5aa31','S1',350,312,'NO momentary contact to CPU X10:7 (DI a.0); PLC address/program configuration is not simulated.');
       device('siemens-6es7212-1ae40-0xb0','A1',750,330,'Sinking input with 1M on DC return. Sensor supply, outputs and unused analog inputs require separate project engineering; see manufacturer wiring notes.');
+      byRef.A1.plcIo={'x10-7':{signal:'Start pushbutton',address:''}};
       connect('X1','connection-2','A1','x10-1');connect('X2','connection-2','A1','x10-2');connect('X3','connection-2','A1','x10-3');
       connect('X1','connection-1','S1','contact-13');connect('S1','contact-14','A1','x10-7');connect('A1','x10-6','X2','connection-1');
     }else if(example.id==='hardware-relay'){
@@ -3195,6 +3212,29 @@ function createPumpStarterDocumentation(name) {
     });
     return '\uFEFF' + lines.join('\r\n') + '\r\n';
   }
+  function plcIoRegisterCsv(project){
+    const instances=new Map(project.objects.filter(item=>item.kind==='component-instance').map(item=>[item.id,item]));
+    const links=new Map();
+    for(const wire of project.objects.filter(item=>item.kind==='wire')){
+      for(const [end,attachment] of Object.entries(wire.attachments??{})){
+        const key=JSON.stringify([attachment.instanceId,attachment.pinId]);
+        const other=wire.attachments[end==='start'?'end':'start'],device=instances.get(other?.instanceId);
+        const pin=device&&component(device.componentId)?.symbol.pins.find(item=>item.id===other.pinId);
+        const connection={wireId:wire.id,peer:pin?device.ref+':'+pin.localNumber:'Open or routed through drawing geometry'};
+        if(!links.has(key))links.set(key,[]);
+        links.get(key).push(connection);
+      }
+    }
+    const rows=[];
+    for(const cpu of instances.values()){
+      for(const pin of plcIoPins(component(cpu.componentId))){
+        const assignment=cpu.plcIo?.[pin.id],connections=links.get(JSON.stringify([cpu.id,pin.id]))??[];
+        rows.push({cpu:cpu.ref,sheet:project.sheets.find(sheet=>sheet.id===cpu.sheetId)?.number,terminal:pin.localNumber,channel:pin.name,
+          signal:assignment?.signal,address:assignment?.address,wires:connections.map(item=>item.wireId),peers:connections.map(item=>item.peer)});
+      }
+    }
+    return reportCsv([['CPU','cpu'],['Sheet','sheet'],['Terminal','terminal'],['Channel','channel'],['Signal','signal'],['Configured address','address'],['Attached wire IDs','wires'],['Direct peers','peers']],rows);
+  }
   const floorProfileColumns=[['Engineering documentation profile','engineeringProfile'],['Declared standard and edition','standardEdition']];
   function floorProfileReport(sheet){
     const plan=sheet.floorPlan;
@@ -3419,6 +3459,9 @@ function createPumpStarterDocumentation(name) {
   }
 
   root.AdigunCADEngine = Object.freeze({
+    plcIoPins,
+    validPlcIo,
+    plcIoRegisterCsv,
     validPanelThermalInputs,
     cabinetFeatureFaces,
     validCabinetFeatures,
