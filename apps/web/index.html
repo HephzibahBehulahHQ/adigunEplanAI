@@ -2767,12 +2767,18 @@
         });
         svg.append(group);
       }
-      for(const feature of features){
+      const outlines=features.map(feature=>({id:`${feature.kind}-${feature.face}-${feature.id}`,points:
+        window.AdigunPanelGeometry.featureVertices(cabinetEnvelope(cabinet),feature).map(({x,y,z})=>({x:x+cabinet.x,y:y+cabinet.y,z}))}));
+      for(const [index,feature] of features.entries()){
         const outline=document.createElementNS(ns,'polyline');
         const fits=cabinetFeatureFits(feature,cabinet);
         outline.dataset.cabinetOpening=feature.id;
-        outline.setAttribute('points',window.AdigunPanelGeometry.featureVertices(cabinetEnvelope(cabinet),feature)
-          .map(({x,y,z})=>projectPoint(x+cabinet.x,y+cabinet.y,z).join(',')).join(' '));
+        outline.setAttribute('points',outlines[index].points.map(({x,y,z})=>{
+          const point=projectPoint(x,y,z);
+          bounds.left=Math.min(bounds.left,point[0]);bounds.right=Math.max(bounds.right,point[0]);
+          bounds.top=Math.min(bounds.top,point[1]);bounds.bottom=Math.max(bounds.bottom,point[1]);
+          return point.join(',');
+        }).join(' '));
         outline.setAttribute('fill','none');outline.setAttribute('stroke',fits?'#146b80':'#b91c1c');
         outline.setAttribute('vector-effect','non-scaling-stroke');
         const title=document.createElementNS(ns,'title');
@@ -2780,7 +2786,23 @@
         outline.append(title);svg.append(outline);
       }
       svg.setAttribute('viewBox',[bounds.left-15,bounds.top-15,bounds.right-bounds.left+30,bounds.bottom-bounds.top+30].join(' '));
-      host.prepend(svg);
+      const boxes=[...structures,...bodies].map(item=>({id:`${item.kind||item.ref}-${item.id}`,bounds:bounds3(item),wireframe:item.kind==='panel-compartment'}));
+      if(cabinetBounds)boxes.unshift({id:'cabinet-boundary',bounds:cabinetBounds,wireframe:true});
+      const exportActions=document.createElement('div');
+      for(const [format,type,content] of [['SVG','image/svg+xml',()=>new XMLSerializer().serializeToString(svg)],
+        ['OBJ','text/plain',()=>window.AdigunPanelGeometry.compactPanelObj(boxes,outlines)]]){
+        const button=document.createElement('button');button.type='button';button.className='command-item';
+        button.textContent='Export panel '+format;
+        button.addEventListener('click',()=>{
+          const link=document.createElement('a'),url=URL.createObjectURL(new Blob([content()],{type}));
+          link.href=url;
+          link.download=(activeDraftingSheet()?.number||state.sheet).replace(/[\\/]/g,'-')+'-panel.'+format.toLowerCase();
+          link.click();
+          setTimeout(()=>URL.revokeObjectURL(url),1000);
+        });
+        exportActions.append(button);
+      }
+      host.prepend(svg,exportActions);
     }catch(error){host.textContent=error.message;}
   }
   $('#inspectorContent').addEventListener('submit',event=>{
