@@ -2445,6 +2445,10 @@ function createPumpStarterDocumentation(name) {
     const length=Math.abs(b-a);
     return finite(a)&&finite(b)&&finite(length)&&length>0?length:null;
   }
+  function svgLabel(x,y,value){
+    const escaped=String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]));
+    return `<text x="${x}" y="${y}" stroke="none">${escaped}</text>`;
+  }
   function floorRiserElevationSvg(project,routeId){
     const route=project.objects.find(item=>item.id===routeId&&item.floorRouteKind);
     const source=project.sheets.find(sheet=>sheet.id===route?.sheetId);
@@ -2452,7 +2456,7 @@ function createPumpStarterDocumentation(name) {
     const length=floorRiserLength(source,target);
     if(length===null)throw new Error('Select a floor route with a linked riser.');
     const escape=value=>String(value).replace(/[&<>]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[char]));
-    const text=(x,y,value)=>`<text x="${x}" y="${y}">${escape(value)}</text>`;
+    const text=svgLabel;
     const levels=[source,target].sort((a,b)=>b.floorPlan.elevationMm-a.floorPlan.elevationMm);
     const ordinates=[120,310];
     const datums=levels.map((sheet,index)=>{
@@ -2933,8 +2937,7 @@ function createPumpStarterDocumentation(name) {
     return '\uFEFF' + lines.join('\r\n') + '\r\n';
   }
 
-  function floorCircuitScheduleCsv(project) {
-    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser'],['Known connected load (W)','connected'],['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']];
+  function floorCircuitRows(project,boardId){
     const emptyTotals=()=>({loads:[],cable:0,conduit:0,tray:0,riser:0,connected:0,unknownConnected:0,demand:0,unknownDemand:0});
     const assignments=new Map(),sheets=new Map(project.sheets.map(sheet=>[sheet.id,sheet]));
     for(const object of project.objects){
@@ -2959,12 +2962,34 @@ function createPumpStarterDocumentation(name) {
     }
     const rows=[];
     for(const board of project.objects){
-      if(!board.floorCircuits?.length)continue;
+      if(!board.floorCircuits?.length||boardId&&board.id!==boardId)continue;
       const sheet=sheets.get(board.sheetId);
       for(const circuit of board.floorCircuits)rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
         board:board.ref,circuit:circuit.name,...(assignments.get(board.id)?.get(circuit.id)||emptyTotals())});
     }
-    return reportCsv(columns,rows);
+    return rows;
+  }
+  function floorCircuitScheduleCsv(project) {
+    const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser'],['Known connected load (W)','connected'],['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']];
+    return reportCsv(columns,floorCircuitRows(project));
+  }
+  function floorBoardSingleLineSvg(project,boardId){
+    const rows=boardId?floorCircuitRows(project,boardId):[];
+    if(!rows.length)throw new Error('Select a distribution board with at least one floor circuit.');
+    const board=rows[0];
+    let y=166;
+    const branches=rows.map(row=>{
+      const top=y;
+      const refs=row.loads.join(', ')||'No assigned equipment';
+      const labels=[row.circuit,...refs.match(/[\s\S]{1,70}/gu),
+        `Known connected ${Number(row.connected.toPrecision(9))} W · ${row.unknownConnected} missing power`,
+        `Known demand ${Number(row.demand.toPrecision(9))} W · ${row.unknownDemand} missing inputs`];
+      y+=labels.length*23+29;
+      return `<path d="M56 ${top} H140"/><circle cx="56" cy="${top}" r="3" fill="#1855a4"/>`
+        +labels.map((label,index)=>svgLabel(152,top+5+index*23,label)).join('');
+    }).join('');
+    const height=y+20;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 ${height}" width="980" height="${height}"><title>Distribution board single-line assignments</title><rect width="980" height="${height}" fill="white"/><g font-family="sans-serif" font-size="15" fill="#19283c">${svgLabel(32,32,board.board+' · Distribution board single-line')}${svgLabel(32,56,board.sheet+' · '+board.building)}${svgLabel(32,79,'Floor · '+board.floor)}${svgLabel(32,104,'Branches show assigned equipment. Verify conductor connections in the project.')}${svgLabel(75,138,board.board)}<g stroke="#1855a4" stroke-width="2"><path d="M56 132 V${y-28}" fill="none"/>${branches}</g></g></svg>`;
   }
   function roomEquipmentScheduleCsv(project) {
     const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Room ID','roomId'],['Room','room'],['Reference','reference'],['Equipment','equipment']];
@@ -3094,6 +3119,7 @@ function createPumpStarterDocumentation(name) {
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
     floorRiserElevationSvg: floorRiserElevationSvg,
+    floorBoardSingleLineSvg: floorBoardSingleLineSvg,
     wireRoute: wireRoute,
     wireRouteLength: wireRouteLength,
     floorRouteLength: floorRouteLength,
