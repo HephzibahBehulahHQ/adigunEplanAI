@@ -116,3 +116,15 @@ unsupported or conflicting data.
 ```powershell
 python scripts/extract-wago-through-terminal-datasheets.py dist/component-bank-source/wago-terminal-candidates.jsonl dist/component-bank-source/series-2000-2004 --retrieved-at 2026-11-23
 ```
+
+## Higher-current operating-tool through terminals
+
+Thirty-eight 2006-, 2010- and 2016-series parts carry 6, 10 and 16 mm² nominal
+conductor sections with IEC rated currents of 41, 57 and 76 A respectively.
+The catalog uses 800 V for overvoltage category III and pollution degree 3.
+The datasheets also show 1,000 V for category III and pollution degree 2.
+All added parts have one common potential. The two larger series have a
+36.9 mm depth above the DIN rail, compared with 32.9 mm for the 2006 series.
+[2006-1201 datasheet](https://wago.priintcloud.com/datasheets/2006-1201/en) ·
+[2010-1201 datasheet](https://wago.priintcloud.com/datasheets/2010-1201/en) ·
+[2016-1201 datasheet](https://wago.priintcloud.com/datasheets/2016-1201/en)
