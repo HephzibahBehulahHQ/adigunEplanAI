@@ -3394,3 +3394,43 @@ test("floor plan dimensions measure endpoints and save their offset", async ({
   await page.locator("#openFile").setInputFiles(saved.path);
   await expect(dimension).toHaveText("500 mm");
 });
+
+test("floor plan equipment uses native devices and preserves terminal wiring", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  const placements = [
+    ["building-distribution-board", 260, 240],
+    ["building-socket", 580, 300],
+    ["building-luminaire", 900, 400],
+  ] as const;
+  for (const [id, x, y] of placements) {
+    await page.locator("#symbolSearch").fill(id);
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, y);
+  }
+  await clickAt(220, 320);
+  await clickAt(540, 380);
+  const saved = await saveDrawing(page, "floor-plan-devices");
+  const [board, socket, lamp, wire] = saved.data.objects;
+  expect([board.componentId, socket.componentId, lamp.componentId]).toEqual(
+    placements.map(([id]) => id),
+  );
+  expect(wire.attachments).toEqual({
+    start: { instanceId: board.id, pinId: "L" },
+    end: { instanceId: socket.id, pinId: "L" },
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#userDrawings [data-object]")).toHaveCount(4);
+});

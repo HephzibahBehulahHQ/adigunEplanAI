@@ -1081,9 +1081,28 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 
   const EPLAN_COMPONENTS = Object.freeze(Object.fromEntries((root.AdigunEplanSymbols || []).map(function(def) { return [def.id, deepFreeze(def)]; })));
-  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || null; }
+  const BUILDING_COMPONENTS=deepFreeze(Object.fromEntries([
+    ['building-luminaire','Floor-plan luminaire','LUM','M-50 -50L50 50M-50 50L50 -50',[-60,-60,120,120]],
+    ['building-socket','Floor-plan socket outlet','SO','M-32 -14H32M-32 14H32',[-50,-50,100,100]],
+    ['building-distribution-board','Floor-plan distribution board','DB','M-55 -30H55M-55 0H55M-55 30H55',[-75,-55,150,110]]
+  ].map(function(entry){
+    const [id,name,referencePrefix,path,body]=entry;
+    const [x,y,width,height]=body;
+    const pins=['L','N','PE'].map(function(number,index){
+      return {id:number,localNumber:number,name:number,x:(index-1)*40,y:80,electricalType:'passive',connectionType:'schematic'};
+    });
+    const artwork=[{kind:'rect',x,y,width,height},{kind:'path',d:path},...pins.map(pin=>({
+      kind:'line',from:{x:pin.x,y:y+height},to:pin
+    }))];
+    return [id,{schemaVersion:COMPONENT_SCHEMA_VERSION,id,name,model:name,generic:true,manufacturer:'Not assigned',manufacturerPartNumber:'Not assigned',
+      family:'building-device',referencePrefix,category:'Building · floor-plan devices',connectionClass:'electrical',
+      symbol:{id:id+'-symbol',view:'schematic',unit:'mm',width:160,height:180,artwork,pins,internalConnections:[],
+        numberingNote:'Logical floor-plan terminals. Supply, product ratings and installed footprint require design inputs.'},
+      specifications:{},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}];
+  })));
+  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || null; }
   function catalog() {
-    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS)).map(function (id) {
+    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS)).map(function (id) {
       const def = component(id);
       return { id: def.id, componentId: def.id, name: def.generic ? def.name : def.model + ' · ' + def.manufacturerPartNumber + (def.family==='motor-terminal-board'?' · Delta terminal-board view':''), category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
     });

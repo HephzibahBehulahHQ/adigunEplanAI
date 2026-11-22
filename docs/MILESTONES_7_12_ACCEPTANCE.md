@@ -13,6 +13,14 @@ This record describes schema 17 implementation, not final production certificati
 
 ## Evidence and limitations
 
+The compact editor's M7 workflow now creates native floor-plan sheets in
+millimeters. It supports named rectangular rooms, walls with door and
+window openings, measured dimension lines, and generic luminaire, socket,
+and distribution-board placement with editable terminal connections.
+Building equipment uses unassigned manufacturer data. Room equipment
+schedules, distribution assignments, and riser integration remain open in
+the compact editor.
+
 Focused M8 verification covers all 25 categories, invalid units/bounds, round trips and unavailable method versions. All six calculation browser workflows pass, including four languages and narrow screens. M9 has 22 domain tests and two complete browser workflows including real export downloads and no console errors. M10 has four focused domain tests and a complete browser workflow. Drawing/report browser verification parses actual SVG/PNG/PDF output, native IDs, pixels and physical page dimensions. Account verification covers account-switch isolation/stale responses, conflicts/history/recovery, private-avatar validation, offline same-owner local editing and header behavior. These mocked-session tests do not establish real production credentials or database authorization.
 
 The Supabase history/avatar migration is applied. Direct read-only inspection verifies owner/nonanonymous RLS, immutable client history, restricted grants, nonpublic trigger functions and private image storage. Unauthenticated REST returned 401 for both tables. The rollback fixture in supabase/tests/history-avatars.sql has not executed because mandatory confirmation expired; no substitute mutation was used to bypass that gate.
