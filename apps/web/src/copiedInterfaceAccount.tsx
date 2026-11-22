@@ -7,6 +7,7 @@ import {
 } from "../../../packages/localization";
 import { AccountPanel } from "./AccountPanel";
 import "./compactPanelEstimates.ts";
+import "./compactPlcLibrary.ts";
 import { requestGuestTrial, useAccount } from "./useAccount";
 import "./account.css";
 import "./copiedInterfaceAccount.css";

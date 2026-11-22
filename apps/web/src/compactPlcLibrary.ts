@@ -1,0 +1,18 @@
+import { plcKinds, plcSymbol } from "../../../packages/automation/plc.ts";
+import { engineeringSymbols } from "../../../packages/component-library/symbols.ts";
+
+const symbols = plcKinds.map((kind) => {
+  const { symbol: id, channels } = plcSymbol[kind];
+  const symbol = engineeringSymbols.find((entry) => entry.id === id);
+  if (!symbol) throw new Error(`Missing PLC library symbol ${id}`);
+  return { kind, channels, symbol };
+});
+
+declare global {
+  interface Window {
+    AdigunCADEngine: { registerPlcSymbols: (entries: typeof symbols) => void };
+  }
+}
+
+window.AdigunCADEngine.registerPlcSymbols(symbols);
+window.dispatchEvent(new Event("adigun-plc-library-ready"));

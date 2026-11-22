@@ -150,6 +150,9 @@ The Siemens CPU Properties panel edits a signal and configured address per
 documented I/O terminal. The CSV includes the drawing's attached wire IDs and
 direct peer terminals. The wired PLC input example includes a named start signal
 with the configured address left for the user to enter.
+The compact library includes the six original generic PLC module types with
+native terminal geometry and editable per-terminal documentation. Generic
+schematic pins carry no manufacturer ratings or physical pin claims.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
