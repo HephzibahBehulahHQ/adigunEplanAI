@@ -3489,6 +3489,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     ).floorCircuit,
   ).toEqual({ boardId: board.id, circuitId });
   await page.locator("#openFile").setInputFiles(wiredFloor.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-plan-circuits.adigun.json opened.",
+  );
   await clickAt(580, 300);
   await expect(circuit).toHaveValue(circuitId);
   const circuitPending = page.waitForEvent("download");
@@ -3518,6 +3521,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     { x: 500, y: 630 },
   ]);
   await page.locator("#openFile").setInputFiles(routedFloor.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-plan-cable-route.adigun.json opened.",
+  );
   await expect(
     page.locator('[data-object="' + route.id + '"]'),
   ).toHaveAttribute("d", "M300 530 L500 530 L500 630");
