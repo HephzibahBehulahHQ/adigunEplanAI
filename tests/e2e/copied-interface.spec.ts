@@ -3767,6 +3767,80 @@ test("floor plan specialty devices expose independent native terminals", async (
   await expect(architecture).toBeVisible();
 });
 
+test("floor cable ampacity compares explicit inputs and reopens them", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.locator("#sheetDialog [data-floor-sheet]").click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Draw floor cable route");
+  await page
+    .locator("#commandList")
+    .getByText("Draw floor cable route", { exact: true })
+    .click();
+  for (const x of [200, 520]) {
+    const point = await sheetPoint(page, x, 320);
+    await page.mouse.click(point.x, point.y);
+  }
+  await page.keyboard.press("Enter");
+  await page.getByText("Route ampacity check", { exact: true }).click();
+  const form = page.locator("[data-route-ampacity]");
+  for (const [label, value] of [
+    ["Design current (A)", "10"],
+    ["Protection rating (A)", "16"],
+    ["Tabulated ampacity (A)", "25"],
+    ["Temperature factor", "0.8"],
+    ["Grouping factor", "0.9"],
+    ["Installation factor", "1"],
+    ["Candidate conductor area (mm²)", "2.5"],
+  ]) {
+    await form
+      .getByRole("spinbutton", { name: label, exact: true })
+      .fill(value);
+  }
+  await form
+    .getByRole("textbox", { name: "Input evidence" })
+    .fill("Synthetic ampacity reference inputs");
+  const calculate = form.getByRole("button", { name: "Check route ampacity" });
+  await calculate.click();
+  const output = form.locator("output");
+  await expect(output).toContainText("Corrected ampacity 18 A");
+  await expect(output).toContainText(
+    "Protection rating ≤ corrected ampacity: pass",
+  );
+  await form
+    .getByRole("spinbutton", { name: "Protection rating (A)" })
+    .fill("20");
+  await calculate.click();
+  await expect(output).toContainText(
+    "Protection rating ≤ corrected ampacity: fail",
+  );
+  const saved = await saveDrawing(page, "floor-ampacity-inputs");
+  expect(saved.data.objects[0].ampacity).toMatchObject({
+    ratedCurrent: 20,
+    area: 2.5,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project floor-ampacity-inputs.adigun.json opened.",
+  );
+  const route = await sheetPoint(page, 400, 320);
+  await page.mouse.click(route.x, route.y);
+  await page.getByText("Route ampacity check", { exact: true }).click();
+  await expect(
+    form.getByRole("spinbutton", { name: "Protection rating (A)" }),
+  ).toHaveValue("20");
+  await calculate.click();
+  await expect(output).toContainText(
+    "adiguneplanai:calculation:cable-sizing:1.0.0",
+  );
+});
+
 test("floor plan equipment uses native devices and preserves terminal wiring", async ({
   page,
 }) => {

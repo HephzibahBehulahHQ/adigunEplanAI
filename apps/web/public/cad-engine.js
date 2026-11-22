@@ -1386,6 +1386,12 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             drop.voltage<=0||drop.powerFactor>1||drop.dropLimit<=0||drop.dropLimit>100||
             typeof drop.evidence!=='string'||drop.evidence.trim().length<8||drop.evidence.length>400)errors.push('Invalid route voltage drop inputs '+object.id+'.');
         }
+        if(object.ampacity!==undefined){
+          const ampacity=object.ampacity;
+          if(object.floorRouteKind!=='cable'||!ampacity||!finite(ampacity.current)||ampacity.current<0||
+            ['ratedCurrent','tabulatedAmpacity','temperatureFactor','groupingFactor','installationFactor','area'].some(key=>!finite(ampacity[key])||ampacity[key]<=0)||
+            typeof ampacity.evidence!=='string'||ampacity.evidence.trim().length<8||ampacity.evidence.length>400)errors.push('Invalid route ampacity inputs '+object.id+'.');
+        }
         if(object.riserTargetSheetId!==undefined){
           const sheetId=object.sheetId||(project.sheets?.length===1?project.sheets[0]?.id:null);
           if(!object.floorRouteKind||floorRiserLength(floorSheets.get(sheetId),floorSheets.get(object.riserTargetSheetId))===null)errors.push('Invalid floor riser '+object.id+'.');
