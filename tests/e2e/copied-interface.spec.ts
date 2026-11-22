@@ -3902,6 +3902,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await page.keyboard.press("Enter");
   await expect(page.getByText("300 mm", { exact: true })).toBeVisible();
   await circuit.selectOption({ label: "DB1 · Workshop sockets" });
+  const routeTag = page.getByRole("textbox", { name: "Route tag" });
+  await routeTag.fill("W-FLOOR-01");
+  await routeTag.press("Tab");
   const routedFloor = await saveDrawing(page, "floor-plan-cable-route");
   const route = routedFloor.data.objects.find(
     (object: { floorRouteKind?: string }) => object.floorRouteKind === "cable",
@@ -3970,6 +3973,15 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   const routingSchedule = await routingPending;
   expect(fs.readFileSync((await routingSchedule.path())!, "utf8")).toContain(
     '"DB1","Workshop sockets","SO1","300","0","0","3200","600","0","450","0"',
+  );
+  const cablePending = page.waitForEvent("download");
+  await command("Export floor cable schedule");
+  const cableReport = await cablePending;
+  expect(cableReport.suggestedFilename()).toBe("floor-cable-schedule.csv");
+  const cableCsv = fs.readFileSync((await cableReport.path())!, "utf8");
+  expect(cableCsv).toContain('"W-FLOOR-01","cable"');
+  expect(cableCsv).toContain(
+    '"A2/001","Upper floor","DB1","Workshop sockets","300","3200","3500"',
   );
   await clickAt(260, 240);
   const diagramPending = page.waitForEvent("download");

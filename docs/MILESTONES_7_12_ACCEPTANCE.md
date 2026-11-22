@@ -43,6 +43,9 @@ assignments independently of conductor connectivity.
 The floor panel schedule aggregates circuit counts, known power and demand
 by distribution board. It also includes board room and zone assignments and
 lists boards with no circuits.
+The floor cable schedule lists individual cable, conduit and tray routes
+with optional route tags, assigned circuits and destination floors. It
+reports planar and vertical lengths separately and sums the drawn route.
 Assigned floor devices and routes display their board reference and circuit
 name on the drawing. Labels update when the source circuit changes.
 
