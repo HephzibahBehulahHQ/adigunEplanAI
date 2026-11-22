@@ -154,3 +154,18 @@ candidates stay out of this batch because the source lacks a reviewed
 diagram or shows or describes internal commoning. To review mixed inputs,
 pass `--skip-unverified`; the tool reports rejected PDFs to standard error.
 [Example source with two isolated levels](https://wago.priintcloud.com/datasheets/2202-2234/en)
+
+## CAGE CLAMP rail terminal families
+
+The 279, 280, 281, 282 and 285 series add 114 distinct through terminals
+with dated and hashed exact datasheets. Definitions distinguish standard
+CAGE CLAMP and POWER CAGE CLAMP. The sourced 285 rail-mount variants require
+35 × 15 mm DIN rail. Part geometry uses the above-rail depth from the
+physical-data table.
+
+The source review held 33 candidates out of this batch. They lacked the
+expected IEC nominal-rating data or body width, or used a different
+mounting interface. The extractor reports these cases separately from
+parts accepted into the editor.
+[279-681 datasheet](https://wago.priintcloud.com/datasheets/279-681/en) ·
+[285-635 datasheet](https://wago.priintcloud.com/datasheets/285-635/en)

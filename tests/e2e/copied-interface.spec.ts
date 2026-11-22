@@ -1749,7 +1749,7 @@ test("both component pickers search 10,000 entries and place the final real part
   ).toHaveLength(2);
 });
 
-test("Larger TOPJOB push-button variants can be found, placed and wired by exact code", async ({
+test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", async ({
   page,
 }) => {
   await page.goto("/");
@@ -1763,8 +1763,8 @@ test("Larger TOPJOB push-button variants can be found, placed and wired by exact
     const point = await sheetPoint(page, x, 250);
     await page.mouse.click(point.x, point.y);
   };
-  await place("2204-1202", 400);
-  await place("2206-1405", 650);
+  await place("285-635", 400);
+  await place("281-652", 650);
   for (const [x, y] of [
     [472, 250],
     [578, 240],
@@ -1775,8 +1775,8 @@ test("Larger TOPJOB push-button variants can be found, placed and wired by exact
   const native = await saveDrawing(page, "topjob-variants");
   expect(native.data.objects).toEqual(
     expect.arrayContaining([
-      expect.objectContaining({ componentId: "wago-2204-1202" }),
-      expect.objectContaining({ componentId: "wago-2206-1405" }),
+      expect.objectContaining({ componentId: "wago-285-635" }),
+      expect.objectContaining({ componentId: "wago-281-652" }),
       expect.objectContaining({
         kind: "wire",
         attachments: {

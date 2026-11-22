@@ -1098,14 +1098,17 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const isSource=value=>typeof value==='string'&&/^https:\/\/[^/\s]+\/\S+$/.test(value);
     for(const part of rows){
       const id='wago-'+part?.orderCode;
-      if(!part||typeof part.orderCode!=='string'||!/^(?:2000|2001|2002|2004|2006|2010|2016|2200|2201|2202|2204|2206)-[0-9]{4}$/.test(part.orderCode)||
+      const classic=typeof part?.orderCode==='string'&&/^(?:279|280|281|282|285)-[0-9]{3}$/.test(part.orderCode);
+      if(!part||typeof part.orderCode!=='string'||(!classic&&!/^(?:2000|2001|2002|2004|2006|2010|2016|2200|2201|2202|2204|2206)-[0-9]{4}$/.test(part.orderCode))||
+        (classic&&(!['CAGE CLAMP','POWER CAGE CLAMP'].includes(part.connectionTechnology)||!['DIN rail 35 × 7.5 or 35 × 15 mm','DIN rail 35 × 15 mm only'].includes(part.mounting)))||
         !Array.isArray(part.positions)||part.positions.length<1||part.positions.length>2||
         !Array.from(part.positions).every(count=>Number.isInteger(count)&&count>=2&&count<=4)||
         ![part.nominalVoltage,part.ratedCurrent,part.widthMm,part.heightMm,part.depthMm,part.nominalCrossSectionMm2].every(value=>Number.isFinite(value)&&value>0)||
         ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
         typeof part.slug!=='string'||!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(part.slug)||
         !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||!isSource(part.datasheet)||
-        (part.actuationMethod!==undefined&&!['Push-button','Operating tool'].includes(part.actuationMethod))||
+        (part.actuationMethod!==undefined&&!['Push-button','Operating tool'].includes(part.actuationMethod)&&
+          !(classic&&/^T-wrench; [0-9]+ mm$/.test(part.actuationMethod)))||
         (part.markerCarrier!==undefined&&typeof part.markerCarrier!=='boolean')||
         (part.retrievedAt!==undefined&&(typeof part.retrievedAt!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(part.retrievedAt)))||
         (part.datasheetSha256!==undefined&&(typeof part.datasheetSha256!=='string'||!/^[a-f0-9]{64}$/.test(part.datasheetSha256)))||
@@ -1133,7 +1136,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         const side=index<Math.ceil(count/2)?-1:1;
         const pinY=count===2?y:y+(index%2===0?-10:10),localNumber=(deckCount===1?'':deck===0?'U':'L')+(index+1);
         const pin={id:'clamp-'+localNumber.toLowerCase(),localNumber,name:'Clamping position '+localNumber,
-          x:side*72,y:pinY,electricalType:'passive',connectionType:'Push-in CAGE CLAMP'};
+          x:side*72,y:pinY,electricalType:'passive',connectionType:part.connectionTechnology||'Push-in CAGE CLAMP'};
         pins.push(pin);group.push(pin.id);
         artwork.push(line(pin.x,pin.y,side*34,pin.y));
         if(pin.y!==y)artwork.push(line(side*34,pin.y,side*34,y));
@@ -1141,7 +1144,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       internalConnections.push(group);
     }
     return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
-      model:'TOPJOB S '+part.orderCode,name:title,family:'topjob-terminal',referencePrefix:'X',category:'Electrical · WAGO terminal systems',
+      model:(part.connectionTechnology?part.connectionTechnology+' ':'TOPJOB S ')+part.orderCode,name:title,
+      family:part.connectionTechnology?'wago-rail-terminal':'topjob-terminal',referencePrefix:'X',category:'Electrical · WAGO terminal systems',
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:144,height,pins,internalConnections,artwork,
         numberingNote:'Anchor labels identify schematic clamping positions. Each level is one documented potential; no cross-level or adjacent-block jumper is included.'},
       specifications:{connectionCount:{value:pins.length},levels:{value:deckCount},potentials:{value:deckCount},
@@ -1149,7 +1153,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         finish:{value:part.finish},...(part.actuationMethod?{actuationMethod:{value:part.actuationMethod}}:{}),
         ...(part.potentialMarking?{potentialMarking:{value:part.potentialMarking}}:{}),
         ...(part.markerCarrier===undefined?{}:{markerCarrier:{value:part.markerCarrier?'Fitted':'Without marker carrier'}}),
-        nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},mounting:{value:'DIN rail 35 × 7.5 or 35 × 15 mm'},
+        nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},mounting:{value:part.mounting||'DIN rail 35 × 7.5 or 35 × 15 mm'},
+        ...(part.connectionTechnology?{connectionTechnology:{value:part.connectionTechnology}}:{}),
         railReferencedDimensions:{width:{value:part.widthMm,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}},
       panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:part.dimensionPage,
         note:'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.'},
