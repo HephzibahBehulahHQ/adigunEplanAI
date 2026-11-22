@@ -3525,6 +3525,10 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await clickAt(580, 300);
   const circuit = page.getByRole("combobox", { name: "Assigned circuit" });
   await circuit.selectOption({ label: "DB1 · Workshop sockets" });
+  await page.getByRole("spinbutton", { name: "Active power (W)" }).fill("600");
+  await page
+    .getByRole("spinbutton", { name: "Demand factor (0–1)" })
+    .fill("0.75");
   const wiredFloor = await saveDrawing(page, "floor-plan-circuits");
   const savedBoard = wiredFloor.data.objects.find(
     (object: { id: string }) => object.id === board.id,
@@ -3541,6 +3545,12 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   );
   await clickAt(580, 300);
   await expect(circuit).toHaveValue(circuitId);
+  await expect(
+    page.getByRole("spinbutton", { name: "Active power (W)" }),
+  ).toHaveValue("600");
+  await expect(
+    page.getByRole("spinbutton", { name: "Demand factor (0–1)" }),
+  ).toHaveValue("0.75");
   const circuitPending = page.waitForEvent("download");
   await command("Export floor circuit schedule");
   const circuitSchedule = await circuitPending;
@@ -3621,7 +3631,7 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   await command("Export floor circuit schedule");
   const routingSchedule = await routingPending;
   expect(fs.readFileSync((await routingSchedule.path())!, "utf8")).toContain(
-    '"DB1","Workshop sockets","SO1","300","0","0","3200"',
+    '"DB1","Workshop sockets","SO1","300","0","0","3200","600","0","450","0"',
   );
   await clickAt(260, 240);
   await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
