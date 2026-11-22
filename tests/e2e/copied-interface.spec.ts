@@ -3620,7 +3620,9 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
     '"DB1","Workshop sockets","SO1"',
   );
   await command("Draw floor cable route");
-  await expect(page.locator("#statusText")).toContainText("Click route corners.");
+  await expect(page.locator("#statusText")).toContainText(
+    "Click route corners.",
+  );
   await clickAt(300, 530);
   await clickAt(500, 530);
   await clickAt(500, 630);
