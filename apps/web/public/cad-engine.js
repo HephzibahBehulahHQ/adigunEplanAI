@@ -1361,7 +1361,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         if (typeof object.id !== 'string' || !object.id || objectIds.has(object.id)) errors.push('Drawing object ID is missing or duplicated: '+object.id);
         objectIds.add(object.id);
         if(object.zIndex!==undefined&&!Number.isSafeInteger(object.zIndex))errors.push('Drawing object '+object.id+' requires an integer draw order.');
-        if(object.layer!==undefined&&!['connections','devices','annotations'].includes(object.layer))errors.push('Drawing object '+object.id+' requires a supported drawing layer.');
+        if(object.layer!==undefined&&!['connections','devices','annotations','architecture'].includes(object.layer))errors.push('Drawing object '+object.id+' requires a supported drawing layer.');
         if(object.lineType!==undefined&&!['solid','dashed','dotted'].includes(object.lineType))errors.push('Drawing object '+object.id+' requires a supported line type.');
         if(object.dimensionOffset!==undefined&&(object.kind!=='line'||object.wallThickness!==undefined||!finite(object.dimensionOffset)||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid dimension line '+object.id+'.');
         if(object.wallThickness!==undefined&&(object.kind!=='line'||!finite(object.wallThickness)||object.wallThickness<1||![object.x1,object.y1,object.x2,object.y2].every(finite)||Math.hypot(object.x2-object.x1,object.y2-object.y1)<2))errors.push('Invalid wall outline '+object.id+'.');

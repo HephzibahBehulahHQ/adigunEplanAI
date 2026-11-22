@@ -3496,6 +3496,36 @@ test("floor plan specialty devices expose independent native terminals", async (
   );
   const reopened = await saveDrawing(page, "floor-specialty-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Draw room outline");
+  await page.locator("#commandSearch").press("Enter");
+  const start = await sheetPoint(page, 85, 100);
+  const end = await sheetPoint(page, 600, 400);
+  await page.mouse.move(start.x, start.y);
+  await page.mouse.down();
+  await page.mouse.move(end.x, end.y);
+  await page.mouse.up();
+  const architecture = page.locator(
+    '#userDrawings [data-layer="architecture"]',
+  );
+  const electricalWire = page.locator(
+    '#userDrawings [data-object="' + wire.id + '"]',
+  );
+  const electricalDevice = page.locator(
+    '#userDrawings [data-object="' + emergency.id + '"]',
+  );
+  await expect(architecture).toBeVisible();
+  await page
+    .getByRole("complementary", { name: "Inspector tools" })
+    .getByRole("button", { name: "Layers and visibility" })
+    .click();
+  const visible = page.getByRole("checkbox", { name: "Architecture" });
+  await visible.uncheck();
+  await expect(architecture).toBeHidden();
+  await expect(electricalWire).toBeVisible();
+  await expect(electricalDevice).toBeVisible();
+  await visible.check();
+  await expect(architecture).toBeVisible();
 });
 
 test("floor plan equipment uses native devices and preserves terminal wiring", async ({
