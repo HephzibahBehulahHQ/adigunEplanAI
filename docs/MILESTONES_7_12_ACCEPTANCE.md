@@ -43,6 +43,8 @@ assignments independently of conductor connectivity.
 The floor panel schedule aggregates circuit counts, known power and demand
 by distribution board. It also includes board room and zone assignments and
 lists boards with no circuits.
+Assigned floor devices and routes display their board reference and circuit
+name on the drawing. Labels update when the source circuit changes.
 
 The compact editor includes a generic earthing bond point with two common PE
 terminals. The floor protective-earth CSV lists wires attached to a building

@@ -891,7 +891,7 @@
         if(obj.riserTargetSheetId)el=renderFloorRiser(obj,el,stroke);
         if(obj.dimensionOffset!==undefined)el=renderDimensionLine(obj,el,stroke);
         if(obj.roomName||obj.floorZone)el=renderFloorOutline(obj,el,stroke);
-        if(obj.rotation&&obj.kind!=='component-instance'){const center=objectCenter(obj);el.setAttribute('transform','rotate('+obj.rotation+' '+center.x+' '+center.y+')');}if(obj.strokeWidth)el.setAttribute('stroke-width',width);if(obj.lineType==='dashed')el.setAttribute('stroke-dasharray',(width*4)+' '+(width*2));if(obj.lineType==='dotted'){el.setAttribute('stroke-dasharray',width+' '+(width*2));el.setAttribute('stroke-linecap','round');}el.dataset.object=obj.id;el.dataset.layer=drawingLayerForObject(obj);el.addEventListener('click',e=>{if(state.tool==='select'){e.stopPropagation();const current=state.objects.find(function(item){return item.id===obj.id;});if(current){state.selected=current.id;if(current.kind!=='text')renderObjects();showObject(current);}}});el.addEventListener('dblclick',e=>handleObjectDoubleClick(e,obj.id));if(!drawingObjectVisible(obj))el.style.display='none';if(obj.locked)el.dataset.locked='true';if(obj.flipX||obj.flipY){const center=objectCenter(obj);el.setAttribute('transform',`translate(${obj.flipX?center.x*2:0} ${obj.flipY?center.y*2:0}) scale(${obj.flipX?-1:1} ${obj.flipY?-1:1})`);}return el;}
+        if(obj.rotation&&obj.kind!=='component-instance'){const center=objectCenter(obj);el.setAttribute('transform','rotate('+obj.rotation+' '+center.x+' '+center.y+')');}if(obj.strokeWidth)el.setAttribute('stroke-width',width);if(obj.lineType==='dashed')el.setAttribute('stroke-dasharray',(width*4)+' '+(width*2));if(obj.lineType==='dotted'){el.setAttribute('stroke-dasharray',width+' '+(width*2));el.setAttribute('stroke-linecap','round');}if(obj.flipX||obj.flipY){const center=objectCenter(obj);el.setAttribute('transform',`translate(${obj.flipX?center.x*2:0} ${obj.flipY?center.y*2:0}) scale(${obj.flipX?-1:1} ${obj.flipY?-1:1})`);}if(obj.floorCircuit)el=renderFloorCircuitLabel(obj,el,stroke);el.dataset.object=obj.id;el.dataset.layer=drawingLayerForObject(obj);el.addEventListener('click',e=>{if(state.tool==='select'){e.stopPropagation();const current=state.objects.find(function(item){return item.id===obj.id;});if(current){state.selected=current.id;if(current.kind!=='text')renderObjects();showObject(current);}}});el.addEventListener('dblclick',e=>handleObjectDoubleClick(e,obj.id));if(!drawingObjectVisible(obj))el.style.display='none';if(obj.locked)el.dataset.locked='true';return el;}
 
   function renderCrossSheetConnectors(){
     $$('#userDrawings .cross-sheet-connector').forEach(function(node){node.remove();});
@@ -1139,6 +1139,34 @@
     label.setAttribute('fill',stroke);
     label.textContent='Riser → '+target.floorPlan.level+' · '+Number(length.toFixed(3))+' mm';
     group.append(path,label);
+    return group;
+  }
+  function renderFloorCircuitLabel(object,glyph,stroke){
+    const assignment=object.floorCircuit;
+    const board=state.objects.find(item=>item.id===assignment.boardId);
+    const circuit=board?.floorCircuits?.find(item=>item.id===assignment.circuitId);
+    const bounds=objectBounds(object);
+    if(!circuit||!bounds)return glyph;
+    const ns='http://www.w3.org/2000/svg';
+    const group=document.createElementNS(ns,'g'),label=document.createElementNS(ns,'text');
+    group.setAttribute('class',glyph.getAttribute('class')||'');
+    glyph.removeAttribute('class');
+    label.dataset.floorCircuitLabel='';
+    label.setAttribute('x',bounds.cx);
+    const clearance=object.displayName?Math.max(24,30*(object.displayScale||1)):12;
+    const top=object.floorRouteKind&&object.rotation?bounds.cy-Math.hypot(bounds.width,bounds.height)/2:bounds.top;
+    label.setAttribute('y',top-clearance);
+    label.setAttribute('text-anchor','middle');
+    label.setAttribute('font-size','12');
+    label.setAttribute('fill',stroke);
+    label.setAttribute('pointer-events','none');
+    label.textContent=board.ref+' · '+circuit.name;
+    const width=Math.max(bounds.width,110);
+    if(label.textContent.length*7>width){
+      label.setAttribute('textLength',width);
+      label.setAttribute('lengthAdjust','spacingAndGlyphs');
+    }
+    group.append(glyph,label);
     return group;
   }
   function floorRouteFields(route){
@@ -1581,7 +1609,7 @@
       board.floorCircuits=board.floorCircuits.filter(circuit=>circuit.id!==id);
       for(const load of state.objects)if(load.floorCircuit?.boardId===board.id&&load.floorCircuit.circuitId===id)delete load.floorCircuit;
     }
-    persist();refreshSelectedProperties();
+    renderObjects();persist();refreshSelectedProperties();
   });
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target;
@@ -1604,7 +1632,7 @@
       if(circuitId)equipment.floorCircuit={boardId,circuitId};
       else delete equipment.floorCircuit;
     }
-    persist();refreshSelectedProperties();
+    renderObjects();persist();refreshSelectedProperties();
   });
   function equipmentRoomField(obj,definition){
     if(definition.family!=='building-device'||!activeDraftingSheet()?.floorPlan)return '';
