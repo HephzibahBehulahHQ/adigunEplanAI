@@ -40,6 +40,9 @@ Missing inputs are counted separately so partial totals remain identifiable.
 The command palette exports a selected board's single-line assignment diagram
 with circuit branches, equipment tags and known load totals. Branches document
 assignments independently of conductor connectivity.
+The floor panel schedule aggregates circuit counts, known power and demand
+by distribution board. It also includes board room and zone assignments and
+lists boards with no circuits.
 
 The compact editor includes a generic earthing bond point with two common PE
 terminals. The floor protective-earth CSV lists wires attached to a building
