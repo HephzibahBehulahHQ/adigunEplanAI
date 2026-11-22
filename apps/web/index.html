@@ -253,7 +253,8 @@
     if(state.sheet===id){const next=state.openSheetIds[state.openSheetIds.length-1];if(next)setSheet(next);else showEmptyProjectSheet();}
     renderCustomSheetNavigation();persist();
   }
-  function deleteSheet(id){const sheet=state.sheets.find(function(item){return item.id===id;});if(!sheet){notify('Only project-created sheets can be deleted.');return;}if(!window.confirm('Delete '+sheet.number+' · '+sheet.name+' and all drawing objects on that sheet?'))return;state.connectionIssues=(state.connectionIssues||[]).concat(window.AdigunCADEngine.sheetDeletionDiagnostics(state.crossSheetConnections,sheet));const wasActive=state.sheet===id;if(wasActive){state.sheet=null;state.objects=[];}state.openSheetIds=state.openSheetIds.filter(function(openId){return openId!==id;});state.sheets=state.sheets.filter(function(item){return item.id!==id;});state.crossSheetConnections=window.AdigunCADEngine.removeSheetConnections(state.crossSheetConnections,id);delete state.sheetObjects[id];delete state.sheetViews[id];renderCustomSheetNavigation();if(wasActive){const next=state.openSheetIds[state.openSheetIds.length-1];if(next)setSheet(next);else showEmptyProjectSheet();}persist();notify(sheet.number+' · '+sheet.name+' deleted.');}
+  function deleteSheet(id){const sheet=state.sheets.find(function(item){return item.id===id;});if(!sheet){notify('Only project-created sheets can be deleted.');return;}if(!window.confirm('Delete '+sheet.number+' · '+sheet.name+' and all drawing objects on that sheet?'))return;state.connectionIssues=(state.connectionIssues||[]).concat(window.AdigunCADEngine.sheetDeletionDiagnostics(state.crossSheetConnections,sheet));const wasActive=state.sheet===id;if(wasActive){state.sheet=null;state.objects=[];}state.openSheetIds=state.openSheetIds.filter(function(openId){return openId!==id;});state.sheets=state.sheets.filter(function(item){return item.id!==id;});state.crossSheetConnections=window.AdigunCADEngine.removeSheetConnections(state.crossSheetConnections,id);delete state.sheetObjects[id];delete state.sheetViews[id];
+    for(const objects of [...Object.values(state.sheetObjects),state.objects])for(const item of objects)if(item.riserTargetSheetId===id)delete item.riserTargetSheetId;renderCustomSheetNavigation();if(wasActive){const next=state.openSheetIds[state.openSheetIds.length-1];if(next)setSheet(next);else showEmptyProjectSheet();}persist();notify(sheet.number+' · '+sheet.name+' deleted.');}
   function renameSheet(id){
     const row=$$('#projectTree [data-sheet]').find(function(item){return item.dataset.sheet===id;});if(!row)return;
     const target=row.querySelector('[data-sheet-name]')||row.querySelector('span:nth-child(2)'),sheet=state.sheets.find(function(item){return item.id===id;});if(!target)return;
@@ -666,7 +667,7 @@
   function footprintsOverlap(first,second){
     return first.left<second.right&&first.right>second.left&&first.top<second.bottom&&first.bottom>second.top;
   }
-  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(!activeDraftingSheet()?.floorPlan){delete copy.floorCircuits;delete copy.floorRouteKind;}if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.floorCircuit){const boardId=copiedIds.get(copy.floorCircuit.boardId)||copy.floorCircuit.boardId;if(activeDraftingSheet()?.floorPlan&&[...copies,...state.objects].some(item=>item.id===boardId&&item.componentId==='building-distribution-board'&&item.floorCircuits?.some(circuit=>circuit.id===copy.floorCircuit.circuitId)))copy.floorCircuit.boardId=boardId;else delete copy.floorCircuit;}if(copy.roomId){const roomId=copiedIds.get(copy.roomId)||copy.roomId;if(activeDraftingSheet()?.floorPlan&&(copies.some(item=>item.id===roomId&&item.roomName)||state.objects.some(item=>item.id===roomId&&item.roomName)))copy.roomId=roomId;else delete copy.roomId;}if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
+  function pasteObject(){if(!state.sheet){notify('Add a sheet before pasting drawing objects.');return;}if(!state.clipboardObject){notify('Clipboard is empty.');return;}const sources=Array.isArray(state.clipboardObject)?state.clipboardObject:[state.clipboardObject],copies=JSON.parse(JSON.stringify(sources)),counts=new Map();copies.forEach(function(obj){if(obj.groupId)counts.set(obj.groupId,(counts.get(obj.groupId)||0)+1);});const copiedIds=new Map();const groupMap=new Map(),occupiedRefs=new Set(collectProjectObjects().filter(function(obj){return obj.kind==='component-instance';}).map(function(obj){return obj.ref;})),stamp=Date.now();copies.forEach(function(copy,index){const previousId=copy.id;copy.id='obj-paste-'+stamp+'-'+index+'-'+Math.random().toString(36).slice(2,7);copiedIds.set(previousId,copy.id);delete copy.sheetId;if(!activeDraftingSheet()?.floorPlan){delete copy.floorCircuits;delete copy.floorRouteKind;}if(copy.groupId&&counts.get(copy.groupId)>1){if(!groupMap.has(copy.groupId))groupMap.set(copy.groupId,'group-paste-'+stamp+'-'+groupMap.size);copy.groupId=groupMap.get(copy.groupId);}else delete copy.groupId;if(copy.kind==='component-instance'){const definition=window.AdigunCADEngine.component(copy.componentId),prefix=definition&&definition.referencePrefix||'X';let number=1;while(occupiedRefs.has(prefix+number))number++;copy.ref=prefix+number;occupiedRefs.add(copy.ref);copy.x+=50;copy.y+=50;}else translateObjectGeometry(copy,50,50);});copies.forEach(function(copy){if(copy.riserTargetSheetId&&window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),state.sheets.find(sheet=>sheet.id===copy.riserTargetSheetId))===null)delete copy.riserTargetSheetId;if(copy.floorCircuit){const boardId=copiedIds.get(copy.floorCircuit.boardId)||copy.floorCircuit.boardId;if(activeDraftingSheet()?.floorPlan&&[...copies,...state.objects].some(item=>item.id===boardId&&item.componentId==='building-distribution-board'&&item.floorCircuits?.some(circuit=>circuit.id===copy.floorCircuit.circuitId)))copy.floorCircuit.boardId=boardId;else delete copy.floorCircuit;}if(copy.roomId){const roomId=copiedIds.get(copy.roomId)||copy.roomId;if(activeDraftingSheet()?.floorPlan&&(copies.some(item=>item.id===roomId&&item.roomName)||state.objects.some(item=>item.id===roomId&&item.roomName)))copy.roomId=roomId;else delete copy.roomId;}if(copy.attachments)Object.keys(copy.attachments).forEach(function(end){const target=copiedIds.get(copy.attachments[end].instanceId);if(target)copy.attachments[end].instanceId=target;else delete copy.attachments[end];});});if(copies.length===1&&copies[0].kind==='component-instance'){
     const position=clearComponentPastePosition(copies[0]);
     if(!position){notify('No clear space for this component in the current view. Zoom out or pan to open space.');return;}
     Object.assign(copies[0],position);
@@ -887,6 +888,7 @@
         else if(obj.kind==='text'){el=document.createElementNS('http://www.w3.org/2000/svg','text');el.setAttribute('pointer-events','bounding-box');const size=Number(obj.fontSize)||12;el.setAttribute('x',obj.x);el.setAttribute('y',obj.y);el.setAttribute('font-size',size);el.setAttribute('font-family',obj.fontFamily||'Arial');el.setAttribute('font-weight',obj.bold?'700':'400');el.setAttribute('font-style',obj.italic?'italic':'normal');el.setAttribute('text-decoration',obj.underline?'underline':'none');el.setAttribute('text-anchor',obj.align||'start');el.setAttribute('fill',stroke);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);sheetTextLines(obj).forEach(function(line,index){const span=document.createElementNS('http://www.w3.org/2000/svg','tspan');span.setAttribute('x',obj.x);span.setAttribute('dy',index?size*1.4:0);span.textContent=line||' ';el.append(span);});}
         else {el=document.createElementNS('http://www.w3.org/2000/svg','g');el.setAttribute('transform',`translate(${obj.x} ${obj.y}) rotate(${obj.rotation||0})`);el.setAttribute('class',`drawing-object ${state.selectedObjectIds.includes(obj.id)||obj.id===state.selected?'selected-object':''}`);const shape=document.createElementNS('http://www.w3.org/2000/svg',obj.kind==='motor'?'circle':'rect');if(obj.kind==='motor'){shape.setAttribute('cx','0');shape.setAttribute('cy','0');shape.setAttribute('r','18');}else{shape.setAttribute('x','-21');shape.setAttribute('y','-14');shape.setAttribute('width','42');shape.setAttribute('height','28');}shape.setAttribute('fill','#fff');shape.setAttribute('stroke',stroke);shape.setAttribute('stroke-width','1.5');el.append(shape);const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x','0');t.setAttribute('y','4');t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.setAttribute('fill',stroke);t.textContent=({terminal:'X1',relay:'K2',contact:'13/14',breaker:'F2',sensor:'B2',motor:'M2',plc:'I1',ground:'PE'})[obj.kind]||'DEV';el.append(t);}
         if(obj.wallThickness){el.setAttribute('fill',obj.fill&&obj.fill!=='none'?obj.fill:stroke);el=renderWallOpenings(obj,el,stroke);}
+        if(obj.riserTargetSheetId)el=renderFloorRiser(obj,el,stroke);
         if(obj.dimensionOffset!==undefined)el=renderDimensionLine(obj,el,stroke);
         if(obj.roomName)el=renderRoomOutline(obj,el,stroke);
         if(obj.rotation&&obj.kind!=='component-instance'){const center=objectCenter(obj);el.setAttribute('transform','rotate('+obj.rotation+' '+center.x+' '+center.y+')');}if(obj.strokeWidth)el.setAttribute('stroke-width',width);if(obj.lineType==='dashed')el.setAttribute('stroke-dasharray',(width*4)+' '+(width*2));if(obj.lineType==='dotted'){el.setAttribute('stroke-dasharray',width+' '+(width*2));el.setAttribute('stroke-linecap','round');}el.dataset.object=obj.id;el.dataset.layer=drawingLayerForObject(obj);el.addEventListener('click',e=>{if(state.tool==='select'){e.stopPropagation();const current=state.objects.find(function(item){return item.id===obj.id;});if(current){state.selected=current.id;if(current.kind!=='text')renderObjects();showObject(current);}}});el.addEventListener('dblclick',e=>handleObjectDoubleClick(e,obj.id));if(!drawingObjectVisible(obj))el.style.display='none';if(obj.locked)el.dataset.locked='true';if(obj.flipX||obj.flipY){const center=objectCenter(obj);el.setAttribute('transform',`translate(${obj.flipX?center.x*2:0} ${obj.flipY?center.y*2:0}) scale(${obj.flipX?-1:1} ${obj.flipY?-1:1})`);}return el;}
@@ -1114,20 +1116,53 @@
     openInspector('Properties');
     persist();
   });
+  function floorRiserFields(route){
+    const source=activeDraftingSheet(),engine=window.AdigunCADEngine;
+    const targets=state.sheets.filter(sheet=>engine.floorRiserLength(source,sheet)!==null);
+    const options=targets.map(sheet=>'<option value="'+escapeHtml(sheet.id)+'"'+(route.riserTargetSheetId===sheet.id?' selected':'')+'>'+escapeHtml(sheet.number+' · '+sheet.floorPlan.level)+'</option>').join('');
+    const target=targets.find(sheet=>sheet.id===route.riserTargetSheetId);
+    const length=engine.floorRiserLength(source,target);
+    return '<label class="property-row"><span>Riser target floor</span><select data-riser-target'+(route.locked?' disabled':'')+'><option value="">No riser</option>'+options+'</select></label>'
+      +(length===null?'':'<div class="property-row"><span>Vertical riser length</span><strong>'+Number(length.toFixed(3))+' mm</strong></div>');
+  }
+  function renderFloorRiser(route,path,stroke){
+    const target=state.sheets.find(sheet=>sheet.id===route.riserTargetSheetId);
+    const length=window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),target);
+    if(length===null)return path;
+    const ns='http://www.w3.org/2000/svg',group=document.createElementNS(ns,'g'),label=document.createElementNS(ns,'text');
+    const point=route.points.at(-1);
+    group.setAttribute('class',path.getAttribute('class'));
+    path.removeAttribute('class');
+    label.setAttribute('x',point.x+10);
+    label.setAttribute('y',point.y-8);
+    label.setAttribute('font-size','15');
+    label.setAttribute('fill',stroke);
+    label.textContent='Riser → '+target.floorPlan.level+' · '+Number(length.toFixed(3))+' mm';
+    group.append(path,label);
+    return group;
+  }
   function floorRouteFields(route){
     if(!route.floorRouteKind)return '';
     return '<div class="property-row"><span>Route length</span><strong>'+Number(window.AdigunCADEngine.floorRouteLength(route).toFixed(3))+' mm</strong></div>'
       +'<label class="property-row"><span>Route kind</span><select data-floor-route-kind'+(route.locked?' disabled':'')+'>'
       +['cable','conduit','tray'].map(kind=>'<option value="'+kind+'"'+(kind===route.floorRouteKind?' selected':'')+'>'+kind+'</option>').join('')+'</select></label>'
       +'<label class="property-row"><span>Route points (X, Y mm)</span><textarea rows="4" data-floor-route-points'+(route.locked?' disabled':'')+'>'+route.points.map(point=>point.x+', '+point.y).join('&#10;')+'</textarea></label>'
+      +floorRiserFields(route)
       +equipmentCircuitFields(route,{family:'building-device'});
   }
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target;
-    if(!field.matches('[data-floor-route-kind],[data-floor-route-points]'))return;
+    if(!field.matches('[data-floor-route-kind],[data-floor-route-points],[data-riser-target]'))return;
     const route=state.objects.find(item=>item.id===state.selected&&item.floorRouteKind&&!item.locked);
     if(!route)return;
-    if(field.matches('[data-floor-route-kind]')){
+    if(field.matches('[data-riser-target]')){
+      if(field.value===route.riserTargetSheetId||!field.value&&!route.riserTargetSheetId)return;
+      const target=state.sheets.find(sheet=>sheet.id===field.value);
+      if(field.value&&window.AdigunCADEngine.floorRiserLength(activeDraftingSheet(),target)===null)return;
+      pushUndo();
+      if(target)route.riserTargetSheetId=target.id;
+      else delete route.riserTargetSheetId;
+    }else if(field.matches('[data-floor-route-kind]')){
       if(!['cable','conduit','tray'].includes(field.value)||field.value===route.floorRouteKind)return;
       pushUndo();route.floorRouteKind=field.value;
     }else{
@@ -1812,18 +1847,34 @@
     if(!fields){
       fields=document.createElement('div');
       fields.dataset.floorPlanFields='';
-      fields.innerHTML='<label class="property-row"><span>Building name</span><input data-floor-plan-field="building" maxlength="80"></label><label class="property-row"><span>Floor level</span><input data-floor-plan-field="level" maxlength="80"></label>';
+      fields.innerHTML='<label class="property-row"><span>Building name</span><input data-floor-plan-field="building" maxlength="80"></label><label class="property-row"><span>Floor level</span><input data-floor-plan-field="level" maxlength="80"></label><label class="property-row"><span>Floor elevation (mm)</span><input type="number" step="any" data-floor-plan-field="elevationMm"></label>';
       block.append(fields);
     }
     fields.hidden=!sheet?.floorPlan;
-    for(const field of fields.querySelectorAll('input'))field.value=sheet?.floorPlan?.[field.dataset.floorPlanField]||'';
+    for(const field of fields.querySelectorAll('input'))field.value=sheet?.floorPlan?.[field.dataset.floorPlanField]??'';
   }
   $('#inspectorContent').addEventListener('change',event=>{
-    const key=event.target.dataset.floorPlanField,plan=activeDraftingSheet()?.floorPlan;
-    if(!plan||!['building','level'].includes(key))return;
-    const value=event.target.value.trim().slice(0,80);
-    if(value){plan[key]=value;persist();}
-    event.target.value=plan[key];
+    const field=event.target,key=field.dataset.floorPlanField,sheet=activeDraftingSheet();
+    if(!sheet?.floorPlan||!['building','level','elevationMm'].includes(key))return;
+    const next={...sheet.floorPlan};
+    if(key==='elevationMm'){
+      if(field.value==='')delete next.elevationMm;
+      else if(Number.isFinite(field.valueAsNumber))next.elevationMm=field.valueAsNumber;
+    }else{
+      const value=field.value.trim().slice(0,80);
+      if(value)next[key]=value;
+    }
+    const proposed={...sheet,floorPlan:next};
+    const engine=window.AdigunCADEngine;
+    const invalid=collectProjectObjects().some(route=>{
+      if(!route.riserTargetSheetId||route.sheetId!==sheet.id&&route.riserTargetSheetId!==sheet.id)return false;
+      const source=route.sheetId===sheet.id?proposed:state.sheets.find(item=>item.id===route.sheetId);
+      const target=route.riserTargetSheetId===sheet.id?proposed:state.sheets.find(item=>item.id===route.riserTargetSheetId);
+      return engine.floorRiserLength(source,target)===null;
+    });
+    if(invalid)notify('This change would invalidate a riser. Update the affected route first.');
+    else{sheet.floorPlan=next;renderObjects();refreshSelectedProperties();persist();}
+    field.value=sheet.floorPlan[key]??'';
   });
   function refreshFrameControl(){
     const sheet=state.sheets.find(item=>item.id===state.sheet);

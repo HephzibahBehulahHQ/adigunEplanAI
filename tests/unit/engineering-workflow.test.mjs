@@ -8,6 +8,34 @@ for (const file of ["eplan-symbols.js", "cad-engine.js"])
 const engine = context.AdigunCADEngine;
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
+test("floor riser length requires distinct elevations in the same building", () => {
+  const source = {
+    id: "ground",
+    floorPlan: { building: "Workshop", level: "Ground", elevationMm: 0 },
+  };
+  const target = {
+    id: "upper",
+    floorPlan: { building: "Workshop", level: "Upper", elevationMm: 3200 },
+  };
+  assert.equal(engine.floorRiserLength(source, target), 3200);
+  assert.equal(engine.floorRiserLength(target, source), 3200);
+  assert.equal(engine.floorRiserLength(source, source), null);
+  assert.equal(
+    engine.floorRiserLength(source, {
+      ...target,
+      floorPlan: { ...target.floorPlan, building: "Annex" },
+    }),
+    null,
+  );
+  assert.equal(
+    engine.floorRiserLength(source, {
+      ...target,
+      floorPlan: { ...target.floorPlan, elevationMm: 0 },
+    }),
+    null,
+  );
+});
+
 test("floor circuits reject cross-floor assignments and clear references when a board is removed", () => {
   const floorPlan = { building: "Workshop", level: "Ground floor" };
   const board = {
