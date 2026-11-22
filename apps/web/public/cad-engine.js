@@ -1332,6 +1332,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           if(!paper||!Number.isFinite(size)||!['portrait','landscape'].includes(paper.orientation)||
             [paper.customWidth,paper.customHeight].some(value=>!Number.isFinite(value)||value<20||value>5000)||
             !Number.isFinite(paper.margin)||paper.margin<0||paper.margin>=size/2||
+            ['centerX','centerY'].some(key=>paper[key]!==undefined&&(!finite(paper[key])||Math.abs(paper[key])>10000000))||
             !Number.isFinite(paper.scale)||paper.scale<0||paper.scale>10000)errors.push('Invalid paper settings on sheet '+sheet.id+'.');
         }
         if (sheetIds.has(sheet.id)) errors.push('Duplicate sheet ID: ' + sheet.id + '.');

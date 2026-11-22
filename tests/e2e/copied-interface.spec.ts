@@ -3445,6 +3445,66 @@ test("floor plan dimensions measure endpoints and save their offset", async ({
   await expect(dimension).toHaveText("500 mm");
 });
 
+test("floor print frame preserves a physical scale at distant model coordinates", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await page.locator('[data-project-section="A2"]').click();
+  await page.locator("#newSheet").click();
+  await page.getByRole("button", { name: "Building floor plan" }).click();
+  await page.locator("#projectTree [data-generated-sheet]").click();
+  await page.locator("#floorPlanImportFile").setInputFiles({
+    name: "distant-plan.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="60000mm" height="20000mm" viewBox="0 0 60000 20000"><line x1="45000" y1="10000" x2="55000" y2="10000"/></svg>',
+    ),
+  });
+  await expect(page.locator("#statusText")).toContainText(
+    "Imported 1 floor objects",
+  );
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByRole("checkbox", { name: "Show print frame" }).check();
+  await page.getByText("Print layout", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Paper format", exact: true })
+    .selectOption("A4");
+  for (const [label, value] of [
+    ["Scale 1:n (0 fits frame)", "100"],
+    ["Print centre X (mm)", "50000"],
+    ["Print centre Y (mm)", "10000"],
+  ]) {
+    const field = page.getByLabel(label, { exact: true });
+    await field.fill(value);
+    await field.press("Tab");
+  }
+  const saved = await saveDrawing(page, "scaled-floor-print");
+  expect(saved.data.sheets[0].paper).toMatchObject({
+    centerX: 50000,
+    centerY: 10000,
+    scale: 100,
+  });
+  await page.locator("#openFile").setInputFiles(saved.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project scaled-floor-print.adigun.json opened.",
+  );
+  await expect(page.locator("#paperBoundary")).toHaveAttribute("x", "36150");
+  const pending = page.waitForEvent("download", { timeout: 10000 });
+  await page.keyboard.press("Control+k");
+  await page.locator("#commandSearch").fill("Export print frame as SVG");
+  await page.locator("#commandSearch").press("Enter");
+  const download = await pending;
+  const svg = fs.readFileSync((await download.path())!, "utf8");
+  expect(svg).toContain('viewBox="36150 500 27700 19000"');
+  expect(svg).toContain('width="277mm"');
+  expect(svg).toContain('height="190mm"');
+  expect(svg).toContain('data-object="' + saved.data.objects[0].id + '"');
+  const [start, end] = saved.data.objects[0].points;
+  expect(((end.x - start.x) * 277) / 27700).toBeCloseTo(100);
+});
+
 test("floor plan imports scaled SVG and DXF as native geometry", async ({
   page,
 }) => {
