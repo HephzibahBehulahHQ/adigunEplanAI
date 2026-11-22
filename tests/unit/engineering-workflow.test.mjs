@@ -40,6 +40,51 @@ test("panel envelopes require positive overlap on all three axes", () => {
   assert.equal(scene({ x: 122.5 }).collisions.length, 0);
 });
 
+test("panel clearances rotate with the device and use an explicitly chosen condition", () => {
+  const componentId = "siemens-3rt2027-2kb40";
+  const device = engine.createInstance(componentId, 0, 0, "K1");
+  const sheetId = "panel";
+  const placement = {
+    id: "body",
+    kind: "panel-placement",
+    sheetId,
+    deviceId: device.id,
+    footprintComponentId: componentId,
+    x: 100,
+    y: 100,
+    scale: 0.5,
+    rotation: 90,
+  };
+  const sheets = [
+    {
+      id: sheetId,
+      cabinetBounds: { x: 0, y: 0, width: 260, height: 400, depth: 200 },
+    },
+  ];
+  const run = (changes) =>
+    engine.panelBodyScene(
+      { sheets, objects: [device, { ...placement, ...changes }] },
+      sheetId,
+    );
+  assert.equal(run({}).clearanceConflicts.length, 0);
+  assert.match(
+    run({}).issues[0].message,
+    /Choose a documented clearance condition/,
+  );
+  assert.deepEqual(
+    plain(
+      run({ clearanceCondition: "sideBySide" }).clearanceConflicts.map(
+        ({ face, requiredMm, availableMm }) => ({
+          face,
+          requiredMm,
+          availableMm,
+        }),
+      ),
+    ),
+    [{ face: "right", requiredMm: 10, availableMm: 9 }],
+  );
+});
+
 test("floor zone polygons measure concave geometry and reject crossings", () => {
   const points = (pairs) => pairs.map(([x, y]) => ({ x, y }));
   assert.equal(

@@ -1972,6 +1972,16 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await expect(
     preview.locator('[data-panel-body="' + placement.id + '"] title'),
   ).toContainText("Z 25 mm");
+  await page.locator('[data-inspector="Properties"]').click();
+  await page
+    .getByRole("combobox", { name: "Documented clearance condition" })
+    .selectOption("sideBySide");
+  await page.locator("#openCommands").click();
+  await page.locator("#commandSearch").fill("Preview panel in 3D");
+  await page
+    .locator("#commandList")
+    .getByText("Preview panel in 3D", { exact: true })
+    .click();
   for (const [label, value] of [
     ["Cabinet left X (mm)", "0"],
     ["Cabinet top Y (mm)", "0"],
@@ -1988,6 +1998,11 @@ test("linked panel placement preserves its canonical device on local reopen", as
   await expect(page.locator("#inspectorContent")).toContainText(
     "Body extends beyond the declared cabinet boundary.",
   );
+  await expect(
+    page
+      .locator("[data-panel-clearance-conflict]")
+      .filter({ hasText: "front clearance" }),
+  ).toContainText("of 10 mm documented");
   const bounded = await saveDrawing(page, "panel-cabinet-bounds");
   expect(
     bounded.data.sheets.find(

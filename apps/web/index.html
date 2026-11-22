@@ -1025,14 +1025,29 @@
     function panelPlacementInfo(obj){
     if(obj.kind!=='panel-placement')return '';
     try{const g=window.AdigunCADEngine.panelPlacementGeometry({objects:collectProjectObjects()},obj);return '<div class="notice">Linked device: '+escapeHtml(g.ref)+' · '+escapeHtml(g.footprint.widthMm+' × '+g.footprint.heightMm+' × '+g.footprint.depthMm+' mm')+'<br>Drawing scale: '+escapeHtml(obj.scale)+' drawing units/mm. Moving this view does not move its electrical symbol.<br>'+escapeHtml(g.footprint.note)+'</div><a class="component-source" href="'+escapeHtml(g.footprint.source)+'" target="_blank" rel="noopener noreferrer">Footprint source · '+escapeHtml(g.footprint.edition)+'</a>'
-      +'<label class="property-row"><span>Mounting depth from rear (mm)</span><input type="number" min="0" max="1000000" step="any" data-panel-mounting-depth value="'+(obj.mountingDepthMm??'')+'"'+(obj.locked?' disabled':'')+'></label>';}
+      +'<label class="property-row"><span>Mounting depth from rear (mm)</span><input type="number" min="0" max="1000000" step="any" data-panel-mounting-depth value="'+(obj.mountingDepthMm??'')+'"'+(obj.locked?' disabled':'')+'></label>'
+      +panelClearanceConditionField(obj,g.footprint);}
     catch(error){return '<div class="notice">REVIEW: '+escapeHtml(error.message)+'</div>';}
+  }
+  function panelClearanceConditionField(placement,footprint){
+    const labels={sideBySide:'Side by side',groundedParts:'Grounded parts',liveParts:'Live parts'};
+    const options=Object.keys(labels).filter(key=>footprint.clearancesMm?.[key]).map(key=>
+      '<option value="'+key+'"'+(placement.clearanceCondition===key?' selected':'')+'>'+labels[key]+'</option>');
+    return options.length?'<label class="property-row"><span>Documented clearance condition</span><select data-panel-clearance-condition'+(placement.locked?' disabled':'')+'><option value="">Choose condition</option>'+options.join('')+'</select></label>':'';
   }
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target;
-    if(!field.matches('[data-panel-mounting-depth]'))return;
+    if(!field.matches('[data-panel-mounting-depth],[data-panel-clearance-condition]'))return;
     const item=state.objects.find(object=>object.id===state.selected&&object.kind==='panel-placement'&&!object.locked);
     if(!item)return;
+    if(field.hasAttribute('data-panel-clearance-condition')){
+      const condition=field.value||undefined;
+      if(condition===item.clearanceCondition)return;
+      pushUndo();
+      if(condition)item.clearanceCondition=condition;
+      else delete item.clearanceCondition;
+      persist();return;
+    }
     const depth=field.valueAsNumber,blank=field.value===''&&!field.validity.badInput;
     if(!blank&&(!Number.isFinite(depth)||depth<0||depth>1000000)){field.value=item.mountingDepthMm??'';return;}
     if((blank?undefined:depth)===item.mountingDepthMm)return;
@@ -2517,7 +2532,7 @@
     host.replaceChildren();
     try{
       const project={objects:collectProjectObjects(),sheets:state.sheets};
-      const {bodies,issues,cabinet,collisions}=window.AdigunCADEngine.panelBodyScene(project,state.sheet);
+      const {bodies,issues,cabinet,collisions,clearanceConflicts}=window.AdigunCADEngine.panelBodyScene(project,state.sheet);
       const note=document.createElement('p');
       note.className='notice';
       note.textContent='Dimensioned body envelopes in millimetres. Blank mounting depths use the rear reference plane. Enter the usable cabinet boundaries for a body fit comparison.';
@@ -2539,6 +2554,15 @@
         const overlap=Object.values(collision.overlapMm).map(value=>Number(value.toPrecision(6))).join(' × ');
         warning.textContent=collision.refs.join(' and ')+' · Body collision. Overlap X × Y × Z: '+overlap+' mm.';
         host.append(warning);
+      }
+      for(const conflict of clearanceConflicts){
+        const warning=document.createElement('p');
+        warning.className='notice';warning.dataset.panelClearanceConflict='';
+        warning.textContent=conflict.ref+' · '+conflict.face+' clearance: '+Number(conflict.availableMm.toPrecision(6))
+          +' mm available of '+conflict.requiredMm+' mm documented, '+conflict.obstacle+'. ';
+        const link=document.createElement('a');
+        link.href=conflict.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Footprint source';
+        warning.append(link);host.append(warning);
       }
       if(!bodies.length&&!cabinet)return;
       const ns='http://www.w3.org/2000/svg';
