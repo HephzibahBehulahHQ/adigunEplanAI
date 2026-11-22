@@ -130,9 +130,11 @@ Documented clearances rotate with their device and are checked against the
 usable cabinet boundary and other linked bodies. When the footprint has
 condition-dependent clearances, choose the applicable condition in Properties.
 On a sheet with linked placements, drawing commands create editable mounting
-plates, DIN rails, cable ducts and terminal rails. Enter their rear offsets
+plates, DIN rails, cable ducts, terminal rails, doors and compartments. Enter their rear offsets
 and depths in Properties to
 show their user-defined envelopes in the shared 3D view.
+A door models the closed envelope. A compartment is a wireframe volume used as
+a layout region and does not obstruct service access.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.
