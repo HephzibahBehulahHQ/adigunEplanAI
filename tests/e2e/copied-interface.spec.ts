@@ -3914,6 +3914,13 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   expect(diagramSvg).toContain(">Workshop sockets</text>");
   expect(diagramSvg).toContain(">SO1</text>");
   expect(diagramSvg).toContain("Known demand 450 W");
+  const panelPending = page.waitForEvent("download");
+  await command("Export floor panel schedule");
+  const panelReport = await panelPending;
+  expect(panelReport.suggestedFilename()).toBe("floor-panel-schedule.csv");
+  expect(fs.readFileSync((await panelReport.path())!, "utf8")).toContain(
+    '"DB1","","","1","1","600","0","450","0"',
+  );
   await page.getByRole("button", { name: "Remove Workshop sockets" }).click();
   await clickAt(580, 300);
   await expect(circuit).toHaveValue("");
@@ -3948,6 +3955,12 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   );
   await expect(page.getByLabel("Zone distribution board")).toHaveValue(
     board.id,
+  );
+  const zonePanelPending = page.waitForEvent("download");
+  await command("Export floor panel schedule");
+  const zonePanelReport = await zonePanelPending;
+  expect(fs.readFileSync((await zonePanelReport.path())!, "utf8")).toContain(
+    '"DB1","","Distribution zone 1","0","0","0","0","0","0"',
   );
   await page.locator('[data-panel="symbols"]').click();
   await page.locator("#symbolSearch").fill("building-earthing-bond-point");

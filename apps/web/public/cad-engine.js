@@ -2976,16 +2976,41 @@ function createPumpStarterDocumentation(name) {
     }
     const rows=[];
     for(const board of project.objects){
-      if(!board.floorCircuits?.length||boardId&&board.id!==boardId)continue;
+      if(board.componentId!=='building-distribution-board'||!board.floorCircuits?.length||boardId&&board.id!==boardId)continue;
       const sheet=sheets.get(board.sheetId);
+      if(!sheet?.floorPlan)continue;
       for(const circuit of board.floorCircuits)rows.push({building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
-        board:board.ref,circuit:circuit.name,...(assignments.get(board.id)?.get(circuit.id)||emptyTotals())});
+        boardId:board.id,board:board.ref,circuit:circuit.name,...(assignments.get(board.id)?.get(circuit.id)||emptyTotals())});
     }
     return rows;
   }
   function floorCircuitScheduleCsv(project) {
     const columns=[['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Circuit','circuit'],['Equipment references','loads'],['Cable route length (mm)','cable'],['Conduit route length (mm)','conduit'],['Tray route length (mm)','tray'],['Vertical riser length (mm)','riser'],['Known connected load (W)','connected'],['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']];
     return reportCsv(columns,floorCircuitRows(project));
+  }
+  function floorPanelScheduleCsv(project){
+    const sheets=new Map(project.sheets.filter(sheet=>sheet.floorPlan).map(sheet=>[sheet.id,sheet]));
+    const objects=new Map(project.objects.map(object=>[object.id,object]));
+    const rows=new Map();
+    for(const board of project.objects){
+      const sheet=sheets.get(board.sheetId);
+      if(board.componentId!=='building-distribution-board'||!sheet)continue;
+      rows.set(board.id,{
+        building:sheet.floorPlan.building,floor:sheet.floorPlan.level,sheet:sheet.number,
+        board:board.ref,room:objects.get(board.roomId)?.roomName,zones:[],circuits:0,loads:0,
+        connected:0,demand:0,unknownConnected:0,unknownDemand:0
+      });
+    }
+    for(const object of project.objects)rows.get(object.floorZone?.boardId)?.zones.push(object.floorZone.name);
+    for(const circuit of floorCircuitRows(project)){
+      const row=rows.get(circuit.boardId);
+      row.circuits++;
+      row.loads+=circuit.loads.length;
+      for(const key of ['connected','demand','unknownConnected','unknownDemand'])row[key]+=circuit[key];
+    }
+    return reportCsv([['Building','building'],['Floor','floor'],['Sheet','sheet'],['Board','board'],['Board room','room'],
+      ['Distribution zones','zones'],['Circuits','circuits'],['Assigned loads','loads'],['Known connected load (W)','connected'],
+      ['Loads missing active power','unknownConnected'],['Known estimated demand (W)','demand'],['Loads missing demand inputs','unknownDemand']],Array.from(rows.values()));
   }
   function floorBoardSingleLineSvg(project,boardId){
     const rows=boardId?floorCircuitRows(project,boardId):[];
@@ -3169,6 +3194,7 @@ function createPumpStarterDocumentation(name) {
     billOfMaterialsCsv: billOfMaterialsCsv,
     roomEquipmentScheduleCsv: roomEquipmentScheduleCsv,
     floorCircuitScheduleCsv: floorCircuitScheduleCsv,
+    floorPanelScheduleCsv: floorPanelScheduleCsv,
     floorProtectiveEarthCsv: floorProtectiveEarthCsv,
     floorRiserElevationSvg: floorRiserElevationSvg,
     floorBoardSingleLineSvg: floorBoardSingleLineSvg,
