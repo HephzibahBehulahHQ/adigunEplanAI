@@ -2982,7 +2982,7 @@
       const host=document.createElement('div');host.className='inspector-block';host.textContent='Loading calculation methods…';panel.replaceChildren(host);
       const projectId=state.projectId;
       const records=state.calculations||=([]);
-      const project=state.projectName?{records,save(record){
+      const project=state.projectName?{get name(){return state.projectName;},records,save(record){
         if(state.projectId!==projectId)return false;
         const index=records.findIndex(item=>item.id===record.id);
         if(index<0)records.push(record);else records[index]=record;

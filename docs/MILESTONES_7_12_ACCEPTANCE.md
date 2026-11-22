@@ -174,6 +174,9 @@ frame, fills and application-specific connectivity metadata.
 The title-block inspector and command palette export the drawing register and
 the current recorded revisions. The exports use project defaults and saved
 sheet overrides. Revision rows appear when a revision or revision date is set.
+The calculation inspector exports all saved calculations as a versioned JSON
+register. It pairs each saved record with its exact-method replay result, or
+preserves the record and gives the reason replay is unavailable.
 Cable duct Properties saves the entered cable outside diameters, usable internal
 cross-section and optional documented fill limit. It displays occupied area,
 fill percentage when area is available, and comparison with the entered limit.

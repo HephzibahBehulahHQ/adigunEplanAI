@@ -1,6 +1,7 @@
 import {
   calculate,
   calculateRecord,
+  calculationReport,
   calculationToRecord,
   CalculationError,
   calculatorById,
@@ -112,6 +113,7 @@ function renderResult(
 }
 
 type ProjectCalculations = {
+  name: string;
   records: CalculationRecord[];
   save: (record: CalculationRecord) => boolean;
 };
@@ -148,7 +150,40 @@ export function mountCompactCalculations(
   const selectedUnits = new Map<string, Unit>();
   form.append(fields, evidenceRow, evidenceHint, run);
   host.replaceChildren(field(message("calcTool"), method), form, result);
-  if (project) host.prepend(field(message("calcSavedRecords"), savedRecords));
+  let exportRegister: HTMLButtonElement | undefined;
+  if (project) {
+    exportRegister = document.createElement("button");
+    exportRegister.type = "button";
+    exportRegister.className = "command-item";
+    exportRegister.textContent = "Download saved calculation register JSON";
+    exportRegister.addEventListener("click", () => {
+      const entries = project.records.map((record) => {
+        try {
+          return { status: "replayed", ...calculationReport(record) };
+        } catch (error) {
+          if (!(error instanceof CalculationError)) throw error;
+          return { status: "unavailable", record, issues: error.issues };
+        }
+      });
+      downloadFile(
+        "calculation-register.json",
+        JSON.stringify(
+          {
+            schema: "adiguneplanai-calculation-register/1",
+            project: project.name,
+            entries,
+          },
+          null,
+          2,
+        ),
+        "application/json",
+      );
+    });
+    host.prepend(
+      field(message("calcSavedRecords"), savedRecords),
+      exportRegister,
+    );
+  }
   const scope = document.createElement("p");
   scope.className = "notice";
   scope.textContent = message("calcScope");
@@ -159,6 +194,7 @@ export function mountCompactCalculations(
     for (const record of project?.records ?? [])
       savedRecords.add(new Option(record.name, record.id));
     savedRecords.value = savedId ?? "";
+    if (exportRegister) exportRegister.disabled = !project?.records.length;
   }
 
   function showResult(calculation: CalculationResult) {
