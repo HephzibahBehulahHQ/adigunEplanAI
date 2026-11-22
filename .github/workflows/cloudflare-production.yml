@@ -1,0 +1,59 @@
+name: Publish verified Cloudflare runtime
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: adiguneplanai-cloudflare-production
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: cloudflare-production
+      url: https://adiguneplanai.hephzibahbehulah.com/
+    env:
+      VERIFIED_SHA: ${{ github.event.workflow_run.head_sha }}
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ env.VERIFIED_SHA }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+      - name: Package the verified source runtime
+        run: |
+          npm ci
+          npm run build
+          npm run notices:check
+          node scripts/prepare-pages-runtime.mjs
+          node scripts/package-pages.mjs "$RUNNER_TEMP/verified-worker-runtime"
+          node scripts/package-engineering-catalog.mjs "$RUNNER_TEMP/verified-worker-runtime"
+          mv apps/web/dist "$RUNNER_TEMP/unpackaged-worker-runtime"
+          mv "$RUNNER_TEMP/verified-worker-runtime" apps/web/dist
+      - name: Publish the account Worker and its verified assets
+        id: publish
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          main_ref=$(git ls-remote --exit-code origin refs/heads/main)
+          if [ "$(printf '%s\n' "$main_ref" | cut -f1)" != "$VERIFIED_SHA" ]; then
+            echo 'A newer main revision superseded this workflow.'
+            exit 0
+          fi
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo '::error::Configure the Cloudflare deployment credentials in the cloudflare-production environment.'
+            exit 1
+          fi
+          npm exec --yes --package=wrangler@4.158.0 -- wrangler deploy --config apps/account-worker/wrangler.toml --env production
+          echo 'deployed=true' >> "$GITHUB_OUTPUT"
+      - name: Verify the custom domain and account route
+        if: steps.publish.outputs.deployed == 'true'
+        run: node scripts/check-live-worker.mjs "$VERIFIED_SHA"
