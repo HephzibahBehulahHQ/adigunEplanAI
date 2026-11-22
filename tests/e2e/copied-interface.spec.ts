@@ -3551,6 +3551,77 @@ test("floor plan imports scaled SVG and DXF as native geometry", async ({
   await expect(
     page.locator('#userDrawings [data-object="' + outline.id + '"]'),
   ).toBeVisible();
+  const unitlessDxf = dxf.replace("$INSUNITS\n70\n5", "$INSUNITS\n70\n0");
+  const manualDxf = {
+    name: "manual.dxf",
+    mimeType: "application/dxf",
+    buffer: Buffer.from(unitlessDxf),
+  };
+  await input.setInputFiles(manualDxf);
+  await expect(page.locator("#statusText")).toContainText("Enter Import scale");
+  await page
+    .getByRole("complementary", { name: "Inspector tools" })
+    .getByRole("button", { name: "Properties", exact: true })
+    .click();
+  const scale = page.getByRole("spinbutton", {
+    name: "Import scale (mm per source unit)",
+  });
+  await scale.fill("0");
+  await scale.press("Tab");
+  await expect(scale).toHaveValue("");
+  await scale.fill("2.5");
+  await scale.press("Tab");
+  await input.setInputFiles(manualDxf);
+  await expect(page.locator("#inspectorContent")).toContainText("manual.dxf");
+  await input.setInputFiles({
+    name: "manual.svg",
+    mimeType: "image/svg+xml",
+    buffer: Buffer.from(
+      '<svg xmlns="http://www.w3.org/2000/svg"><line x1="80" y1="140" x2="120" y2="140"/></svg>',
+    ),
+  });
+  await expect(page.locator("#inspectorContent")).toContainText("manual.svg");
+  const calibrated = await saveDrawing(page, "calibrated-floor");
+  expect(calibrated.data.sheets[0].floorPlan.importMmPerUnit).toBe(2.5);
+  expect(
+    calibrated.data.objects
+      .slice(-2)
+      .map(
+        (object: {
+          points: object;
+          planImport: { overrideMmPerUnit: number };
+        }) => [object.points, object.planImport.overrideMmPerUnit],
+      ),
+  ).toEqual([
+    [
+      [
+        { x: 100, y: 75 },
+        { x: 137.5, y: 87.5 },
+      ],
+      2.5,
+    ],
+    [
+      [
+        { x: 200, y: 350 },
+        { x: 300, y: 350 },
+      ],
+      2.5,
+    ],
+  ]);
+  await page.locator("#openFile").setInputFiles(calibrated.path);
+  await expect(page.locator("#statusText")).toContainText(
+    "Project calibrated-floor.adigun.json opened.",
+  );
+  await page
+    .getByRole("complementary", { name: "Inspector tools" })
+    .getByRole("button", { name: "Properties", exact: true })
+    .click();
+  await expect(scale).toHaveValue("2.5");
+  await scale.fill("");
+  await scale.press("Tab");
+  const automatic = await saveDrawing(page, "automatic-floor-scale");
+  expect(automatic.data.sheets[0].floorPlan.importMmPerUnit).toBeUndefined();
+  expect(automatic.data.objects).toEqual(calibrated.data.objects);
 });
 
 test("floor plan specialty devices expose independent native terminals", async ({

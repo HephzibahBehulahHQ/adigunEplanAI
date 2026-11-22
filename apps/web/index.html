@@ -1319,7 +1319,8 @@
     const source=obj.planImport;
     return source?'<div class="property-row"><span>Source drawing</span><strong>'+escapeHtml(source.file)+'</strong></div>'
       +'<div class="property-row"><span>Source layer</span><strong>'+escapeHtml(source.layer)+'</strong></div>'
-      +'<div class="property-row"><span>Source element</span><strong>'+escapeHtml(source.element)+'</strong></div>':'';
+      +'<div class="property-row"><span>Source element</span><strong>'+escapeHtml(source.element)+'</strong></div>'
+      +(source.overrideMmPerUnit===undefined?'':'<div class="property-row"><span>Import scale override</span><strong>'+source.overrideMmPerUnit+' mm per source unit</strong></div>'):'';
   }
   function importedLayerFields(){
     const groups=new Map();
@@ -1342,21 +1343,22 @@
     persist();
   });
   $('#floorPlanImportFile').addEventListener('change',async event=>{
-    const input=event.target,file=input.files[0],sheetId=activeDraftingSheet()?.floorPlan&&state.sheet,projectId=state.projectId;
+    const input=event.target,file=input.files[0],floor=activeDraftingSheet()?.floorPlan,sheetId=state.sheet,projectId=state.projectId;
     input.value='';
-    if(!file||!sheetId)return;
+    if(!file||!floor)return;
+    const overrideMmPerUnit=floor.importMmPerUnit;
     try{
       if(file.size>1024*1024)throw new Error('Floor plan exceeds 1 MiB.');
       const text=await file.text();
       const {parseSvgPlan,parseDxfPlan}=await import('./src/compactPlanImport.ts');
-      const draft=/\.dxf$/i.test(file.name)?parseDxfPlan(text,file.name):parseSvgPlan(text,file.name,'viewport');
+      const draft=/\.dxf$/i.test(file.name)?parseDxfPlan(text,file.name,overrideMmPerUnit):parseSvgPlan(text,file.name,overrideMmPerUnit??'viewport');
       if(state.sheet!==sheetId||state.projectId!==projectId)return;
       const objects=draft.shapes.map(shape=>{
         const layerState=draft.layerStates?.[shape.layer];
         return makeObj('freehand',shape.points[0].x,shape.points[0].y,{
           points:shape.points,layer:'architecture',stroke:'#48627a',
           hidden:layerState?.visible===false,locked:layerState?.locked===true,
-          planImport:{file:file.name,layer:shape.layer,element:shape.name,closed:shape.closed}
+          planImport:{file:file.name,layer:shape.layer,element:shape.name,closed:shape.closed,overrideMmPerUnit}
         });
       });
       if(objects.length){
@@ -1370,7 +1372,9 @@
       openInspector('Floor plan import report');
       notify('Imported '+objects.length+' floor objects. See the import report for details.');
     }catch(error){
-      notify('Floor plan import failed: '+error.message);
+      const help=overrideMmPerUnit===undefined&&/requires absolute width|units are missing/.test(error.message)?
+        ' Enter Import scale in the floor Properties and try again.':'';
+      notify('Floor plan import failed: '+error.message+help);
     }
   });
   function renderFloorOutline(obj,outline,stroke){
@@ -1954,7 +1958,7 @@
     if(!fields){
       fields=document.createElement('div');
       fields.dataset.floorPlanFields='';
-      fields.innerHTML='<label class="property-row"><span>Building name</span><input data-floor-plan-field="building" maxlength="80"></label><label class="property-row"><span>Floor level</span><input data-floor-plan-field="level" maxlength="80"></label><label class="property-row"><span>Floor elevation (mm)</span><input type="number" step="any" data-floor-plan-field="elevationMm"></label>';
+      fields.innerHTML='<label class="property-row"><span>Building name</span><input data-floor-plan-field="building" maxlength="80"></label><label class="property-row"><span>Floor level</span><input data-floor-plan-field="level" maxlength="80"></label><label class="property-row"><span>Floor elevation (mm)</span><input type="number" step="any" data-floor-plan-field="elevationMm"></label><label class="property-row"><span>Import scale (mm per source unit)</span><input type="number" step="any" min="0" max="1000000" placeholder="Use file scale" data-floor-plan-field="importMmPerUnit"></label>';
       block.append(fields);
     }
     fields.hidden=!sheet?.floorPlan;
@@ -1962,8 +1966,21 @@
   }
   $('#inspectorContent').addEventListener('change',event=>{
     const field=event.target,key=field.dataset.floorPlanField,sheet=activeDraftingSheet();
-    if(!sheet?.floorPlan||!['building','level','elevationMm'].includes(key))return;
+    if(!sheet?.floorPlan||!['building','level','elevationMm','importMmPerUnit'].includes(key))return;
     const next={...sheet.floorPlan};
+    if(key==='importMmPerUnit'){
+      const scale=field.valueAsNumber;
+      if(field.value===''&&!field.validity.badInput)delete next.importMmPerUnit;
+      else if(Number.isFinite(scale)&&scale>0&&scale<=1000000)next.importMmPerUnit=scale;
+      else{
+        field.value=sheet.floorPlan.importMmPerUnit??'';
+        notify('Import scale must be greater than zero and at most 1,000,000 mm per source unit.');
+        return;
+      }
+      sheet.floorPlan=next;
+      persist();
+      return;
+    }
     if(key==='elevationMm'){
       if(field.value==='')delete next.elevationMm;
       else if(Number.isFinite(field.valueAsNumber))next.elevationMm=field.valueAsNumber;
