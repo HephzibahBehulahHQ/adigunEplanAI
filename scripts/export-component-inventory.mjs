@@ -92,6 +92,17 @@ engine.registerWagoSingleChannelBreakerBatch(
     ),
   ),
 );
+engine.registerWago2086PcbTerminalBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-pcb-2086-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoMcsBatch(
   ["231", "232", "721", "733", "734", "831"].flatMap((series) =>
     JSON.parse(

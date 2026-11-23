@@ -782,6 +782,79 @@ test("WINSTA terminals retain exact markings and isolate every plug and socket p
   );
 });
 
+const pcb2086Batch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-pcb-2086-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWago2086PcbTerminalBatch(pcb2086Batch);
+
+test("WAGO 2086 PCB terminals preserve individual PCB terminals and isolated poles", () => {
+  assert.equal(pcb2086Batch.length, 378);
+  assert.equal(pcb2086Batch.filter((row) => row.mounting === "SMD").length, 72);
+  for (const row of pcb2086Batch) {
+    const def = engine.component("wago-" + row.orderCode.replaceAll("/", "_"));
+    assert.equal(
+      def.symbol.pins.length,
+      row.poles * (row.solderPinsPerPole + 1),
+    );
+    const instance = engine.createInstance(def.id, 200, 300, "X1");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(
+      engine.billOfMaterials([instance]).rows[0].partNumber,
+      row.orderCode,
+    );
+    instance.sheetId = "pcb";
+    const wires = engine.worldPins(instance).map((pin) =>
+      engine.attachWire(
+        {
+          id: pin.id,
+          kind: "wire",
+          sheetId: instance.sheetId,
+          x1: pin.x,
+          y1: pin.y,
+          x2: pin.x,
+          y2: pin.y + Math.sign(pin.y - instance.y) * 100,
+        },
+        { attachment: { instanceId: instance.id, pinId: pin.id } },
+        {},
+      ),
+    );
+    assert.deepEqual(
+      plain(
+        engine.analyze([instance, ...wires]).nets.map((net) => net.pins.length),
+      ),
+      Array(row.poles).fill(row.solderPinsPerPole + 1),
+    );
+    assert.equal(
+      def.pcbFootprint.pads.length,
+      row.poles * row.solderPinsPerPole,
+    );
+    for (const [index, pad] of def.pcbFootprint.pads.entries()) {
+      const pole = Math.floor(index / row.solderPinsPerPole);
+      const padRow =
+        row.solderPinsPerPole === 2 ? index % 2 : (pole + row.poles) % 2;
+      assert.equal(pad.xMm, pole * row.padPitchMm);
+      assert.equal(pad.yMm, padRow * row.padRowSpacingMm);
+      assert.ok(def.symbol.pins.some((pin) => pin.id === pad.pinId));
+      if (row.mounting === "SMD") {
+        assert.equal(pad.widthMm, row.padWidthMm);
+        assert.equal(pad.lengthMm, row.padLengthMm);
+      } else {
+        assert.equal(pad.drilledHoleDiameterMm, row.drilledHoleDiameterMm);
+        assert.equal(
+          pad.drilledHolePlusToleranceMm,
+          row.drilledHolePlusToleranceMm,
+        );
+      }
+    }
+  }
+});
+
 test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () => {
   assert.ok(pcbBatch.length >= 291);
   for (const part of pcbBatch) {

@@ -2143,6 +2143,47 @@ test("WAGO 231 long connectors expose both ends of a 24-pole row", async ({
   }
 });
 
+test("WAGO 2086 SMD PCB terminals show land dimensions and retain a second pad attachment", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["2086-1102", 400],
+    ["2086-1102/700-000/997-604", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    const id = "wago-" + code.replaceAll("/", "_");
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(644, 295);
+  await clickAt(388, 205);
+  await clickAt(650, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PCB pad centers (mm)", { exact: true }).click();
+  await expect(
+    page.getByText("X 3.5 · Y 7.3 · 1.6 × 3.9", { exact: true }),
+  ).toBeVisible();
+  const saved = await saveDrawing(page, "pcb-2086-smd");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "pad-1-2" }),
+        end: expect.objectContaining({ pinId: "clamp-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO MCS MAXI headers expose the third solder anchor and three drill rows", async ({
   page,
 }) => {
