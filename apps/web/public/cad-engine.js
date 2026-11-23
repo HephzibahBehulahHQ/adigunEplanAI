@@ -1097,7 +1097,64 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         retrievedAt:'2026-11-23',sha256:'a574825921dec7add1c2af33d0dd0f74bac3922c126d12c5edf695d4f805361e'}]
     });
   })();
-  const COMPONENTS = Object.freeze({[pfc200Definition.id]:pfc200Definition,[ukCoverDefinition.id]:ukCoverDefinition,[utCoverDefinition.id]:utCoverDefinition,[peCoverDefinition.id]:peCoverDefinition,[terminalEndBracketDefinition.id]:terminalEndBracketDefinition,[overloadSupportElectricalDefinition.id]:overloadSupportElectricalDefinition,[overloadSupportDefinition.id]:overloadSupportDefinition,[rittalEnclosureDefinition.id]:rittalEnclosureDefinition,[rittalFieldEnclosureDefinition.id]:rittalFieldEnclosureDefinition,[lappFourCoreCableDefinition.id]:lappFourCoreCableDefinition,[lappMotorCableDefinition.id]:lappMotorCableDefinition,[lappFieldControlCableDefinition.id]:lappFieldControlCableDefinition,[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [schneiderContactBlockDefinition.id]: schneiderContactBlockDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+  const siprotecProtectionDefinition = (function () {
+    const product='https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728';
+    const manual='https://cache.industry.siemens.com/dl/files/193/109742193/att_1162585/v1/SIP5_Hardware_V09.70_Manual_C002-U_en.pdf';
+    const terminalGroups=[
+      ['A',['I1 polarity','I1 return','I2 polarity','I2 return','I3 polarity','I3 return','I4 polarity','I4 return']],
+      ['B',['V1 polarity','V1/V2/V3 common','V2 polarity','V3 polarity','V4 polarity','V4 return',
+        'BO 1.1 common','BO 1.1 normally open','BO 1.2 normally closed','BO 1.2 common','BO 1.2 normally open',
+        'BO 1.3 normally closed','BO 1.3 common','BO 1.3 normally open']],
+      ['D',['BO 1.4 normally open','BO 1.4/1.5/1.6 common','BO 1.5 normally open','BI 1.1 input',
+        'BO 1.6 normally open','BI 1.1 return','BI 1.2 input','BI 1.3 input','BI 1.4 input',
+        'BI 1.5 input','BI 1.6 input','BI 1.7 input','BI 1.8 input','BI 1.2–1.8 common']],
+      ['L',['Auxiliary supply +','Auxiliary supply −','BO 2.1 common','BO 2.1 normally open',
+        'BO 2.2 common','BO 2.2 normally closed','Life contact normally closed','BO 2.2 normally open',
+        'Life contact normally open','Life contact common','BI 2.1/2.2/2.3 common','BI 2.1 input','BI 2.3 input','BI 2.2 input']]
+    ];
+    const pins=terminalGroups.flatMap(function ([group,names],groupIndex) {
+      const x=groupIndex<2?-104:104;
+      const startY=groupIndex%2===0?-216:24;
+      return names.map(function (name,index) {
+        const number=group+(index+1);
+        return {id:number.toLowerCase(),localNumber:number,name,x,y:startY+index*16,
+          electricalType:group==='L'&&index<2?'power':/^(I[1-4]|V[1-4]|BI )/.test(name)?'input':'passive',
+          connectionType:group==='A'?'Current terminal':'Voltage terminal'};
+      });
+    });
+    pins.push({id:'pe',localNumber:'PE',name:'Chassis protective grounding terminal',x:0,y:274,
+      electricalType:'passive',connectionType:'protective-earth'});
+    return deepFreeze({
+      schemaVersion:COMPONENT_SCHEMA_VERSION,id:'siemens-p1j122728',manufacturer:'Siemens',manufacturerPartNumber:'P1J122728',
+      model:'SIPROTEC 5 7SJ82 overcurrent protection',name:'7SJ82 protection relay · IO102 / PS101',
+      family:'siprotec-protection',referencePrefix:'F',category:'Electrical · Verified protection relays',
+      symbol:{id:'siemens-p1j122728-schematic-v1',view:'schematic',unit:'mm',width:228,height:560,pins,
+        internalConnections:[],
+        artwork:[{kind:'rect',x:-80,y:-246,width:160,height:494},
+          ...pins.map(pin=>({kind:'line',from:{x:pin.x,y:pin.y},to:{x:Math.sign(pin.x)*80,y:pin.id==='pe'?248:pin.y}})),
+          {kind:'text',text:'7SJ82',x:0,y:-218,size:14},
+          {kind:'text',text:'IO102',x:0,y:-65,size:12},
+          {kind:'text',text:'PS101',x:0,y:105,size:12}],
+        numberingNote:'IO102 A, B and D and PS101 L follow the hardware diagrams. Shared returns are single physical terminals. Relay contact states, sensors and measurement windings do not create permanent conductive links.'},
+      specifications:{
+        auxiliarySupply:{value:'24–48 V DC'},binaryInputs:{value:11},binaryOutputs:{value:9},
+        currentInputs:{value:4},voltageInputs:{value:4},installedHardware:{value:'IO102 + PS101'},
+        mounting:{value:'1/3 × 19-inch flush mounting'},operationPanel:{value:'Integrated large display, 16 LEDs'},
+        communications:{value:'Port J RJ45; port G D-sub time synchronization; positions E/F for plug-in modules'}
+      },
+      panelFootprint:{widthMm:150,heightMm:266,depthMm:231,source:manual,edition:'C53000-G5040-C002-U, 12.2023',page:283,
+        note:'Maximum flush-mount envelope: 145 + 5 mm wide and 34 + 163 + 34 mm deep. Connector projection, cable bends and cutout are separate.'},
+      instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},
+      sources:[
+        {publisher:'Siemens',title:'P1J122728 exact product configuration',url:product,retrievedAt:'2026-11-23'},
+        {publisher:'Siemens',title:'SIPROTEC 5 hardware manual, pp. 139, 145–147 and 283',url:manual,
+          documentRevision:'C53000-G5040-C002-U, December 2023',
+          revisionNote:'PS101 and IO102 terminals and contact functions; housing and cabinet envelope for the 1/3 flush-mount device.',
+          retrievedAt:'2026-11-23',sha256:'0fb44a28cc6a43f153fddb33511466c7dcaff6121135a6aaf178a6612d1d86be'}
+      ]
+    });
+  })();
+  const COMPONENTS = Object.freeze({[siprotecProtectionDefinition.id]:siprotecProtectionDefinition,[pfc200Definition.id]:pfc200Definition,[ukCoverDefinition.id]:ukCoverDefinition,[utCoverDefinition.id]:utCoverDefinition,[peCoverDefinition.id]:peCoverDefinition,[terminalEndBracketDefinition.id]:terminalEndBracketDefinition,[overloadSupportElectricalDefinition.id]:overloadSupportElectricalDefinition,[overloadSupportDefinition.id]:overloadSupportDefinition,[rittalEnclosureDefinition.id]:rittalEnclosureDefinition,[rittalFieldEnclosureDefinition.id]:rittalFieldEnclosureDefinition,[lappFourCoreCableDefinition.id]:lappFourCoreCableDefinition,[lappMotorCableDefinition.id]:lappMotorCableDefinition,[lappFieldControlCableDefinition.id]:lappFieldControlCableDefinition,[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [schneiderContactBlockDefinition.id]: schneiderContactBlockDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;
