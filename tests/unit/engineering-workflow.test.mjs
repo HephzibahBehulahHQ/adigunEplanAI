@@ -147,6 +147,87 @@ test("WAGO power supplies preserve distinct terminal anchors, ratings and BOM pr
   }
 });
 
+const wagoSingleChannelBreakerBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-single-channel-breaker-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoSingleChannelBreakerBatch(wagoSingleChannelBreakerBatch);
+
+test("WAGO single-channel breakers join only documented fixed potentials", () => {
+  assert.equal(wagoSingleChannelBreakerBatch.length, 19);
+  for (const part of wagoSingleChannelBreakerBatch) {
+    const def = engine.component("wago-" + part.orderCode.replaceAll("/", "_"));
+    assert.deepEqual(plain(def.symbol.pins.map((pin) => pin.name)), [
+      "S2",
+      "VIN+",
+      "VIN+",
+      "GND",
+      "S1",
+      "VOUT+",
+      "VOUT+",
+      "GND",
+    ]);
+    const instance = engine.createInstance(def.id, 400, 300, "F1");
+    instance.sheetId = "breaker";
+    const objects = [
+      instance,
+      ...engine.worldPins(instance).map((pin) =>
+        engine.attachWire(
+          {
+            id: pin.id,
+            kind: "wire",
+            sheetId: instance.sheetId,
+            x1: pin.x,
+            y1: pin.y,
+            x2: pin.x + Math.sign(pin.x - instance.x) * 100,
+            y2: pin.y,
+          },
+          { attachment: { instanceId: instance.id, pinId: pin.id } },
+          {},
+        ),
+      ),
+    ];
+    const restored = engine.parseProject(
+      engine.serializeProject({
+        project: "Breaker terminal verification",
+        sheets: [{ id: instance.sheetId, name: "Breaker", number: "A2/000" }],
+        objects,
+      }),
+    );
+    assert.equal(restored.valid, true);
+    const restoredObjects = restored.project.objects;
+    assert.deepEqual(
+      plain(
+        engine
+          .analyze(restoredObjects)
+          .nets.map((net) =>
+            net.pins
+              .map((pin) => pin.pinId)
+              .sort()
+              .join(","),
+          )
+          .sort(),
+      ),
+      [
+        "terminal-1",
+        "terminal-2,terminal-3",
+        "terminal-4,terminal-8",
+        "terminal-5",
+        "terminal-6,terminal-7",
+      ],
+    );
+    assert.equal(
+      engine.billOfMaterials(restoredObjects).rows[0].partNumber,
+      part.orderCode,
+    );
+  }
+});
+
 test("WAGO relays carry documented coil and contact states without passive shorts", () => {
   assert.equal(wagoRelayBatch.length, 84);
   for (const source of wagoRelayBatch) {

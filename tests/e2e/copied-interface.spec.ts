@@ -2303,6 +2303,45 @@ test("WAGO power supplies place by exact code and wire to documented terminals",
   );
 });
 
+test("WAGO single-channel breakers expose current settings and attach to supply terminals", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, id, x] of [
+    ["787-1002", "wago-787-1002", 400],
+    ["787-3861/108-020", "wago-787-3861_108-020", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(490, 196);
+  await clickAt(560, 234);
+  await clickAt(650, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "1 / 2 / 3 / 4 / 5 / 6 / 7 / 8 A",
+  );
+  const saved = await saveDrawing(page, "wago-single-channel-breaker");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "output-1" }),
+        end: expect.objectContaining({ pinId: "terminal-2" }),
+      },
+    }),
+  );
+});
+
 test("generic PLC library places six editable modules with native terminal wiring", async ({
   page,
 }) => {
