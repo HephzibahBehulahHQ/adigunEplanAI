@@ -2089,6 +2089,51 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
   expect(attachedClamps.sort()).toEqual(["clamp-1-1", "clamp-1-2"]);
 });
 
+test("WAGO 231 long connectors expose both ends of a 24-pole row", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["231-154/001-000", 400],
+    ["231-124/026-000", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page
+      .locator('[data-insert="wago-' + code.replace("/", "_") + '"]')
+      .click();
+    await clickAt(x, 450);
+  }
+  await page.locator('[data-action="fit"]').first().click();
+  for (const y of [36, 864]) {
+    await clickAt(472, y);
+    await clickAt(578, y);
+  }
+  const saved = await saveDrawing(page, "wago-24-pole");
+  const wires = saved.data.objects.filter(
+    ({ kind }: { kind: string }) => kind === "wire",
+  );
+  expect(wires).toHaveLength(2);
+  for (const pole of [1, 24]) {
+    const pinId = "contact-" + pole;
+    expect(wires).toContainEqual(
+      expect.objectContaining({
+        attachments: {
+          start: expect.objectContaining({ pinId }),
+          end: expect.objectContaining({ pinId }),
+        },
+      }),
+    );
+  }
+});
+
 test("generic PLC library places six editable modules with native terminal wiring", async ({
   page,
 }) => {
