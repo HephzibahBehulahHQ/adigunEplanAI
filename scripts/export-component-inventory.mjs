@@ -48,6 +48,17 @@ engine.registerWagoWinstaBatch(
     ),
   ),
 );
+engine.registerWagoDigitalIoBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-digital-io-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerPlcSymbols(
   plcKinds.map((kind) => ({
     kind,

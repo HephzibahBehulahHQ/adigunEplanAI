@@ -236,3 +236,15 @@ Each preserves source pole order, coding, gender, clamp count, and the exact
 body envelope. The model identifies these parts as WINSTA MINI. One candidate
 was held out because its datasheet lacked the series designation used for
 verification.
+
+## WAGO 750 digital I/O
+
+Eight WAGO digital I/O modules are available in the compact editor. Datasheet
+front views define the field-terminal order. The four-channel modules expose
+their duplicated field supply terminals as separate 24 V and 0 V groups.
+The eight- and sixteen-channel modules expose the signal clamps. Side bus
+and power jumper contacts are outside the field connector. Each channel
+supports the existing editable signal and address fields. Switching side,
+ratings, and rail dimensions come from the exact datasheet.
+[750-402 datasheet](https://wago.priintcloud.com/datasheets/750-402/en) ·
+[750-1505 datasheet](https://wago.priintcloud.com/datasheets/750-1505/en)

@@ -36,6 +36,17 @@ const winstaBatch = JSON.parse(
   ),
 );
 engine.registerWagoWinstaBatch(winstaBatch);
+engine.registerWagoDigitalIoBatch(
+  JSON.parse(
+    fs.readFileSync(
+      new URL(
+        "../../packages/component-library/wago-digital-io-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", () => {
@@ -57,6 +68,58 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
     /Duplicate WAGO terminal catalog ID/,
   );
   assert.equal(engine.component("wago-2002-9999"), null);
+});
+
+test("WAGO 750 I/O exposes documented field terminals and keeps supply groups separate", () => {
+  for (const [code, direction, channels, switching] of [
+    ["402", "DI", 4, "high"],
+    ["430", "DI", 8, "high"],
+    ["431", "DI", 8, "high"],
+    ["436", "DI", 8, "low"],
+    ["437", "DI", 8, "low"],
+    ["504", "DO", 4, "high"],
+    ["530", "DO", 8, "high"],
+    ["1505", "DO", 16, "low"],
+  ]) {
+    const def = engine.component("wago-750-" + code);
+    assert.deepEqual(
+      plain(engine.plcIoPins(def).map((pin) => pin.localNumber)),
+      Array.from({ length: channels }, (_, index) => direction + (index + 1)),
+    );
+    assert.equal(def.specifications.switching.value, switching + "-side");
+    assert.deepEqual(
+      plain(def.symbol.internalConnections),
+      channels === 4
+        ? [
+            ["24v-l", "24v-r"],
+            ["0v-l", "0v-r"],
+          ]
+        : [],
+    );
+    assert.equal(def.symbol.pins.length, channels === 4 ? 8 : channels);
+    const part = engine.createInstance(def.id, 300, 220, "A1");
+    part.sheetId = "digital-io";
+    part.plcIo = {
+      [direction.toLowerCase() + "1"]: {
+        signal: "Field sensor or load",
+        address: "0.0",
+      },
+    };
+    assert.equal(engine.validateInstance(part).valid, true);
+    assert.equal(
+      engine.billOfMaterials([part]).rows[0].partNumber,
+      "750-" + code,
+    );
+    const restored = engine.parseProject(
+      engine.serializeProject({
+        project: "Field I/O",
+        sheets: [{ id: "digital-io", name: "Field I/O", number: "A2/000" }],
+        objects: [part],
+      }),
+    );
+    assert.equal(restored.valid, true);
+    assert.deepEqual(plain(restored.project.objects[0].plcIo), part.plcIo);
+  }
 });
 
 test("WINSTA terminals retain exact markings and isolate every plug and socket pole", () => {
