@@ -24,6 +24,13 @@ ISOLATED_DECK_DIAGRAMS = {
 }
 
 
+# Drawings dimension the interleaved rows 5 mm apart and identify the first pad.
+STAGGERED_PCB_DRAWINGS = {
+    "c152e6f267c1ddd76ec1d0210c47861dcf329cd09ba5993a4b70571c0ab9715f": (3.5, 5),
+    "71fe602df5fe38ed975589be07c9819ffe726582359b0e6974d7cac5b6f8fabb": (2.5, 5),
+}
+
+
 def evidence(pages, pattern, label):
     matches = [
         (index, match.group(1))
@@ -63,7 +70,7 @@ def read_pcb_article(pdf, candidate, retrieved_at):
     technology = field(r"^Connection technology (Push-in CAGE CLAMP|CAGE CLAMP)\b", "connection technology")
     actuation = field(r"^Actuation (?:type|Method) (Push-button)\b", "actuation")
     mounting = field(r"^PCB contact (THT)\b", "PCB contact")
-    pattern = field(r"^Solder pin arrangement over the entire terminal strip \(?(in-line)\)?", "pad arrangement")
+    pattern = field(r"^Solder pin arrangement over the entire terminal strip \(?(in-line|staggered)\)?", "pad arrangement")
     pitch = field(rf"^Pin spacing {NUMBER} mm", "single pad pitch")
     width = field(rf"^Width {NUMBER} mm", "width")
     height = field(rf"^Height from the surface {NUMBER} mm", "height above board")
@@ -85,7 +92,26 @@ def read_pcb_article(pdf, candidate, retrieved_at):
         or pins[1] != "1"
         or (int(poles[1]) - 1) * value(pitch) >= value(width)
     ):
-        raise ValueError("source does not document one clamp and one in-line pad per pole")
+        raise ValueError("source does not document one clamp and one solder pad per pole")
+
+    staggered = {}
+    if pattern[1] == "staggered":
+        with pypdfium2.PdfDocument(pdf) as document, closing(document[0]) as cover:
+            hashes = {
+                hashlib.sha256(image.get_data()).hexdigest()
+                for image in cover.get_objects(filter=[FPDF_PAGEOBJ_IMAGE])
+            }
+        reviewed = hashes.intersection(STAGGERED_PCB_DRAWINGS)
+        if len(reviewed) != 1:
+            raise ValueError("no reviewed staggered-pad drawing")
+        diagram_sha = reviewed.pop()
+        diagram_pitch, row_spacing = STAGGERED_PCB_DRAWINGS[diagram_sha]
+        if value(pitch) != diagram_pitch or row_spacing >= value(depth):
+            raise ValueError("staggered drawing conflicts with pad pitch or body depth")
+        staggered = {
+            "padRowSpacingMm": row_spacing,
+            "footprintDrawingSha256": diagram_sha,
+        }
 
     (voltage, current, ratings_page) = iec_ratings(pages, "60664-1")
     last = max(ratings_page, pins[0], width[0], finish[0], mounting[0], pattern[0])
@@ -93,6 +119,7 @@ def read_pcb_article(pdf, candidate, retrieved_at):
     return {
         "orderCode": code,
         "poles": int(poles[1]),
+        **staggered,
         "nominalVoltage": value(voltage),
         "ratedCurrent": value(current),
         "finish": finish[1].title(),

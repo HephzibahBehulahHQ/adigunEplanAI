@@ -50,7 +50,7 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 });
 
 test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () => {
-  assert.ok(pcbBatch.length >= 72);
+  assert.ok(pcbBatch.length >= 118);
   for (const part of pcbBatch) {
     const def = engine.component("wago-" + part.orderCode);
     const instance = engine.createInstance(def.id, 400, 250, "XPCB");
@@ -71,7 +71,7 @@ test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () =
     for (const [index, pad] of def.pcbFootprint.pads.entries()) {
       assert.equal(pad.pinId, "pad-" + (index + 1));
       assert.equal(pad.xMm, index * part.padPitchMm);
-      assert.equal(pad.yMm, 0);
+      assert.equal(pad.yMm, (index % 2) * (part.padRowSpacingMm || 0));
     }
     assert.equal(def.panelFootprint.heightMm, part.bodyDepthMm);
     assert.equal(def.panelFootprint.depthMm, part.bodyHeightAboveBoardMm);
@@ -80,7 +80,21 @@ test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () =
   assert.equal(def.pcbFootprint.pads[15].xMm, 37.5);
   assert.equal(def.pcbFootprint.pads[15].drilledHoleDiameterMm, 1.1);
   assert.equal(def.panelFootprint.widthMm, 41.5);
-  const instance = engine.createInstance("wago-250-302", 400, 250, "XPCB");
+  for (const [orderCode, pitch] of [
+    ["250-202", 3.5],
+    ["250-402", 2.5],
+  ]) {
+    const staggered = engine.component("wago-" + orderCode);
+    assert.deepEqual(
+      plain(staggered.pcbFootprint.pads.map(({ xMm, yMm }) => [xMm, yMm])),
+      [
+        [0, 0],
+        [pitch, 5],
+      ],
+    );
+    assert.match(staggered.sources[0].footprintDrawingSha256, /^[a-f0-9]{64}$/);
+  }
+  const instance = engine.createInstance("wago-250-202", 400, 250, "XPCB");
   instance.sheetId = "pcb";
   const wires = ["clamp-1", "pad-1", "clamp-2", "pad-2"].map((id, index) => {
     const pin = engine.worldPins(instance).find((item) => item.id === id);

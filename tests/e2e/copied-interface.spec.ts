@@ -1757,8 +1757,8 @@ test("PCB terminal blocks expose wire clamps and solder pins on the canvas", asy
   await page.locator("#createProject").click();
   await addSectionSheet(page);
   await page.locator('[data-panel="symbols"]').click();
-  await page.locator("#symbolSearch").fill("250-302");
-  const entry = page.locator('[data-insert="wago-250-302"]');
+  await page.locator("#symbolSearch").fill("250-202");
+  const entry = page.locator('[data-insert="wago-250-202"]');
   const clickAt = async (x: number, y: number) => {
     const point = await sheetPoint(page, x, y);
     await page.mouse.click(point.x, point.y);
@@ -1769,10 +1769,16 @@ test("PCB terminal blocks expose wire clamps and solder pins on the canvas", asy
   }
   await clickAt(412, 295);
   await clickAt(638, 205);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PCB drill centers (mm)", { exact: true }).click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "X 3.5 · Y 5 · Ø 1.1",
+  );
   const saved = await saveDrawing(page, "pcb-clamp-to-pad");
   expect(
     saved.data.objects.filter(
-      (item: { componentId?: string }) => item.componentId === "wago-250-302",
+      (item: { componentId?: string }) => item.componentId === "wago-250-202",
     ),
   ).toHaveLength(2);
   expect(saved.data.objects).toContainEqual(
