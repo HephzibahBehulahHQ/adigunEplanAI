@@ -222,7 +222,7 @@
   function sheetCaption(sheet){return sheet.sectionId?sheet.sectionId+'/'+(sheet.customName===false?sheet.number.split('/')[1]:sheet.name):sheet.number+' · '+sheet.name;}
   function ensureSheetTab(id){
     let tab=$$('#sheetTabs .document-tab[data-sheet]').find(function(item){return item.dataset.sheet===id;});
-    const meta=state.sheets.find(function(sheet){return sheet.id===id;}),label=sheetLabel(id),caption=meta?sheetCaption(meta):label[0]+' · '+label[1];
+    const label=sheetLabel(id),caption=label[0]+' · '+label[1];
     if(tab){const title=tab.querySelector('[data-sheet-tab-title]')||Array.from(tab.childNodes).find(function(node){return node.nodeType===3||node.nodeType===1&&!node.classList.contains('tab-close');});if(title)title.textContent=caption+' ';tab.title=caption;const close=tab.querySelector('.tab-close');if(close){delete close.dataset.deleteSheet;close.dataset.closeSheet=id;close.setAttribute('aria-label','Close sheet tab '+label[1]);}return tab;}
     tab=document.createElement('button');tab.type='button';tab.className='document-tab';tab.setAttribute('role','tab');tab.dataset.sheet=id;tab.dataset.generatedSheet='true';tab.setAttribute('aria-selected','false');
     const text=document.createElement('span');text.dataset.sheetTabTitle='true';text.textContent=caption;Object.assign(text.style,{minWidth:'0',overflow:'hidden',textOverflow:'ellipsis'});tab.title=caption;const close=document.createElement('span');close.className='tab-close';close.style.flexShrink='0';close.setAttribute('role','button');close.tabIndex=0;close.dataset.closeSheet=id;close.setAttribute('aria-label','Close sheet tab '+label[1]);close.textContent='×';tab.append(text,close);$('#newSheet').before(tab);return tab;
@@ -230,7 +230,7 @@
   function showEmptyProjectSheet(){cancelTerminalDrag();cancelWireDraft();
     state.sheet=null;state.objects=[];state.selected=null;state.selectedObjectIds=[];state.undo=[];state.redo=[];
     $$('#sheetTabs .document-tab[data-sheet]').forEach(function(tab){if(!state.openSheetIds.includes(tab.dataset.sheet))tab.remove();else tab.setAttribute('aria-selected','false');});
-    renderObjects();updateHistoryButtons();design.style.visibility='hidden';wrap.classList.add('blank-sheet');
+    renderObjects();updateHistoryButtons();design.style.visibility='hidden';wrap.classList.add('blank-sheet','frame-hidden');applyView();
     drawing.setAttribute('aria-label','No sheet selected · select a sheet in the sidebar');
     if($('#customSheetName'))$('#customSheetName').textContent='Select a sheet in the sidebar, or use a section + to create one';
     if($('#customSheetNumber'))$('#customSheetNumber').textContent='';
@@ -268,15 +268,15 @@
   function setSheet(id){clearFloorRouteDraft();cancelTerminalDrag();cancelWireDraft();if(state.sections&&!state.sheets.some(function(sheet){return sheet.id===id;})){if(id==null||!state.sheets.length)showEmptyProjectSheet();return false;}const meta=state.sheets.find(function(sheet){return sheet.id===id;});if(!sheetNames[id]&&!meta)return false;if(!state.openSheetIds.includes(id))state.openSheetIds.push(id);if(meta&&meta.sectionId)state.activeSection=meta.sectionId;if(state.sheet!==id){if(state.sheet)state.sheetObjects[state.sheet]=state.objects;state.sheetViews[state.sheet]=state.view;state.sheet=id;state.objects=state.sheetObjects[id]||[];state.sheetObjects[id]=state.objects;state.view=state.sheetViews[id]||{x:0,y:0,w:1200,h:760};state.undo=[];state.redo=[];updateHistoryButtons();}design.style.visibility='';const label=sheetLabel(id),tab=ensureSheetTab(id);state.selected=null;state.selectedObjectIds=[];$$('[data-sheet]').forEach(function(el){const active=el.dataset.sheet===id;if(el.classList.contains('document-tab')){el.hidden=false;el.setAttribute('aria-selected',String(active));if(active)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');}else el.classList.toggle('selected',active);});$$('[data-project-section]').forEach(function(row){const active=row.dataset.projectSection===state.activeSection;(row.closest('[data-section-header]')||row).classList.toggle('selected',active);row.setAttribute('aria-pressed',String(active));});refreshSheetProperties();if($('#selectionDetails'))$('#selectionDetails').innerHTML='<div class="inspector-title">Selection</div><div class="empty-selection">Select an electrical object on the sheet to inspect its drawing designation.</div>';drawing.setAttribute('aria-label','Electrical drawing · '+label[1]);wrap.classList.toggle('blank-sheet',id!=='control'||wrap.classList.contains('blank-start'));const sheetName=$('#customSheetName'),sheetNumber=$('#customSheetNumber');if(sheetName)sheetName.textContent=label[1];if(sheetNumber)sheetNumber.textContent=label[0];renderProjectTitleBlock();applyView();renderObjects();tab.scrollIntoView({block:'nearest',inline:'nearest'});persist();return true;}
   function openAddSheetDialog(){
     const choices=state.sections?{A1:['Project overview','Title page','Contents'],A2:['Power supply','Control circuit','PLC / I/O'],A3:['Panel layout','Mounting and cable entries','Installation details'],A4:['Equipment and material list','Cable and terminal report','Checks and handover']}[state.activeSection]:['Power supply','Control circuit','PLC / I/O'];
-    $$('#sheetDialog [data-new-sheet]').forEach(function(button,index){button.dataset.newSheet=choices[index];button.querySelector('span:last-child').textContent=choices[index]+' · IEC A3';});
+    $$('#sheetDialog [data-new-sheet]').forEach(function(button,index){button.dataset.newSheet=choices[index];button.querySelector('span:last-child').textContent=choices[index]+' · Drafting sheet';});
     $('#sheetDialog .notice').textContent=state.sections?'Add a sheet to '+state.activeSection+'. Page numbering continues across A1–A4.':'Choose a drawing type to add a project sheet.';
     $('#sheetDialog').showModal();
   }
-  function addSheet(name,showPrintFrame=true,floorPlan){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
+  function addSheet(name,showPrintFrame=false,floorPlan){if(!state.projectName){notify('Create or open a project before adding sheets.');return;}
     const safeName=String(name||'Sheet').trim().slice(0,80)||'Sheet',id='custom-'+Date.now()+'-'+(++sheetIdSequence);
     const sheet={id:id,name:safeName,number:nextSheetNumber(),customName:!!name,showPrintFrame};
     if(floorPlan)sheet.floorPlan=floorPlan;
-    if(floorPlan||(state.activeSection==='A3'&&showPrintFrame))sheet.drafting={units:'mm',minor:2.5,major:10,snap:2.5};
+    if(floorPlan||state.activeSection==='A3')sheet.drafting={units:'mm',minor:2.5,major:10,snap:2.5};
     if(state.sections){sheet.sectionId=state.activeSection;const section=state.sections.find(function(item){return item.id===state.activeSection;});if(section)section.collapsed=false;}
     state.sheets.push(sheet);state.sheetObjects[id]=[];state.sheetViews[id]={x:0,y:0,w:1200,h:760};
     renderCustomSheetNavigation();notify(sheetLabel(id)[0]+' created. Select it in the sidebar to open.');persist();return id;
@@ -336,7 +336,7 @@
   function activeDraftingSheet(){return state.sheets.find(sheet=>sheet.id===state.sheet);}
   function renderRulers(scale){
     const sheet=activeDraftingSheet(),units=draftingSettings().units,conversion=units==='in'?25.4:1;
-    const visible=Boolean(sheet&&sheet.rulersVisible!==false),view=drawing.viewBox.baseVal;
+    const visible=Boolean(state.projectName&&sheet?.rulersVisible!==false),view=drawing.viewBox.baseVal;
     const target=74/scale/conversion;
     const power=10**Math.floor(Math.log10(target));
     const step=(target<=power?1:target<=2*power?2:target<=5*power?5:10)*power;
@@ -2493,7 +2493,7 @@
   });
   function refreshFrameControl(){
     const sheet=state.sheets.find(item=>item.id===state.sheet);
-    wrap.classList.toggle('frame-hidden',sheet?.showPrintFrame===false);
+    wrap.classList.toggle('frame-hidden',!sheet||sheet.showPrintFrame===false);
     const block=$('#sheetDesignation')?.closest('.inspector-block');
     if(!block)return;
     let field=block.querySelector('[data-show-print-frame]');
