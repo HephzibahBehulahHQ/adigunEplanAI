@@ -69,6 +69,84 @@ const wagoRelayBatch = JSON.parse(
 );
 engine.registerWagoRelayBatch(wagoRelayBatch);
 
+const wagoPowerSupplyBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-power-supply-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoPowerSupplyBatch(wagoPowerSupplyBatch);
+
+test("WAGO power supplies preserve distinct terminal anchors, ratings and BOM provenance", () => {
+  assert.equal(wagoPowerSupplyBatch.length, 63);
+  for (const part of wagoPowerSupplyBatch) {
+    const def = engine.component("wago-" + part.orderCode.replaceAll("/", "_"));
+    const { pins, internalConnections } = def.symbol;
+    assert.deepEqual(plain(pins.map((pin) => pin.localNumber)), [
+      ...part.inputs,
+      ...part.outputs,
+      ...part.signals,
+    ]);
+    assert.equal(new Set(pins.map((pin) => pin.id)).size, pins.length);
+    assert.equal(
+      new Set(pins.map((pin) => `${pin.x},${pin.y}`)).size,
+      pins.length,
+    );
+    assert.equal(
+      def.specifications.outputVoltage.value,
+      part.nominalOutputVoltage,
+    );
+    assert.equal(
+      def.specifications.ratedOutputCurrent.value,
+      part.nominalOutputCurrent,
+    );
+    assert.equal(def.panelFootprint.depthMm, part.depthMm);
+    assert.equal(def.sources[0].sha256, part.datasheetSha256);
+    assert.deepEqual(plain(internalConnections), []);
+
+    const instance = engine.createInstance(def.id, 400, 300, "PS1");
+    instance.sheetId = "supply";
+    const wires = engine.worldPins(instance).map((pin) =>
+      engine.attachWire(
+        {
+          id: pin.id,
+          kind: "wire",
+          sheetId: instance.sheetId,
+          x1: pin.x,
+          y1: pin.y,
+          x2: pin.x + Math.sign(pin.x - instance.x) * 100,
+          y2: pin.y,
+        },
+        { attachment: { instanceId: instance.id, pinId: pin.id } },
+        {},
+      ),
+    );
+    const restored = engine.parseProject(
+      engine.serializeProject({
+        project: "Power supply terminal verification",
+        sheets: [{ id: instance.sheetId, name: "Supply", number: "A2/000" }],
+        objects: [instance, ...wires],
+      }),
+    );
+    assert.equal(restored.valid, true);
+    assert.equal(
+      engine.billOfMaterials(restored.project.objects).rows[0].partNumber,
+      part.orderCode,
+    );
+    assert.deepEqual(
+      plain(
+        engine
+          .analyze(restored.project.objects)
+          .nets.map((net) => net.pins.length),
+      ),
+      Array(pins.length).fill(1),
+    );
+  }
+});
+
 test("WAGO relays carry documented coil and contact states without passive shorts", () => {
   assert.equal(wagoRelayBatch.length, 84);
   for (const source of wagoRelayBatch) {
