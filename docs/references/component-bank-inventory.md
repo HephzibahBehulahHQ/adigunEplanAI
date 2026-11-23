@@ -302,3 +302,9 @@ Coding P includes three-pole L, PE and N and five-pole N, PE, L1, L2 and
 L3 versions. The three coding S assemblies carry contacts 1, 2 and L.
 [Coding P datasheet](https://wago.priintcloud.com/datasheets/771-9973_006-101/en) ·
 [Coding S datasheet](https://wago.priintcloud.com/datasheets/771-9973_006-305/en)
+
+The 115 additional two-pole MINI and MIDI assemblies include PVC and
+halogen-free types, with a plug or individually wireable leads at the
+second end. Coding A carries L and N, and coding B carries 1 and 2.
+[Coding A MIDI datasheet](https://wago.priintcloud.com/datasheets/771-8992_106-201/en) ·
+[Coding B MINI datasheet](https://wago.priintcloud.com/datasheets/891-8992_105-103/en)
