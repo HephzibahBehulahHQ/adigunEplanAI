@@ -1187,7 +1187,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const rated=part.ratingPage!==undefined;
       const drawn=part.footprintPage!==undefined;
-      if(!/^(236|256)-\d{3,4}(?:\/\d{3}-\d{3}){0,3}$/.test(part.orderCode)||
+      if(!/^(236|255|256|257)-\d{3,4}(?:\/\d{3}-\d{3}){0,3}$/.test(part.orderCode)||
         !['THT','THR'].includes(part.mounting)||![1,2].includes(part.solderPinsPerPole)||
         !Number.isInteger(part.poles)||part.poles<1||part.poles>48||![5,7.5,10].includes(part.padPitchMm)||
         (part.alternatePadPitchMm!==undefined&&part.alternatePadPitchMm!==part.padPitchMm*1.016)||

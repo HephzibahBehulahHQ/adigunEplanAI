@@ -866,14 +866,27 @@ const pcbStackableBatch = JSON.parse(
 );
 engine.registerWagoStackablePcbTerminalBatch(pcbStackableBatch);
 
-test("WAGO 236 and 256 PCB terminals retain exact pole topology and footprint evidence", () => {
+const pcb255257Batch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-pcb-255-257-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoStackablePcbTerminalBatch(pcb255257Batch);
+
+test("WAGO stackable PCB terminals retain exact pole topology and footprint evidence", () => {
   assert.equal(pcbStackableBatch.length, 501);
   assert.equal(
     pcbStackableBatch.filter((row) => row.footprintPage).length,
     481,
   );
   assert.equal(Math.max(...pcbStackableBatch.map((row) => row.poles)), 48);
-  for (const row of pcbStackableBatch) {
+  assert.equal(pcb255257Batch.length, 272);
+  assert.equal(pcb255257Batch.filter((row) => row.footprintPage).length, 265);
+  for (const row of [...pcbStackableBatch, ...pcb255257Batch]) {
     const def = engine.component("wago-" + row.orderCode.replaceAll("/", "_"));
     const expected = Array.from({ length: row.poles }, (_, index) => {
       const pole = index + 1;

@@ -6,6 +6,7 @@ import wagoTerminalBatch from "../../../packages/component-library/wago-terminal
 import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-terminal-batch.json";
 import wago2086PcbTerminalBatch from "../../../packages/component-library/wago-pcb-2086-batch.json";
 import wagoStackablePcbTerminalBatch from "../../../packages/component-library/wago-pcb-236-256-batch.json";
+import wago255257PcbTerminalBatch from "../../../packages/component-library/wago-pcb-255-257-batch.json";
 
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
@@ -29,6 +30,10 @@ const mcsCatalog = [
   ...wagoMcsMiniBatch,
   ...wagoMcsMaxiBatch,
 ];
+const stackablePcbCatalog = [
+  ...wagoStackablePcbTerminalBatch,
+  ...wago255257PcbTerminalBatch,
+];
 
 const symbols = plcKinds.map((kind) => {
   const { symbol: id, channels } = plcSymbol[kind];
@@ -48,7 +53,7 @@ declare global {
         rows: typeof wago2086PcbTerminalBatch,
       ) => void;
       registerWagoStackablePcbTerminalBatch: (
-        rows: typeof wagoStackablePcbTerminalBatch,
+        rows: typeof stackablePcbCatalog,
       ) => void;
       registerWagoWinstaBatch: (rows: typeof wagoWinstaBatch) => void;
       registerWagoWinstaCableBatch: (rows: typeof wagoWinstaCableBatch) => void;
@@ -68,7 +73,7 @@ window.AdigunCADEngine.registerWago2086PcbTerminalBatch(
   wago2086PcbTerminalBatch,
 );
 window.AdigunCADEngine.registerWagoStackablePcbTerminalBatch(
-  wagoStackablePcbTerminalBatch,
+  stackablePcbCatalog,
 );
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
 window.AdigunCADEngine.registerWagoWinstaCableBatch(wagoWinstaCableBatch);
