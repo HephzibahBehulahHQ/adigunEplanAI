@@ -313,9 +313,9 @@ test("WAGO relays carry documented coil and contact states without passive short
 
 test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
   assert.equal(cableBatch.length, 1077);
-  assert.equal(explicitWinstaBatch.length, 1066);
+  assert.equal(explicitWinstaBatch.length, 1679);
   for (const row of [...cableBatch, ...explicitWinstaBatch]) {
-    const def = engine.component("wago-" + row.orderCode.replace("/", "_"));
+    const def = engine.component("wago-" + row.orderCode.replaceAll("/", "_"));
     const freeEnd = row.endType === "free";
     const startPrefix = row.termination === "plug-free" ? "plug-" : "socket-";
     const endPrefix = freeEnd ? "lead-" : "plug-";
@@ -341,10 +341,12 @@ test("WINSTA cables carry isolated potentials across both ends after move and re
     assert.deepEqual(
       plain(def.symbol.internalConnections),
       row.markings.map((mark) => {
-        const pinMark = mark
-          .toLowerCase()
-          .replace("/", "-")
-          .replace("'", "-prime");
+        const pinMark =
+          mark === "+"
+            ? "positive"
+            : mark === "-"
+              ? "negative"
+              : mark.toLowerCase().replace("/", "-").replace("'", "-prime");
         return [startPrefix + pinMark, endPrefix + pinMark];
       }),
     );

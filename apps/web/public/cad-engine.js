@@ -1370,7 +1370,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const documentedMarkings=new Set([
       'A:L,N','A:L,PE,N',"A:N,PE,2/L,1/L'",'A:N,PE,L1,L2,L3','A:N,PE,1,2,3',
       'B:1,2','B:1,2,3','B:1,2,3,4','B:1,2,3,4,5',
-      'I:N,PE,L,DA-,DA+',"L:N,PE,L,N',L'",'P:L,PE,N','P:N,PE,L1,L2,L3','S:1,2,L',
+      'I:N,PE,L,DA-,DA+','I:+,-','I:N,PE,L,-,+','B:N,PE,L,I-,I+',
+      "L:N,PE,L,N',L'","L:L',N'",'P:L,PE,N','P:N,PE,L1,L2,L3','S:1,2,L',
     ]);
     const profiles=[
       {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^(?:H05VV-F|H05Z1Z1-F) 2x(?:1(?:\.5)?|2\.5)$/},
@@ -1390,15 +1391,15 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       {code:/^771-9395\/[01]66-[0-9]{3}$/,coding:'B',markings:['1','2','3','4','5'],cable:/^Control line 5x1\.5$/},
     ];
     for(const part of rows){
-      const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
       const explicit=part.termination!==undefined;
       const freeEnd=explicit?part.termination==='socket-free'||part.termination==='plug-free':/\/1/.test(part.orderCode);
       const plugAtStart=part.termination==='plug-free';
       const profile=profiles.find(candidate=>candidate.coding===part.coding&&candidate.code.test(part.orderCode));
-      const cableType=/^(?:H05VV-F|H05Z1Z1-F|Control line) ([2-5])[Gx](?:1|1\.5|2\.5)$/.exec(part.cableType);
+      const cableType=/^(?:H05VV-F|H05Z1Z1-F|Control line|XZ1-K \(AS\)) ([2-5])[Gx](?:1|1\.5|2\.5|4)$/.exec(part.cableType);
       if(!Array.isArray(part.markings)||part.series!==(mini?'MINI':'MIDI')||
-        (explicit?(!/^(771|891)-\d{4}\/\d{3,4}-\d{3,4}$/.test(part.orderCode)||
+        (explicit?(!/^(771|891)-\d{4}(?:\/\d{3,4}-\d{3,4}){1,2}$/.test(part.orderCode)||
           !['socket-plug','socket-free','plug-free'].includes(part.termination)||
           !cableType||Number(cableType[1])!==part.markings.length||
           !documentedMarkings.has(part.coding+':'+part.markings.join(','))):
@@ -1408,7 +1409,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           (part.endType!==undefined||part.conductorPreparation!==undefined))||
         ![part.lengthM,part.connectorWidthMm,part.nominalVoltage,part.ratedCurrent,part.impulseVoltageKv].every(value=>finite(value)&&value>0)||
         (part.connectorHeightMm!==undefined&&(!finite(part.connectorHeightMm)||part.connectorHeightMm<=0))||
-        ![2,3].includes(part.ratingPage)||
+        !(explicit?[1,2,3]:[2,3]).includes(part.ratingPage)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
         throw new Error('Invalid or duplicate WAGO WINSTA cable row: '+id);
@@ -1424,7 +1425,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       if(!freeEnd)artwork.push({kind:'rect',x:36,y:-bodyHeight/2,width:36,height:bodyHeight});
       for(const [index,mark] of part.markings.entries()){
         const y=(index-(poleCount-1)/2)*36;
-        const pinMark=mark.toLowerCase().replace('/','-').replace("'",'-prime');
+        const pinMark=mark==='+'?'positive':mark==='-'?'negative':mark.toLowerCase().replace('/','-').replace("'",'-prime');
         const startLabel=(plugAtStart?'Plug ':'Socket ')+mark;
         const start={id:startType+'-'+pinMark,name:startLabel,localNumber:startLabel,
           x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':
