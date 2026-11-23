@@ -264,5 +264,19 @@
     "fieldSupplyTerminals": false,
     "widthMm": 12,
     "heightMm": 100
+  },
+  {
+    "orderCode": "750-1405",
+    "direction": "DI",
+    "channels": 16,
+    "switching": "high",
+    "filterMs": 3,
+    "railDepthMm": 61.8,
+    "revision": "20.11.2026",
+    "connectionTechnology": "Push-in CAGE CLAMP",
+    "datasheetSha256": "f4a1835e770b16ba2c37922bacd790f5c38695387c3baf2d1d7404999c54f477",
+    "fieldSupplyTerminals": false,
+    "widthMm": 12,
+    "heightMm": 100
   }
 ]

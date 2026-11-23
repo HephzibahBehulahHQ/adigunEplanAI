@@ -766,6 +766,7 @@ test("WAGO 750 I/O exposes documented field terminals and keeps supply groups se
     ["431", "DI", 8, "high"],
     ["436", "DI", 8, "low"],
     ["437", "DI", 8, "low"],
+    ["1405", "DI", 16, "high"],
     ["504", "DO", 4, "high"],
     ["530", "DO", 8, "high"],
     ["1505", "DO", 16, "low"],

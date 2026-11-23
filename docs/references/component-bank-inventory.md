@@ -24,6 +24,14 @@ anchor where the source shows a rail bond.
 [Commoned terminal datasheet](https://wago.priintcloud.com/datasheets/727-225/en) ·
 [Matrix terminal datasheet](https://wago.priintcloud.com/datasheets/727-219/en)
 
+## WAGO 750-1405
+
+The compact component bank exposes sixteen field inputs with no supply clamp
+anchors. Field supply reaches the module through its side power jumper
+contacts. Its cabinet footprint uses the 61.8 mm DIN rail datum depth. The
+legacy engineering symbol uses a compatibility mapping for older documents.
+[WAGO datasheet](https://wago.priintcloud.com/datasheets/750-1405/en)
+
 ## Schneider Electric ZBE101
 
 The native schematic contact exposes the manufacturer’s screw terminals 3 and
