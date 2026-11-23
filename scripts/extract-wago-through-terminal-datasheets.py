@@ -177,6 +177,8 @@ PE_GLYPHS = set("""
 72c78696b060 81a33142eb46 8c5a116e2555 a5f10920e719 b78d9cf48406
 bf9fb3a38736 c22a67a67943 d136c50e2e90 d52ffc4128a5 d6ddf321deb5
 d7a95db1bbe9 e4e9fa851356 e639f8e674c9 e678692e73f8 f72f5aeae3b5
+ccbbf344574c 0f73decef6db 635096ea810d 6b2283afde1c 212e35edbe23
+b9fd3a85883c dc8292ad9573 56e92bd66275 2abd46f0e925
 """.split())
 
 
@@ -219,7 +221,7 @@ def read_winsta_article(pdf, candidate, retrieved_at):
             with closing(document[index]) as page, closing(page.get_textpage()) as text:
                 pages.append(text.get_text_range().replace("\r", "").replace("\xa0", " "))
         # These reviewed source rows render a literal minus at the field boundary.
-        if url_code in {"770-263_071-000", "770-274_071-000", "770-274_072-000", "770-282_080-000"}:
+        if url_code in {"770-263_071-000", "770-274_071-000", "770-274_072-000", "770-282_080-000", "890-263_071-000", "890-282_080-000"}:
             pages = [re.sub(r"(?<=[A-Z])\ufffe(?=Potential marking|Mating force)", "-\n", page) for page in pages]
         raw_marking = evidence(pages, r"^Potential marking ([^\n]+)", "potential marking")
         marks = read_winsta_markings(document, raw_marking[1].strip())
@@ -231,9 +233,9 @@ def read_winsta_article(pdf, candidate, retrieved_at):
         or candidate["datasheetUrl"] != f"https://wago.priintcloud.com/datasheets/{url_code}/en"
         or candidate["productUrl"] != f"https://www.wago.com/{url_code}"
         or not all(re.search(rf"Item Number: {re.escape(code)}(?:\s|$)", page) for page in pages)
-        or not re.search(r"WINSTA.{0,4} MIDI", title)
+        or not re.search(r"WINSTA.{0,4} " + ("MINI" if code.startswith("890-") else "MIDI"), title)
     ):
-        raise ValueError("source does not identify this WINSTA MIDI part")
+        raise ValueError("source does not identify this WINSTA part")
     pole_count = re.search(r"\b([2-5])-pole\b", title)
     if not pole_count:
         raise ValueError("source cover lacks a supported pole count")
@@ -292,7 +294,7 @@ def read_winsta_article(pdf, candidate, retrieved_at):
 
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
-    if re.fullmatch(r"770-[0-9]{3}(?:_[0-9]{3}-[0-9]{3})?", code):
+    if re.fullmatch(r"(?:770|890)-[0-9]{3}(?:_[0-9]{3}-[0-9]{3}){0,3}", code):
         return read_winsta_article(pdf, candidate, retrieved_at)
     if re.fullmatch(r"250-[0-9]{3,4}(?:_[0-9]{3}-[0-9]{3})?", code):
         return read_pcb_article(pdf, candidate, retrieved_at)

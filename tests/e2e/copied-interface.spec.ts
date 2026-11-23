@@ -1762,8 +1762,8 @@ test("WINSTA plug and socket expose their marked mating contacts", async ({
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["770-213", 400],
-    ["770-203", 650],
+    ["890-213", 400],
+    ["890-203", 650],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page.locator('[data-insert="wago-' + code + '"]').click();

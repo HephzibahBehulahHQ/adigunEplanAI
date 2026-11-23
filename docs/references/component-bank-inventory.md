@@ -228,3 +228,11 @@ use the existing wire tool. Coding is recorded for engineering review and
 does not itself create a mating connection.
 [Socket 770-203 datasheet](https://wago.priintcloud.com/datasheets/770-203/en) ·
 [Plug 770-213 datasheet](https://wago.priintcloud.com/datasheets/770-213/en)
+
+## WINSTA MINI installation connectors
+
+The catalog includes 76 more plug and socket records from the 890 series.
+Each preserves source pole order, coding, gender, clamp count, and the exact
+body envelope. The model identifies these parts as WINSTA MINI. One candidate
+was held out because its datasheet lacked the series designation used for
+verification.
