@@ -1339,6 +1339,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('734-');
       const midiFemale=part.orderCode.startsWith('232-');
+      const midi=part.orderCode.startsWith('721-');
       const header=part.mount!=='wire';
       const doubleClamp=part.clampsPerPole===2;
       const genderName=part.gender==='socket'?'female':'male';
@@ -1348,7 +1349,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const hasSolderDimensions=solderDimensions.some(value=>value!==undefined);
       const hasDrill=part.drilledHoleDiameterMm!==undefined||part.drilledHolePlusToleranceMm!==undefined;
       const pitchOptions=mini?[3.5,3.81]:[5,5.08,7.5,7.62];
-      const orderCodePattern=mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
+      const orderCodePattern=mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232|721)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
       if(!orderCodePattern.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
         (part.clampsPerPole!==undefined&&!doubleClamp)||
@@ -1395,7 +1396,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         internalConnections.push(group);
       }
-      const model=(mini?'MCS MINI ':'MCS MIDI Classic ')+part.kind;
+      const model=(mini?'MCS MINI ':midi?'MCS MIDI ':'MCS MIDI Classic ')+part.kind;
       const mm=value=>({value,unit:'mm'});
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-mcs-connector',referencePrefix:'X',category:'Electrical · PCB connectors',
