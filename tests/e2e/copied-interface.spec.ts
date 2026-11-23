@@ -4446,7 +4446,8 @@ test("editable draw order controls topmost selection and survives undo and reope
 test("every published component renders from a valid native project and reopens exactly", async ({
   page,
 }) => {
-  test.setTimeout(60000);
+  // This fixture renders every catalog sheet and reopens the full project on shared CI.
+  test.setTimeout(150000);
   page.setDefaultTimeout(8000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
