@@ -1985,8 +1985,8 @@ test("WINSTA cable assemblies expose wireable contacts at both ends", async ({
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["891-8992/006-103", 400],
-    ["891-8992/006-203", 700],
+    ["771-9993/006-101", 400],
+    ["771-9993/006-201", 700],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page
@@ -1994,15 +1994,15 @@ test("WINSTA cable assemblies expose wireable contacts at both ends", async ({
       .click();
     await clickAt(x, 250);
   }
-  await clickAt(492, 232);
-  await clickAt(608, 232);
+  await clickAt(492, 250);
+  await clickAt(608, 250);
   const saved = await saveDrawing(page, "winsta-cable");
   expect(saved.data.objects).toContainEqual(
     expect.objectContaining({
       kind: "wire",
       attachments: {
-        start: expect.objectContaining({ pinId: "plug-1" }),
-        end: expect.objectContaining({ pinId: "socket-1" }),
+        start: expect.objectContaining({ pinId: "plug-pe" }),
+        end: expect.objectContaining({ pinId: "socket-pe" }),
       },
     }),
   );
