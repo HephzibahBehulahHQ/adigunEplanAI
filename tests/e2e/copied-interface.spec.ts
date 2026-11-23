@@ -2143,6 +2143,47 @@ test("WAGO 231 long connectors expose both ends of a 24-pole row", async ({
   }
 });
 
+test("WAGO MCS MICRO headers expose 2.5 mm pitch and wire by terminal", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["733-332", 400],
+    ["733-102", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(472, 232);
+  await clickAt(578, 232);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("2.5 mm");
+  await page.getByText("PCB drill centers (mm)", { exact: true }).click();
+  await expect(
+    page.getByText("X 2.5 · Y 0 · Ø 1.1", { exact: true }),
+  ).toBeVisible();
+  const saved = await saveDrawing(page, "mcs-733");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "contact-1" }),
+        end: expect.objectContaining({ pinId: "contact-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO MCS MINI headers show documented drill centres and wire by terminal", async ({
   page,
 }) => {

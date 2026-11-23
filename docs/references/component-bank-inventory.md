@@ -290,6 +290,15 @@ wireable and retains its documented termination and panel dimensions.
 Ratings are available for 968 of the 970 WAGO 231 entries.
 [24-pole THT header datasheet](https://wago.priintcloud.com/datasheets/231-154_001-000/en)
 
+## WAGO 733 MCS MICRO connectors
+
+The 96 exact order codes use 2.5 mm pitch and include one-conductor
+wire connectors and straight or angled THT and THR headers. Every
+pole has independently wireable mating and termination points. The
+20 THT entries include the documented 1.1 mm drill with +0.1 mm tolerance.
+[MCS MICRO wire connector datasheet](https://wago.priintcloud.com/datasheets/733-102/en) ·
+[MCS MICRO THT header datasheet](https://wago.priintcloud.com/datasheets/733-332/en)
+
 ## WAGO 734 MCS MINI and documented PCB drill rows
 
 The 516 MCS MINI entries include wire connectors and straight and angled
