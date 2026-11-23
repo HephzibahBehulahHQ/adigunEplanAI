@@ -1946,16 +1946,75 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     });
     return issues;
   }
-  function synchronizeWireAttachments(objects) {
-    objects.filter(function(obj) { return obj && obj.kind === 'wire'; }).forEach(function(wire) {
+  function wireContactGeometry(wire,points=wireRoute(wire)) {
+    const excluded=new Set((Array.isArray(wire.continuationEnds)?wire.continuationEnds:[]).concat(Array.isArray(wire.detachedEnds)?wire.detachedEnds:[]));
+    const junctionPoints=wire.attachments
+      ? ['start','end'].filter(end=>!wire.attachments[end]&&!excluded.has(end)).map(end=>end==='start'?points[0]:points.at(-1))
+      : points;
+    const segments=points.slice(1).map((b,index)=>({a:points[index],b}))
+      .filter(({a,b})=>Math.abs(a.x-b.x)>EPSILON||Math.abs(a.y-b.y)>EPSILON);
+    return {junctionPoints,segments};
+  }
+  function wiresMakeContact(a,b) {
+    return a.junctionPoints.some(point=>b.segments.some(segment=>pointOnSegment(point,segment)))||
+      b.junctionPoints.some(point=>a.segments.some(segment=>pointOnSegment(point,segment)));
+  }
+  function avoidNewWireContacts(wires,previous) {
+    const before=new Map(),after=new Map();
+    for(const wire of wires){
+      try {
+        const geometry=wireContactGeometry(wire);
+        after.set(wire,geometry);
+        before.set(wire,previous.has(wire)?wireContactGeometry(previous.get(wire)):geometry);
+      } catch {
+        // Route validation reports malformed geometry separately.
+      }
+    }
+    for(const wire of previous.keys()){
+      if(!before.has(wire)||!after.has(wire)||wire.waypoints||wire.route&&!wire.route.automatic)continue;
+      const peers=wires.filter(other=>other!==wire&&before.has(other)&&after.has(other)&&
+        (!wire.sheetId||!other.sheetId||wire.sheetId===other.sheetId));
+      const original=peers.map(other=>wiresMakeContact(before.get(wire),before.get(other)));
+      const preservesContacts=geometry=>peers.every((other,index)=>original[index]===wiresMakeContact(geometry,after.get(other)));
+      if(preservesContacts(after.get(wire)))continue;
+      const options=[{axis:'y',coordinate:wire.y2},{axis:'x',coordinate:wire.x2}];
+      for(const [index,other] of peers.entries()){
+        if(!original[index])continue;
+        for(const point of after.get(other).junctionPoints){
+          options.push({axis:'x',coordinate:point.x},{axis:'y',coordinate:point.y});
+        }
+      }
+      for(const axis of ['x','y']){
+        const start=wire[axis+'1'],end=wire[axis+'2'];
+        options.push({axis,coordinate:(start+end)/2});
+        for(const offset of [8,16,24,40,64]){
+          options.push({axis,coordinate:Math.min(start,end)-offset},{axis,coordinate:Math.max(start,end)+offset});
+        }
+      }
+      for(const option of options){
+        const geometry=wireContactGeometry({...wire,route:option});
+        if(!preservesContacts(geometry))continue;
+        wire.route={...option,automatic:true};
+        after.set(wire,geometry);
+        break;
+      }
+    }
+  }
+  function synchronizeWireAttachments(objects,selectedIds) {
+    const wires=objects.filter(obj=>obj&&obj.kind==='wire'),previous=new Map();
+    for(const wire of wires){
+      if(selectedIds&&!selectedIds.has(wire.id))continue;
       ['start','end'].forEach(function(end,index) {
-        const pin = endpointPin(objects,wire.attachments && wire.attachments[end],wire.sheetId);
-        if (!pin) return;
-        wire[index?'x2':'x1']=pin.x;wire[index?'y2':'y1']=pin.y;
-        if (!index) {wire.x=pin.x;wire.y=pin.y;}
+        const pin=endpointPin(objects,wire.attachments?.[end],wire.sheetId);
+        const x=index?'x2':'x1',y=index?'y2':'y1';
+        if(!pin||wire[x]===pin.x&&wire[y]===pin.y)return;
+        if(!previous.has(wire))previous.set(wire,{...wire});
+        wire[x]=pin.x;wire[y]=pin.y;
+        if(!index){wire.x=pin.x;wire.y=pin.y;}
       });
-    });
-    return wireAttachmentIssues(objects);
+    }
+    if(previous.size)avoidNewWireContacts(wires,previous);
+    return wireAttachmentIssues(selectedIds?objects.filter(obj=>selectedIds.has(obj.id)):objects);
   }
   function attachWire(wire, start, end) {
     wire.attachments = {};
@@ -2951,14 +3010,12 @@ function createPumpStarterDocumentation(name) {
       const start = { x: object.x1, y: object.y1 };
       let points;try{points=wireRoute(object);}catch(error){errors.push({code:'invalid-route',objectId:object.id,message:error.message});return;}
       const end = { x: object.x2, y: object.y2 };
-      const segments = points.slice(1).map(function(point,i){return [points[i],point];})
-        .filter(function (pair) { return Math.abs(pair[0].x - pair[1].x) > EPSILON || Math.abs(pair[0].y - pair[1].y) > EPSILON; })
-        .map(function (pair) { return { a: pair[0], b: pair[1] }; });
+      const {segments,junctionPoints}=wireContactGeometry(object,points);
       if (!segments.length) {
         errors.push({ code: 'zero-length-wire', objectId: object.id || null, message: 'A wire has zero length.' });
         return;
       }
-      wires.push({ id: object.id || 'wire-' + (index + 1), points: points, start: start, end: end, segments: segments, attachments: object.attachments, continuationEnds: (Array.isArray(object.continuationEnds)?object.continuationEnds:[]).concat(Array.isArray(object.detachedEnds)?object.detachedEnds:[]) });
+      wires.push({ id: object.id || 'wire-' + (index + 1), points: points, start: start, end: end, segments: segments, junctionPoints: junctionPoints, attachments: object.attachments, continuationEnds: (Array.isArray(object.continuationEnds)?object.continuationEnds:[]).concat(Array.isArray(object.detachedEnds)?object.detachedEnds:[]) });
     });
 
     source.forEach(function (object) {
@@ -2990,15 +3047,9 @@ function createPumpStarterDocumentation(name) {
     pins.forEach(function (pin) { pin.node = addNode(); });
 
     // Explicit terminal bindings own connectivity; only free endpoints may form geometric branches.
-    const junctionPoints = function (wire) { return wire.attachments ? ['start','end'].filter(function (end) { return !wire.attachments[end]&&!wire.continuationEnds.includes(end); }).map(function (end) { return wire[end]; }) : wire.points; };
     for (let i = 0; i < wires.length; i += 1) {
       for (let j = i + 1; j < wires.length; j += 1) {
-        const touches = junctionPoints(wires[i]).some(function (point) {
-          return wires[j].segments.some(function (segment) { return pointOnSegment(point, segment); });
-        }) || junctionPoints(wires[j]).some(function (point) {
-          return wires[i].segments.some(function (segment) { return pointOnSegment(point, segment); });
-        });
-        if (touches) join(wires[i].node, wires[j].node);
+        if (wiresMakeContact(wires[i],wires[j])) join(wires[i].node,wires[j].node);
       }
     }
     let connectedPinCount = 0;

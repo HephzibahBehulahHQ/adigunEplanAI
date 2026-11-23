@@ -183,3 +183,11 @@ The extractor verified individual order codes, single-pole clamp-to-pin
 relationships and the IEC/EN 60664-1 rating basis. It held out 46 staggered
 solder-pin variants pending verification of the second row's dimensions.
 [WAGO 250-316 datasheet](https://wago.priintcloud.com/datasheets/250-316/en)
+
+## Wire junctions during component edits
+
+When a terminal moves, the editor checks its changed automatic route against
+the other wires on the sheet. If the route changes a geometric junction, the
+editor tries an alternate lane that preserves the previous contacts. Manual
+bends and authored lanes keep their existing geometry rules. Electrical
+checks remain available for drawings that require manual routing.

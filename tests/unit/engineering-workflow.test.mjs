@@ -104,15 +104,20 @@ test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () =
     plain(engine.analyze(objects).nets.map((net) => net.pins.length)),
     [2, 2],
   );
+  const originalFreeEnds = wires.map(({ x1, y1 }) => ({ x1, y1 }));
   instance.rotation = 90;
   engine.moveInstance(instance, 600, 300);
-  // Rotate the four external stubs with the part to keep their routes separate.
-  for (const [index, wire] of wires.entries()) {
-    const pin = engine.endpointPin(objects, wire.attachments.end);
-    wire.x1 = pin.x + (index % 2 ? -100 : 100);
-    wire.y1 = pin.y;
-  }
   engine.synchronizeWireAttachments(objects);
+  assert.ok(wires.some((wire) => wire.route?.automatic));
+  assert.deepEqual(
+    plain(wires.map(({ x1, y1 }) => ({ x1, y1 }))),
+    originalFreeEnds,
+  );
+  for (const wire of wires) {
+    const pin = engine.endpointPin(objects, wire.attachments.end);
+    assert.equal(wire.x2, pin.x);
+    assert.equal(wire.y2, pin.y);
+  }
   const restored = engine.parseProject(
     engine.serializeProject({
       project: "PCB terminal verification",
