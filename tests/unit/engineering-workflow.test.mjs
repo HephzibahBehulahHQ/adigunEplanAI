@@ -58,6 +58,91 @@ engine.registerWagoDigitalIoBatch(
   ),
 );
 const plain = (value) => JSON.parse(JSON.stringify(value));
+const wagoRelayBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-relay-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoRelayBatch(wagoRelayBatch);
+
+test("WAGO relays carry documented coil and contact states without passive shorts", () => {
+  assert.equal(wagoRelayBatch.length, 84);
+  for (const source of wagoRelayBatch) {
+    const def = engine.component("wago-" + source.orderCode.replace("/", "_"));
+    assert.deepEqual(
+      plain(def.symbol.pins.map((pin) => pin.localNumber).sort()),
+      ["A1", "A2", ...source.contactSets.flat().filter(Boolean)].sort(),
+    );
+    assert.equal(
+      def.electricalFunctions.coil.nominalVoltage.unit,
+      "V " + source.coilSupply,
+    );
+    assert.deepEqual(plain(def.symbol.internalConnections), []);
+    assert.deepEqual(
+      plain(
+        def.electricalFunctions.contacts.map(
+          (contact) => contact.energizedConnections,
+        ),
+      ),
+      source.contactSets.map(([common, , no]) => [
+        ["contact-" + common, "contact-" + no],
+      ]),
+    );
+    assert.deepEqual(
+      plain(
+        def.electricalFunctions.contacts.map(
+          (contact) => contact.deenergizedConnections,
+        ),
+      ),
+      source.contactSets.map(([common, nc]) =>
+        nc ? [["contact-" + common, "contact-" + nc]] : [],
+      ),
+    );
+    const instance = engine.createInstance(def.id, 400, 300, "K1");
+    instance.sheetId = "relay";
+    const wires = engine
+      .worldPins(instance)
+      .map((pin) =>
+        engine.attachWire(
+          {
+            id: pin.id,
+            kind: "wire",
+            sheetId: instance.sheetId,
+            x1: pin.x,
+            y1: pin.y,
+            x2: pin.x + Math.sign(pin.x - instance.x) * 100,
+            y2: pin.y,
+          },
+          { attachment: { instanceId: instance.id, pinId: pin.id } },
+          {},
+        ),
+      );
+    const restored = engine.parseProject(
+      engine.serializeProject({
+        project: "Relay contact verification",
+        sheets: [{ id: instance.sheetId, name: "Relay", number: "A2/000" }],
+        objects: [instance, ...wires],
+      }),
+    );
+    assert.equal(restored.valid, true);
+    assert.deepEqual(
+      plain(
+        engine
+          .analyze(restored.project.objects)
+          .nets.map((net) => net.pins.length),
+      ),
+      Array(def.symbol.pins.length).fill(1),
+    );
+    assert.equal(
+      engine.billOfMaterials(restored.project.objects).rows[0].partNumber,
+      source.orderCode,
+    );
+  }
+});
 
 test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
   assert.equal(cableBatch.length, 1077);

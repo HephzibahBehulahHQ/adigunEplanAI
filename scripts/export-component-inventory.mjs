@@ -59,6 +59,17 @@ engine.registerWagoWinstaCableBatch(
     ),
   ),
 );
+engine.registerWagoRelayBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-relay-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoMcsBatch(
   ["231", "232", "721", "734"].flatMap((series) =>
     JSON.parse(

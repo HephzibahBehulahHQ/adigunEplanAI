@@ -1333,6 +1333,76 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
 
+  function registerWagoRelayBatch(rows){
+    const batch=new Map();
+    const diagrams=new Set(['11:12:14','11::14','13::14','11:12:14|21:22:24']);
+    for(const part of rows){
+      const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
+      const fixedVoltage=part.coilVoltage!==undefined;
+      const railMounted=part.mounting==='DIN-35 rail';
+      if(!/^(?:788|789|857)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3})?$/.test(part.orderCode)||
+        part.kind!==(railMounted?'Relay module':'Basic relay')||(!railMounted&&part.mounting!=='Pluggable module')||
+        !['AC','DC','AC/DC'].includes(part.coilSupply)||
+        (fixedVoltage?(!finite(part.coilVoltage)||part.coilVoltage<=0||part.coilVoltageMin!==undefined||part.coilVoltageMax!==undefined):
+          (![part.coilVoltageMin,part.coilVoltageMax].every(value=>finite(value)&&value>0)||part.coilVoltageMin>=part.coilVoltageMax))||
+        !Array.isArray(part.contactSets)||!part.contactSets.every(group=>Array.isArray(group)&&group.length===3)||
+        !diagrams.has(part.contactSets.map(group=>group.join(':')).join('|'))||
+        ![part.widthMm,part.heightMm,part.depthMm,part.limitingCurrent].every(value=>finite(value)&&value>0)||
+        ![2,3].includes(part.dimensionPage)||!/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||
+        !/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        ![part.datasheetSha256,part.circuitDiagramSha256].every(value=>/^[a-f0-9]{64}$/.test(value))||
+        batch.has(id)||component(id))throw new Error('Invalid or duplicate WAGO relay row: '+id);
+      const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
+      const coilVoltage=fixedVoltage?{value:part.coilVoltage,unit:'V '+part.coilSupply}:
+        {minimum:part.coilVoltageMin,maximum:part.coilVoltageMax,unit:'V '+part.coilSupply};
+      const contactType=railMounted?'Module terminal':'Relay socket pin';
+      const coilPins=['coil-a1','coil-a2'];
+      const pins=coilPins.map((pinId,index)=>({id:pinId,localNumber:'A'+(index+1),name:'Coil A'+(index+1),
+        x:-84,y:index?24:-24,electricalType:'passive',connectionType:contactType}));
+      const height=part.contactSets.length===2?144:88;
+      const artwork=[{kind:'rect',x:-62,y:-13,width:24,height:26}];
+      const line=(x1,y1,x2,y2)=>artwork.push({kind:'line',from:{x:x1,y:y1},to:{x:x2,y:y2}});
+      for(const pin of pins){line(pin.x,pin.y,-50,pin.y);line(-50,pin.y,-50,Math.sign(pin.y)*13);}
+      const contacts=part.contactSets.map(([common,nc,no],index)=>{
+        const y=(index-(part.contactSets.length-1)/2)*64;
+        const contactPin=(number,name,offset)=>({id:'contact-'+number,localNumber:number,name,x:84,y:y+offset,
+          electricalType:'passive',connectionType:contactType});
+        const commonPin=contactPin(common,'Contact common',0);
+        const openPin=contactPin(no,'Normally open',20);
+        pins.push(commonPin,openPin);
+        line(4,y,84,y);
+        line(31,openPin.y,84,openPin.y);
+        const closedPin=nc?contactPin(nc,'Normally closed',-20):null;
+        if(closedPin){
+          pins.push(closedPin);
+          line(31,closedPin.y,84,closedPin.y);
+        }
+        line(4,y,closedPin?31:25,closedPin?closedPin.y:y+12);
+        return {common:commonPin.id,normallyClosed:closedPin?.id??null,normallyOpen:openPin.id,
+          deenergizedConnections:closedPin?[[commonPin.id,closedPin.id]]:[],
+          energizedConnections:[[commonPin.id,openPin.id]]};
+      });
+      const model='WAGO '+part.kind+' '+part.orderCode;
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model,name:part.kind,family:'wago-interface-relay',referencePrefix:'K',category:'Electrical · Interface relays',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:168,height,pins,internalConnections:[],artwork,
+          numberingNote:'Terminal designations follow the exact circuit diagram. Contact states are documented in the model without adding permanent links.'},
+        electricalFunctions:{coil:{pins:coilPins,nominalVoltage:coilVoltage},contacts,
+          simulationNote:'The schematic shows the de-energized relay. Static connectivity follows drawn wires. Coil energization and switching are not simulated.'},
+        specifications:{nominalCoilVoltage:coilVoltage,contactCount:{value:contacts.length},
+          contactForm:{value:contacts[0].normallyClosed?'Changeover':'Normally open'},
+          limitingContinuousCurrent:{value:part.limitingCurrent,unit:'A'},mounting:{value:part.mounting}},
+        panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:datasheet,
+          edition:part.revision,page:part.dimensionPage,note:railMounted?'Depth above DIN rail. Apply installation clearances separately.':
+            'Relay body only. Model the matching socket separately when laying out the assembly.'},
+        instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
+          revisionNote:'Circuit diagram, nominal coil supply, contact rating and mounting dimensions.',retrievedAt:part.retrievedAt,
+          sha256:part.datasheetSha256,circuitDiagramSha256:part.circuitDiagramSha256}]}));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function registerWagoMcsBatch(rows){
     const batch=new Map();
     for(const part of rows){
@@ -4066,6 +4136,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoWinstaBatch,
     registerWagoWinstaCableBatch,
     registerWagoMcsBatch,
+    registerWagoRelayBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,
