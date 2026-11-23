@@ -1348,11 +1348,20 @@ test("library views fit the dock and category, type and project filters show rea
     .getByRole("button", { name: "Symbol library", exact: true })
     .click();
   const views = page.getByRole("group", { name: "Component library views" });
-  const width = await views.evaluate((el) => ({
-    visible: el.clientWidth,
-    content: el.scrollWidth,
-  }));
-  expect(width.content).toBeLessThanOrEqual(width.visible);
+  for (const windowWidth of [800, 1600]) {
+    await page.setViewportSize({ width: windowWidth, height: 900 });
+    const overflow = await page.locator("#symbolsPanel").evaluate((panel) => {
+      const edge = panel.getBoundingClientRect().right;
+      return [
+        panel.scrollWidth > panel.clientWidth,
+        ...Array.from(
+          panel.querySelectorAll("#symbolScopes button,#symbolFilters select"),
+          (control) => control.getBoundingClientRect().right > edge + 1,
+        ),
+      ];
+    });
+    expect(overflow.every((value) => !value)).toBe(true);
+  }
   const list = page.locator("#symbolList");
   await views.getByRole("button", { name: "Common parts" }).click();
   const commonCount = await list.locator("[data-insert]").count();
@@ -1366,6 +1375,9 @@ test("library views fit the dock and category, type and project filters show rea
   const part = list.locator('[data-insert="wago-750-8217-625-000"]');
   await expect(part).toHaveCount(1);
   await expect(part).toHaveAttribute("title", new RegExp("750-8217/625-000"));
+  await expect(part.locator("span").last()).toHaveText(
+    "PLC · 750-8217/625-000",
+  );
   await part.click();
   const target = await sheetPoint(page, 495, 320);
   await page.mouse.click(target.x, target.y);
