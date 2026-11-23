@@ -1261,16 +1261,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const profiles=[
       {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^H05VV-F 2x1\.5$/},
       {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1\.5$/},
-      {code:/^771-9993\/0[01][67]-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],
+      {code:/^771-9993\/[01][01][67]-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],
         cable:/^(?:H05VV-F|H05Z1Z1-F) 3G(?:1\.5|2\.5)$/},
-      {code:/^771-9995\/0[01][67]-[0-9]{3}$/,coding:'A',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
-      {code:/^771-9985\/0[01][67]-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
+      {code:/^771-9993\/106-10[57]$/,coding:'B',markings:['1','2','3'],cable:/^H05VV-F 3x1\.5$/},
+      {code:/^771-9995\/[01][01][67]-[0-9]{3}$/,coding:'A',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
+      {code:/^771-9985\/[01][01][67]-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
     ];
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
+      const freeEnd=/\/1/.test(part.orderCode);
       const profile=profiles.find(candidate=>candidate.coding===part.coding&&candidate.code.test(part.orderCode));
       if(!profile||part.series!==(mini?'MINI':'MIDI')||!profile.cable.test(part.cableType)||
+        (freeEnd?(part.endType!=='free'||part.conductorPreparation!=='ultrasonically tip-bonded'):
+          (part.endType!==undefined||part.conductorPreparation!==undefined))||
         !Array.isArray(part.markings)||part.markings.length!==profile.markings.length||
         !profile.markings.every((mark,index)=>mark===part.markings[index])||
         ![part.lengthM,part.connectorWidthMm,part.connectorHeightMm].every(value=>finite(value)&&value>0)||
@@ -1280,30 +1284,35 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       }
       const poleCount=profile.markings.length;
       const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
-      const model='WINSTA '+part.series+' socket–plug cable · '+part.lengthM+' m';
+      const termination=freeEnd?'socket–free end':'socket–plug';
+      const model='WINSTA '+part.series+' '+termination+' cable · '+part.lengthM+' m';
       const pins=[],internalConnections=[];
       const bodyHeight=36*poleCount-10;
-      const artwork=[{kind:'rect',x:-72,y:-bodyHeight/2,width:36,height:bodyHeight},{kind:'rect',x:36,y:-bodyHeight/2,width:36,height:bodyHeight}];
+      const artwork=[{kind:'rect',x:-72,y:-bodyHeight/2,width:36,height:bodyHeight}];
+      if(!freeEnd)artwork.push({kind:'rect',x:36,y:-bodyHeight/2,width:36,height:bodyHeight});
       for(const [index,mark] of part.markings.entries()){
         const y=(index-(poleCount-1)/2)*36;
         const socket={id:'socket-'+mark.toLowerCase(),name:'Socket '+mark,localNumber:'Socket '+mark,
           x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Female mating contact'};
-        const plug={id:'plug-'+mark.toLowerCase(),name:'Plug '+mark,localNumber:'Plug '+mark,
-          x:92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Male mating contact'};
-        pins.push(socket,plug);
-        internalConnections.push([socket.id,plug.id]);
-        artwork.push({kind:'line',from:{x:socket.x,y},to:{x:plug.x,y}});
+        const endLabel=(freeEnd?'Lead ':'Plug ')+mark;
+        const end={id:(freeEnd?'lead-':'plug-')+mark.toLowerCase(),name:endLabel,localNumber:endLabel,
+          x:92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':freeEnd?'Free conductor end':'Male mating contact'};
+        pins.push(socket,end);
+        internalConnections.push([socket.id,end.id]);
+        artwork.push({kind:'line',from:{x:socket.x,y},to:{x:end.x,y}});
       }
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-winsta-cable',referencePrefix:'W',category:'Electrical · Cable assemblies',
         symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:184,height:bodyHeight+8,pins,internalConnections,artwork,
-          numberingNote:'Each potential is carried between the same marked socket and plug contact. Schematic spacing is independent of assembly length.'},
+          numberingNote:freeEnd?'Lead labels refer to the matching socket potentials. Schematic spacing is independent of assembly length.':
+            'Each potential is carried between the same marked socket and plug contact. Schematic spacing is independent of assembly length.'},
         specifications:{poleCount:{value:poleCount},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
           cableType:{value:part.cableType},connectorWidth:{value:part.connectorWidthMm,unit:'mm'},
-          connectorHeight:{value:part.connectorHeightMm,unit:'mm'}},
+          connectorHeight:{value:part.connectorHeightMm,unit:'mm'},
+          ...(freeEnd?{conductorPreparation:{value:part.conductorPreparation}}:{})},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
-        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–2',url:datasheet,documentRevision:part.revision,
-          revisionNote:'Socket and plug, shared potential markings, coding, cable type and total length.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–'+(freeEnd?'3':'2'),url:datasheet,documentRevision:part.revision,
+          revisionNote:'Cable termination, documented potentials, coding, cable type and total length.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }

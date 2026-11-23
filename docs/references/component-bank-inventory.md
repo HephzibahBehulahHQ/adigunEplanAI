@@ -290,3 +290,9 @@ DA+. Each marked conductor is continuous between the two ends and is
 isolated from the other four.
 [Coding A datasheet](https://wago.priintcloud.com/datasheets/771-9995_006-101/en) ·
 [Coding I datasheet](https://wago.priintcloud.com/datasheets/771-9985_006-101/en)
+
+The 161 socket-to-free-end assemblies expose each prepared conductor as
+a separate wireable lead. Each lead label identifies its matching socket
+potential. Properties retains the source-listed ultrasonic tip bonding,
+and the BOM reports the assembly’s exact order code and nominal length.
+[Open-ended MIDI datasheet](https://wago.priintcloud.com/datasheets/771-9985_106-101/en)
