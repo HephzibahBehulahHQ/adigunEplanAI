@@ -1975,7 +1975,7 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   );
 });
 
-test("WINSTA coding L assemblies keep primed and unprimed contacts separate", async ({
+test("WINSTA four-pole assemblies expose exact ratings and separate switched conductors", async ({
   page,
 }) => {
   await page.goto("/");
@@ -1988,8 +1988,8 @@ test("WINSTA coding L assemblies keep primed and unprimed contacts separate", as
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["771-9385/027-703", 400],
-    ["771-9385/027-903", 700],
+    ["771-9294/016-101", 400],
+    ["771-9294/016-201", 700],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page
@@ -1997,12 +1997,17 @@ test("WINSTA coding L assemblies keep primed and unprimed contacts separate", as
       .click();
     await clickAt(x, 250);
   }
-  for (const y of [178, 214, 250, 286, 322]) {
+  for (const y of [196, 232, 268, 304]) {
     await clickAt(492, y);
     await clickAt(608, y);
   }
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("400 V");
+  await expect(page.locator("#inspectorContent")).toContainText("16 A");
+  await expect(page.locator("#inspectorContent")).toContainText("6 kV");
   const saved = await saveDrawing(page, "winsta-cable");
-  for (const terminal of ["n", "pe", "l", "n-prime", "l-prime"]) {
+  for (const terminal of ["n", "pe", "2-l", "1-l-prime"]) {
     expect(saved.data.objects).toContainEqual(
       expect.objectContaining({
         kind: "wire",

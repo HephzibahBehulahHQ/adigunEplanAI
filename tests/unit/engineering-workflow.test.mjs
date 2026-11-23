@@ -60,7 +60,7 @@ engine.registerWagoDigitalIoBatch(
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
-  assert.equal(cableBatch.length, 877);
+  assert.equal(cableBatch.length, 1077);
   for (const row of cableBatch) {
     const def = engine.component("wago-" + row.orderCode.replace("/", "_"));
     const freeEnd = row.endType === "free";
@@ -68,6 +68,16 @@ test("WINSTA cables carry isolated potentials across both ends after move and re
     assert.equal(def.specifications.assemblyLength.value, row.lengthM);
     assert.equal(def.specifications.coding.value, row.coding);
     assert.equal(def.specifications.cableType.value, row.cableType);
+    assert.equal(def.specifications.nominalVoltage.value, row.nominalVoltage);
+    assert.equal(def.specifications.ratedCurrent.value, row.ratedCurrent);
+    assert.equal(
+      def.specifications.ratedImpulseWithstandVoltage.value,
+      row.impulseVoltageKv,
+    );
+    assert.equal(
+      def.specifications.connectorHeight?.value,
+      row.connectorHeightMm,
+    );
     assert.equal(def.specifications.poleCount.value, row.markings.length);
     assert.equal(
       def.symbol.pins.filter((pin) => pin.connectionType === "protective-earth")
@@ -77,7 +87,10 @@ test("WINSTA cables carry isolated potentials across both ends after move and re
     assert.deepEqual(
       plain(def.symbol.internalConnections),
       row.markings.map((mark) => {
-        const pinMark = mark.toLowerCase().replace("'", "-prime");
+        const pinMark = mark
+          .toLowerCase()
+          .replace("/", "-")
+          .replace("'", "-prime");
         return ["socket-" + pinMark, endPrefix + pinMark];
       }),
     );

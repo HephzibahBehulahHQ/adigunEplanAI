@@ -1262,16 +1262,21 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const profiles=[
       {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^(?:H05VV-F|H05Z1Z1-F) 2x(?:1(?:\.5)?|2\.5)$/},
       {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1(?:\.5)?$/},
-      {code:/^771-(?:9993\/[01][01][67]|9393\/[01][16][67])-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],cable:threeCoreCable},
+      {code:/^771-8292\/(?:01[56]|115)-[0-9]{3}$/,coding:'B',markings:['1','2'],cable:/^H05Z1Z1-F 2x1(?:\.5)?$/},
+      {code:/^771-(?:9993\/[01][01][67]|9393\/[01][16][67]|9293\/[01]1[67])-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],cable:threeCoreCable},
+      {code:/^771-9293\/01[56]-[0-9]{3}$/,coding:'B',markings:['1','2','3'],cable:/^H05Z1Z1-F 3x1(?:\.5)?$/},
       {code:/^771-9973\/[01][01][67]-[0-9]{3}$/,coding:'P',markings:['L','PE','N'],cable:threeCoreCable},
       {code:/^771-9973\/(?:006-305|016-[57]05)$/,coding:'S',markings:['1','2','L'],cable:/^(?:H05VV-F|H05Z1Z1-F) 3x1\.5$/},
       {code:/^771-9993\/106-10[57]$/,coding:'B',markings:['1','2','3'],cable:/^H05VV-F 3x1\.5$/},
       {code:/^771-(?:9995\/[01][01][67]|9395\/[01][16][67])-[0-9]{3}$/,coding:'A',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
       {code:/^771-9975\/[01][01][67]-[0-9]{3}$/,coding:'P',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
-      {code:/^771-(?:9985\/[01][01][67]|9385\/[01][16][67])-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
+      {code:/^771-9294\/016-[0-9]{3}$/,coding:'A',markings:['N','PE','2/L',"1/L'"],cable:/^H05Z1Z1-F 4G1\.5$/},
+      {code:/^771-9294\/[01]15-[0-9]{3}$/,coding:'B',markings:['1','2','3','4'],cable:/^H05Z1Z1-F 4x1$/},
+      {code:/^771-(?:9985\/[01][01][67]|9385\/[01][16][67]|9285\/[01]1[67])-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
       {code:/^771-9385\/027-[79]03$/,coding:'L',markings:['N','PE','L',"N'","L'"],cable:fiveCoreCable},
-      {code:/^771-9395\/166-[0-9]{3}$/,coding:'B',markings:['1','2','3','4','5'],cable:/^Control line 5x1\.5$/},
+      {code:/^771-9395\/[01]66-[0-9]{3}$/,coding:'B',markings:['1','2','3','4','5'],cable:/^Control line 5x1\.5$/},
     ];
+    const ratingBasis='IEC/EN 60664-1 · overvoltage category III · pollution degree 3';
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
@@ -1282,7 +1287,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           (part.endType!==undefined||part.conductorPreparation!==undefined))||
         !Array.isArray(part.markings)||part.markings.length!==profile.markings.length||
         !profile.markings.every((mark,index)=>mark===part.markings[index])||
-        ![part.lengthM,part.connectorWidthMm,part.connectorHeightMm].every(value=>finite(value)&&value>0)||
+        ![part.lengthM,part.connectorWidthMm,part.nominalVoltage,part.ratedCurrent,part.impulseVoltageKv].every(value=>finite(value)&&value>0)||
+        (part.connectorHeightMm!==undefined&&(!finite(part.connectorHeightMm)||part.connectorHeightMm<=0))||
+        ![2,3].includes(part.ratingPage)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
         throw new Error('Invalid or duplicate WAGO WINSTA cable row: '+id);
@@ -1297,7 +1304,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       if(!freeEnd)artwork.push({kind:'rect',x:36,y:-bodyHeight/2,width:36,height:bodyHeight});
       for(const [index,mark] of part.markings.entries()){
         const y=(index-(poleCount-1)/2)*36;
-        const pinMark=mark.toLowerCase().replace("'",'-prime');
+        const pinMark=mark.toLowerCase().replace('/','-').replace("'",'-prime');
         const socket={id:'socket-'+pinMark,name:'Socket '+mark,localNumber:'Socket '+mark,
           x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Female mating contact'};
         const endLabel=(freeEnd?'Lead ':'Plug ')+mark;
@@ -1314,11 +1321,14 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             'Each potential is carried between the same marked socket and plug contact. Schematic spacing is independent of assembly length.'},
         specifications:{poleCount:{value:poleCount},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
           cableType:{value:part.cableType},connectorWidth:{value:part.connectorWidthMm,unit:'mm'},
-          connectorHeight:{value:part.connectorHeightMm,unit:'mm'},
+          ...(part.connectorHeightMm===undefined?{}:{connectorHeight:{value:part.connectorHeightMm,unit:'mm'}}),
+          nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:ratingBasis},
+          ratedCurrent:{value:part.ratedCurrent,unit:'A',basis:ratingBasis},
+          ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:ratingBasis},
           ...(freeEnd?{conductorPreparation:{value:part.conductorPreparation}}:{})},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
-        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–'+(freeEnd?'3':'2'),url:datasheet,documentRevision:part.revision,
-          revisionNote:'Cable termination, documented potentials, coding, cable type and total length.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
+          revisionNote:'Cable termination, potential markings, cable type and length. IEC/EN ratings on page '+part.ratingPage+'.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
