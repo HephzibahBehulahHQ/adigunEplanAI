@@ -4202,6 +4202,10 @@ test("every published component renders from a valid native project and reopens 
     });
   });
   const expected = JSON.parse(fixture);
+  const partsBySheet = Map.groupBy(
+    expected.objects as { id: string; sheetId: string; ref: string }[],
+    (part) => part.sheetId,
+  );
   await page.locator("#openFile").setInputFiles({
     name: "catalogue.adigun.json",
     mimeType: "application/json",
@@ -4209,20 +4213,19 @@ test("every published component renders from a valid native project and reopens 
   });
   for (const sheet of expected.sheets) {
     await page.locator('#projectTree [data-sheet="' + sheet.id + '"]').click();
-    const parts = expected.objects.filter(
-      (object: { sheetId: string }) => object.sheetId === sheet.id,
-    );
-    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
-      parts.length,
+    const parts = partsBySheet.get(sheet.id) ?? [];
+    const drawings = page.locator("#userDrawings .drawing-object");
+    await expect(drawings).toHaveCount(parts.length);
+    const rendered = new Map(
+      await drawings.evaluateAll((nodes) =>
+        nodes.map((node) => [
+          node.getAttribute("data-object"),
+          node.querySelector("title")?.textContent,
+        ]),
+      ),
     );
     for (const part of parts) {
-      await expect(
-        page
-          .locator(
-            '#userDrawings .drawing-object[data-object="' + part.id + '"]',
-          )
-          .locator("title"),
-      ).toContainText(part.ref);
+      expect(rendered.get(part.id)).toContain(part.ref);
     }
   }
   const saved = await saveDrawing(page, "all-catalogue-parts");
