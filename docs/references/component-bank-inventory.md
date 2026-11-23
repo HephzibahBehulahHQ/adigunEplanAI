@@ -284,6 +284,12 @@ whose orientation was checked against the original datasheets. Verified
 IEC/EN ratings are now available for 673 of the 675 WAGO 231 entries.
 [Angled THT header datasheet](https://wago.priintcloud.com/datasheets/231-432_040-000/en)
 
+The 295 long-row variants cover 13–24 poles across wire connectors and
+straight and angled THT headers. Each position remains independently
+wireable and retains its documented termination and panel dimensions.
+Ratings are available for 968 of the 970 WAGO 231 entries.
+[24-pole THT header datasheet](https://wago.priintcloud.com/datasheets/231-154_001-000/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug

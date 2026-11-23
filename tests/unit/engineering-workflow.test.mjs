@@ -161,9 +161,9 @@ const mcsBatch = JSON.parse(
 engine.registerWagoMcsBatch(mcsBatch);
 
 test("WAGO 231 connectors retain exact order codes and isolated pole groups", () => {
-  assert.equal(mcsBatch.length, 675);
-  assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 673);
-  assert.ok(mcsBatch.some((source) => source.poles === 12));
+  assert.equal(mcsBatch.length, 970);
+  assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 968);
+  assert.equal(Math.max(...mcsBatch.map((source) => source.poles)), 24);
   assert.ok(
     mcsBatch
       .filter((source) => source.mount !== "wire")

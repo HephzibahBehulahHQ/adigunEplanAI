@@ -1351,7 +1351,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
         (part.dimensionPage!==undefined&&![2,3].includes(part.dimensionPage))||
         (!header&&part.kind!==(doubleClamp?'2':'1')+'-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
-        !Number.isInteger(part.poles)||part.poles<2||part.poles>12||![5,5.08,7.5,7.62].includes(part.pitchMm)||
+        !Number.isInteger(part.poles)||part.poles<2||part.poles>24||![5,5.08,7.5,7.62].includes(part.pitchMm)||
         ![part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
