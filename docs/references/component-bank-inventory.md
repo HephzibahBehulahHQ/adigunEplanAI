@@ -290,6 +290,16 @@ wireable and retains its documented termination and panel dimensions.
 Ratings are available for 968 of the 970 WAGO 231 entries.
 [24-pole THT header datasheet](https://wago.priintcloud.com/datasheets/231-154_001-000/en)
 
+## WAGO 831 MCS MAXI connectors
+
+The 237 exact order codes cover 181 Push-in CAGE CLAMP wire connectors
+and 56 THT headers. Each header exposes three distinct solder anchors
+per mating contact, with a separate net for each pole. The 40 headers
+with fully dimensioned drill patterns show the documented three-row
+hole centres, 1.7 mm diameter and +0.1 mm tolerance.
+[MCS MAXI wire connector datasheet](https://wago.priintcloud.com/datasheets/831-1102/en) ·
+[MCS MAXI three-row header datasheet](https://wago.priintcloud.com/datasheets/831-3642/en)
+
 ## WAGO 733 MCS MICRO connectors
 
 The 96 exact order codes use 2.5 mm pitch and include one-conductor

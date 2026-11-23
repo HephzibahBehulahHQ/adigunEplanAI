@@ -1522,6 +1522,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const micro=part.orderCode.startsWith('733-');
       const mini=part.orderCode.startsWith('734-');
+      const maxi=part.orderCode.startsWith('831-');
       const midiFemale=part.orderCode.startsWith('232-');
       const midi=part.orderCode.startsWith('721-');
       const header=part.mount!=='wire';
@@ -1532,19 +1533,27 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const solderDimensions=[part.solderPinLengthMm,part.solderPinWidthMm,part.solderPinDepthMm];
       const hasSolderDimensions=solderDimensions.some(value=>value!==undefined);
       const hasDrill=part.drilledHoleDiameterMm!==undefined||part.drilledHolePlusToleranceMm!==undefined;
-      const pitchOptions=micro?[2.5]:mini?[3.5,3.81]:[5,5.08,7.5,7.62];
-      const orderCodePattern=mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232|721|733)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
+      const tripleSolder=maxi&&header;
+      const pcbRows=part.pcbRowsMm;
+      const pitchOptions=maxi?[7.62]:micro?[2.5]:mini?[3.5,3.81]:[5,5.08,7.5,7.62];
+      const orderCodePattern=maxi?/^831-\d{4}(?:\/\d{3}-\d{3,4}){0,2}$/:
+        mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232|721|733)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
       if(!orderCodePattern.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
         (part.clampsPerPole!==undefined&&!doubleClamp)||
         (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
         (midiFemale&&part.gender!=='socket')||
-        (header&&((!mini&&!midiFemale&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
+        (header&&((!maxi&&!mini&&!midiFemale&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
           part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' '+genderName+' header'))||
+        (tripleSolder&&(part.mount!=='THT'||part.solderPinsPerPole!==3||!hasSolderDimensions||
+          ![1,2].includes(part.dimensionDiagramPage)||!/^[a-f0-9]{64}$/.test(part.dimensionDiagramSha256)))||
+        (maxi&&!header&&part.connectionTechnology!=='Push-in CAGE CLAMP')||
+        (tripleSolder&&hasDrill&&(!Array.isArray(pcbRows)||!['0|5.08|10.16','0|5.1|10.2'].includes(pcbRows.join('|'))))||
+        (pcbRows!==undefined&&(!tripleSolder||!hasDrill))||
         (part.headerOrientation!==undefined&&(!header||!['straight','angled'].includes(part.headerOrientation)))||
         (part.connectorOrientation!==undefined&&(header||!['straight','angled'].includes(part.connectorOrientation)))||
         (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
-        (part.dimensionPage!==undefined&&![2,3].includes(part.dimensionPage))||
+        (part.dimensionPage!==undefined&&!(maxi?[1,2,3]:[2,3]).includes(part.dimensionPage))||
         (hasSolderDimensions&&(!header||!solderDimensions.every(value=>finite(value)&&value>0)))||
         (hasDrill&&(!hasSolderDimensions||part.mount!=='THT'||!finite(part.drilledHoleDiameterMm)||
           part.drilledHoleDiameterMm<=0||!finite(part.drilledHolePlusToleranceMm)||part.drilledHolePlusToleranceMm<0))||
@@ -1558,7 +1567,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
       const width=144,height=part.poles*36+12;
       const matingSide=part.gender==='plug'?1:-1;
-      const backType=header?part.mount+' solder pin':doubleClamp?part.connectionTechnology:'CAGE CLAMP';
+      const backType=header?part.mount+' solder pin':part.connectionTechnology??'CAGE CLAMP';
+      const backOffsets=tripleSolder?[-10,0,10]:doubleClamp?[-9,9]:[0];
       const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-43,y:-height/2,width:86,height}];
       for(let number=1;number<=part.poles;number++){
         const y=(number-(part.poles+1)/2)*36;
@@ -1567,8 +1577,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         const group=[face.id],branch={x:-matingSide*29,y};
         pins.push(face);
         artwork.push({kind:'line',from:branch,to:{x:face.x,y}});
-        for(const offset of doubleClamp?[-9,9]:[0]){
-          const suffix=doubleClamp?String(offset<0?1:2):'';
+        for(const [index,offset] of backOffsets.entries()){
+          const suffix=backOffsets.length>1?String(index+1):'';
           const back={id:(header?'solder-':'clamp-')+number+(suffix?'-'+suffix:''),
             name:backType+' '+number+(suffix?'.'+suffix:''),localNumber:number+(header?' PCB':' wire')+(suffix?' '+suffix:''),
             x:-matingSide*72,y:y+offset,electricalType:'passive',connectionType:backType};
@@ -1580,14 +1590,18 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         internalConnections.push(group);
       }
-      const model=(micro?'MCS MICRO ':mini?'MCS MINI ':midi?'MCS MIDI ':'MCS MIDI Classic ')+part.kind;
+      const model=(maxi?'MCS MAXI ':micro?'MCS MICRO ':mini?'MCS MINI ':midi?'MCS MIDI ':'MCS MIDI Classic ')+part.kind;
       const mm=value=>({value,unit:'mm'});
+      const drillRows=pcbRows??[0];
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-mcs-connector',referencePrefix:'X',category:'Electrical · PCB connectors',
         symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
-          numberingNote:doubleClamp?'Model-local numbers follow the contact row. The two clamps for each mating contact share one isolated potential.':'Model-local numbers follow the contact row. Each mating contact connects to its own wire clamp or PCB solder pin.'},
+          numberingNote:tripleSolder?'Model-local numbers follow the contact row. Each mating contact shares an isolated potential with its three solder pins.':
+            doubleClamp?'Model-local numbers follow the contact row. The two clamps for each mating contact share one isolated potential.':
+            'Model-local numbers follow the contact row. Each mating contact connects to its own wire clamp or PCB solder pin.'},
         specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
           ...(doubleClamp?{clampsPerPole:{value:2}}:{}),
+          ...(tripleSolder?{solderPinsPerPole:{value:3}}:{}),
           ...(part.headerOrientation?{headerOrientation:{value:part.headerOrientation}}:{}),
           ...(part.connectorOrientation?{connectorOrientation:{value:part.connectorOrientation}}:{}),
           ...(hasSolderDimensions?{solderPinLength:mm(part.solderPinLengthMm),solderPinWidth:mm(part.solderPinWidthMm),
@@ -1599,17 +1613,21 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:wagoIecRatingBasis},
           }:{}),
           connectionTechnology:{value:backType},connectorGender:{value:part.gender},overallHeight:{value:part.heightMm,unit:'mm'}},
-        ...(hasDrill?{pcbFootprint:{datum:'Center of first solder pin, +X along the in-line contact row',
-          pads:Array.from({length:part.poles},(_,index)=>({pinId:'solder-'+(index+1),xMm:index*part.pitchMm,yMm:0,
-            drilledHoleDiameterMm:part.drilledHoleDiameterMm,drilledHolePlusToleranceMm:part.drilledHolePlusToleranceMm}))}}:{}),
+        ...(hasDrill?{pcbFootprint:{datum:tripleSolder?'Center of first solder pin, +X along pole order and +Y across solder rows':
+          'Center of first solder pin, +X along the in-line contact row',
+          pads:Array.from({length:part.poles},(_,index)=>drillRows.map((yMm,row)=>({
+            pinId:'solder-'+(index+1)+(tripleSolder?'-'+(row+1):''),xMm:index*part.pitchMm,yMm,
+            drilledHoleDiameterMm:part.drilledHoleDiameterMm,drilledHolePlusToleranceMm:part.drilledHolePlusToleranceMm}))).flat()}}:{}),
         panelFootprint:{widthMm:part.widthMm,heightMm:header?part.depthMm:part.heightMm,
           depthMm:header?part.heightAboveBoardMm:part.depthMm,source:datasheet,edition:part.revision,page:part.dimensionPage??2,
           note:header?'Header projected on the PCB plane. Width and depth follow the datasheet footprint envelope.':'Unmated wire connector body. Allow additional wire bend and mating clearance.'},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
         sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
           revisionNote:'Manufacturer contact row, isolated potentials, termination, pitch and body dimensions.'+
-            (hasSolderDimensions?' In-line solder pin dimensions.':'')+(hasDrill?' Specified PCB drill diameter and tolerance.':'')+
-            (rated?' IEC/EN ratings on page '+part.ratingPage+'.':''),retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
+            (tripleSolder?' Three solder pins per potential in the drawing on page '+part.dimensionDiagramPage+'.':
+              hasSolderDimensions?' In-line solder pin dimensions.':'')+(hasDrill?' Specified PCB drill diameter and tolerance.':'')+
+            (rated?' IEC/EN ratings on page '+part.ratingPage+'.':''),retrievedAt:part.retrievedAt,sha256:part.datasheetSha256,
+          ...(tripleSolder?{dimensionDiagramSha256:part.dimensionDiagramSha256}:{})}]}));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
