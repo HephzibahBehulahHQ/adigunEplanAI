@@ -158,10 +158,20 @@ const mcsBatch = JSON.parse(
     "utf8",
   ),
 );
-engine.registerWagoMcsBatch(mcsBatch);
+const mcsMiniBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-734-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoMcsBatch([...mcsBatch, ...mcsMiniBatch]);
 
-test("WAGO 231 connectors retain exact order codes and isolated pole groups", () => {
+test("WAGO MCS connectors retain exact order codes, isolated poles and verified drill data", () => {
   assert.equal(mcsBatch.length, 970);
+  assert.equal(mcsMiniBatch.length, 516);
   assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 968);
   assert.equal(Math.max(...mcsBatch.map((source) => source.poles)), 24);
   assert.ok(
@@ -169,7 +179,12 @@ test("WAGO 231 connectors retain exact order codes and isolated pole groups", ()
       .filter((source) => source.mount !== "wire")
       .every((source) => source.headerOrientation),
   );
-  for (const source of mcsBatch) {
+  const parts = [...mcsBatch, ...mcsMiniBatch];
+  assert.equal(
+    parts.filter((source) => source.drilledHoleDiameterMm).length,
+    593,
+  );
+  for (const source of parts) {
     const def = engine.component(
       "wago-" + source.orderCode.replaceAll("/", "_"),
     );
@@ -202,6 +217,20 @@ test("WAGO 231 connectors retain exact order codes and isolated pole groups", ()
     );
     assert.equal(def.panelFootprint.widthMm, source.widthMm);
     assert.equal(def.panelFootprint.page, source.dimensionPage ?? 2);
+    if (source.drilledHoleDiameterMm) {
+      assert.deepEqual(
+        plain(def.pcbFootprint.pads),
+        Array.from({ length: source.poles }, (_, index) => ({
+          pinId: "solder-" + (index + 1),
+          xMm: index * source.pitchMm,
+          yMm: 0,
+          drilledHoleDiameterMm: source.drilledHoleDiameterMm,
+          drilledHolePlusToleranceMm: source.drilledHolePlusToleranceMm,
+        })),
+      );
+    } else {
+      assert.equal(def.pcbFootprint, undefined);
+    }
     assert.equal(
       def.panelFootprint.depthMm,
       source.heightAboveBoardMm ?? source.depthMm,

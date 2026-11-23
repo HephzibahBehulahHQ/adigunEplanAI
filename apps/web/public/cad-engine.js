@@ -1337,21 +1337,31 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const batch=new Map();
     for(const part of rows){
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      const mini=part.orderCode.startsWith('734-');
       const header=part.mount!=='wire';
       const doubleClamp=part.clampsPerPole===2;
+      const genderName=part.gender==='socket'?'female':'male';
       const ratings=[part.nominalVoltage,part.ratedCurrent,part.impulseVoltageKv];
       const rated=part.ratingPage!==undefined||ratings.some(value=>value!==undefined);
-      if(!/^231-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/.test(part.orderCode)||
+      const solderDimensions=[part.solderPinLengthMm,part.solderPinWidthMm,part.solderPinDepthMm];
+      const hasSolderDimensions=solderDimensions.some(value=>value!==undefined);
+      const hasDrill=part.drilledHoleDiameterMm!==undefined||part.drilledHolePlusToleranceMm!==undefined;
+      const pitchOptions=mini?[3.5,3.81]:[5,5.08,7.5,7.62];
+      const orderCodePattern=mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^231-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
+      if(!orderCodePattern.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
         (part.clampsPerPole!==undefined&&!doubleClamp)||
         (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
-        (header&&(part.gender!=='plug'||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
-          part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' male header'))||
+        (header&&((!mini&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
+          part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' '+genderName+' header'))||
         (part.headerOrientation!==undefined&&(!header||!['straight','angled'].includes(part.headerOrientation)))||
         (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
         (part.dimensionPage!==undefined&&![2,3].includes(part.dimensionPage))||
-        (!header&&part.kind!==(doubleClamp?'2':'1')+'-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
-        !Number.isInteger(part.poles)||part.poles<2||part.poles>24||![5,5.08,7.5,7.62].includes(part.pitchMm)||
+        (hasSolderDimensions&&(!header||!solderDimensions.every(value=>finite(value)&&value>0)))||
+        (hasDrill&&(!hasSolderDimensions||part.mount!=='THT'||!finite(part.drilledHoleDiameterMm)||
+          part.drilledHoleDiameterMm<=0||!finite(part.drilledHolePlusToleranceMm)||part.drilledHolePlusToleranceMm<0))||
+        (!header&&part.kind!==(doubleClamp?'2':'1')+'-conductor '+genderName+' connector')||
+        !Number.isInteger(part.poles)||part.poles<2||part.poles>24||!pitchOptions.includes(part.pitchMm)||
         ![part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
@@ -1382,7 +1392,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         internalConnections.push(group);
       }
-      const model='MCS MIDI Classic '+part.kind;
+      const model=(mini?'MCS MINI ':'MCS MIDI Classic ')+part.kind;
+      const mm=value=>({value,unit:'mm'});
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-mcs-connector',referencePrefix:'X',category:'Electrical · PCB connectors',
         symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
@@ -1390,18 +1401,25 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
           ...(doubleClamp?{clampsPerPole:{value:2}}:{}),
           ...(part.headerOrientation?{headerOrientation:{value:part.headerOrientation}}:{}),
+          ...(hasSolderDimensions?{solderPinLength:mm(part.solderPinLengthMm),solderPinWidth:mm(part.solderPinWidthMm),
+            solderPinDepth:mm(part.solderPinDepthMm)}:{}),
+          ...(hasDrill?{drilledHoleDiameter:mm(part.drilledHoleDiameterMm),drilledHolePlusTolerance:mm(part.drilledHolePlusToleranceMm)}:{}),
           ...(rated?{
             nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:wagoIecRatingBasis},
             ratedCurrent:{value:part.ratedCurrent,unit:'A',basis:wagoIecRatingBasis},
             ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:wagoIecRatingBasis},
           }:{}),
           connectionTechnology:{value:backType},connectorGender:{value:part.gender},overallHeight:{value:part.heightMm,unit:'mm'}},
+        ...(hasDrill?{pcbFootprint:{datum:'Center of first solder pin, +X along the in-line contact row',
+          pads:Array.from({length:part.poles},(_,index)=>({pinId:'solder-'+(index+1),xMm:index*part.pitchMm,yMm:0,
+            drilledHoleDiameterMm:part.drilledHoleDiameterMm,drilledHolePlusToleranceMm:part.drilledHolePlusToleranceMm}))}}:{}),
         panelFootprint:{widthMm:part.widthMm,heightMm:header?part.depthMm:part.heightMm,
           depthMm:header?part.heightAboveBoardMm:part.depthMm,source:datasheet,edition:part.revision,page:part.dimensionPage??2,
           note:header?'Header projected on the PCB plane. Width and depth follow the datasheet footprint envelope.':'Unmated wire connector body. Allow additional wire bend and mating clearance.'},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
         sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
           revisionNote:'Manufacturer contact row, isolated potentials, termination, pitch and body dimensions.'+
+            (hasSolderDimensions?' In-line solder pin dimensions.':'')+(hasDrill?' Specified PCB drill diameter and tolerance.':'')+
             (rated?' IEC/EN ratings on page '+part.ratingPage+'.':''),retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
