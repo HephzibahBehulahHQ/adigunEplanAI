@@ -36,6 +36,16 @@ const winstaBatch = JSON.parse(
   ),
 );
 engine.registerWagoWinstaBatch(winstaBatch);
+const cableBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-winsta-cable-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoWinstaCableBatch(cableBatch);
 engine.registerWagoDigitalIoBatch(
   JSON.parse(
     fs.readFileSync(
@@ -48,6 +58,75 @@ engine.registerWagoDigitalIoBatch(
   ),
 );
 const plain = (value) => JSON.parse(JSON.stringify(value));
+
+test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
+  assert.equal(cableBatch.length, 26);
+  for (const row of cableBatch) {
+    const def = engine.component("wago-" + row.orderCode.replace("/", "_"));
+    assert.equal(def.specifications.assemblyLength.value, row.lengthM);
+    assert.equal(def.specifications.coding.value, row.coding);
+    assert.deepEqual(
+      plain(def.symbol.internalConnections),
+      row.markings.map((mark) => [
+        "socket-" + mark.toLowerCase(),
+        "plug-" + mark.toLowerCase(),
+      ]),
+    );
+    const instance = engine.createInstance(def.id, 200, 300, "W1");
+    instance.sheetId = "cables";
+    const wires = engine
+      .worldPins(instance)
+      .filter((pin) => pin.id.startsWith("socket-"))
+      .map((pin) =>
+        engine.attachWire(
+          {
+            id: pin.id,
+            kind: "wire",
+            sheetId: instance.sheetId,
+            x1: pin.x,
+            y1: pin.y,
+            x2: pin.x - 100,
+            y2: pin.y,
+          },
+          { attachment: { instanceId: instance.id, pinId: pin.id } },
+          {},
+        ),
+      );
+    const objects = [instance, ...wires];
+    instance.rotation = 90;
+    engine.moveInstance(instance, 450, 350);
+    engine.synchronizeWireAttachments(objects);
+    const restored = engine.parseProject(
+      engine.serializeProject({
+        project: "WINSTA cable verification",
+        sheets: [{ id: instance.sheetId, name: "Cables", number: "A2/000" }],
+        objects,
+      }),
+    );
+    assert.equal(restored.valid, true);
+    assert.deepEqual(
+      plain(
+        engine
+          .analyze(restored.project.objects)
+          .nets.map((net) => net.pins.length),
+      ),
+      [2, 2],
+    );
+    for (const wire of restored.project.objects.filter(
+      (object) => object.kind === "wire",
+    )) {
+      const pin = engine.endpointPin(
+        restored.project.objects,
+        wire.attachments.start,
+      );
+      assert.deepEqual([wire.x1, wire.y1], [pin.x, pin.y]);
+    }
+    assert.equal(
+      engine.billOfMaterials(restored.project.objects).rows[0].partNumber,
+      row.orderCode,
+    );
+  }
+});
 const mcsBatch = JSON.parse(
   fs.readFileSync(
     new URL(
