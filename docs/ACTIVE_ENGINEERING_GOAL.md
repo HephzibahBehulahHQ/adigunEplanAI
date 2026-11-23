@@ -4,9 +4,12 @@
 
 The owner prioritized 10,000 distinct source-backed order codes while
 keeping the approved editor interface. The catalogue includes 10,054
-distinct manufacturer and order-code pairs. The inventory exports
-include exact identity, terminal groups, provenance and available mounting
-geometry. Each batch runs native editor and save/reopen checks before merge.
+distinct manufacturer and order-code pairs, each implemented in the compact
+editor. The inventory exports include exact identity, terminal groups,
+provenance and available mounting geometry. The browser exercises all eight
+compact example templates. It edits a connected template device, adds three
+parts, recolors and reconnects a wire, and compares objects and cross-sheet
+connections after reopening the drawing. Each batch runs native editor and save/reopen checks before merge.
 Use [the inventory record](references/component-bank-inventory.md) for
 manufacturer sources and documented limits.
 
