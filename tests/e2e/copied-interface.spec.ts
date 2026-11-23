@@ -2175,6 +2175,49 @@ test("WAGO MCS MINI headers show documented drill centres and wire by terminal",
   );
 });
 
+test("WAGO 232 female headers expose separate socket and PCB terminals", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["232-232", 400],
+    ["232-132", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(472, 232);
+  await clickAt(578, 232);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "THT female header",
+  );
+  await page.getByText("PCB drill centers (mm)", { exact: true }).click();
+  await expect(
+    page.getByText("X 5 · Y 0 · Ø 1.3", { exact: true }),
+  ).toBeVisible();
+  const saved = await saveDrawing(page, "mcs-232");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "solder-1" }),
+        end: expect.objectContaining({ pinId: "contact-1" }),
+      },
+    }),
+  );
+});
+
 test("generic PLC library places six editable modules with native terminal wiring", async ({
   page,
 }) => {

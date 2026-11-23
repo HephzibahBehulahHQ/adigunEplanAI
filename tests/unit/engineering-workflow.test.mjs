@@ -167,11 +167,22 @@ const mcsMiniBatch = JSON.parse(
     "utf8",
   ),
 );
-engine.registerWagoMcsBatch([...mcsBatch, ...mcsMiniBatch]);
+const mcsFemaleBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-232-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+const mcsParts = [...mcsBatch, ...mcsMiniBatch, ...mcsFemaleBatch];
+engine.registerWagoMcsBatch(mcsParts);
 
 test("WAGO MCS connectors retain exact order codes, isolated poles and verified drill data", () => {
   assert.equal(mcsBatch.length, 970);
   assert.equal(mcsMiniBatch.length, 516);
+  assert.equal(mcsFemaleBatch.length, 310);
   assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 968);
   assert.equal(Math.max(...mcsBatch.map((source) => source.poles)), 24);
   assert.ok(
@@ -179,12 +190,11 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
       .filter((source) => source.mount !== "wire")
       .every((source) => source.headerOrientation),
   );
-  const parts = [...mcsBatch, ...mcsMiniBatch];
   assert.equal(
-    parts.filter((source) => source.drilledHoleDiameterMm).length,
-    593,
+    mcsParts.filter((source) => source.drilledHoleDiameterMm).length,
+    831,
   );
-  for (const source of parts) {
+  for (const source of mcsParts) {
     const def = engine.component(
       "wago-" + source.orderCode.replaceAll("/", "_"),
     );
@@ -214,6 +224,10 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
     assert.equal(
       def.specifications.headerOrientation?.value,
       source.headerOrientation,
+    );
+    assert.equal(
+      def.specifications.connectorOrientation?.value,
+      source.connectorOrientation,
     );
     assert.equal(def.panelFootprint.widthMm, source.widthMm);
     assert.equal(def.panelFootprint.page, source.dimensionPage ?? 2);
