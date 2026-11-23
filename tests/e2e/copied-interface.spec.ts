@@ -4259,22 +4259,42 @@ test("every published component renders from a valid native project and reopens 
     mimeType: "application/json",
     buffer: Buffer.from(fixture),
   });
-  for (const sheet of expected.sheets) {
-    await page.locator('#projectTree [data-sheet="' + sheet.id + '"]').click();
-    const parts = partsBySheet.get(sheet.id) ?? [];
-    const drawings = page.locator("#userDrawings .drawing-object");
-    await expect(drawings).toHaveCount(parts.length);
-    const rendered = new Map(
-      await drawings.evaluateAll((nodes) =>
-        nodes.map((node) => [
-          node.getAttribute("data-object"),
-          node.querySelector("title")?.textContent,
-        ]),
-      ),
-    );
-    for (const part of parts) {
-      expect(rendered.get(part.id)).toContain(part.ref);
-    }
+  await expect(
+    page.locator('#projectTree [data-sheet="' + expected.sheets[0].id + '"]'),
+  ).toBeVisible();
+  const sheets: { id: string }[] = expected.sheets;
+  for (let offset = 0; offset < sheets.length; offset += 24) {
+    const batch = sheets.slice(offset, offset + 24).map(({ id }) => ({
+      id,
+      parts: partsBySheet.get(id) ?? [],
+    }));
+    const issue = await page.evaluate((batch) => {
+      for (const { id, parts } of batch) {
+        const row = document.querySelector<HTMLElement>(
+          '#projectTree [data-sheet="' + CSS.escape(id) + '"]',
+        );
+        if (!row) return "Missing project sheet " + id;
+        row.click();
+        const rendered = new Map(
+          Array.from(
+            document.querySelectorAll("#userDrawings .drawing-object"),
+            (node) => [
+              node.getAttribute("data-object"),
+              node.querySelector("title")?.textContent,
+            ],
+          ),
+        );
+        if (rendered.size !== parts.length)
+          return "Unexpected object count on " + id;
+        for (const part of parts) {
+          if (!rendered.get(part.id)?.includes(part.ref)) {
+            return "Missing rendered component " + part.ref + " on " + id;
+          }
+        }
+      }
+      return null;
+    }, batch);
+    expect(issue).toBeNull();
   }
   const saved = await saveDrawing(page, "all-catalogue-parts");
   expect(saved.data.objects).toEqual(expected.objects);
