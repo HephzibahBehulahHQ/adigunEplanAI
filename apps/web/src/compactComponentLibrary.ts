@@ -7,6 +7,8 @@ import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-t
 
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 
+import wagoDigitalIoBatch from "../../../packages/component-library/wago-digital-io-batch.json";
+
 const symbols = plcKinds.map((kind) => {
   const { symbol: id, channels } = plcSymbol[kind];
   const symbol = engineeringSymbols.find((entry) => entry.id === id);
@@ -17,6 +19,7 @@ const symbols = plcKinds.map((kind) => {
 declare global {
   interface Window {
     AdigunCADEngine: {
+      registerWagoDigitalIoBatch: (rows: typeof wagoDigitalIoBatch) => void;
       registerPlcSymbols: (entries: typeof symbols) => void;
       registerWagoTerminalBatch: (rows: typeof wagoTerminalBatch) => void;
       registerWagoPcbTerminalBatch: (rows: typeof wagoPcbTerminalBatch) => void;
@@ -29,4 +32,5 @@ window.AdigunCADEngine.registerWagoTerminalBatch(wagoTerminalBatch);
 window.AdigunCADEngine.registerWagoPcbTerminalBatch(wagoPcbTerminalBatch);
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
 window.AdigunCADEngine.registerPlcSymbols(symbols);
+window.AdigunCADEngine.registerWagoDigitalIoBatch(wagoDigitalIoBatch);
 window.dispatchEvent(new Event("adigun-component-library-ready"));

@@ -1343,6 +1343,49 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{channelCount:{value:channels}},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}));
     }
   }
+  function registerWagoDigitalIoBatch(rows){
+    const batch=new Map();
+    for(const part of rows){
+      const id='wago-'+part.orderCode;
+      const input=part.direction==='DI';
+      if(!/^750-[0-9]{3,4}$/.test(part.orderCode)||!['DI','DO'].includes(part.direction)||
+        ![4,8,16].includes(part.channels)||!['high','low'].includes(part.switching)||
+        typeof part.fieldSupplyTerminals!=='boolean'||
+        ![part.widthMm,part.heightMm,part.railDepthMm,input?part.filterMs:part.outputCurrentA].every(value=>finite(value)&&value>0)||
+        !['CAGE CLAMP','Push-in CAGE CLAMP'].includes(part.connectionTechnology)||
+        !/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}$/.test(part.revision)||!/^[a-f0-9]{64}$/.test(part.datasheetSha256)||
+        component(id)||batch.has(id))throw new Error('Invalid or duplicate WAGO digital I/O definition: '+id);
+      const pinRows=Array.from({length:part.channels/2},(_,i)=>[part.direction+(2*i+1),part.direction+(2*i+2)]);
+      const internalConnections=[];
+      if(part.fieldSupplyTerminals){
+        pinRows.splice(1,0,['24V-L','24V-R'],['0V-L','0V-R']);
+        internalConnections.push(['24v-l','24v-r'],['0v-l','0v-r']);
+      }
+      const height=pinRows.length*24+20,width=144;
+      const pins=pinRows.flatMap((row,i)=>row.map((name,side)=>({
+        id:name.toLowerCase(),localNumber:name,name,x:side?72:-72,y:(i-(pinRows.length-1)/2)*24,
+        plcChannel:name.startsWith(part.direction),electricalType:name.startsWith(part.direction)?(input?'input':'output'):'passive',
+        connectionType:part.connectionTechnology,
+      })));
+      const datasheet='https://wago.priintcloud.com/datasheets/'+part.orderCode+'/en';
+      const model=part.channels+'-channel digital '+(input?'input':'output');
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model,name:model,family:'wago-digital-io',referencePrefix:'A',category:'Automation · WAGO 750 I/O',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,
+          artwork:[{kind:'rect',x:-48,y:-height/2,width:96,height},...pins.map(pin=>({kind:'line',
+            from:{x:pin.x,y:pin.y},to:{x:Math.sign(pin.x)*48,y:pin.y}}))],
+          numberingNote:'Field terminals follow the datasheet front view. L/R distinguishes duplicated supply labels. Side bus and jumper contacts are outside the field connector.'},
+        specifications:{channelCount:{value:part.channels},nominalFieldVoltage:{value:24,unit:'V DC'},
+          switching:{value:part.switching+'-side'},connectionTechnology:{value:part.connectionTechnology},
+          ...(input?{inputFilter:{value:part.filterMs,unit:'ms'}}:{outputCurrentPerChannel:{value:part.outputCurrentA,unit:'A'}})},
+        panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.railDepthMm,source:datasheet,edition:part.revision,page:2,
+          note:'Depth above DIN rail datum.'},
+        instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–2',url:datasheet,documentRevision:part.revision,
+          retrievedAt:'2026-11-23',sha256:part.datasheetSha256}]}));
+    }
+    for(const [id,definition] of batch)plcComponents.set(id,definition);
+  }
   function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || wagoTerminalComponents.get(id) || plcComponents.get(id) || null; }
   function catalog() {
     return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Array.from(wagoTerminalComponents.keys()),Array.from(plcComponents.keys())).map(function (id) {
@@ -1373,7 +1416,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     };
   }
   function plcIoPins(def){
-    if(def?.family==='generic-plc')return def.symbol.pins.filter(pin=>pin.plcChannel);
+    if(def?.family==='generic-plc'||def?.family==='wago-digital-io')return def.symbol.pins.filter(pin=>pin.plcChannel);
     return def?.family==='plc-cpu'?def.symbol.pins.filter(pin=>/^(DI|DQ|AI) /.test(pin.name)):[];
   }
   const automationNoteKinds=Object.freeze(['interlock','emergency-stop','motor-control','sequence','safety']);
@@ -3827,6 +3870,7 @@ function createPumpStarterDocumentation(name) {
     validAutomationNote,
     automationNoteRegisterCsv,
     registerPlcSymbols,
+    registerWagoDigitalIoBatch,
     registerWagoTerminalBatch,
     registerWagoPcbTerminalBatch,
     registerWagoWinstaBatch,
