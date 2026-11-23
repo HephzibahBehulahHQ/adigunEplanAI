@@ -1988,53 +1988,60 @@ test("WAGO double-deck terminal exposes both levels and stays wired on reopen", 
   expect(reopened.data.objects).toEqual(native.data.objects);
 });
 
-test("WAGO digital I/O can be wired and assigned through Properties", async ({
-  page,
-}) => {
-  await page.goto("/");
-  await page.locator('[data-action="new"]').first().click();
-  await page.locator("#createProject").click();
-  await addSectionSheet(page);
-  await page.locator('[data-panel="symbols"]').click();
-  const clickAt = async (x: number, y: number) => {
-    const point = await sheetPoint(page, x, y);
-    await page.mouse.click(point.x, point.y);
-  };
-  for (const [code, x] of [
-    ["753-530", 400],
-    ["750-430/040-000", 650],
-  ] as const) {
-    await page.locator("#symbolSearch").fill(code);
-    await page
-      .locator('[data-insert="wago-' + code.replace("/", "_") + '"]')
-      .click();
-    await clickAt(x, 250);
-  }
-  await clickAt(472, 214);
-  await clickAt(578, 214);
-  await clickAt(650, 250);
-  await page.locator('[data-inspector="Properties"]').click();
-  await page.getByText("PLC I/O assignments", { exact: true }).click();
-  const signal = page.getByLabel("DI1 signal", { exact: true });
-  await signal.fill("Feedback");
-  await signal.press("Tab");
-  const saved = await saveDrawing(page, "wago-digital-io");
-  expect(saved.data.objects).toContainEqual(
-    expect.objectContaining({
-      componentId: "wago-750-430_040-000",
-      plcIo: { di1: { signal: "Feedback", address: "" } },
-    }),
-  );
-  expect(saved.data.objects).toContainEqual(
-    expect.objectContaining({
-      kind: "wire",
-      attachments: {
-        start: expect.objectContaining({ pinId: "do2" }),
-        end: expect.objectContaining({ pinId: "di1" }),
-      },
-    }),
-  );
-});
+for (const [inputCode, inputPin, inputY] of [
+  ["750-430/040-000", "di1", 214],
+  ["750-1405", "di15", 334],
+] as const) {
+  test(`WAGO ${inputCode} can be wired and assigned through Properties`, async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.locator('[data-action="new"]').first().click();
+    await page.locator("#createProject").click();
+    await addSectionSheet(page);
+    await page.locator('[data-panel="symbols"]').click();
+    const clickAt = async (x: number, y: number) => {
+      const point = await sheetPoint(page, x, y);
+      await page.mouse.click(point.x, point.y);
+    };
+    for (const [code, x] of [
+      ["753-530", 400],
+      [inputCode, 650],
+    ] as const) {
+      await page.locator("#symbolSearch").fill(code);
+      await page
+        .locator('[data-insert="wago-' + code.replace("/", "_") + '"]')
+        .click();
+      await clickAt(x, 250);
+    }
+    await clickAt(472, 214);
+    await clickAt(578, inputY);
+    await clickAt(650, 250);
+    await page.locator('[data-inspector="Properties"]').click();
+    await page.getByText("PLC I/O assignments", { exact: true }).click();
+    const signal = page.getByLabel(inputPin.toUpperCase() + " signal", {
+      exact: true,
+    });
+    await signal.fill("Feedback");
+    await signal.press("Tab");
+    const saved = await saveDrawing(page, "wago-digital-io");
+    expect(saved.data.objects).toContainEqual(
+      expect.objectContaining({
+        componentId: "wago-" + inputCode.replace("/", "_"),
+        plcIo: { [inputPin]: { signal: "Feedback", address: "" } },
+      }),
+    );
+    expect(saved.data.objects).toContainEqual(
+      expect.objectContaining({
+        kind: "wire",
+        attachments: {
+          start: expect.objectContaining({ pinId: "do2" }),
+          end: expect.objectContaining({ pinId: inputPin }),
+        },
+      }),
+    );
+  });
+}
 
 test("WAGO field cable assemblies preserve documented conductor and connector identities", async ({
   page,
