@@ -1256,12 +1256,12 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
 
   function registerWagoWinstaCableBatch(rows){
     const batch=new Map();
-    const twoPoleCode=/^(?:771|891)-8992\/006-[0-9]{3}$/;
+    const twoPoleCode=/^(?:771|891)-8992\/[01][01][567]-[0-9]{3}$/;
     const threeCoreCable=/^(?:H05VV-F|H05Z1Z1-F) 3G(?:1\.5|2\.5)$/;
     const fiveCoreCable=/^(?:H05VV-F|H05Z1Z1-F) 5G(?:1\.5|2\.5)$/;
     const profiles=[
-      {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^H05VV-F 2x1\.5$/},
-      {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1\.5$/},
+      {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^(?:H05VV-F|H05Z1Z1-F) 2x(?:1(?:\.5)?|2\.5)$/},
+      {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1(?:\.5)?$/},
       {code:/^771-9993\/[01][01][67]-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],cable:threeCoreCable},
       {code:/^771-9973\/[01][01][67]-[0-9]{3}$/,coding:'P',markings:['L','PE','N'],cable:threeCoreCable},
       {code:/^771-9973\/(?:006-305|016-[57]05)$/,coding:'S',markings:['1','2','L'],cable:/^(?:H05VV-F|H05Z1Z1-F) 3x1\.5$/},

@@ -60,13 +60,14 @@ engine.registerWagoDigitalIoBatch(
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
-  assert.equal(cableBatch.length, 528);
+  assert.equal(cableBatch.length, 643);
   for (const row of cableBatch) {
     const def = engine.component("wago-" + row.orderCode.replace("/", "_"));
     const freeEnd = row.endType === "free";
     const endPrefix = freeEnd ? "lead-" : "plug-";
     assert.equal(def.specifications.assemblyLength.value, row.lengthM);
     assert.equal(def.specifications.coding.value, row.coding);
+    assert.equal(def.specifications.cableType.value, row.cableType);
     assert.equal(def.specifications.poleCount.value, row.markings.length);
     assert.equal(
       def.symbol.pins.filter((pin) => pin.connectionType === "protective-earth")
