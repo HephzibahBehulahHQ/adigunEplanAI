@@ -1801,6 +1801,43 @@ test("PCB terminal blocks expose wire clamps and solder pins on the canvas", asy
   );
 });
 
+test("PFC200 places by exact code, exposes communications and wires its field supply", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("750-8217/625-000");
+  const part = page.locator('[data-insert="wago-750-8217-625-000"]');
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const x of [400, 650]) {
+    await part.click();
+    await clickAt(x, 250);
+  }
+  await expect(
+    page
+      .locator("#userDrawings .drawing-object")
+      .getByText("2 × RJ45", { exact: true }),
+  ).toHaveCount(2);
+  await clickAt(484, 224);
+  await clickAt(566, 224);
+  const { data } = await saveDrawing(page, "pfc200-field-wiring");
+  expect(data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "clamp-6" }),
+        end: expect.objectContaining({ pinId: "clamp-2" }),
+      },
+    }),
+  );
+});
+
 test("Harmony ZBE101 places, wires by marked terminals and preserves the open contact", async ({
   page,
 }) => {
