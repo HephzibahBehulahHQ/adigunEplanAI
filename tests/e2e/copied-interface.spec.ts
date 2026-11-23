@@ -992,6 +992,9 @@ test("drafting tools draw on-axis lines, dimensions and exact offsets", async ({
   await click(400, 360);
   page.once("dialog", (dialog) => dialog.accept("20"));
   await lower.getByRole("button", { name: "Offset", exact: true }).click();
+  await upper.getByRole("button", { name: "Ortho Lock" }).click();
+  await draw("Draw line", 725, 220, 780, 330);
+  await upper.getByRole("button", { name: "Ortho Lock" }).click();
   await draw("Dimension", 320, 500, 440, 500);
   await upper.getByRole("button", { name: "Show Print Frame" }).click();
   await expect(page.locator("#customSheetFrame")).toBeVisible();
@@ -1031,6 +1034,13 @@ test("drafting tools draw on-axis lines, dimensions and exact offsets", async ({
         y2: 380,
       }),
       expect.objectContaining({ kind: "line", dimensionOffset: 50 }),
+      expect.objectContaining({
+        kind: "line",
+        x1: 725,
+        y1: 220,
+        x2: 725,
+        y2: 330,
+      }),
     ]),
   );
   await page.setViewportSize({ width: 800, height: 760 });
@@ -1359,6 +1369,7 @@ test("library views fit the dock and category, type and project filters show rea
   await part.click();
   const target = await sheetPoint(page, 495, 320);
   await page.mouse.click(target.x, target.y);
+  await addSectionSheet(page, "A1");
   await views.getByRole("button", { name: "Project symbols" }).click();
   await expect(list.locator("[data-insert]")).toHaveCount(1);
   await expect(part).toBeVisible();

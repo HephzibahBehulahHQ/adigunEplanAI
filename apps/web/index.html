@@ -1006,7 +1006,10 @@
     '750-1405','750-530','750-8217/625-000','IFS204','XMLB004A2S11',
     '2202-1406','787-1664','1033000','P1J122728'
   ]);
-  function projectSymbolIds(){return Array.from(new Set(state.objects.map(obj=>obj.componentId).filter(Boolean))).sort();}
+  function projectSymbolIds(){
+    const objects=state.objects.concat(Object.entries(state.sheetObjects).filter(([id])=>id!==state.sheet).flatMap(([,items])=>items));
+    return Array.from(new Set(objects.map(obj=>obj.componentId).filter(Boolean))).sort();
+  }
   function symbolOptions(select,values,allLabel,format=String){
     const previous=select.value;
     select.replaceChildren(new Option(allLabel,''),...Array.from(new Set(values)).sort().map(value=>new Option(format(value),value)));
@@ -3377,6 +3380,9 @@
       row.toggleAttribute('data-overflow',toolWidth>row.clientWidth);
     });
     resize.observe(row);
+    row.addEventListener('focusin',event=>{
+      if(event.target.matches('.tool:focus-visible'))status.textContent=event.target.getAttribute('aria-label')||event.target.title;
+    });
     more.addEventListener('click',()=>{
       const end=content.scrollWidth-content.clientWidth;
       content.scrollLeft=content.scrollLeft>=end-2?0:Math.min(end,content.scrollLeft+content.clientWidth*.8);
