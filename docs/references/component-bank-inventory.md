@@ -215,3 +215,16 @@ drawing with 5 mm between rows. One candidate, 250-216/000-024, has eight
 clamping units and sixteen potentials in the datasheet and remains out of
 the one-clamp-per-pole family.
 [Variant datasheet](https://wago.priintcloud.com/datasheets/250-202_000-006/en)
+
+## WINSTA MIDI installation connectors
+
+The 770 family adds 116 exact WAGO plug and socket order codes. The
+manufacturer contact order, pole markings, gender, coding and unmated body
+dimensions are preserved. The schematic distinguishes wire clamps from
+mating contacts and joins only the terminals belonging to the same pole.
+Protective-earth glyphs and minus signs that did not survive PDF text
+extraction were verified against the rendered source tables. The connectors
+use the existing wire tool. Coding is recorded for engineering review and
+does not itself create a mating connection.
+[Socket 770-203 datasheet](https://wago.priintcloud.com/datasheets/770-203/en) ·
+[Plug 770-213 datasheet](https://wago.priintcloud.com/datasheets/770-213/en)

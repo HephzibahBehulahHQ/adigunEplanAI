@@ -26,6 +26,16 @@ const pcbBatch = JSON.parse(
   ),
 );
 engine.registerWagoPcbTerminalBatch(pcbBatch);
+const winstaBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-winsta-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoWinstaBatch(winstaBatch);
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", () => {
@@ -47,6 +57,88 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
     /Duplicate WAGO terminal catalog ID/,
   );
   assert.equal(engine.component("wago-2002-9999"), null);
+});
+
+test("WINSTA terminals retain exact markings and isolate every plug and socket pole", () => {
+  assert.ok(winstaBatch.length >= 116);
+  assert.deepEqual(
+    plain(
+      engine.component("wago-770-282_080-000").connectorInterface.poleMarkings,
+    ),
+    ["I+", "I-"],
+  );
+  for (const part of winstaBatch) {
+    const id = "wago-" + part.orderCode.replace("/", "_");
+    const def = engine.component(id);
+    assert.equal(def.manufacturerPartNumber, part.orderCode);
+    assert.equal(def.connectorInterface.coding, part.coding);
+    assert.deepEqual(plain(def.connectorInterface.poleMarkings), part.markings);
+    assert.equal(
+      def.symbol.pins.length,
+      part.markings.length * (part.clampsPerPole + 1),
+    );
+    assert.equal(
+      new Set(def.symbol.internalConnections.flat()).size,
+      def.symbol.pins.length,
+    );
+    for (const [index, group] of def.symbol.internalConnections.entries()) {
+      assert.equal(group.length, part.clampsPerPole + 1);
+      assert.equal(
+        def.symbol.pins.find((pin) => pin.id === group[0]).localNumber,
+        part.markings[index],
+      );
+    }
+    assert.equal(def.panelFootprint.depthMm, part.depthMm);
+  }
+  const plug = engine.createInstance("wago-770-213", 400, 250, "XP");
+  const socket = engine.createInstance("wago-770-203", 650, 250, "XS");
+  plug.sheetId = socket.sheetId = "winsta";
+  assert.deepEqual(
+    plain(engine.component(plug.componentId).connectorInterface.poleMarkings),
+    ["N", "PE", "L"],
+  );
+  assert.deepEqual(
+    plain(engine.component(socket.componentId).connectorInterface.poleMarkings),
+    ["L", "PE", "N"],
+  );
+  const a = engine.worldPins(plug).find((pin) => pin.id === "contact-2");
+  const b = engine.worldPins(socket).find((pin) => pin.id === "contact-2");
+  assert.equal(a.number, "PE");
+  assert.equal(b.number, "PE");
+  const wire = engine.attachWire(
+    {
+      id: "winsta-pe",
+      kind: "wire",
+      sheetId: "winsta",
+      x1: a.x,
+      y1: a.y,
+      x2: b.x,
+      y2: b.y,
+    },
+    { ...a, attachment: { instanceId: plug.id, pinId: a.id } },
+    { ...b, attachment: { instanceId: socket.id, pinId: b.id } },
+  );
+  const objects = [plug, socket, wire];
+  const restored = engine.parseProject(
+    engine.serializeProject({
+      project: "WINSTA wiring",
+      sheets: [{ id: "winsta", name: "Connectors", number: "A2/000" }],
+      objects,
+    }),
+  );
+  assert.equal(restored.valid, true);
+  const { nets } = engine.analyze(restored.project.objects);
+  const connected = nets.find((net) => net.wireIds.includes(wire.id));
+  assert.equal(connected.pins.length, 6);
+  assert.ok(connected.pins.every((pin) => pin.number.startsWith("PE")));
+  assert.deepEqual(
+    plain(
+      engine
+        .billOfMaterials(restored.project.objects)
+        .rows.map((row) => row.partNumber),
+    ).sort(),
+    ["770-203", "770-213"],
+  );
 });
 
 test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () => {

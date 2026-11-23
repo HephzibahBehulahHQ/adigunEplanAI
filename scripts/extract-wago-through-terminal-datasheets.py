@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 
 import pypdfium2
+from PIL import ImageOps
 from pypdfium2.raw import FPDF_PAGEOBJ_IMAGE
 
 
@@ -169,8 +170,130 @@ def iec_ratings(pages, standard="60947-7-1"):
     return voltage, current, ratings_page
 
 
+# Reviewed renderings of the protective-earth glyph in WINSTA potential tables.
+PE_GLYPHS = set("""
+069bf14ceccf 278a501e0a38 3369ee60aa15 41f9fa83d08e 47979d070d8e
+4a214ce05c20 5312a5a94e9e 53339a754846 6dd3fa56efbe 71b4c63ffe3e
+72c78696b060 81a33142eb46 8c5a116e2555 a5f10920e719 b78d9cf48406
+bf9fb3a38736 c22a67a67943 d136c50e2e90 d52ffc4128a5 d6ddf321deb5
+d7a95db1bbe9 e4e9fa851356 e639f8e674c9 e678692e73f8 f72f5aeae3b5
+""".split())
+
+
+def read_winsta_markings(document, raw):
+    if "\ufffd" not in raw:
+        return raw.split()
+    hashes = []
+    for index in range(3):
+        with closing(document[index]) as page, closing(page.get_textpage()) as text:
+            search = text.search("Potential marking")
+            match = search.get_next()
+            if match is None:
+                continue
+            start, length = match
+            for offset in range(start + length, min(start + length + 60, text.count_chars())):
+                glyph = text.get_text_range(offset, 1)
+                if "\n" in glyph or "\r" in glyph:
+                    break
+                if glyph != "\ufffd":
+                    continue
+                left, bottom, right, top = text.get_charbox(offset)
+                crop = (left - 1, bottom - 1, page.get_width() - right - 1, page.get_height() - top - 1)
+                with closing(page.render(scale=10, crop=crop)) as bitmap:
+                    image = bitmap.to_pil().convert("L").point(lambda pixel: 0 if pixel < 160 else 255)
+                box = ImageOps.invert(image).getbbox()
+                if not box:
+                    raise ValueError("potential table glyph is empty")
+                hashes.append(hashlib.sha256(image.crop(box).resize((32, 32)).tobytes()).hexdigest())
+    if len(hashes) != raw.count("\ufffd") or any(value[:12] not in PE_GLYPHS for value in hashes):
+        raise ValueError("potential table contains an unverified glyph")
+    return raw.replace("\ufffd", "PE").split()
+
+
+def read_winsta_article(pdf, candidate, retrieved_at):
+    code = candidate["orderCode"]
+    url_code = code.replace("/", "_")
+    with pypdfium2.PdfDocument(pdf) as document:
+        pages = []
+        for index in range(3):
+            with closing(document[index]) as page, closing(page.get_textpage()) as text:
+                pages.append(text.get_text_range().replace("\r", "").replace("\xa0", " "))
+        # These reviewed source rows render a literal minus at the field boundary.
+        if url_code in {"770-263_071-000", "770-274_071-000", "770-274_072-000", "770-282_080-000"}:
+            pages = [re.sub(r"(?<=[A-Z])\ufffe(?=Potential marking|Mating force)", "-\n", page) for page in pages]
+        raw_marking = evidence(pages, r"^Potential marking ([^\n]+)", "potential marking")
+        marks = read_winsta_markings(document, raw_marking[1].strip())
+
+    title = " ".join(pages[0].replace("\ufffe", "").split())
+    if (
+        candidate["manufacturer"] != "WAGO"
+        or pdf.stem != url_code
+        or candidate["datasheetUrl"] != f"https://wago.priintcloud.com/datasheets/{url_code}/en"
+        or candidate["productUrl"] != f"https://www.wago.com/{url_code}"
+        or not all(re.search(rf"Item Number: {re.escape(code)}(?:\s|$)", page) for page in pages)
+        or not re.search(r"WINSTA.{0,4} MIDI", title)
+    ):
+        raise ValueError("source does not identify this WINSTA MIDI part")
+    pole_count = re.search(r"\b([2-5])-pole\b", title)
+    if not pole_count:
+        raise ValueError("source cover lacks a supported pole count")
+
+    def field(pattern, name):
+        return evidence(pages, pattern, name)
+
+    def value(item):
+        return float(item[1].replace(",", "."))
+
+    poles = int(pole_count[1])
+    clamps = int(field(r"^Clamping units (\d+)\b", "clamp count")[1])
+    potentials = int(field(r"^Total number of potentials (\d+)\b", "potential count")[1])
+    contact = field(r"^Contact type \(pluggable connector\) (Female connector/socket|Male connector/plug)", "connector gender")
+    gender = "socket" if contact[1].startswith("Female") else "plug"
+    if (
+        len(marks) != poles
+        or len(set(marks)) != poles
+        or any(not re.fullmatch(r"[A-Z0-9/+'-]+", mark) for mark in marks)
+        or potentials != poles
+        or clamps not in (poles, 2 * poles)
+        or not candidate["description"].startswith(gender.capitalize() + ";")
+    ):
+        raise ValueError("pole marking, clamp count or gender conflict")
+
+    coding = field(r"^Coding ([A-Z])(?=\s|$)", "coding")
+    width = field(rf"^Width {NUMBER} mm", "width")
+    height = field(rf"^Height {NUMBER} mm", "height")
+    depth = field(rf"^Depth {NUMBER} mm", "depth")
+    color = field(r"^Color:? ([a-z]+(?:[ /-][a-z]+)*)(?= Similar to illustration|[ \t]*$)", "finish")
+    revision = field(r"Version (\d{2}\.\d{2}\.\d{4})", "version")
+    technology = field(r"^Connection technology (Push-in CAGE CLAMP)\b", "connection technology")
+    voltage, current, ratings_page = iec_ratings(pages, "60664-1")
+    return {
+        "orderCode": code,
+        "gender": gender,
+        "coding": coding[1],
+        "markings": marks,
+        "clampsPerPole": clamps // poles,
+        "nominalVoltage": value(voltage),
+        "ratedCurrent": value(current),
+        "finish": color[1].title(),
+        "connectionTechnology": technology[1],
+        "widthMm": value(width),
+        "heightMm": value(height),
+        "depthMm": value(depth),
+        "revision": revision[1],
+        "pages": f"1–{max(contact[0], width[0], raw_marking[0], ratings_page)}",
+        "dimensionPage": width[0],
+        "datasheet": candidate["datasheetUrl"],
+        "productUrl": candidate["productUrl"],
+        "retrievedAt": retrieved_at,
+        "datasheetSha256": hashlib.sha256(pdf.read_bytes()).hexdigest(),
+    }
+
+
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
+    if re.fullmatch(r"770-[0-9]{3}(?:_[0-9]{3}-[0-9]{3})?", code):
+        return read_winsta_article(pdf, candidate, retrieved_at)
     if re.fullmatch(r"250-[0-9]{3,4}(?:_[0-9]{3}-[0-9]{3})?", code):
         return read_pcb_article(pdf, candidate, retrieved_at)
     double_deck = bool(re.fullmatch(r"(?:2000|2002|2200|2202)-2[0-9]{3}", code))

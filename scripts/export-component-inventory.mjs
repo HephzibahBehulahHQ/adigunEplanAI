@@ -37,6 +37,17 @@ engine.registerWagoPcbTerminalBatch(
     ),
   ),
 );
+engine.registerWagoWinstaBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-winsta-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerPlcSymbols(
   plcKinds.map((kind) => ({
     kind,
