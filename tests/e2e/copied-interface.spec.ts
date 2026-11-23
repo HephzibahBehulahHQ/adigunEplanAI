@@ -1972,7 +1972,7 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   );
 });
 
-test("WINSTA two-pole assemblies expose separate coding B leads", async ({
+test("WINSTA coding L assemblies keep primed and unprimed contacts separate", async ({
   page,
 }) => {
   await page.goto("/");
@@ -1985,8 +1985,8 @@ test("WINSTA two-pole assemblies expose separate coding B leads", async ({
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["891-8992/105-103", 400],
-    ["891-8992/005-103", 700],
+    ["771-9385/027-703", 400],
+    ["771-9385/027-903", 700],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page
@@ -1994,17 +1994,17 @@ test("WINSTA two-pole assemblies expose separate coding B leads", async ({
       .click();
     await clickAt(x, 250);
   }
-  for (const y of [232, 268]) {
+  for (const y of [178, 214, 250, 286, 322]) {
     await clickAt(492, y);
     await clickAt(608, y);
   }
   const saved = await saveDrawing(page, "winsta-cable");
-  for (const terminal of ["1", "2"]) {
+  for (const terminal of ["n", "pe", "l", "n-prime", "l-prime"]) {
     expect(saved.data.objects).toContainEqual(
       expect.objectContaining({
         kind: "wire",
         attachments: {
-          start: expect.objectContaining({ pinId: "lead-" + terminal }),
+          start: expect.objectContaining({ pinId: "plug-" + terminal }),
           end: expect.objectContaining({ pinId: "socket-" + terminal }),
         },
       }),
