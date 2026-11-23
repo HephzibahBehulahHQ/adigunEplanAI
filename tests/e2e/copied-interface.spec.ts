@@ -1648,7 +1648,10 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
   await page.locator('[data-inspector="Properties"]').click();
   await page.getByText("PLC I/O assignments", { exact: true }).click();
   await expect(address).toHaveValue("%I0.0");
-  await page.locator('[data-panel="project"]').click();
+  const explorer = page.locator('[data-panel="project"]');
+  await explorer.click();
+  await expect(page.locator("#projectPanel")).toBeHidden();
+  await explorer.click();
   await expect(page.locator("#projectSearch")).toHaveValue("");
   await expect(page.locator("[data-project-section]")).toHaveCount(4);
 });
@@ -4010,7 +4013,7 @@ test("mounting accessory links to the canonical overload and survives rename and
       o.componentId === "siemens-3ru2926-3aa01" && o.sheetId === "eng0601-a3-0",
   );
   expect(accessory.assemblyFor).toBe(relay.id);
-  await page.locator('[data-panel="project"]').click();
+  await expect(page.locator("#projectPanel")).toBeVisible();
   await page
     .locator('[data-sheet="' + relay.sheetId + '"]')
     .first()
@@ -6756,7 +6759,7 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   expect(fs.readFileSync((await zonePanelReport.path())!, "utf8")).toContain(
     '"DB1","","Distribution zone 1","0","0","0","0","0","0"',
   );
-  await page.locator('[data-panel="symbols"]').click();
+  await expect(page.locator("#symbolsPanel")).toBeVisible();
   await page.locator("#symbolSearch").fill("building-earthing-bond-point");
   await page.locator('[data-insert="building-earthing-bond-point"]').click();
   await clickAt(180, 620);

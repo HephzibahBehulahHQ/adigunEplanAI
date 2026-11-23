@@ -42,7 +42,7 @@
     }
   </style>
   <style id="left-sidebar-dock-styles">
-    @media(min-width:851px){.workspace:not(.maximized):not(.left-sidebar-closed){grid-template-columns:36px 220px minmax(0,1fr) 36px}}
+    @media(min-width:851px){.workspace:not(.maximized):not(.left-sidebar-closed){grid-template-columns:36px 250px minmax(0,1fr) 36px}}
     @media(min-width:851px){.workspace.left-sidebar-closed{grid-template-columns:36px 0 minmax(0,1fr) 36px}}
     @media(min-width:641px) and (max-width:850px){.workspace.left-sidebar-closed{grid-template-columns:34px 0 minmax(0,1fr) 34px}}
     .workspace.left-sidebar-closed .sidepanel{visibility:hidden;pointer-events:none}
@@ -162,7 +162,12 @@
   let symbolScope='all',lastProjectSymbols='';
   const symbolById=new Map(),symbolByComponentId=new Map(),symbolSearchText=new Map();
   function refreshSymbolCatalog(){
-    symbolCatalog=window.AdigunCADEngine.catalog().sort((a,b)=>a.category.localeCompare(b.category)||a.family.localeCompare(b.family));
+    const categories=new Map();
+    for(const item of window.AdigunCADEngine.catalog()){
+      if(!categories.has(item.category))categories.set(item.category,[]);
+      categories.get(item.category).push(item);
+    }
+    symbolCatalog=Array.from(categories.values()).flatMap(items=>items.sort((a,b)=>a.family.localeCompare(b.family)));
     symbolById.clear();symbolByComponentId.clear();symbolSearchText.clear();
     for(const symbol of symbolCatalog){
       symbolById.set(symbol.id,symbol);
@@ -2828,8 +2833,14 @@
   function selectPanel(id,toggle=false){
     if(id==='layers'){openInspector('Layers and visibility');return;}
     const panel=$('#'+id+'Panel');
-    panel.hidden=toggle&&!panel.hidden&&!workspace.classList.contains('left-sidebar-closed');
-    if(id==='project'&&!panel.hidden&&!state.projectName&&!$('#projectTree').children.length)$('#projectTree').append(...exampleNavigationRows);
+    const emptyExplorer=id==='project'&&!state.projectName&&!$('#projectTree').children.length;
+    panel.hidden=toggle&&!emptyExplorer&&!panel.hidden&&!workspace.classList.contains('left-sidebar-closed');
+    if(id==='project'&&!panel.hidden){
+      if(emptyExplorer)$('#projectTree').append(...exampleNavigationRows);
+      $('#projectSearch').value='';
+      $('#projectSearch').dispatchEvent(new Event('input'));
+      $('#projectTree').scrollTop=0;
+    }
     syncLeftSidebar();
     if(id==='symbols'&&!panel.hidden)renderSymbolSidebar($('#symbolSearch').value);
   }
