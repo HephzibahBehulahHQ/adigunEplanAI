@@ -2,6 +2,7 @@ import { plcKinds, plcSymbol } from "../../../packages/automation/plc.ts";
 import { engineeringSymbols } from "../../../packages/component-library/symbols.ts";
 
 import wagoTerminalBatch from "../../../packages/component-library/wago-terminal-batch.json";
+import wagoMappedTerminalBatch from "../../../packages/component-library/wago-mapped-terminal-batch.json";
 
 import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-terminal-batch.json";
 import wago2086PcbTerminalBatch from "../../../packages/component-library/wago-pcb-2086-batch.json";
@@ -60,6 +61,9 @@ declare global {
       registerWagoDigitalIoBatch: (rows: typeof wagoDigitalIoBatch) => void;
       registerPlcSymbols: (entries: typeof symbols) => void;
       registerWagoTerminalBatch: (rows: typeof wagoTerminalBatch) => void;
+      registerWagoMappedTerminalBatch: (
+        rows: typeof wagoMappedTerminalBatch,
+      ) => void;
       registerWagoPcbTerminalBatch: (rows: typeof wagoPcbTerminalBatch) => void;
       registerWago2086PcbTerminalBatch: (
         rows: typeof wago2086PcbTerminalBatch,
@@ -81,6 +85,7 @@ declare global {
 }
 
 window.AdigunCADEngine.registerWagoTerminalBatch(wagoTerminalBatch);
+window.AdigunCADEngine.registerWagoMappedTerminalBatch(wagoMappedTerminalBatch);
 window.AdigunCADEngine.registerWagoPcbTerminalBatch(wagoPcbTerminalBatch);
 window.AdigunCADEngine.registerWago2086PcbTerminalBatch(
   wago2086PcbTerminalBatch,

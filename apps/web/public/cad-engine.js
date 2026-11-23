@@ -1832,44 +1832,108 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
 
+  function registerWagoMappedTerminalBatch(rows){
+    const batch=new Map();
+    const mountingTypes=new Set(['DIN-15 rail','DIN-35 rail','DIN-35 x 15 rail','DIN rail 35 × 7.5 mm',
+      'DIN rail 35 × 15 mm','Mounting flange','Snap-in foot']);
+    for(const part of rows){
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      const matrix=part.orderCode.startsWith('727-');
+      const diagram=part.connectionDiagramSha256!==undefined;
+      const rated=part.ratingPage!==undefined;
+      const count=part.levelCount;
+      if(!/^\d{3,4}-\d{3,4}(?:\/\d{3}-\d{3})?$/.test(part.orderCode)||
+        !['common','isolated','isolated-levels'].includes(part.topology)||!mountingTypes.has(part.mounting)||
+        !Number.isInteger(count)||count<1||count>8||!Number.isInteger(part.clampCount)||part.clampCount<2||
+        ![part.widthMm,part.heightMm,part.depthMm,part.nominalCrossSectionMm2].every(value=>finite(value)&&value>0)||
+        !['Operating tool','Push-button','T-wrench; 8 mm'].includes(part.actuationMethod)||
+        !['CAGE CLAMP','Push-in CAGE CLAMP','POWER CAGE CLAMP'].includes(part.connectionTechnology)||
+        (matrix?(![4,8].includes(count)||part.clampCount!==count*4||
+          !/^DIN rail 35 × (7\.5|15) mm$/.test(part.mounting)):
+          (count===1?(part.topology!=='common'||![2,3,4,5,6,8].includes(part.clampCount)):!diagram))||
+        (diagram&&(![1,2].includes(part.connectionDiagramPage)||!/^[a-f0-9]{64}$/.test(part.connectionDiagramSha256)||
+          !Array.isArray(part.positions)||part.positions.length!==count||
+          !part.positions.every(value=>Number.isInteger(value)&&value>=2&&value<=8)||
+          part.positions.reduce((total,value)=>total+value,0)!==part.clampCount))||
+        (part.groundedLevel!==undefined&&(!diagram||!Number.isInteger(part.groundedLevel)||
+          part.groundedLevel<0||part.groundedLevel>=count||!part.mounting.startsWith('DIN')))||
+        (rated&&(![1,2,3].includes(part.ratingPage)||!/^IEC\/EN(?: 60947-7-1| 60664-1)?$/.test(part.ratingStandard)||
+          ![part.nominalVoltage,part.ratedCurrent].every(value=>finite(value)&&value>0)))||
+        ![2,3].includes(part.dimensionPage)||typeof part.finish!=='string'||!part.finish.trim()||
+        !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
+        throw new Error('Invalid or duplicate WAGO mapped terminal row: '+id);
+      }
+      const positions=part.positions??Array(count).fill(part.clampCount/count);
+      batch.set(id,deepFreeze(createWagoTerminal({...part,positions,
+        datasheet:'https://wago.priintcloud.com/datasheets/'+urlCode+'/en',
+        productUrl:'https://www.wago.com/'+urlCode,
+        pages:'1–'+Math.max(part.dimensionPage,part.ratingPage??0),
+      },id)));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function createWagoTerminal(part,id){
+    const mapped=part.topology!==undefined;
+    const matrix=part.orderCode.startsWith('727-');
+    const common=part.topology==='common';
+    const rail=!mapped||part.mounting.startsWith('DIN');
     const deckCount=part.positions.length,height=deckCount*54+16;
-    const title=deckCount===2?'Double-deck through terminal block':'Through terminal block';
-    const productUrl='https://www.wago.com/gb/rail-mount-terminal-blocks/'+part.slug+'/p/'+part.orderCode;
-    const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-48,y:-height/2,width:96,height}];
+    const title=matrix?deckCount+(common?'-level commoned terminal block':'-level matrix terminal block'):
+      mapped&&deckCount>2?deckCount+'-level terminal block':deckCount===2?'Double-deck through terminal block':'Through terminal block';
+    const productUrl=part.productUrl??'https://www.wago.com/gb/rail-mount-terminal-blocks/'+part.slug+'/p/'+part.orderCode;
+    const pins=[],groups=[],artwork=[{kind:'rect',x:-48,y:-height/2,width:96,height}];
     const line=(x1,y1,x2,y2)=>({kind:'line',from:{x:x1,y:y1},to:{x:x2,y:y2}});
+    if(common&&deckCount>1)artwork.push(line(0,-(deckCount-1)*27,0,(deckCount-1)*27));
     for(const [deck,count] of part.positions.entries()){
       const y=(deck-(deckCount-1)/2)*54,group=[];
       artwork.push(line(-34,y,34,y));
       for(let index=0;index<count;index++){
-        const side=index<Math.ceil(count/2)?-1:1;
-        const pinY=count===2?y:y+(index%2===0?-10:10),localNumber=(deckCount===1?'':deck===0?'U':'L')+(index+1);
+        const leftCount=Math.ceil(count/2),side=index<leftCount?-1:1;
+        const sideCount=side<0?leftCount:count-leftCount;
+        const sideIndex=side<0?index:index-leftCount;
+        const pinY=count>4?y+(sideIndex-(sideCount-1)/2)*14:count===2?y:y+(index%2===0?-10:10);
+        const levelLabel=deckCount>2?'L'+(deck+1)+'-':deckCount===2?(deck===0?'U':'L'):'';
+        const localNumber=levelLabel+(index+1);
         const pin={id:'clamp-'+localNumber.toLowerCase(),localNumber,name:'Clamping position '+localNumber,
           x:side*72,y:pinY,electricalType:'passive',connectionType:part.connectionTechnology||'Push-in CAGE CLAMP'};
         pins.push(pin);group.push(pin.id);
         artwork.push(line(pin.x,pin.y,side*34,pin.y));
         if(pin.y!==y)artwork.push(line(side*34,pin.y,side*34,y));
       }
-      internalConnections.push(group);
+      if(part.groundedLevel===deck){
+        pins.push({id:'rail-bond',localNumber:'PE',name:'Grounding foot',x:0,y:y+25,electricalType:'passive',connectionType:'protective-earth'});
+        group.push('rail-bond');
+        artwork.push(line(0,y,0,y+25),line(-7,y+13,7,y+13),line(-5,y+17,5,y+17),line(-3,y+21,3,y+21));
+      }
+      groups.push(group);
     }
+    const internalConnections=common?[groups.flat()]:groups;
     return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
       model:(part.connectionTechnology?part.connectionTechnology+' ':'TOPJOB S ')+part.orderCode,name:title,
       family:part.connectionTechnology?'wago-rail-terminal':'topjob-terminal',referencePrefix:'X',category:'Electrical · WAGO terminal systems',
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:144,height,pins,internalConnections,artwork,
-        numberingNote:'Anchor labels identify schematic clamping positions. Each level is one documented potential; no cross-level or adjacent-block jumper is included.'},
-      specifications:{connectionCount:{value:pins.length},levels:{value:deckCount},potentials:{value:deckCount},
-        ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN, category III, pollution degree 3'},
+        numberingNote:mapped?(common?'The documented clamping positions share one electrical potential.':
+          'Each level is a separate documented electrical potential.')+(part.groundedLevel===undefined?'':' PE identifies the documented grounding foot.'):
+          'Anchor labels identify schematic clamping positions. Each level is one documented potential; no cross-level or adjacent-block jumper is included.'},
+      specifications:{connectionCount:{value:part.clampCount??pins.length},levels:{value:deckCount},potentials:{value:internalConnections.length},
+        ...(part.ratedCurrent!==undefined?{ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalVoltage:{value:part.nominalVoltage,unit:'V',
+          basis:(part.ratingStandard??'IEC/EN')+', category III, pollution degree 3'}}:{}),
         finish:{value:part.finish},...(part.actuationMethod?{actuationMethod:{value:part.actuationMethod}}:{}),
         ...(part.potentialMarking?{potentialMarking:{value:part.potentialMarking}}:{}),
         ...(part.markerCarrier===undefined?{}:{markerCarrier:{value:part.markerCarrier?'Fitted':'Without marker carrier'}}),
         nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},mounting:{value:part.mounting||'DIN rail 35 × 7.5 or 35 × 15 mm'},
         ...(part.connectionTechnology?{connectionTechnology:{value:part.connectionTechnology}}:{}),
-        railReferencedDimensions:{width:{value:part.widthMm,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}},
+        ...(rail?{railReferencedDimensions:{width:{value:part.widthMm,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depthAboveRail:{value:part.depthMm,unit:'mm'}}}:{
+          mountingDimensions:{width:{value:part.widthMm,unit:'mm'},height:{value:part.heightMm,unit:'mm'},depth:{value:part.depthMm,unit:'mm'}}})},
       panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,edition:part.revision,page:part.dimensionPage,
-        note:'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.'},
+        note:rail?'Envelope depth is measured from the upper edge of the DIN rail. Use the rail mounting plane as the rear datum.':
+          'Manufacturer body dimensions for the documented mounting method.'},
       instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
       sources:[{publisher:'WAGO',title:`${part.orderCode} datasheet, pp. ${part.pages}`,url:part.datasheet,documentRevision:part.revision,
-        revisionNote:'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:part.retrievedAt||'2026-11-22',
+        revisionNote:mapped?'Clamping positions, documented potential groups and mounting dimensions.':
+          'Connection count, separate potentials, IEC ratings and rail-referenced dimensions.',retrievedAt:part.retrievedAt||'2026-11-22',
         ...(part.datasheetSha256?{sha256:part.datasheetSha256}:{}),
         ...(part.connectionDiagramSha256?{connectionDiagramSha256:part.connectionDiagramSha256}:{})},
         {publisher:'WAGO',title:`${part.orderCode} product record`,url:productUrl,revisionNote:'Exact order identity and DIN rail sizes.',retrievedAt:part.retrievedAt||'2026-11-22'},
@@ -4464,6 +4528,7 @@ function createPumpStarterDocumentation(name) {
     registerPlcSymbols,
     registerWagoDigitalIoBatch,
     registerWagoTerminalBatch,
+    registerWagoMappedTerminalBatch,
     registerWagoPcbTerminalBatch,
     registerWago2086PcbTerminalBatch,
     registerWagoStackablePcbTerminalBatch,
