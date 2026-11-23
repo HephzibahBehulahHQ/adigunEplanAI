@@ -400,6 +400,15 @@ const mcsBatch = JSON.parse(
     "utf8",
   ),
 );
+const mcsMicroBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-733-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
 const mcsMiniBatch = JSON.parse(
   fs.readFileSync(
     new URL(
@@ -429,6 +438,7 @@ const mcsMidiBatch = JSON.parse(
 );
 const mcsParts = [
   ...mcsBatch,
+  ...mcsMicroBatch,
   ...mcsMiniBatch,
   ...mcsFemaleBatch,
   ...mcsMidiBatch,
@@ -437,6 +447,7 @@ engine.registerWagoMcsBatch(mcsParts);
 
 test("WAGO MCS connectors retain exact order codes, isolated poles and verified drill data", () => {
   assert.equal(mcsBatch.length, 970);
+  assert.equal(mcsMicroBatch.length, 96);
   assert.equal(mcsMiniBatch.length, 516);
   assert.equal(mcsFemaleBatch.length, 310);
   assert.equal(mcsMidiBatch.length, 404);
@@ -449,7 +460,7 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
   );
   assert.equal(
     mcsParts.filter((source) => source.drilledHoleDiameterMm).length,
-    976,
+    996,
   );
   for (const source of mcsParts) {
     const def = engine.component(
