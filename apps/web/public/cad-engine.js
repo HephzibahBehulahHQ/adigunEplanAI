@@ -1181,8 +1181,43 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
 
+  function registerWagoStackablePcbTerminalBatch(rows){
+    const batch=new Map();
+    for(const part of rows){
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      const rated=part.ratingPage!==undefined;
+      const drawn=part.footprintPage!==undefined;
+      if(!/^(236|256)-\d{3,4}(?:\/\d{3}-\d{3}){0,3}$/.test(part.orderCode)||
+        !['THT','THR'].includes(part.mounting)||![1,2].includes(part.solderPinsPerPole)||
+        !Number.isInteger(part.poles)||part.poles<1||part.poles>48||![5,7.5,10].includes(part.padPitchMm)||
+        (part.alternatePadPitchMm!==undefined&&part.alternatePadPitchMm!==part.padPitchMm*1.016)||
+        !['Operating tool','Push-button','Push-button (angled)','Finger-operated lever'].includes(part.actuationMethod)||
+        ![part.nominalCrossSectionMm2,part.bodyWidthMm,part.bodyDepthMm,part.bodyHeightAboveBoardMm,
+          part.solderPinLengthMm,part.solderPinWidthMm,part.solderPinDepthMm,part.drilledHoleDiameterMm,
+          part.drilledHolePlusToleranceMm].every(value=>finite(value)&&value>0)||
+        (part.poles-1)*part.padPitchMm>=part.bodyWidthMm||
+        (rated&&(![1,2,3,4].includes(part.ratingPage)||
+          ![part.nominalVoltage,part.impulseVoltageKv,part.ratedCurrent].every(value=>finite(value)&&value>0)))||
+        (drawn&&(![1,2].includes(part.footprintPage)||!/^[a-f0-9]{64}$/.test(part.footprintDrawingSha256)||
+          (part.solderPinsPerPole===2?part.padRowSpacingMm!==5:part.padRowSpacingMm!==undefined)))||
+        ![2,3,4].includes(part.dimensionPage)||typeof part.finish!=='string'||!part.finish.trim()||
+        !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
+        throw new Error('Invalid or duplicate WAGO stackable PCB terminal row: '+id);
+      }
+      batch.set(id,deepFreeze(createWagoPcbTerminal({...part,
+        datasheet:'https://wago.priintcloud.com/datasheets/'+urlCode+'/en',productUrl:'https://www.wago.com/'+urlCode,
+        connectionTechnology:'CAGE CLAMP',pages:'1–'+Math.max(part.dimensionPage,part.ratingPage??0),
+      },id)));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function createWagoPcbTerminal(part,id){
-    const series2086=part.mounting!==undefined;
+    const series=part.orderCode.split('-')[0];
+    const series2086=series==='2086';
+    const hasLayout=series==='250'||part.footprintPage!==undefined;
+    const throughHoleReflow=part.mounting==='THR';
     const surfaceMount=part.mounting==='SMD';
     const doublePad=part.solderPinsPerPole===2;
     const pcbMount=surfaceMount?'Surface-mount solder pad':'Through-hole solder pin';
@@ -1203,7 +1238,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           x:x+offset,y:45,electricalType:'passive',connectionType:pcbMount});
         group.push(padId);
         artwork.push({kind:'line',from:junction,to:{x:x+offset,y:45}});
-        const row=doublePad?padIndex:(index+(series2086?part.poles%2:0))%2;
+        const row=doublePad?padIndex:series2086?(index+part.poles)%2:series==='250'?index%2:0;
         pads.push({pinId:padId,xMm:index*part.padPitchMm,yMm:row*(part.padRowSpacingMm||0),
           ...(surfaceMount?{widthMm:part.padWidthMm,lengthMm:part.padLengthMm}:{drilledHoleDiameterMm:part.drilledHoleDiameterMm,
             ...(part.drilledHolePlusToleranceMm!==undefined?{drilledHolePlusToleranceMm:part.drilledHolePlusToleranceMm}:{})})});
@@ -1212,34 +1247,39 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     }
     const mm=value=>({value,unit:'mm'});
     return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
-      model:'Series '+(series2086?'2086':'250')+' PCB terminal block',
-      name:surfaceMount?'Surface-mount PCB terminal block':series2086?'Through-hole reflow PCB terminal block':'Through-hole PCB terminal block',
+      model:'Series '+series+' PCB terminal block',
+      name:surfaceMount?'Surface-mount PCB terminal block':throughHoleReflow?'Through-hole reflow PCB terminal block':'Through-hole PCB terminal block',
       family:'wago-pcb-terminal',
       referencePrefix:'X',category:'Electrical · WAGO PCB terminal blocks',
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
         numberingNote:doublePad?'W and P identify model-local wire clamps and PCB terminals. One clamp and its two PCB terminals share one isolated potential.':
           'W and P identify model-local wire clamps and solder pins. Each pair is one isolated potential.'},
-      specifications:{poleCount:{value:part.poles},nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},
-        ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},
+      specifications:{poleCount:{value:part.poles},
+        ...(part.nominalVoltage!==undefined?{nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},
+          ratedCurrent:{value:part.ratedCurrent,unit:'A'}}:{}),nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},
         finish:{value:part.finish},connectionTechnology:{value:part.connectionTechnology},actuationMethod:{value:part.actuationMethod},
-        mounting:{value:surfaceMount?'Surface-mount soldering':series2086?'Through-hole reflow':'Through-hole solder mounting'},padPitch:mm(part.padPitchMm),
-        ...(series2086?{solderPinsPerPole:{value:part.solderPinsPerPole},
-          ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:wagoIecRatingBasis}}:{}),
+        mounting:{value:surfaceMount?'Surface-mount soldering':throughHoleReflow?'Through-hole reflow':'Through-hole solder mounting'},padPitch:mm(part.padPitchMm),
+        ...(part.alternatePadPitchMm?{alternatePadPitch:mm(part.alternatePadPitchMm)}:{}),
+        ...(part.solderPinsPerPole?{solderPinsPerPole:{value:part.solderPinsPerPole}}:{}),
+        ...(part.impulseVoltageKv?{ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:wagoIecRatingBasis}}:{}),
         ...(part.packaging?{packaging:{value:part.packaging}}:{}),
         ...(part.padRowSpacingMm?{padRowSpacing:mm(part.padRowSpacingMm)}:{}),
         ...(surfaceMount?{padWidth:mm(part.padWidthMm),padLength:mm(part.padLengthMm)}:{solderPinLength:mm(part.solderPinLengthMm),
           solderPinWidth:mm(part.solderPinWidthMm),solderPinDepth:mm(part.solderPinDepthMm),drilledHoleDiameter:mm(part.drilledHoleDiameterMm),
           ...(part.drilledHolePlusToleranceMm!==undefined?{drilledHolePlusTolerance:mm(part.drilledHolePlusToleranceMm)}:{})})},
-      pcbFootprint:{datum:series2086?'Origin at first pole on the upper row of the datasheet drawing, +X along poles and +Y toward the lower row':
-        part.padRowSpacingMm?'First solder pin at front right of manufacturer drawing, +X along pole order, +Y toward rear':'Center of first solder pin',pads},
+      ...(hasLayout?{pcbFootprint:{datum:series2086?'Origin at first pole on the upper row of the datasheet drawing, +X along poles and +Y toward the lower row':
+        series!=='250'?'Origin at the first solder pin. X uses the primary datasheet pitch, Y runs across the solder rows.':
+        part.padRowSpacingMm?'First solder pin at front right of manufacturer drawing, +X along pole order, +Y toward rear':'Center of first solder pin',pads}}:{}),
       panelFootprint:{widthMm:part.bodyWidthMm,heightMm:part.bodyDepthMm,depthMm:part.bodyHeightAboveBoardMm,
         source:part.datasheet,edition:part.revision,page:part.dimensionPage,
         note:surfaceMount?'Body projected on the PCB mounting plane. Use the documented surface pads.':
           'Body projected on the PCB mounting plane. Solder-pin protrusion is recorded separately.'},
       instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
       sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. '+part.pages,url:part.datasheet,documentRevision:part.revision,
-        revisionNote:series2086?'Isolated potentials, mounting pattern on page '+part.footprintPage+' and IEC ratings on page '+part.ratingPage+'.':
-          'Isolated potentials, one solder pin per potential, pitch, hole and body geometry.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256,
+        revisionNote:series==='250'?'Isolated potentials, one solder pin per potential, pitch, hole and body geometry.':
+          'Isolated potentials, solder terminals and mechanical data.'+
+          (part.footprintPage?' PCB geometry from the drawing on page '+part.footprintPage+'.':'')+
+          (part.ratingPage?' IEC ratings on page '+part.ratingPage+'.':''),retrievedAt:part.retrievedAt,sha256:part.datasheetSha256,
         ...(part.footprintDrawingSha256?{footprintDrawingSha256:part.footprintDrawingSha256}:{})},
         {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
@@ -4320,6 +4360,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoTerminalBatch,
     registerWagoPcbTerminalBatch,
     registerWago2086PcbTerminalBatch,
+    registerWagoStackablePcbTerminalBatch,
     registerWagoWinstaBatch,
     registerWagoWinstaCableBatch,
     registerWagoMcsBatch,

@@ -5,6 +5,7 @@ import wagoTerminalBatch from "../../../packages/component-library/wago-terminal
 
 import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-terminal-batch.json";
 import wago2086PcbTerminalBatch from "../../../packages/component-library/wago-pcb-2086-batch.json";
+import wagoStackablePcbTerminalBatch from "../../../packages/component-library/wago-pcb-236-256-batch.json";
 
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
@@ -46,6 +47,9 @@ declare global {
       registerWago2086PcbTerminalBatch: (
         rows: typeof wago2086PcbTerminalBatch,
       ) => void;
+      registerWagoStackablePcbTerminalBatch: (
+        rows: typeof wagoStackablePcbTerminalBatch,
+      ) => void;
       registerWagoWinstaBatch: (rows: typeof wagoWinstaBatch) => void;
       registerWagoWinstaCableBatch: (rows: typeof wagoWinstaCableBatch) => void;
       registerWagoRelayBatch: (rows: typeof wagoRelayBatch) => void;
@@ -62,6 +66,9 @@ window.AdigunCADEngine.registerWagoTerminalBatch(wagoTerminalBatch);
 window.AdigunCADEngine.registerWagoPcbTerminalBatch(wagoPcbTerminalBatch);
 window.AdigunCADEngine.registerWago2086PcbTerminalBatch(
   wago2086PcbTerminalBatch,
+);
+window.AdigunCADEngine.registerWagoStackablePcbTerminalBatch(
+  wagoStackablePcbTerminalBatch,
 );
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
 window.AdigunCADEngine.registerWagoWinstaCableBatch(wagoWinstaCableBatch);

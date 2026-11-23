@@ -103,6 +103,17 @@ engine.registerWago2086PcbTerminalBatch(
     ),
   ),
 );
+engine.registerWagoStackablePcbTerminalBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-pcb-236-256-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoMcsBatch(
   ["231", "232", "721", "733", "734", "831"].flatMap((series) =>
     JSON.parse(
