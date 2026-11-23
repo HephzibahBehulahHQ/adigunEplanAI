@@ -50,9 +50,9 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 });
 
 test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () => {
-  assert.ok(pcbBatch.length >= 118);
+  assert.ok(pcbBatch.length >= 291);
   for (const part of pcbBatch) {
-    const def = engine.component("wago-" + part.orderCode);
+    const def = engine.component("wago-" + part.orderCode.replace("/", "_"));
     const instance = engine.createInstance(def.id, 400, 250, "XPCB");
     assert.equal(engine.validateInstance(instance).valid, true);
     assert.equal(
@@ -76,6 +76,13 @@ test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () =
     assert.equal(def.panelFootprint.heightMm, part.bodyDepthMm);
     assert.equal(def.panelFootprint.depthMm, part.bodyHeightAboveBoardMm);
   }
+  const suffixed = engine.component("wago-250-202_000-006");
+  assert.equal(suffixed.manufacturerPartNumber, "250-202/000-006");
+  assert.equal(suffixed.specifications.finish.value, "Blue");
+  assert.equal(
+    engine.component("wago-250-202").specifications.finish.value,
+    "Gray",
+  );
   const def = engine.component("wago-250-316");
   assert.equal(def.pcbFootprint.pads[15].xMm, 37.5);
   assert.equal(def.pcbFootprint.pads[15].drilledHoleDiameterMm, 1.1);
@@ -94,7 +101,12 @@ test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () =
     );
     assert.match(staggered.sources[0].footprintDrawingSha256, /^[a-f0-9]{64}$/);
   }
-  const instance = engine.createInstance("wago-250-202", 400, 250, "XPCB");
+  const instance = engine.createInstance(
+    "wago-250-202_000-006",
+    400,
+    250,
+    "XPCB",
+  );
   instance.sheetId = "pcb";
   const wires = ["clamp-1", "pad-1", "clamp-2", "pad-2"].map((id, index) => {
     const pin = engine.worldPins(instance).find((item) => item.id === id);
@@ -149,6 +161,10 @@ test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () =
     [2, 2],
   );
   assert.equal(restored.project.objects[2].attachments.end.pinId, "pad-1");
+  assert.equal(
+    engine.billOfMaterials(restored.project.objects).rows[0].partNumber,
+    "250-202/000-006",
+  );
 });
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {

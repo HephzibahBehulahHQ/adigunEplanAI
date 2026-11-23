@@ -202,3 +202,16 @@ the other wires on the sheet. If the route changes a geometric junction, the
 editor tries an alternate lane that preserves the previous contacts. Manual
 bends and authored lanes keep their existing geometry rules. Electrical
 checks remain available for drawings that require manual routing.
+
+## Series 250 exact order variants
+
+A further 173 series 250 parts use their exact manufacturer order codes in
+the pickers, Properties and BOM. Slash suffixes such as 250-202/000-006
+remain part of the manufacturer identity. The editor uses the manufacturer's
+underscore-form URL slug as the stable internal ID suffix.
+
+The batch includes 31 staggered parts verified against a 2.54 mm pitch
+drawing with 5 mm between rows. One candidate, 250-216/000-024, has eight
+clamping units and sixteen potentials in the datasheet and remains out of
+the one-clamp-per-pole family.
+[Variant datasheet](https://wago.priintcloud.com/datasheets/250-202_000-006/en)

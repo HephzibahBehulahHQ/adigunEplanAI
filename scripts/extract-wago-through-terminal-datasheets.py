@@ -28,6 +28,7 @@ ISOLATED_DECK_DIAGRAMS = {
 STAGGERED_PCB_DRAWINGS = {
     "c152e6f267c1ddd76ec1d0210c47861dcf329cd09ba5993a4b70571c0ab9715f": (3.5, 5),
     "71fe602df5fe38ed975589be07c9819ffe726582359b0e6974d7cac5b6f8fabb": (2.5, 5),
+    "88ba609cc3b79eac09016983aadd19c25d208dac924ac4493806f6d11f51684a": (2.54, 5),
 }
 
 
@@ -43,7 +44,8 @@ def evidence(pages, pattern, label):
 
 
 def read_pcb_article(pdf, candidate, retrieved_at):
-    code = pdf.stem
+    code = candidate["orderCode"]
+    url_code = code.replace("/", "_")
     with pypdfium2.PdfDocument(pdf) as document:
         pages = [
             document[index].get_textpage().get_text_range().replace("\r", "").replace("\xa0", " ")
@@ -51,9 +53,11 @@ def read_pcb_article(pdf, candidate, retrieved_at):
         ]
     if (
         candidate["manufacturer"] != "WAGO"
-        or candidate["datasheetUrl"] != f"https://wago.priintcloud.com/datasheets/{code}/en"
+        or url_code != pdf.stem
+        or candidate["datasheetUrl"] != f"https://wago.priintcloud.com/datasheets/{url_code}/en"
+        or candidate["productUrl"] != f"https://www.wago.com/{url_code}"
         or not candidate["description"].startswith("PCB terminal block;")
-        or not all(f"Item Number: {code}" in page for page in pages)
+        or not all(re.search(rf"Item Number: {re.escape(code)}(?:\s|$)", page) for page in pages)
     ):
         raise ValueError("source does not identify this PCB terminal block")
 
@@ -149,21 +153,25 @@ def iec_ratings(pages, standard="60947-7-1"):
     for page in pages:
         for table in re.finditer(rf"IEC/EN {standard}[\s\S]*?Rated current[^\n]+", page):
             iec_tables.append(table.group())
-    voltage = evidence(iec_tables, rf"^Nominal voltage {NUMBER} V", "IEC nominal voltage")
     current = evidence(iec_tables, rf"^Rated current {NUMBER} A", "IEC rated current")
     ratings_page = next(index for index, page in enumerate(pages, 1) if iec_tables[0] in page)
-    if not all(
+    explicit_basis = r"^Nominal voltage \(III\s*/\s*3\)"
+    if all(re.search(explicit_basis, table, re.MULTILINE) for table in iec_tables):
+        voltage = evidence(iec_tables, rf"{explicit_basis} {NUMBER} V", "IEC nominal voltage")
+    elif all(
         re.search(r"Overvoltage category III\b", table)
         and re.search(r"Pollution degree 3\b", table)
         for table in iec_tables
     ):
+        voltage = evidence(iec_tables, rf"^Nominal voltage {NUMBER} V", "IEC nominal voltage")
+    else:
         raise ValueError("IEC rating basis is missing")
     return voltage, current, ratings_page
 
 
 def read_article(pdf, candidate, retrieved_at):
     code = pdf.stem
-    if re.fullmatch(r"250-[0-9]{3}", code):
+    if re.fullmatch(r"250-[0-9]{3,4}(?:_[0-9]{3}-[0-9]{3})?", code):
         return read_pcb_article(pdf, candidate, retrieved_at)
     double_deck = bool(re.fullmatch(r"(?:2000|2002|2200|2202)-2[0-9]{3}", code))
     classic = bool(re.fullmatch(r"(?:279|280|281|282|285)-[0-9]{3}", code))
@@ -321,7 +329,7 @@ def main():
     with args.candidate_jsonl.open(encoding="utf-8") as source:
         for line in source:
             candidate = json.loads(line)
-            code = candidate["orderCode"]
+            code = candidate["orderCode"].replace("/", "_")
             if code in candidates:
                 parser.error(f"duplicate candidate code {code}")
             candidates[code] = candidate
