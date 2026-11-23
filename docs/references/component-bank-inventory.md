@@ -24,6 +24,12 @@ anchor where the source shows a rail bond.
 [Commoned terminal datasheet](https://wago.priintcloud.com/datasheets/727-225/en) ·
 [Matrix terminal datasheet](https://wago.priintcloud.com/datasheets/727-219/en)
 
+## WAGO 2002-1201
+
+The gray two-conductor TOPJOB S terminal is placeable by exact order code. Its
+two clamps share one electrical potential. The cabinet body uses the 32.9 mm
+depth above the DIN rail datum. [WAGO datasheet](https://wago.priintcloud.com/datasheets/2002-1201/en)
+
 ## First terminal-system batch
 
 Three WAGO TOPJOB S through terminals are placeable from the compact library.
