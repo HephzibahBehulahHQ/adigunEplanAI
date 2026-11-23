@@ -60,7 +60,7 @@ engine.registerWagoDigitalIoBatch(
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
-  assert.equal(cableBatch.length, 643);
+  assert.equal(cableBatch.length, 877);
   for (const row of cableBatch) {
     const def = engine.component("wago-" + row.orderCode.replace("/", "_"));
     const freeEnd = row.endType === "free";
@@ -76,10 +76,10 @@ test("WINSTA cables carry isolated potentials across both ends after move and re
     );
     assert.deepEqual(
       plain(def.symbol.internalConnections),
-      row.markings.map((mark) => [
-        "socket-" + mark.toLowerCase(),
-        endPrefix + mark.toLowerCase(),
-      ]),
+      row.markings.map((mark) => {
+        const pinMark = mark.toLowerCase().replace("'", "-prime");
+        return ["socket-" + pinMark, endPrefix + pinMark];
+      }),
     );
     const instance = engine.createInstance(def.id, 200, 300, "W1");
     instance.sheetId = "cables";

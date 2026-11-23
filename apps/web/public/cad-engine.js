@@ -1262,13 +1262,15 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const profiles=[
       {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^(?:H05VV-F|H05Z1Z1-F) 2x(?:1(?:\.5)?|2\.5)$/},
       {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1(?:\.5)?$/},
-      {code:/^771-9993\/[01][01][67]-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],cable:threeCoreCable},
+      {code:/^771-(?:9993\/[01][01][67]|9393\/[01][16][67])-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],cable:threeCoreCable},
       {code:/^771-9973\/[01][01][67]-[0-9]{3}$/,coding:'P',markings:['L','PE','N'],cable:threeCoreCable},
       {code:/^771-9973\/(?:006-305|016-[57]05)$/,coding:'S',markings:['1','2','L'],cable:/^(?:H05VV-F|H05Z1Z1-F) 3x1\.5$/},
       {code:/^771-9993\/106-10[57]$/,coding:'B',markings:['1','2','3'],cable:/^H05VV-F 3x1\.5$/},
-      {code:/^771-9995\/[01][01][67]-[0-9]{3}$/,coding:'A',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
+      {code:/^771-(?:9995\/[01][01][67]|9395\/[01][16][67])-[0-9]{3}$/,coding:'A',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
       {code:/^771-9975\/[01][01][67]-[0-9]{3}$/,coding:'P',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
-      {code:/^771-9985\/[01][01][67]-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
+      {code:/^771-(?:9985\/[01][01][67]|9385\/[01][16][67])-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
+      {code:/^771-9385\/027-[79]03$/,coding:'L',markings:['N','PE','L',"N'","L'"],cable:fiveCoreCable},
+      {code:/^771-9395\/166-[0-9]{3}$/,coding:'B',markings:['1','2','3','4','5'],cable:/^Control line 5x1\.5$/},
     ];
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
@@ -1295,10 +1297,11 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       if(!freeEnd)artwork.push({kind:'rect',x:36,y:-bodyHeight/2,width:36,height:bodyHeight});
       for(const [index,mark] of part.markings.entries()){
         const y=(index-(poleCount-1)/2)*36;
-        const socket={id:'socket-'+mark.toLowerCase(),name:'Socket '+mark,localNumber:'Socket '+mark,
+        const pinMark=mark.toLowerCase().replace("'",'-prime');
+        const socket={id:'socket-'+pinMark,name:'Socket '+mark,localNumber:'Socket '+mark,
           x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Female mating contact'};
         const endLabel=(freeEnd?'Lead ':'Plug ')+mark;
-        const end={id:(freeEnd?'lead-':'plug-')+mark.toLowerCase(),name:endLabel,localNumber:endLabel,
+        const end={id:(freeEnd?'lead-':'plug-')+pinMark,name:endLabel,localNumber:endLabel,
           x:92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':freeEnd?'Free conductor end':'Male mating contact'};
         pins.push(socket,end);
         internalConnections.push([socket.id,end.id]);

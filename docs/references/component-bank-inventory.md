@@ -308,3 +308,9 @@ halogen-free types, with a plug or individually wireable leads at the
 second end. Coding A carries L and N, and coding B carries 1 and 2.
 [Coding A MIDI datasheet](https://wago.priintcloud.com/datasheets/771-8992_106-201/en) ·
 [Coding B MINI datasheet](https://wago.priintcloud.com/datasheets/891-8992_105-103/en)
+
+The 234 additional MIDI assemblies cover coding A, B, I and L. Coding L
+retains N, PE, L, N′ and L′ as five separate conductors. Five-pole coding B
+uses contacts 1 through 5. Six variants remain outside this batch because
+their datasheets omit connector height.
+[Coding L datasheet](https://wago.priintcloud.com/datasheets/771-9385_027-703/en)
