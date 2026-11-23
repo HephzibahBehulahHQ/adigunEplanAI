@@ -1975,6 +1975,46 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   );
 });
 
+test("WINSTA plug-to-free-lead assemblies retain documented cable end identity", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["771-9993/206-101", 400],
+    ["891-8993/005-101", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    const id = "wago-" + code.replace("/", "_");
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(492, 214);
+  await clickAt(608, 214);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "plug–free end",
+  );
+  const saved = await saveDrawing(page, "winsta-plug-free-leads");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "lead-l" }),
+        end: expect.objectContaining({ pinId: "socket-l" }),
+      },
+    }),
+  );
+});
+
 test("WINSTA four-pole assemblies expose exact ratings and separate switched conductors", async ({
   page,
 }) => {

@@ -46,6 +46,16 @@ const cableBatch = JSON.parse(
   ),
 );
 engine.registerWagoWinstaCableBatch(cableBatch);
+const explicitWinstaBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-winsta-termination-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoWinstaCableBatch(explicitWinstaBatch);
 engine.registerWagoDigitalIoBatch(
   JSON.parse(
     fs.readFileSync(
@@ -303,9 +313,11 @@ test("WAGO relays carry documented coil and contact states without passive short
 
 test("WINSTA cables carry isolated potentials across both ends after move and reopen", () => {
   assert.equal(cableBatch.length, 1077);
-  for (const row of cableBatch) {
+  assert.equal(explicitWinstaBatch.length, 700);
+  for (const row of [...cableBatch, ...explicitWinstaBatch]) {
     const def = engine.component("wago-" + row.orderCode.replace("/", "_"));
     const freeEnd = row.endType === "free";
+    const startPrefix = row.termination === "plug-free" ? "plug-" : "socket-";
     const endPrefix = freeEnd ? "lead-" : "plug-";
     assert.equal(def.specifications.assemblyLength.value, row.lengthM);
     assert.equal(def.specifications.coding.value, row.coding);
@@ -333,7 +345,7 @@ test("WINSTA cables carry isolated potentials across both ends after move and re
           .toLowerCase()
           .replace("/", "-")
           .replace("'", "-prime");
-        return ["socket-" + pinMark, endPrefix + pinMark];
+        return [startPrefix + pinMark, endPrefix + pinMark];
       }),
     );
     const instance = engine.createInstance(def.id, 200, 300, "W1");

@@ -11,6 +11,7 @@ import wagoMultipinPcbTerminalBatch from "../../../packages/component-library/wa
 
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
+import wagoWinstaTerminationBatch from "../../../packages/component-library/wago-winsta-termination-batch.json";
 import wagoRelayBatch from "../../../packages/component-library/wago-relay-batch.json";
 import wagoPowerSupplyBatch from "../../../packages/component-library/wago-power-supply-batch.json";
 import wagoSingleChannelBreakerBatch from "../../../packages/component-library/wago-single-channel-breaker-batch.json";
@@ -36,6 +37,10 @@ const stackablePcbCatalog = [
   ...wago255257PcbTerminalBatch,
   ...wagoMultipinPcbTerminalBatch,
 ];
+const winstaCableCatalog = [
+  ...wagoWinstaCableBatch,
+  ...wagoWinstaTerminationBatch,
+];
 
 const symbols = plcKinds.map((kind) => {
   const { symbol: id, channels } = plcSymbol[kind];
@@ -58,7 +63,7 @@ declare global {
         rows: typeof stackablePcbCatalog,
       ) => void;
       registerWagoWinstaBatch: (rows: typeof wagoWinstaBatch) => void;
-      registerWagoWinstaCableBatch: (rows: typeof wagoWinstaCableBatch) => void;
+      registerWagoWinstaCableBatch: (rows: typeof winstaCableCatalog) => void;
       registerWagoRelayBatch: (rows: typeof wagoRelayBatch) => void;
       registerWagoPowerSupplyBatch: (rows: typeof wagoPowerSupplyBatch) => void;
       registerWagoSingleChannelBreakerBatch: (
@@ -78,7 +83,7 @@ window.AdigunCADEngine.registerWagoStackablePcbTerminalBatch(
   stackablePcbCatalog,
 );
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
-window.AdigunCADEngine.registerWagoWinstaCableBatch(wagoWinstaCableBatch);
+window.AdigunCADEngine.registerWagoWinstaCableBatch(winstaCableCatalog);
 window.AdigunCADEngine.registerWagoRelayBatch(wagoRelayBatch);
 window.AdigunCADEngine.registerWagoPowerSupplyBatch(wagoPowerSupplyBatch);
 window.AdigunCADEngine.registerWagoSingleChannelBreakerBatch(

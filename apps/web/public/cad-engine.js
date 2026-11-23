@@ -1367,6 +1367,11 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const twoPoleCode=/^(?:771|891)-8992\/[01][01][567]-[0-9]{3}$/;
     const threeCoreCable=/^(?:H05VV-F|H05Z1Z1-F) 3G(?:1\.5|2\.5)$/;
     const fiveCoreCable=/^(?:H05VV-F|H05Z1Z1-F) 5G(?:1\.5|2\.5)$/;
+    const documentedMarkings=new Set([
+      'A:L,N','A:L,PE,N',"A:N,PE,2/L,1/L'",'A:N,PE,L1,L2,L3','A:N,PE,1,2,3',
+      'B:1,2','B:1,2,3','B:1,2,3,4','B:1,2,3,4,5',
+      'I:N,PE,L,DA-,DA+',"L:N,PE,L,N',L'",'P:L,PE,N','P:N,PE,L1,L2,L3','S:1,2,L',
+    ]);
     const profiles=[
       {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^(?:H05VV-F|H05Z1Z1-F) 2x(?:1(?:\.5)?|2\.5)$/},
       {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1(?:\.5)?$/},
@@ -1387,13 +1392,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
-      const freeEnd=/\/1/.test(part.orderCode);
+      const explicit=part.termination!==undefined;
+      const freeEnd=explicit?part.termination==='socket-free'||part.termination==='plug-free':/\/1/.test(part.orderCode);
+      const plugAtStart=part.termination==='plug-free';
       const profile=profiles.find(candidate=>candidate.coding===part.coding&&candidate.code.test(part.orderCode));
-      if(!profile||part.series!==(mini?'MINI':'MIDI')||!profile.cable.test(part.cableType)||
+      const cableType=/^(?:H05VV-F|H05Z1Z1-F|Control line) ([2-5])[Gx](?:1|1\.5|2\.5)$/.exec(part.cableType);
+      if(!Array.isArray(part.markings)||part.series!==(mini?'MINI':'MIDI')||
+        (explicit?(!/^(771|891)-\d{4}\/\d{3,4}-\d{3,4}$/.test(part.orderCode)||
+          !['socket-plug','socket-free','plug-free'].includes(part.termination)||
+          !cableType||Number(cableType[1])!==part.markings.length||
+          !documentedMarkings.has(part.coding+':'+part.markings.join(','))):
+          (!profile||!profile.cable.test(part.cableType)||part.markings.length!==profile.markings.length||
+            !profile.markings.every((mark,index)=>mark===part.markings[index])))||
         (freeEnd?(part.endType!=='free'||part.conductorPreparation!=='ultrasonically tip-bonded'):
           (part.endType!==undefined||part.conductorPreparation!==undefined))||
-        !Array.isArray(part.markings)||part.markings.length!==profile.markings.length||
-        !profile.markings.every((mark,index)=>mark===part.markings[index])||
         ![part.lengthM,part.connectorWidthMm,part.nominalVoltage,part.ratedCurrent,part.impulseVoltageKv].every(value=>finite(value)&&value>0)||
         (part.connectorHeightMm!==undefined&&(!finite(part.connectorHeightMm)||part.connectorHeightMm<=0))||
         ![2,3].includes(part.ratingPage)||
@@ -1401,9 +1413,10 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
         throw new Error('Invalid or duplicate WAGO WINSTA cable row: '+id);
       }
-      const poleCount=profile.markings.length;
+      const poleCount=part.markings.length;
       const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
-      const termination=freeEnd?'socket–free end':'socket–plug';
+      const startType=plugAtStart?'plug':'socket';
+      const termination=freeEnd?startType+'–free end':'socket–plug';
       const model='WINSTA '+part.series+' '+termination+' cable · '+part.lengthM+' m';
       const pins=[],internalConnections=[];
       const bodyHeight=36*poleCount-10;
@@ -1412,19 +1425,21 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       for(const [index,mark] of part.markings.entries()){
         const y=(index-(poleCount-1)/2)*36;
         const pinMark=mark.toLowerCase().replace('/','-').replace("'",'-prime');
-        const socket={id:'socket-'+pinMark,name:'Socket '+mark,localNumber:'Socket '+mark,
-          x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Female mating contact'};
+        const startLabel=(plugAtStart?'Plug ':'Socket ')+mark;
+        const start={id:startType+'-'+pinMark,name:startLabel,localNumber:startLabel,
+          x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':
+            plugAtStart?'Male mating contact':'Female mating contact'};
         const endLabel=(freeEnd?'Lead ':'Plug ')+mark;
         const end={id:(freeEnd?'lead-':'plug-')+pinMark,name:endLabel,localNumber:endLabel,
           x:92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':freeEnd?'Free conductor end':'Male mating contact'};
-        pins.push(socket,end);
-        internalConnections.push([socket.id,end.id]);
-        artwork.push({kind:'line',from:{x:socket.x,y},to:{x:end.x,y}});
+        pins.push(start,end);
+        internalConnections.push([start.id,end.id]);
+        artwork.push({kind:'line',from:{x:start.x,y},to:{x:end.x,y}});
       }
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-winsta-cable',referencePrefix:'W',category:'Electrical · Cable assemblies',
         symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:184,height:bodyHeight+8,pins,internalConnections,artwork,
-          numberingNote:freeEnd?'Lead labels refer to the matching socket potentials. Schematic spacing is independent of assembly length.':
+          numberingNote:freeEnd?'Lead labels refer to the matching '+startType+' potentials. Schematic spacing is independent of assembly length.':
             'Each potential is carried between the same marked socket and plug contact. Schematic spacing is independent of assembly length.'},
         specifications:{poleCount:{value:poleCount},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
           cableType:{value:part.cableType},connectorWidth:{value:part.connectorWidthMm,unit:'mm'},
