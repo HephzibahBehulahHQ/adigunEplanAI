@@ -1,5 +1,24 @@
 # Active engineering goal — 2026-11-14
 
+## Component bank checkpoint — 2026-11-23
+
+The owner prioritized 10,000 distinct source-backed order codes while
+keeping the approved editor interface. Main at `b51e366` contains 7,045
+verified catalogue entries after PRs #270–279. The inventory exports
+include exact identity, terminal groups, provenance and available mounting
+geometry. Each batch runs native editor and save/reopen checks before merge.
+Use [the inventory record](references/component-bank-inventory.md) for
+manufacturer sources and documented limits.
+
+GitHub Pages publication is workflow-verified. The public custom domain
+still serves an older manifest while the `cloudflare-production` environment
+is missing `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Check the
+public build manifest separately before reporting a live update.
+
+Continue the component bank before other roadmap work. Keep exact connector
+ends and manufacturer-specific markings, validate the full catalogue in
+the native editor, then merge and verify Pages in small batches.
+
 The A3 assembly sheet includes a worked ENC1 heat-load subtotal for F1,
 K1, F2 and PS1. It uses the [Siemens F1 data sheet](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RV2321-4BC10),
 [K1 data sheet](https://support.industry.siemens.com/teddatasheet/?caller=SIOS&format=pdf&language=en&mlfbs=3RT20272KB40),
