@@ -262,3 +262,9 @@ model-local. Header panel geometry uses the manufacturer body envelope above
 the board. PCB drill coordinates and automatic mating are outside this batch.
 [Female connector](https://www.wago.com/global/pluggable-connectors/1-conductor-female-connector/p/231-102_026-000) ·
 [THT header](https://www.wago.com/global/pluggable-connectors/tht-male-header/p/231-433_001-000)
+
+The two-conductor batch adds 32 socket variants across the same pitches.
+Each mating contact and its two Push-in CAGE CLAMP terminals form one
+isolated potential. Three 107-000 variants are held for review because the
+datasheet clamping-unit counts differ from the two-conductor descriptions.
+[Two-conductor socket datasheet](https://wago.priintcloud.com/datasheets/231-2102_026-000/en)
