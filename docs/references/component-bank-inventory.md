@@ -290,6 +290,16 @@ wireable and retains its documented termination and panel dimensions.
 Ratings are available for 968 of the 970 WAGO 231 entries.
 [24-pole THT header datasheet](https://wago.priintcloud.com/datasheets/231-154_001-000/en)
 
+## WAGO 734 MCS MINI and documented PCB drill rows
+
+The 516 MCS MINI entries include wire connectors and straight and angled
+THT and THR headers. A header can have either male or female mating contacts.
+The verified in-line solder pin dimensions are available for all 315 MCS
+MINI headers and 450 WAGO 231 headers. The existing Properties panel lists
+PCB drill centres for the 593 THT parts with a documented hole diameter and
+tolerance. These coordinates use the first solder pin as the datum.
+[MCS MINI THT datasheet](https://wago.priintcloud.com/datasheets/734-162/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug

@@ -60,13 +60,15 @@ engine.registerWagoWinstaCableBatch(
   ),
 );
 engine.registerWagoMcsBatch(
-  JSON.parse(
-    readFileSync(
-      new URL(
-        "../packages/component-library/wago-mcs-231-batch.json",
-        import.meta.url,
+  ["231", "734"].flatMap((series) =>
+    JSON.parse(
+      readFileSync(
+        new URL(
+          `../packages/component-library/wago-mcs-${series}-batch.json`,
+          import.meta.url,
+        ),
+        "utf8",
       ),
-      "utf8",
     ),
   ),
 );
