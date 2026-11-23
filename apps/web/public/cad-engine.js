@@ -1347,7 +1347,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
         (header&&(part.gender!=='plug'||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
           part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' male header'))||
-        (part.headerOrientation!==undefined&&(!header||part.headerOrientation!=='straight'))||
+        (part.headerOrientation!==undefined&&(!header||!['straight','angled'].includes(part.headerOrientation)))||
         (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
         (part.dimensionPage!==undefined&&![2,3].includes(part.dimensionPage))||
         (!header&&part.kind!==(doubleClamp?'2':'1')+'-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
