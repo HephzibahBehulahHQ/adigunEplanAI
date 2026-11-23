@@ -1254,6 +1254,48 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
 
+  function registerWagoWinstaCableBatch(rows){
+    const batch=new Map();
+    for(const part of rows){
+      const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
+      const mini=part.orderCode.startsWith('891-');
+      if(!/^(?:771|891)-8992\/006-[0-9]{3}$/.test(part.orderCode)||
+        part.series!==(mini?'MINI':'MIDI')||!['A','B'].includes(part.coding)||
+        !Array.isArray(part.markings)||part.markings.join(' ')!==(part.coding==='A'?'L N':'1 2')||
+        part.cableType!==(part.coding==='A'?'H05VV-F 2x1.5':'Control line 2x1.5')||
+        ![part.lengthM,part.connectorWidthMm,part.connectorHeightMm].every(value=>finite(value)&&value>0)||
+        !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
+        throw new Error('Invalid or duplicate WAGO WINSTA cable row: '+id);
+      }
+      const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
+      const model='WINSTA '+part.series+' socket–plug cable · '+part.lengthM+' m';
+      const pins=[],internalConnections=[];
+      const artwork=[{kind:'rect',x:-72,y:-31,width:36,height:62},{kind:'rect',x:36,y:-31,width:36,height:62}];
+      for(const [index,mark] of part.markings.entries()){
+        const y=(index-0.5)*36;
+        const socket={id:'socket-'+mark.toLowerCase(),name:'Socket '+mark,localNumber:'Socket '+mark,
+          x:-92,y,electricalType:'passive',connectionType:'Female mating contact'};
+        const plug={id:'plug-'+mark.toLowerCase(),name:'Plug '+mark,localNumber:'Plug '+mark,
+          x:92,y,electricalType:'passive',connectionType:'Male mating contact'};
+        pins.push(socket,plug);
+        internalConnections.push([socket.id,plug.id]);
+        artwork.push({kind:'line',from:{x:socket.x,y},to:{x:plug.x,y}});
+      }
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model,name:model,family:'wago-winsta-cable',referencePrefix:'W',category:'Electrical · Cable assemblies',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:184,height:70,pins,internalConnections,artwork,
+          numberingNote:'Each potential is carried between the same marked socket and plug contact. Schematic spacing is independent of assembly length.'},
+        specifications:{poleCount:{value:2},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
+          cableType:{value:part.cableType},connectorWidth:{value:part.connectorWidthMm,unit:'mm'},
+          connectorHeight:{value:part.connectorHeightMm,unit:'mm'}},
+        instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–2',url:datasheet,documentRevision:part.revision,
+          revisionNote:'Socket and plug, shared potential markings, coding, cable type and total length.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function registerWagoMcsBatch(rows){
     const batch=new Map();
     for(const part of rows){
@@ -3942,6 +3984,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoTerminalBatch,
     registerWagoPcbTerminalBatch,
     registerWagoWinstaBatch,
+    registerWagoWinstaCableBatch,
     registerWagoMcsBatch,
     plcIoPins,
     validPlcIo,

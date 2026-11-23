@@ -1972,6 +1972,42 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   );
 });
 
+test("WINSTA cable assemblies expose wireable contacts at both ends", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["891-8992/006-103", 400],
+    ["891-8992/006-203", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page
+      .locator('[data-insert="wago-' + code.replace("/", "_") + '"]')
+      .click();
+    await clickAt(x, 250);
+  }
+  await clickAt(492, 232);
+  await clickAt(608, 232);
+  const saved = await saveDrawing(page, "winsta-cable");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "plug-1" }),
+        end: expect.objectContaining({ pinId: "socket-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO 231 exact codes can be placed and wired from the component library", async ({
   page,
 }) => {

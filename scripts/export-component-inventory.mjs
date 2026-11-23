@@ -48,6 +48,17 @@ engine.registerWagoWinstaBatch(
     ),
   ),
 );
+engine.registerWagoWinstaCableBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-winsta-cable-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoMcsBatch(
   JSON.parse(
     readFileSync(
