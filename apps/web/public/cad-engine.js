@@ -1702,7 +1702,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const maxi=part.orderCode.startsWith('831-');
       const midiFemale=part.orderCode.startsWith('232-');
       const midi=part.orderCode.startsWith('721-');
-      const pluggable= /^(2231|2091|2092)-/.test(part.orderCode);
+      const pluggable=/^(2091|2092|2231|2232|2721|2724)-/.test(part.orderCode);
       const twoRow=part.orderCode.startsWith('713-');
       const header=part.mount!=='wire';
       const doubleClamp=part.clampsPerPole===2;
@@ -1716,7 +1716,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const pcbRows=part.pcbRowsMm;
       const pitchOptions=twoRow?[3.5]:pluggable?[3.5,5,5.08,7.5,7.62]:maxi?[7.62]:micro?[2.5]:mini?[3.5,3.81]:[5,5.08,7.5,7.62];
       const orderCodePattern=twoRow?/^713-\d{4}(?:\/\d{3}-\d{3,4}){0,2}$/:
-        pluggable?/^(2231|2091|2092)-\d{3,4}(?:\/\d{3}-\d{3,4}){0,2}$/:
+        pluggable?/^(2091|2092|2231|2232|2721|2724)-\d{3,4}(?:\/\d{3}-\d{3,4}){0,2}$/:
         maxi?/^831-\d{4}(?:\/\d{3}-\d{3,4}){0,2}$/:
         mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232|721|733)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
       if(!orderCodePattern.test(part.orderCode)||
@@ -1741,7 +1741,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         (pcbRows!==undefined&&(!tripleSolder||!hasDrill))||
         (part.headerOrientation!==undefined&&(!header||!['straight','angled'].includes(part.headerOrientation)))||
         (part.connectorOrientation!==undefined&&(header||!['straight','angled'].includes(part.connectorOrientation)))||
-        (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
+        (rated&&(!(pluggable?[1,2,3]:[2,3]).includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
         (part.dimensionPage!==undefined&&!(maxi?[1,2,3]:[2,3]).includes(part.dimensionPage))||
         (hasSolderDimensions&&(!header||!solderDimensions.every(value=>finite(value)&&value>0)))||
         (hasDrill&&(!hasSolderDimensions||part.mount!=='THT'||!finite(part.drilledHoleDiameterMm)||
@@ -1783,7 +1783,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         internalConnections.push(group);
       }
       const series=part.orderCode.split('-')[0];
-      const model=(twoRow?'Series 713 two-row ':pluggable&&series!=='2231'?'Series '+series+' ':maxi?'MCS MAXI ':
+      const model=(twoRow?'Series 713 two-row ':series==='2721'?'MCS MIDI ':
+        pluggable&&!['2231','2232'].includes(series)?'Series '+series+' ':maxi?'MCS MAXI ':
         micro?'MCS MICRO ':mini?'MCS MINI ':midi?'MCS MIDI ':'MCS MIDI Classic ')+part.kind;
       const mm=value=>({value,unit:'mm'});
       const drillRows=pcbRows??[0];

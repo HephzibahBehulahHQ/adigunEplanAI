@@ -4443,6 +4443,80 @@ test("editable draw order controls topmost selection and survives undo and reope
   expect(reopened.data.objects).toEqual(saved.data.objects);
 });
 
+test("the component bank lists every source-backed part and places exact-code results", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const bank = page.locator("#symbolList");
+  await expect(bank.locator("[data-insert]").first()).toBeVisible();
+  const catalog = await page.evaluate(() => {
+    const engine = Reflect.get(window, "AdigunCADEngine");
+    const ids: string[] = engine
+      .catalog()
+      .map((entry: { id: string }) => entry.id);
+    const partNumbers = new Set<string>();
+    for (const id of ids) {
+      const part = engine.component(id);
+      if (part.manufacturerPartNumber && part.sources?.length) {
+        partNumbers.add(part.manufacturer + "\n" + part.manufacturerPartNumber);
+      }
+    }
+    return { ids, distinctParts: partNumbers.size };
+  });
+  expect(catalog.distinctParts).toBeGreaterThanOrEqual(10000);
+  const listed = await bank.evaluate((host) => {
+    const ids: string[] = [];
+    for (;;) {
+      for (const button of host.querySelectorAll<HTMLElement>("[data-insert]"))
+        ids.push(button.dataset.insert ?? "");
+      const next = Array.from(host.querySelectorAll("button")).find(
+        (button) => button.textContent === "Next results",
+      );
+      if (!next || next.disabled) return ids;
+      next.click();
+    }
+  });
+  const listedIds = new Set(listed);
+  expect(listedIds.size).toBe(listed.length);
+  expect(listedIds.size).toBe(catalog.ids.length);
+  expect(catalog.ids.filter((id) => !listedIds.has(id)).slice(0, 10)).toEqual(
+    [],
+  );
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["2721-1602", 400],
+    ["2721-102/026-000", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await bank
+      .locator('[data-insert="wago-' + code.replaceAll("/", "_") + '"]')
+      .click();
+    await clickAt(x, 250);
+  }
+  await clickAt(472, 232);
+  await clickAt(628, 232);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("Lever");
+  const saved = await saveDrawing(page, "full-bank-exact-placement");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "contact-1" }),
+        end: expect.objectContaining({ pinId: "contact-1" }),
+      },
+    }),
+  );
+});
+
 test("every published component renders from a valid native project and reopens exactly", async ({
   page,
 }) => {

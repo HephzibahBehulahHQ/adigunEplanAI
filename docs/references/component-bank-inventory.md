@@ -349,9 +349,9 @@ document the contact holes at 5 mm or 3.5 mm row spacing.
 [Straight header datasheet](https://wago.priintcloud.com/datasheets/713-1402/en) ·
 [Two-row wire connector datasheet](https://wago.priintcloud.com/datasheets/713-1103/en)
 
-## WAGO 2231, 2091 and 2092 pluggable connectors
+## WAGO 2231, 2232, 2091, 2092, 2721 and 2724 pluggable connectors
 
-The 443 exact order codes cover wire connectors and PCB headers. The
+The 629 exact order codes cover wire connectors and PCB headers. The
 native pin groups record each mating contact and its corresponding clamp
 or solder pin. Properties exposes the documented actuation, mounting and
 IEC ratings, and shows PCB drill centres where the datasheet dimensions
