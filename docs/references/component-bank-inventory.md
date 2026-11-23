@@ -296,3 +296,9 @@ a separate wireable lead. Each lead label identifies its matching socket
 potential. Properties retains the source-listed ultrasonic tip bonding,
 and the BOM reports the assembly’s exact order code and nominal length.
 [Open-ended MIDI datasheet](https://wago.priintcloud.com/datasheets/771-9985_106-101/en)
+
+The next batch adds 167 coding P assemblies and three coding S assemblies.
+Coding P includes three-pole L, PE and N and five-pole N, PE, L1, L2 and
+L3 versions. The three coding S assemblies carry contacts 1, 2 and L.
+[Coding P datasheet](https://wago.priintcloud.com/datasheets/771-9973_006-101/en) ·
+[Coding S datasheet](https://wago.priintcloud.com/datasheets/771-9973_006-305/en)
