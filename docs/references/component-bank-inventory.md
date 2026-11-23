@@ -277,6 +277,13 @@ Four candidate connectors are held because their clamp counts disagree
 with the two-conductor description.
 [Straight THR header datasheet](https://wago.priintcloud.com/datasheets/231-132_001-000_105-604/en)
 
+A further 332 WAGO 231 entries include straight and angled THT and THR
+headers and single-conductor connectors. Properties shows the documented
+orientation for every WAGO 231 header, including 43 earlier entries
+whose orientation was checked against the original datasheets. Verified
+IEC/EN ratings are now available for 673 of the 675 WAGO 231 entries.
+[Angled THT header datasheet](https://wago.priintcloud.com/datasheets/231-432_040-000/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug

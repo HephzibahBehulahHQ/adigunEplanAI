@@ -2033,7 +2033,7 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["231-132/001-000/105-604", 400],
+    ["231-432/040-000", 400],
     ["231-2102/026-000", 650],
     ["231-102/026-000", 900],
   ] as const) {
@@ -2051,13 +2051,13 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
   await clickAt(828, 268);
   await clickAt(400, 250);
   await page.locator('[data-inspector="Properties"]').click();
-  await expect(page.locator("#inspectorContent")).toContainText("straight");
+  await expect(page.locator("#inspectorContent")).toContainText("angled");
   await expect(page.locator("#inspectorContent")).toContainText("320 V");
   await expect(page.locator("#inspectorContent")).toContainText("12 A");
   const saved = await saveDrawing(page, "wago-mcs");
   const header = saved.data.objects.find(
     ({ componentId }: { componentId?: string }) =>
-      componentId === "wago-231-132_001-000_105-604",
+      componentId === "wago-231-432_040-000",
   );
   const socket = saved.data.objects.find(
     ({ componentId }: { componentId?: string }) =>
