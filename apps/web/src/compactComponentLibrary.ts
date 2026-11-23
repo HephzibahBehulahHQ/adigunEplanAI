@@ -22,6 +22,7 @@ import wagoMcsMicroBatch from "../../../packages/component-library/wago-mcs-733-
 import wagoMcsMiniBatch from "../../../packages/component-library/wago-mcs-734-batch.json";
 import wagoMcsMaxiBatch from "../../../packages/component-library/wago-mcs-831-batch.json";
 import wagoPluggableBatch from "../../../packages/component-library/wago-mcs-2231-209x-batch.json";
+import wagoTwoRowBatch from "../../../packages/component-library/wago-mcs-713-batch.json";
 
 import wagoDigitalIoBatch from "../../../packages/component-library/wago-digital-io-batch.json";
 
@@ -33,6 +34,7 @@ const mcsCatalog = [
   ...wagoMcsMiniBatch,
   ...wagoMcsMaxiBatch,
   ...wagoPluggableBatch,
+  ...wagoTwoRowBatch,
 ];
 const stackablePcbCatalog = [
   ...wagoStackablePcbTerminalBatch,
