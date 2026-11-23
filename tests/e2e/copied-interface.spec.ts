@@ -1985,8 +1985,9 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["231-832/001-000/105-604", 400],
-    ["231-202/026-000", 650],
+    ["231-432/001-000/105-604", 400],
+    ["231-2102/026-000", 650],
+    ["231-102/026-000", 900],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page
@@ -1996,14 +1997,18 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
   }
   await clickAt(472, 232);
   await clickAt(578, 232);
+  await clickAt(722, 223);
+  await clickAt(828, 232);
+  await clickAt(722, 241);
+  await clickAt(828, 268);
   const saved = await saveDrawing(page, "wago-mcs");
   const header = saved.data.objects.find(
     ({ componentId }: { componentId?: string }) =>
-      componentId === "wago-231-832_001-000_105-604",
+      componentId === "wago-231-432_001-000_105-604",
   );
   const socket = saved.data.objects.find(
     ({ componentId }: { componentId?: string }) =>
-      componentId === "wago-231-202_026-000",
+      componentId === "wago-231-2102_026-000",
   );
   expect(saved.data.objects).toContainEqual(
     expect.objectContaining({
@@ -2014,6 +2019,21 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
       },
     }),
   );
+  const attachedClamps = saved.data.objects
+    .filter(({ kind }: { kind: string }) => kind === "wire")
+    .map(
+      ({
+        attachments,
+      }: {
+        attachments: { start: { instanceId: string; pinId: string } };
+      }) => attachments?.start,
+    )
+    .filter(
+      (start: { instanceId: string } | undefined) =>
+        start?.instanceId === socket.id,
+    )
+    .map(({ pinId }: { pinId: string }) => pinId);
+  expect(attachedClamps.sort()).toEqual(["clamp-1-1", "clamp-1-2"]);
 });
 
 test("generic PLC library places six editable modules with native terminal wiring", async ({

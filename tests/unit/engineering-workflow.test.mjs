@@ -59,21 +59,25 @@ const mcsBatch = JSON.parse(
 );
 engine.registerWagoMcsBatch(mcsBatch);
 
-test("WAGO 231 connectors retain exact order codes and isolated contact pairs", () => {
-  assert.equal(mcsBatch.length, 85);
+test("WAGO 231 connectors retain exact order codes and isolated pole groups", () => {
+  assert.equal(mcsBatch.length, 117);
   for (const source of mcsBatch) {
     const def = engine.component(
       "wago-" + source.orderCode.replaceAll("/", "_"),
     );
     const back = source.mount === "wire" ? "clamp-" : "solder-";
+    const doubleClamp = source.clampsPerPole === 2;
+    const terminalsPerPole = doubleClamp ? 3 : 2;
     assert.deepEqual(
       plain(def.symbol.internalConnections),
       Array.from({ length: source.poles }, (_, index) => [
         "contact-" + (index + 1),
-        back + (index + 1),
+        ...(doubleClamp
+          ? [back + (index + 1) + "-1", back + (index + 1) + "-2"]
+          : [back + (index + 1)]),
       ]),
     );
-    assert.equal(def.symbol.pins.length, source.poles * 2);
+    assert.equal(def.symbol.pins.length, source.poles * terminalsPerPole);
     assert.equal(def.specifications.pinSpacing.value, source.pitchMm);
     assert.equal(def.panelFootprint.widthMm, source.widthMm);
     assert.equal(
@@ -111,11 +115,11 @@ test("WAGO 231 connectors retain exact order codes and isolated contact pairs", 
     const nets = engine.analyze(restored.project.objects).nets;
     assert.deepEqual(
       plain(nets.map((net) => net.pins.length)),
-      Array(source.poles).fill(2),
+      Array(source.poles).fill(terminalsPerPole),
     );
     assert.match(
       engine.terminalRegisterCsv(restored.project),
-      /"1 \/ 1 (?:wire|PCB)"/,
+      doubleClamp ? /"1 \/ 1 wire 1 \/ 1 wire 2"/ : /"1 \/ 1 (?:wire|PCB)"/,
     );
     assert.equal(
       engine.billOfMaterials([instance]).rows[0].partNumber,

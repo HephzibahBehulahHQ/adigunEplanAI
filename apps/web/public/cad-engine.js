@@ -1259,11 +1259,14 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const part of rows){
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const header=part.mount!=='wire';
-      if(!/^231-[0-9]{3}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/.test(part.orderCode)||
+      const doubleClamp=part.clampsPerPole===2;
+      if(!/^231-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
+        (part.clampsPerPole!==undefined&&!doubleClamp)||
+        (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
         (header&&(part.gender!=='plug'||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
           part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' male header'))||
-        (!header&&part.kind!=='1-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
+        (!header&&part.kind!==(doubleClamp?'2':'1')+'-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
         !Number.isInteger(part.poles)||part.poles<2||part.poles>8||![5,5.08,7.5,7.62].includes(part.pitchMm)||
         ![part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
@@ -1273,24 +1276,35 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
       const width=144,height=part.poles*36+12;
       const matingSide=part.gender==='plug'?1:-1;
-      const backType=header?part.mount+' solder pin':'CAGE CLAMP';
+      const backType=header?part.mount+' solder pin':doubleClamp?part.connectionTechnology:'CAGE CLAMP';
       const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-43,y:-height/2,width:86,height}];
       for(let number=1;number<=part.poles;number++){
         const y=(number-(part.poles+1)/2)*36;
         const face={id:'contact-'+number,name:'Mating contact '+number,localNumber:String(number),x:matingSide*72,y,
           electricalType:'passive',connectionType:part.gender==='socket'?'Female mating contact':'Male mating contact'};
-        const back={id:(header?'solder-':'clamp-')+number,name:backType+' '+number,localNumber:number+(header?' PCB':' wire'),
-          x:-matingSide*72,y,electricalType:'passive',connectionType:backType};
-        pins.push(face,back);
-        internalConnections.push([face.id,back.id]);
-        artwork.push({kind:'line',from:{x:back.x,y},to:{x:face.x,y}});
+        const group=[face.id],branch={x:-matingSide*29,y};
+        pins.push(face);
+        artwork.push({kind:'line',from:branch,to:{x:face.x,y}});
+        for(const offset of doubleClamp?[-9,9]:[0]){
+          const suffix=doubleClamp?String(offset<0?1:2):'';
+          const back={id:(header?'solder-':'clamp-')+number+(suffix?'-'+suffix:''),
+            name:backType+' '+number+(suffix?'.'+suffix:''),localNumber:number+(header?' PCB':' wire')+(suffix?' '+suffix:''),
+            x:-matingSide*72,y:y+offset,electricalType:'passive',connectionType:backType};
+          pins.push(back);
+          group.push(back.id);
+          const elbow={x:branch.x,y:back.y};
+          artwork.push({kind:'line',from:{x:back.x,y:back.y},to:elbow});
+          if(offset)artwork.push({kind:'line',from:elbow,to:branch});
+        }
+        internalConnections.push(group);
       }
       const model='MCS MIDI Classic '+part.kind;
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-mcs-connector',referencePrefix:'X',category:'Electrical · PCB connectors',
         symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
-          numberingNote:'Model-local numbers follow the contact row. Each mating contact connects to its own wire clamp or PCB solder pin.'},
+          numberingNote:doubleClamp?'Model-local numbers follow the contact row. The two clamps for each mating contact share one isolated potential.':'Model-local numbers follow the contact row. Each mating contact connects to its own wire clamp or PCB solder pin.'},
         specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
+          ...(doubleClamp?{clampsPerPole:{value:2}}:{}),
           connectionTechnology:{value:backType},connectorGender:{value:part.gender},overallHeight:{value:part.heightMm,unit:'mm'}},
         panelFootprint:{widthMm:part.widthMm,heightMm:header?part.depthMm:part.heightMm,
           depthMm:header?part.heightAboveBoardMm:part.depthMm,source:datasheet,edition:part.revision,page:2,
