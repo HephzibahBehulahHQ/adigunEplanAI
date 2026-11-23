@@ -409,6 +409,13 @@ terminals. Tripping and switching response are outside static analysis.
 
 ## WINSTA cable assemblies
 
+The 700 additional MINI and MIDI order codes distinguish plug-to-free-lead,
+socket-to-free-lead and socket-to-plug configurations. Each conductor
+retains the exact marked potential and its own terminal anchors, with the
+manufacturer's length, cable type and electrical ratings in Properties.
+[Plug-to-free-lead datasheet](https://wago.priintcloud.com/datasheets/771-9993_206-101/en) ·
+[Five-pole MINI interconnect datasheet](https://wago.priintcloud.com/datasheets/891-8995_006-101/en)
+
 The 26 MINI and MIDI cable assemblies expose separate socket and plug
 terminals for each documented potential. The BOM identifies the exact
 assembly and nominal length. Properties lists the documented connector

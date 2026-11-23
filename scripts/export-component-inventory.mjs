@@ -49,13 +49,15 @@ engine.registerWagoWinstaBatch(
   ),
 );
 engine.registerWagoWinstaCableBatch(
-  JSON.parse(
-    readFileSync(
-      new URL(
-        "../packages/component-library/wago-winsta-cable-batch.json",
-        import.meta.url,
+  ["cable", "termination"].flatMap((batch) =>
+    JSON.parse(
+      readFileSync(
+        new URL(
+          `../packages/component-library/wago-winsta-${batch}-batch.json`,
+          import.meta.url,
+        ),
+        "utf8",
       ),
-      "utf8",
     ),
   ),
 );
