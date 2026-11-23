@@ -759,6 +759,32 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
   assert.equal(engine.component("wago-2002-9999"), null);
 });
 
+test("PFC200 keeps its system supply separate from the three commoned field potentials", () => {
+  const id = "wago-750-8217-625-000";
+  const definition = engine.component(id);
+  const instance = engine.createInstance(id, 400, 250, "A1");
+  assert.deepEqual(plain(engine.worldPins(instance).map((pin) => pin.number)), [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+  ]);
+  assert.deepEqual(plain(definition.symbol.internalConnections), [
+    ["clamp-2", "clamp-6"],
+    ["clamp-3", "clamp-7"],
+    ["clamp-4", "clamp-8"],
+  ]);
+  assert.equal(definition.panelFootprint.depthMm, 64.7);
+  assert.equal(
+    engine.billOfMaterials([instance]).rows[0].partNumber,
+    "750-8217/625-000",
+  );
+});
+
 test("WAGO 750 I/O exposes documented field terminals and keeps supply groups separate", () => {
   for (const [code, direction, channels, switching] of [
     ["402", "DI", 4, "high"],

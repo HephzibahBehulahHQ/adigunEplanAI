@@ -24,6 +24,14 @@ anchor where the source shows a rail bond.
 [Commoned terminal datasheet](https://wago.priintcloud.com/datasheets/727-225/en) ·
 [Matrix terminal datasheet](https://wago.priintcloud.com/datasheets/727-219/en)
 
+## WAGO PFC200 750-8217/625-000
+
+The compact editor exposes all eight numbered CAGE CLAMP supply connections.
+Three commoned pairs carry the field potentials. The two system supply
+clamps remain separate. Ethernet, serial, antenna, and service interfaces
+are documented in Properties. The cabinet body uses the 64.7 mm DIN rail
+datum depth. [WAGO datasheet](https://wago.priintcloud.com/datasheets/750-8217_625-000/en)
+
 ## WAGO 750-1405
 
 The compact component bank exposes sixteen field inputs with no supply clamp
