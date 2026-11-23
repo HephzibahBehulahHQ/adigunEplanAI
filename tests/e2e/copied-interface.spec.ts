@@ -2352,6 +2352,46 @@ test("WAGO 2086 SMD PCB terminals show land dimensions and retain a second pad a
   );
 });
 
+test("WAGO 2231 and 2092 connector instances expose exact clamp technologies and wire independently", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["2092-1122", 400],
+    ["2231-102/026-000", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    const id = "wago-" + code.replaceAll("/", "_");
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(472, 232);
+  await clickAt(578, 232);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText(
+    "Push-in CAGE CLAMP",
+  );
+  const saved = await saveDrawing(page, "mcs-push-in-clamps");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "clamp-1" }),
+        end: expect.objectContaining({ pinId: "contact-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO MCS MAXI headers expose the third solder anchor and three drill rows", async ({
   page,
 }) => {
