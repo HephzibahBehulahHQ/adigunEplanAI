@@ -426,6 +426,16 @@ terminals. Tripping and switching response are outside static analysis.
 [787-2861 circuit breaker manual](https://docs.rs-online.com/1709/A700000011520405.pdf) ·
 [787-3861 circuit breaker manual](https://cdn.automationdirect.com/static/manuals/wagomccb/manual_7873861_1001000.pdf)
 
+## WAGO 756 field cable assemblies
+
+The 347 exact sensor, Ethernet, power and CANopen/DeviceNet cable order
+codes use the manufacturer's conductor-to-contact diagrams. Each
+documented path has its own wireable endpoints. The editor distinguishes
+functional earth and shield markings and records cable end types, colour
+codes and length in Properties.
+[Sensor cable datasheet](https://wago.priintcloud.com/datasheets/756-5507_030-020/en) ·
+[Ethernet cable datasheet](https://wago.priintcloud.com/datasheets/756-1250_1013-005/en)
+
 ## WINSTA cable assemblies
 
 The 1,679 additional MINI and MIDI order codes distinguish plug-to-free-lead,

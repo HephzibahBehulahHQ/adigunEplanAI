@@ -12,6 +12,7 @@ import wagoMultipinPcbTerminalBatch from "../../../packages/component-library/wa
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
 import wagoWinstaTerminationBatch from "../../../packages/component-library/wago-winsta-termination-batch.json";
+import wagoFieldCableBatch from "../../../packages/component-library/wago-field-cable-batch.json";
 import wagoRelayBatch from "../../../packages/component-library/wago-relay-batch.json";
 import wagoPowerSupplyBatch from "../../../packages/component-library/wago-power-supply-batch.json";
 import wagoSingleChannelBreakerBatch from "../../../packages/component-library/wago-single-channel-breaker-batch.json";
@@ -68,6 +69,7 @@ declare global {
       ) => void;
       registerWagoWinstaBatch: (rows: typeof wagoWinstaBatch) => void;
       registerWagoWinstaCableBatch: (rows: typeof winstaCableCatalog) => void;
+      registerWagoFieldCableBatch: (rows: typeof wagoFieldCableBatch) => void;
       registerWagoRelayBatch: (rows: typeof wagoRelayBatch) => void;
       registerWagoPowerSupplyBatch: (rows: typeof wagoPowerSupplyBatch) => void;
       registerWagoSingleChannelBreakerBatch: (
@@ -88,6 +90,7 @@ window.AdigunCADEngine.registerWagoStackablePcbTerminalBatch(
 );
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
 window.AdigunCADEngine.registerWagoWinstaCableBatch(winstaCableCatalog);
+window.AdigunCADEngine.registerWagoFieldCableBatch(wagoFieldCableBatch);
 window.AdigunCADEngine.registerWagoRelayBatch(wagoRelayBatch);
 window.AdigunCADEngine.registerWagoPowerSupplyBatch(wagoPowerSupplyBatch);
 window.AdigunCADEngine.registerWagoSingleChannelBreakerBatch(
