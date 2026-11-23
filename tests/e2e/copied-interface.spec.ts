@@ -1049,7 +1049,27 @@ test("drafting tools draw on-axis lines, dimensions and exact offsets", async ({
   });
   await expect(more).toBeVisible();
   await more.click();
-  expect(await lower.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+  const overflow = page.getByRole("menu", { name: "More toolbar tools" });
+  await expect(overflow).toBeVisible();
+  await expect(more).toHaveAttribute("aria-expanded", "true");
+  const menuTop = (await overflow.boundingBox())!.y;
+  const toolbarBox = (await page.locator(".toolbar").boundingBox())!;
+  expect(menuTop).toBeGreaterThanOrEqual(toolbarBox.y + toolbarBox.height - 1);
+  await page.keyboard.press("End");
+  await expect(
+    overflow.getByRole("menuitem", { name: "Paste drawing objects" }),
+  ).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(overflow).toBeHidden();
+  await expect(page.locator("#statusText")).toContainText(
+    "Clipboard is empty.",
+  );
+  await expect(more).toBeFocused();
+  await page.setViewportSize({ width: 1900, height: 900 });
+  await expect(more).toBeHidden();
+  await expect(
+    lower.getByRole("button", { name: "Paste drawing objects" }),
+  ).toBeVisible();
 });
 
 test("a named project starts with full drafting rulers and new sheets hide print frames", async ({
