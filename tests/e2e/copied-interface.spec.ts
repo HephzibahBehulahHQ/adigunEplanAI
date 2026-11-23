@@ -1975,6 +1975,45 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   );
 });
 
+test("WINSTA DALI assemblies keep positive and negative channels on distinct terminals", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["891-8282/016-101", 400],
+    ["891-8282/016-201", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    const id = "wago-" + code.replaceAll("/", "_");
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, 250);
+  }
+  for (const y of [232, 268]) {
+    await clickAt(492, y);
+    await clickAt(608, y);
+  }
+  const saved = await saveDrawing(page, "winsta-dali");
+  for (const terminal of ["positive", "negative"]) {
+    expect(saved.data.objects).toContainEqual(
+      expect.objectContaining({
+        kind: "wire",
+        attachments: {
+          start: expect.objectContaining({ pinId: "plug-" + terminal }),
+          end: expect.objectContaining({ pinId: "socket-" + terminal }),
+        },
+      }),
+    );
+  }
+});
+
 test("WINSTA plug-to-free-lead assemblies retain documented cable end identity", async ({
   page,
 }) => {
