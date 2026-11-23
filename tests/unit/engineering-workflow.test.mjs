@@ -104,23 +104,21 @@ test("WAGO relays carry documented coil and contact states without passive short
     );
     const instance = engine.createInstance(def.id, 400, 300, "K1");
     instance.sheetId = "relay";
-    const wires = engine
-      .worldPins(instance)
-      .map((pin) =>
-        engine.attachWire(
-          {
-            id: pin.id,
-            kind: "wire",
-            sheetId: instance.sheetId,
-            x1: pin.x,
-            y1: pin.y,
-            x2: pin.x + Math.sign(pin.x - instance.x) * 100,
-            y2: pin.y,
-          },
-          { attachment: { instanceId: instance.id, pinId: pin.id } },
-          {},
-        ),
-      );
+    const wires = engine.worldPins(instance).map((pin) =>
+      engine.attachWire(
+        {
+          id: pin.id,
+          kind: "wire",
+          sheetId: instance.sheetId,
+          x1: pin.x,
+          y1: pin.y,
+          x2: pin.x + Math.sign(pin.x - instance.x) * 100,
+          y2: pin.y,
+        },
+        { attachment: { instanceId: instance.id, pinId: pin.id } },
+        {},
+      ),
+    );
     const restored = engine.parseProject(
       engine.serializeProject({
         project: "Relay contact verification",
