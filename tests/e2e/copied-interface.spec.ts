@@ -2143,6 +2143,47 @@ test("WAGO 231 long connectors expose both ends of a 24-pole row", async ({
   }
 });
 
+test("WAGO 236 and 256 PCB terminals expose both pitches and retain solder terminal wiring", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["236-402", 400],
+    ["256-401", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(656, 295);
+  await clickAt(388, 205);
+  await clickAt(650, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("5.08 mm");
+  await page.getByText("PCB drill centers (mm)", { exact: true }).click();
+  await expect(
+    page.getByText("X 0 · Y 5 · Ø 1.1", { exact: true }),
+  ).toBeVisible();
+  const saved = await saveDrawing(page, "pcb-236-256");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "pad-1-2" }),
+        end: expect.objectContaining({ pinId: "clamp-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO 2086 SMD PCB terminals show land dimensions and retain a second pad attachment", async ({
   page,
 }) => {
@@ -4161,6 +4202,10 @@ test("every published component renders from a valid native project and reopens 
     });
   });
   const expected = JSON.parse(fixture);
+  const partsBySheet = Map.groupBy(
+    expected.objects as { id: string; sheetId: string; ref: string }[],
+    (part) => part.sheetId,
+  );
   await page.locator("#openFile").setInputFiles({
     name: "catalogue.adigun.json",
     mimeType: "application/json",
@@ -4168,20 +4213,19 @@ test("every published component renders from a valid native project and reopens 
   });
   for (const sheet of expected.sheets) {
     await page.locator('#projectTree [data-sheet="' + sheet.id + '"]').click();
-    const parts = expected.objects.filter(
-      (object: { sheetId: string }) => object.sheetId === sheet.id,
-    );
-    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
-      parts.length,
+    const parts = partsBySheet.get(sheet.id) ?? [];
+    const drawings = page.locator("#userDrawings .drawing-object");
+    await expect(drawings).toHaveCount(parts.length);
+    const rendered = new Map(
+      await drawings.evaluateAll((nodes) =>
+        nodes.map((node) => [
+          node.getAttribute("data-object"),
+          node.querySelector("title")?.textContent,
+        ]),
+      ),
     );
     for (const part of parts) {
-      await expect(
-        page
-          .locator(
-            '#userDrawings .drawing-object[data-object="' + part.id + '"]',
-          )
-          .locator("title"),
-      ).toContainText(part.ref);
+      expect(rendered.get(part.id)).toContain(part.ref);
     }
   }
   const saved = await saveDrawing(page, "all-catalogue-parts");

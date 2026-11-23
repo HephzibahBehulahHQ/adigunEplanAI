@@ -855,6 +855,65 @@ test("WAGO 2086 PCB terminals preserve individual PCB terminals and isolated pol
   }
 });
 
+const pcbStackableBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-pcb-236-256-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoStackablePcbTerminalBatch(pcbStackableBatch);
+
+test("WAGO 236 and 256 PCB terminals retain exact pole topology and footprint evidence", () => {
+  assert.equal(pcbStackableBatch.length, 501);
+  assert.equal(
+    pcbStackableBatch.filter((row) => row.footprintPage).length,
+    481,
+  );
+  assert.equal(Math.max(...pcbStackableBatch.map((row) => row.poles)), 48);
+  for (const row of pcbStackableBatch) {
+    const def = engine.component("wago-" + row.orderCode.replaceAll("/", "_"));
+    const expected = Array.from({ length: row.poles }, (_, index) => {
+      const pole = index + 1;
+      const pads =
+        row.solderPinsPerPole === 2
+          ? [`pad-${pole}-1`, `pad-${pole}-2`]
+          : [`pad-${pole}`];
+      return [`clamp-${pole}`, ...pads];
+    });
+    assert.deepEqual(plain(def.symbol.internalConnections), expected);
+    assert.equal(
+      def.symbol.pins.length,
+      row.poles * (row.solderPinsPerPole + 1),
+    );
+    const instance = engine.createInstance(def.id, 200, 300, "X1");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(
+      engine.billOfMaterials([instance]).rows[0].partNumber,
+      row.orderCode,
+    );
+    assert.equal(
+      def.specifications.alternatePadPitch?.value,
+      row.alternatePadPitchMm,
+    );
+    assert.equal(def.specifications.nominalVoltage?.value, row.nominalVoltage);
+    if (row.footprintPage) {
+      assert.deepEqual(
+        plain(def.pcbFootprint.pads.map((pad) => pad.pinId)),
+        expected.flatMap(([, ...pads]) => pads),
+      );
+      assert.equal(
+        def.sources[0].footprintDrawingSha256,
+        row.footprintDrawingSha256,
+      );
+    } else {
+      assert.equal(def.pcbFootprint, undefined);
+    }
+  }
+});
+
 test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () => {
   assert.ok(pcbBatch.length >= 291);
   for (const part of pcbBatch) {
