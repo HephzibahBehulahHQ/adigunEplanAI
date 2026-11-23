@@ -118,6 +118,17 @@ engine.registerWagoStackablePcbTerminalBatch(
     ),
   ),
 );
+engine.registerWagoFieldCableBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-field-cable-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoMcsBatch(
   ["231", "232", "713", "721", "733", "734", "831", "2231-209x"].flatMap(
     (series) =>

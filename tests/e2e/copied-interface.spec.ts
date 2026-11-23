@@ -1975,6 +1975,45 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   );
 });
 
+test("WAGO field cable assemblies preserve documented conductor and connector identities", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["756-5507/030-020", 400],
+    ["756-5401/030-010", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    const id = "wago-" + code.replaceAll("/", "_");
+    await page.locator('[data-insert="' + id + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(492, 250);
+  await clickAt(608, 250);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("M8 socket");
+  await expect(page.locator("#inspectorContent")).toContainText("3: blue");
+  const saved = await saveDrawing(page, "wago-field-cable");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "end-b-3" }),
+        end: expect.objectContaining({ pinId: "end-a-3" }),
+      },
+    }),
+  );
+});
+
 test("WINSTA DALI assemblies keep positive and negative channels on distinct terminals", async ({
   page,
 }) => {

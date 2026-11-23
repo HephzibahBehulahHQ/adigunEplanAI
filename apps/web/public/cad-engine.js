@@ -1456,6 +1456,60 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
 
+  function registerWagoFieldCableBatch(rows){
+    const batch=new Map();
+    const connector=/^(?:M8|M12|RJ-45) (?:socket|plug)$/;
+    const kinds=new Set(['ETHERNET cable','Sensor/Actuator cable','Power cable','CANopen/DeviceNet cable']);
+    const colors=new Set(['brown','white','blue','black','gray','yellow','orange','green','red',
+      'white/orange','white/green','white/blue','white/brown','shield']);
+    for(const part of rows){
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      const free=part.rightEnd==='free leads';
+      if(!/^756-\d{4}\/\d{3,4}-\d{3,4}$/.test(part.orderCode)||!kinds.has(part.productKind)||
+        !connector.test(part.leftEnd)||!(free||connector.test(part.rightEnd))||
+        !Array.isArray(part.markings)||part.markings.length<3||part.markings.length>9||
+        part.markings.some(mark=>!/^(?:[1-8]|FE|Shield)$/.test(mark))||new Set(part.markings).size!==part.markings.length||
+        !Array.isArray(part.conductorColors)||part.conductorColors.length!==part.markings.length||
+        !part.conductorColors.every(color=>colors.has(color))||
+        (part.sheathColor!==undefined&&!colors.has(part.sheathColor)&&part.sheathColor!=='violet')||
+        !finite(part.lengthM)||part.lengthM<=0||![1,2].includes(part.wiringDiagramPage)||
+        !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        ![part.datasheetSha256,part.wiringDiagramSha256].every(value=>/^[a-f0-9]{64}$/.test(value))||
+        batch.has(id)||component(id))throw new Error('Invalid or duplicate WAGO field cable row: '+id);
+      const height=part.markings.length*36-10;
+      const artwork=[{kind:'rect',x:-72,y:-height/2,width:36,height}];
+      if(!free)artwork.push({kind:'rect',x:36,y:-height/2,width:36,height});
+      const pins=[],internalConnections=[];
+      for(const [index,mark] of part.markings.entries()){
+        const y=(index-(part.markings.length-1)/2)*36;
+        const label=mark.toLowerCase();
+        const color=part.conductorColors[index];
+        const start={id:'end-a-'+label,localNumber:'A '+mark,name:part.leftEnd+' '+mark,x:-92,y,
+          electricalType:'passive',connectionType:mark==='FE'?'functional-earth':part.leftEnd};
+        const end={id:'end-b-'+label,localNumber:'B '+mark,name:free?'Lead '+color:part.rightEnd+' '+mark,x:92,y,
+          electricalType:'passive',connectionType:mark==='FE'?'functional-earth':part.rightEnd};
+        pins.push(start,end);
+        internalConnections.push([start.id,end.id]);
+        artwork.push({kind:'line',from:{x:start.x,y},to:{x:end.x,y}});
+      }
+      const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model:part.productKind+' · '+part.leftEnd+' to '+part.rightEnd+' · '+part.lengthM+' m',
+        name:part.productKind,family:'wago-field-cable',referencePrefix:'W',category:'Electrical · Cable assemblies',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:184,height:height+8,pins,internalConnections,artwork,
+          numberingNote:'A and B identify the assembly ends. Only the conductor paths shown on the manufacturer wiring diagram are linked.'},
+        specifications:{connectorA:{value:part.leftEnd},connectorB:{value:part.rightEnd},
+          assemblyLength:{value:part.lengthM,unit:'m'},
+          conductorColors:{value:part.markings.map((mark,index)=>mark+': '+part.conductorColors[index]).join(' · ')},
+          ...(part.sheathColor?{sheathColor:{value:part.sheathColor}}:{})},
+        instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet',url:datasheet,documentRevision:part.revision,
+          revisionNote:'End configuration, assembly length and pin-to-conductor mapping on page '+part.wiringDiagramPage+'.',
+          retrievedAt:part.retrievedAt,sha256:part.datasheetSha256,wiringDiagramSha256:part.wiringDiagramSha256}]}));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function registerWagoRelayBatch(rows){
     const batch=new Map();
     const diagrams=new Set(['11:12:14','11::14','13::14','11:12:14|21:22:24']);
@@ -4415,6 +4469,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoStackablePcbTerminalBatch,
     registerWagoWinstaBatch,
     registerWagoWinstaCableBatch,
+    registerWagoFieldCableBatch,
     registerWagoMcsBatch,
     registerWagoRelayBatch,
     registerWagoPowerSupplyBatch,

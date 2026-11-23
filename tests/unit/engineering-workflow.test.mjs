@@ -56,6 +56,41 @@ const explicitWinstaBatch = JSON.parse(
   ),
 );
 engine.registerWagoWinstaCableBatch(explicitWinstaBatch);
+const fieldCableBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-field-cable-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoFieldCableBatch(fieldCableBatch);
+
+test("WAGO field cable conductor groups retain source marks and end identities", () => {
+  assert.equal(fieldCableBatch.length, 347);
+  for (const row of fieldCableBatch) {
+    const def = engine.component("wago-" + row.orderCode.replaceAll("/", "_"));
+    assert.deepEqual(
+      plain(def.symbol.internalConnections),
+      row.markings.map((mark) => [
+        "end-a-" + mark.toLowerCase(),
+        "end-b-" + mark.toLowerCase(),
+      ]),
+    );
+    assert.equal(def.symbol.pins.length, row.markings.length * 2);
+    assert.equal(def.sources[0].wiringDiagramSha256, row.wiringDiagramSha256);
+    assert.equal(def.specifications.connectorA.value, row.leftEnd);
+    assert.equal(def.specifications.connectorB.value, row.rightEnd);
+    assert.equal(def.specifications.assemblyLength.value, row.lengthM);
+    const instance = engine.createInstance(def.id, 350, 250, "W1");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(
+      engine.billOfMaterials([instance]).rows[0].partNumber,
+      row.orderCode,
+    );
+  }
+});
 engine.registerWagoDigitalIoBatch(
   JSON.parse(
     fs.readFileSync(
