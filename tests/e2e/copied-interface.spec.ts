@@ -874,6 +874,184 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   });
 });
 
+test("junction and symbol transforms preserve electrical intent through save and reopen", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1680, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const point = (x: number, y: number) => sheetPoint(page, x, y);
+  const click = async (x: number, y: number) => {
+    const p = await point(x, y);
+    await page.mouse.click(p.x, p.y);
+  };
+  await page.locator("#symbolSearch").fill("eplan-resistor");
+  await page.locator('[data-insert="eplan-resistor"]').click();
+  await click(400, 330);
+  await page.locator('[data-insert="eplan-resistor"]').click();
+  await click(600, 330);
+  await click(410, 330);
+  await click(590, 330);
+  await page.locator('[data-draw="select"]').click();
+  await click(400, 330);
+  await page.getByRole("button", { name: "Mirror", exact: true }).click();
+  const mirrored = await saveDrawing(page, "mirrored-drawing");
+  const wire = mirrored.data.objects.find(
+    (obj: { kind: string }) => obj.kind === "wire",
+  );
+  expect(wire.x1).toBe(390);
+  const device = mirrored.data.objects.find(
+    (obj: { id: string }) => obj.id === wire.attachments.start.instanceId,
+  );
+  expect(device.mirrorX).toBe(true);
+  await page.getByRole("button", { name: "Rotate 90°", exact: true }).click();
+  const rotated = await saveDrawing(page, "rotated-drawing");
+  expect(
+    rotated.data.objects.find((obj: { id: string }) => obj.id === wire.id),
+  ).toMatchObject({ x1: 400, y1: 320, attachments: wire.attachments });
+  for (const [x, y, x2, y2] of [
+    [330, 485, 590, 485],
+    [460, 440, 460, 550],
+  ]) {
+    await page.locator('[data-draw="wire"]').click();
+    const a = await point(x, y),
+      b = await point(x2, y2);
+    await page.mouse.move(a.x, a.y);
+    await page.mouse.down();
+    await page.mouse.move(b.x, b.y, { steps: 5 });
+    await page.mouse.up();
+  }
+  const before = await saveDrawing(page, "unjoined-crossing");
+  const count = (objects: object[]) =>
+    page.evaluate(
+      (data) => Reflect.get(window, "AdigunCADEngine").analyze(data).netCount,
+      objects,
+    );
+  const beforeCount = await count(before.data.objects);
+  await page.getByRole("button", { name: "Junction", exact: true }).click();
+  await click(460, 485);
+  await expect(page.locator("#userDrawings [data-junction]")).toHaveCount(1);
+  const joined = await saveDrawing(page, "joined-crossing");
+  expect(await count(joined.data.objects)).toBe(beforeCount - 1);
+  await page.reload();
+  await page.locator("#openFile").setInputFiles(joined.path);
+  await expect(page.locator("#userDrawings [data-junction]")).toHaveCount(1);
+});
+
+test("drafting tools draw on-axis lines, dimensions and exact offsets", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1680, height: 900 });
+  await page.goto("/");
+  const upper = page.getByRole("toolbar", { name: "Drafting controls" });
+  const lower = page.getByRole("toolbar", {
+    name: "Drawing and electrical tools",
+  });
+  await upper.getByRole("button", { name: "New project" }).click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await expect(
+    upper.getByRole("button", { name: "Snap to Terminals" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await upper.getByRole("button", { name: "Snap to Terminals" }).click();
+  await expect(
+    upper.getByRole("button", { name: "Snap to Grid" }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const click = async (x: number, y: number) => {
+    const p = await sheetPoint(page, x, y);
+    await page.mouse.click(p.x, p.y);
+  };
+  const draw = async (
+    name: string,
+    x: number,
+    y: number,
+    x2: number,
+    y2: number,
+  ) => {
+    await lower.getByRole("button", { name, exact: true }).click();
+    const a = await sheetPoint(page, x, y),
+      b = await sheetPoint(page, x2, y2);
+    await page.mouse.move(a.x, a.y);
+    await page.mouse.down();
+    await page.mouse.move(b.x, b.y, { steps: 3 });
+    await page.mouse.up();
+  };
+  await draw("Horizontal Line", 300, 250, 630, 350);
+  await draw("Vertical Line", 510, 180, 610, 470);
+  await lower.getByRole("button", { name: "Trim", exact: true }).click();
+  await click(510, 330);
+  await click(605, 250);
+  await draw("Horizontal Line", 310, 360, 450, 375);
+  await lower.getByRole("button", { name: "Extend", exact: true }).click();
+  await click(510, 390);
+  await click(440, 360);
+  await lower.getByRole("button", { name: "Select and move" }).click();
+  await click(400, 360);
+  page.once("dialog", (dialog) => dialog.accept("20"));
+  await lower.getByRole("button", { name: "Offset", exact: true }).click();
+  await upper.getByRole("button", { name: "Ortho Lock" }).click();
+  await draw("Draw line", 725, 220, 780, 330);
+  await upper.getByRole("button", { name: "Ortho Lock" }).click();
+  await draw("Dimension", 320, 500, 440, 500);
+  await upper.getByRole("button", { name: "Show Print Frame" }).click();
+  await expect(page.locator("#customSheetFrame")).toBeVisible();
+  await upper.getByRole("button", { name: "Electrical Checks" }).click();
+  await expect(page.locator("#rightPanelTitle")).toHaveText(
+    "Electrical checks",
+  );
+  const saved = await saveDrawing(page, "drafting-tools");
+  expect(saved.data.objects).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        kind: "line",
+        x1: 300,
+        y1: 250,
+        x2: 510,
+        y2: 250,
+      }),
+      expect.objectContaining({
+        kind: "line",
+        x1: 510,
+        y1: 180,
+        x2: 510,
+        y2: 470,
+      }),
+      expect.objectContaining({
+        kind: "line",
+        x1: 310,
+        y1: 360,
+        x2: 510,
+        y2: 360,
+      }),
+      expect.objectContaining({
+        kind: "line",
+        x1: 310,
+        y1: 380,
+        x2: 510,
+        y2: 380,
+      }),
+      expect.objectContaining({ kind: "line", dimensionOffset: 50 }),
+      expect.objectContaining({
+        kind: "line",
+        x1: 725,
+        y1: 220,
+        x2: 725,
+        y2: 330,
+      }),
+    ]),
+  );
+  await page.setViewportSize({ width: 800, height: 760 });
+  const more = page.getByRole("button", {
+    name: "More tools in Drawing and electrical tools",
+  });
+  await expect(more).toBeVisible();
+  await more.click();
+  expect(await lower.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+});
+
 test("a named project starts with full drafting rulers and new sheets hide print frames", async ({
   page,
 }) => {
@@ -1191,6 +1369,7 @@ test("library views fit the dock and category, type and project filters show rea
   await part.click();
   const target = await sheetPoint(page, 495, 320);
   await page.mouse.click(target.x, target.y);
+  await addSectionSheet(page, "A1");
   await views.getByRole("button", { name: "Project symbols" }).click();
   await expect(list.locator("[data-insert]")).toHaveCount(1);
   await expect(part).toBeVisible();
