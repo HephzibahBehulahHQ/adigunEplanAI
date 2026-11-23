@@ -1254,6 +1254,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
 
+  const wagoIecRatingBasis='IEC/EN 60664-1 · overvoltage category III · pollution degree 3';
   function registerWagoWinstaCableBatch(rows){
     const batch=new Map();
     const twoPoleCode=/^(?:771|891)-8992\/[01][01][567]-[0-9]{3}$/;
@@ -1276,7 +1277,6 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       {code:/^771-9385\/027-[79]03$/,coding:'L',markings:['N','PE','L',"N'","L'"],cable:fiveCoreCable},
       {code:/^771-9395\/[01]66-[0-9]{3}$/,coding:'B',markings:['1','2','3','4','5'],cable:/^Control line 5x1\.5$/},
     ];
-    const ratingBasis='IEC/EN 60664-1 · overvoltage category III · pollution degree 3';
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
@@ -1322,9 +1322,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{poleCount:{value:poleCount},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
           cableType:{value:part.cableType},connectorWidth:{value:part.connectorWidthMm,unit:'mm'},
           ...(part.connectorHeightMm===undefined?{}:{connectorHeight:{value:part.connectorHeightMm,unit:'mm'}}),
-          nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:ratingBasis},
-          ratedCurrent:{value:part.ratedCurrent,unit:'A',basis:ratingBasis},
-          ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:ratingBasis},
+          nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:wagoIecRatingBasis},
+          ratedCurrent:{value:part.ratedCurrent,unit:'A',basis:wagoIecRatingBasis},
+          ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:wagoIecRatingBasis},
           ...(freeEnd?{conductorPreparation:{value:part.conductorPreparation}}:{})},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
         sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
@@ -1339,14 +1339,19 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const header=part.mount!=='wire';
       const doubleClamp=part.clampsPerPole===2;
+      const ratings=[part.nominalVoltage,part.ratedCurrent,part.impulseVoltageKv];
+      const rated=part.ratingPage!==undefined||ratings.some(value=>value!==undefined);
       if(!/^231-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
         (part.clampsPerPole!==undefined&&!doubleClamp)||
         (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
         (header&&(part.gender!=='plug'||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
           part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' male header'))||
+        (part.headerOrientation!==undefined&&(!header||part.headerOrientation!=='straight'))||
+        (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
+        (part.dimensionPage!==undefined&&![2,3].includes(part.dimensionPage))||
         (!header&&part.kind!==(doubleClamp?'2':'1')+'-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
-        !Number.isInteger(part.poles)||part.poles<2||part.poles>8||![5,5.08,7.5,7.62].includes(part.pitchMm)||
+        !Number.isInteger(part.poles)||part.poles<2||part.poles>12||![5,5.08,7.5,7.62].includes(part.pitchMm)||
         ![part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
@@ -1384,13 +1389,20 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           numberingNote:doubleClamp?'Model-local numbers follow the contact row. The two clamps for each mating contact share one isolated potential.':'Model-local numbers follow the contact row. Each mating contact connects to its own wire clamp or PCB solder pin.'},
         specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
           ...(doubleClamp?{clampsPerPole:{value:2}}:{}),
+          ...(part.headerOrientation?{headerOrientation:{value:part.headerOrientation}}:{}),
+          ...(rated?{
+            nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:wagoIecRatingBasis},
+            ratedCurrent:{value:part.ratedCurrent,unit:'A',basis:wagoIecRatingBasis},
+            ratedImpulseWithstandVoltage:{value:part.impulseVoltageKv,unit:'kV',basis:wagoIecRatingBasis},
+          }:{}),
           connectionTechnology:{value:backType},connectorGender:{value:part.gender},overallHeight:{value:part.heightMm,unit:'mm'}},
         panelFootprint:{widthMm:part.widthMm,heightMm:header?part.depthMm:part.heightMm,
-          depthMm:header?part.heightAboveBoardMm:part.depthMm,source:datasheet,edition:part.revision,page:2,
+          depthMm:header?part.heightAboveBoardMm:part.depthMm,source:datasheet,edition:part.revision,page:part.dimensionPage??2,
           note:header?'Header projected on the PCB plane. Width and depth follow the datasheet footprint envelope.':'Unmated wire connector body. Allow additional wire bend and mating clearance.'},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
         sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
-          revisionNote:'Manufacturer contact row, isolated potentials, termination, pitch and body dimensions.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
+          revisionNote:'Manufacturer contact row, isolated potentials, termination, pitch and body dimensions.'+
+            (rated?' IEC/EN ratings on page '+part.ratingPage+'.':''),retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }

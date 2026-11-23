@@ -161,7 +161,8 @@ const mcsBatch = JSON.parse(
 engine.registerWagoMcsBatch(mcsBatch);
 
 test("WAGO 231 connectors retain exact order codes and isolated pole groups", () => {
-  assert.equal(mcsBatch.length, 117);
+  assert.equal(mcsBatch.length, 343);
+  assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 341);
   for (const source of mcsBatch) {
     const def = engine.component(
       "wago-" + source.orderCode.replaceAll("/", "_"),
@@ -180,7 +181,21 @@ test("WAGO 231 connectors retain exact order codes and isolated pole groups", ()
     );
     assert.equal(def.symbol.pins.length, source.poles * terminalsPerPole);
     assert.equal(def.specifications.pinSpacing.value, source.pitchMm);
+    assert.equal(
+      def.specifications.nominalVoltage?.value,
+      source.nominalVoltage,
+    );
+    assert.equal(def.specifications.ratedCurrent?.value, source.ratedCurrent);
+    assert.equal(
+      def.specifications.ratedImpulseWithstandVoltage?.value,
+      source.impulseVoltageKv,
+    );
+    assert.equal(
+      def.specifications.headerOrientation?.value,
+      source.headerOrientation,
+    );
     assert.equal(def.panelFootprint.widthMm, source.widthMm);
+    assert.equal(def.panelFootprint.page, source.dimensionPage ?? 2);
     assert.equal(
       def.panelFootprint.depthMm,
       source.heightAboveBoardMm ?? source.depthMm,
