@@ -4843,6 +4843,62 @@ for (const template of [
     await page.locator('[data-action="new"]').first().click();
     if (template) await page.locator("#projectTemplate").selectOption(template);
     await page.locator("#createProject").click();
+    const originals = template
+      ? await saveDrawing(page, "example-original")
+      : null;
+    if (originals) {
+      const originalWire = originals.data.objects.find(
+        (o: { kind: string; attachments?: { start?: object; end?: object } }) =>
+          o.kind === "wire" && o.attachments?.start && o.attachments?.end,
+      );
+      expect(originalWire).toBeTruthy();
+      const originalPart = originals.data.objects.find(
+        (o: { id: string; kind: string }) =>
+          o.kind === "component-instance" &&
+          o.id === originalWire.attachments.start.instanceId,
+      );
+      expect(originalPart).toBeTruthy();
+      await page
+        .locator('#projectTree [data-sheet="' + originalPart.sheetId + '"]')
+        .click();
+      const hit = page.locator(
+        '[data-object="' + originalPart.id + '"] .component-hit-target',
+      );
+      const bounds = await hit.boundingBox();
+      expect(bounds).toBeTruthy();
+      await page.mouse.click(
+        bounds!.x + bounds!.width / 4,
+        bounds!.y + bounds!.height / 4,
+      );
+      await page.locator('[data-inspector="Properties"]').click();
+      const ref = page.locator('[data-component-property="ref"]');
+      await expect(ref).toHaveValue(originalPart.ref);
+      await ref.fill("EDIT-" + originalPart.ref);
+      await ref.press("Tab");
+      const x = page.locator('[data-object-coordinate="x"]');
+      await x.fill(String(originalPart.x + 7));
+      await x.press("Tab");
+      const edited = await saveDrawing(page, "example-native-edit");
+      expect(
+        edited.data.objects.find(
+          (o: { id: string }) => o.id === originalPart.id,
+        ),
+      ).toMatchObject({
+        ref: "EDIT-" + originalPart.ref,
+        x: originalPart.x + 7,
+      });
+      expect(
+        edited.data.objects.find(
+          (o: { id: string }) => o.id === originalWire.id,
+        ),
+      ).toMatchObject({
+        attachments: originalWire.attachments,
+        x1: originalWire.x1 + 7,
+      });
+      expect(edited.data.crossSheetConnections).toMatchObject(
+        originals.data.crossSheetConnections,
+      );
+    }
     await addSectionSheet(page);
     await page.locator('[data-module="Electrical"]').click();
     await page.getByRole("menuitem", { name: "Symbol Library" }).click();
@@ -4994,6 +5050,9 @@ for (const template of [
     await page.locator("#openFile").setInputFiles(saved.path);
     const reopened = await saveDrawing(page, "workshop-reopened");
     expect(reopened.data.objects).toEqual(saved.data.objects);
+    expect(reopened.data.crossSheetConnections).toEqual(
+      saved.data.crossSheetConnections,
+    );
   });
 }
 
