@@ -1674,46 +1674,14 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
 });
 
-test("both component pickers search 10,000 entries and place the final real part", async ({
+test("both component pickers search the full real catalogue and place exact matches", async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    Object.defineProperty(window, "AdigunCADEngine", {
-      configurable: true,
-      set(engine) {
-        Object.defineProperty(window, "AdigunCADEngine", {
-          value: {
-            ...engine,
-            catalog() {
-              const catalog = engine.catalog();
-              const last = catalog.find(
-                (row: { id: string }) => row.id === "wago-2202-1406",
-              );
-              const existing = catalog.filter(
-                (row: { id: string }) => row !== last,
-              );
-              const filler = Array.from(
-                { length: 10_000 - catalog.length },
-                (_, index) => ({
-                  id: "test-only-" + index,
-                  componentId: "test-only-" + index,
-                  name: "Fixture entry " + index,
-                  category: "Scale fixture",
-                  family: "test",
-                  tag: "T",
-                }),
-              );
-              return last
-                ? [...filler, ...existing, last]
-                : [...filler, ...catalog];
-            },
-          },
-          configurable: true,
-        });
-      },
-    });
-  });
   await page.goto("/");
+  const total = await page.evaluate(
+    () => Reflect.get(window, "AdigunCADEngine").catalog().length,
+  );
+  expect(total).toBeGreaterThanOrEqual(10000);
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -1721,9 +1689,9 @@ test("both component pickers search 10,000 entries and place the final real part
   const sidebar = page.locator("#symbolList");
   await expect(sidebar.locator(".symbol-row")).toHaveCount(250);
   await sidebar.getByRole("button", { name: "Next results" }).click();
-  await expect(sidebar.getByRole("status")).toHaveText("251–500 of 10000");
+  await expect(sidebar.getByRole("status")).toHaveText("251–500 of " + total);
   await sidebar.getByRole("button", { name: "Previous results" }).click();
-  await expect(sidebar.getByRole("status")).toHaveText("1–250 of 10000");
+  await expect(sidebar.getByRole("status")).toHaveText("1–250 of " + total);
   await page.locator("#symbolSearch").fill("WAGO 2202-1406");
   await expect(sidebar.locator(".symbol-row")).toHaveCount(1);
   await sidebar.locator('[data-insert="wago-2202-1406"]').click();
@@ -1736,7 +1704,7 @@ test("both component pickers search 10,000 entries and place the final real part
   const list = picker.locator(".command-list");
   await expect(list.locator(".command-item")).toHaveCount(250);
   await list.getByRole("button", { name: "Next results" }).click();
-  await expect(list.getByRole("status")).toHaveText("251–500 of 10000");
+  await expect(list.getByRole("status")).toHaveText("251–500 of " + total);
   await picker
     .getByRole("searchbox", { name: "Search component library" })
     .fill("WAGO 2202-1406");
@@ -4441,6 +4409,80 @@ test("editable draw order controls topmost selection and survives undo and reope
   expect(await topAtPoint()).toBe("lower");
   const reopened = await saveDrawing(page, "draw-order-reopened");
   expect(reopened.data.objects).toEqual(saved.data.objects);
+});
+
+test("the component bank lists every source-backed part and places exact-code results", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const bank = page.locator("#symbolList");
+  await expect(bank.locator("[data-insert]").first()).toBeVisible();
+  const catalog = await page.evaluate(() => {
+    const engine = Reflect.get(window, "AdigunCADEngine");
+    const ids: string[] = engine
+      .catalog()
+      .map((entry: { id: string }) => entry.id);
+    const partNumbers = new Set<string>();
+    for (const id of ids) {
+      const part = engine.component(id);
+      if (part.manufacturerPartNumber && part.sources?.length) {
+        partNumbers.add(part.manufacturer + "\n" + part.manufacturerPartNumber);
+      }
+    }
+    return { ids, distinctParts: partNumbers.size };
+  });
+  expect(catalog.distinctParts).toBeGreaterThanOrEqual(10000);
+  const listed = await bank.evaluate((host) => {
+    const ids: string[] = [];
+    for (;;) {
+      for (const button of host.querySelectorAll<HTMLElement>("[data-insert]"))
+        ids.push(button.dataset.insert ?? "");
+      const next = Array.from(host.querySelectorAll("button")).find(
+        (button) => button.textContent === "Next results",
+      );
+      if (!next || next.disabled) return ids;
+      next.click();
+    }
+  });
+  const listedIds = new Set(listed);
+  expect(listedIds.size).toBe(listed.length);
+  expect(listedIds.size).toBe(catalog.ids.length);
+  expect(catalog.ids.filter((id) => !listedIds.has(id)).slice(0, 10)).toEqual(
+    [],
+  );
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["2721-1602", 400],
+    ["2721-102/026-000", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await bank
+      .locator('[data-insert="wago-' + code.replaceAll("/", "_") + '"]')
+      .click();
+    await clickAt(x, 250);
+  }
+  await clickAt(472, 232);
+  await clickAt(628, 232);
+  await clickAt(400, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("Lever");
+  const saved = await saveDrawing(page, "full-bank-exact-placement");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "contact-1" }),
+        end: expect.objectContaining({ pinId: "contact-1" }),
+      },
+    }),
+  );
 });
 
 test("every published component renders from a valid native project and reopens exactly", async ({

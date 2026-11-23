@@ -3,8 +3,8 @@
 ## Component bank checkpoint — 2026-11-23
 
 The owner prioritized 10,000 distinct source-backed order codes while
-keeping the approved editor interface. Main at `b51e366` contains 7,045
-verified catalogue entries after PRs #270–279. The inventory exports
+keeping the approved editor interface. The catalogue includes 10,054
+distinct manufacturer and order-code pairs. The inventory exports
 include exact identity, terminal groups, provenance and available mounting
 geometry. Each batch runs native editor and save/reopen checks before merge.
 Use [the inventory record](references/component-bank-inventory.md) for
