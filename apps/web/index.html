@@ -612,7 +612,7 @@
     state.objects=JSON.parse(drag.snapshot);
     translateObjectSet(drag.ids,dx,dy);
     const engine=window.AdigunCADEngine;
-    if(drag.connectionIds.size)engine.synchronizeWireAttachments(state.objects.filter(obj=>drag.connectionIds.has(obj.id)));
+    if(drag.connectionIds.size)engine.synchronizeWireAttachments(state.objects,drag.connectionIds);
 
     const changedWires=new Map();
     for(const obj of state.objects){
