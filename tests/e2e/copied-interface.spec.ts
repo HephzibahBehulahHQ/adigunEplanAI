@@ -1674,46 +1674,14 @@ test("integrated PLC example preserves its input and output wiring through edits
   );
 });
 
-test("both component pickers search 10,000 entries and place the final real part", async ({
+test("both component pickers search the full real catalogue and place exact matches", async ({
   page,
 }) => {
-  await page.addInitScript(() => {
-    Object.defineProperty(window, "AdigunCADEngine", {
-      configurable: true,
-      set(engine) {
-        Object.defineProperty(window, "AdigunCADEngine", {
-          value: {
-            ...engine,
-            catalog() {
-              const catalog = engine.catalog();
-              const last = catalog.find(
-                (row: { id: string }) => row.id === "wago-2202-1406",
-              );
-              const existing = catalog.filter(
-                (row: { id: string }) => row !== last,
-              );
-              const filler = Array.from(
-                { length: 10_000 - catalog.length },
-                (_, index) => ({
-                  id: "test-only-" + index,
-                  componentId: "test-only-" + index,
-                  name: "Fixture entry " + index,
-                  category: "Scale fixture",
-                  family: "test",
-                  tag: "T",
-                }),
-              );
-              return last
-                ? [...filler, ...existing, last]
-                : [...filler, ...catalog];
-            },
-          },
-          configurable: true,
-        });
-      },
-    });
-  });
   await page.goto("/");
+  const total = await page.evaluate(
+    () => Reflect.get(window, "AdigunCADEngine").catalog().length,
+  );
+  expect(total).toBeGreaterThanOrEqual(10000);
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -1721,9 +1689,9 @@ test("both component pickers search 10,000 entries and place the final real part
   const sidebar = page.locator("#symbolList");
   await expect(sidebar.locator(".symbol-row")).toHaveCount(250);
   await sidebar.getByRole("button", { name: "Next results" }).click();
-  await expect(sidebar.getByRole("status")).toHaveText("251–500 of 10000");
+  await expect(sidebar.getByRole("status")).toHaveText("251–500 of " + total);
   await sidebar.getByRole("button", { name: "Previous results" }).click();
-  await expect(sidebar.getByRole("status")).toHaveText("1–250 of 10000");
+  await expect(sidebar.getByRole("status")).toHaveText("1–250 of " + total);
   await page.locator("#symbolSearch").fill("WAGO 2202-1406");
   await expect(sidebar.locator(".symbol-row")).toHaveCount(1);
   await sidebar.locator('[data-insert="wago-2202-1406"]').click();
@@ -1736,7 +1704,7 @@ test("both component pickers search 10,000 entries and place the final real part
   const list = picker.locator(".command-list");
   await expect(list.locator(".command-item")).toHaveCount(250);
   await list.getByRole("button", { name: "Next results" }).click();
-  await expect(list.getByRole("status")).toHaveText("251–500 of 10000");
+  await expect(list.getByRole("status")).toHaveText("251–500 of " + total);
   await picker
     .getByRole("searchbox", { name: "Search component library" })
     .fill("WAGO 2202-1406");
