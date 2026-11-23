@@ -60,7 +60,7 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
 });
 
 test("WINSTA terminals retain exact markings and isolate every plug and socket pole", () => {
-  assert.ok(winstaBatch.length >= 116);
+  assert.ok(winstaBatch.length >= 192);
   assert.deepEqual(
     plain(
       engine.component("wago-770-282_080-000").connectorInterface.poleMarkings,
@@ -72,6 +72,10 @@ test("WINSTA terminals retain exact markings and isolate every plug and socket p
     const def = engine.component(id);
     assert.equal(def.manufacturerPartNumber, part.orderCode);
     assert.equal(def.connectorInterface.coding, part.coding);
+    assert.equal(
+      def.connectorInterface.series,
+      part.orderCode.startsWith("890-") ? "WINSTA MINI" : "WINSTA MIDI",
+    );
     assert.deepEqual(plain(def.connectorInterface.poleMarkings), part.markings);
     assert.equal(
       def.symbol.pins.length,

@@ -1196,7 +1196,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const part of rows){
       const urlCode=typeof part?.orderCode==='string'?part.orderCode.replace('/','_'):'';
       const id='wago-'+urlCode;
-      if(!part||!/^770-[0-9]{3}(?:\/[0-9]{3}-[0-9]{3})?$/.test(part.orderCode)||
+      if(!part||!/^(?:770|890)-[0-9]{3}(?:\/[0-9]{3}-[0-9]{3})?$/.test(part.orderCode)||
         !['plug','socket'].includes(part.gender)||!/^[A-Z]$/.test(part.coding)||
         !Array.isArray(part.markings)||part.markings.length<2||part.markings.length>5||
         new Set(part.markings).size!==part.markings.length||
@@ -1217,6 +1217,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
   function createWinstaConnector(part,id){
+    const series=part.orderCode.startsWith('890-')?'WINSTA MINI':'WINSTA MIDI';
     const poles=part.markings.length,width=144,height=poles*36+12,matingSide=part.gender==='plug'?1:-1;
     const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-43,y:-height/2,width:86,height}];
     const line=(a,b)=>artwork.push({kind:'line',from:{x:a.x,y:a.y},to:{x:b.x,y:b.y}});
@@ -1236,11 +1237,11 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       internalConnections.push(group);
     }
     return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
-      model:'WINSTA MIDI '+part.gender,name:'WINSTA MIDI '+part.gender,family:'wago-installation-connector',
+      model:series+' '+part.gender,name:series+' '+part.gender,family:'wago-installation-connector',
       referencePrefix:'X',category:'Electrical · Installation connectors',
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
         numberingNote:'Mating contacts use manufacturer pole markings. The suffix on a wire clamp is a model-local identifier. Each marked pole is electrically isolated from the other poles.'},
-      connectorInterface:{series:'WINSTA MIDI',gender:part.gender,coding:part.coding,poleMarkings:part.markings},
+      connectorInterface:{series,gender:part.gender,coding:part.coding,poleMarkings:part.markings},
       specifications:{connectorGender:{value:part.gender},coding:{value:part.coding},poleCount:{value:poles},
         clampsPerPole:{value:part.clampsPerPole},potentialMarkings:{value:part.markings.join(' / ')},
         nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},
