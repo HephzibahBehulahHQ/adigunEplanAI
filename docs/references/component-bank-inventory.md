@@ -308,6 +308,15 @@ contact with its own clamp or solder pin. The headers expose manufacturer
 drill centres, nominal hole diameter and tolerance in Properties.
 [Female THT header datasheet](https://wago.priintcloud.com/datasheets/232-232/en)
 
+## WAGO 721 MCS MIDI connectors
+
+The 404 source-backed entries have 5 mm or 7.5 mm contact pitch.
+They include one- and two-conductor wire connectors and 145 straight or
+angled THT headers with documented in-line drill centres and tolerance.
+Two-conductor models expose both clamps on each isolated pole.
+[721 THT header datasheet](https://wago.priintcloud.com/datasheets/721-432_001-000/en) ·
+[Two-conductor connector datasheet](https://wago.priintcloud.com/datasheets/721-2102_026-000/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug

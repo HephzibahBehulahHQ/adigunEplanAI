@@ -176,13 +176,28 @@ const mcsFemaleBatch = JSON.parse(
     "utf8",
   ),
 );
-const mcsParts = [...mcsBatch, ...mcsMiniBatch, ...mcsFemaleBatch];
+const mcsMidiBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-721-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+const mcsParts = [
+  ...mcsBatch,
+  ...mcsMiniBatch,
+  ...mcsFemaleBatch,
+  ...mcsMidiBatch,
+];
 engine.registerWagoMcsBatch(mcsParts);
 
 test("WAGO MCS connectors retain exact order codes, isolated poles and verified drill data", () => {
   assert.equal(mcsBatch.length, 970);
   assert.equal(mcsMiniBatch.length, 516);
   assert.equal(mcsFemaleBatch.length, 310);
+  assert.equal(mcsMidiBatch.length, 404);
   assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 968);
   assert.equal(Math.max(...mcsBatch.map((source) => source.poles)), 24);
   assert.ok(
@@ -192,7 +207,7 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
   );
   assert.equal(
     mcsParts.filter((source) => source.drilledHoleDiameterMm).length,
-    831,
+    976,
   );
   for (const source of mcsParts) {
     const def = engine.component(
@@ -212,6 +227,12 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
     );
     assert.equal(def.symbol.pins.length, source.poles * terminalsPerPole);
     assert.equal(def.specifications.pinSpacing.value, source.pitchMm);
+    if (source.connectionTechnology) {
+      assert.equal(
+        def.specifications.connectionTechnology.value,
+        source.connectionTechnology,
+      );
+    }
     assert.equal(
       def.specifications.nominalVoltage?.value,
       source.nominalVoltage,

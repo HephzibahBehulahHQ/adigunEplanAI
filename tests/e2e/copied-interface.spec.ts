@@ -2020,7 +2020,7 @@ test("WINSTA four-pole assemblies expose exact ratings and separate switched con
   }
 });
 
-test("WAGO 231 exact codes can be placed and wired from the component library", async ({
+test("WAGO 721 exact codes can be placed and wired from the component library", async ({
   page,
 }) => {
   await page.goto("/");
@@ -2033,9 +2033,9 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["231-432/040-000", 400],
-    ["231-2102/026-000", 650],
-    ["231-102/026-000", 900],
+    ["721-432/001-000", 400],
+    ["721-2102/026-000", 650],
+    ["721-102/026-000", 900],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page
@@ -2054,14 +2054,23 @@ test("WAGO 231 exact codes can be placed and wired from the component library", 
   await expect(page.locator("#inspectorContent")).toContainText("angled");
   await expect(page.locator("#inspectorContent")).toContainText("320 V");
   await expect(page.locator("#inspectorContent")).toContainText("12 A");
+  await expect(
+    page.getByText("Verified component · MCS MIDI THT male header", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.getByText("PCB drill centers (mm)", { exact: true }).click();
+  await expect(
+    page.getByText("X 5 · Y 0 · Ø 1.4", { exact: true }),
+  ).toBeVisible();
   const saved = await saveDrawing(page, "wago-mcs");
   const header = saved.data.objects.find(
     ({ componentId }: { componentId?: string }) =>
-      componentId === "wago-231-432_040-000",
+      componentId === "wago-721-432_001-000",
   );
   const socket = saved.data.objects.find(
     ({ componentId }: { componentId?: string }) =>
-      componentId === "wago-231-2102_026-000",
+      componentId === "wago-721-2102_026-000",
   );
   expect(saved.data.objects).toContainEqual(
     expect.objectContaining({

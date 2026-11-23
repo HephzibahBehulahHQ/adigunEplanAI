@@ -9,6 +9,7 @@ import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-bat
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
 import wagoMcsBatch from "../../../packages/component-library/wago-mcs-231-batch.json";
 import wagoMcsFemaleBatch from "../../../packages/component-library/wago-mcs-232-batch.json";
+import wagoMcsMidiBatch from "../../../packages/component-library/wago-mcs-721-batch.json";
 import wagoMcsMiniBatch from "../../../packages/component-library/wago-mcs-734-batch.json";
 
 import wagoDigitalIoBatch from "../../../packages/component-library/wago-digital-io-batch.json";
@@ -16,6 +17,7 @@ import wagoDigitalIoBatch from "../../../packages/component-library/wago-digital
 const mcsCatalog = [
   ...wagoMcsBatch,
   ...wagoMcsFemaleBatch,
+  ...wagoMcsMidiBatch,
   ...wagoMcsMiniBatch,
 ];
 
