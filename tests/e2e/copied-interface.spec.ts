@@ -874,6 +874,27 @@ test("ENG-0601 opens authored paper documents without overlaps and roundtrips ed
   });
 });
 
+test("a named project starts with full drafting rulers and new sheets hide print frames", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1680, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await expect(page.locator('[data-ruler-axis="x"]')).toBeVisible();
+  await expect(page.locator('[data-ruler-axis="y"]')).toBeVisible();
+  await expect(page.locator("#customSheetFrame")).toBeHidden();
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(0);
+  await addSectionSheet(page);
+  await expect(page.locator("#customSheetFrame")).toBeHidden();
+  await expect(page.locator("#sheetTabs [aria-selected=true]")).toContainText(
+    "A2/000",
+  );
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByRole("checkbox", { name: "Show print frame" }).check();
+  await expect(page.locator("#customSheetFrame")).toBeVisible();
+});
+
 test("title block edits propagate shared fields and retain sheet overrides", async ({
   page,
 }) => {
@@ -882,6 +903,8 @@ test("title block edits propagate shared fields and retain sheet overrides", asy
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page, "A1");
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByRole("checkbox", { name: "Show print frame" }).check();
   await page.locator("#customSheetFrame rect").last().dblclick();
   await page
     .getByLabel("Project manager", { exact: true })
