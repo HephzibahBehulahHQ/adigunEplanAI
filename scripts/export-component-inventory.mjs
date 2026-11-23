@@ -81,6 +81,17 @@ engine.registerWagoPowerSupplyBatch(
     ),
   ),
 );
+engine.registerWagoSingleChannelBreakerBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-single-channel-breaker-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoMcsBatch(
   ["231", "232", "721", "734"].flatMap((series) =>
     JSON.parse(

@@ -1462,6 +1462,60 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
 
+  function registerWagoSingleChannelBreakerBatch(rows){
+    const batch=new Map();
+    const labels=['S2','VIN+','VIN+','GND','S1','VOUT+','VOUT+','GND'];
+    const pins=labels.map((name,index)=>({id:'terminal-'+(index+1),localNumber:String(index+1),name,
+      x:index<4?-90:90,y:(index%4-1.5)*32,electricalType:'passive',connectionType:'Module terminal'}));
+    const line=(x1,y1,x2,y2)=>({kind:'line',from:{x:x1,y:y1},to:{x:x2,y:y2}});
+    const artwork=[
+      {kind:'rect',x:-62,y:-64,width:124,height:128},
+      ...pins.map(pin=>line(pin.x,pin.y,Math.sign(pin.x)*62,pin.y)),
+      line(-62,-16,-44,-16),line(-62,16,-44,16),line(-44,-16,-44,16),line(-44,0,-21,0),
+      line(62,-16,44,-16),line(62,16,44,16),line(44,-16,44,16),line(44,0,21,0),
+      line(-21,0,13,-16),line(-62,48,62,48),
+    ];
+    for(const part of rows){
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      if(!/^787-(2861|3861)\/\d{3}-\d{3,4}$/.test(part.orderCode)||
+        ![part.minimumInputVoltage,part.nominalInputVoltage,part.maximumInputVoltage,part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
+        part.minimumInputVoltage>=part.nominalInputVoltage||part.nominalInputVoltage>=part.maximumInputVoltage||
+        !Array.isArray(part.currentSettings)||!part.currentSettings.length||
+        !part.currentSettings.every((current,index)=>finite(current)&&current>0&&(!index||current>part.currentSettings[index-1]))||
+        part.circuitDiagramPage!==1||part.dimensionPage!==3||
+        !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        ![part.datasheetSha256,part.circuitDiagramSha256].every(value=>/^[a-f0-9]{64}$/.test(value))||
+        batch.has(id)||component(id))throw new Error('Invalid or duplicate WAGO circuit breaker row: '+id);
+      const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
+      const newer=part.orderCode.startsWith('787-3861/');
+      const manual=newer?'https://cdn.automationdirect.com/static/manuals/wagomccb/manual_7873861_1001000.pdf':
+        'https://docs.rs-online.com/1709/A700000011520405.pdf';
+      const current=part.currentSettings.length===1?{value:part.currentSettings[0],unit:'A'}:
+        {value:part.currentSettings.join(' / '),unit:'A'};
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model:'WAGO electronic circuit breaker '+part.orderCode,name:'Single-channel electronic circuit breaker',
+        family:'wago-electronic-breaker',referencePrefix:'F',category:'Power · Electronic circuit protection',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:180,height:128,pins,artwork,
+          internalConnections:[['terminal-2','terminal-3'],['terminal-4','terminal-8'],['terminal-6','terminal-7']],
+          numberingNote:'The eight terminal numbers follow the manufacturer diagram.'},
+        electricalFunctions:{protection:{inputPins:['terminal-2','terminal-3'],outputPins:['terminal-6','terminal-7'],
+          returnPins:['terminal-4','terminal-8'],controlInput:'terminal-5',statusOutput:'terminal-1'},
+          simulationNote:'Static nets include only documented fixed links. The electronic switch and signals are not simulated.'},
+        specifications:{nominalInputVoltage:{value:part.nominalInputVoltage,unit:'V DC'},
+          inputVoltageRange:{minimum:part.minimumInputVoltage,maximum:part.maximumInputVoltage,unit:'V DC'},
+          nominalOutputCurrent:current,mounting:{value:'DIN-35 rail'}},
+        panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:datasheet,
+          edition:part.revision,page:part.dimensionPage,note:'Depth above DIN rail. Apply installation clearances separately.'},
+        instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
+          revisionNote:'Terminal layout, output current setting and mounting dimensions.',retrievedAt:part.retrievedAt,
+          sha256:part.datasheetSha256,circuitDiagramSha256:part.circuitDiagramSha256},
+        {publisher:'WAGO',title:'Single-channel electronic circuit breaker product manual',url:manual,
+          documentRevision:newer?'1.0.0':'1.3.1',revisionNote:'Connection assignment and distribution of common potentials.'}]}));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function registerWagoMcsBatch(rows){
     const batch=new Map();
     for(const part of rows){
@@ -4197,6 +4251,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoMcsBatch,
     registerWagoRelayBatch,
     registerWagoPowerSupplyBatch,
+    registerWagoSingleChannelBreakerBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,

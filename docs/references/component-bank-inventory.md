@@ -338,6 +338,16 @@ the device. Panel dimensions cover the body above the rail.
 [Compact supply datasheet](https://wago.priintcloud.com/datasheets/787-1001/en) ·
 [Supply with DC OK contacts datasheet](https://wago.priintcloud.com/datasheets/787-1622/en)
 
+## WAGO single-channel electronic circuit breakers
+
+The 19 exact 787-2861 and 787-3861 order codes have editable symbols
+with numbered terminals, documented current settings and above-rail
+body dimensions. The netlist joins fixed same-potential pairs (2–3,
+4–8 and 6–7). Protection and signals are represented by their documented
+terminals. Tripping and switching response are outside static analysis.
+[787-2861 circuit breaker manual](https://docs.rs-online.com/1709/A700000011520405.pdf) ·
+[787-3861 circuit breaker manual](https://cdn.automationdirect.com/static/manuals/wagomccb/manual_7873861_1001000.pdf)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug
