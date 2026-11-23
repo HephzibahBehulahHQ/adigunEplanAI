@@ -326,13 +326,20 @@
       ratedInsulationVoltage: { value: 600, unit: 'V' },
       ratedImpulseWithstandVoltage: { value: 6, unit: 'kV' }
     },
+    panelFootprint: {
+      widthMm: 9.825, heightMm: 32, depthMm: 28.3,
+      source: 'https://download.se.com/files?p_enDocType=CAD&p_File_Name=ZBE101_2D-front.dxf&p_Doc_Ref=ZBE101_NEW_2024', edition: 'ZBE101_NEW_2024',
+      note: 'Envelope measured from the manufacturer DXF model-space extents in millimetres. Front view gives width and height; left and top views confirm depth. Mounting clearances and actuator geometry are separate.'
+    },
     instanceProperties: {
       marking: { type: 'string', default: '', maximumLength: 40 },
       comment: { type: 'string', default: '', maximumLength: 160 }
     },
     sources: [
       { publisher: 'Schneider Electric', title: 'ZBE101 product data sheet', url: 'https://www.mouser.com/catalog/specsheets/Schneider_09-24-2025_ZBE101.pdf', documentRevision: '24 September 2025 · pp. 1–2', revisionNote: 'Exact contact block, family compatibility, mounting, contact operation and electrical ratings.', retrievedAt: '2026-11-23' },
-      { publisher: 'Schneider Electric', title: 'ZBE10-series terminal markings', url: 'https://www.se.com/us/en/faqs/FA121755/', revisionNote: 'ZBE101 screw terminals are marked 3 and 4.', retrievedAt: '2026-11-23' }
+      { publisher: 'Schneider Electric', title: 'ZBE10-series terminal markings', url: 'https://www.se.com/us/en/faqs/FA121755/', revisionNote: 'ZBE101 screw terminals are marked 3 and 4.', retrievedAt: '2026-11-23' },
+      { publisher: 'Schneider Electric', title: 'ZBE101 front CAD view', url: 'https://download.se.com/files?p_enDocType=CAD&p_File_Name=ZBE101_2D-front.dxf&p_Doc_Ref=ZBE101_NEW_2024', documentRevision: 'ZBE101_NEW_2024', sha256: '9134a09fb2be0769970a284bd47e9dda46523b76337eb9d5616451a2c5fd1dfa', retrievedAt: '2026-11-23' },
+      { publisher: 'Schneider Electric', title: 'ZBE101 left CAD view', url: 'https://download.se.com/files?p_enDocType=CAD&p_File_Name=ZBE101_2D-left.dxf&p_Doc_Ref=ZBE101_NEW_2024', documentRevision: 'ZBE101_NEW_2024', sha256: '6e52efacd8947a07f67f6ab8565dcfcf064363362ba9b221a26afc8a06ea1563', retrievedAt: '2026-11-23' }
     ]
   });
   const motorStarterDefinition = deepFreeze({

@@ -1840,6 +1840,16 @@ test("Harmony ZBE101 places, wires by marked terminals and preserves the open co
         .symbol.internalConnections,
   );
   expect(connections).toEqual([]);
+  const envelope = await page.evaluate(
+    () =>
+      Reflect.get(window, "AdigunCADEngine").component("schneider-zbe101")
+        .panelFootprint,
+  );
+  expect(envelope).toMatchObject({
+    widthMm: 9.825,
+    heightMm: 32,
+    depthMm: 28.3,
+  });
 });
 
 test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", async ({

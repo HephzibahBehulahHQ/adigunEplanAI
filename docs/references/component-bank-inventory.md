@@ -28,8 +28,9 @@ anchor where the source shows a rail bond.
 
 The native schematic contact exposes the manufacturer’s screw terminals 3 and
 4. Its normally open state leaves the two terminals on separate nets. The
-block is documented as a front-mounted Harmony XB4/XB5 add-on. Cabinet
-geometry is pending review of the exact product drawing.
+block is documented as a front-mounted Harmony XB4/XB5 add-on. The cabinet body
+envelope measures 9.825 × 32 × 28.3 mm from the exact product’s orthographic
+CAD views. Those dimensions describe the contact block body.
 [Terminal identification](https://www.se.com/us/en/faqs/FA121755/) ·
 [Product data sheet](https://www.mouser.com/catalog/specsheets/Schneider_09-24-2025_ZBE101.pdf)
 
