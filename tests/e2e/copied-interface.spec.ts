@@ -2192,6 +2192,46 @@ for (const [firstCode, secondCode] of [
   });
 }
 
+test("WAGO 2616 PCB terminals expose and wire the sixth solder point", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["2604-1102", 400],
+    ["2616-1102", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(644, 295);
+  await clickAt(388, 205);
+  await clickAt(650, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await page.getByText("PCB drill centers (mm)", { exact: true }).click();
+  await expect(
+    page.getByText("X 5 · Y 15 · Ø 1.7", { exact: true }),
+  ).toBeVisible();
+  const saved = await saveDrawing(page, "pcb-six-solder-points");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "pad-1-6" }),
+        end: expect.objectContaining({ pinId: "clamp-1" }),
+      },
+    }),
+  );
+});
+
 test("WAGO 2086 SMD PCB terminals show land dimensions and retain a second pad attachment", async ({
   page,
 }) => {
@@ -4219,22 +4259,42 @@ test("every published component renders from a valid native project and reopens 
     mimeType: "application/json",
     buffer: Buffer.from(fixture),
   });
-  for (const sheet of expected.sheets) {
-    await page.locator('#projectTree [data-sheet="' + sheet.id + '"]').click();
-    const parts = partsBySheet.get(sheet.id) ?? [];
-    const drawings = page.locator("#userDrawings .drawing-object");
-    await expect(drawings).toHaveCount(parts.length);
-    const rendered = new Map(
-      await drawings.evaluateAll((nodes) =>
-        nodes.map((node) => [
-          node.getAttribute("data-object"),
-          node.querySelector("title")?.textContent,
-        ]),
-      ),
-    );
-    for (const part of parts) {
-      expect(rendered.get(part.id)).toContain(part.ref);
-    }
+  await expect(
+    page.locator('#projectTree [data-sheet="' + expected.sheets[0].id + '"]'),
+  ).toBeVisible();
+  const sheets: { id: string }[] = expected.sheets;
+  for (let offset = 0; offset < sheets.length; offset += 24) {
+    const batch = sheets.slice(offset, offset + 24).map(({ id }) => ({
+      id,
+      parts: partsBySheet.get(id) ?? [],
+    }));
+    const issue = await page.evaluate((batch) => {
+      for (const { id, parts } of batch) {
+        const row = document.querySelector<HTMLElement>(
+          '#projectTree [data-sheet="' + CSS.escape(id) + '"]',
+        );
+        if (!row) return "Missing project sheet " + id;
+        row.click();
+        const rendered = new Map(
+          Array.from(
+            document.querySelectorAll("#userDrawings .drawing-object"),
+            (node) => [
+              node.getAttribute("data-object"),
+              node.querySelector("title")?.textContent,
+            ],
+          ),
+        );
+        if (rendered.size !== parts.length)
+          return "Unexpected object count on " + id;
+        for (const part of parts) {
+          if (!rendered.get(part.id)?.includes(part.ref)) {
+            return "Missing rendered component " + part.ref + " on " + id;
+          }
+        }
+      }
+      return null;
+    }, batch);
+    expect(issue).toBeNull();
   }
   const saved = await saveDrawing(page, "all-catalogue-parts");
   expect(saved.data.objects).toEqual(expected.objects);

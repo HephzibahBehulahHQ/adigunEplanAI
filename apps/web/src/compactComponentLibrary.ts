@@ -7,6 +7,7 @@ import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-t
 import wago2086PcbTerminalBatch from "../../../packages/component-library/wago-pcb-2086-batch.json";
 import wagoStackablePcbTerminalBatch from "../../../packages/component-library/wago-pcb-236-256-batch.json";
 import wago255257PcbTerminalBatch from "../../../packages/component-library/wago-pcb-255-257-batch.json";
+import wagoMultipinPcbTerminalBatch from "../../../packages/component-library/wago-pcb-multipin-batch.json";
 
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
@@ -33,6 +34,7 @@ const mcsCatalog = [
 const stackablePcbCatalog = [
   ...wagoStackablePcbTerminalBatch,
   ...wago255257PcbTerminalBatch,
+  ...wagoMultipinPcbTerminalBatch,
 ];
 
 const symbols = plcKinds.map((kind) => {

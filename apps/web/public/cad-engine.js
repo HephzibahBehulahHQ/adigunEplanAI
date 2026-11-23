@@ -1187,19 +1187,27 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const rated=part.ratingPage!==undefined;
       const drawn=part.footprintPage!==undefined;
-      if(!/^(236|255|256|257)-\d{3,4}(?:\/\d{3}-\d{3}){0,3}$/.test(part.orderCode)||
-        !['THT','THR'].includes(part.mounting)||![1,2].includes(part.solderPinsPerPole)||
-        !Number.isInteger(part.poles)||part.poles<1||part.poles>48||![5,7.5,10].includes(part.padPitchMm)||
+      if(!/^(236|255|256|257|741|745|2604|2616)-\d{3,4}(?:\/\d{3}-\d{3}){0,3}$/.test(part.orderCode)||
+        !['THT','THR'].includes(part.mounting)||![1,2,3,4,6].includes(part.solderPinsPerPole)||
+        !Number.isInteger(part.poles)||part.poles<1||part.poles>48||
+        ![5,5.08,6.5,7.5,7.62,10,10.16,11.5,12.5,15,20].includes(part.padPitchMm)||
         (part.alternatePadPitchMm!==undefined&&part.alternatePadPitchMm!==part.padPitchMm*1.016)||
-        !['Operating tool','Push-button','Push-button (angled)','Finger-operated lever'].includes(part.actuationMethod)||
+        !['Operating tool','Push-button','Push-button (angled)','Finger-operated lever','Lever'].includes(part.actuationMethod)||
+        (part.connectionTechnology!==undefined&&!['CAGE CLAMP','Push-in CAGE CLAMP'].includes(part.connectionTechnology))||
         ![part.nominalCrossSectionMm2,part.bodyWidthMm,part.bodyDepthMm,part.bodyHeightAboveBoardMm,
           part.solderPinLengthMm,part.solderPinWidthMm,part.solderPinDepthMm,part.drilledHoleDiameterMm,
           part.drilledHolePlusToleranceMm].every(value=>finite(value)&&value>0)||
         (part.poles-1)*part.padPitchMm>=part.bodyWidthMm||
         (rated&&(![1,2,3,4].includes(part.ratingPage)||
           ![part.nominalVoltage,part.impulseVoltageKv,part.ratedCurrent].every(value=>finite(value)&&value>0)))||
-        (drawn&&(![1,2].includes(part.footprintPage)||!/^[a-f0-9]{64}$/.test(part.footprintDrawingSha256)||
-          (part.solderPinsPerPole===2?part.padRowSpacingMm!==5:part.padRowSpacingMm!==undefined)))||
+        (drawn&&(![1,2].includes(part.footprintPage)||!/^[a-f0-9]{64}$/.test(part.footprintDrawingSha256)))||
+        (part.pcbPadOffsetsMm!==undefined&&(!drawn||!Array.isArray(part.pcbPadOffsetsMm)||
+          part.pcbPadOffsetsMm.length!==part.solderPinsPerPole||
+          !part.pcbPadOffsetsMm.every(offset=>Array.isArray(offset)&&offset.length===2&&
+            offset.every(value=>finite(value)&&value>=0)&&offset[0]<part.padPitchMm&&offset[1]<part.bodyDepthMm)||
+          new Set(part.pcbPadOffsetsMm.map(offset=>offset.join(','))).size!==part.solderPinsPerPole))||
+        (drawn&&!part.pcbPadOffsetsMm&&
+          (part.solderPinsPerPole===2?part.padRowSpacingMm!==5:part.solderPinsPerPole!==1||part.padRowSpacingMm!==undefined))||
         ![2,3,4].includes(part.dimensionPage)||typeof part.finish!=='string'||!part.finish.trim()||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
@@ -1207,7 +1215,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       }
       batch.set(id,deepFreeze(createWagoPcbTerminal({...part,
         datasheet:'https://wago.priintcloud.com/datasheets/'+urlCode+'/en',productUrl:'https://www.wago.com/'+urlCode,
-        connectionTechnology:'CAGE CLAMP',pages:'1–'+Math.max(part.dimensionPage,part.ratingPage??0),
+        connectionTechnology:part.connectionTechnology??'CAGE CLAMP',pages:'1–'+Math.max(part.dimensionPage,part.ratingPage??0),
       },id)));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
@@ -1219,27 +1227,32 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     const hasLayout=series==='250'||part.footprintPage!==undefined;
     const throughHoleReflow=part.mounting==='THR';
     const surfaceMount=part.mounting==='SMD';
-    const doublePad=part.solderPinsPerPole===2;
+    const padCount=part.solderPinsPerPole??1;
+    const multiPad=padCount>1;
+    const poleSpacing=padCount>2?42:24;
+    const padSpacing=padCount>2?6:12;
     const pcbMount=surfaceMount?'Surface-mount solder pad':'Through-hole solder pin';
-    const width=24*part.poles+16,height=90;
+    const width=poleSpacing*part.poles+16,height=90;
     const pins=[],internalConnections=[],pads=[];
     const artwork=[{kind:'rect',x:-width/2,y:-26,width,height:52}];
     for(let index=0;index<part.poles;index++){
-      const number=index+1,x=(index-(part.poles-1)/2)*24;
+      const number=index+1,x=(index-(part.poles-1)/2)*poleSpacing;
       const clampId='clamp-'+number,group=[clampId],junction={x,y:15};
       pins.push({id:clampId,localNumber:'W'+number,name:'Wire clamp '+number,x,y:-45,
         electricalType:'passive',connectionType:part.connectionTechnology});
       artwork.push({kind:'line',from:{x,y:-45},to:junction});
-      const padOffsets=doublePad?[-6,6]:[0];
-      for(const [padIndex,offset] of padOffsets.entries()){
-        const terminalNumber=number+(doublePad?'.'+(padIndex+1):'');
-        const padId='pad-'+number+(doublePad?'-'+(padIndex+1):'');
+      for(let padIndex=0;padIndex<padCount;padIndex++){
+        const offset=(padIndex-(padCount-1)/2)*padSpacing;
+        const terminalNumber=number+(multiPad?'.'+(padIndex+1):'');
+        const padId='pad-'+number+(multiPad?'-'+(padIndex+1):'');
         pins.push({id:padId,localNumber:'P'+terminalNumber,name:'PCB solder '+(surfaceMount?'pad ':'pin ')+terminalNumber,
           x:x+offset,y:45,electricalType:'passive',connectionType:pcbMount});
         group.push(padId);
         artwork.push({kind:'line',from:junction,to:{x:x+offset,y:45}});
-        const row=doublePad?padIndex:series2086?(index+part.poles)%2:series==='250'?index%2:0;
-        pads.push({pinId:padId,xMm:index*part.padPitchMm,yMm:row*(part.padRowSpacingMm||0),
+        if(!hasLayout)continue;
+        const row=multiPad?padIndex:series2086?(index+part.poles)%2:series==='250'?index%2:0;
+        const [padX,padY]=part.pcbPadOffsetsMm?.[padIndex]??[0,row*(part.padRowSpacingMm||0)];
+        pads.push({pinId:padId,xMm:index*part.padPitchMm+padX,yMm:padY,
           ...(surfaceMount?{widthMm:part.padWidthMm,lengthMm:part.padLengthMm}:{drilledHoleDiameterMm:part.drilledHoleDiameterMm,
             ...(part.drilledHolePlusToleranceMm!==undefined?{drilledHolePlusToleranceMm:part.drilledHolePlusToleranceMm}:{})})});
       }
@@ -1252,7 +1265,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       family:'wago-pcb-terminal',
       referencePrefix:'X',category:'Electrical · WAGO PCB terminal blocks',
       symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
-        numberingNote:doublePad?'W and P identify model-local wire clamps and PCB terminals. One clamp and its two PCB terminals share one isolated potential.':
+        numberingNote:multiPad?'W and P identify model-local wire clamps and PCB terminals. Each clamp shares an isolated potential with the corresponding '+padCount+' PCB terminals.':
           'W and P identify model-local wire clamps and solder pins. Each pair is one isolated potential.'},
       specifications:{poleCount:{value:part.poles},
         ...(part.nominalVoltage!==undefined?{nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},

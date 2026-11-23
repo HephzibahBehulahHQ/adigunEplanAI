@@ -104,7 +104,7 @@ engine.registerWago2086PcbTerminalBatch(
   ),
 );
 engine.registerWagoStackablePcbTerminalBatch(
-  ["236-256", "255-257"].flatMap((series) =>
+  ["236-256", "255-257", "multipin"].flatMap((series) =>
     JSON.parse(
       readFileSync(
         new URL(
