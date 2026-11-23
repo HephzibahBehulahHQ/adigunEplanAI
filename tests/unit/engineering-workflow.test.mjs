@@ -122,6 +122,38 @@ test("WAGO 750 I/O exposes documented field terminals and keeps supply groups se
   }
 });
 
+test("WAGO 753 and XTR variants preserve exact order codes and the 750-1501 header mapping", () => {
+  for (const code of [
+    "750-403",
+    "750-408",
+    "750-409",
+    "750-430/040-000",
+    "750-431/040-000",
+    "753-430",
+    "753-431",
+    "753-436",
+    "753-437",
+    "753-530",
+    "750-1501",
+  ]) {
+    const def = engine.component("wago-" + code.replace("/", "_"));
+    const part = engine.createInstance(def.id, 300, 220, "A1");
+    assert.equal(engine.validateInstance(part).valid, true);
+    assert.equal(engine.billOfMaterials([part]).rows[0].partNumber, code);
+  }
+  const header = engine.component("wago-750-1501");
+  assert.deepEqual(
+    plain(header.symbol.pins.map((pin) => Number(pin.localNumber))),
+    Array.from({ length: 22 }, (_, index) => index + 1),
+  );
+  assert.equal(engine.plcIoPins(header).length, 16);
+  assert.equal(header.symbol.pins[20].connectionType, "CAGE CLAMP");
+  assert.deepEqual(plain(header.symbol.internalConnections), [
+    ["24v-17", "24v-19", "24v-21"],
+    ["0v-18", "0v-20", "0v-22"],
+  ]);
+});
+
 test("WINSTA terminals retain exact markings and isolate every plug and socket pole", () => {
   assert.ok(winstaBatch.length >= 192);
   assert.deepEqual(

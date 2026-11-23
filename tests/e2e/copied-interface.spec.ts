@@ -1937,11 +1937,13 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["750-530", 400],
-    ["750-430", 650],
+    ["753-530", 400],
+    ["750-430/040-000", 650],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
-    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await page
+      .locator('[data-insert="wago-' + code.replace("/", "_") + '"]')
+      .click();
     await clickAt(x, 250);
   }
   await clickAt(472, 214);
@@ -1955,7 +1957,7 @@ test("WAGO digital I/O can be wired and assigned through Properties", async ({
   const saved = await saveDrawing(page, "wago-digital-io");
   expect(saved.data.objects).toContainEqual(
     expect.objectContaining({
-      componentId: "wago-750-430",
+      componentId: "wago-750-430_040-000",
       plcIo: { di1: { signal: "Feedback", address: "" } },
     }),
   );
