@@ -459,6 +459,15 @@ const mcsMaxiBatch = JSON.parse(
     "utf8",
   ),
 );
+const mcsPluggableBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-2231-209x-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
 const mcsParts = [
   ...mcsBatch,
   ...mcsMicroBatch,
@@ -466,6 +475,7 @@ const mcsParts = [
   ...mcsFemaleBatch,
   ...mcsMidiBatch,
   ...mcsMaxiBatch,
+  ...mcsPluggableBatch,
 ];
 engine.registerWagoMcsBatch(mcsParts);
 
@@ -476,6 +486,7 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
   assert.equal(mcsFemaleBatch.length, 310);
   assert.equal(mcsMidiBatch.length, 404);
   assert.equal(mcsMaxiBatch.length, 237);
+  assert.equal(mcsPluggableBatch.length, 443);
   assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 968);
   assert.equal(Math.max(...mcsBatch.map((source) => source.poles)), 24);
   assert.ok(
@@ -485,7 +496,7 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
   );
   assert.equal(
     mcsParts.filter((source) => source.drilledHoleDiameterMm).length,
-    1036,
+    1040,
   );
   for (const source of mcsParts) {
     const def = engine.component(

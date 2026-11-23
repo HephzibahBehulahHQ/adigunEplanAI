@@ -330,6 +330,16 @@ documented separately.
 [THR block datasheet](https://wago.priintcloud.com/datasheets/2086-1122/en) ·
 [SMD block datasheet](https://wago.priintcloud.com/datasheets/2086-1102_700-000_997-604/en)
 
+## WAGO 2231, 2091 and 2092 pluggable connectors
+
+The 443 exact order codes cover wire connectors and PCB headers. The
+native pin groups record each mating contact and its corresponding clamp
+or solder pin. Properties exposes the documented actuation, mounting and
+IEC ratings, and shows PCB drill centres where the datasheet dimensions
+are verified.
+[2231 MIDI Classic datasheet](https://wago.priintcloud.com/datasheets/2231-102_026-000/en) ·
+[2092 connector datasheet](https://wago.priintcloud.com/datasheets/2092-1122/en)
+
 ## WAGO 831 MCS MAXI connectors
 
 The 237 exact order codes cover 181 Push-in CAGE CLAMP wire connectors

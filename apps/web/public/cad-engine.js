@@ -1648,6 +1648,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const maxi=part.orderCode.startsWith('831-');
       const midiFemale=part.orderCode.startsWith('232-');
       const midi=part.orderCode.startsWith('721-');
+      const pluggable= /^(2231|2091|2092)-/.test(part.orderCode);
       const header=part.mount!=='wire';
       const doubleClamp=part.clampsPerPole===2;
       const genderName=part.gender==='socket'?'female':'male';
@@ -1658,19 +1659,24 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const hasDrill=part.drilledHoleDiameterMm!==undefined||part.drilledHolePlusToleranceMm!==undefined;
       const tripleSolder=maxi&&header;
       const pcbRows=part.pcbRowsMm;
-      const pitchOptions=maxi?[7.62]:micro?[2.5]:mini?[3.5,3.81]:[5,5.08,7.5,7.62];
-      const orderCodePattern=maxi?/^831-\d{4}(?:\/\d{3}-\d{3,4}){0,2}$/:
+      const pitchOptions=pluggable?[3.5,5,5.08,7.5,7.62]:maxi?[7.62]:micro?[2.5]:mini?[3.5,3.81]:[5,5.08,7.5,7.62];
+      const orderCodePattern=pluggable?/^(2231|2091|2092)-\d{3,4}(?:\/\d{3}-\d{3,4}){0,2}$/:
+        maxi?/^831-\d{4}(?:\/\d{3}-\d{3,4}){0,2}$/:
         mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232|721|733)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
       if(!orderCodePattern.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
         (part.clampsPerPole!==undefined&&!doubleClamp)||
         (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
         (midiFemale&&part.gender!=='socket')||
-        (header&&((!maxi&&!mini&&!midiFemale&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
+        (header&&((!pluggable&&!maxi&&!mini&&!midiFemale&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
           part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' '+genderName+' header'))||
         (tripleSolder&&(part.mount!=='THT'||part.solderPinsPerPole!==3||!hasSolderDimensions||
           ![1,2].includes(part.dimensionDiagramPage)||!/^[a-f0-9]{64}$/.test(part.dimensionDiagramSha256)))||
         (maxi&&!header&&part.connectionTechnology!=='Push-in CAGE CLAMP')||
+        (pluggable&&!header&&(!['CAGE CLAMP','Push-in CAGE CLAMP'].includes(part.connectionTechnology)||
+          !['Push-button','Lever','Operating tool','Finger-operated lever'].includes(part.actuationMethod)))||
+        (part.connectionDiagramSha256!==undefined&&(!header||![1,2].includes(part.connectionDiagramPage)||
+          !/^[a-f0-9]{64}$/.test(part.connectionDiagramSha256)))||
         (tripleSolder&&hasDrill&&(!Array.isArray(pcbRows)||!['0|5.08|10.16','0|5.1|10.2'].includes(pcbRows.join('|'))))||
         (pcbRows!==undefined&&(!tripleSolder||!hasDrill))||
         (part.headerOrientation!==undefined&&(!header||!['straight','angled'].includes(part.headerOrientation)))||
@@ -1713,7 +1719,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         }
         internalConnections.push(group);
       }
-      const model=(maxi?'MCS MAXI ':micro?'MCS MICRO ':mini?'MCS MINI ':midi?'MCS MIDI ':'MCS MIDI Classic ')+part.kind;
+      const series=part.orderCode.split('-')[0];
+      const model=(pluggable&&series!=='2231'?'Series '+series+' ':maxi?'MCS MAXI ':
+        micro?'MCS MICRO ':mini?'MCS MINI ':midi?'MCS MIDI ':'MCS MIDI Classic ')+part.kind;
       const mm=value=>({value,unit:'mm'});
       const drillRows=pcbRows??[0];
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
@@ -1725,6 +1733,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
           ...(doubleClamp?{clampsPerPole:{value:2}}:{}),
           ...(tripleSolder?{solderPinsPerPole:{value:3}}:{}),
+          ...(part.actuationMethod?{actuationMethod:{value:part.actuationMethod}}:{}),
           ...(part.headerOrientation?{headerOrientation:{value:part.headerOrientation}}:{}),
           ...(part.connectorOrientation?{connectorOrientation:{value:part.connectorOrientation}}:{}),
           ...(hasSolderDimensions?{solderPinLength:mm(part.solderPinLengthMm),solderPinWidth:mm(part.solderPinWidthMm),
@@ -1750,7 +1759,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
             (tripleSolder?' Three solder pins per potential in the drawing on page '+part.dimensionDiagramPage+'.':
               hasSolderDimensions?' In-line solder pin dimensions.':'')+(hasDrill?' Specified PCB drill diameter and tolerance.':'')+
             (rated?' IEC/EN ratings on page '+part.ratingPage+'.':''),retrievedAt:part.retrievedAt,sha256:part.datasheetSha256,
-          ...(tripleSolder?{dimensionDiagramSha256:part.dimensionDiagramSha256}:{})}]}));
+          ...(tripleSolder?{dimensionDiagramSha256:part.dimensionDiagramSha256}:{}),
+          ...(part.connectionDiagramSha256?{connectionDiagramSha256:part.connectionDiagramSha256}:{})}]}));
     }
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
