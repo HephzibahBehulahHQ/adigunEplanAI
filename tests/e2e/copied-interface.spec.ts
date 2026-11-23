@@ -5501,6 +5501,7 @@ test("SVG and PNG keep off-frame geometry and PDF honors physical paper size", a
   const margin = page.getByLabel("Page margin (mm)", { exact: true });
   await margin.fill("12");
   await margin.press("Tab");
+  await page.getByRole("checkbox", { name: "Show print frame" }).check();
   const saved = await saveDrawing(page, "a4-print-layout");
   expect(saved.data.sheets[0].paper).toMatchObject({
     format: "A4",
