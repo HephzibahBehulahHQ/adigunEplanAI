@@ -314,3 +314,11 @@ retains N, PE, L, N′ and L′ as five separate conductors. Five-pole coding B
 uses contacts 1 through 5. Six variants remain outside this batch because
 their datasheets omit connector height.
 [Coding L datasheet](https://wago.priintcloud.com/datasheets/771-9385_027-703/en)
+
+An additional 200 cable assemblies retain the exact source contact
+markings, including four-pole coding A with N, PE, 2/L and 1/L′. Properties
+shows documented dimensions. Connector height is omitted wherever the
+datasheet omits it. The 1,077 WINSTA cable records expose the datasheet’s
+nominal voltage, rated current and impulse withstand voltage, with source
+page and IEC/EN 60664-1 rating basis.
+[Four-pole datasheet](https://wago.priintcloud.com/datasheets/771-9294_016-101/en)
