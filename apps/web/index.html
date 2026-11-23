@@ -42,11 +42,21 @@
     }
   </style>
   <style id="left-sidebar-dock-styles">
+    @media(min-width:851px){.workspace:not(.maximized):not(.left-sidebar-closed){grid-template-columns:36px 220px minmax(0,1fr) 36px}}
     @media(min-width:851px){.workspace.left-sidebar-closed{grid-template-columns:36px 0 minmax(0,1fr) 36px}}
     @media(min-width:641px) and (max-width:850px){.workspace.left-sidebar-closed{grid-template-columns:34px 0 minmax(0,1fr) 34px}}
     .workspace.left-sidebar-closed .sidepanel{visibility:hidden;pointer-events:none}
+    #symbolScopes,#symbolFilters{display:grid;gap:3px;padding:3px 6px}
+    #symbolScopes{grid-template-columns:repeat(3,minmax(0,1fr))}
+    #symbolScopes button{font-size:10px;line-height:1.15;min-height:27px;overflow-wrap:anywhere;color:inherit;background:#172538;border-radius:3px}
+    #symbolScopes button[aria-pressed="true"]{background:#164c5b;color:#e9fbff}
+    #symbolFilters{grid-template-columns:repeat(2,minmax(0,1fr))}
+    #symbolFilters select{width:100%;min-width:0;padding:2px;font-size:10px;background:var(--panel);color:inherit}
+    #symbolList .symbol-row>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     #projectPanel{grid-row:1}#symbolsPanel{grid-row:2}
     #projectPanel[hidden],#symbolsPanel[hidden]{display:none}
+    .workspace .sidepanel.symbols-only{grid-template-rows:minmax(0,1fr)}
+    .sidepanel.symbols-only #symbolsPanel{grid-row:1}
     @media(max-width:640px){.workspace.mobile-tools.left-sidebar-open{grid-template-columns:34px minmax(110px,34vw) minmax(0,1fr) 0}.workspace.mobile-tools.left-sidebar-open .rail.left{width:auto}.workspace.mobile-tools.left-sidebar-open .sidepanel{display:grid;visibility:visible;pointer-events:auto;grid-template-rows:minmax(0,1fr) minmax(0,1fr)}}
   </style>
 <style>.drawing-wrap.blank-start #sheetDesign>:not(:first-child):not(#userDrawings):not(#customSheetFrame){display:none}.drawing-wrap.blank-sheet #sheetDesign>:not(:first-child):not(#userDrawings):not(#customSheetFrame){display:none}.drawing-wrap.blank-sheet #customSheetFrame{display:block!important}</style>
@@ -71,7 +81,7 @@
   </div>
   <div class="color-palette" id="colorPalette" role="dialog" aria-label="Color palette" hidden><div class="palette-head"><strong>Color palette</strong><span class="grow"></span><button type="button" class="palette-mode active" data-palette-mode="stroke" aria-pressed="true">Stroke</button><button type="button" class="palette-mode" data-palette-mode="fill" aria-pressed="false">Fill</button></div><div class="palette-swatches" id="paletteSwatches"></div><label class="palette-custom">Custom color <input id="customColor" type="color" value="#164eac" aria-label="Custom drawing color"></label><label class="palette-fill"><input id="paletteFillEnabled" type="checkbox"> Fill closed shapes</label></div>
   <div class="workspace" id="workspace">
-    <aside class="rail left" aria-label="Project navigation"><button data-tip="Project explorer" aria-label="Project explorer" aria-pressed="true" data-panel="project"><svg><use href="#i-folder"/></svg></button><button data-tip="Symbol library" aria-label="Symbol library" aria-pressed="false" data-panel="symbols"><svg><use href="#i-symbol"/></svg></button><button data-tip="Layers" aria-label="Layers" aria-pressed="false" data-panel="layers"><svg><use href="#i-layers"/></svg></button><div class="rail-spacer"></div><button data-tip="Workspace settings" aria-label="Workspace settings" data-action="settings"><svg><use href="#i-settings"/></svg></button></aside>
+    <aside class="rail left" aria-label="Project navigation"><button data-tip="Project explorer" aria-label="Project explorer" aria-pressed="true" aria-controls="projectPanel" data-panel="project"><svg><use href="#i-folder"/></svg></button><button data-tip="Symbol library" aria-label="Symbol library" aria-pressed="false" aria-controls="symbolsPanel" data-panel="symbols"><svg><use href="#i-symbol"/></svg></button><button data-tip="Layers" aria-label="Layers" aria-pressed="false" data-panel="layers"><svg><use href="#i-layers"/></svg></button><div class="rail-spacer"></div><button data-tip="Workspace settings" aria-label="Workspace settings" data-action="settings"><svg><use href="#i-settings"/></svg></button></aside>
     <aside class="sidepanel" id="sidepanel" aria-label="Project and symbol panels">
       <section class="panel-section" id="projectPanel"><div class="panel-head"><span class="head-icon">▤</span><span>Project Explorer</span><span class="grow"></span><button aria-label="Collapse project explorer" id="collapseProject">−</button><button type="button" id="closeLeftPanel" aria-label="Close left sidebar" title="Close left sidebar">×</button></div><label class="panel-search"><span>⌕</span><input id="projectSearch" type="search" placeholder="Find sheet or device" aria-label="Find sheet or device"></label><div class="tree" id="projectTree">
         <div class="tree-row selected" data-sheet="overview"><span class="caret">▾</span><span class="folder">▰</span><b>Z0010000</b><span>Control cabinet</span></div>
@@ -90,7 +100,7 @@
         <div class="tree-row tree-grand" data-sheet="terminals"><span class="file">▱</span><span>120 · Terminal strip</span><span class="detail">A3/120</span></div>
         <div class="tree-row tree-grand" data-sheet="bom"><span class="file">▱</span><span>200 · Bill of materials</span><span class="detail">A3/200</span></div>
       </div><div class="panel-tabs"><button class="active" data-tree-view="tree">Tree</button><button data-tree-view="list">List</button></div></section>
-      <section class="panel-section" id="symbolsPanel" hidden><div class="panel-head"><span class="head-icon">⊕</span><span>Symbols / Macros</span><span class="grow"></span><button aria-label="Search symbols" id="focusSymbols">⌕</button></div><label class="panel-search"><span>⌕</span><input id="symbolSearch" type="search" placeholder="Search symbols" aria-label="Search symbols"></label><div class="symbol-list" id="symbolList"><div class="library-group">▾ IEC-style symbols · built in</div><button class="symbol-row" data-insert="terminal"><span class="symbol-glyph">⊣</span><span>Terminal · 2-pin</span></button><button class="symbol-row" data-insert="relay"><span class="symbol-glyph">▱</span><span>Relay coil · K</span></button><button class="symbol-row" data-insert="contact"><span class="symbol-glyph">/</span><span>NO contact · 13 / 14</span></button><button class="symbol-row" data-insert="breaker"><span class="symbol-glyph">◈</span><span>Protective switch</span></button><button class="symbol-row" data-insert="sensor"><span class="symbol-glyph">◇</span><span>Sensor · 3-wire</span></button><button class="symbol-row" data-insert="motor"><span class="symbol-glyph">○</span><span>Three-phase motor</span></button><div class="library-group">PLC and distribution</div><button class="symbol-row" data-insert="plc"><span class="symbol-glyph">▣</span><span>PLC I/O module · 8-point</span></button><button class="symbol-row" data-insert="ground"><span class="symbol-glyph">⏚</span><span>Protective earth</span></button></div><div class="panel-tabs"><button class="active" data-symbol-view="library">Library</button><button data-symbol-view="macros">Macros</button></div></section>
+      <section class="panel-section" id="symbolsPanel" hidden><div class="panel-head"><span class="head-icon">⊕</span><span>Symbols / Macros</span><span class="grow"></span><button aria-label="Search symbols" id="focusSymbols">⌕</button></div><label class="panel-search"><span>⌕</span><input id="symbolSearch" type="search" placeholder="Search symbols" aria-label="Search symbols"></label><div id="symbolScopes" role="group" aria-label="Component library views"><button type="button" data-symbol-scope="all" aria-pressed="true">All parts</button><button type="button" data-symbol-scope="common" aria-pressed="false">Common parts</button><button type="button" data-symbol-scope="project" aria-pressed="false">Project symbols</button></div><div id="symbolFilters"><select id="symbolCategory" aria-label="Component category"></select><select id="symbolType" aria-label="Component type"></select></div><div class="symbol-list" id="symbolList"><div class="library-group">▾ IEC-style symbols · built in</div><button class="symbol-row" data-insert="terminal"><span class="symbol-glyph">⊣</span><span>Terminal · 2-pin</span></button><button class="symbol-row" data-insert="relay"><span class="symbol-glyph">▱</span><span>Relay coil · K</span></button><button class="symbol-row" data-insert="contact"><span class="symbol-glyph">/</span><span>NO contact · 13 / 14</span></button><button class="symbol-row" data-insert="breaker"><span class="symbol-glyph">◈</span><span>Protective switch</span></button><button class="symbol-row" data-insert="sensor"><span class="symbol-glyph">◇</span><span>Sensor · 3-wire</span></button><button class="symbol-row" data-insert="motor"><span class="symbol-glyph">○</span><span>Three-phase motor</span></button><div class="library-group">PLC and distribution</div><button class="symbol-row" data-insert="plc"><span class="symbol-glyph">▣</span><span>PLC I/O module · 8-point</span></button><button class="symbol-row" data-insert="ground"><span class="symbol-glyph">⏚</span><span>Protective earth</span></button></div><div class="panel-tabs"><button class="active" data-symbol-view="library">Library</button><button data-symbol-view="macros">Macros</button></div></section>
     </aside>
     <section class="editor" aria-label="Electrical drawing editor">
       <div class="editor-tabs" id="sheetTabs" role="tablist" aria-label="Open drawing sheets"><button class="document-tab" role="tab" data-sheet="power" aria-selected="false">A1/010 · Power supply <span class="tab-close" role="button" tabindex="0" data-close-sheet="power" aria-label="Close Power supply tab">×</span></button><button class="document-tab" role="tab" data-sheet="control" aria-selected="true">A1/020 · Control circuit <span class="tab-close" role="button" tabindex="0" data-close-sheet="control" aria-label="Close Control circuit tab">×</span></button><button class="document-tab" role="tab" data-sheet="plc" aria-selected="false">A2/030 · PLC / I/O <span class="tab-close" role="button" tabindex="0" data-close-sheet="plc" aria-label="Close PLC / I/O tab">×</span></button><button class="document-tab add-sheet" id="newSheet" aria-label="Add sheet">+</button></div>
@@ -149,9 +159,10 @@
   const sheetNames={overview:['Z0010000','Control cabinet'],title:['A1/000','Title page'],contents:['A1/001','Contents'],device:['A1/005','Device list'],power:['A1/010','Power supply'],control:['A1/020','Control circuit'],plc:['A2/030','PLC / I/O'],drive:['A2/040','Drive interface'],safety:['A2/050','Safety circuit'],layout:['A3/100','Enclosure layout'],terminals:['A3/120','Terminal strip'],bom:['A3/200','Bill of materials']};
   const symbolNames={terminal:'Terminal · 2-pin',relay:'Relay coil · K',contact:'NO contact · 13 / 14',breaker:'Protective switch',sensor:'Sensor · 3-wire',motor:'Three-phase motor',plc:'PLC I/O module · 8-point',ground:'Protective earth'};
   let symbolCatalog;
+  let symbolScope='all',lastProjectSymbols='';
   const symbolById=new Map(),symbolByComponentId=new Map(),symbolSearchText=new Map();
   function refreshSymbolCatalog(){
-    symbolCatalog=window.AdigunCADEngine.catalog();
+    symbolCatalog=window.AdigunCADEngine.catalog().sort((a,b)=>a.category.localeCompare(b.category)||a.family.localeCompare(b.family));
     symbolById.clear();symbolByComponentId.clear();symbolSearchText.clear();
     for(const symbol of symbolCatalog){
       symbolById.set(symbol.id,symbol);
@@ -856,9 +867,9 @@
     return true;
   }
   const symbolPageSize=250;
-  function showSymbolResults(host,query,category,appendRow){
+  function showSymbolResults(host,query,category,appendRow,catalog=symbolCatalog){
     const words=query.trim().toLowerCase().split(/\s+/).filter(Boolean);
-    const results=symbolCatalog.filter(item=>(!category||category===item.category)&&
+    const results=catalog.filter(item=>(!category||category===item.category)&&
       words.every(word=>symbolSearchText.get(item.id).includes(word)));
     function renderPage(page,focusOffset){
       let focusButton;
@@ -894,20 +905,47 @@
     }
     renderPage(0);
   }
+  const commonManufacturerParts=new Set([
+    '3004362','3044076','3212147','2002-1201','2002-1301','2002-1401','2002-2401',
+    'ZBE101','XB5AA31','XB5AA42','XB5AVB3','XB5AVB4','3LD2203-0TK51',
+    '3RT2027-2KB40','3RV2321-4BC10','3RM1201-1AA04','6EP1332-5BA00',
+    '750-1405','750-530','750-8217/625-000','IFS204','XMLB004A2S11',
+    '2202-1406','787-1664','1033000','P1J122728'
+  ]);
+  function projectSymbolIds(){return Array.from(new Set(state.objects.map(obj=>obj.componentId).filter(Boolean))).sort();}
+  function symbolOptions(select,values,allLabel,format=String){
+    const previous=select.value;
+    select.replaceChildren(new Option(allLabel,''),...Array.from(new Set(values)).sort().map(value=>new Option(format(value),value)));
+    select.value=values.includes(previous)?previous:'';
+  }
   function renderSymbolSidebar(query=''){
+    const category=$('#symbolCategory'),type=$('#symbolType');
+    const ids=symbolScope==='project'?projectSymbolIds():[];
+    lastProjectSymbols=ids.join('|');
+    const projectIds=new Set(ids);
+    const catalog=symbolCatalog.filter(item=>{
+      if(symbolScope==='all')return true;
+      if(symbolScope==='project')return projectIds.has(item.componentId);
+      const definition=window.AdigunCADEngine.component(item.componentId);
+      return item.family==='eplan-original'||commonManufacturerParts.has(definition?.manufacturerPartNumber);
+    });
+    symbolOptions(category,catalog.map(item=>item.category),'All categories');
+    const categoryItems=category.value?catalog.filter(item=>item.category===category.value):catalog;
+    symbolOptions(type,categoryItems.map(item=>item.family),'All types',value=>value.replaceAll('-',' '));
+    const scoped=type.value?categoryItems.filter(item=>item.family===type.value):categoryItems;
     showSymbolResults($('#symbolList'),query,'',(content,item,group)=>{
       if(item.category!==group){
         const head=document.createElement('div');
         head.className='library-group';head.textContent=item.category;content.append(head);
       }
       const button=document.createElement('button');
-      button.className='symbol-row';button.dataset.insert=item.id;button.draggable=true;
+      button.className='symbol-row';button.dataset.insert=item.id;button.draggable=true;button.title=item.name;
       const glyph=document.createElement('span');
       glyph.className='symbol-glyph';glyph.textContent=item.tag.slice(0,3);
       const label=document.createElement('span');
       label.textContent=item.name;button.append(glyph,label);content.append(button);
       return item.category;
-    });
+    },scoped);
   }
   function componentHoverDescription(obj,definition){if(definition.generic)return obj.ref+' · '+definition.name+'\n'+(definition.family==='building-device'?'Generic floor-plan ':'Original Eplan ')+definition.connectionClass+' symbol · manufacturer part not assigned\nPins: '+definition.symbol.pins.map(function(p){return p.id;}).join(', ');const lines=[(obj.ref||'Component')+' · '+definition.name,'Manufacturer: '+definition.manufacturer,'Model: '+definition.model,'Part no.: '+definition.manufacturerPartNumber,'Position: X '+Number(obj.x).toFixed(2)+' mm, Y '+Number(obj.y).toFixed(2)+' mm','Rotation: '+(Number(obj.rotation)||0)+'°','Pins: '+definition.symbol.pins.map(function(pin){return pin.localNumber+' '+pin.name;}).join(' · ')];Object.keys(obj.properties||{}).forEach(function(name){const value=obj.properties[name];if(typeof value==='string'&&value.trim())lines.push(name+': '+value.trim());else if(typeof value==='number'&&Number.isFinite(value))lines.push(name+': '+value);});return lines.join('\n');}
   function canResizeGraphic(obj){return Boolean(obj&&!obj.locked&&drawingObjectVisible(obj)&&(obj.kind==='component-instance'||['rect','ellipse','triangle','circle'].includes(obj.kind)&&Number.isFinite(obj.x)&&Number.isFinite(obj.y)&&Number.isFinite(obj.x2)&&Number.isFinite(obj.y2)&&!(Number(obj.rotation)||obj.flipX||obj.flipY)));}
@@ -933,6 +971,7 @@
   function finishObjectResize(event){if(!resizeDrag)return;const drag=resizeDrag;updateObjectResize(svgPoint(event));resizeDrag=null;drawing.style.cursor='default';if(drag.moved&&drag.lastValid!==drag.snapshot){pushUndo(drag.snapshot);persist();refreshSelectedProperties();notify('Drawing object resized. Undo is available.');}else{state.objects=JSON.parse(drag.snapshot);renderObjects();}}
   function synchronizeActiveConnections(){const endpoints=(state.crossSheetConnections||[]).flatMap(function(link){return link.endpoints;}).filter(function(e){return e.sheetId===state.sheet;});endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&!e.wireEnd){if(e.point.x===wire.x1&&e.point.y===wire.y1)e.wireEnd='start';else if(e.point.x===wire.x2&&e.point.y===wire.y2)e.wireEnd='end';}});window.AdigunCADEngine.synchronizeWireAttachments(state.objects);endpoints.forEach(function(e){const wire=state.objects.find(function(o){return o.id===e.wireId;});if(wire&&['start','end'].includes(e.wireEnd))e.point={x:wire[e.wireEnd==='start'?'x1':'x2'],y:wire[e.wireEnd==='start'?'y1':'y2']};});}
   function renderObjects(){
+    if(symbolScope==='project'&&!$('#symbolsPanel').hidden&&projectSymbolIds().join('|')!==lastProjectSymbols)renderSymbolSidebar($('#symbolSearch').value);
     placementFootprints=null;
     synchronizeActiveConnections();
     userDrawings.replaceChildren();
@@ -2776,28 +2815,29 @@
     if(!state.sheet){notify('Open a drawing sheet before printing.');return;}
     if(confirmFrameClipping())window.print();
   }
-  function selectPanel(id){
+  function syncLeftSidebar(){
+    const project=$('#projectPanel'),symbols=$('#symbolsPanel');
+    const open=!project.hidden||!symbols.hidden;
+    workspace.classList.toggle('left-sidebar-open',open);
+    workspace.classList.toggle('left-sidebar-closed',!open);
+    $('#sidepanel').classList.toggle('symbols-only',project.hidden&&!symbols.hidden);
+    $('[data-panel="project"]').setAttribute('aria-pressed',String(!project.hidden));
+    $('[data-panel="symbols"]').setAttribute('aria-pressed',String(!symbols.hidden));
+    (project.hidden?symbols:project).querySelector('.panel-head').append($('#closeLeftPanel'));
+  }
+  function selectPanel(id,toggle=false){
     if(id==='layers'){openInspector('Layers and visibility');return;}
-    workspace.classList.remove('left-sidebar-closed');
-    workspace.classList.add('left-sidebar-open');
-    $('#projectPanel').hidden=false;
-    if(id==='symbols')$('#symbolsPanel').hidden=false;
-    if(id==='project'){
-      if(!state.projectName&&!$('#projectTree').children.length)$('#projectTree').append(...exampleNavigationRows);
-      $('#projectSearch').value='';
-      $('#projectSearch').dispatchEvent(new Event('input'));
-      $('#projectTree').scrollTop=0;
-    }
-    $('[data-panel="project"]').setAttribute('aria-pressed','true');
-    $('[data-panel="symbols"]').setAttribute('aria-pressed',String(!$('#symbolsPanel').hidden));
+    const panel=$('#'+id+'Panel');
+    panel.hidden=toggle&&!panel.hidden&&!workspace.classList.contains('left-sidebar-closed');
+    if(id==='project'&&!panel.hidden&&!state.projectName&&!$('#projectTree').children.length)$('#projectTree').append(...exampleNavigationRows);
+    syncLeftSidebar();
+    if(id==='symbols'&&!panel.hidden)renderSymbolSidebar($('#symbolSearch').value);
   }
   $('#closeLeftPanel').addEventListener('click',function(){
-    workspace.classList.remove('left-sidebar-open');
-    workspace.classList.add('left-sidebar-closed');
-    const projectButton=$('[data-panel="project"]');
-    projectButton.setAttribute('aria-pressed','false');
-    $('[data-panel="symbols"]').setAttribute('aria-pressed','false');
-    projectButton.focus();
+    $('#projectPanel').hidden=true;
+    $('#symbolsPanel').hidden=true;
+    syncLeftSidebar();
+    $('[data-panel="project"]').focus();
   });
   const cabinetFeatureNames={'mounting-hole':'Mounting hole','cable-entry':'Cable entry'};
   const cabinetEnvelope=cabinet=>({widthMm:cabinet.width,heightMm:cabinet.height,depthMm:cabinet.depth});
@@ -3211,11 +3251,11 @@
   $('#colorPalette').addEventListener('pointerleave',schedulePaletteClose);
   document.addEventListener('pointerdown',e=>{const button=$('[data-action="palette"]'),panel=$('#colorPalette');if(!panel.hidden&&!panel.contains(e.target)&&!button.contains(e.target))closeColorPalette();});
 
-  $$('[data-panel]').forEach(b=>b.addEventListener('click',()=>selectPanel(b.dataset.panel)));
+  $$('[data-panel]').forEach(b=>b.addEventListener('click',()=>selectPanel(b.dataset.panel,true)));
   $$('[data-inspector]').forEach(b=>b.addEventListener('click',()=>openInspector(b.dataset.inspector)));
 
   $$('[data-toggle]').forEach(b=>b.addEventListener('click',()=>{const key=b.dataset.toggle;state[key]=!state[key];b.setAttribute('aria-pressed',String(state[key]));if(key==='grid'){$('#viewportGrid').style.display=state.grid?'':'none';applyView();}persist();notify(`${key.toUpperCase()} ${state[key]?'on':'off'}.`);}));
-  $('#collapseProject').addEventListener('click',()=>{const hidden=$('#projectPanel').hidden;$('#projectPanel').hidden=!hidden;});$('#focusSymbols').addEventListener('click',()=>$('#symbolSearch').focus());$('#closeRightPanel').addEventListener('click',()=>{$('#rightPanel').classList.remove('open');workspace.classList.remove('inspector-open');});$('#maximize').addEventListener('click',()=>workspace.classList.toggle('maximized'));$('#newSheet').addEventListener('click',()=>openAddSheetDialog());
+  $('#collapseProject').addEventListener('click',()=>{selectPanel('project',true);$('[data-panel="project"]').focus();});$('#focusSymbols').addEventListener('click',()=>$('#symbolSearch').focus());$('#closeRightPanel').addEventListener('click',()=>{$('#rightPanel').classList.remove('open');workspace.classList.remove('inspector-open');});$('#maximize').addEventListener('click',()=>workspace.classList.toggle('maximized'));$('#newSheet').addEventListener('click',()=>openAddSheetDialog());
   $('#zoomValue').addEventListener('click',function(){const menu=$('#zoomMenu'),open=menu.hidden;menu.hidden=!open;$('#zoomValue').setAttribute('aria-expanded',String(open));if(open){const r=$('#zoomValue').getBoundingClientRect();menu.style.left=Math.max(8,Math.min(innerWidth-150,r.left))+'px';menu.style.bottom=(innerHeight-r.top+5)+'px';}});
   $('#zoomMenu').addEventListener('click',function(e){const b=e.target.closest('[data-zoom-preset]');if(!b)return;$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');if(b.dataset.zoomPreset==='fit')runAction('fit');else setZoom(Number(b.dataset.zoomPreset));});
   document.addEventListener('click',function(e){if(!e.target.closest('#zoomMenu')&&!e.target.closest('#zoomValue')){$('#zoomMenu').hidden=true;$('#zoomValue').setAttribute('aria-expanded','false');}});
@@ -3240,6 +3280,13 @@
   $('#projectTree').addEventListener('click',e=>{if(e.target.closest('input'))return;const addSection=e.target.closest('[data-add-project-section]');if(addSection){const id='A'+(state.sections.length+1);state.sections.push({id:id,name:'Additional section',collapsed:false});state.activeSection=id;renderCustomSheetNavigation();persist();return;}const toggle=e.target.closest('[data-toggle-section]');if(toggle){const section=state.sections.find(function(item){return item.id===toggle.dataset.toggleSection;});section.collapsed=!section.collapsed;renderCustomSheetNavigation();persist();return;}const add=e.target.closest('[data-add-section-sheet]');if(add){state.activeSection=add.dataset.addSectionSheet;addSheet();return;}const section=e.target.closest('[data-project-section]');if(section){selectProjectSection(section.dataset.projectSection);return;}const row=e.target.closest('[data-sheet]');if(row)setSheet(row.dataset.sheet);});$('#sheetTabs').addEventListener('click',e=>{const close=e.target.closest('[data-delete-sheet],[data-close-sheet]');if(close){e.preventDefault();e.stopPropagation();closeSheetTab(close.dataset.closeSheet||close.dataset.deleteSheet);return;}const tab=e.target.closest('.document-tab[data-sheet]');if(tab)setSheet(tab.dataset.sheet);});$('#sheetTabs').addEventListener('keydown',e=>{const close=e.target.closest('[data-delete-sheet],[data-close-sheet]');if(close&&(e.key==='Enter'||e.key===' ')){e.preventDefault();closeSheetTab(close.dataset.closeSheet||close.dataset.deleteSheet);}});
   $('#symbolList').addEventListener('click',e=>{const b=e.target.closest('[data-insert]');if(b)insertCatalogSymbol(b.dataset.insert);});
   $('#symbolSearch').addEventListener('input',e=>renderSymbolSidebar(e.target.value));
+  for(const button of document.querySelectorAll('[data-symbol-scope]'))button.addEventListener('click',()=>{
+    symbolScope=button.dataset.symbolScope;
+    for(const view of document.querySelectorAll('[data-symbol-scope]'))view.setAttribute('aria-pressed',String(view===button));
+    $('#symbolCategory').value='';$('#symbolType').value='';
+    renderSymbolSidebar($('#symbolSearch').value);
+  });
+  for(const filter of [$('#symbolCategory'),$('#symbolType')])filter.addEventListener('change',()=>renderSymbolSidebar($('#symbolSearch').value));
 
   $('#inspectorContent').addEventListener('change',e=>{const key=e.target.dataset.layer;if(!key)return;const map={connections:'.wire,.wire-blue,.wire-dark,.cross-sheet-connector',devices:'.drawing-object[data-object]',annotations:'.accent,.small,.medium,.tiny'};if(map[key])design.querySelectorAll(map[key]).forEach(el=>el.style.display=e.target.checked?'':'none');});
   $('#rightPanel').addEventListener('click',e=>{const rotate=e.target.closest('[data-rotate-object]');if(rotate){rotateObject(rotate.dataset.rotateObject);return;}if(e.target.closest('[data-delete-object]')){const id=e.target.closest('[data-delete-object]').dataset.deleteObject;pushUndo();removeSelectedDrawingObjects([id]);state.selected=null;renderObjects();$('#selectionDetails').innerHTML='<div class="inspector-title">Selection</div><div class="empty-selection">Select an electrical object on the sheet to inspect its drawing designation.</div>';persist();notify('Drawing object removed.');}});

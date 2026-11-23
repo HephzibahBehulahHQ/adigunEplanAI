@@ -1102,6 +1102,20 @@ test("the docked library keeps the project tree visible and the left sidebar can
   const library = (await page.locator("#symbolsPanel").boundingBox())!;
   expect(library.x).toBe(explorer.x);
   expect(library.y).toBeGreaterThan(explorer.y);
+  await page
+    .getByRole("button", { name: "Project explorer", exact: true })
+    .click();
+  await expect(page.locator("#projectPanel")).toBeHidden();
+  await expect(page.locator("#symbolsPanel")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Project explorer", exact: true })
+    .click();
+  await expect(page.locator("#projectPanel")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Symbol library", exact: true })
+    .click();
+  await expect(page.locator("#symbolsPanel")).toBeHidden();
+  await expect(page.locator("#projectPanel")).toBeVisible();
   const before = (await page.locator(".editor").boundingBox())!.width;
   await page.getByRole("button", { name: "Close left sidebar" }).click();
   await expect(page.locator("#sidepanel")).toBeHidden();
@@ -1110,11 +1124,56 @@ test("the docked library keeps the project tree visible and the left sidebar can
   await page
     .getByRole("button", { name: "Symbol library", exact: true })
     .click();
+  await expect(page.locator("#projectPanel")).toBeHidden();
+  await page
+    .getByRole("button", { name: "Project explorer", exact: true })
+    .click();
   await expect(page.locator("#projectTree [data-sheet]").first()).toBeVisible();
   await expect(page.locator('[data-insert="eplan-resistor"]')).toBeVisible();
   await page.screenshot({
     path: test.info().outputPath("library-below-project-explorer.png"),
   });
+});
+
+test("library views fit the dock and category, type and project filters show real components", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page
+    .getByRole("button", { name: "Symbol library", exact: true })
+    .click();
+  const views = page.getByRole("group", { name: "Component library views" });
+  const width = await views.evaluate((el) => ({
+    visible: el.clientWidth,
+    content: el.scrollWidth,
+  }));
+  expect(width.content).toBeLessThanOrEqual(width.visible);
+  const list = page.locator("#symbolList");
+  await views.getByRole("button", { name: "Common parts" }).click();
+  const commonCount = await list.locator("[data-insert]").count();
+  expect(commonCount).toBeGreaterThanOrEqual(85);
+  expect(commonCount).toBeLessThanOrEqual(115);
+  await views.getByRole("button", { name: "All parts" }).click();
+  await page
+    .getByLabel("Component category")
+    .selectOption("Automation · WAGO controllers");
+  await page.getByLabel("Component type").selectOption("wago-pfc-controller");
+  const part = list.locator('[data-insert="wago-750-8217-625-000"]');
+  await expect(part).toHaveCount(1);
+  await expect(part).toHaveAttribute("title", new RegExp("750-8217/625-000"));
+  await part.click();
+  const target = await sheetPoint(page, 495, 320);
+  await page.mouse.click(target.x, target.y);
+  await views.getByRole("button", { name: "Project symbols" }).click();
+  await expect(list.locator("[data-insert]")).toHaveCount(1);
+  await expect(part).toBeVisible();
+  await views.getByRole("button", { name: "All parts" }).click();
+  await page.locator("#symbolSearch").fill("P1J122728");
+  await expect(list.locator('[data-insert="siemens-p1j122728"]')).toBeVisible();
 });
 
 test("new project wires attach to terminals, follow edits, undo and reopen", async ({
