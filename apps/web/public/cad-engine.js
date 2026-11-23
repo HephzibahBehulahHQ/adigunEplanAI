@@ -1403,6 +1403,65 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
   }
 
+  function registerWagoPowerSupplyBatch(rows){
+    const batch=new Map();
+    const inputMaps=new Set(['L|N','L|N|PE','L1 (L)|L2 (N)|PE','L1|L2|L3|PE','PE|L|N','PE|N|L']);
+    const outputMaps=new Set(['DC+|DC-|DC-','DC+|DC+|DC-|DC-','DC+|DC+|DC-|DC-|DC-']);
+    const signalMaps=new Set(['','DC OK','DC OK 1|DC OK 2','Stand-by|DC OK 1|DC OK common|DC OK 3']);
+    for(const part of rows){
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      if(!/^787-\d{3,4}(?:\/\d{3}-\d{3,4})?$/.test(part.orderCode)||part.mounting!=='DIN-35 rail'||
+        !inputMaps.has(part.inputs?.join('|'))||!outputMaps.has(part.outputs?.join('|'))||!signalMaps.has(part.signals?.join('|'))||
+        typeof part.inputRange!=='string'||!part.inputRange.trim()||
+        ![part.nominalOutputVoltage,part.nominalOutputCurrent,part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
+        part.dimensionPage!==2||part.circuitDiagramPage!==1||!/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||
+        !/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        ![part.datasheetSha256,part.circuitDiagramSha256].every(value=>/^[a-f0-9]{64}$/.test(value))||
+        batch.has(id)||component(id))throw new Error('Invalid or duplicate WAGO power supply row: '+id);
+      const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
+      const height=Math.max(part.inputs.length,part.outputs.length+part.signals.length)*36;
+      const side=(labels,x)=>labels.map(({label,role,id:pinId},index)=>({
+        id:pinId,localNumber:label,name:label,x,y:(index-(labels.length-1)/2)*36,
+        electricalType:'passive',connectionType:role==='earth'?'protective-earth':'Module terminal',
+      }));
+      const inputLabels=part.inputs.map((label,index)=>({label,role:label==='PE'?'earth':'input',id:'input-'+(index+1)}));
+      const outputLabels=part.outputs.map((label,index)=>({label,role:'output',id:'output-'+(index+1)}));
+      const signalLabels=part.signals.map((label,index)=>({label,role:'signal',id:'signal-'+(index+1)}));
+      const pins=[
+        ...side(inputLabels,-90),
+        ...side([...outputLabels,...signalLabels],90),
+      ];
+      const line=(x1,y1,x2,y2)=>({kind:'line',from:{x:x1,y:y1},to:{x:x2,y:y2}});
+      const artwork=[
+        {kind:'rect',x:-64,y:-height/2,width:128,height},
+        line(-64,height/2,64,-height/2),
+        line(-48,-18,-40,-26),line(-40,-26,-32,-18),line(-32,-18,-24,-26),
+        line(24,18,48,18),line(24,24,48,24),
+        ...pins.map(pin=>line(pin.x,pin.y,Math.sign(pin.x)*64,pin.y)),
+      ];
+      const outputVoltage={value:part.nominalOutputVoltage,unit:'V DC'};
+      const outputCurrent={value:part.nominalOutputCurrent,unit:'A'};
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model:'WAGO AC/DC power supply '+part.orderCode,name:'AC/DC power supply',family:'wago-ac-dc-supply',
+        referencePrefix:'PS',category:'Power · Verified supply',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:180,height,pins,internalConnections:[],artwork,
+          numberingNote:'Repeated output markings identify separate connection points. Numbered DC OK labels identify positions in the circuit diagram.'},
+        electricalFunctions:{supply:{inputPins:inputLabels.filter(pin=>pin.role==='input').map(pin=>pin.id),
+          protectiveEarth:inputLabels.find(pin=>pin.role==='earth')?.id??null,
+          positivePins:outputLabels.filter(pin=>pin.label==='DC+').map(pin=>pin.id),
+          negativePins:outputLabels.filter(pin=>pin.label==='DC-').map(pin=>pin.id),statusPins:signalLabels.map(pin=>pin.id)},
+          simulationNote:'The terminal groups document the source diagram. Supply conversion and status behavior are not simulated.'},
+        specifications:{inputVoltageRange:{value:part.inputRange},outputVoltage,ratedOutputCurrent:outputCurrent,mounting:{value:part.mounting}},
+        panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:datasheet,
+          edition:part.revision,page:part.dimensionPage,note:'Depth above DIN rail. Apply installation clearances separately.'},
+        instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–2',url:datasheet,documentRevision:part.revision,
+          revisionNote:'Circuit diagram, input range, nominal output and mounting dimensions.',retrievedAt:part.retrievedAt,
+          sha256:part.datasheetSha256,circuitDiagramSha256:part.circuitDiagramSha256}]}));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function registerWagoMcsBatch(rows){
     const batch=new Map();
     for(const part of rows){
@@ -4137,6 +4196,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoWinstaCableBatch,
     registerWagoMcsBatch,
     registerWagoRelayBatch,
+    registerWagoPowerSupplyBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,

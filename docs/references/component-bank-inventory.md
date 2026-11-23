@@ -327,6 +327,17 @@ Properties shows coil voltage, contact current and mounting information.
 Panel dimensions represent the module or bare relay body as supplied.
 [Changeover relay module datasheet](https://wago.priintcloud.com/datasheets/788-341/en)
 
+## WAGO DIN-rail AC/DC power supplies
+
+The 63 exact order codes include single-phase and three-phase models.
+Their editable schematic symbols preserve each documented input, output,
+protective-earth and status terminal. Repeated output labels have distinct
+wire anchors and are grouped by polarity in the definition. The static
+netlist follows drawn wiring while the ratings and terminal groups describe
+the device. Panel dimensions cover the body above the rail.
+[Compact supply datasheet](https://wago.priintcloud.com/datasheets/787-1001/en) ·
+[Supply with DC OK contacts datasheet](https://wago.priintcloud.com/datasheets/787-1622/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug

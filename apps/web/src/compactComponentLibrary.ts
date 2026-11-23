@@ -8,6 +8,7 @@ import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-t
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
 import wagoWinstaCableBatch from "../../../packages/component-library/wago-winsta-cable-batch.json";
 import wagoRelayBatch from "../../../packages/component-library/wago-relay-batch.json";
+import wagoPowerSupplyBatch from "../../../packages/component-library/wago-power-supply-batch.json";
 import wagoMcsBatch from "../../../packages/component-library/wago-mcs-231-batch.json";
 import wagoMcsFemaleBatch from "../../../packages/component-library/wago-mcs-232-batch.json";
 import wagoMcsMidiBatch from "../../../packages/component-library/wago-mcs-721-batch.json";
@@ -39,6 +40,7 @@ declare global {
       registerWagoWinstaBatch: (rows: typeof wagoWinstaBatch) => void;
       registerWagoWinstaCableBatch: (rows: typeof wagoWinstaCableBatch) => void;
       registerWagoRelayBatch: (rows: typeof wagoRelayBatch) => void;
+      registerWagoPowerSupplyBatch: (rows: typeof wagoPowerSupplyBatch) => void;
       registerWagoMcsBatch: (rows: typeof mcsCatalog) => void;
     };
   }
@@ -49,6 +51,7 @@ window.AdigunCADEngine.registerWagoPcbTerminalBatch(wagoPcbTerminalBatch);
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
 window.AdigunCADEngine.registerWagoWinstaCableBatch(wagoWinstaCableBatch);
 window.AdigunCADEngine.registerWagoRelayBatch(wagoRelayBatch);
+window.AdigunCADEngine.registerWagoPowerSupplyBatch(wagoPowerSupplyBatch);
 window.AdigunCADEngine.registerWagoMcsBatch(mcsCatalog);
 window.AdigunCADEngine.registerPlcSymbols(symbols);
 window.AdigunCADEngine.registerWagoDigitalIoBatch(wagoDigitalIoBatch);
