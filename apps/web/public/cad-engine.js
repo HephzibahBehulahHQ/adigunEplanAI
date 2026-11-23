@@ -1259,10 +1259,15 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
-      if(!/^(?:771|891)-8992\/006-[0-9]{3}$/.test(part.orderCode)||
-        part.series!==(mini?'MINI':'MIDI')||!['A','B'].includes(part.coding)||
-        !Array.isArray(part.markings)||part.markings.join(' ')!==(part.coding==='A'?'L N':'1 2')||
-        part.cableType!==(part.coding==='A'?'H05VV-F 2x1.5':'Control line 2x1.5')||
+      const threePole=/^771-9993\/0[01][67]-[0-9]{3}$/.test(part.orderCode);
+      const poleCount=threePole?3:2;
+      const markings=threePole?'L PE N':part.coding==='A'?'L N':'1 2';
+      const cableTypeValid=threePole?/^(?:H05VV-F|H05Z1Z1-F) 3G(?:1\.5|2\.5)$/.test(part.cableType):
+        part.cableType===(part.coding==='A'?'H05VV-F 2x1.5':'Control line 2x1.5');
+      if((!threePole&&!/^(?:771|891)-8992\/006-[0-9]{3}$/.test(part.orderCode))||
+        part.series!==(mini?'MINI':'MIDI')||!(threePole?['A']:['A','B']).includes(part.coding)||
+        !Array.isArray(part.markings)||part.markings.length!==poleCount||part.markings.join(' ')!==markings||
+        !cableTypeValid||
         ![part.lengthM,part.connectorWidthMm,part.connectorHeightMm].every(value=>finite(value)&&value>0)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
@@ -1271,22 +1276,23 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
       const model='WINSTA '+part.series+' socket–plug cable · '+part.lengthM+' m';
       const pins=[],internalConnections=[];
-      const artwork=[{kind:'rect',x:-72,y:-31,width:36,height:62},{kind:'rect',x:36,y:-31,width:36,height:62}];
+      const bodyHeight=36*poleCount-10;
+      const artwork=[{kind:'rect',x:-72,y:-bodyHeight/2,width:36,height:bodyHeight},{kind:'rect',x:36,y:-bodyHeight/2,width:36,height:bodyHeight}];
       for(const [index,mark] of part.markings.entries()){
-        const y=(index-0.5)*36;
+        const y=(index-(poleCount-1)/2)*36;
         const socket={id:'socket-'+mark.toLowerCase(),name:'Socket '+mark,localNumber:'Socket '+mark,
-          x:-92,y,electricalType:'passive',connectionType:'Female mating contact'};
+          x:-92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Female mating contact'};
         const plug={id:'plug-'+mark.toLowerCase(),name:'Plug '+mark,localNumber:'Plug '+mark,
-          x:92,y,electricalType:'passive',connectionType:'Male mating contact'};
+          x:92,y,electricalType:'passive',connectionType:mark==='PE'?'protective-earth':'Male mating contact'};
         pins.push(socket,plug);
         internalConnections.push([socket.id,plug.id]);
         artwork.push({kind:'line',from:{x:socket.x,y},to:{x:plug.x,y}});
       }
       batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
         model,name:model,family:'wago-winsta-cable',referencePrefix:'W',category:'Electrical · Cable assemblies',
-        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:184,height:70,pins,internalConnections,artwork,
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width:184,height:bodyHeight+8,pins,internalConnections,artwork,
           numberingNote:'Each potential is carried between the same marked socket and plug contact. Schematic spacing is independent of assembly length.'},
-        specifications:{poleCount:{value:2},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
+        specifications:{poleCount:{value:poleCount},coding:{value:part.coding},assemblyLength:{value:part.lengthM,unit:'m'},
           cableType:{value:part.cableType},connectorWidth:{value:part.connectorWidthMm,unit:'mm'},
           connectorHeight:{value:part.connectorHeightMm,unit:'mm'}},
         instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
@@ -2192,34 +2198,42 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         // Route validation reports malformed geometry separately.
       }
     }
-    for(const wire of previous.keys()){
-      if(!before.has(wire)||!after.has(wire)||wire.waypoints||wire.route&&!wire.route.automatic)continue;
-      const peers=wires.filter(other=>other!==wire&&before.has(other)&&after.has(other)&&
-        (!wire.sheetId||!other.sheetId||wire.sheetId===other.sheetId));
-      const original=peers.map(other=>wiresMakeContact(before.get(wire),before.get(other)));
-      const preservesContacts=geometry=>peers.every((other,index)=>original[index]===wiresMakeContact(geometry,after.get(other)));
-      if(preservesContacts(after.get(wire)))continue;
-      const options=[{axis:'y',coordinate:wire.y2},{axis:'x',coordinate:wire.x2}];
-      for(const [index,other] of peers.entries()){
-        if(!original[index])continue;
-        for(const point of after.get(other).junctionPoints){
-          options.push({axis:'x',coordinate:point.x},{axis:'y',coordinate:point.y});
+    const pending=new Set(previous.keys());
+    // Repairing one route can make a previously blocked route safe to change.
+    while(pending.size){
+      let rerouted=false;
+      for(const wire of pending){
+        if(!before.has(wire)||!after.has(wire)||wire.waypoints||wire.route&&!wire.route.automatic){pending.delete(wire);continue;}
+        const peers=wires.filter(other=>other!==wire&&before.has(other)&&after.has(other)&&
+          (!wire.sheetId||!other.sheetId||wire.sheetId===other.sheetId));
+        const original=peers.map(other=>wiresMakeContact(before.get(wire),before.get(other)));
+        const preservesContacts=geometry=>peers.every((other,index)=>original[index]===wiresMakeContact(geometry,after.get(other)));
+        if(preservesContacts(after.get(wire))){pending.delete(wire);continue;}
+        const options=[{axis:'y',coordinate:wire.y2},{axis:'x',coordinate:wire.x2}];
+        for(const [index,other] of peers.entries()){
+          if(!original[index])continue;
+          for(const point of after.get(other).junctionPoints){
+            options.push({axis:'x',coordinate:point.x},{axis:'y',coordinate:point.y});
+          }
+        }
+        for(const axis of ['x','y']){
+          const start=wire[axis+'1'],end=wire[axis+'2'];
+          options.push({axis,coordinate:(start+end)/2});
+          for(const offset of [8,16,24,40,64]){
+            options.push({axis,coordinate:Math.min(start,end)-offset},{axis,coordinate:Math.max(start,end)+offset});
+          }
+        }
+        for(const option of options){
+          const geometry=wireContactGeometry({...wire,route:option});
+          if(!preservesContacts(geometry))continue;
+          wire.route={...option,automatic:true};
+          after.set(wire,geometry);
+          pending.delete(wire);
+          rerouted=true;
+          break;
         }
       }
-      for(const axis of ['x','y']){
-        const start=wire[axis+'1'],end=wire[axis+'2'];
-        options.push({axis,coordinate:(start+end)/2});
-        for(const offset of [8,16,24,40,64]){
-          options.push({axis,coordinate:Math.min(start,end)-offset},{axis,coordinate:Math.max(start,end)+offset});
-        }
-      }
-      for(const option of options){
-        const geometry=wireContactGeometry({...wire,route:option});
-        if(!preservesContacts(geometry))continue;
-        wire.route={...option,automatic:true};
-        after.set(wire,geometry);
-        break;
-      }
+      if(!rerouted)break;
     }
   }
   function synchronizeWireAttachments(objects,selectedIds) {

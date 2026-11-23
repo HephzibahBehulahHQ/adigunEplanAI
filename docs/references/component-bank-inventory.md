@@ -269,7 +269,7 @@ isolated potential. Three 107-000 variants are held for review because the
 datasheet clamping-unit counts differ from the two-conductor descriptions.
 [Two-conductor socket datasheet](https://wago.priintcloud.com/datasheets/231-2102_026-000/en)
 
-## WINSTA two-pole cable assemblies
+## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug
 terminals for each documented potential. The BOM identifies the exact
@@ -278,3 +278,8 @@ width and height. Physical routing and installed bend geometry depend
 on the actual cable path and are outside the schematic representation.
 [Coding A datasheet](https://wago.priintcloud.com/datasheets/771-8992_006-101/en) ·
 [Coding B datasheet](https://wago.priintcloud.com/datasheets/891-8992_006-103/en)
+
+The 58 three-pole MIDI assemblies place L, PE and N on separate conductors.
+Protective earth has a dedicated wireable terminal at both ends. The
+recorded cable type distinguishes the PVC and halogen-free variants.
+[Three-pole MIDI datasheet](https://wago.priintcloud.com/datasheets/771-9993_006-101/en)
