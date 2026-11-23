@@ -293,6 +293,48 @@
   };
   const schneiderStartPushButtonDefinition = createHarmonyPushButtonDefinition('XB5AA31', 'Green', 'normally-open', '13', '14', false);
   const schneiderStopPushButtonDefinition = createHarmonyPushButtonDefinition('XB5AA42', 'Red', 'normally-closed', '21', '22', true);
+  const schneiderContactBlockDefinition = deepFreeze({
+    schemaVersion: COMPONENT_SCHEMA_VERSION,
+    id: 'schneider-zbe101',
+    manufacturer: 'Schneider Electric',
+    manufacturerPartNumber: 'ZBE101',
+    model: 'Harmony ZBE101',
+    name: 'Harmony XB4/XB5 normally-open screw-clamp contact block',
+    family: 'contact-block',
+    referencePrefix: 'S',
+    category: 'Electrical · Verified operator contact blocks',
+    symbol: {
+      id: 'contact-block.harmony-zbe101.v1',
+      view: 'schematic',
+      unit: 'mm',
+      width: 140,
+      height: 72,
+      artwork: [{ kind: 'path', d: 'M-55 0H-10 M-10 0L9 -16 M10 0H55' }],
+      pins: [
+        { id: 'contact-3', localNumber: '3', name: 'Normally-open contact terminal 3', x: -55, y: 0, electricalType: 'passive', connectionType: 'screw-clamp' },
+        { id: 'contact-4', localNumber: '4', name: 'Normally-open contact terminal 4', x: 55, y: 0, electricalType: 'passive', connectionType: 'screw-clamp' }
+      ],
+      internalConnections: [],
+      numberingNote: 'Terminal marks 3 and 4 follow the manufacturer FAQ. The normally-open contact creates no permanent conductive connection.'
+    },
+    specifications: {
+      contactComposition: { value: '1 NO, slow-break' },
+      terminalConnection: { value: 'Screw clamp' },
+      compatibleProductRange: { value: 'Harmony XB4 / XB5' },
+      mounting: { value: 'Front-mounted add-on contact block' },
+      conventionalFreeAirThermalCurrent: { value: 10, unit: 'A' },
+      ratedInsulationVoltage: { value: 600, unit: 'V' },
+      ratedImpulseWithstandVoltage: { value: 6, unit: 'kV' }
+    },
+    instanceProperties: {
+      marking: { type: 'string', default: '', maximumLength: 40 },
+      comment: { type: 'string', default: '', maximumLength: 160 }
+    },
+    sources: [
+      { publisher: 'Schneider Electric', title: 'ZBE101 product data sheet', url: 'https://www.mouser.com/catalog/specsheets/Schneider_09-24-2025_ZBE101.pdf', documentRevision: '24 September 2025 · pp. 1–2', revisionNote: 'Exact contact block, family compatibility, mounting, contact operation and electrical ratings.', retrievedAt: '2026-11-23' },
+      { publisher: 'Schneider Electric', title: 'ZBE10-series terminal markings', url: 'https://www.se.com/us/en/faqs/FA121755/', revisionNote: 'ZBE101 screw terminals are marked 3 and 4.', retrievedAt: '2026-11-23' }
+    ]
+  });
   const motorStarterDefinition = deepFreeze({
     schemaVersion: COMPONENT_SCHEMA_VERSION,
     id: 'siemens-3rm1201-1aa04',
@@ -1012,7 +1054,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   const utCoverDefinition=terminalAccessoryDefinition('3047028','D-UT 2,5/10','Terminal end cover',2.2,47,39.8,'https://www.phoenixcontact.com/en-gb/products/end-cover-d-ut-2510-3047028?type=pdf',['phoenix-contact-3044076'],'https://www.phoenixcontact.com/de-de/produkte/durchgangsklemme-ut-25-3044076?type=pdf');
   const peCoverDefinition=terminalAccessoryDefinition('3212060','D-PT 16 N','Terminal end cover',2.2,75.4,45.6,'https://www.phoenixcontact.com/en-us/products/end-cover-d-pt-16-n-3212060',['phoenix-contact-3212147','phoenix-contact-3212147-rail-view'],'https://www.phoenixcontact.com/us/products/3212147/pdf');
   const terminalEndBracketDefinition=terminalAccessoryDefinition('3022276','CLIPFIX 35-5','End bracket for NS 35/7.5 or NS 35/15',5.2,48.6,35.3,'https://www.phoenixcontact.com/en-us/products/end-block-clipfix-35-5-3022276?type=pdf',[],null);
-  const COMPONENTS = Object.freeze({[ukCoverDefinition.id]:ukCoverDefinition,[utCoverDefinition.id]:utCoverDefinition,[peCoverDefinition.id]:peCoverDefinition,[terminalEndBracketDefinition.id]:terminalEndBracketDefinition,[overloadSupportElectricalDefinition.id]:overloadSupportElectricalDefinition,[overloadSupportDefinition.id]:overloadSupportDefinition,[rittalEnclosureDefinition.id]:rittalEnclosureDefinition,[rittalFieldEnclosureDefinition.id]:rittalFieldEnclosureDefinition,[lappFourCoreCableDefinition.id]:lappFourCoreCableDefinition,[lappMotorCableDefinition.id]:lappMotorCableDefinition,[lappFieldControlCableDefinition.id]:lappFieldControlCableDefinition,[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
+  const COMPONENTS = Object.freeze({[ukCoverDefinition.id]:ukCoverDefinition,[utCoverDefinition.id]:utCoverDefinition,[peCoverDefinition.id]:peCoverDefinition,[terminalEndBracketDefinition.id]:terminalEndBracketDefinition,[overloadSupportElectricalDefinition.id]:overloadSupportElectricalDefinition,[overloadSupportDefinition.id]:overloadSupportDefinition,[rittalEnclosureDefinition.id]:rittalEnclosureDefinition,[rittalFieldEnclosureDefinition.id]:rittalFieldEnclosureDefinition,[lappFourCoreCableDefinition.id]:lappFourCoreCableDefinition,[lappMotorCableDefinition.id]:lappMotorCableDefinition,[lappFieldControlCableDefinition.id]:lappFieldControlCableDefinition,[phoenixPeRailViewDefinition.id]:phoenixPeRailViewDefinition,[mainIsolatorDefinition.id]:mainIsolatorDefinition,[feederContactorDefinition.id]:feederContactorDefinition,[feederMagneticBreakerDefinition.id]:feederMagneticBreakerDefinition,[feederOverloadRelayDefinition.id]:feederOverloadRelayDefinition,[greenPilotDefinition.id]:greenPilotDefinition,[redPilotDefinition.id]:redPilotDefinition,[auxiliaryMcbDefinition.id]:auxiliaryMcbDefinition,[ptcbDefinition.id]:ptcbDefinition,[isolatorAuxiliaryDefinition.id]:isolatorAuxiliaryDefinition,[siemensMaintenanceIsolatorDefinition.id]:siemensMaintenanceIsolatorDefinition,[sewDeltaTerminalBoardDefinition.id]:sewDeltaTerminalBoardDefinition, [xmlbPressureSwitchDefinition.id]:xmlbPressureSwitchDefinition, [uk5TerminalDefinition.id]:uk5TerminalDefinition,[ut25TerminalDefinition.id]:ut25TerminalDefinition, [terminalDefinition.id]: terminalDefinition, [relayDefinition.id]: relayDefinition, [contactorDefinition.id]: contactorDefinition, [siemensPowerContactorDefinition.id]: siemensPowerContactorDefinition, [siemensOverloadRelayDefinition.id]: siemensOverloadRelayDefinition, [siemensStarDeltaTimerDefinition.id]: siemensStarDeltaTimerDefinition, [schneiderStartPushButtonDefinition.id]: schneiderStartPushButtonDefinition, [schneiderStopPushButtonDefinition.id]: schneiderStopPushButtonDefinition, [schneiderContactBlockDefinition.id]: schneiderContactBlockDefinition, [motorProtectionBreakerDefinition.id]: motorProtectionBreakerDefinition, [lowRangeMotorProtectionBreakerDefinition.id]: lowRangeMotorProtectionBreakerDefinition, [starDeltaMotorProtectionBreakerDefinition.id]: starDeltaMotorProtectionBreakerDefinition, [motorStarterDefinition.id]: motorStarterDefinition, [motorDefinition.id]: motorDefinition, [sewStarDeltaMotorDefinition.id]: sewStarDeltaMotorDefinition, [siemensCpuDefinition.id]: siemensCpuDefinition, [ifmInductiveSensorDefinition.id]: ifmInductiveSensorDefinition, [ifmPressureSensorDefinition.id]: ifmPressureSensorDefinition, [siemensSitopPsuDefinition.id]: siemensSitopPsuDefinition, [phoenixProtectiveEarthTerminalDefinition.id]: phoenixProtectiveEarthTerminalDefinition });
 
   function reorderObject(objects,id,direction) {
     if (!Array.isArray(objects) || (direction !== 1 && direction !== -1)) return false;

@@ -1801,6 +1801,47 @@ test("PCB terminal blocks expose wire clamps and solder pins on the canvas", asy
   );
 });
 
+test("Harmony ZBE101 places, wires by marked terminals and preserves the open contact", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("ZBE101");
+  const entry = page.locator('[data-insert="schneider-zbe101"]');
+  const clickAt = async (x: number) => {
+    const point = await sheetPoint(page, x, 250);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const x of [400, 650]) {
+    await entry.click();
+    await clickAt(x);
+  }
+  const parts = page.locator("#userDrawings .drawing-object text");
+  await expect(parts.filter({ hasText: /^3$/ })).toHaveCount(2);
+  await expect(parts.filter({ hasText: /^4$/ })).toHaveCount(2);
+  await clickAt(455);
+  await clickAt(595);
+  const { data } = await saveDrawing(page, "harmony-contact-block");
+  expect(data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "contact-4" }),
+        end: expect.objectContaining({ pinId: "contact-3" }),
+      },
+    }),
+  );
+  const connections = await page.evaluate(
+    () =>
+      Reflect.get(window, "AdigunCADEngine").component("schneider-zbe101")
+        .symbol.internalConnections,
+  );
+  expect(connections).toEqual([]);
+});
+
 test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", async ({
   page,
 }) => {
