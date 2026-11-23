@@ -255,7 +255,7 @@ supply terminals. [750-1501 datasheet](https://wago.priintcloud.com/datasheets/7
 
 ## WAGO 231 MCS MIDI Classic connectors
 
-The 27 catalog entries cover 5 mm pitch, single-conductor male and female
+The 85 catalog entries cover 5, 5.08, 7.5 and 7.62 mm pitches, single-conductor male and female
 connectors and angled THT and THR headers. Each isolated pole pairs its mating
 contact with one clamp or solder pin. Schematic contact numbering is
 model-local. Header panel geometry uses the manufacturer body envelope above

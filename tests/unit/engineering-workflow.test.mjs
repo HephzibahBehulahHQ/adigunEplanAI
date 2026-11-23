@@ -60,7 +60,7 @@ const mcsBatch = JSON.parse(
 engine.registerWagoMcsBatch(mcsBatch);
 
 test("WAGO 231 connectors retain exact order codes and isolated contact pairs", () => {
-  assert.equal(mcsBatch.length, 27);
+  assert.equal(mcsBatch.length, 85);
   for (const source of mcsBatch) {
     const def = engine.component(
       "wago-" + source.orderCode.replaceAll("/", "_"),
@@ -74,6 +74,7 @@ test("WAGO 231 connectors retain exact order codes and isolated contact pairs", 
       ]),
     );
     assert.equal(def.symbol.pins.length, source.poles * 2);
+    assert.equal(def.specifications.pinSpacing.value, source.pitchMm);
     assert.equal(def.panelFootprint.widthMm, source.widthMm);
     assert.equal(
       def.panelFootprint.depthMm,
@@ -81,6 +82,41 @@ test("WAGO 231 connectors retain exact order codes and isolated contact pairs", 
     );
     const instance = engine.createInstance(def.id, 200, 300, "X1");
     assert.equal(engine.validateInstance(instance).valid, true);
+    instance.sheetId = "connectors";
+    const wires = engine
+      .worldPins(instance)
+      .filter((pin) => pin.id.startsWith(back))
+      .map((pin) =>
+        engine.attachWire(
+          {
+            id: pin.id,
+            kind: "wire",
+            sheetId: instance.sheetId,
+            x1: pin.x,
+            y1: pin.y,
+            x2: pin.x + Math.sign(pin.x - instance.x) * 100,
+            y2: pin.y,
+          },
+          { attachment: { instanceId: instance.id, pinId: pin.id } },
+          {},
+        ),
+      );
+    const project = {
+      project: "Connector verification",
+      sheets: [{ id: instance.sheetId, name: "Connectors", number: "A2/000" }],
+      objects: [instance, ...wires],
+    };
+    const restored = engine.parseProject(engine.serializeProject(project));
+    assert.equal(restored.valid, true);
+    const nets = engine.analyze(restored.project.objects).nets;
+    assert.deepEqual(
+      plain(nets.map((net) => net.pins.length)),
+      Array(source.poles).fill(2),
+    );
+    assert.match(
+      engine.terminalRegisterCsv(restored.project),
+      /"1 \/ 1 (?:wire|PCB)"/,
+    );
     assert.equal(
       engine.billOfMaterials([instance]).rows[0].partNumber,
       source.orderCode,
