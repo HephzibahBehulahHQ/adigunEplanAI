@@ -877,6 +877,17 @@ const pcb255257Batch = JSON.parse(
 );
 engine.registerWagoStackablePcbTerminalBatch(pcb255257Batch);
 
+const pcbMultipinBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-pcb-multipin-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoStackablePcbTerminalBatch(pcbMultipinBatch);
+
 test("WAGO stackable PCB terminals retain exact pole topology and footprint evidence", () => {
   assert.equal(pcbStackableBatch.length, 501);
   assert.equal(
@@ -886,13 +897,22 @@ test("WAGO stackable PCB terminals retain exact pole topology and footprint evid
   assert.equal(Math.max(...pcbStackableBatch.map((row) => row.poles)), 48);
   assert.equal(pcb255257Batch.length, 272);
   assert.equal(pcb255257Batch.filter((row) => row.footprintPage).length, 265);
-  for (const row of [...pcbStackableBatch, ...pcb255257Batch]) {
+  assert.equal(pcbMultipinBatch.length, 524);
+  assert.equal(pcbMultipinBatch.filter((row) => row.footprintPage).length, 323);
+  for (const row of [
+    ...pcbStackableBatch,
+    ...pcb255257Batch,
+    ...pcbMultipinBatch,
+  ]) {
     const def = engine.component("wago-" + row.orderCode.replaceAll("/", "_"));
     const expected = Array.from({ length: row.poles }, (_, index) => {
       const pole = index + 1;
       const pads =
-        row.solderPinsPerPole === 2
-          ? [`pad-${pole}-1`, `pad-${pole}-2`]
+        row.solderPinsPerPole > 1
+          ? Array.from(
+              { length: row.solderPinsPerPole },
+              (_, pin) => `pad-${pole}-${pin + 1}`,
+            )
           : [`pad-${pole}`];
       return [`clamp-${pole}`, ...pads];
     });
@@ -921,6 +941,16 @@ test("WAGO stackable PCB terminals retain exact pole topology and footprint evid
         def.sources[0].footprintDrawingSha256,
         row.footprintDrawingSha256,
       );
+      if (row.pcbPadOffsetsMm) {
+        assert.deepEqual(
+          plain(
+            def.pcbFootprint.pads
+              .slice(0, row.solderPinsPerPole)
+              .map((pad) => [pad.xMm, pad.yMm]),
+          ),
+          row.pcbPadOffsetsMm,
+        );
+      }
     } else {
       assert.equal(def.pcbFootprint, undefined);
     }
