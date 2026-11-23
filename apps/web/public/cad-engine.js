@@ -2238,6 +2238,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if (!finite(instance.x) || !finite(instance.y)) errors.push('Component position is invalid.');
     if(instance.displayScale!==undefined&&(!finite(instance.displayScale)||instance.displayScale<0.25||instance.displayScale>4))errors.push('Component drawing scale must be between 0.25 and 4.');
     if (![0, 90, 180, 270].includes(instance.rotation)) errors.push('Component rotation must be 0, 90, 180, or 270 degrees.');
+    if(instance.mirrorX!==undefined&&typeof instance.mirrorX!=='boolean')errors.push('Component mirror flag must be boolean.');
     if (typeof instance.id !== 'string' || !instance.id || instance.id.length > 100) errors.push('Component instance ID is invalid.');
     if (typeof instance.ref !== 'string' || !instance.ref.trim() || instance.ref.length > 32) errors.push('Component reference is invalid.');
     if (!instance.properties || typeof instance.properties !== 'object' || Array.isArray(instance.properties)) errors.push('Component instance properties are missing.');
@@ -2283,15 +2284,15 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if (!result.valid) return [];
     const angle = instance.rotation * Math.PI / 180;
     const cos = Math.cos(angle), sin = Math.sin(angle);
-    const scale=instance.displayScale||1;
+    const scale=instance.displayScale||1,mirror=instance.mirrorX?-1:1;
     return result.definition.symbol.pins.map(function (pin) {
       return {
         id: pin.id,
         number: pin.localNumber,
         name: pin.name,
         electricalType: pin.electricalType,
-        x: instance.x + scale * pin.x * cos - scale * pin.y * sin,
-        y: instance.y + scale * pin.x * sin + scale * pin.y * cos
+        x: instance.x + scale * mirror * pin.x * cos - scale * pin.y * sin,
+        y: instance.y + scale * mirror * pin.x * sin + scale * pin.y * cos
       };
     });
   }
