@@ -269,6 +269,14 @@ isolated potential. Three 107-000 variants are held for review because the
 datasheet clamping-unit counts differ from the two-conductor descriptions.
 [Two-conductor socket datasheet](https://wago.priintcloud.com/datasheets/231-2102_026-000/en)
 
+Another 226 WAGO 231 parts add one- and two-conductor connectors and
+straight THT and THR headers with up to 12 isolated poles. The catalog
+records the exact ratings and their source page for 341 of the 343
+WAGO 231 entries. Two existing THR datasheets omit these ratings.
+Four candidate connectors are held because their clamp counts disagree
+with the two-conductor description.
+[Straight THR header datasheet](https://wago.priintcloud.com/datasheets/231-132_001-000_105-604/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug
