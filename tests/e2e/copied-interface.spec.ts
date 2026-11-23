@@ -1321,6 +1321,9 @@ test("manufacturer projects open, expose editable parts and preserve connections
     ).toBe(true);
     await page.reload();
     await page.locator("#openFile").setInputFiles(saved.path);
+    await expect(page.locator("#userDrawings .drawing-object")).toHaveCount(
+      count,
+    );
     const reopened = await saveDrawing(page, id + "-restored");
     expect(reopened.data.objects).toEqual(saved.data.objects);
     await page.locator('[data-inspector="Electrical checks"]').click();
