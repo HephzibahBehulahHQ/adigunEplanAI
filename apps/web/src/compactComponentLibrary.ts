@@ -15,6 +15,7 @@ import wagoMcsFemaleBatch from "../../../packages/component-library/wago-mcs-232
 import wagoMcsMidiBatch from "../../../packages/component-library/wago-mcs-721-batch.json";
 import wagoMcsMicroBatch from "../../../packages/component-library/wago-mcs-733-batch.json";
 import wagoMcsMiniBatch from "../../../packages/component-library/wago-mcs-734-batch.json";
+import wagoMcsMaxiBatch from "../../../packages/component-library/wago-mcs-831-batch.json";
 
 import wagoDigitalIoBatch from "../../../packages/component-library/wago-digital-io-batch.json";
 
@@ -24,6 +25,7 @@ const mcsCatalog = [
   ...wagoMcsMidiBatch,
   ...wagoMcsMicroBatch,
   ...wagoMcsMiniBatch,
+  ...wagoMcsMaxiBatch,
 ];
 
 const symbols = plcKinds.map((kind) => {

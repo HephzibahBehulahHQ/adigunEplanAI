@@ -93,7 +93,7 @@ engine.registerWagoSingleChannelBreakerBatch(
   ),
 );
 engine.registerWagoMcsBatch(
-  ["231", "232", "721", "733", "734"].flatMap((series) =>
+  ["231", "232", "721", "733", "734", "831"].flatMap((series) =>
     JSON.parse(
       readFileSync(
         new URL(

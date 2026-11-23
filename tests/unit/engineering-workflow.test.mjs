@@ -436,12 +436,22 @@ const mcsMidiBatch = JSON.parse(
     "utf8",
   ),
 );
+const mcsMaxiBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-831-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
 const mcsParts = [
   ...mcsBatch,
   ...mcsMicroBatch,
   ...mcsMiniBatch,
   ...mcsFemaleBatch,
   ...mcsMidiBatch,
+  ...mcsMaxiBatch,
 ];
 engine.registerWagoMcsBatch(mcsParts);
 
@@ -451,6 +461,7 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
   assert.equal(mcsMiniBatch.length, 516);
   assert.equal(mcsFemaleBatch.length, 310);
   assert.equal(mcsMidiBatch.length, 404);
+  assert.equal(mcsMaxiBatch.length, 237);
   assert.equal(mcsBatch.filter((source) => source.ratingPage).length, 968);
   assert.equal(Math.max(...mcsBatch.map((source) => source.poles)), 24);
   assert.ok(
@@ -460,22 +471,24 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
   );
   assert.equal(
     mcsParts.filter((source) => source.drilledHoleDiameterMm).length,
-    996,
+    1036,
   );
   for (const source of mcsParts) {
     const def = engine.component(
       "wago-" + source.orderCode.replaceAll("/", "_"),
     );
     const back = source.mount === "wire" ? "clamp-" : "solder-";
-    const doubleClamp = source.clampsPerPole === 2;
-    const terminalsPerPole = doubleClamp ? 3 : 2;
+    const backCount = source.clampsPerPole ?? source.solderPinsPerPole ?? 1;
+    const backId = (pole, index) =>
+      back + pole + (backCount > 1 ? "-" + (index + 1) : "");
+    const terminalsPerPole = backCount + 1;
     assert.deepEqual(
       plain(def.symbol.internalConnections),
       Array.from({ length: source.poles }, (_, index) => [
         "contact-" + (index + 1),
-        ...(doubleClamp
-          ? [back + (index + 1) + "-1", back + (index + 1) + "-2"]
-          : [back + (index + 1)]),
+        ...Array.from({ length: backCount }, (_, pin) =>
+          backId(index + 1, pin),
+        ),
       ]),
     );
     assert.equal(def.symbol.pins.length, source.poles * terminalsPerPole);
@@ -508,13 +521,15 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
     if (source.drilledHoleDiameterMm) {
       assert.deepEqual(
         plain(def.pcbFootprint.pads),
-        Array.from({ length: source.poles }, (_, index) => ({
-          pinId: "solder-" + (index + 1),
-          xMm: index * source.pitchMm,
-          yMm: 0,
-          drilledHoleDiameterMm: source.drilledHoleDiameterMm,
-          drilledHolePlusToleranceMm: source.drilledHolePlusToleranceMm,
-        })),
+        Array.from({ length: source.poles }, (_, index) =>
+          (source.pcbRowsMm ?? [0]).map((yMm, row) => ({
+            pinId: backId(index + 1, row),
+            xMm: index * source.pitchMm,
+            yMm,
+            drilledHoleDiameterMm: source.drilledHoleDiameterMm,
+            drilledHolePlusToleranceMm: source.drilledHolePlusToleranceMm,
+          })),
+        ).flat(),
       );
     } else {
       assert.equal(def.pcbFootprint, undefined);
@@ -556,9 +571,18 @@ test("WAGO MCS connectors retain exact order codes, isolated poles and verified 
       plain(nets.map((net) => net.pins.length)),
       Array(source.poles).fill(terminalsPerPole),
     );
-    assert.match(
-      engine.terminalRegisterCsv(restored.project),
-      doubleClamp ? /"1 \/ 1 wire 1 \/ 1 wire 2"/ : /"1 \/ 1 (?:wire|PCB)"/,
+    const terminalPrefix = source.mount === "wire" ? "1 wire" : "1 PCB";
+    const terminalNames = [
+      "1",
+      ...Array.from(
+        { length: backCount },
+        (_, index) => terminalPrefix + (backCount > 1 ? " " + (index + 1) : ""),
+      ),
+    ];
+    assert.ok(
+      engine
+        .terminalRegisterCsv(restored.project)
+        .includes('"' + terminalNames.join(" / ") + '"'),
     );
     assert.equal(
       engine.billOfMaterials([instance]).rows[0].partNumber,
