@@ -1393,7 +1393,7 @@ test("TOPJOB through terminals keep every clamping point and isolate the two dec
       part.actuationMethod,
       part.heightMm,
     ]),
-    ["2002-1201", [2], 800, 32.9],
+    ["2002-1201", [2], 800, 32.9, "Gray", 5.2, 2.5, 24, "Operating tool", 48.5],
     ["2002-1301", [3], 800, 32.9],
     ["2002-1304", [3], 800, 32.9],
     ["2002-1401", [4], 800, 32.9],
