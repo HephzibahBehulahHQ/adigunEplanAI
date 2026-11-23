@@ -14,6 +14,16 @@ manufacturer definitions with declared pin maps are a coverage count. The
 inventory has no fleet-wide independent validation count. Generic symbols,
 layout views and custom user definitions do not count toward the 10,000 parts.
 
+## WAGO rail, flange and matrix terminals
+
+The 766 exact order codes preserve documented clamp counts, potential
+groups, housing dimensions and mounting methods. The Series 727 blocks
+distinguish internally commoned assemblies from matrix terminals with
+one potential per level. Diagram-backed variants expose a grounding-foot
+anchor where the source shows a rail bond.
+[Commoned terminal datasheet](https://wago.priintcloud.com/datasheets/727-225/en) ·
+[Matrix terminal datasheet](https://wago.priintcloud.com/datasheets/727-219/en)
+
 ## First terminal-system batch
 
 Three WAGO TOPJOB S through terminals are placeable from the compact library.

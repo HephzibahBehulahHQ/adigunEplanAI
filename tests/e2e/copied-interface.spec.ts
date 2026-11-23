@@ -1872,6 +1872,48 @@ test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", a
   );
 });
 
+test("WAGO matrix terminals wire the documented commoned and isolated levels", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["727-225", 400],
+    ["727-219", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 300);
+  }
+  await clickAt(472, 209);
+  await clickAt(628, 209);
+  const saved = await saveDrawing(page, "wago-matrix-terminal");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "clamp-l1-3" }),
+        end: expect.objectContaining({ pinId: "clamp-l1-1" }),
+      },
+    }),
+  );
+  const connectedPotentials = await page.evaluate(
+    (objects) =>
+      Reflect.get(window, "AdigunCADEngine")
+        .analyze(objects)
+        .nets.map((net: { pins: unknown[] }) => net.pins.length),
+    saved.data.objects,
+  );
+  expect(connectedPotentials).toEqual([20]);
+});
+
 test("WAGO double-deck terminal exposes both levels and stays wired on reopen", async ({
   page,
 }) => {

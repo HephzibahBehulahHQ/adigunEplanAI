@@ -15,6 +15,73 @@ const terminalBatch = JSON.parse(
     "utf8",
   ),
 );
+const mappedTerminalBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mapped-terminal-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoMappedTerminalBatch(mappedTerminalBatch);
+
+test("WAGO mapped terminals preserve commoned levels, isolated groups and grounding feet", () => {
+  assert.equal(mappedTerminalBatch.length, 766);
+  assert.equal(
+    mappedTerminalBatch.filter((row) => row.orderCode.startsWith("727-"))
+      .length,
+    194,
+  );
+  for (const row of mappedTerminalBatch) {
+    const id = "wago-" + row.orderCode.replaceAll("/", "_");
+    const def = engine.component(id);
+    assert.equal(def.specifications.connectionCount.value, row.clampCount);
+    assert.equal(
+      def.specifications.potentials.value,
+      row.topology === "common" ? 1 : row.levelCount,
+    );
+    const grounded = row.groundedLevel !== undefined;
+    const pins = def.symbol.pins;
+    assert.equal(pins.length, row.clampCount + Number(grounded));
+    assert.equal(
+      new Set(pins.map((pin) => pin.x + "," + pin.y)).size,
+      pins.length,
+    );
+    const groups = plain(def.symbol.internalConnections);
+    assert.equal(new Set(groups.flat()).size, pins.length);
+    if (row.topology === "common") {
+      assert.deepEqual(
+        groups.map((group) => group.length),
+        [pins.length],
+      );
+    } else {
+      const levels =
+        row.positions ??
+        Array(row.levelCount).fill(row.clampCount / row.levelCount);
+      assert.deepEqual(
+        groups.map((group) => group.length),
+        levels.map(
+          (count, level) => count + Number(row.groundedLevel === level),
+        ),
+      );
+    }
+    if (grounded) {
+      assert.equal(
+        pins.find((pin) => pin.id === "rail-bond").connectionType,
+        "protective-earth",
+      );
+    }
+    assert.equal(def.specifications.ratedCurrent?.value, row.ratedCurrent);
+    assert.equal(def.panelFootprint.depthMm, row.depthMm);
+    const instance = engine.createInstance(id, 300, 250, "X1");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(
+      engine.billOfMaterials([instance]).rows[0].partNumber,
+      row.orderCode,
+    );
+  }
+});
 engine.registerWagoTerminalBatch(terminalBatch);
 const pcbBatch = JSON.parse(
   fs.readFileSync(

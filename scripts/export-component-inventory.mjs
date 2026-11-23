@@ -26,6 +26,17 @@ const terminalBatch = JSON.parse(
   ),
 );
 engine.registerWagoTerminalBatch(terminalBatch);
+engine.registerWagoMappedTerminalBatch(
+  JSON.parse(
+    readFileSync(
+      new URL(
+        "../packages/component-library/wago-mapped-terminal-batch.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  ),
+);
 engine.registerWagoPcbTerminalBatch(
   JSON.parse(
     readFileSync(
