@@ -740,6 +740,25 @@
     "datasheet": "https://wago.priintcloud.com/datasheets/2001-1406/en"
   },
   {
+    "orderCode": "2002-1201",
+    "positions": [2],
+    "nominalVoltage": 800,
+    "ratedCurrent": 24,
+    "finish": "Gray",
+    "heightMm": 48.5,
+    "depthMm": 32.9,
+    "revision": "23.11.2026",
+    "pages": "1–3",
+    "dimensionPage": 3,
+    "slug": "2-conductor-through-terminal-block",
+    "datasheet": "https://wago.priintcloud.com/datasheets/2002-1201/en",
+    "widthMm": 5.2,
+    "nominalCrossSectionMm2": 2.5,
+    "actuationMethod": "Operating tool",
+    "retrievedAt": "2026-11-23",
+    "datasheetSha256": "62ce5c5a840c4ee71b2a69c7d941ca3e1128d323719ec78aedbf016982bfec84"
+  },
+  {
     "orderCode": "2002-1202",
     "positions": [2],
     "nominalVoltage": 800,
