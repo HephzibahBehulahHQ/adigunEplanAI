@@ -119,16 +119,17 @@ engine.registerWagoStackablePcbTerminalBatch(
   ),
 );
 engine.registerWagoMcsBatch(
-  ["231", "232", "721", "733", "734", "831", "2231-209x"].flatMap((series) =>
-    JSON.parse(
-      readFileSync(
-        new URL(
-          `../packages/component-library/wago-mcs-${series}-batch.json`,
-          import.meta.url,
+  ["231", "232", "713", "721", "733", "734", "831", "2231-209x"].flatMap(
+    (series) =>
+      JSON.parse(
+        readFileSync(
+          new URL(
+            `../packages/component-library/wago-mcs-${series}-batch.json`,
+            import.meta.url,
+          ),
+          "utf8",
         ),
-        "utf8",
       ),
-    ),
   ),
 );
 engine.registerWagoDigitalIoBatch(

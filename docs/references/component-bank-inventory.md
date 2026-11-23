@@ -330,6 +330,15 @@ documented separately.
 [THR block datasheet](https://wago.priintcloud.com/datasheets/2086-1122/en) ·
 [SMD block datasheet](https://wago.priintcloud.com/datasheets/2086-1102_700-000_997-604/en)
 
+## WAGO 713 two-row connectors
+
+The 288 exact order codes cover wire connectors and straight and angled
+THT and THR headers. The editor identifies the two isolated contact
+rows with model-local A and B labels. The 72 matched THT drill drawings
+document the contact holes at 5 mm or 3.5 mm row spacing.
+[Straight header datasheet](https://wago.priintcloud.com/datasheets/713-1402/en) ·
+[Two-row wire connector datasheet](https://wago.priintcloud.com/datasheets/713-1103/en)
+
 ## WAGO 2231, 2091 and 2092 pluggable connectors
 
 The 443 exact order codes cover wire connectors and PCB headers. The
