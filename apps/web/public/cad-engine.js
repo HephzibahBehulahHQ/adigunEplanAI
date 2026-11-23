@@ -1190,6 +1190,69 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
 
+  function registerWagoWinstaBatch(rows){
+    if(!Array.isArray(rows)||!rows.length)throw new TypeError('Expected a nonempty WINSTA connector batch');
+    const batch=new Map();
+    for(const part of rows){
+      const urlCode=typeof part?.orderCode==='string'?part.orderCode.replace('/','_'):'';
+      const id='wago-'+urlCode;
+      if(!part||!/^770-[0-9]{3}(?:\/[0-9]{3}-[0-9]{3})?$/.test(part.orderCode)||
+        !['plug','socket'].includes(part.gender)||!/^[A-Z]$/.test(part.coding)||
+        !Array.isArray(part.markings)||part.markings.length<2||part.markings.length>5||
+        new Set(part.markings).size!==part.markings.length||
+        !part.markings.every(mark=>typeof mark==='string'&&/^[A-Z0-9/+'-]+$/.test(mark))||
+        ![1,2].includes(part.clampsPerPole)||part.connectionTechnology!=='Push-in CAGE CLAMP'||
+        ![part.nominalVoltage,part.ratedCurrent,part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
+        ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
+        !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||
+        part.datasheet!=='https://wago.priintcloud.com/datasheets/'+urlCode+'/en'||
+        part.productUrl!=='https://www.wago.com/'+urlCode||
+        !/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(part.retrievedAt)||
+        !/^[a-f0-9]{64}$/.test(part.datasheetSha256)){
+        throw new TypeError('Invalid WAGO WINSTA catalog row: '+id);
+      }
+      if(batch.has(id)||component(id))throw new Error('Duplicate WAGO WINSTA catalog ID: '+id);
+      batch.set(id,deepFreeze(createWinstaConnector(part,id)));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+  function createWinstaConnector(part,id){
+    const poles=part.markings.length,width=144,height=poles*36+12,matingSide=part.gender==='plug'?1:-1;
+    const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-43,y:-height/2,width:86,height}];
+    const line=(a,b)=>artwork.push({kind:'line',from:{x:a.x,y:a.y},to:{x:b.x,y:b.y}});
+    for(const [index,mark] of part.markings.entries()){
+      const number=index+1,y=(index-(poles-1)/2)*36;
+      const face={id:'contact-'+number,localNumber:mark,name:'Mating contact '+mark,x:matingSide*72,y,
+        electricalType:'passive',connectionType:part.gender==='plug'?'Male mating contact':'Female mating contact'};
+      pins.push(face);line({x:matingSide*43,y},face);
+      const group=[face.id],branch={x:-matingSide*38,y};
+      line(branch,{x:matingSide*43,y});
+      for(let clamp=1;clamp<=part.clampsPerPole;clamp++){
+        const terminal={id:'clamp-'+number+'-'+clamp,localNumber:mark+'·'+clamp,name:mark+' wire clamp '+clamp,
+          x:-matingSide*72,y:y+(part.clampsPerPole===1?0:clamp===1?-7:7),
+          electricalType:'passive',connectionType:part.connectionTechnology};
+        pins.push(terminal);group.push(terminal.id);line(terminal,{x:branch.x,y:terminal.y});line({x:branch.x,y:terminal.y},branch);
+      }
+      internalConnections.push(group);
+    }
+    return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+      model:'WINSTA MIDI '+part.gender,name:'WINSTA MIDI '+part.gender,family:'wago-installation-connector',
+      referencePrefix:'X',category:'Electrical · Installation connectors',
+      symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
+        numberingNote:'Mating contacts use manufacturer pole markings. The suffix on a wire clamp is a model-local identifier. Each marked pole is electrically isolated from the other poles.'},
+      connectorInterface:{series:'WINSTA MIDI',gender:part.gender,coding:part.coding,poleMarkings:part.markings},
+      specifications:{connectorGender:{value:part.gender},coding:{value:part.coding},poleCount:{value:poles},
+        clampsPerPole:{value:part.clampsPerPole},potentialMarkings:{value:part.markings.join(' / ')},
+        nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},
+        ratedCurrent:{value:part.ratedCurrent,unit:'A'},finish:{value:part.finish},connectionTechnology:{value:part.connectionTechnology}},
+      panelFootprint:{widthMm:part.widthMm,heightMm:part.heightMm,depthMm:part.depthMm,source:part.datasheet,
+        edition:part.revision,page:part.dimensionPage,note:'Unmated connector body envelope. Wire bend and mating clearances depend on the installed assembly.'},
+      instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+      sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. '+part.pages,url:part.datasheet,documentRevision:part.revision,
+        revisionNote:'Potential markings, coding, clamp technology, ratings and physical dimensions.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256},
+        {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
+  }
+
   function createWagoTerminal(part,id){
     const deckCount=part.positions.length,height=deckCount*54+16;
     const title=deckCount===2?'Double-deck through terminal block':'Through terminal block';
@@ -3765,6 +3828,7 @@ function createPumpStarterDocumentation(name) {
     registerPlcSymbols,
     registerWagoTerminalBatch,
     registerWagoPcbTerminalBatch,
+    registerWagoWinstaBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,

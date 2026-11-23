@@ -1749,6 +1749,40 @@ test("both component pickers search 10,000 entries and place the final real part
   ).toHaveLength(2);
 });
 
+test("WINSTA plug and socket expose their marked mating contacts", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["770-213", 400],
+    ["770-203", 650],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(472, 250);
+  await clickAt(578, 250);
+  const saved = await saveDrawing(page, "winsta-pe");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "contact-2" }),
+        end: expect.objectContaining({ pinId: "contact-2" }),
+      },
+    }),
+  );
+});
+
 test("PCB terminal blocks expose wire clamps and solder pins on the canvas", async ({
   page,
 }) => {
