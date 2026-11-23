@@ -24,6 +24,14 @@ anchor where the source shows a rail bond.
 [Commoned terminal datasheet](https://wago.priintcloud.com/datasheets/727-225/en) ·
 [Matrix terminal datasheet](https://wago.priintcloud.com/datasheets/727-219/en)
 
+## Siemens SIPROTEC 7SJ82 P1J122728
+
+The compact editor exposes the IO102 A, B and D blocks, the PS101 L block, and
+the protective earth terminal. Shared channel returns use their documented
+physical terminal. The cabinet envelope follows the 1/3 flush-mount drawing.
+[Exact order code](https://mall.industry.siemens.com/mall/en/de/Catalog/Product/P1J122728) ·
+[Hardware manual](https://cache.industry.siemens.com/dl/files/193/109742193/att_1162585/v1/SIP5_Hardware_V09.70_Manual_C002-U_en.pdf)
+
 ## WAGO PFC200 750-8217/625-000
 
 The compact editor exposes all eight numbered CAGE CLAMP supply connections.

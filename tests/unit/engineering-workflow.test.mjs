@@ -759,6 +759,27 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
   assert.equal(engine.component("wago-2002-9999"), null);
 });
 
+test("SIPROTEC P1J122728 retains the IO102 and PS101 terminal schedules", () => {
+  const definition = engine.component("siemens-p1j122728");
+  const instance = engine.createInstance(definition.id, 450, 350, "F1");
+  const pins = engine.worldPins(instance);
+  const names = Object.fromEntries(pins.map((pin) => [pin.number, pin.name]));
+  assert.equal(pins.length, 51);
+  assert.equal(names.A8, "I4 return");
+  assert.equal(names.B2, "V1/V2/V3 common");
+  assert.equal(names.D2, "BO 1.4/1.5/1.6 common");
+  assert.equal(names.D14, "BI 1.2–1.8 common");
+  assert.equal(names.L1, "Auxiliary supply +");
+  assert.equal(names.L11, "BI 2.1/2.2/2.3 common");
+  assert.equal(names.PE, "Chassis protective grounding terminal");
+  assert.equal(definition.symbol.internalConnections.length, 0);
+  assert.equal(definition.panelFootprint.depthMm, 231);
+  assert.equal(
+    engine.billOfMaterials([instance]).rows[0].partNumber,
+    "P1J122728",
+  );
+});
+
 test("PFC200 keeps its system supply separate from the three commoned field potentials", () => {
   const id = "wago-750-8217-625-000";
   const definition = engine.component(id);

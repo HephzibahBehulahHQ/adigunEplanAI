@@ -1801,6 +1801,43 @@ test("PCB terminal blocks expose wire clamps and solder pins on the canvas", asy
   );
 });
 
+test("SIPROTEC exact order code places with marked terminals and saves supply wiring", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  await page.locator("#symbolSearch").fill("P1J122728");
+  const part = page.locator('[data-insert="siemens-p1j122728"]');
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const x of [400, 700]) {
+    await part.click();
+    await clickAt(x, 380);
+  }
+  await expect(
+    page
+      .locator("#userDrawings .drawing-object")
+      .getByText("D14", { exact: true }),
+  ).toHaveCount(2);
+  await clickAt(504, 404);
+  await clickAt(804, 404);
+  const { data } = await saveDrawing(page, "siprotec-wiring");
+  expect(data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "l1" }),
+        end: expect.objectContaining({ pinId: "l1" }),
+      },
+    }),
+  );
+});
+
 test("PFC200 places by exact code, exposes communications and wires its field supply", async ({
   page,
 }) => {
