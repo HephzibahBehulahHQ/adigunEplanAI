@@ -283,3 +283,10 @@ The 58 three-pole MIDI assemblies place L, PE and N on separate conductors.
 Protective earth has a dedicated wireable terminal at both ends. The
 recorded cable type distinguishes the PVC and halogen-free variants.
 [Three-pole MIDI datasheet](https://wago.priintcloud.com/datasheets/771-9993_006-101/en)
+
+The 113 five-pole MIDI assemblies preserve distinct manufacturer mappings.
+Coding A carries N, PE, L1, L2 and L3. Coding I carries N, PE, L, DA− and
+DA+. Each marked conductor is continuous between the two ends and is
+isolated from the other four.
+[Coding A datasheet](https://wago.priintcloud.com/datasheets/771-9995_006-101/en) ·
+[Coding I datasheet](https://wago.priintcloud.com/datasheets/771-9985_006-101/en)

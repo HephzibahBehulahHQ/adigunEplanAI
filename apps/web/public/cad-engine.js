@@ -1256,23 +1256,29 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
 
   function registerWagoWinstaCableBatch(rows){
     const batch=new Map();
+    const twoPoleCode=/^(?:771|891)-8992\/006-[0-9]{3}$/;
+    const fiveCoreCable=/^(?:H05VV-F|H05Z1Z1-F) 5G(?:1\.5|2\.5)$/;
+    const profiles=[
+      {code:twoPoleCode,coding:'A',markings:['L','N'],cable:/^H05VV-F 2x1\.5$/},
+      {code:twoPoleCode,coding:'B',markings:['1','2'],cable:/^Control line 2x1\.5$/},
+      {code:/^771-9993\/0[01][67]-[0-9]{3}$/,coding:'A',markings:['L','PE','N'],
+        cable:/^(?:H05VV-F|H05Z1Z1-F) 3G(?:1\.5|2\.5)$/},
+      {code:/^771-9995\/0[01][67]-[0-9]{3}$/,coding:'A',markings:['N','PE','L1','L2','L3'],cable:fiveCoreCable},
+      {code:/^771-9985\/0[01][67]-[0-9]{3}$/,coding:'I',markings:['N','PE','L','DA-','DA+'],cable:fiveCoreCable},
+    ];
     for(const part of rows){
       const urlCode=part.orderCode.replace('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('891-');
-      const threePole=/^771-9993\/0[01][67]-[0-9]{3}$/.test(part.orderCode);
-      const poleCount=threePole?3:2;
-      const markings=threePole?'L PE N':part.coding==='A'?'L N':'1 2';
-      const cableTypeValid=threePole?/^(?:H05VV-F|H05Z1Z1-F) 3G(?:1\.5|2\.5)$/.test(part.cableType):
-        part.cableType===(part.coding==='A'?'H05VV-F 2x1.5':'Control line 2x1.5');
-      if((!threePole&&!/^(?:771|891)-8992\/006-[0-9]{3}$/.test(part.orderCode))||
-        part.series!==(mini?'MINI':'MIDI')||!(threePole?['A']:['A','B']).includes(part.coding)||
-        !Array.isArray(part.markings)||part.markings.length!==poleCount||part.markings.join(' ')!==markings||
-        !cableTypeValid||
+      const profile=profiles.find(candidate=>candidate.coding===part.coding&&candidate.code.test(part.orderCode));
+      if(!profile||part.series!==(mini?'MINI':'MIDI')||!profile.cable.test(part.cableType)||
+        !Array.isArray(part.markings)||part.markings.length!==profile.markings.length||
+        !profile.markings.every((mark,index)=>mark===part.markings[index])||
         ![part.lengthM,part.connectorWidthMm,part.connectorHeightMm].every(value=>finite(value)&&value>0)||
         !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
         throw new Error('Invalid or duplicate WAGO WINSTA cable row: '+id);
       }
+      const poleCount=profile.markings.length;
       const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
       const model='WINSTA '+part.series+' socket–plug cable · '+part.lengthM+' m';
       const pins=[],internalConnections=[];

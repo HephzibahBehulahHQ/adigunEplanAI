@@ -1985,8 +1985,8 @@ test("WINSTA cable assemblies expose wireable contacts at both ends", async ({
     await page.mouse.click(point.x, point.y);
   };
   for (const [code, x] of [
-    ["771-9993/006-101", 400],
-    ["771-9993/006-201", 700],
+    ["771-9985/006-101", 400],
+    ["771-9985/006-201", 700],
   ] as const) {
     await page.locator("#symbolSearch").fill(code);
     await page
@@ -1994,18 +1994,22 @@ test("WINSTA cable assemblies expose wireable contacts at both ends", async ({
       .click();
     await clickAt(x, 250);
   }
-  await clickAt(492, 250);
-  await clickAt(608, 250);
+  for (const y of [214, 286, 322]) {
+    await clickAt(492, y);
+    await clickAt(608, y);
+  }
   const saved = await saveDrawing(page, "winsta-cable");
-  expect(saved.data.objects).toContainEqual(
-    expect.objectContaining({
-      kind: "wire",
-      attachments: {
-        start: expect.objectContaining({ pinId: "plug-pe" }),
-        end: expect.objectContaining({ pinId: "socket-pe" }),
-      },
-    }),
-  );
+  for (const terminal of ["pe", "da-", "da+"]) {
+    expect(saved.data.objects).toContainEqual(
+      expect.objectContaining({
+        kind: "wire",
+        attachments: {
+          start: expect.objectContaining({ pinId: "plug-" + terminal }),
+          end: expect.objectContaining({ pinId: "socket-" + terminal }),
+        },
+      }),
+    );
+  }
 });
 
 test("WAGO 231 exact codes can be placed and wired from the component library", async ({
