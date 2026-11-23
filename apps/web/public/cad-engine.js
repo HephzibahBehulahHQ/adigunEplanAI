@@ -1091,7 +1091,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
   }
 
   const EPLAN_COMPONENTS = Object.freeze(Object.fromEntries((root.AdigunEplanSymbols || []).map(function(def) { return [def.id, deepFreeze(def)]; })));
-  const wagoTopjobTerminals=new Map();
+  const wagoTerminalComponents=new Map();
   function registerWagoTerminalBatch(rows){
     if(!Array.isArray(rows)||!rows.length)throw new TypeError('Expected a nonempty WAGO terminal batch');
     const batch=new Map();
@@ -1117,10 +1117,72 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         (part.connectionSource!==undefined&&!isSource(part.connectionSource))){
         throw new TypeError('Invalid WAGO terminal catalog row: '+id);
       }
-      if(batch.has(id)||wagoTopjobTerminals.has(id))throw new Error('Duplicate WAGO terminal catalog ID: '+id);
+      if(batch.has(id)||wagoTerminalComponents.has(id))throw new Error('Duplicate WAGO terminal catalog ID: '+id);
       batch.set(id,deepFreeze(createWagoTerminal(part,id)));
     }
-    for(const [id,definition] of batch)wagoTopjobTerminals.set(id,definition);
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
+  function registerWagoPcbTerminalBatch(rows){
+    if(!Array.isArray(rows)||!rows.length)throw new TypeError('Expected a nonempty WAGO PCB terminal batch');
+    const batch=new Map();
+    for(const part of rows){
+      const id='wago-'+part?.orderCode;
+      if(!part||typeof part.orderCode!=='string'||!/^250-[0-9]{3}$/.test(part.orderCode)||
+        !Number.isInteger(part.poles)||part.poles<1||part.poles>32||
+        ![part.nominalVoltage,part.ratedCurrent,part.nominalCrossSectionMm2,part.bodyWidthMm,
+          part.bodyDepthMm,part.bodyHeightAboveBoardMm,part.padPitchMm,part.solderPinLengthMm,
+          part.solderPinWidthMm,part.solderPinDepthMm,part.drilledHoleDiameterMm].every(value=>finite(value)&&value>0)||
+        (part.poles-1)*part.padPitchMm>=part.bodyWidthMm||
+        !['Push-in CAGE CLAMP','CAGE CLAMP'].includes(part.connectionTechnology)||part.actuationMethod!=='Push-button'||
+        ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
+        !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||
+        part.datasheet!=='https://wago.priintcloud.com/datasheets/'+part.orderCode+'/en'||
+        part.productUrl!=='https://www.wago.com/'+part.orderCode||
+        !/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(part.retrievedAt)||
+        !/^[a-f0-9]{64}$/.test(part.datasheetSha256)){
+        throw new TypeError('Invalid WAGO PCB terminal catalog row: '+id);
+      }
+      if(batch.has(id)||component(id))throw new Error('Duplicate WAGO PCB terminal catalog ID: '+id);
+      batch.set(id,deepFreeze(createWagoPcbTerminal(part,id)));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
+  function createWagoPcbTerminal(part,id){
+    const width=24*part.poles+16,height=90;
+    const pins=[],internalConnections=[],pads=[];
+    const artwork=[{kind:'rect',x:-width/2,y:-26,width,height:52}];
+    for(let index=0;index<part.poles;index++){
+      const number=index+1,x=(index-(part.poles-1)/2)*24;
+      const clampId='clamp-'+number,padId='pad-'+number;
+      pins.push(
+        {id:clampId,localNumber:'W'+number,name:'Wire clamp '+number,x,y:-45,electricalType:'passive',connectionType:part.connectionTechnology},
+        {id:padId,localNumber:'P'+number,name:'PCB solder pin '+number,x,y:45,electricalType:'passive',connectionType:'Through-hole solder pin'},
+      );
+      internalConnections.push([clampId,padId]);
+      artwork.push({kind:'line',from:{x,y:-45},to:{x,y:45}});
+      pads.push({pinId:padId,xMm:index*part.padPitchMm,yMm:0,drilledHoleDiameterMm:part.drilledHoleDiameterMm});
+    }
+    const mm=value=>({value,unit:'mm'});
+    return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+      model:'Series 250 PCB terminal block',name:'Through-hole PCB terminal block',family:'wago-pcb-terminal',
+      referencePrefix:'X',category:'Electrical · WAGO PCB terminal blocks',
+      symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
+        numberingNote:'W and P identify model-local wire clamps and solder pins. Each pair is one isolated potential.'},
+      specifications:{poleCount:{value:part.poles},nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},
+        ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},
+        finish:{value:part.finish},connectionTechnology:{value:part.connectionTechnology},actuationMethod:{value:part.actuationMethod},
+        mounting:{value:'Through-hole solder mounting'},padPitch:mm(part.padPitchMm),solderPinLength:mm(part.solderPinLengthMm),
+        solderPinWidth:mm(part.solderPinWidthMm),solderPinDepth:mm(part.solderPinDepthMm),drilledHoleDiameter:mm(part.drilledHoleDiameterMm)},
+      pcbFootprint:{datum:'Center of first solder pin',pads},
+      panelFootprint:{widthMm:part.bodyWidthMm,heightMm:part.bodyDepthMm,depthMm:part.bodyHeightAboveBoardMm,
+        source:part.datasheet,edition:part.revision,page:part.dimensionPage,
+        note:'Body projected on the PCB mounting plane. Solder-pin protrusion is recorded separately.'},
+      instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+      sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. '+part.pages,url:part.datasheet,documentRevision:part.revision,
+        revisionNote:'Isolated potentials, one solder pin per potential, pitch, hole and body geometry.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256},
+        {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
 
   function createWagoTerminal(part,id){
@@ -1212,9 +1274,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{channelCount:{value:channels}},instanceProperties:{comment:{type:'string',default:'',maximumLength:160}},sources:[]}));
     }
   }
-  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || wagoTopjobTerminals.get(id) || plcComponents.get(id) || null; }
+  function component(id) { return COMPONENTS[id] || EPLAN_COMPONENTS[id] || BUILDING_COMPONENTS[id] || wagoTerminalComponents.get(id) || plcComponents.get(id) || null; }
   function catalog() {
-    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Array.from(wagoTopjobTerminals.keys()),Array.from(plcComponents.keys())).map(function (id) {
+    return Object.keys(EPLAN_COMPONENTS).concat(Object.keys(COMPONENTS),Object.keys(BUILDING_COMPONENTS),Array.from(wagoTerminalComponents.keys()),Array.from(plcComponents.keys())).map(function (id) {
       const def = component(id);
       return { id: def.id, componentId: def.id, name: def.generic ? def.name : def.model + ' · ' + def.manufacturerPartNumber + (def.family==='motor-terminal-board'?' · Delta terminal-board view':''), category: def.category, family: def.family, tag: def.referencePrefix || 'X' };
     });
@@ -3646,6 +3708,7 @@ function createPumpStarterDocumentation(name) {
     automationNoteRegisterCsv,
     registerPlcSymbols,
     registerWagoTerminalBatch,
+    registerWagoPcbTerminalBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,

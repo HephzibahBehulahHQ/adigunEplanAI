@@ -169,3 +169,17 @@ mounting interface. The extractor reports these cases separately from
 parts accepted into the editor.
 [279-681 datasheet](https://wago.priintcloud.com/datasheets/279-681/en) ·
 [285-635 datasheet](https://wago.priintcloud.com/datasheets/285-635/en)
+
+## Through-hole PCB terminal blocks
+
+The first 72 WAGO series 250 parts have a documented in-line solder-pin row.
+Each schematic pole connects one wire clamp to one solder pin. Poles are
+isolated from one another. The PCB footprint records the drill center and
+diameter at each documented pitch from the first solder-pin center. The
+linked mounting view uses the body projected onto the board and its height
+above the board; solder-pin protrusion is recorded separately.
+
+The extractor verified individual order codes, single-pole clamp-to-pin
+relationships and the IEC/EN 60664-1 rating basis. It held out 46 staggered
+solder-pin variants pending verification of the second row's dimensions.
+[WAGO 250-316 datasheet](https://wago.priintcloud.com/datasheets/250-316/en)

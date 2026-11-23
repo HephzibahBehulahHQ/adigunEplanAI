@@ -16,6 +16,16 @@ const terminalBatch = JSON.parse(
   ),
 );
 engine.registerWagoTerminalBatch(terminalBatch);
+const pcbBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-pcb-terminal-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoPcbTerminalBatch(pcbBatch);
 const plain = (value) => JSON.parse(JSON.stringify(value));
 
 test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", () => {
@@ -37,6 +47,89 @@ test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", 
     /Duplicate WAGO terminal catalog ID/,
   );
   assert.equal(engine.component("wago-2002-9999"), null);
+});
+
+test("WAGO PCB terminals have one isolated clamp-to-pad net for each pole", () => {
+  assert.ok(pcbBatch.length >= 72);
+  for (const part of pcbBatch) {
+    const def = engine.component("wago-" + part.orderCode);
+    const instance = engine.createInstance(def.id, 400, 250, "XPCB");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(
+      engine.billOfMaterials([instance]).rows[0].partNumber,
+      part.orderCode,
+    );
+    assert.equal(def.symbol.pins.length, part.poles * 2);
+    assert.deepEqual(
+      plain(def.symbol.internalConnections),
+      Array.from({ length: part.poles }, (_, index) => [
+        "clamp-" + (index + 1),
+        "pad-" + (index + 1),
+      ]),
+    );
+    assert.equal(def.pcbFootprint.pads.length, part.poles);
+    for (const [index, pad] of def.pcbFootprint.pads.entries()) {
+      assert.equal(pad.pinId, "pad-" + (index + 1));
+      assert.equal(pad.xMm, index * part.padPitchMm);
+      assert.equal(pad.yMm, 0);
+    }
+    assert.equal(def.panelFootprint.heightMm, part.bodyDepthMm);
+    assert.equal(def.panelFootprint.depthMm, part.bodyHeightAboveBoardMm);
+  }
+  const def = engine.component("wago-250-316");
+  assert.equal(def.pcbFootprint.pads[15].xMm, 37.5);
+  assert.equal(def.pcbFootprint.pads[15].drilledHoleDiameterMm, 1.1);
+  assert.equal(def.panelFootprint.widthMm, 41.5);
+  const instance = engine.createInstance("wago-250-302", 400, 250, "XPCB");
+  instance.sheetId = "pcb";
+  const wires = ["clamp-1", "pad-1", "clamp-2", "pad-2"].map((id, index) => {
+    const pin = engine.worldPins(instance).find((item) => item.id === id);
+    const free = { x: pin.x, y: pin.y + (index % 2 ? 100 : -100) };
+    return engine.attachWire(
+      {
+        id: "wire-" + index,
+        kind: "wire",
+        sheetId: "pcb",
+        x1: free.x,
+        y1: free.y,
+        x2: pin.x,
+        y2: pin.y,
+      },
+      free,
+      { ...pin, attachment: { instanceId: instance.id, pinId: id } },
+    );
+  });
+  const objects = [instance, ...wires];
+  assert.deepEqual(
+    plain(engine.analyze(objects).nets.map((net) => net.pins.length)),
+    [2, 2],
+  );
+  instance.rotation = 90;
+  engine.moveInstance(instance, 600, 300);
+  // Rotate the four external stubs with the part to keep their routes separate.
+  for (const [index, wire] of wires.entries()) {
+    const pin = engine.endpointPin(objects, wire.attachments.end);
+    wire.x1 = pin.x + (index % 2 ? -100 : 100);
+    wire.y1 = pin.y;
+  }
+  engine.synchronizeWireAttachments(objects);
+  const restored = engine.parseProject(
+    engine.serializeProject({
+      project: "PCB terminal verification",
+      sheets: [{ id: "pcb", name: "PCB", number: "A2/000" }],
+      objects,
+    }),
+  );
+  assert.equal(restored.valid, true);
+  assert.deepEqual(
+    plain(
+      engine
+        .analyze(restored.project.objects)
+        .nets.map((net) => net.pins.length),
+    ),
+    [2, 2],
+  );
+  assert.equal(restored.project.objects[2].attachments.end.pinId, "pad-1");
 });
 
 test("TOPJOB through terminals keep every clamping point and isolate the two decks", () => {
