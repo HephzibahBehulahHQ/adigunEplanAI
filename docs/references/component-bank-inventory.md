@@ -180,9 +180,20 @@ linked mounting view uses the body projected onto the board and its height
 above the board; solder-pin protrusion is recorded separately.
 
 The extractor verified individual order codes, single-pole clamp-to-pin
-relationships and the IEC/EN 60664-1 rating basis. It held out 46 staggered
-solder-pin variants pending verification of the second row's dimensions.
+relationships and the IEC/EN 60664-1 rating basis.
 [WAGO 250-316 datasheet](https://wago.priintcloud.com/datasheets/250-316/en)
+
+## Staggered PCB terminal footprints
+
+Forty-six additional series 250 order codes use staggered through-hole pads.
+The reviewed WAGO mechanical drawings identify the first pin at the front
+right, show alternating rows 5 mm apart and dimension nominal pole pitch at
+2.5 or 3.5 mm by exact part. The extractor requires the corresponding drawing
+fingerprint and a matching pitch in the exact datasheet. The existing
+Properties inspector lists the pad drill centers and hole diameters relative
+to the first pin.
+[3.5 mm pitch source](https://wago.priintcloud.com/datasheets/250-202/en) ·
+[2.5 mm pitch source](https://wago.priintcloud.com/datasheets/250-402/en)
 
 ## Wire junctions during component edits
 

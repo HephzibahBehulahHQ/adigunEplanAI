@@ -1134,6 +1134,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
           part.bodyDepthMm,part.bodyHeightAboveBoardMm,part.padPitchMm,part.solderPinLengthMm,
           part.solderPinWidthMm,part.solderPinDepthMm,part.drilledHoleDiameterMm].every(value=>finite(value)&&value>0)||
         (part.poles-1)*part.padPitchMm>=part.bodyWidthMm||
+        (part.padRowSpacingMm!==undefined&&(!finite(part.padRowSpacingMm)||part.padRowSpacingMm<=0||
+          part.padRowSpacingMm>=part.bodyDepthMm||!/^[a-f0-9]{64}$/.test(part.footprintDrawingSha256)))||
         !['Push-in CAGE CLAMP','CAGE CLAMP'].includes(part.connectionTechnology)||part.actuationMethod!=='Push-button'||
         ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
         !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||
@@ -1162,7 +1164,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       );
       internalConnections.push([clampId,padId]);
       artwork.push({kind:'line',from:{x,y:-45},to:{x,y:45}});
-      pads.push({pinId:padId,xMm:index*part.padPitchMm,yMm:0,drilledHoleDiameterMm:part.drilledHoleDiameterMm});
+      pads.push({pinId:padId,xMm:index*part.padPitchMm,yMm:index%2*(part.padRowSpacingMm||0),drilledHoleDiameterMm:part.drilledHoleDiameterMm});
     }
     const mm=value=>({value,unit:'mm'});
     return {schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
@@ -1173,15 +1175,17 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       specifications:{poleCount:{value:part.poles},nominalVoltage:{value:part.nominalVoltage,unit:'V',basis:'IEC/EN 60664-1, category III, pollution degree 3'},
         ratedCurrent:{value:part.ratedCurrent,unit:'A'},nominalCrossSection:{value:part.nominalCrossSectionMm2,unit:'mm²'},
         finish:{value:part.finish},connectionTechnology:{value:part.connectionTechnology},actuationMethod:{value:part.actuationMethod},
-        mounting:{value:'Through-hole solder mounting'},padPitch:mm(part.padPitchMm),solderPinLength:mm(part.solderPinLengthMm),
+        mounting:{value:'Through-hole solder mounting'},padPitch:mm(part.padPitchMm),
+        ...(part.padRowSpacingMm?{padRowSpacing:mm(part.padRowSpacingMm)}:{}),solderPinLength:mm(part.solderPinLengthMm),
         solderPinWidth:mm(part.solderPinWidthMm),solderPinDepth:mm(part.solderPinDepthMm),drilledHoleDiameter:mm(part.drilledHoleDiameterMm)},
-      pcbFootprint:{datum:'Center of first solder pin',pads},
+      pcbFootprint:{datum:part.padRowSpacingMm?'First solder pin at front right of manufacturer drawing, +X along pole order, +Y toward rear':'Center of first solder pin',pads},
       panelFootprint:{widthMm:part.bodyWidthMm,heightMm:part.bodyDepthMm,depthMm:part.bodyHeightAboveBoardMm,
         source:part.datasheet,edition:part.revision,page:part.dimensionPage,
         note:'Body projected on the PCB mounting plane. Solder-pin protrusion is recorded separately.'},
       instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
       sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. '+part.pages,url:part.datasheet,documentRevision:part.revision,
-        revisionNote:'Isolated potentials, one solder pin per potential, pitch, hole and body geometry.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256},
+        revisionNote:'Isolated potentials, one solder pin per potential, pitch, hole and body geometry.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256,
+        ...(part.footprintDrawingSha256?{footprintDrawingSha256:part.footprintDrawingSha256}:{})},
         {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
 
