@@ -290,6 +290,15 @@ wireable and retains its documented termination and panel dimensions.
 Ratings are available for 968 of the 970 WAGO 231 entries.
 [24-pole THT header datasheet](https://wago.priintcloud.com/datasheets/231-154_001-000/en)
 
+## WAGO 255 and 257 stackable PCB terminal blocks
+
+The 272 exact order codes include push-button and lever actuation.
+Each pole exposes its documented clamp and solder terminals. The
+265 verified PCB drawings provide primary-pitch drill coordinates,
+and Properties records alternate pitch where the datasheet lists one.
+[255 multi-pole datasheet](https://wago.priintcloud.com/datasheets/255-402/en) ·
+[257 stackable datasheet](https://wago.priintcloud.com/datasheets/257-401/en)
+
 ## WAGO 236 and 256 stackable PCB terminal blocks
 
 The 501 exact order codes cover through-hole and reflow blocks with
