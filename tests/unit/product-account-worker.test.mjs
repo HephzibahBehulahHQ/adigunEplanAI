@@ -1,8 +1,36 @@
 import assert from "node:assert/strict";
 import { test, mock } from "node:test";
+import gateway from "../../apps/account-worker/index.mjs";
 import worker from "../../apps/account-worker/account.mjs";
 
 const origin = "https://preview.example.com";
+
+test("release entry and manifest bypass caches while versioned assets retain caching", async () => {
+  const assetEnvironment = {
+    ASSETS: {
+      fetch: async () =>
+        new Response("asset", {
+          headers: { "Cache-Control": "public, max-age=3600" },
+        }),
+    },
+  };
+  for (const path of [
+    "/",
+    "/index.html",
+    "/build-info.json",
+    "/cad-engine.js?v=abc",
+  ]) {
+    const response = await gateway.fetch(
+      new Request(origin + path),
+      assetEnvironment,
+    );
+    assert.equal(await response.text(), "asset");
+    assert.equal(
+      response.headers.get("Cache-Control"),
+      path.includes("?v=") ? "public, max-age=3600" : "no-store",
+    );
+  }
+});
 const email = "reader@example.com";
 const password = "A separate SPS password";
 const env = {

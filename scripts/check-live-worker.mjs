@@ -16,12 +16,17 @@ const request = (path, init) =>
 
 for (let attempt = 0; attempt < 8; attempt++) {
   try {
-    const manifest = await request(`/build-info.json?verify=${commit}`);
+    const manifest = await request("/build-info.json");
     if (!manifest.ok) throw new Error(`Build manifest HTTP ${manifest.status}`);
     const info = await manifest.json();
     if (info.sourceCommit !== commit) throw new Error("Source commit differs");
 
-    const index = await request(`/?verify=${commit}`);
+    const index = await request("/");
+    for (const entry of [manifest, index]) {
+      if (!entry.headers.get("Cache-Control")?.includes("no-store")) {
+        throw new Error("Release document may be reused from cache");
+      }
+    }
     const hash = createHash("sha256")
       .update(Buffer.from(await index.arrayBuffer()))
       .digest("hex");
