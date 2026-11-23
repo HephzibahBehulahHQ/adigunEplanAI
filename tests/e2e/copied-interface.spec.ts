@@ -2227,6 +2227,44 @@ test("WAGO 232 female headers expose separate socket and PCB terminals", async (
   );
 });
 
+test("WAGO relay coils and contacts are independently wireable", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+  await page.locator('[data-panel="symbols"]').click();
+  const clickAt = async (x: number, y: number) => {
+    const point = await sheetPoint(page, x, y);
+    await page.mouse.click(point.x, point.y);
+  };
+  for (const [code, x] of [
+    ["788-341", 400],
+    ["788-342", 700],
+  ] as const) {
+    await page.locator("#symbolSearch").fill(code);
+    await page.locator('[data-insert="wago-' + code + '"]').click();
+    await clickAt(x, 250);
+  }
+  await clickAt(484, 270);
+  await clickAt(616, 226);
+  await clickAt(350, 250);
+  await page.locator('[data-inspector="Properties"]').click();
+  await expect(page.locator("#inspectorContent")).toContainText("24 V DC");
+  await expect(page.locator("#inspectorContent")).toContainText("16 A");
+  const saved = await saveDrawing(page, "wago-relay");
+  expect(saved.data.objects).toContainEqual(
+    expect.objectContaining({
+      kind: "wire",
+      attachments: {
+        start: expect.objectContaining({ pinId: "contact-14" }),
+        end: expect.objectContaining({ pinId: "coil-a1" }),
+      },
+    }),
+  );
+});
+
 test("generic PLC library places six editable modules with native terminal wiring", async ({
   page,
 }) => {

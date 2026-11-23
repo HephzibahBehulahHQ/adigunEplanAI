@@ -317,6 +317,16 @@ Two-conductor models expose both clamps on each isolated pole.
 [721 THT header datasheet](https://wago.priintcloud.com/datasheets/721-432_001-000/en) ·
 [Two-conductor connector datasheet](https://wago.priintcloud.com/datasheets/721-2102_026-000/en)
 
+## WAGO relay modules and basic relays
+
+The 84 WAGO relays have terminal assignments verified against the exact
+manufacturer circuit diagrams. The native symbols expose A1/A2 coil
+terminals and each documented common, normally open and normally closed
+contact. Contact states are recorded separately from the permanent netlist.
+Properties shows coil voltage, contact current and mounting information.
+Panel dimensions represent the module or bare relay body as supplied.
+[Changeover relay module datasheet](https://wago.priintcloud.com/datasheets/788-341/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug
