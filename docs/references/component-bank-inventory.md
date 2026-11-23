@@ -290,6 +290,17 @@ wireable and retains its documented termination and panel dimensions.
 Ratings are available for 968 of the 970 WAGO 231 entries.
 [24-pole THT header datasheet](https://wago.priintcloud.com/datasheets/231-154_001-000/en)
 
+## WAGO 2086 PCB terminal blocks
+
+The 378 exact order codes include 306 through-hole reflow and 72
+surface-mount blocks, including manufacturer packaging variants. Each
+pole exposes a clamp and the documented one or two PCB terminals.
+The PCB inspector shows through-hole drill centres or rectangular SMD
+land centres and sizes. The body envelope and the land pattern are
+documented separately.
+[THR block datasheet](https://wago.priintcloud.com/datasheets/2086-1122/en) ·
+[SMD block datasheet](https://wago.priintcloud.com/datasheets/2086-1102_700-000_997-604/en)
+
 ## WAGO 831 MCS MAXI connectors
 
 The 237 exact order codes cover 181 Push-in CAGE CLAMP wire connectors

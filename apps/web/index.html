@@ -1931,10 +1931,11 @@
       +'<div class="property-row"><span>Part number</span><strong>'+escapeHtml(def.manufacturerPartNumber)+'</strong></div>'
       +specRows+drawOrderField(obj)+drawingStyleFields(obj)
       +'<div class="property-row"><span>External terminals</span><strong>'+escapeHtml(def.symbol.pins.length+' · '+pinSummary)+'</strong></div>'
-      +(def.pcbFootprint?'<details class="component-specs"><summary>PCB drill centers (mm)</summary>'
+      +(def.pcbFootprint?'<details class="component-specs"><summary>'+(def.pcbFootprint.pads[0]?.widthMm?'PCB pad centers (mm)':'PCB drill centers (mm)')+'</summary>'
         +'<p class="notice">'+escapeHtml(def.pcbFootprint.datum)+'</p>'
         +def.pcbFootprint.pads.map(function(pad){const pin=def.symbol.pins.find(function(item){return item.id===pad.pinId;});
-          return '<div class="property-row"><span>'+escapeHtml(pin.localNumber)+'</span><strong>'+escapeHtml('X '+pad.xMm+' · Y '+pad.yMm+' · Ø '+pad.drilledHoleDiameterMm)+'</strong></div>';
+          const size=pad.widthMm?pad.widthMm+' × '+pad.lengthMm:'Ø '+pad.drilledHoleDiameterMm;
+          return '<div class="property-row"><span>'+escapeHtml(pin.localNumber)+'</span><strong>'+escapeHtml('X '+pad.xMm+' · Y '+pad.yMm+' · '+size)+'</strong></div>';
         }).join('')+'</details>':'')
       +'<div class="property-row"><span>Rotation</span><strong>'+escapeHtml(obj.rotation+'°')+'</strong></div>'
       +(def&&def.generic?'<div class="notice">Original Eplan '+escapeHtml(def.connectionClass)+' symbol. Manufacturer part not assigned. Pins: '+escapeHtml(def.symbol.pins.map(function(p){return p.id;}).join(', '))+'</div>':'')
