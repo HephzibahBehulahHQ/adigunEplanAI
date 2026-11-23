@@ -248,3 +248,17 @@ supports the existing editable signal and address fields. Switching side,
 ratings, and rail dimensions come from the exact datasheet.
 [750-402 datasheet](https://wago.priintcloud.com/datasheets/750-402/en) ·
 [750-1505 datasheet](https://wago.priintcloud.com/datasheets/750-1505/en)
+
+The later batch adds eleven 750, XTR and 753 variants, including the
+750-1501 with numbered DIN 41651 contacts and separate CAGE CLAMP field
+supply terminals. [750-1501 datasheet](https://wago.priintcloud.com/datasheets/750-1501/en)
+
+## WAGO 231 MCS MIDI Classic connectors
+
+The 27 catalog entries cover 5 mm pitch, single-conductor male and female
+connectors and angled THT and THR headers. Each isolated pole pairs its mating
+contact with one clamp or solder pin. Schematic contact numbering is
+model-local. Header panel geometry uses the manufacturer body envelope above
+the board. PCB drill coordinates and automatic mating are outside this batch.
+[Female connector](https://www.wago.com/global/pluggable-connectors/1-conductor-female-connector/p/231-102_026-000) ·
+[THT header](https://www.wago.com/global/pluggable-connectors/tht-male-header/p/231-433_001-000)

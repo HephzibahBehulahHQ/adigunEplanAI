@@ -1254,6 +1254,54 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         {publisher:'WAGO',title:part.orderCode+' product record',url:part.productUrl,retrievedAt:part.retrievedAt}]};
   }
 
+  function registerWagoMcsBatch(rows){
+    const batch=new Map();
+    for(const part of rows){
+      const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
+      const header=part.mount!=='wire';
+      if(!/^231-[0-9]{3}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/.test(part.orderCode)||
+        !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
+        (header&&(part.gender!=='plug'||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
+          part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' male header'))||
+        (!header&&part.kind!=='1-conductor '+(part.gender==='socket'?'female':'male')+' connector')||
+        !Number.isInteger(part.poles)||part.poles<2||part.poles>8||part.pitchMm!==5||
+        ![part.widthMm,part.heightMm,part.depthMm].every(value=>finite(value)&&value>0)||
+        !/^\d{2}\.\d{2}\.\d{4}$/.test(part.revision)||!/^\d{4}-\d{2}-\d{2}$/.test(part.retrievedAt)||
+        !/^[a-f0-9]{64}$/.test(part.datasheetSha256)||batch.has(id)||component(id)){
+        throw new Error('Invalid or duplicate WAGO MCS catalog row: '+id);
+      }
+      const datasheet='https://wago.priintcloud.com/datasheets/'+urlCode+'/en';
+      const width=144,height=part.poles*36+12;
+      const matingSide=part.gender==='plug'?1:-1;
+      const backType=header?part.mount+' solder pin':'CAGE CLAMP';
+      const pins=[],internalConnections=[],artwork=[{kind:'rect',x:-43,y:-height/2,width:86,height}];
+      for(let number=1;number<=part.poles;number++){
+        const y=(number-(part.poles+1)/2)*36;
+        const face={id:'contact-'+number,name:'Mating contact '+number,localNumber:String(number),x:matingSide*72,y,
+          electricalType:'passive',connectionType:part.gender==='socket'?'Female mating contact':'Male mating contact'};
+        const back={id:(header?'solder-':'clamp-')+number,name:backType+' '+number,localNumber:number+(header?' PCB':' wire'),
+          x:-matingSide*72,y,electricalType:'passive',connectionType:backType};
+        pins.push(face,back);
+        internalConnections.push([face.id,back.id]);
+        artwork.push({kind:'line',from:{x:back.x,y},to:{x:face.x,y}});
+      }
+      const model='MCS MIDI Classic '+part.kind;
+      batch.set(id,deepFreeze({schemaVersion:COMPONENT_SCHEMA_VERSION,id,manufacturer:'WAGO',manufacturerPartNumber:part.orderCode,
+        model,name:model,family:'wago-mcs-connector',referencePrefix:'X',category:'Electrical · PCB connectors',
+        symbol:{id:id+'-schematic-v1',view:'schematic',unit:'mm',width,height,pins,internalConnections,artwork,
+          numberingNote:'Model-local numbers follow the contact row. Each mating contact connects to its own wire clamp or PCB solder pin.'},
+        specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
+          connectionTechnology:{value:backType},connectorGender:{value:part.gender},overallHeight:{value:part.heightMm,unit:'mm'}},
+        panelFootprint:{widthMm:part.widthMm,heightMm:header?part.depthMm:part.heightMm,
+          depthMm:header?part.heightAboveBoardMm:part.depthMm,source:datasheet,edition:part.revision,page:2,
+          note:header?'Header projected on the PCB plane. Width and depth follow the datasheet footprint envelope.':'Unmated wire connector body. Allow additional wire bend and mating clearance.'},
+        instanceProperties:{marking:{type:'string',default:'',maximumLength:40},comment:{type:'string',default:'',maximumLength:160}},
+        sources:[{publisher:'WAGO',title:part.orderCode+' datasheet, pp. 1–3',url:datasheet,documentRevision:part.revision,
+          revisionNote:'Manufacturer contact row, isolated potentials, termination, pitch and body dimensions.',retrievedAt:part.retrievedAt,sha256:part.datasheetSha256}]}));
+    }
+    for(const [id,definition] of batch)wagoTerminalComponents.set(id,definition);
+  }
+
   function createWagoTerminal(part,id){
     const deckCount=part.positions.length,height=deckCount*54+16;
     const title=deckCount===2?'Double-deck through terminal block':'Through terminal block';
@@ -3880,6 +3928,7 @@ function createPumpStarterDocumentation(name) {
     registerWagoTerminalBatch,
     registerWagoPcbTerminalBatch,
     registerWagoWinstaBatch,
+    registerWagoMcsBatch,
     plcIoPins,
     validPlcIo,
     plcIoRegisterCsv,
