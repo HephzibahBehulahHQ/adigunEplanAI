@@ -60,7 +60,7 @@ engine.registerWagoWinstaCableBatch(
   ),
 );
 engine.registerWagoMcsBatch(
-  ["231", "734"].flatMap((series) =>
+  ["231", "232", "734"].flatMap((series) =>
     JSON.parse(
       readFileSync(
         new URL(

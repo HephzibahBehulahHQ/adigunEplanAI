@@ -1338,6 +1338,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     for(const part of rows){
       const urlCode=part.orderCode.replaceAll('/','_'),id='wago-'+urlCode;
       const mini=part.orderCode.startsWith('734-');
+      const midiFemale=part.orderCode.startsWith('232-');
       const header=part.mount!=='wire';
       const doubleClamp=part.clampsPerPole===2;
       const genderName=part.gender==='socket'?'female':'male';
@@ -1347,14 +1348,16 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
       const hasSolderDimensions=solderDimensions.some(value=>value!==undefined);
       const hasDrill=part.drilledHoleDiameterMm!==undefined||part.drilledHolePlusToleranceMm!==undefined;
       const pitchOptions=mini?[3.5,3.81]:[5,5.08,7.5,7.62];
-      const orderCodePattern=mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^231-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
+      const orderCodePattern=mini?/^734-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,3}$/:/^(?:231|232)-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3}){0,2}$/;
       if(!orderCodePattern.test(part.orderCode)||
         !['wire','THT','THR'].includes(part.mount)||!['plug','socket'].includes(part.gender)||
         (part.clampsPerPole!==undefined&&!doubleClamp)||
         (doubleClamp&&(header||part.gender!=='socket'||part.connectionTechnology!=='Push-in CAGE CLAMP'))||
-        (header&&((!mini&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
+        (midiFemale&&part.gender!=='socket')||
+        (header&&((!mini&&!midiFemale&&part.gender!=='plug')||!finite(part.heightAboveBoardMm)||part.heightAboveBoardMm<=0||
           part.heightAboveBoardMm>part.heightMm||part.kind!==part.mount+' '+genderName+' header'))||
         (part.headerOrientation!==undefined&&(!header||!['straight','angled'].includes(part.headerOrientation)))||
+        (part.connectorOrientation!==undefined&&(header||!['straight','angled'].includes(part.connectorOrientation)))||
         (rated&&(![2,3].includes(part.ratingPage)||!ratings.every(value=>finite(value)&&value>0)))||
         (part.dimensionPage!==undefined&&![2,3].includes(part.dimensionPage))||
         (hasSolderDimensions&&(!header||!solderDimensions.every(value=>finite(value)&&value>0)))||
@@ -1401,6 +1404,7 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         specifications:{poleCount:{value:part.poles},pinSpacing:{value:part.pitchMm,unit:'mm'},
           ...(doubleClamp?{clampsPerPole:{value:2}}:{}),
           ...(part.headerOrientation?{headerOrientation:{value:part.headerOrientation}}:{}),
+          ...(part.connectorOrientation?{connectorOrientation:{value:part.connectorOrientation}}:{}),
           ...(hasSolderDimensions?{solderPinLength:mm(part.solderPinLengthMm),solderPinWidth:mm(part.solderPinWidthMm),
             solderPinDepth:mm(part.solderPinDepthMm)}:{}),
           ...(hasDrill?{drilledHoleDiameter:mm(part.drilledHoleDiameterMm),drilledHolePlusTolerance:mm(part.drilledHolePlusToleranceMm)}:{}),

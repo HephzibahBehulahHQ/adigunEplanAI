@@ -300,6 +300,14 @@ PCB drill centres for the 593 THT parts with a documented hole diameter and
 tolerance. These coordinates use the first solder pin as the datum.
 [MCS MINI THT datasheet](https://wago.priintcloud.com/datasheets/734-162/en)
 
+## WAGO 232 MCS MIDI Classic female connectors
+
+The 310 WAGO 232 entries comprise 72 angled wire connectors and 238
+straight or angled female THT headers. An isolated pole pairs each mating
+contact with its own clamp or solder pin. The headers expose manufacturer
+drill centres, nominal hole diameter and tolerance in Properties.
+[Female THT header datasheet](https://wago.priintcloud.com/datasheets/232-232/en)
+
 ## WINSTA cable assemblies
 
 The 26 MINI and MIDI cable assemblies expose separate socket and plug
