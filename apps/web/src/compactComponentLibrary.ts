@@ -6,6 +6,7 @@ import wagoTerminalBatch from "../../../packages/component-library/wago-terminal
 import wagoPcbTerminalBatch from "../../../packages/component-library/wago-pcb-terminal-batch.json";
 
 import wagoWinstaBatch from "../../../packages/component-library/wago-winsta-batch.json";
+import wagoMcsBatch from "../../../packages/component-library/wago-mcs-231-batch.json";
 
 import wagoDigitalIoBatch from "../../../packages/component-library/wago-digital-io-batch.json";
 
@@ -24,6 +25,7 @@ declare global {
       registerWagoTerminalBatch: (rows: typeof wagoTerminalBatch) => void;
       registerWagoPcbTerminalBatch: (rows: typeof wagoPcbTerminalBatch) => void;
       registerWagoWinstaBatch: (rows: typeof wagoWinstaBatch) => void;
+      registerWagoMcsBatch: (rows: typeof wagoMcsBatch) => void;
     };
   }
 }
@@ -31,6 +33,7 @@ declare global {
 window.AdigunCADEngine.registerWagoTerminalBatch(wagoTerminalBatch);
 window.AdigunCADEngine.registerWagoPcbTerminalBatch(wagoPcbTerminalBatch);
 window.AdigunCADEngine.registerWagoWinstaBatch(wagoWinstaBatch);
+window.AdigunCADEngine.registerWagoMcsBatch(wagoMcsBatch);
 window.AdigunCADEngine.registerPlcSymbols(symbols);
 window.AdigunCADEngine.registerWagoDigitalIoBatch(wagoDigitalIoBatch);
 window.dispatchEvent(new Event("adigun-component-library-ready"));

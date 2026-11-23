@@ -48,6 +48,45 @@ engine.registerWagoDigitalIoBatch(
   ),
 );
 const plain = (value) => JSON.parse(JSON.stringify(value));
+const mcsBatch = JSON.parse(
+  fs.readFileSync(
+    new URL(
+      "../../packages/component-library/wago-mcs-231-batch.json",
+      import.meta.url,
+    ),
+    "utf8",
+  ),
+);
+engine.registerWagoMcsBatch(mcsBatch);
+
+test("WAGO 231 connectors retain exact order codes and isolated contact pairs", () => {
+  assert.equal(mcsBatch.length, 27);
+  for (const source of mcsBatch) {
+    const def = engine.component(
+      "wago-" + source.orderCode.replaceAll("/", "_"),
+    );
+    const back = source.mount === "wire" ? "clamp-" : "solder-";
+    assert.deepEqual(
+      plain(def.symbol.internalConnections),
+      Array.from({ length: source.poles }, (_, index) => [
+        "contact-" + (index + 1),
+        back + (index + 1),
+      ]),
+    );
+    assert.equal(def.symbol.pins.length, source.poles * 2);
+    assert.equal(def.panelFootprint.widthMm, source.widthMm);
+    assert.equal(
+      def.panelFootprint.depthMm,
+      source.heightAboveBoardMm ?? source.depthMm,
+    );
+    const instance = engine.createInstance(def.id, 200, 300, "X1");
+    assert.equal(engine.validateInstance(instance).valid, true);
+    assert.equal(
+      engine.billOfMaterials([instance]).rows[0].partNumber,
+      source.orderCode,
+    );
+  }
+});
 
 test("TOPJOB catalog batches reject invalid rows and duplicate IDs atomically", () => {
   const candidate = { ...terminalBatch[0], orderCode: "2002-9999" };
