@@ -1127,8 +1127,9 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
     if(!Array.isArray(rows)||!rows.length)throw new TypeError('Expected a nonempty WAGO PCB terminal batch');
     const batch=new Map();
     for(const part of rows){
-      const id='wago-'+part?.orderCode;
-      if(!part||typeof part.orderCode!=='string'||!/^250-[0-9]{3}$/.test(part.orderCode)||
+      const urlCode=typeof part?.orderCode==='string'?part.orderCode.replace('/','_'):'';
+      const id='wago-'+urlCode;
+      if(!part||typeof part.orderCode!=='string'||!/^250-[0-9]{3,4}(?:\/[0-9]{3}-[0-9]{3})?$/.test(part.orderCode)||
         !Number.isInteger(part.poles)||part.poles<1||part.poles>32||
         ![part.nominalVoltage,part.ratedCurrent,part.nominalCrossSectionMm2,part.bodyWidthMm,
           part.bodyDepthMm,part.bodyHeightAboveBoardMm,part.padPitchMm,part.solderPinLengthMm,
@@ -1139,8 +1140,8 @@ const siemensMaintenanceIsolatorDefinition=deepFreeze({
         !['Push-in CAGE CLAMP','CAGE CLAMP'].includes(part.connectionTechnology)||part.actuationMethod!=='Push-button'||
         ![part.finish,part.revision,part.pages].every(value=>typeof value==='string'&&value.trim())||
         !Number.isInteger(part.dimensionPage)||part.dimensionPage<1||
-        part.datasheet!=='https://wago.priintcloud.com/datasheets/'+part.orderCode+'/en'||
-        part.productUrl!=='https://www.wago.com/'+part.orderCode||
+        part.datasheet!=='https://wago.priintcloud.com/datasheets/'+urlCode+'/en'||
+        part.productUrl!=='https://www.wago.com/'+urlCode||
         !/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(part.retrievedAt)||
         !/^[a-f0-9]{64}$/.test(part.datasheetSha256)){
         throw new TypeError('Invalid WAGO PCB terminal catalog row: '+id);
