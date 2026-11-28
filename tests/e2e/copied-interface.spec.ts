@@ -14,6 +14,33 @@ test.beforeEach(async ({ page }) => {
   });
 });
 
+test("overview and studio switch in the same tab and preset links open native templates", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "Draw it. Wire it. Make it editable." }),
+  ).toBeVisible();
+  await expect(page.locator("#app")).toBeHidden();
+  await page.getByRole("link", { name: "Launch Studio" }).click();
+  await expect(page).toHaveURL(/#studio$/);
+  await expect(page.locator("#app")).toBeVisible();
+  await addSectionSheetAfterCreate(page);
+  await page.getByRole("link", { name: "Back to Overview" }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await page.goBack();
+  await expect(page.locator("#projectTree [data-sheet]")).toHaveCount(1);
+  expect(page.context().pages()).toHaveLength(1);
+  await page.goto("/#studio/indicator");
+  await expect(page.locator("#projectTemplate")).toHaveValue("indicator");
+});
+
+async function addSectionSheetAfterCreate(page: Page) {
+  await page.locator('[data-action="new"]').first().click();
+  await page.locator("#createProject").click();
+  await addSectionSheet(page);
+}
+
 test("expired guests can open Eplan registration and enter an email code", async ({
   page,
 }) => {
@@ -30,7 +57,7 @@ test("expired guests can open Eplan registration and enter an email code", async
       await route.fulfill({ json: { step: "registered" } });
     }
   });
-  await page.goto("/");
+  await page.goto("/#studio");
   await expect(page.getByText(/four-minute guest trial ended/)).toBeVisible();
   await expect(page.locator("#app")).toHaveAttribute("inert", "");
   await page.locator("#eplan-workspace-gate button").click();
@@ -105,7 +132,7 @@ test("compact workspace keeps guest and verified account drafts isolated", async
     if (path.endsWith("/auth/v1/logout")) return route.fulfill({ status: 204 });
     return route.fulfill({ status: 404 });
   });
-  await page.goto("/");
+  await page.goto("/#studio");
   const workspace = page.locator("#app");
   const tree = page.locator("#projectTree");
   const dialog = page.getByRole("dialog", { name: "Account" });
@@ -176,7 +203,7 @@ test("sourced feeder parts use the existing library and preserve editable settin
   page.setDefaultTimeout(8000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Feeder component review");
   await page.locator("#createProject").click();
@@ -245,7 +272,7 @@ test("example copy remains a native editable project through replacement and loc
   page.setDefaultTimeout(8000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#newProjectName").fill("My editable pump project");
@@ -424,7 +451,7 @@ test("example copy remains a native editable project through replacement and loc
 test("manufacturer pressure switch inserts through existing library and preserves its terminal interface", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -492,7 +519,7 @@ test("manufacturer pressure switch inserts through existing library and preserve
 test("ENG-0601 control and interlock notes edit and export without altering wires", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#createProject").click();
@@ -547,7 +574,7 @@ test("ENG-0601 control and interlock notes edit and export without altering wire
 test("ENG-0601 opens authored paper documents without overlaps and roundtrips edits", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#newProjectName").fill("ENG-0601 development");
@@ -878,7 +905,7 @@ test("junction and symbol transforms preserve electrical intent through save and
   page,
 }) => {
   await page.setViewportSize({ width: 1680, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -945,7 +972,7 @@ test("drafting tools draw on-axis lines, dimensions and exact offsets", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1680, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   const upper = page.getByRole("toolbar", { name: "Drafting controls" });
   const lower = page.getByRole("toolbar", {
     name: "Drawing and electrical tools",
@@ -1076,7 +1103,7 @@ test("a named project starts with full drafting rulers and new sheets hide print
   page,
 }) => {
   await page.setViewportSize({ width: 1680, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await expect(page.locator('[data-ruler-axis="x"]')).toBeVisible();
@@ -1097,7 +1124,7 @@ test("title block edits propagate shared fields and retain sheet overrides", asy
   page,
 }) => {
   page.setDefaultTimeout(5000);
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page, "A1");
@@ -1177,7 +1204,7 @@ test("paper sheets support multiline writing, formatting and saved editing", asy
   page.on("pageerror", (error) => {
     throw error;
   });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page, "A1");
@@ -1241,7 +1268,7 @@ test("approved interface branding and menu overlay remain intact", async ({
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await expect(page).toHaveTitle("AdigunEplanAI — Electrical CAD Workspace");
   await expect(page.locator(".brandname")).toHaveText("AdigunEplanAI");
   const logo = page.getByRole("img", { name: "HB Elektroniker" });
@@ -1308,7 +1335,7 @@ test("the docked library keeps the project tree visible and the left sidebar can
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -1360,7 +1387,7 @@ test("library views fit the dock and category, type and project filters show rea
   page,
 }) => {
   await page.setViewportSize({ width: 1600, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -1418,7 +1445,7 @@ test("new project wires attach to terminals, follow edits, undo and reopen", asy
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Bench circuit");
   await page.locator("#createProject").click();
@@ -1488,7 +1515,7 @@ test("existing New Project dialog opens both connected editable examples", async
   page.setDefaultTimeout(6000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   for (const id of ["indicator", "relay"]) {
     await page.locator('[data-action="new"]').first().click();
     await page.locator("#newProjectName").fill(id + " workshop");
@@ -1568,7 +1595,7 @@ test("manufacturer projects open, expose editable parts and preserve connections
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   for (const [id, count, wireCount] of [
     ["hardware-plc-input", 13, 6],
     ["hardware-relay", 15, 6],
@@ -1642,7 +1669,7 @@ test("manufacturer projects open, expose editable parts and preserve connections
 test("imported sheet metadata overrides sample labels when opening properties", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Imported cabinet");
   await page.locator("#createProject").click();
@@ -1684,7 +1711,7 @@ test("existing insertion toolbar places verified PLC motor and earth terminal", 
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -1717,7 +1744,7 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Eplan symbol regression");
   await page.locator("#createProject").click();
@@ -1758,7 +1785,7 @@ test("existing Electrical Symbol Library places and saves original Eplan symbols
 test("new projects own four empty sections and continuously numbered sheets survive reopening", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-panel="symbols"]').click();
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Section workflow");
@@ -1811,7 +1838,7 @@ test("new projects own four empty sections and continuously numbered sheets surv
 test("Project Explorer exposes searchable examples and opens an editable copy", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-panel="symbols"]').click();
   await expect(page.locator("#projectPanel")).toBeVisible();
   await page.locator('[data-panel="project"]').click();
@@ -1893,7 +1920,7 @@ test("Project Explorer exposes searchable examples and opens an editable copy", 
 test("integrated PLC example preserves its input and output wiring through edits and exports", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("hardware-plc-io");
   await page.locator("#createProject").click();
@@ -1973,7 +2000,7 @@ test("integrated PLC example preserves its input and output wiring through edits
 test("both component pickers search the full real catalogue and place exact matches", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   const total = await page.evaluate(
     () => Reflect.get(window, "AdigunCADEngine").catalog().length,
   );
@@ -2019,7 +2046,7 @@ test("both component pickers search the full real catalogue and place exact matc
 test("WINSTA plug and socket expose their marked mating contacts", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2053,7 +2080,7 @@ test("WINSTA plug and socket expose their marked mating contacts", async ({
 test("PCB terminal blocks expose wire clamps and solder pins on the canvas", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2100,7 +2127,7 @@ test("PCB terminal blocks expose wire clamps and solder pins on the canvas", asy
 test("SIPROTEC exact order code places with marked terminals and saves supply wiring", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2137,7 +2164,7 @@ test("SIPROTEC exact order code places with marked terminals and saves supply wi
 test("PFC200 places by exact code, exposes communications and wires its field supply", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2174,7 +2201,7 @@ test("PFC200 places by exact code, exposes communications and wires its field su
 test("Harmony ZBE101 places, wires by marked terminals and preserves the open contact", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2225,7 +2252,7 @@ test("Harmony ZBE101 places, wires by marked terminals and preserves the open co
 test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2264,7 +2291,7 @@ test("WAGO CAGE CLAMP terminals can be found, placed and wired by exact code", a
 test("WAGO matrix terminals wire the documented commoned and isolated levels", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2306,7 +2333,7 @@ test("WAGO matrix terminals wire the documented commoned and isolated levels", a
 test("WAGO double-deck terminal exposes both levels and stays wired on reopen", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2365,7 +2392,7 @@ for (const [inputCode, inputPin, inputY] of [
   test(`WAGO ${inputCode} can be wired and assigned through Properties`, async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/#studio");
     await page.locator('[data-action="new"]').first().click();
     await page.locator("#createProject").click();
     await addSectionSheet(page);
@@ -2416,7 +2443,7 @@ for (const [inputCode, inputPin, inputY] of [
 test("WAGO field cable assemblies preserve documented conductor and connector identities", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2455,7 +2482,7 @@ test("WAGO field cable assemblies preserve documented conductor and connector id
 test("WINSTA DALI assemblies keep positive and negative channels on distinct terminals", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2494,7 +2521,7 @@ test("WINSTA DALI assemblies keep positive and negative channels on distinct ter
 test("WINSTA plug-to-free-lead assemblies retain documented cable end identity", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2534,7 +2561,7 @@ test("WINSTA plug-to-free-lead assemblies retain documented cable end identity",
 test("WINSTA four-pole assemblies expose exact ratings and separate switched conductors", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2579,7 +2606,7 @@ test("WINSTA four-pole assemblies expose exact ratings and separate switched con
 test("WAGO 721 exact codes can be placed and wired from the component library", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2657,7 +2684,7 @@ test("WAGO 721 exact codes can be placed and wired from the component library", 
 test("WAGO 231 long connectors expose both ends of a 24-pole row", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2706,7 +2733,7 @@ for (const [firstCode, secondCode] of [
   test(`WAGO ${firstCode} and ${secondCode} expose both pitches and retain solder terminal wiring`, async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/#studio");
     await page.locator('[data-action="new"]').first().click();
     await page.locator("#createProject").click();
     await addSectionSheet(page);
@@ -2751,7 +2778,7 @@ for (const [firstCode, secondCode] of [
 test("WAGO 2616 PCB terminals expose and wire the sixth solder point", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2791,7 +2818,7 @@ test("WAGO 2616 PCB terminals expose and wire the sixth solder point", async ({
 test("WAGO 2086 SMD PCB terminals show land dimensions and retain a second pad attachment", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2832,7 +2859,7 @@ test("WAGO 2086 SMD PCB terminals show land dimensions and retain a second pad a
 test("WAGO 713 connectors retain two rows with separate terminals and drill positions", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2872,7 +2899,7 @@ test("WAGO 713 connectors retain two rows with separate terminals and drill posi
 test("WAGO 2231 and 2092 connector instances expose exact clamp technologies and wire independently", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2912,7 +2939,7 @@ test("WAGO 2231 and 2092 connector instances expose exact clamp technologies and
 test("WAGO MCS MAXI headers expose the third solder anchor and three drill rows", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2952,7 +2979,7 @@ test("WAGO MCS MAXI headers expose the third solder anchor and three drill rows"
 test("WAGO MCS MICRO headers expose 2.5 mm pitch and wire by terminal", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -2993,7 +3020,7 @@ test("WAGO MCS MICRO headers expose 2.5 mm pitch and wire by terminal", async ({
 test("WAGO MCS MINI headers show documented drill centres and wire by terminal", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3034,7 +3061,7 @@ test("WAGO MCS MINI headers show documented drill centres and wire by terminal",
 test("WAGO 232 female headers expose separate socket and PCB terminals", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3077,7 +3104,7 @@ test("WAGO 232 female headers expose separate socket and PCB terminals", async (
 test("WAGO relay coils and contacts are independently wireable", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3115,7 +3142,7 @@ test("WAGO relay coils and contacts are independently wireable", async ({
 test("WAGO power supplies place by exact code and wire to documented terminals", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3153,7 +3180,7 @@ test("WAGO power supplies place by exact code and wire to documented terminals",
 test("WAGO single-channel breakers expose current settings and attach to supply terminals", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3192,7 +3219,7 @@ test("WAGO single-channel breakers expose current settings and attach to supply 
 test("generic PLC library places six editable modules with native terminal wiring", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3274,7 +3301,7 @@ test("sidebar creates documents without opening, renames inline, reorders and cl
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   for (let i = 0; i < 5; i++)
@@ -3375,7 +3402,7 @@ test("sidebar creates documents without opening, renames inline, reorders and cl
 test("projects above the former sheet limit preserve connections, order and additional sheets", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   const seed = await saveDrawing(page, "large-project-seed");
@@ -3474,7 +3501,7 @@ test("projects above the former sheet limit preserve connections, order and addi
 test("Electrical checks exposes persisted inconsistent cable core assignments", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#createProject").click();
@@ -3505,7 +3532,7 @@ test("Electrical checks exposes persisted inconsistent cable core assignments", 
 test("LAPP cable inserts through the existing library and preserves editable route", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Cable library verification");
   await page.locator("#createProject").click();
@@ -3550,7 +3577,7 @@ test("LAPP cable inserts through the existing library and preserves editable rou
 test("sourced LAPP motor and control cables expose only their real cores and keep wire attachments", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -3675,7 +3702,7 @@ test("sourced LAPP motor and control cables expose only their real cores and kee
 test("Rittal enclosure inserts as editable mechanical data without electrical pins", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Enclosure verification");
   await page.locator("#createProject").click();
@@ -3734,7 +3761,7 @@ test("linked panel placement preserves its canonical device on local reopen", as
   page,
 }) => {
   test.setTimeout(60_000);
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#newProjectName").fill("Linked panel verification");
@@ -4204,7 +4231,7 @@ test("linked panel placement preserves its canonical device on local reopen", as
 test("mounting accessory links to the canonical overload and survives rename and reopen", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#newProjectName").fill("Accessory verification");
@@ -4285,7 +4312,7 @@ test("electrical support wires to relay terminals and retains bindings after edi
   page.setDefaultTimeout(5000);
   test.setTimeout(60000);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Support wiring verification");
   await page.locator("#createProject").click();
@@ -4379,7 +4406,7 @@ test("ENG-0601 A4 reports open as native editable sheets and survive local reope
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#newProjectName").fill("A4 report verification");
@@ -4536,7 +4563,7 @@ test("ENG-0601 A3 opens with five editable linked device placements", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#createProject").click();
@@ -4582,7 +4609,7 @@ test("terminal bodies can be added through existing Properties and reopened", as
   page.setDefaultTimeout(5000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#newProjectName").fill("Terminal placement verification");
@@ -4648,7 +4675,7 @@ test("terminal bodies can be added through existing Properties and reopened", as
 test("A3 terminal detail sheets render linked bodies and retain native edits", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#projectTemplate").selectOption("eng0601");
   await page.locator("#createProject").click();
@@ -4737,7 +4764,7 @@ test("terminal accessories insert through the existing library as editable mecha
 }) => {
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Terminal accessories");
   await page.locator("#createProject").click();
@@ -4783,7 +4810,7 @@ test("terminal accessories insert through the existing library as editable mecha
 test("editable draw order controls topmost selection and survives undo and reopen", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page, "A3");
@@ -4842,7 +4869,7 @@ test("editable draw order controls topmost selection and survives undo and reope
 test("the component bank lists every source-backed part and places exact-code results", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -4921,7 +4948,7 @@ test("every published component renders from a valid native project and reopens 
   page.setDefaultTimeout(8000);
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("/#studio");
   const fixture = await page.evaluate(() => {
     const engine = Reflect.get(window, "AdigunCADEngine");
     const sheets: { id: string; name: string; sectionId: string }[] = [];
@@ -5019,7 +5046,7 @@ test("every published component renders from a valid native project and reopens 
 test("terminal clicks auto-route and manual bends survive moving both connected parts", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5135,7 +5162,7 @@ for (const template of [
   }) => {
     test.setTimeout(60000);
     page.setDefaultTimeout(7500);
-    await page.goto("/");
+    await page.goto("/#studio");
     await page.locator('[data-action="new"]').first().click();
     if (template) await page.locator("#projectTemplate").selectOption(template);
     await page.locator("#createProject").click();
@@ -5356,7 +5383,7 @@ test("drafts across the full viewport with a signed, pointer-centered camera", a
   page,
 }) => {
   await page.setViewportSize({ width: 1750, height: 700 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5425,7 +5452,7 @@ test("drafts across the full viewport with a signed, pointer-centered camera", a
 test("free drafting sheets save their print-frame visibility independently", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -5450,7 +5477,7 @@ test("free drafting sheets save their print-frame visibility independently", asy
 test("component placement accounts for the rendered PLC reference label", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5477,7 +5504,7 @@ test("fit drawing centers signed geometry and the origin command centers zero", 
   page,
 }) => {
   await page.setViewportSize({ width: 1750, height: 700 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5504,7 +5531,7 @@ test("fit drawing centers signed geometry and the origin command centers zero", 
 test("physical grid, cursor units and snap spacing persist independently", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page, "A3");
@@ -5553,7 +5580,7 @@ test("rulers create saved guides with exact coordinates, visibility and locking"
   page,
 }) => {
   await page.setViewportSize({ width: 1550, height: 850 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5594,7 +5621,7 @@ test("SVG and PNG keep off-frame geometry and PDF honors physical paper size", a
   page,
 }) => {
   await page.setViewportSize({ width: 1750, height: 700 });
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5745,7 +5772,7 @@ test("SVG and PNG keep off-frame geometry and PDF honors physical paper size", a
 test("drag redraws connected geometry only and can return exactly to its origin", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await addSectionSheet(page);
@@ -5784,7 +5811,7 @@ test("drag redraws connected geometry only and can return exactly to its origin"
 test("building floor sheets keep editable identities and physical units on reopen", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#newProjectName").fill("Workshop");
   await page.locator("#createProject").click();
@@ -5816,7 +5843,7 @@ test("building floor sheets keep editable identities and physical units on reope
 test("floor plan walls persist physical thickness and hosted openings", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -5874,7 +5901,7 @@ test("floor plan walls persist physical thickness and hosted openings", async ({
 test("room outlines have editable physical dimensions and reopen on their floor", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -5916,7 +5943,7 @@ test("room outlines have editable physical dimensions and reopen on their floor"
 test("floor zones preserve their type and editable boundary on reopen", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -5993,7 +6020,7 @@ test("floor zones preserve their type and editable boundary on reopen", async ({
 test("floor plan dimensions measure endpoints and save their offset", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -6032,7 +6059,7 @@ test("floor plan dimensions measure endpoints and save their offset", async ({
 test("floor print frame preserves a physical scale at distant model coordinates", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -6092,7 +6119,7 @@ test("floor print frame preserves a physical scale at distant model coordinates"
 test("floor plan imports scaled SVG and DXF as native geometry", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -6271,7 +6298,7 @@ test("floor plan imports scaled SVG and DXF as native geometry", async ({
 test("floor plan specialty devices expose independent native terminals", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -6354,7 +6381,7 @@ test("floor plan specialty devices expose independent native terminals", async (
 test("engineering calculation registry converts units and exports the method result", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator("#openCommands").click();
@@ -6510,7 +6537,7 @@ test("floor cable ampacity compares explicit inputs and reopens them", async ({
   page,
 }) => {
   test.setTimeout(45_000);
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();
@@ -6665,7 +6692,7 @@ test("floor plan equipment uses native devices and preserves terminal wiring", a
   page,
 }) => {
   test.setTimeout(45_000);
-  await page.goto("/");
+  await page.goto("/#studio");
   await page.locator('[data-action="new"]').first().click();
   await page.locator("#createProject").click();
   await page.locator('[data-project-section="A2"]').click();

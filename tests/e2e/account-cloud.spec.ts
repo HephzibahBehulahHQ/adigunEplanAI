@@ -253,7 +253,7 @@ test("guest, A and B keep local projects and undo histories isolated; stale clou
   page,
 }) => {
   const mock = await mockBackend(page);
-  await page.goto("/");
+  await page.goto("/#studio");
   await create(page, "Guest project");
   await signIn(page, a);
   await expect(
@@ -335,7 +335,7 @@ test("explicit cloud conflicts, immutable history and failed-save review preserv
   page,
 }) => {
   const mock = await mockBackend(page);
-  await page.goto("/");
+  await page.goto("/#studio");
   await signIn(page, a);
   await create(page, "Versioned project");
   let dialog = await openAccount(page);
@@ -424,7 +424,7 @@ test("registration/reset stay signed out and verified profiles preserve other pr
   page,
 }) => {
   const mock = await mockBackend(page);
-  await page.goto("/");
+  await page.goto("/#studio");
   let dialog = await openAccount(page);
   await dialog.getByRole("button", { name: "Register", exact: true }).click();
   let form = dialog.getByRole("form", {
@@ -508,7 +508,7 @@ test("cached sessions never produce a green status for a server-reported anonymo
       localStorage.setItem("adiguneplanai.auth.v1", JSON.stringify(value)),
     mock.sessions.get(a),
   );
-  await page.goto("/");
+  await page.goto("/#studio");
   await expect(page.locator(".account-dot")).toHaveAttribute(
     "data-account-state",
     "guest",
@@ -525,7 +525,7 @@ test("avatar previews validate image content and upload/remove only in the verif
   page,
 }) => {
   const mock = await mockBackend(page);
-  await page.goto("/");
+  await page.goto("/#studio");
   await signIn(page, a);
   const dialog = await openAccount(page);
   const upload = dialog.getByRole("form", {
@@ -583,7 +583,7 @@ test("transient same-account verification failures preserve local editing and di
   page,
 }) => {
   const mock = await mockBackend(page);
-  await page.goto("/");
+  await page.goto("/#studio");
   await signIn(page, a);
   await create(page, "Offline A");
   mock.control.failVerify = true;
@@ -627,7 +627,7 @@ test("compact owner toolbar has one settings/help control and searches actual lo
   page,
 }) => {
   await mockBackend(page);
-  await page.goto("/");
+  await page.goto("/#studio");
   await create(page, "Alpha");
   await page.locator(".workbench-add-sheet").click();
   await create(page, "Beta");

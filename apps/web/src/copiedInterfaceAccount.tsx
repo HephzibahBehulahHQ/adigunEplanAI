@@ -27,6 +27,17 @@ const toolbarAccount = document.querySelector<HTMLButtonElement>(
 
 function WorkspaceAccount() {
   const account = useAccount();
+  const [studioStarted, setStudioStarted] = useState(() =>
+    document.documentElement.hasAttribute("data-studio"),
+  );
+  useEffect(() => {
+    const enterStudio = () => {
+      if (location.hash === "#studio" || location.hash.startsWith("#studio/"))
+        setStudioStarted(true);
+    };
+    window.addEventListener("hashchange", enterStudio);
+    return () => window.removeEventListener("hashchange", enterStudio);
+  }, []);
   const dialog = useRef<HTMLDialogElement>(null);
   const [access, setAccess] = useState<
     "checking" | "guest" | "required" | "expired"
@@ -43,6 +54,7 @@ function WorkspaceAccount() {
     return () => toolbarAccount.removeEventListener("click", open);
   }, []);
   useEffect(() => {
+    if (!studioStarted) return;
     let active = true;
     let expiration: ReturnType<typeof setTimeout> | undefined;
     if (account.verified) {
@@ -74,7 +86,7 @@ function WorkspaceAccount() {
       active = false;
       clearTimeout(expiration);
     };
-  }, [account.checking, account.verified]);
+  }, [account.checking, account.verified, studioStarted]);
   useLayoutEffect(() => {
     workspace.inert = !allowed;
     if (!account.checking) {
